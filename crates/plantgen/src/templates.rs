@@ -434,7 +434,15 @@ impl Templates {
                 let pattern = look
                     .variegation
                     .map(|variegation| {
-                        variegation_ranks(&variegation, &look.organ, &coverage, aspect)
+                        // A compound leaf's pattern follows each leaflet.
+                        let places = leaflet_places(look, aspect, grew.as_ref());
+                        variegation_ranks(
+                            &variegation,
+                            &look.organ,
+                            &coverage,
+                            aspect,
+                            places.as_deref(),
+                        )
                     })
                     .unwrap_or_default();
                 let painted = look.hairs.as_ref().map(|hairs| {
@@ -3391,6 +3399,103 @@ pub fn darkening(template: &Template, colour: [f64; 3]) -> f64 {
     }
 }
 
+/// Where a texel lies on one leaflet of a compound leaf, for
+/// [`variegation_ranks`].
+#[derive(Clone, Copy, Debug)]
+struct LeafletPlace {
+    /// Across the leaflet from its midrib, over its half-width there:
+    /// -1 to 1, negative on its left.
+    across: f64,
+    /// Along its blade, from its base (0) to its tip (1).
+    along: f64,
+    /// Its half-width there over its widest.
+    half: f64,
+    /// Its widest half-width and its blade's length, card lengths.
+    widest: f64,
+    length: f64,
+    /// Which leaflet.
+    leaflet: usize,
+}
+
+/// Each texel's place on the leaflet it lies on, for a compound leaf's
+/// template; `None` for any other shape. Texels off the leaflets (the
+/// rachis and stalks) have none.
+fn leaflet_places(
+    look: &Look,
+    aspect: f64,
+    grew: Option<&GrownLeaf>,
+) -> Option<Vec<Option<LeafletPlace>>> {
+    let Shape::Compound(s) = &look.shape else {
+        return None;
+    };
+    let own;
+    let laid = if let Some(laid) = grew.and_then(|leaf| leaf.layout.as_ref()) {
+        laid
+    } else {
+        own = divided::layout(s);
+        &own
+    };
+    let margins = grew.map_or(&[][..], |leaf| &leaf.margins);
+    let (share_across, share_along) = drawn_share(&look.shape);
+    let form = &laid.form;
+    // Each leaflet's widest half-width, sampled along its blade.
+    let widest: Vec<f64> = laid
+        .leaflets
+        .iter()
+        .map(|leaflet| {
+            let blade = leaflet.length * (1.0 - form.petiolule);
+            (0..=40)
+                .map(|k| {
+                    let t = f64::from(k) / 40.0;
+                    [true, false]
+                        .iter()
+                        .map(|&left| {
+                            leaflet_width(s, form, blade, t, margins.get(usize::from(left)))
+                        })
+                        .fold(0.0, f64::max)
+                })
+                .fold(1e-9, f64::max)
+        })
+        .collect();
+    let size = TEMPLATE_SIZE;
+    let mut places = Vec::with_capacity(size * size);
+    for y in 0..size {
+        for x in 0..size {
+            let u = (to_f64(x) + 0.5) / to_f64(size);
+            let v = (to_f64(y) + 0.5) / to_f64(size);
+            let p = ((u - 0.5) * aspect / share_across, v / share_along);
+            let mut place = None;
+            for (index, leaflet) in laid.leaflets.iter().enumerate() {
+                let (along, across) = local(p, leaflet.base, leaflet.direction);
+                if !(0.0..=leaflet.length).contains(&along) {
+                    continue;
+                }
+                let stalk = form.petiolule * leaflet.length;
+                let blade = leaflet.length - stalk;
+                if along < stalk || blade <= 0.0 {
+                    continue;
+                }
+                let t = (along - stalk) / blade;
+                let width =
+                    leaflet_width(s, form, blade, t, margins.get(usize::from(across < 0.0)));
+                if across.abs() < width {
+                    place = Some(LeafletPlace {
+                        across: across / width.max(1e-9),
+                        along: t,
+                        half: width / widest[index],
+                        widest: widest[index],
+                        length: blade,
+                        leaflet: index,
+                    });
+                    break;
+                }
+            }
+            places.push(place);
+        }
+    }
+    Some(places)
+}
+
 /// Each texel's rank in `variegation`'s pattern on a template of
 /// `coverage` and `aspect`, 0 to 1 over the covered texels (1 where none
 /// is covered), so a card paints the share of its blade its ranks below
@@ -3405,6 +3510,7 @@ fn variegation_ranks(
     organ: &str,
     coverage: &[f32],
     aspect: f64,
+    places: Option<&[Option<LeafletPlace>]>,
 ) -> Vec<f32> {
     use crate::looks::VariegationPattern as P;
     let size = TEMPLATE_SIZE;
@@ -3483,8 +3589,40 @@ fn variegation_ranks(
                 continue;
             }
             let (px, py) = at(x, y);
-            // Across the blade from its midrib (0) to its margin (1).
-            let across = (px.abs() / half[y].max(1e-9)).min(1.0);
+            // On a compound leaf each leaflet is its own blade; the rachis
+            // and stalks between them are never painted.
+            let leaflet = if let Some(places) = places {
+                let Some(place) = places[index] else {
+                    values.push((20.0, index));
+                    continue;
+                };
+                Some(place)
+            } else {
+                None
+            };
+            // Across the blade from its midrib (0) to its margin (1), on
+            // which side, along it, and its row's half-width.
+            let (across, left, along_blade, along_card, row_half, blade_widest, seed) =
+                match leaflet {
+                    Some(place) => (
+                        place.across.abs().min(1.0),
+                        place.across < 0.0,
+                        place.along,
+                        place.along * place.length,
+                        place.half,
+                        place.widest,
+                        seed ^ mix64(u64::try_from(place.leaflet).unwrap_or(0) + 1),
+                    ),
+                    None => (
+                        (px.abs() / half[y].max(1e-9)).min(1.0),
+                        px < 0.0,
+                        along(y),
+                        py,
+                        half[y] / widest,
+                        widest,
+                        seed,
+                    ),
+                };
             let noise = |sx: f64, sy: f64, salt: u64| value_noise(px / sx, py / sy, seed ^ salt);
             let value = match (&edge, variegation.pattern) {
                 (Some((distance, deepest)), P::Margin) => {
@@ -3499,11 +3637,11 @@ fn variegation_ranks(
                 (None, P::Veins) => {
                     let place = VeinPlace {
                         across,
-                        side: px < 0.0,
-                        along: along(y),
-                        y: py,
-                        half: half[y] / widest,
-                        widest,
+                        side: left,
+                        along: along_blade,
+                        y: along_card,
+                        half: row_half,
+                        widest: blade_widest,
                     };
                     vein_value(variegation, &place, seed)
                         + 0.04 * (noise(scale * 0.25, scale * 0.25, 8) - 0.5)
@@ -3511,11 +3649,11 @@ fn variegation_ranks(
                 (None, P::Between) => {
                     let place = VeinPlace {
                         across,
-                        side: px < 0.0,
-                        along: along(y),
-                        y: py,
-                        half: half[y] / widest,
-                        widest,
+                        side: left,
+                        along: along_blade,
+                        y: along_card,
+                        half: row_half,
+                        widest: blade_widest,
                     };
                     -vein_value(variegation, &place, seed)
                         + 0.04 * (noise(scale * 0.25, scale * 0.25, 8) - 0.5)
@@ -3525,7 +3663,7 @@ fn variegation_ranks(
                     // blade with its arms leaning back to the base.
                     let out = match variegation.from {
                         crate::looks::ZoneFrom::Midrib => across,
-                        crate::looks::ZoneFrom::Base => along(y) + 0.4 * across,
+                        crate::looks::ZoneFrom::Base => along_blade + 0.4 * across,
                     };
                     // Toothed a little where the veins cross its edge.
                     (out - variegation.at).abs() + 0.08 * (noise(scale, scale * 0.5, 9) - 0.5)
@@ -4286,6 +4424,51 @@ mod tests {
             .copied()
             .fold(f32::MAX, f32::min);
         assert!(ranks[0] > inner + 0.3, "{ranks:?}");
+    }
+
+    #[test]
+    fn a_compound_leaf_s_zone_lies_on_each_leaflet() {
+        let shape: Compound = serde_json::from_str(
+            r#"{"leaflets": 3, "pattern": "palmate", "leaflet_width": 0.85, "petiole": 0.7}"#,
+        )
+        .expect("reads");
+        let mut looks = looks_of(&[Shape::Compound(shape)]);
+        let variegation: crate::looks::Variegation = serde_json::from_str(
+            r#"{"pattern": "zone", "from": "base", "at": 0.5, "colour": [0.5, 0.5, 0.5],
+                "amount": 0.2, "spread": 0}"#,
+        )
+        .expect("reads");
+        looks[0].variegation = Some(variegation);
+        let templates = Templates::for_looks(&looks);
+        let places = leaflet_places(
+            &looks[0],
+            looks[0].aspect(),
+            grow_leaf(&looks[0].shape).as_ref(),
+        )
+        .expect("a compound leaf");
+        // Each leaflet carries its own band, and the stalks none.
+        let mut lowest = [f32::MAX; 3];
+        let mut stalk = f32::MAX;
+        for y in 0..TEMPLATE_SIZE {
+            for x in 0..TEMPLATE_SIZE {
+                let (u, v) = (
+                    (x as f32 + 0.5) / TEMPLATE_SIZE as f32,
+                    (y as f32 + 0.5) / TEMPLATE_SIZE as f32,
+                );
+                let texel = templates.sample(0, u, v);
+                if texel.coverage < 0.5 {
+                    continue;
+                }
+                match places[y * TEMPLATE_SIZE + x] {
+                    Some(place) => {
+                        lowest[place.leaflet] = lowest[place.leaflet].min(texel.pattern);
+                    }
+                    None => stalk = stalk.min(texel.pattern),
+                }
+            }
+        }
+        assert!(lowest.iter().all(|&rank| rank < 0.05), "{lowest:?}");
+        assert!(stalk > 0.5, "{stalk}");
     }
 
     #[test]

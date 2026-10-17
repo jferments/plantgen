@@ -602,6 +602,7 @@ pub mod venation;
 /// lateral veins), its inverse `between` (silver fields between the veins),
 /// `zone` (a band along the outline, or a V from the base), a rim the
 /// pattern never reaches, and patches on the upper face only (`faces`);
-/// the rattlesnake plantain's leaves are drawn
-/// so, dark blue-green, six to a flat rosette (95 is lacy leaves, #180).
+/// a compound leaf's pattern lies on each leaflet; the rattlesnake
+/// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
+/// (95 is lacy leaves, #180).
 pub const GENERATOR_REVISION: u32 = 96;
