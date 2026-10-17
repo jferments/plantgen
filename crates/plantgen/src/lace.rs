@@ -79,7 +79,8 @@ pub fn build(
         let Shape::Compound(c) = &look.shape else {
             continue;
         };
-        if !drawn_at(c, level) || !(organ.size > 0.0) {
+        if !drawn_at(c, level) || organ.size.partial_cmp(&0.0) != Some(std::cmp::Ordering::Greater)
+        {
             continue;
         }
         let layout = laid[index].get_or_insert_with(|| divided::layout(c));
@@ -364,6 +365,7 @@ impl<'a> Lace<'a> {
     /// A ribbon from `from` to `to` in the local frame, its face along
     /// `face`, `half(t)` wide either side at `t` of the way, with a face
     /// each side.
+    #[allow(clippy::many_single_char_names)]
     fn ribbon(
         &self,
         from: Vec3,
