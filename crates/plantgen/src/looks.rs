@@ -209,6 +209,20 @@ pub struct Variegation {
     /// For `zone`: what the band follows.
     #[serde(default, skip_serializing_if = "ZoneFrom::is_midrib")]
     pub from: ZoneFrom,
+    /// For `zone`: how far the band's edge reaches along the lateral veins
+    /// (`cross` apart, leaning by `slant`) past where it lies between them,
+    /// as a share of the half-width: the toothed edge of Cyclamen's
+    /// silver. 0 for a plain edge.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub feather: f64,
+    /// For `spots` and `mottle`: how many times longer than wide the
+    /// patches are, drawn out along the blade as a parallel-veined leaf's
+    /// are (trout lily's blotches). 1 for round.
+    #[serde(
+        default = "default_variegation_stretch",
+        skip_serializing_if = "is_one"
+    )]
+    pub stretch: f64,
 }
 
 /// What a `zone` variegation's band follows.
@@ -271,6 +285,10 @@ fn default_variegation_at() -> f64 {
 
 fn default_variegation_scale() -> f64 {
     0.08
+}
+
+fn default_variegation_stretch() -> f64 {
+    1.0
 }
 
 /// Where a [`Variegation`]'s patches lie on a blade.
@@ -346,6 +364,8 @@ impl Variegation {
         within("variegation rim", self.rim, 0.0, 0.5)?;
         within("variegation at", self.at, 0.0, 1.0)?;
         within("variegation slant", self.slant, 0.0, 4.0)?;
+        within("variegation feather", self.feather, 0.0, 0.5)?;
+        within("variegation stretch", self.stretch, 1.0, 10.0)?;
         for channel in self.colour {
             within("variegation colour", f64::from(channel), 0.0, 1.0)?;
         }
@@ -1098,6 +1118,12 @@ pub struct Simple {
     /// share of the blade's length (emarginate, retuse). 0 for none.
     #[serde(skip_serializing_if = "is_zero")]
     pub apex_notch: f64,
+    /// Veins each side of the midrib that run from the base to the tip
+    /// beside it, following the outline (parallel and acrodromous
+    /// venation: lilies, plantains, Smilax), drawn in place of the
+    /// branching veins; 0 for a pinnate or palmate blade's.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub parallel: u32,
 }
 
 impl Default for Simple {
@@ -1118,6 +1144,7 @@ impl Default for Simple {
             base_taper: None,
             apex_point: 0.0,
             apex_notch: 0.0,
+            parallel: 0,
         }
     }
 }
@@ -2551,6 +2578,7 @@ impl Shape {
                 }
                 check("apex_point", s.apex_point, 0.0, 0.3)?;
                 check("apex_notch", s.apex_notch, 0.0, 0.2)?;
+                count("parallel", s.parallel, 0, 12)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Lobed(s) => {
@@ -3962,9 +3990,10 @@ mod tests {
         // Written back, the defaults stay out.
         let written = serde_json::to_string(&veins).expect("writes");
         assert!(
-            !written.contains("faces") && !written.contains("rim"),
+            !written.contains("faces") && !written.contains("rim") && !written.contains("stretch"),
             "{written}"
         );
+        assert!((veins.stretch - 1.0).abs() < 1e-12 && veins.feather.abs() < 1e-12);
         for wrong in [
             Variegation { lines: 13, ..veins },
             Variegation {
@@ -3972,6 +4001,14 @@ mod tests {
                 ..veins
             },
             Variegation { rim: 0.6, ..veins },
+            Variegation {
+                stretch: 0.5,
+                ..veins
+            },
+            Variegation {
+                feather: 0.6,
+                ..veins
+            },
         ] {
             assert!(wrong.validate().is_err(), "{wrong:?}");
         }

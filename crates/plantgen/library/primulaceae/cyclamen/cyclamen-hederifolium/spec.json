@@ -72,6 +72,9 @@
           "amount": 0.3,
           "spread": 0.4,
           "at": 0.65,
+          "feather": 0.12,
+          "cross": 0.12,
+          "slant": 1.2,
           "faces": "upper"
         }
       },
@@ -188,7 +191,7 @@
     "appearance.organs.basal.variegation": {
       "evidence": "Authored",
       "source": "inaturalist-photos-2026-10",
-      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants without flowers, read 2026-10-17; for example observation 190064589): a silver-grey band, air space under the upper skin, that follows the outline about 0.5 to 0.8 of the way from the midrib to the margin, leaving a dark centre and a dark rim, its edges a little toothed; how wide it is varies between plants, some nearly all silver. Drawn as the zone variegation at 0.65 of the way out, on the upper face only. Wikipedia (Cyclamen hederifolium, read 2026-10-17) has the leaves marked with a hastate pattern in silver to grey-green."
+      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants without flowers, read 2026-10-17; for example observation 190064589): a silver-grey band, air space under the upper skin, that follows the outline about 0.5 to 0.8 of the way from the midrib to the margin, leaving a dark centre and a dark rim, its edges a little toothed; how wide it is varies between plants, some nearly all silver. Drawn as the zone variegation at 0.65 of the way out, on the upper face only, its edges drawn out a little along the lateral veins (feather 0.12, veins 0.12 of the blade apart, leaning toward the tip). Wikipedia (Cyclamen hederifolium, read 2026-10-17) has the leaves marked with a hastate pattern in silver to grey-green."
     }
   },
   "provenance": {

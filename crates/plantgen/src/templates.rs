@@ -1122,6 +1122,7 @@ fn shape_seed(shape: &Shape) -> u64 {
     // A blade without basal lobes, fanned veins or a shaped apex or base
     // grows the veins it grew before cards had them.
     let mut text = format!("{plain:?}")
+        .replace(", parallel: 0 }", " }")
         .replace("outline: None, ", "")
         .replace(
             ", sinus: 0.0, fan: 0, apex_taper: None, base_taper: None, apex_point: 0.0, apex_notch: 0.0 }",
@@ -1918,13 +1919,27 @@ fn simple(
         return Paint::solid(1.2, 0.5);
     }
     let along = y - base;
-    Paint::solid(
-        0.92 + 0.08 * x.abs() / width.max(1e-6)
-            + grown(veins, x / length, t, length, || {
-                side_veins(along, x, length / 9.0, math::radians(52.0))
-            }),
-        0.0,
-    )
+    let across = x.abs() / width.max(1e-6);
+    let veins = if s.parallel > 0 {
+        parallel_veins(across, width, s.parallel)
+    } else {
+        grown(veins, x / length, t, length, || {
+            side_veins(along, x, length / 9.0, math::radians(52.0))
+        })
+    };
+    Paint::solid(0.92 + 0.08 * across + veins, 0.0)
+}
+
+/// Faint veins running the blade's length beside the midrib, `count` each
+/// side, evenly across the half-width so they follow the outline and meet
+/// at the base and tip: brighter within a texel or so of each, for a point
+/// `across` the half-width `width` (card units) from the midrib.
+fn parallel_veins(across: f64, width: f64, count: u32) -> f64 {
+    let gap = 1.0 / (f64::from(count) + 1.0);
+    let nearest = (across / gap).round().clamp(1.0, f64::from(count)) * gap;
+    let distance = (across - nearest).abs() * width;
+    let (_, widest, soft) = VEIN_WIDTHS;
+    VEIN.0 * (1.0 - math::smoothstep(widest - soft, widest + soft, distance))
 }
 
 /// A pinnately lobed leaf: rounded or pointed lobes along both sides of a
@@ -3516,6 +3531,8 @@ fn variegation_ranks(
     let size = TEMPLATE_SIZE;
     let seed = crate::rng::hash_str(organ) ^ 0x7661_7269_6567;
     let scale = variegation.scale.max(0.005);
+    // Patches drawn out along the blade, the card's length.
+    let stretch = variegation.stretch.max(1.0);
     let covered = |x: isize, y: isize| {
         let inside = (0..size.cast_signed()).contains(&x) && (0..size.cast_signed()).contains(&y);
         inside && coverage[y.cast_unsigned() * size + x.cast_unsigned()] >= 0.5
@@ -3633,7 +3650,7 @@ fn variegation_ranks(
                 }
                 (None, P::Stripes) => noise(scale * aspect.min(1.0), scale * 12.0, 2),
                 (None, P::Bands) => noise(scale * 12.0, scale, 3),
-                (None, P::Spots) => noise(scale, scale, 4),
+                (None, P::Spots) => noise(scale, scale * stretch, 4),
                 (None, P::Veins) => {
                     let place = VeinPlace {
                         across,
@@ -3665,13 +3682,34 @@ fn variegation_ranks(
                         crate::looks::ZoneFrom::Midrib => across,
                         crate::looks::ZoneFrom::Base => along_blade + 0.4 * across,
                     };
+                    // Drawn out along the lateral veins, where `feather`
+                    // asks: the vein's own distance from its centre line.
+                    let feather = if variegation.feather > 0.0 {
+                        let place = wandered(
+                            variegation,
+                            &VeinPlace {
+                                across,
+                                side: left,
+                                along: along_blade,
+                                y: along_card,
+                                half: row_half,
+                                widest: blade_widest,
+                            },
+                            seed,
+                        );
+                        let near = cross_vein(variegation, &place, 0.0, seed) / 0.025;
+                        variegation.feather * (1.0 - near.min(1.0))
+                    } else {
+                        0.0
+                    };
                     // Toothed a little where the veins cross its edge.
-                    (out - variegation.at).abs() + 0.08 * (noise(scale, scale * 0.5, 9) - 0.5)
+                    (out - variegation.at).abs() - feather
+                        + 0.08 * (noise(scale, scale * 0.5, 9) - 0.5)
                 }
                 (None, _) => {
-                    0.55 * noise(scale, scale, 5)
-                        + 0.3 * noise(scale * 0.4, scale * 0.4, 6)
-                        + 0.15 * noise(scale * 0.15, scale * 0.15, 7)
+                    0.55 * noise(scale, scale * stretch, 5)
+                        + 0.3 * noise(scale * 0.4, scale * 0.4 * stretch, 6)
+                        + 0.15 * noise(scale * 0.15, scale * 0.15 * stretch, 7)
                 }
             };
             let kept = if across > 1.0 - variegation.rim {
@@ -3722,15 +3760,7 @@ struct VeinPlace {
 /// so it narrows to the base and tip; it stops short of both ends.
 fn vein_value(variegation: &crate::looks::Variegation, at: &VeinPlace, seed: u64) -> f64 {
     let lines = f64::from(variegation.lines);
-    let spacing = variegation.cross.max(0.01);
-    // Veins wander: the net's places shift a little, smoothly, so its
-    // islands are uneven, as no two are alike in photographs.
-    let wander = |salt: u64| value_noise(at.across * 6.0, at.y / spacing * 0.7, seed ^ salt) - 0.5;
-    let at = &VeinPlace {
-        across: (at.across + 0.06 * wander(11)).clamp(0.0, 1.0),
-        y: at.y + 0.5 * spacing * wander(12),
-        ..*at
-    };
+    let at = &wandered(variegation, at, seed);
     // The midrib's stripe, as wide as the blade allows.
     // It widens to a seventh of the half-width, then hardly further: the
     // net beyond it turns pale first.
@@ -3744,18 +3774,7 @@ fn vein_value(variegation: &crate::looks::Variegation, at: &VeinPlace, seed: u64
     } else {
         f64::INFINITY
     };
-    // The cross veinlets: rows `spacing` apart, each column between two
-    // longitudinal veins offset on its own, as a tessellation's are.
-    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-    let key = (column as u64) * 2 + u64::from(at.side);
-    let offset = unit(mix64(seed ^ 0x6372_6f73_73 ^ key)) * spacing;
-    // Slanted toward the tip as they run out, where `slant` is above 0:
-    // a pinnate blade's lateral veins.
-    let y = at.y - variegation.slant * at.across * at.half * at.widest;
-    let cross = {
-        let k = ((y - offset) / spacing).round();
-        (y - (k * spacing + offset)).abs() / at.widest.max(1e-6)
-    };
+    let cross = cross_vein(variegation, at, column, seed);
     // How much later the veins away from the midrib turn pale.
     let out = 0.6 * at.across;
     // A soft minimum, so the pale lines widen where they meet and the
@@ -3775,6 +3794,38 @@ fn vein_value(variegation: &crate::looks::Variegation, at: &VeinPlace, seed: u64
     let ends =
         0.8 * ((at.along - 0.85) / 0.15).max(0.0) + 0.8 * ((0.06 - at.along) / 0.06).max(0.0);
     value + ends
+}
+
+/// `at` moved a little, smoothly: veins wander, so a net's islands are
+/// uneven, as no two are alike in photographs.
+fn wandered(variegation: &crate::looks::Variegation, at: &VeinPlace, seed: u64) -> VeinPlace {
+    let spacing = variegation.cross.max(0.01);
+    let wander = |salt: u64| value_noise(at.across * 6.0, at.y / spacing * 0.7, seed ^ salt) - 0.5;
+    VeinPlace {
+        across: (at.across + 0.06 * wander(11)).clamp(0.0, 1.0),
+        y: at.y + 0.5 * spacing * wander(12),
+        ..*at
+    }
+}
+
+/// How far `at` lies from the nearest cross vein, over the blade's widest
+/// half-width: rows `cross` apart, each `column` between two longitudinal
+/// veins offset on its own, as a tessellation's are, and slanted toward
+/// the tip as they run out where `slant` is above 0 (a pinnate blade's
+/// lateral veins).
+fn cross_vein(
+    variegation: &crate::looks::Variegation,
+    at: &VeinPlace,
+    column: f64,
+    seed: u64,
+) -> f64 {
+    let spacing = variegation.cross.max(0.01);
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let key = (column as u64) * 2 + u64::from(at.side);
+    let offset = unit(mix64(seed ^ 0x6372_6f73_73 ^ key)) * spacing;
+    let y = at.y - variegation.slant * at.across * at.half * at.widest;
+    let k = ((y - offset) / spacing).round();
+    (y - (k * spacing + offset)).abs() / at.widest.max(1e-6)
 }
 
 /// Smooth value noise from 0 to 1 at `(x, y)`, one lattice cell a unit
@@ -4272,6 +4323,8 @@ mod tests {
             at: 0.6,
             from: crate::looks::ZoneFrom::Midrib,
             slant: 0.0,
+            feather: 0.0,
+            stretch: 1.0,
         });
         let templates = Templates::for_looks(&looks);
         let template = &templates.templates[0];
@@ -4341,6 +4394,8 @@ mod tests {
             at: 0.6,
             from: crate::looks::ZoneFrom::Midrib,
             slant: 0.0,
+            feather: 0.0,
+            stretch: 1.0,
         });
         let templates = Templates::for_looks(&looks);
         let step = 1.0 / TEMPLATE_SIZE as f32;
@@ -4424,6 +4479,90 @@ mod tests {
             .copied()
             .fold(f32::MAX, f32::min);
         assert!(ranks[0] > inner + 0.3, "{ranks:?}");
+    }
+
+    #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn feathers_stretches_and_parallel_veins() {
+        let variegated = |json: &str, shape: Simple| {
+            let mut looks = looks_of(&[Shape::Simple(shape)]);
+            looks[0].variegation = Some(
+                serde_json::from_str(&format!(
+                    r#"{{"colour": [0.5, 0.5, 0.5], "amount": 0.2, "spread": 0{json}}}"#
+                ))
+                .expect("reads"),
+            );
+            Templates::for_looks(&looks)
+        };
+        let step = 1.0 / TEMPLATE_SIZE as f32;
+        // The covered texels of the row at `v`, from the midrib out.
+        let row = |templates: &Templates, v: f32| {
+            let mut texels = Vec::new();
+            let mut u = 0.5;
+            while templates.sample(0, u, v).coverage >= 0.5 {
+                texels.push(templates.sample(0, u, v));
+                u += step;
+            }
+            texels
+        };
+        // A feathered zone reaches in along the lateral veins: well inside
+        // its line, some texels rank far lower than a plain zone's.
+        let zone = r#", "pattern": "zone", "at": 0.7, "cross": 0.1, "slant": 1.0"#;
+        let inner_lowest = |templates: &Templates| {
+            (30..70)
+                .map(|k| {
+                    let texels = row(templates, k as f32 / 100.0);
+                    texels[texels.len() * 3 / 10].pattern
+                })
+                .fold(f32::MAX, f32::min)
+        };
+        let plain = inner_lowest(&variegated(zone, Simple::default()));
+        let feathered = inner_lowest(&variegated(
+            &format!(r#"{zone}, "feather": 0.3"#),
+            Simple::default(),
+        ));
+        assert!(feathered < plain - 0.1, "{feathered} {plain}");
+        // Stretched mottle changes less along the blade than across it.
+        let roughness = |templates: &Templates| {
+            let (mut along, mut across) = (0.0, 0.0);
+            for k in 20..80 {
+                let (v, w) = (k as f32 / 100.0, k as f32 / 100.0 + step);
+                let (here, next) = (row(templates, v), row(templates, w));
+                for i in 1..here.len().min(next.len()) {
+                    along += (next[i].pattern - here[i].pattern).abs();
+                    across += (here[i].pattern - here[i - 1].pattern).abs();
+                }
+            }
+            along / across
+        };
+        let round = roughness(&variegated(r#", "pattern": "mottle""#, Simple::default()));
+        let long = roughness(&variegated(
+            r#", "pattern": "mottle", "stretch": 4"#,
+            Simple::default(),
+        ));
+        assert!(long < 0.6 * round, "{long} {round}");
+        // Parallel veins: brighter along each, between them plainer.
+        let veined = variegated(
+            r#", "pattern": "spots""#,
+            Simple {
+                parallel: 3,
+                ..Simple::default()
+            },
+        );
+        let texels = row(&veined, 0.45);
+        let at = |share: f64| texels[(share * texels.len() as f64) as usize].brightness;
+        let on = [0.25, 0.5, 0.75]
+            .iter()
+            .map(|&share| {
+                (-1..=1)
+                    .map(|d| at(share + f64::from(d) / texels.len() as f64))
+                    .fold(0.0, f32::max)
+            })
+            .fold(f32::MAX, f32::min);
+        assert!(
+            on > at(0.375) + 0.05 && on > at(0.625) + 0.05,
+            "{on} {texels:?}"
+        );
     }
 
     #[test]

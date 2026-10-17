@@ -1705,6 +1705,8 @@ mod tests {
                 at: 0.6,
                 from: plantgen::looks::ZoneFrom::Midrib,
                 slant: 0.0,
+                feather: 0.0,
+                stretch: 1.0,
             });
             the_card_paint_matches(&templates);
         }

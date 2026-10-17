@@ -618,4 +618,9 @@ pub mod venation;
 /// a compound leaf's pattern lies on each leaflet; the rattlesnake
 /// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
 /// (97 is lacy leaves as geometry, #183).
-pub const GENERATOR_REVISION: u32 = 98;
+/// 99: a zone's edge drawn out along the lateral veins (`feather`),
+/// spots and mottle drawn out along the blade (`stretch`), and a simple
+/// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
+/// trout lily's long blotches and its veins meeting at the tip (98 is
+/// variegation along the veins, #175).
+pub const GENERATOR_REVISION: u32 = 99;
