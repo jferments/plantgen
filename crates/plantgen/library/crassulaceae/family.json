@@ -8,7 +8,7 @@
     "leaf_margin": {"entire": "usually", "crenate": "sometimes", "dentate": "rarely", "serrate": "rarely"},
     "stamens": {"min": 5, "max": 10, "low": 3},
     "carpels": {"min": 5, "max": 5, "low": 3, "high": 6},
-    "hypanthium": {"false": "often", "true": "often"},
+    "hypanthium": {"false": "usually", "true": "rarely"},
     "woodiness": {
       "herbaceous": "usually",
       "semi": "sometimes"
@@ -43,7 +43,7 @@
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Crassulaceae (read 2026-10-17): margin mostly smooth, otherwise crenate to broadly lobed, at times dentate. DELTA, Crassulaceae (read 2026-10-17): margins entire, crenate or serrate."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 297, 299: stamens once or twice the petal number (5 or 5+5, rarely from 3 to more than 6 per whorl)."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 299: gynoecium of 5 free carpels, rarely 3 to 6 or more."},
-    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 297, 505: flowers hypogynous or slightly perigynous, so a small floral cup in some. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "FFPA Crassulaceae (read 2026-10-17), whose description covers Sedum, Crassula, Kalanchoe/Bryophyllum, Aeonium and Cotyledon, the family's largest genera: a free floral cup absent, only rarely more or less present, with the ovary superior and sessile. That agrees with the first pass's DELTA reading (cup only in weakly perigynous flowers). The page gives one statement for all its genera, so no per-genus count was needed. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

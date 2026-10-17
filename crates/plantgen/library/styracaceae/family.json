@@ -19,9 +19,9 @@
       "polygamous": "rarely"
     },
     "ovary_position": {
-      "superior": "often",
-      "half_inferior": "often",
-      "inferior": "often"
+      "superior": "usually",
+      "half_inferior": "sometimes",
+      "inferior": "sometimes"
     },
     "hypanthium": {
       "true": "often",
@@ -29,17 +29,17 @@
     },
     "woodiness": "woody",
     "inflorescence": {
-      "solitary": "rarely",
-      "cyme": "often",
-      "raceme": "often",
-      "panicle": "often"
+      "raceme": "usually",
+      "panicle": "often",
+      "cyme": "sometimes",
+      "solitary": "rarely"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
     "fruit_type": {
-      "capsule": "often",
-      "drupe": "rarely",
-      "samara": "often"
+      "capsule": "usually",
+      "samara": "sometimes",
+      "drupe": "rarely"
     },
     "stamens": {
       "min": 8,
@@ -58,6 +58,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Styracaceae: leaves alternate; leaves simple; margins entire, crenate, serrate or dentate; veins pinnate; stipules absent; plants usually hermaphrodite, rarely polygamous; ovary superior, half inferior or inferior; floral cup present or absent; stems woody; flowers in cymes, in racemes or in panicles, rarely solitary; flowers actinomorphic; perianth sepals and petals; fruit capsule or samara, rarely drupe; stamens (5-) 8 to 10 (-20); carpels (2-) 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Styracaceae (read 2026-10-17; 12 genera, ~160 spp, Styrax about 130 of them): fruit mostly a dry capsule, sometimes winged, less often a fleshy drupe. Flora of Taiwan Styrax (read 2026-10-17): fruit globose, opening by three valves or irregularly. Winged fruits are confined to the small genera (Halesia, Pterostyrax and kin, under 20 spp)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-taiwan",
+      "note": "Flora of Taiwan Styrax (read 2026-10-17): flowers in axillary or terminal racemes, simple or branched (branched ones read as panicles). Styrax is about 130 of ~160 species in the family (Wikipedia Styracaceae, read the same day), so its racemes decide."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-taiwan",
+      "note": "Flora of Taiwan Styrax (read 2026-10-17): calyx cup free from the ovary or only slightly joined to it, so the ovary sits essentially superior in Styrax, about 130 of ~160 family species (Wikipedia Styracaceae). The family account there allows superior or inferior; the inferior and half-inferior ovaries belong to the dozen small genera."
     }
   }
 }

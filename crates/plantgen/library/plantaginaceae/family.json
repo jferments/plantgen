@@ -41,12 +41,7 @@
       "perennial": "often"
     },
     "leaf_arrangement": {"opposite": "usually", "alternate": "often", "whorled": "sometimes"},
-    "inflorescence": {
-      "head": "often",
-      "panicle": "often",
-      "raceme": "often",
-      "solitary": "often"
-    }
+    "inflorescence": {"raceme": "often", "spike": "sometimes", "panicle": "sometimes", "solitary": "rarely", "head": "rarely"}
   },
   "forms": {
     "forb": {
@@ -111,11 +106,7 @@
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Plantaginaceae with Globulariaceae and Hippuridaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none usually, lobed sometimes; lobes or leaflets pinnate. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). Watson and Dallwitz's Plantaginaceae is Plantago alone; APG's family also takes in Veronica, Penstemon, Antirrhinum and their kin from the old Scrophulariaceae, whose leaves are simple and mostly unlobed (toothed or entire), so the reading stands for them (inferred, not traced)."
     },
     "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Plantaginaceae (read 2026-10-17): ~1,900 species in 107 genera, leaves spiral to opposite; Veronica the biggest genus (~460-500 spp, Wikipedia Veronica). Wikipedia Penstemon (read 2026-10-17): ~280 spp, leaves mostly opposite, rarely alternate or whorled. Veronica's leaves are opposite (general knowledge; its page is silent), so the two largest genera give ~740 opposite-leaved species against the alternate or rosette leaves of Plantago (~200) and Linaria and kin (~200). Whorls are confined to a few (Hippuris, some Linaria, Veronicastrum). Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 421, 423, 424, family Plantaginaceae: inflorescence head, raceme, thyrse or solitary; read as {\"head\": \"often\", \"panicle\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA pages read 2026-10-17. Family (ca. 1,900 spp, ca. 100 genera): flowers in spikes, racemes, cymes, corymbs, thyrses, whorls, panicles or 1-4 together, no weighting. By genus: Veronica (ca. 450 spp, largest genus, FNA genus text) bears terminal or axillary racemes; Plantago (ca. 210, FNA genus text) bears axillary spikes, added as sometimes. Penstemon (thyrses, kept as panicle at sometimes) is close to half the North American species per the FNA family page, but its genus page would not load, so its world count was not read and it is not in the tally. Tally of genera read: raceme ~450 vs spike ~210; raceme stays the leader even if Penstemon's ~280 thyrsoid species are added to panicle. Head and solitary demoted to rarely (no large genus read bears either). Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add inferior (sometimes): Simpson, Plant Systematics (2019) p. 421, 423, 424: superior or inferior."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family low 1: Simpson, Plant Systematics (2019) p. 421, 423, 424: 1-2. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family low 1 and high 8: Simpson, Plant Systematics (2019) p. 421, 423, 424: 1-8. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
