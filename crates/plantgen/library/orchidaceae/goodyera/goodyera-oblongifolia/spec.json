@@ -36,9 +36,9 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "basal_leaves": 5,
+      "basal_leaves": 6,
       "basal_length": 0.065,
-      "basal_angle": 75
+      "basal_angle": 85
     }
   },
   "growth": {
@@ -65,14 +65,14 @@
       0.22
     ],
     "foliage": [
-      0.06,
-      0.13,
-      0.05
+      0.04,
+      0.1,
+      0.07
     ],
     "foliage_shade": [
-      0.022,
-      0.05,
-      0.015
+      0.015,
+      0.04,
+      0.028
     ],
     "variation": 0.15,
     "organs": {
@@ -148,12 +148,16 @@
           "teeth": 0,
           "petiole": 0.15
         },
+        "underside": [0.09, 0.16, 0.09],
         "variegation": {
-          "pattern": "centre",
-          "colour": [0.5, 0.56, 0.45],
-          "amount": 0.14,
-          "spread": 0.3,
-          "scale": 0.06
+          "pattern": "veins",
+          "colour": [0.42, 0.5, 0.4],
+          "amount": 0.16,
+          "spread": 0.35,
+          "lines": 3,
+          "cross": 0.06,
+          "rim": 0.06,
+          "faces": "upper"
         }
       }
     }
@@ -284,7 +288,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "White bog orchid's values, changed by hand for rattlesnake plantain: a basal rosette of five leaves (FEIS, Reeves 2006), 2-5 small leaves low on the stem drawn as 3, and a dense raceme of 14 small flowers. Not fitted to measurements."
+      "note": "White bog orchid's values, changed by hand for rattlesnake plantain: a basal rosette (FEIS, Reeves 2006) drawn as six leaves held nearly flat, as in research-grade iNaturalist photos (read 2026-10-17), 2-5 small leaves low on the stem drawn as 3, and a dense raceme of 14 small flowers. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
@@ -294,7 +298,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FEIS's description (Reeves 2006): dark green rosette leaves with white mottling along the midvein (the basal leaves' variegation: a pale band down the middle of each blade, its edge a little uneven, wider on some leaves than others); small greenish-white hooded flowers."
+      "note": "By eye, after FNA (Kallunki, vol. 26): blade \"usually streaked with white only along midrib, sometimes with fine white lateral veins, especially near midrib\", reticulate and plain leaves in one clone; and research-grade iNaturalist photos (read 2026-10-17): dark blue-green rosette leaves, a greyish-white midrib stripe on every leaf, on some plants white veinlet dashes beside it or a full net of veins round dark areoles, a dark rim kept, plain paler undersides. Drawn as the veins variegation on the upper face only, its share varying between leaves. Small greenish-white hooded flowers (FEIS, Reeves 2006)."
     },
     "traits.fruiting_months": {
       "evidence": "Authored",

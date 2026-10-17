@@ -538,7 +538,11 @@ impl Templates {
         {
             base = under.map(|channel| f64::from(channel) * darkening);
         }
-        if let Some(variegation) = &template.variegation {
+        if let Some(variegation) = template
+            .variegation
+            .as_ref()
+            .filter(|v| !(face.lower && v.faces == crate::looks::VariegationFaces::Upper))
+        {
             let share = variegation.share(f64::from(face.seed));
             let patch = crate::looks::Variegation::weight(f64::from(texel.pattern), share);
             for (channel, value) in base.iter_mut().enumerate() {
@@ -3393,7 +3397,9 @@ pub fn darkening(template: &Template, colour: [f64; 3]) -> f64 {
 /// its share fall on ([`crate::looks::Variegation::weight`]). Margins and
 /// centres rank by distance from the blade's edge, made a little uneven;
 /// stripes, bands, spots and mottles by value noise at the pattern's
-/// scale, seeded by the organ's name.
+/// scale, seeded by the organ's name; veins by [`vein_value`]. Texels in
+/// the variegation's rim rank last.
+#[allow(clippy::too_many_lines)]
 fn variegation_ranks(
     variegation: &crate::looks::Variegation,
     organ: &str,
@@ -3451,6 +3457,24 @@ fn variegation_ranks(
         }
         (distance, deepest.max(1e-9))
     });
+    // Each row's half-width: the farthest covered texel from the centre
+    // line; the blade's rows, from where it is a quarter of its widest to
+    // its tip.
+    let half: Vec<f64> = (0..size)
+        .map(|y| {
+            (0..size)
+                .filter(|&x| coverage[y * size + x] >= 0.5)
+                .map(|x| at(x, y).0.abs() + 0.5 * aspect / to_f64(size))
+                .fold(0.0, f64::max)
+        })
+        .collect();
+    let widest = half.iter().copied().fold(1e-9, f64::max);
+    let blade: Vec<usize> = (0..size).filter(|&y| half[y] >= 0.25 * widest).collect();
+    let (first, last) = (
+        blade.first().copied().unwrap_or(0),
+        blade.last().copied().unwrap_or(size - 1),
+    );
+    let along = |y: usize| (to_f64(y) - to_f64(first)) / to_f64(last.saturating_sub(first).max(1));
     let mut values: Vec<(f64, usize)> = Vec::new();
     for y in 0..size {
         for x in 0..size {
@@ -3459,6 +3483,8 @@ fn variegation_ranks(
                 continue;
             }
             let (px, py) = at(x, y);
+            // Across the blade from its midrib (0) to its margin (1).
+            let across = (px.abs() / half[y].max(1e-9)).min(1.0);
             let noise = |sx: f64, sy: f64, salt: u64| value_noise(px / sx, py / sy, seed ^ salt);
             let value = match (&edge, variegation.pattern) {
                 (Some((distance, deepest)), P::Margin) => {
@@ -3470,13 +3496,52 @@ fn variegation_ranks(
                 (None, P::Stripes) => noise(scale * aspect.min(1.0), scale * 12.0, 2),
                 (None, P::Bands) => noise(scale * 12.0, scale, 3),
                 (None, P::Spots) => noise(scale, scale, 4),
+                (None, P::Veins) => {
+                    let place = VeinPlace {
+                        across,
+                        side: px < 0.0,
+                        along: along(y),
+                        y: py,
+                        half: half[y] / widest,
+                        widest,
+                    };
+                    vein_value(variegation, &place, seed)
+                        + 0.04 * (noise(scale * 0.25, scale * 0.25, 8) - 0.5)
+                }
+                (None, P::Between) => {
+                    let place = VeinPlace {
+                        across,
+                        side: px < 0.0,
+                        along: along(y),
+                        y: py,
+                        half: half[y] / widest,
+                        widest,
+                    };
+                    -vein_value(variegation, &place, seed)
+                        + 0.04 * (noise(scale * 0.25, scale * 0.25, 8) - 0.5)
+                }
+                (None, P::Zone) => {
+                    // Out from the midrib along the outline, or along the
+                    // blade with its arms leaning back to the base.
+                    let out = match variegation.from {
+                        crate::looks::ZoneFrom::Midrib => across,
+                        crate::looks::ZoneFrom::Base => along(y) + 0.4 * across,
+                    };
+                    // Toothed a little where the veins cross its edge.
+                    (out - variegation.at).abs() + 0.08 * (noise(scale, scale * 0.5, 9) - 0.5)
+                }
                 (None, _) => {
                     0.55 * noise(scale, scale, 5)
                         + 0.3 * noise(scale * 0.4, scale * 0.4, 6)
                         + 0.15 * noise(scale * 0.15, scale * 0.15, 7)
                 }
             };
-            values.push((value, index));
+            let kept = if across > 1.0 - variegation.rim {
+                10.0
+            } else {
+                0.0
+            };
+            values.push((value + kept, index));
         }
     }
     values.sort_by(|a, b| a.0.total_cmp(&b.0));
@@ -3489,6 +3554,89 @@ fn variegation_ranks(
         }
     }
     ranks
+}
+
+/// Where a texel lies on a blade, for [`vein_value`].
+#[derive(Clone, Copy)]
+struct VeinPlace {
+    /// Across the blade from its midrib (0) to its margin (1).
+    across: f64,
+    /// On the midrib's left (negative card `x`).
+    side: bool,
+    /// Along the blade from its base, where it is a quarter of its widest
+    /// (0), to its tip (1); below 0 on the petiole.
+    along: f64,
+    /// Along the card, card lengths.
+    y: f64,
+    /// The row's half-width over the blade's widest.
+    half: f64,
+    /// The blade's widest half-width, card lengths.
+    widest: f64,
+}
+
+/// A texel's value in a `veins` variegation, smaller the sooner it turns
+/// pale as the share grows (Goodyera, from photographs: the midrib's
+/// stripe first, a twentieth of the blade either side of it; then the
+/// cross veinlets beside it, a herringbone; then the longitudinal veins;
+/// last a net out to the rim round dark islands, which stay smallest
+/// beside the midrib's stripe). Values are in half-widths of the blade's
+/// widest row: the midrib's stripe follows the blade's own half-width,
+/// so it narrows to the base and tip; it stops short of both ends.
+fn vein_value(variegation: &crate::looks::Variegation, at: &VeinPlace, seed: u64) -> f64 {
+    let lines = f64::from(variegation.lines);
+    let spacing = variegation.cross.max(0.01);
+    // Veins wander: the net's places shift a little, smoothly, so its
+    // islands are uneven, as no two are alike in photographs.
+    let wander = |salt: u64| value_noise(at.across * 6.0, at.y / spacing * 0.7, seed ^ salt) - 0.5;
+    let at = &VeinPlace {
+        across: (at.across + 0.06 * wander(11)).clamp(0.0, 1.0),
+        y: at.y + 0.5 * spacing * wander(12),
+        ..*at
+    };
+    // The midrib's stripe, as wide as the blade allows.
+    // It widens to a seventh of the half-width, then hardly further: the
+    // net beyond it turns pale first.
+    let midrib = 1.2 * at.across + 8.0 * (at.across - 0.14).max(0.0);
+    // The longitudinal veins, evenly across each half.
+    let gap = 1.0 / (lines + 1.0);
+    let column = (at.across / gap).floor();
+    let longitudinal = if lines > 0.0 {
+        let nearest = (at.across / gap).round().clamp(1.0, lines) * gap;
+        (at.across - nearest).abs() * at.half
+    } else {
+        f64::INFINITY
+    };
+    // The cross veinlets: rows `spacing` apart, each column between two
+    // longitudinal veins offset on its own, as a tessellation's are.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let key = (column as u64) * 2 + u64::from(at.side);
+    let offset = unit(mix64(seed ^ 0x6372_6f73_73 ^ key)) * spacing;
+    // Slanted toward the tip as they run out, where `slant` is above 0:
+    // a pinnate blade's lateral veins.
+    let y = at.y - variegation.slant * at.across * at.half * at.widest;
+    let cross = {
+        let k = ((y - offset) / spacing).round();
+        (y - (k * spacing + offset)).abs() / at.widest.max(1e-6)
+    };
+    // How much later the veins away from the midrib turn pale.
+    let out = 0.6 * at.across;
+    // A soft minimum, so the pale lines widen where they meet and the
+    // dark islands between them are rounded, as in photographs.
+    let soft = 0.04;
+    let terms = [midrib, 6.0 * cross + out, 6.0 * longitudinal + 0.05 + out];
+    let low = terms.iter().copied().fold(f64::INFINITY, f64::min);
+    let value = low
+        - soft
+            * crate::math::ln(
+                terms
+                    .iter()
+                    .map(|&term| crate::math::exp(-(term - low) / soft))
+                    .sum::<f64>(),
+            );
+    // The stripe stops short of the blade's base and tip.
+    let ends =
+        0.8 * ((at.along - 0.85) / 0.15).max(0.0) + 0.8 * ((0.06 - at.along) / 0.06).max(0.0);
+    value + ends
 }
 
 /// Smooth value noise from 0 to 1 at `(x, y)`, one lattice cell a unit
@@ -3979,6 +4127,13 @@ mod tests {
             amount: 0.3,
             spread: 0.4,
             scale: 0.08,
+            lines: 3,
+            cross: 0.07,
+            rim: 0.0,
+            faces: crate::looks::VariegationFaces::Both,
+            at: 0.6,
+            from: crate::looks::ZoneFrom::Midrib,
+            slant: 0.0,
         });
         let templates = Templates::for_looks(&looks);
         let template = &templates.templates[0];
@@ -4029,6 +4184,108 @@ mod tests {
         };
         let plain = templates.paint(0, [0.2, 0.4, 0.1], low, sparse);
         assert!((plain[0] - 0.2).abs() < 1e-6);
+    }
+
+    #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn veins_spread_from_the_midrib_and_keep_the_rim() {
+        let mut looks = looks_of(&[Shape::Simple(Simple::default())]);
+        looks[0].variegation = Some(crate::looks::Variegation {
+            pattern: crate::looks::VariegationPattern::Veins,
+            colour: [0.4, 0.5, 0.4],
+            amount: 0.2,
+            spread: 0.3,
+            scale: 0.08,
+            lines: 3,
+            cross: 0.06,
+            rim: 0.1,
+            faces: crate::looks::VariegationFaces::Upper,
+            at: 0.6,
+            from: crate::looks::ZoneFrom::Midrib,
+            slant: 0.0,
+        });
+        let templates = Templates::for_looks(&looks);
+        let step = 1.0 / TEMPLATE_SIZE as f32;
+        // Across the blade's middle: from the midrib to the margin.
+        let v = 0.45;
+        let mut row = Vec::new();
+        let mut u = 0.5;
+        while templates.sample(0, u, v).coverage >= 0.5 {
+            row.push(templates.sample(0, u, v).pattern);
+            u += step;
+        }
+        assert!(row.len() > 8, "{}", row.len());
+        // The midrib is ranked first: a thin share is a stripe down it.
+        let lowest = row.iter().copied().fold(f32::MAX, f32::min);
+        assert!(row[0] <= lowest + 0.02, "{} {lowest}", row[0]);
+        // Past the midrib the ranks rise and fall over the veins: a net,
+        // not a smooth band.
+        let rises = row.windows(2).filter(|w| w[1] > w[0] + 0.01).count();
+        let falls = row.windows(2).filter(|w| w[1] + 0.01 < w[0]).count();
+        assert!(rises > 0 && falls > 0, "{row:?}");
+        // The rim is ranked last, so it stays the organ's colour at any
+        // share a plant is drawn with.
+        let rim = *row.last().expect("covered");
+        assert!(rim > 0.9, "{rim}");
+        // Only the upper face is variegated.
+        let texel = Texel {
+            pattern: 0.0,
+            ..Texel::plain(0.0)
+        };
+        let colour = [0.03, 0.07, 0.05];
+        let upper = templates.paint(0, colour, texel, Face::UPPER);
+        let lower = Face {
+            lower: true,
+            seed: 0.5,
+        };
+        let under = templates.paint(0, colour, texel, lower);
+        assert!(upper[0] > 2.0 * under[0], "{upper:?} {under:?}");
+        assert!((under[0] - 0.03).abs() < 1e-6, "{under:?}");
+    }
+
+    #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn zones_follow_the_outline_and_between_spares_the_veins() {
+        let variegated = |pattern, json: &str| {
+            let mut looks = looks_of(&[Shape::Simple(Simple::default())]);
+            let mut variegation: crate::looks::Variegation = serde_json::from_str(&format!(
+                r#"{{"pattern": "{pattern}", "colour": [0.5, 0.5, 0.5], "amount": 0.2{json}}}"#
+            ))
+            .expect("reads");
+            variegation.spread = 0.0;
+            looks[0].variegation = Some(variegation);
+            Templates::for_looks(&looks)
+        };
+        let step = 1.0 / TEMPLATE_SIZE as f32;
+        let row = |templates: &Templates, v: f32| {
+            let mut ranks = Vec::new();
+            let mut u = 0.5;
+            while templates.sample(0, u, v).coverage >= 0.5 {
+                ranks.push(templates.sample(0, u, v).pattern);
+                u += step;
+            }
+            ranks
+        };
+        // A zone at 0.6 of the way out: across the middle row the lowest
+        // ranks lie near 0.6 of the half-width, not at the midrib or edge.
+        let zone = variegated("zone", r#", "at": 0.6"#);
+        let ranks = row(&zone, 0.45);
+        let lowest = ranks
+            .iter()
+            .enumerate()
+            .min_by(|a, b| a.1.total_cmp(b.1))
+            .map(|(k, _)| k as f64 / ranks.len() as f64)
+            .expect("covered");
+        assert!((lowest - 0.6).abs() < 0.15, "{lowest} {ranks:?}");
+        assert!(ranks[0] > 0.5 && ranks[ranks.len() - 1] > 0.5, "{ranks:?}");
+        // Between the veins the midrib turns pale last of all but the rim.
+        let between = variegated("between", r#", "lines": 0, "slant": 1.0, "rim": 0.1"#);
+        let ranks = row(&between, 0.45);
+        let inner = ranks[ranks.len() / 3..2 * ranks.len() / 3]
+            .iter()
+            .copied()
+            .fold(f32::MAX, f32::min);
+        assert!(ranks[0] > inner + 0.3, "{ranks:?}");
     }
 
     #[test]

@@ -596,4 +596,12 @@ pub mod venation;
 /// divisions lifted, scattered or set all round their rachis
 /// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
 /// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
-pub const GENERATOR_REVISION: u32 = 95;
+/// 96: variegation along a parallel-veined blade's veins (`veins`: a
+/// midrib stripe, then veinlet dashes, then a net round dark islands as
+/// the share grows; `slant` turns the cross veins into a pinnate blade's
+/// lateral veins), its inverse `between` (silver fields between the veins),
+/// `zone` (a band along the outline, or a V from the base), a rim the
+/// pattern never reaches, and patches on the upper face only (`faces`);
+/// the rattlesnake plantain's leaves are drawn
+/// so, dark blue-green, six to a flat rosette (95 is lacy leaves, #180).
+pub const GENERATOR_REVISION: u32 = 96;
