@@ -1095,6 +1095,8 @@ fn shape_seed(shape: &Shape) -> u64 {
             if c.segments == Some(0) {
                 c.segments = None;
             }
+            // How it is drawn as geometry leaves its card as it was.
+            (c.lace, c.lift, c.scatter, c.roll, c.inner_roll) = (None, None, None, None, None);
             if c.inner == c.pattern.or(Some(Pattern::Pinnate)) {
                 c.inner = None;
             }
@@ -1136,6 +1138,12 @@ fn shape_seed(shape: &Shape) -> u64 {
         "tip",
         "base",
         "petiolule",
+        "blade_width",
+        "lace",
+        "lift",
+        "scatter",
+        "roll",
+        "inner_roll",
     ] {
         text = text.replace(&format!(", {field}: None"), "");
     }

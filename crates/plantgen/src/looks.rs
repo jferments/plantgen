@@ -1118,6 +1118,34 @@ pub struct Compound {
     /// Each leaflet's stalk, as a share of its length.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub petiolule: Option<f64>,
+    /// The blade's width over its length, where it bounds a pinnate
+    /// leaf's laterals: they reach no farther than its edge, as a
+    /// strap-shaped leaf's short pinnae do.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub blade_width: Option<f64>,
+    /// The nearest levels of detail on which the leaf is drawn as
+    /// geometry, its rachises and each leaflet or segment in three
+    /// dimensions, instead of on its card (`crate::lace`); unset or 0 for
+    /// the card on every level.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lace: Option<u8>,
+    /// Degrees each primary division rises out of the leaf's plane, drawn
+    /// as geometry.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lift: Option<f64>,
+    /// Degrees each division turns at random about its rachis, either way,
+    /// at most: a loose spray.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub scatter: Option<f64>,
+    /// Degrees each primary division turns about the rachis from the one
+    /// below, 0 for two ranks in the leaf's plane, 137.5 for divisions all
+    /// round it.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub roll: Option<f64>,
+    /// Degrees each leaflet of a division turns about its rachis from the
+    /// one before: a bottlebrush's segments all round each pinna.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inner_roll: Option<f64>,
 }
 
 impl Default for Compound {
@@ -1144,6 +1172,12 @@ impl Default for Compound {
             tip: None,
             base: None,
             petiolule: None,
+            blade_width: None,
+            lace: None,
+            lift: None,
+            scatter: None,
+            roll: None,
+            inner_roll: None,
         }
     }
 }
@@ -2759,7 +2793,7 @@ impl Compound {
     /// once.
     #[must_use]
     pub fn leaflet_length(&self) -> f64 {
-        crate::divided::longest(self.leaflets, self.petiole)
+        crate::divided::Form::of(self).primary_longest()
     }
 
     fn aspect(&self) -> f64 {
@@ -2793,8 +2827,8 @@ impl Compound {
         };
         let divisions = |field: &str, n: u32| -> Result<(), String> {
             match form.pattern {
-                Pattern::Pinnate if !(2..=41).contains(&n) => Err(format!(
-                    "compound {field} of a pinnate leaf must be 2 to 41, found {n}"
+                Pattern::Pinnate if !(2..=81).contains(&n) => Err(format!(
+                    "compound {field} of a pinnate leaf must be 2 to 81, found {n}"
                 )),
                 Pattern::Palmate if !(3..=17).contains(&n) => Err(format!(
                     "compound {field} of a palmate leaf must be 3 to 17, found {n}"
@@ -2838,6 +2872,12 @@ impl Compound {
             ));
         }
         check("petiole", self.petiole, 0.0, 0.7)?;
+        if self.lace.is_some_and(|levels| levels > 2) {
+            return Err(format!(
+                "compound lace is drawn on at most the 2 nearest levels, found {}",
+                self.lace.unwrap_or(0)
+            ));
+        }
         let set = |value: Option<f64>| value.unwrap_or(f64::NAN);
         for (field, value, low, high) in [
             ("confluent", self.confluent, 0.0, 1.0),
@@ -2852,6 +2892,11 @@ impl Compound {
             ("tip", self.tip, 0.0, 1.0),
             ("base", self.base, 0.0, 1.0),
             ("petiolule", self.petiolule, 0.0, 0.5),
+            ("blade_width", self.blade_width, 0.02, 3.0),
+            ("lift", self.lift, -90.0, 90.0),
+            ("scatter", self.scatter, 0.0, 90.0),
+            ("roll", self.roll, 0.0, 360.0),
+            ("inner_roll", self.inner_roll, 0.0, 360.0),
         ] {
             if value.is_some() {
                 check(field, set(value), low, high)?;

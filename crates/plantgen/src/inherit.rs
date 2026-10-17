@@ -1090,6 +1090,12 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("tip", Number),
                 ("base", Number),
                 ("petiolule", Number),
+                ("blade_width", Number),
+                ("lace", Count),
+                ("lift", Number),
+                ("scatter", Number),
+                ("roll", Number),
+                ("inner_roll", Number),
             ],
         ),
         (

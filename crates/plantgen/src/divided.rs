@@ -48,13 +48,16 @@ pub type Point = (f64, f64);
 /// pinna's rachis or a division's stalk (order 1), or a pinnule's (order
 /// 2), from its foot to its
 /// end, with the half-width at its foot of the wing a dissected blade's
-/// rachis bears (0 for none).
+/// rachis bears (0 for none), and, as its leaflets have them, the division
+/// it is (or is in) and, for a pinnule's, its place in it.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Axis {
     pub from: Point,
     pub to: Point,
     pub order: u8,
     pub wing: f64,
+    pub division: Option<u32>,
+    pub within: Option<u32>,
 }
 
 /// One leaflet, or one segment of a dissected blade: where it leaves its
@@ -107,6 +110,7 @@ pub struct Form {
     pub base: f64,
     pub petiolule: f64,
     pub petiole: f64,
+    pub blade_width: Option<f64>,
     /// The blade's half-width as a share of its widest at [`ALONG`], where
     /// the leaf is bounded: for a leaf divided as only pinnate leaves once
     /// were and drawn without an outline, none, so it keeps its old fit.
@@ -169,7 +173,24 @@ impl Form {
             base: blade_base,
             petiolule: c.petiolule.unwrap_or(0.0) * (1.0 - confluent),
             petiole: c.petiole,
+            blade_width: c.blade_width,
             profile,
+        }
+    }
+
+    /// The longest lateral leaflet (or pinna) of a pinnate leaf, as a
+    /// share of its rachis: as long as their spacing allows ([`longest`]),
+    /// or, where the blade's width is set, no longer than reaches its edge
+    /// at `angle` to the rachis.
+    #[must_use]
+    pub fn primary_longest(&self) -> f64 {
+        let spaced = longest(self.leaflets, self.petiole);
+        match self.blade_width {
+            Some(width) if self.pattern == Pattern::Pinnate => {
+                let reach = 0.5 * width * (1.0 - self.petiole);
+                spaced.min((reach / math::sin(math::radians(self.angle)).max(0.2)).max(0.01))
+            }
+            _ => spaced,
         }
     }
 
@@ -256,13 +277,13 @@ pub fn longest(count: u32, stalk: f64) -> f64 {
 type Placed = (Point, Point, f64);
 
 /// A pinnate group of `count` leaflets along a rachis from `(0, 0)` to
-/// `(0, 1)`, its first `stalk` bare, each lateral `angle` radians from it:
+/// `(0, 1)`, its first `stalk` bare, each lateral `angle` radians from it
+/// and the longest `longest` long:
 /// where its rachis ends, and its leaflets, the terminal one first, then
 /// its pairs from the foot up, right before left.
-fn pinnate(form: &Form, count: u32, stalk: f64, angle: f64) -> (f64, Vec<Placed>) {
+fn pinnate(form: &Form, count: u32, stalk: f64, angle: f64, longest: f64) -> (f64, Vec<Placed>) {
     let pairs = count / 2;
     let span = f64::from(pairs.max(1));
-    let longest = longest(count, stalk);
     let (sin, cos) = (math::sin(angle), math::cos(angle));
     let terminal = count % 2 == 1;
     let top = if terminal {
@@ -351,9 +372,10 @@ pub fn layout(c: &Compound) -> Layout {
                 form.leaflets,
                 form.petiole,
                 math::radians(form.angle),
+                form.primary_longest(),
             );
             let wing = if once {
-                0.5 * form.confluent * 0.35 * form.width * longest(form.leaflets, form.petiole)
+                0.5 * form.confluent * 0.35 * form.width * form.primary_longest()
             } else {
                 0.0
             };
@@ -362,6 +384,8 @@ pub fn layout(c: &Compound) -> Layout {
                 to: (0.0, end),
                 order: 0,
                 wing,
+                division: None,
+                within: None,
             });
             (group, (0.0, 0.0))
         }
@@ -371,6 +395,8 @@ pub fn layout(c: &Compound) -> Layout {
                 to: (0.0, form.petiole + 0.01),
                 order: 0,
                 wing: 0.0,
+                division: None,
+                within: None,
             });
             (
                 palmate(
@@ -389,12 +415,14 @@ pub fn layout(c: &Compound) -> Layout {
             leaflets.push(leaflet(placed, division, None, None));
             continue;
         }
-        for (within, pinnule) in (0_u32..).zip(divide(&form, 1, placed, &mut axes)) {
+        let on = (division, None);
+        for (within, pinnule) in (0_u32..).zip(divide(&form, 1, on, placed, &mut axes)) {
             if form.segments == 0 {
                 leaflets.push(leaflet(pinnule, division, Some(within), None));
                 continue;
             }
-            for (segment, placed) in (0_u32..).zip(divide(&form, 2, pinnule, &mut axes)) {
+            let on = (division, Some(within));
+            for (segment, placed) in (0_u32..).zip(divide(&form, 2, on, pinnule, &mut axes)) {
                 leaflets.push(leaflet(placed, division, Some(within), Some(segment)));
             }
         }
@@ -425,13 +453,15 @@ fn leaflet(
     }
 }
 
-/// A division of order `order` (1 a pinna, 2 a pinnule) placed at `base`,
+/// A division of order `order` (1 a pinna, 2 a pinnule), `on` a division
+/// and in a pinna's place in it, placed at `base`,
 /// pointing along `direction` and `length` long: its axis added to
 /// `axes`, and its leaflets or segments placed in the card's frame. Only
 /// the last division's rachis bears a dissected blade's wing.
 fn divide(
     form: &Form,
     order: u8,
+    (division, within): (u32, Option<u32>),
     (base, direction, length): Placed,
     axes: &mut Vec<Axis>,
 ) -> Vec<Placed> {
@@ -442,7 +472,13 @@ fn divide(
     };
     let group = match form.inner {
         Pattern::Pinnate => {
-            let (end, group) = pinnate(form, count, PINNA_STALK, math::radians(angle));
+            let (end, group) = pinnate(
+                form,
+                count,
+                PINNA_STALK,
+                math::radians(angle),
+                longest(count, PINNA_STALK),
+            );
             let wing = if last {
                 0.5 * form.confluent * 0.5 * form.width * length * longest(count, PINNA_STALK)
             } else {
@@ -453,6 +489,8 @@ fn divide(
                 to: frame(base, direction, length, (0.0, end)),
                 order,
                 wing,
+                division: Some(division),
+                within,
             });
             group
         }
@@ -462,6 +500,8 @@ fn divide(
                 to: frame(base, direction, length, (0.0, DIVISION_STALK + 0.01)),
                 order,
                 wing: 0.0,
+                division: Some(division),
+                within,
             });
             palmate(form, count, DIVISION_STALK, math::radians(form.spread))
         }

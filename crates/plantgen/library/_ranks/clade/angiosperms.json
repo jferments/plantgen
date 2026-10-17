@@ -112,6 +112,36 @@
       "map": {"inner_division_pattern": {"pinnate": "pinnate", "palmate": "palmate"}},
       "why": "A compound leaf whose later divisions are set otherwise than its first (a ternate-pinnate leaf) draws them as its inner division pattern says."
     },
+    "appearance.organs.*.shape.blade_width": {
+      "template": "compound",
+      "rule": "clamp(leaf_width_m / leaf_length_m, 0.02, 3)",
+      "why": "A pinnate leaf's laterals reach no farther than the blade's edge, its width over its length as floras measure them: a strap-shaped leaf's pinnae are short for their spacing."
+    },
+    "appearance.organs.*.shape.lace": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 2, "spray": 2, "all_round": 2}},
+      "why": "A divided leaf whose taxa say how its divisions are held is drawn up close as geometry, its rachises and each leaflet or segment where it stands, on the two nearest levels; farther off, on its card."
+    },
+    "appearance.organs.*.shape.lift": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 0, "spray": 25, "all_round": 0}},
+      "why": "A spray's primary divisions rise a quarter of a right angle out of the leaf's plane; a flat leaf's and a bottlebrush's do not."
+    },
+    "appearance.organs.*.shape.scatter": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 4, "spray": 30, "all_round": 20}},
+      "why": "Each division turns a little at random about its rachis: hardly in a flat leaf, up to 30 degrees either way in a spray, 20 round a bottlebrush."
+    },
+    "appearance.organs.*.shape.roll": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 0, "spray": 0, "all_round": 137.5}},
+      "why": "A bottlebrush's primary divisions turn round the rachis by the golden angle from one to the next, so they stand all round it; a flat leaf's and a spray's keep two ranks."
+    },
+    "appearance.organs.*.shape.inner_roll": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 0, "spray": 0, "all_round": 137.5}},
+      "why": "A bottlebrush's leaflets or segments turn round their division's rachis by the golden angle too; a flat leaf's and a spray's lie in their division's plane."
+    },
     "appearance.organs.*.shape.confluent": {
       "template": "compound",
       "map": {"leaf_incision": {"none": 0, "dissected": 0.75}},
@@ -307,6 +337,36 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.blade_width": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen fits a divided leaf's laterals to its blade, a choice of the model's (lacy leaves, 2026-10-17): a flora's leaf length and width bound the blade, so a lateral standing at its angle to the rachis reaches no farther than the width allows. The middle of each range is read."
+    },
+    "rules.appearance.organs.*.shape.lace": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
+    },
+    "rules.appearance.organs.*.shape.lift": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
+    },
+    "rules.appearance.organs.*.shape.scatter": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
+    },
+    "rules.appearance.organs.*.shape.roll": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
+    },
+    "rules.appearance.organs.*.shape.inner_roll": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
     },
     "rules.appearance.organs.*.shape.confluent": {
       "evidence": "Authored",

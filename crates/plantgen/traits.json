@@ -981,6 +981,15 @@
       "optional": true,
       "why": "how the divisions after the first are set, where they differ from the first: a ternate-pinnate leaf's three divisions are each pinnate"
     },
+    "division_planes": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["flat", "spray", "all_round"],
+      "when": {"leaf_division": ["compound"], "leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
+      "optional": true,
+      "why": "how a divided leaf's divisions are held: all in one plane, rising loosely out of it as a spray, or standing all round each rachis so the leaf is a bottlebrush"
+    },
     "cauline_leaves": {
       "group": "leaves",
       "organ": "leaf",
