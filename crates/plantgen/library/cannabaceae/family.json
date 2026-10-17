@@ -5,7 +5,8 @@
   "parent": "order/rosales",
   "traits": {
     "fruit_type": {
-      "achene": "usually"
+      "drupe": "usually",
+      "achene": "sometimes"
     },
     "perianth": "tepals",
     "hypanthium": false,
@@ -20,8 +21,8 @@
   "evidence": {
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 327, family Cannabaceae: fruit type achene (per cladogram), usually; read as {\"achene\": \"usually\"}."
+      "source": "wikipedia",
+      "note": "Wikipedia, Cannabaceae (read 2026-10-16): fruit an achene or a drupe, and Celtis is by far the largest genus (about 100 species); Wikipedia's Celtis page calls its fruit a small drupe, so drupe leads and the achenes of Cannabis and Humulus come second."
     },
     "traits.perianth": {
       "evidence": "SourceInferred",

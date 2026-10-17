@@ -111,6 +111,7 @@
     "fruit_size_m": {"min": 0.015, "max": 0.02}
   },
   "evidence": {
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -199,8 +200,7 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
     "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."}
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."}
   },
   "provenance": {
     "sources": [

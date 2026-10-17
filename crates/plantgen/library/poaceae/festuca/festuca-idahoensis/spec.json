@@ -164,6 +164,7 @@
       6,
       7
     ],
+    "fruiting_months": [7, 8],
     "awn_length_m": {
       "min": 0.002,
       "max": 0.004
@@ -181,8 +182,7 @@
     "height_max_m": 1,
     "leaf_habit": "evergreen",
     "rosette": "basal",
-    "fruit_size_m": {"min": 0.003, "max": 0.005},
-    "fruiting_months": [7, 8]
+    "fruit_size_m": {"min": 0.003, "max": 0.005}
   },
   "evidence": {
     "taxon": {
@@ -265,6 +265,11 @@
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as the FEIS review read gives no months."
     },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Idaho fescue review (Zouhar 2000, read 2026-10-16): \"seeds mature by midsummer\" and \"dispersal is prompt\"; in western Montana dissemination starts late July to mid-August (mean August 5); read as July and August."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -304,8 +309,7 @@
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."}
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."}
   },
   "provenance": {
     "sources": [

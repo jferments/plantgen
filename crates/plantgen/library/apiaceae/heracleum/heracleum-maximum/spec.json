@@ -117,12 +117,12 @@
     "flower_colour": [245, 245, 240],
     "fruit_size_m": {"min": 0.008, "max": 0.012},
     "flowering_months": [2, 3, 4, 5, 6],
+    "fruiting_months": [8, 9],
     "height_max_m": 3,
     "leaf_habit": "deciduous",
     "rosette": "none",
     "leaf_width_m": {"min": 0.2, "max": 0.5},
-    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
-    "fruiting_months": [8, 9]
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3}
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -230,6 +230,11 @@
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951), as H. lanatum, p. 239: flowering February to June over its whole range (Alaska to California)."
     },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-gtr-136",
+      "note": "Restoring Western Ranges and Wildlands, vol. 2 (Monsen and others 2004, ch. 19, p. 441, read 2026-10-16), as Heracleum lanatum in the Intermountain West: flowers \"bloom in July and early August. Seed matures in late August and early September\"; read as August and September. The Range Plant Handbook (1937) says the fruits \"usually ripen during September\"; FEIS (Esser 1995) gives flowering only."
+    },
     "appearance.organs.leaf": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -244,8 +249,7 @@
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."}
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."}
   },
   "provenance": {
     "sources": [

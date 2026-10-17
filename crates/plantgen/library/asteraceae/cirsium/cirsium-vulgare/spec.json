@@ -115,10 +115,10 @@
     "disc_colour": [180, 60, 140],
     "fruit_size_m": {"min": 0.003, "max": 0.0035},
     "flowering_months": [6, 7, 8, 9, 10],
+    "fruiting_months": [8, 9, 10],
     "capitulum_kind": "discoid",
     "height_max_m": 2,
-    "rosette": "basal",
-    "fruiting_months": [1, 2, 3, 4]
+    "rosette": "basal"
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -246,10 +246,14 @@
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, C. vulgare (p. 517): June to October."
     },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's bull thistle review (Zouhar 2002, read 2026-10-16): plants \"usually release seed in late summer and early autumn\" and \"seed dispersal immediately follows maturation\"; read as August to October."
+    },
     "traits.capitulum_kind": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 443, Cirsium vulgare: capitulum kind discoid."},
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3042723), as no source read gives it."},
-    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3042723), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3042723), as no source read gives it."}
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3042723), as no source read gives it."}
   },
   "provenance": {
     "sources": [

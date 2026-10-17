@@ -99,6 +99,7 @@
     "disc_colour": [240, 236, 220],
     "involucre_height_m": {"min": 0.004, "max": 0.007, "high": 0.009},
     "flowering_months": [3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "fruiting_months": [8, 9],
     "rhizome_habit": {"short_creeping": "often", "long_creeping": "often"},
     "height_max_m": 1,
     "woodiness": "herbaceous",
@@ -106,8 +107,7 @@
     "rosette": "basal",
     "perennation": "rhizome",
     "leaf_margin": "entire",
-    "inflorescence_length_m": {"min": 0.04, "max": 0.1},
-    "fruiting_months": [7, 8, 9, 10]
+    "inflorescence_length_m": {"min": 0.04, "max": 0.1}
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -215,6 +215,11 @@
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, varieties of A. millefolium (pp. 390-391): flowering periods given per variety run from March (vars. californica, arenicola) to November (var. arenicola); most varieties May to August."
     },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-16), table of average dates at five elevations in Utah (Ephraim Canyon): \"seeds ripe\" from August 26 to September 28; read as August and September. It gives no Pacific Northwest dates."
+    },
     "traits.rhizome_habit": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
@@ -231,8 +236,7 @@
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."}
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2908230), as no source read gives it."}
   },
   "provenance": {
     "sources": [

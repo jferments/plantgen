@@ -38,7 +38,7 @@
       "bud_share": 0.25,
       "fruit_share": 0.3,
       "bud_size": 0.025,
-      "flower_area": 0.186,
+      "flower_area": 0.362,
       "bud_area": 0.636,
       "fruit_area": 1.143
     }
@@ -61,13 +61,10 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 12,
-          "petal_width": 0.6,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.3
         },
-        "colour": [0.8, 0.7, 0.72],
         "accent": [0.75, 0.65, 0.4]
       },
       "bud": {
@@ -81,14 +78,11 @@
         "shape": {
           "template": "fruit",
           "aspect": 0.9
-        },
-        "colour": [0.5, 0.06, 0.05]
+        }
       }
     },
     "bodies": {
       "stem": {
-        "colour": [0.07, 0.13, 0.05],
-        "valley": [0.035, 0.07, 0.03],
         "dome": 0.8,
         "ribs": {
           "spacing": 0.03,
@@ -96,8 +90,7 @@
           "sharpness": 0.4
         },
         "areoles": {
-          "felt_radius": 0.004,
-          "felt": [0.05, 0.04, 0.035]
+          "felt_radius": 0.004
         },
         "spines": [
           {
@@ -106,7 +99,6 @@
             "angle": 20,
             "length": 0.01,
             "width": 0.0006,
-            "colour": [0.12, 0.08, 0.06],
             "angle_spread": 10,
             "length_spread": 0.3
           },
@@ -116,7 +108,6 @@
             "angle": 45,
             "length": 0.025,
             "width": 0.0009,
-            "colour": [0.1, 0.07, 0.05],
             "angle_spread": 15,
             "length_spread": 0.35,
             "tip": [0.05, 0.04, 0.035]
@@ -145,6 +136,13 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [70, 100, 55],
+    "spine_colour": [140, 138, 132],
+    "central_spine_colour": [85, 82, 78],
+    "areole_wool_colour": [150, 40, 30],
+    "corolla_shape": "funnelform",
+    "flower_colour": [228, 220, 205],
+    "fruit_colour_ripe": [165, 35, 35],
     "height_max_m": {
       "min": 3,
       "max": 7
@@ -161,6 +159,13 @@
     "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: stems green; dark green, as Anderson's photograph shows them."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: radial spines greyish, to 1 cm."},
+    "traits.central_spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: central spines greyish to blackish."},
+    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) p. 14: the areoles' hairs red at first, turning black."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",

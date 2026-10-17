@@ -195,7 +195,7 @@
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
     "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.014)."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.050)."}
   },
   "provenance": {
     "sources": [

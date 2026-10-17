@@ -46,6 +46,7 @@ pub mod gltf;
 pub mod graph;
 pub mod ground;
 pub mod grow;
+pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
@@ -549,12 +550,40 @@ pub mod venation;
 /// which flowered all year and never fruited, now bud, flower, fruit and
 /// drop in their months, as do the magnoliids that state their months
 /// (85 is conifer foliage along the limbs, #142).
-/// 87: species draw from the species-facts records: 189 species state the
+/// 87: a flower with no perianth (no petals, tube, calyx or cup) spreads
+/// its stamens and pistil over the reach its pieces would have taken, and
+/// the reduced drawing shows them as small blunt stamens in the flower's
+/// colour on a ring at any distance, not as bare sticks; seventeen
+/// species state their fruiting months from their sources, so their year
+/// now bears fruit.
+/// 88: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
+/// scales (the new `palea` organ, in `stipe_scale_colour`), largest at
+/// its foot, on its frond and on the stipe bases of an old crown; a
+/// rachis narrows from its foot to its tip, and a small frond's is
+/// thinner (fern program revision 8); the sword fern's stipe is as long
+/// as Flora of North America gives (87 is flowers with no perianth,
+/// #168).
+/// 89: a far level's spine tint greys with each station's age as the near
+/// levels' spines do, covers a rib valley half as much as a crest, and
+/// hides half the skin it did, so a spiny cactus keeps its colour and rib
+/// shading from afar; cacti state stem, spine, old spine and wool colours,
+/// which the family's rules draw (88 is scaly fern stipes, #163).
+/// 90: hairs (`crate::hairs`): a blade's hairs as floras name them
+/// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
+/// sheen and a backlit glow, fringe its edge, and up close stand from it
+/// as strands of their own (89 is cactus colours, #156).
+/// 91: leaves with two faces and variegation: a look's `underside` colour
+/// paints its cards' lower faces (the side that looks more toward the
+/// ground), and its `variegation` paints pale margins, centres, stripes,
+/// bands, spots or mottles, a different share on every leaf; the royal
+/// palm's pinnae are paler below and the rattlesnake plantain's leaves
+/// carry their pale midvein band (90 is leaf hairs, #166).
+/// 92: species draw from the species-facts records: 189 species state the
 /// characters no source of theirs gives (heights, leaf sizes, shapes,
 /// margins and habits, inflorescence and fruit sizes, months, rosettes)
 /// as the records estimate them, and a look a species set by hand gives
 /// way wherever a rule fed by a stated fact now sets it (leaf widths,
 /// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
-/// strap leaf is never narrower than its card draws (86 is flowering
-/// and fruiting years, #159).
-pub const GENERATOR_REVISION: u32 = 87;
+/// strap leaf is never narrower than its card draws (91 is leaves with
+/// two faces and variegation, #164).
+pub const GENERATOR_REVISION: u32 = 92;

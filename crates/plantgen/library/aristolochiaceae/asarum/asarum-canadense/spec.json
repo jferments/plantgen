@@ -124,6 +124,9 @@
       6,
       7
     ],
+    "leaf_hairs": "strigose",
+    "leaf_hairs_beneath": "strigose",
+    "leaf_ciliate": true,
     "height_max_m": 0.3,
     "life_span": "perennial",
     "woodiness": "herbaceous",
@@ -231,6 +234,21 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after FNA vol. 3 and Simpson: hairy, purplish stalks; soft, dull green, kidney-shaped leaves (the western species' card)."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces adaxially appressed-hirsute, at least along main veins: stiff hairs pressed flat, which Harris and Harris call strigose."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces abaxially appressed-hirsute, usually sparsely so (strigose)."
+    },
+    "traits.leaf_ciliate": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): marginal hairs perpendicular to margin or curved toward apex."
     },
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},

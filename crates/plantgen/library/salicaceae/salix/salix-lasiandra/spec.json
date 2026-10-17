@@ -33,7 +33,7 @@
       "extinction": 0.45,
       "pipe_rings": 1.4e-05,
       "leaf_area": 0.138,
-      "bloom_area": 0.032,
+      "bloom_area": 0.036,
       "path_half": 4.25
     }
   },
@@ -197,7 +197,7 @@
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.137)."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.050)."}
   },
   "provenance": {
     "sources": [

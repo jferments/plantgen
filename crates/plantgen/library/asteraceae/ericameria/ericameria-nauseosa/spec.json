@@ -150,6 +150,7 @@
       9,
       10
     ],
+    "fruiting_months": [9, 10, 11],
     "height_typical_m": {"min": 0.5, "max": 2},
     "life_span": "perennial",
     "woodiness": "woody",
@@ -157,8 +158,7 @@
     "rosette": "none",
     "leaf_margin": "entire",
     "inflorescence_length_m": {"min": 0.05, "max": 0.15},
-    "fruit_size_m": {"min": 0.004, "max": 0.006},
-    "fruiting_months": [9, 10, 11]
+    "fruit_size_m": {"min": 0.004, "max": 0.006}
   },
   "evidence": {
     "taxon": {
@@ -231,6 +231,11 @@
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), seed ripens in autumn (FEIS, Tirmenstein 1999); the flowering months are the model's."
     },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's rubber rabbitbrush review (Tirmenstein 1999, read 2026-10-16): near Millican, Oregon, \"seed disseminated\" early September to mid-November (it also says seed ripens \"from late fall to early winter\", late September at high elevations to late November in the Mojave); read as September to November."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -253,8 +258,7 @@
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3094181), as no source read gives it."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3094181), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3094181), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3094181), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3094181), as no source read gives it."}
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3094181), as no source read gives it."}
   },
   "provenance": {
     "sources": [

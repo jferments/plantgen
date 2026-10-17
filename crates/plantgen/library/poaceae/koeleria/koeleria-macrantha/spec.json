@@ -119,11 +119,11 @@
     "inflorescence_posture": "erect",
     "leaf_length_m": {"min": 0.05, "max": 0.2},
     "flowering_months": [6, 7],
+    "fruiting_months": [7, 8],
     "height_typical_m": {"min": 0.2, "max": 0.6},
     "height_max_m": 0.7,
     "rosette": "basal",
-    "fruit_size_m": {"min": 0.002, "max": 0.003},
-    "fruiting_months": [7, 8]
+    "fruit_size_m": {"min": 0.002, "max": 0.003}
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -231,11 +231,15 @@
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Koeleria no. 2, K. cristata, fig. 385): flowers June-July on prairies."
     },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's prairie Junegrass review (Simonin 2000, read 2026-10-16): in southern Idaho \"seed ripening occurring mid-July\" and dissemination from mid-July to mid-August (it also says seed \"ripens late summer to fall\" in general); read as July and August."
+    },
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."},
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."}
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."}
   },
   "provenance": {
     "sources": [

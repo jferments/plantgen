@@ -4,6 +4,7 @@
   "name": "Ferocactus",
   "parent": "subfamily/cactoideae",
   "traits": {
+    "corolla_shape": {"funnelform": "usually", "campanulate": "sometimes"},
     "carpels": {
       "min": 13,
       "max": 20
@@ -11,6 +12,7 @@
     "stem_form": "globose"
   },
   "evidence": {
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 328, Ferocactus: flowers short funnelform, funnelform or bell-shaped, with a ring of hairs inside the perianth; fruit globose to oblong."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-online",

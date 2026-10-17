@@ -159,6 +159,7 @@
       6,
       7
     ],
+    "fruiting_months": [7, 8],
     "awn_length_m": {
       "min": 0.01,
       "max": 0.02
@@ -175,8 +176,7 @@
     "height_typical_m": {"min": 0.4, "max": 1},
     "height_max_m": 1.2,
     "rosette": "basal",
-    "fruit_size_m": {"min": 0.005, "max": 0.007},
-    "fruiting_months": [7, 8]
+    "fruit_size_m": {"min": 0.005, "max": 0.007}
   },
   "evidence": {
     "taxon": {
@@ -259,6 +259,11 @@
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as the FEIS review read gives no months."
     },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's bluebunch wheatgrass review (Zlatnik 1999, read 2026-10-16), central Utah: \"seed ripe\" July 17, disseminating July 23, disseminated August 6; read as July and August."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -297,8 +302,7 @@
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."},
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."}
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."}
   },
   "provenance": {
     "sources": [
