@@ -1685,6 +1685,7 @@ mod tests {
                     hair,
                     fringe: false,
                     pattern: 1.0,
+                    sorus: 0.0,
                 };
                 let want = templates.albedo(template, colour.map(f64::from), texel);
                 let got: [f64; 3] = std::array::from_fn(|c| {
