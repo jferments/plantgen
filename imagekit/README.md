@@ -228,9 +228,11 @@ The server keeps the store's layout in two private sources of the
 plantgen-io catalogue: `images` (one version per batch: its records and the
 image files it holds) and `image-analyses` (one version per run: its rows,
 raw answers, vectors and the analyzers it used). `push` hands each one to
-`pgio push`, so it needs plantgen-io's uploader and the owner's AWS login;
-set `IMAGEKIT_PGIO` if `pgio` is not on the path. A run with Claude batches
-still to collect is skipped.
+`pgio push`, so it needs plantgen-io's uploader (installed, or a checkout
+beside this one or in `~/code`; `IMAGEKIT_PGIO` overrides) and either the
+owner's AWS login or a cloud session's upload key (`PLANTGEN_UPLOAD_KEY_ID`
+and `PLANTGEN_UPLOAD_SECRET`, from plantgen-io `tools/cloud-upload-key.sh`).
+A run with Claude batches still to collect is skipped.
 
 A pushed batch or run is sealed: it takes no more rows, so the copy on the
 server never goes stale. Later work goes in a new batch or run, and nothing

@@ -9,7 +9,8 @@ plantgen-io catalogue:
                     the run's analyzers (analyzers.jsonl beside its rows)
 
 `push` hands each finished batch and run to `pgio push` (the uploader in
-jferments/plantgen-io, with the owner's AWS login), then seals it: a sealed
+jferments/plantgen-io, with the owner's AWS login or a cloud session's
+upload key), then seals it: a sealed
 batch or run takes no more rows, so what the server holds never goes stale;
 later work goes in a new batch or run. `pull` needs no login, only the
 reader key (a cloud session's proxy adds it): it downloads every version the
@@ -75,7 +76,17 @@ def run_analyzers(store: Store, run: str) -> list[dict]:
 
 
 def pgio_command() -> list[str]:
-    return shlex.split(os.environ.get("IMAGEKIT_PGIO", "pgio"))
+    """`pgio` as installed, else from a plantgen-io checkout beside this one or in ~/code."""
+    if os.environ.get("IMAGEKIT_PGIO"):
+        return shlex.split(os.environ["IMAGEKIT_PGIO"])
+    if shutil.which("pgio"):
+        return ["pgio"]
+    here = Path(__file__).resolve().parents[2]  # the plantgen checkout
+    for d in (here.parent / "plantgen-io", Path.home() / "code" / "plantgen-io"):
+        if (d / "uploader" / "pgio" / "cli.py").exists():
+            boot = f"import sys; sys.path.insert(0, {str(d / 'uploader')!r}); from pgio.cli import main; main()"
+            return [sys.executable, "-c", boot]
+    raise SystemExit("pgio not found: install it (pipx install ~/code/plantgen-io/uploader) or set IMAGEKIT_PGIO")
 
 
 def push_one(store: Store, kind: str, name: str, dry_run: bool) -> dict:
