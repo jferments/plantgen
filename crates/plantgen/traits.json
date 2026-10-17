@@ -1023,6 +1023,79 @@
       "optional": true,
       "why": "how scaly a fern's stipe is, as floras word it: bare, a few scales, or densely scaly, its foot shaggy with them"
     },
+    "stipe_scale_extent": {
+      "group": "leaves",
+      "organ": "palea",
+      "type": "enum",
+      "values": ["base", "throughout"],
+      "optional": true,
+      "why": "how far up a fern's stipe its scales go, as floras word it: only at its swollen base (\"scaly at base\", \"scaly proximally\"), or all along it, smaller toward the blade"
+    },
+    "stipe_scale_length_m": {
+      "group": "leaves",
+      "organ": "palea",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 0.05],
+      "optional": true,
+      "why": "the largest scales on a fern's stipe, at its foot"
+    },
+    "fertile_leaf_length_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 5],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "a dimorphic fern's fertile blade, without its stipe, where it differs from the sterile one"
+    },
+    "fertile_petiole_length_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 5],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "a dimorphic fern's fertile stipe"
+    },
+    "fertile_leaf_posture": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["erect", "ascending", "arching", "spreading", "pendent"],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "how a dimorphic fern's fertile fronds hold themselves, as leaf_posture words the sterile ones: often stiffly erect in the crown's centre"
+    },
+    "fertile_leaflet_length_m": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 2],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "a dimorphic fern's longest fertile pinna"
+    },
+    "fertile_leaflet_width_m": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.5],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "a dimorphic fern's fertile pinna at its widest, often contracted to a narrow strip under its sori"
+    },
+    "stipe_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "why": "a fern's stipe over most of its length, and so its rachis: straw-coloured, green, reddish brown or dark"
+    },
     "leaf_peltation": {
       "group": "leaves",
       "organ": "leaf",

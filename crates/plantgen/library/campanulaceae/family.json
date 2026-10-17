@@ -19,10 +19,7 @@
     },
     "leaf_division": "simple",
     "stipules": false,
-    "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
-    },
+    "flower_symmetry": {"zygomorphic": "often", "actinomorphic": "sometimes"},
     "zygomorphy": "bilabiate",
     "perianth": "sepals_and_petals",
     "flower_merosity": {
@@ -52,6 +49,7 @@
     }
   },
   "evidence": {
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "wikipedia", "note": "By genus (read 2026-10-17): Lobelia, 444 spp, has two-lipped tubular five-lobed flowers (zygomorphic); Campanula, 452 accepted spp, has a five-lobed bell corolla (the page names no symmetry; regular by the bellflower group). The two largest genera nearly cancel, so the rest decides by subfamily size from the first pass's Wikipedia reading: Lobelioideae ~1,200 spp, mostly bilabiate, plus the small irregular Cyphioideae and Nemacladoideae, against ~1,100 regular Campanuloideae of ~2,400. Lead about 10-15%, so often/sometimes; Campanula and Wahlenbergia should state actinomorphic themselves."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Campanulaceae (read 2026-10-17): blades entire or pinnatifid/palmatifid; Wikipedia: mostly simple, Cyanea repeatedly divided."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 445, 447: stamens 5, rarely 3 to 10, free but pressed together or joined round the style."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 445, 447: ovary of 2 to 5 carpels."},

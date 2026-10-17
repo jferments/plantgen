@@ -39,7 +39,7 @@
       "pipe_rings": 1e-05,
       "blooms": 2,
       "adult_age": 6,
-      "bloom_size": 0.015,
+      "bloom_size": 0.04,
       "bloom_angle": 40,
       "leaf_area": 0.243,
       "path_half": 5.77
@@ -136,7 +136,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical and subtropical coasts, 5 to 10 m tall, with dark, scaly bark and narrow leaves grey-felted beneath, whose shallow roots send up hundreds of pencil-like breathing roots through the mud round it. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical and subtropical coasts, 5 to 10 m tall, with dark, scaly bark and narrow leaves grey-felted beneath, whose shallow roots send up hundreds of pencil-like breathing roots through the mud round it. Each bloom card stands for one of its cymes, 2 cm to 6 cm long as the species states, now that Acanthaceae's flowers are mostly in cymes (bloom_size 0.04, was 0.015, a single flower's size). Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

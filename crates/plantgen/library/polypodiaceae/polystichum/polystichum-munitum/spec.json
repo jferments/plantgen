@@ -22,7 +22,6 @@
       "season": 0.5,
       "emerge_spread": 0.35,
       "unroll": 0.3,
-      "curl": 38,
       "droop_years": 2.5,
       "crown_age": 4
     }
@@ -62,6 +61,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stipe_scale_extent": "throughout",
     "rhizome_habit": {"ascending": "usually", "erect": "often"},
     "leaf_habit": "evergreen",
     "leaf_posture": "ascending",
@@ -84,6 +84,7 @@
     "leaf_arrangement": "alternate"
   },
   "evidence": {
+    "traits.stipe_scale_extent": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Polystichum munitum: \"Petiole ... densely scaly; scales red-brown to dark brown or nearly black, gradually diminishing in size distally\"; it is told from P. imbricans by \"its persistent, wide (the largest wider than 1 mm) distal petiolar scales\". Scales to the top of the petiole; read as throughout."},
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

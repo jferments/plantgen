@@ -87,11 +87,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
     ),
     (
-        "cytisus-scoparius",
-        "leaf_shape",
-        "its leaflets are drawn by hand on a sprig card widest at the middle, so they read elliptic against the obovate leaflets Abrams gives",
-    ),
-    (
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
@@ -150,11 +145,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "houttuynia-cordata",
         "inflorescence_bracts",
         "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
-    ),
-    (
-        "jacobaea-vulgaris",
-        "leaf_width_m",
-        "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
     ),
     (
         "larrea-tridentata",
@@ -238,13 +228,8 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
-        "leaf_length_m",
-        "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
-    ),
-    (
-        "program:grass",
-        "leaf_width_m",
-        "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
+        "leaf_habit",
+        "a cohort's blades turn to thatch the year after they grow, so a wintergreen grass, rush or sedge (the fescues, tufted hairgrass, orchardgrass, Yorkshire fog, soft rush, slough sedge) draws its leaves as deciduous until the grass program keeps a green blade through winter",
     ),
     (
         "program:grass",

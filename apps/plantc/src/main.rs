@@ -191,14 +191,16 @@ Usage:
       neighbours' crowns as envelopes; each keyframe then says how much
       of it stands in the place's solids and crowns.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
-                [--age N] [--view side|three-quarter|oblique|top] [--lod 0-3]
+                [--age N] [--view side|three-quarter|oblique|top|under]
+                [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
                 [--focus X,Y,Z [--span METRES]] [--parts on]
                 [--conditions FILE|JSON [--from-age N]]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
-      the plant, metres from its foot with +Y up. --parts on (level 0)
+      the plant, metres from its foot with +Y up; --view under looks up
+      at it from below, at the lower faces of its leaves. --parts on (level 0)
       draws every flower, fruit, cone and needle shoot as its part mesh,
       as WorldLab does near the camera. --conditions grows it in a place
       as plantc grow does (the place itself is not drawn).
@@ -235,7 +237,7 @@ Usage:
       the organ alone and solid (LOD0) as it is that day, at one scale
       per row; each day's stage printed.
   plantc lineup <species|spec.json>... --out FILE.png [--age N] [--seeds N]
-                [--view side|three-quarter|oblique|top] [--size PIXELS]
+                [--view side|three-quarter|oblique|top|under] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
   plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]
@@ -287,7 +289,8 @@ Usage:
       Exits non-zero on any error.
   plantc atlas <species|spec.json> --out FILE.png
       Draw the species' organ card textures (leaves, needles, flowers) in
-      their colours, one per organ, side by side.
+      their colours, one per organ, side by side, each lower face that
+      differs (an underside colour, sori) beside its upper.
   plantc ground --out FILE.png [--seed N] [--looks words|litter]
       Draw the nine plant-made ground looks (needles, leaves, thatch,
       twigs, moss, sphagnum, grass, tussock and cushion), seven to a row,
@@ -2912,7 +2915,8 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
     fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
     let shading = spec::organ_areas(&program, &params).map_err(|error| error.to_string())?;
     out!(
-        "wrote {out}: {width}x{height}, one card texture per organ, left to right.\n\
+        "wrote {out}: {width}x{height}, one card texture per organ, left to right,\n\
+         its lower face beside it where the two are unlike.\n\
          Leaf area of an organ 1 m long, as drawn and as the program shades with it:"
     );
     for ((look, template), shades) in looks.iter().zip(&templates.templates).zip(&shading) {
