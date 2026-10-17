@@ -1267,6 +1267,24 @@
       "values": ["rotate", "cupped", "campanulate", "funnelform", "tubular", "salverform", "urceolate"],
       "why": "how a corolla is formed: spreading flat, a cup, a bell, a funnel, a tube, a narrow tube with a flat limb, or an urn narrowed at its mouth"
     },
+    "corolla_tube_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.5],
+      "when": {"corolla_shape": ["campanulate", "funnelform", "tubular", "salverform", "urceolate"]},
+      "optional": true,
+      "why": "a joined corolla's tube, from its foot to where the lobes part, where a flora measures it: a jimsonweed's 6-10 cm trumpet, a tobacco's 3.5-5.5 cm tube under a limb 1-1.5 cm across"
+    },
+    "flower_posture": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["erect", "ascending", "spreading", "nodding", "pendent"],
+      "optional": true,
+      "why": "how an open flower holds itself on its stalk: facing up, rising at a slant, held out level, bent over to face down and out (a belladonna's bell, a pepper's star), or hanging (an angel's trumpet)"
+    },
     "zygomorphy": {
       "group": "flowers",
       "organ": "flower",
@@ -1847,6 +1865,30 @@
       "type": "enum",
       "values": ["terminal", "lateral", "both"],
       "why": "whether flowers end a shoot or sit beside its leaves"
+    },
+    "sympodium": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["none", "monochasial", "dichasial"],
+      "optional": true,
+      "why": "whether a stem ends in its flowers and grows on past them from a bud below: not at all (it grows on from its tip); from one bud, so each inflorescence stands beside the stem across from a leaf (a tomato's leaf-opposed clusters); or from two, so the stem forks again and again with a flower in each fork (a jimsonweed's or a pepper's)"
+    },
+    "sympodial_unit_leaves": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "count",
+      "range": [1, 12],
+      "when": {"sympodium": ["monochasial", "dichasial"]},
+      "optional": true,
+      "why": "the leaves on each piece of a sympodial stem, from the bud that grew on to the inflorescence that ends it: a tomato's three between clusters"
+    },
+    "leaves_geminate": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the leaves stand in unequal pairs, a smaller leaf beside a larger at one place on the stem, as a flora's 'leaves geminate' or 'two together, one smaller' (a belladonna's: the next sympodial unit's first leaf carried up beside the last leaf of the one below)"
     },
     "short_shoots": {
       "group": "architecture",

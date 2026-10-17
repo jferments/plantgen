@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "id": "brugmansia-suaveolens",
+  "taxon": {
+    "scientific_name": "Brugmansia suaveolens",
+    "common_name": "angel's trumpet",
+    "family": "Solanaceae",
+    "genus": "Brugmansia",
+    "plant_name_id": 2684019
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 3
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [
+      3,
+      8
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "height_typical_m": {
+      "min": 3,
+      "max": 5
+    },
+    "height_max_m": 5,
+    "leaf_shape": "elliptic",
+    "leaf_margin": "entire",
+    "leaf_length_m": {
+      "min": 0.15,
+      "max": 0.25,
+      "high": 0.3
+    },
+    "leaf_width_m": {
+      "min": 0.06,
+      "max": 0.15
+    },
+    "leaf_habit": "evergreen",
+    "inflorescence": "solitary",
+    "corolla_shape": "funnelform",
+    "flower_size_m": {
+      "min": 0.1,
+      "max": 0.15
+    },
+    "corolla_tube_length_m": {
+      "min": 0.22,
+      "max": 0.3
+    },
+    "flower_posture": "pendent",
+    "flower_colour": [
+      250,
+      248,
+      240
+    ],
+    "fruit_type": "berry",
+    "fruit_size_m": {
+      "min": 0.1,
+      "max": 0.15
+    },
+    "fruit_colour_ripe": [
+      110,
+      140,
+      60
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the nightshades work (2026-10-17): every character from the floras in the nightshades notes (plantgen-claude project-files/nightshades/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Brugmansia suaveolens, plant_name_id 2684019 (Library 1.0 list, read 2026-10-17)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Solanaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its habit as the floras describe it, drawn by the shrub form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown to the age it is drawn at: an annual's one season, a perennial's or shrub's few years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawing values no character gives (nightshades, 2026-10-17): a trunk of a few stems (Wikipedia: often a many-branched trunk)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): a semi-woody shrub or small tree."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): 3-5 m; Bailey (vol. 2 p. 971, as Datura suaveolens): 10-15 ft."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): 3-5 m tall."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): leaves oval; Bailey: ovate-oblong."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Datura suaveolens, p. 971 (read on the Internet Archive, 2026-10-17): leaves entire, glabrous, petioled, often unequal at the base."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Datura suaveolens, p. 971 (read on the Internet Archive, 2026-10-17): 6-12 in long; Wikipedia: up to 25 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): up to 15 cm wide; Bailey: 2.5-4 in (partly unreadable)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: evergreen."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia' (read 2026-10-17): flowers single, pendulous trumpets."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Datura suaveolens, p. 971 (read on the Internet Archive, 2026-10-17): corolla tube plaited, with a limb of 5 short lobes; Wikipedia: trumpet-shaped."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flower mouth 10-15 cm across."
+    },
+    "traits.corolla_tube_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): trumpet 24-32 cm long, its 5 points short, 1-2.5 cm; Bailey (vol. 2 p. 971, as Datura suaveolens): flowers 9-12 in long."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): flowers fully pendulous to nearly horizontal; Bailey (vol. 2 p. 971): among the tall Daturas with pendulous blossoms."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): usually white, sometimes yellow or pink. The colour is our reading of the word."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a fleshy, unspined fruit (Wikipedia 'Brugmansia': fruit without spines)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: fruit 10-15 cm long."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 39560425 (CC-licensed photograph, viewed 2026-10-17): long spindle-shaped green fruit hang. No text read gives it."
+    }
+  }
+}

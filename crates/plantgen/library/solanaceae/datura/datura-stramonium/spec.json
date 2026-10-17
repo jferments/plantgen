@@ -1,0 +1,258 @@
+{
+  "schema": 1,
+  "id": "datura-stramonium",
+  "taxon": {
+    "scientific_name": "Datura stramonium",
+    "common_name": "jimsonweed",
+    "family": "Solanaceae",
+    "genus": "Datura",
+    "plant_name_id": 2757848
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "clump_radius": 0.01,
+      "stem_radius": 0.009,
+      "first_leaves": 6
+    }
+  },
+  "growth": {
+    "years": 1,
+    "step": 1,
+    "keyframes": [
+      1
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "annual",
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.2,
+      "low": 0.3,
+      "high": 1.5
+    },
+    "sympodial_unit_leaves": 1,
+    "leaf_shape": "ovate",
+    "leaf_incision": "lobed",
+    "leaf_margin": "dentate",
+    "leaf_apex": "acuminate",
+    "leaf_length_m": {
+      "min": 0.075,
+      "max": 0.2
+    },
+    "petiole_length_m": {
+      "min": 0.025,
+      "max": 0.1
+    },
+    "leaf_colour": [
+      45,
+      80,
+      30
+    ],
+    "bark_colour": [
+      150,
+      170,
+      80
+    ],
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.04
+    },
+    "corolla_tube_length_m": {
+      "min": 0.06,
+      "max": 0.08
+    },
+    "flower_posture": "erect",
+    "flower_colour": [
+      245,
+      245,
+      238
+    ],
+    "petal_apex": "acuminate",
+    "fruit_size_m": {
+      "min": 0.035,
+      "max": 0.05
+    },
+    "fruit_colour_ripe": [
+      120,
+      100,
+      60
+    ],
+    "fruit_posture": "erect",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the nightshades work (2026-10-17): every character from the floras in the nightshades notes (plantgen-claude project-files/nightshades/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Datura stramonium, plant_name_id 2757848 (Library 1.0 list, read 2026-10-17)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Solanaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its habit as the floras describe it, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown to the age it is drawn at: an annual's one season, a perennial's or shrub's few years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; a stout stem (Britton and Brown) 18 mm at the foot and six leaves below the first fork, by eye from photographs (iNaturalist 54718314)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): an annual."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Stramonium, p. 1838 (read on the Internet Archive, 2026-10-17): 2 or 3 ft or more in rich soil; Britton and Brown 1-5 ft; Bentham 1-2 ft; Wikipedia 2-5 ft."
+    },
+    "traits.sympodial_unit_leaves": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Datura stramonium' (read 2026-10-17): the stem forks repeatedly, each fork producing a leaf and a single erect flower; King's: leaves arise from the forks."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): leaves ovate in outline, acute or acuminate, mostly narrowed at the base."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): irregularly sinuate-lobed with acute lobes; Bentham: irregular angular or pointed teeth or lobes."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Stramonium, p. 1838 (read on the Internet Archive, 2026-10-17): variously and sharply sinuate-toothed; Gray p. 717: sinuate-toothed or angled."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): acute or acuminate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): leaves 3-8 in long; Wikipedia the same."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): petioles 1-4 in."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Stramonium, p. 1838 (read on the Internet Archive, 2026-10-17): dark green above, paler beneath. The colour is our reading of the words."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Stramonium, p. 1838 (read on the Internet Archive, 2026-10-17): stem yellowish green; Gray: green-stemmed. The colour is our reading of the words."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): limb 1-1.5 in broad (partly unreadable)."
+    },
+    "traits.corolla_tube_length_m": {
+      "evidence": "SourceInferred",
+      "source": "gray-1908",
+      "note": "Gray's New Manual, 7th ed. (1908), Datura stramonium, p. 717 (read on the Internet Archive, 2026-10-17): corolla 7-9 cm long, its 5 lobes short teeth (Bentham: narrow teeth), so the tube is the corolla's length less a centimetre; Britton and Brown: about 4 in high; Wikipedia 2.5-3.5 in."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): flowers erect, short-peduncled; King's: axillary and erect; Wikipedia: a single erect flower in each fork."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "gray-1908",
+      "note": "Gray's New Manual, 7th ed. (1908), Datura stramonium, p. 717 (read on the Internet Archive, 2026-10-17): corolla white; Britton and Brown: white or violet. The colour is our reading of the word."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura, c. p. 170 (read on the Internet Archive, 2026-10-17): limb of broad, acuminate lobes; King's: tipped with short points."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): capsule ovoid, about 2 in high; Wikipedia 1-3 in."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Stramonium, p. 1838 (read on the Internet Archive, 2026-10-17): a large dry capsule. The brown is our reading of a dry capsule; no source names its colour."
+    },
+    "traits.fruit_posture": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): capsule held upright; Bailey: capsule erect."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): June-September; King's July-September."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Capsules ripen after the flowers, through late summer and autumn (Bentham, Gray: flowering summer and autumn); months our reading."
+    }
+  }
+}

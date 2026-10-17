@@ -615,4 +615,9 @@ pub mod venation;
 /// 104: a flowering herb's side branches bear leaves, as large as the leaf
 /// in whose axil they stand, and branch again where the taxon states two
 /// orders (`flowering_branch_orders`; herb program revision 11).
-pub const GENERATOR_REVISION: u32 = 104;
+/// 105: a herb's stem may be a sympodium (`sympodium`; herb program
+/// revision 12, program `solanaceae`); a measured corolla tube is drawn as
+/// long as stated (`corolla_tube_length_m`, a flower's `tube_reach`); a
+/// flower's posture turns a sympodium's flowers and a woody plant's blooms
+/// (`flower_posture`); a panicle's cluster size is its branches' length.
+pub const GENERATOR_REVISION: u32 = 105;
