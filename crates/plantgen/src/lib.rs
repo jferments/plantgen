@@ -648,7 +648,14 @@ pub mod venation;
 /// under the `indusium` stated; most pinnae of a fern whose fronds are
 /// alike, and only the fertile pinnae of a dimorphic one (101 is fern
 /// fiddleheads, #181).
-/// 103: a flowering herb's top leaf nodes may each bear a side branch
+/// 103: 23 species state facts the species-facts records give that the
+/// checks now judge as floras measure them (#189): basal leaf sizes of
+/// foxglove, columbine, foamflower, bull thistle, lupine and mule's ears,
+/// grasses' and sedges' deciduous blades, and fruit, flower, cluster,
+/// shape and height facts held back from 96; broom's stated obovate
+/// leaflets draw where a hand-drawn profile stood (102 is fern sori,
+/// #182).
+/// 104: a flowering herb's top leaf nodes may each bear a side branch
 /// ending in a raceme (`flowering_branches`; herb program revision 10)
-/// (102 is fern sori, #182).
-pub const GENERATOR_REVISION: u32 = 103;
+/// (103 is held-back species facts, #192).
+pub const GENERATOR_REVISION: u32 = 104;
