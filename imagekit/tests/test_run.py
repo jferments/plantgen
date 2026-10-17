@@ -41,6 +41,7 @@ class FakeServer(BaseHTTPRequestHandler):
     cost = None          # usage.cost to report, as OpenRouter does
     no_schema = False    # answer 400 to response_format json_schema, as some servers do
     bad_first = False    # the first answer per image misses a required key
+    upstream_grammar = False  # answer a json_schema request with an error inside HTTP 200
 
     def log_message(self, *_):
         pass
@@ -51,6 +52,8 @@ class FakeServer(BaseHTTPRequestHandler):
         fmt = (body.get("response_format") or {}).get("type")
         if self.no_schema and fmt == "json_schema":
             return self.send(400, {"error": {"message": "response_format json_schema is not supported"}})
+        if self.upstream_grammar and fmt == "json_schema":  # OpenRouter: an upstream failure inside a 200
+            return self.send(200, {"error": {"message": "Grammar error: Unimplemented keys", "code": 400}})
         user = "\n\n".join(c["text"] for c in body["messages"][1]["content"] if c["type"] == "text")
         ans = answer_for(user)
         if self.bad_first and "previous answer was not valid" not in user:
@@ -75,6 +78,7 @@ class RunBase(Base):
     def setUp(self):
         super().setUp()
         FakeServer.requests, FakeServer.cost, FakeServer.no_schema, FakeServer.bad_first = [], None, False, False
+        FakeServer.upstream_grammar = False
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), FakeServer)
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
         self.url = f"http://127.0.0.1:{self.server.server_port}/v1"
@@ -160,6 +164,13 @@ class TestOpenAICompat(RunBase):
         self.assertEqual(modes[:2], ["json_schema", "json_object"])
         self.assertNotIn("json_schema", modes[2:])  # remembered for the rest of the run
         self.assertEqual(len(self.analyses("t1")), 2)
+
+    def test_upstream_error_inside_a_200(self):
+        FakeServer.upstream_grammar = True
+        self.backends.write_text(self.backends.read_text().replace("parallel = 2", "parallel = 1"))
+        self.go("run", "triage", "--backend", "box", "--run", "t1", "--limit", "2")
+        self.assertTrue(all(r["status"] == "ok" for r in self.analyses("t1")))
+        self.assertEqual(len(FakeServer.requests), 3)  # one refused, then plain JSON for both
 
     def test_spend_cap_and_confirmation(self):
         FakeServer.cost = 0.5

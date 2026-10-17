@@ -112,6 +112,7 @@ class OpenAICompat:
             b["response_format"] = {"type": "json_object"}
         if "openrouter.ai" in self.base_url:
             b["usage"] = {"include": True}  # OpenRouter then reports the cost
+        b.update(self.cfg.get("extra", {}))  # e.g. [name.extra] reasoning = {effort = "low"}
         return b
 
     def cache_marks(self) -> bool:
@@ -134,6 +135,13 @@ class OpenAICompat:
                 raise BackendError(f"HTTP {err.code}: {detail}") from err
             except (urllib.error.URLError, TimeoutError) as err:
                 raise BackendError(str(err)) from err
+            if data.get("error"):  # OpenRouter passes an upstream failure on with HTTP 200
+                detail = json.dumps(data["error"])[:500]
+                code = data["error"].get("code") if isinstance(data["error"], dict) else None
+                if code == 400 and mode != "none" and any(w in detail.lower() for w in ("grammar", "schema", "json")):
+                    self.json_mode = modes[modes.index(mode) + 1]
+                    continue
+                raise BackendError(f"upstream error: {detail}")
             choice = (data.get("choices") or [{}])[0]
             usage = data.get("usage") or {}
             tin, tout = usage.get("prompt_tokens"), usage.get("completion_tokens")
@@ -166,7 +174,7 @@ class AnthropicAPI:
         key = os.environ.get(cfg.get("key_env", "ANTHROPIC_API_KEY"))
         self.client = anthropic.Anthropic(api_key=key) if key else anthropic.Anthropic()
         self.anthropic = anthropic
-        self.use_format = True  # off after the API refuses a schema it cannot constrain to
+        self.use_format = bool(cfg.get("structured", True))  # off after the API refuses a schema it cannot constrain to
 
     def params(self, system: str, user: list[str], image: bytes, schema: dict) -> dict:
         p = {
