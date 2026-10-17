@@ -85,13 +85,19 @@
     "age_max_years": 1400.0,
     "litter_kind": {"leaves": "usually"},
     "division_pattern": "pinnate",
-    "leaf_division": "compound"
+    "leaf_division": "compound",
+    "ternate_blade": {"true": "usually"}
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), western bracken: stipes erect, stout, 15 to 100 cm; blades triangular to triangular-ovate, 25 to 100 cm, nearly ternately decompound, usually three times pinnate below."
+    },
+    "traits.ternate_blade": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), western bracken: blades \"nearly ternately decompound\", so usually rather than always ternate."
     },
     "traits.leaf_habit": {
       "evidence": "SourceInferred",

@@ -2229,6 +2229,7 @@ mod tests {
             body: 1,
             left: Vec3::X,
             within: None,
+            young: 0.0,
         }
     }
 

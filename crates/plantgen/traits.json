@@ -972,6 +972,14 @@
       "optional": true,
       "why": "the divisions on each pinna of a thrice-divided leaf (tripinnate, triternate), each bearing leaflets or segments of its own"
     },
+    "ternate_blade": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "whether a compound leaf's lowest pair of divisions is nearly as large as the rest of it, so the leaf is three-parted (ternate): a bracken frond, ternately decompound, which comes up as three coils, an eagle's claw"
+    },
     "inner_division_pattern": {
       "group": "leaves",
       "organ": "leaf",

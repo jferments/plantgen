@@ -625,4 +625,10 @@ pub mod venation;
 /// under the `indusium` stated; most pinnae of a fern whose fronds are
 /// alike, and only the fertile pinnae of a dimorphic one (98 is fern
 /// fiddleheads).
-pub const GENERATOR_REVISION: u32 = 99;
+/// 100: a fern's frond is green while it unrolls and turns to its stipe's
+/// colour after (the L-system's `young` and the appearance's
+/// `young_axis`, fern program revision 12), a crozier is scaly only
+/// where its stipe is scaly all along, its pinnae lie along its coil, and
+/// a ternate frond (`ternate_blade`, bracken) comes up as three coils, an
+/// eagle's claw (99 is fern sori).
+pub const GENERATOR_REVISION: u32 = 100;
