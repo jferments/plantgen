@@ -3193,14 +3193,8 @@ mod tests {
         // Foxglove: single leaves under its order's crossing pairs turn
         // by the golden angle, as the genus's leaves decide.
         assert_eq!(arrangement("digitalis-purpurea"), (Some(1.0), Some(137.5)));
-        // A daisy family's tie sets nothing where the genus says nothing.
-        let daisy = library.inherited("leucanthemum-vulgare").unwrap();
-        assert_eq!(
-            daisy.rules["generator.params.leaves_per_node"].1.as_deref(),
-            Some(
-                "`leaf_arrangement` has no one most usual state: alternate and opposite are each often"
-            )
-        );
+        // Oxeye daisy: single leaves, as most of its family's are.
+        assert_eq!(arrangement("leucanthemum-vulgare").0, Some(1.0));
         // Maples: their genus's opposite leaves, in pairs crossing at a
         // quarter turn, though most of their family's leaves are spiral.
         assert_eq!(arrangement("acer-macrophyllum"), (Some(2.0), Some(90.0)));

@@ -34,10 +34,7 @@
       "tristichous": "usually"
     },
     "leaf_venation": "parallel",
-    "inflorescence": {
-      "cyme": "often",
-      "solitary": "often"
-    },
+    "inflorescence": {"cyme": "usually", "head": "sometimes", "solitary": "rarely"},
     "rosette": {
       "basal": "usually"
     },
@@ -104,11 +101,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 261, 263, family Juncaceae: leaf venation parallel; read as \"parallel\"."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 261, 263, family Juncaceae: inflorescence solitary or cyme (or compound of cymes, glomerules or heads); read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Juncaceae (read 2026-10-17): ~400 spp in 8 genera; flowers grouped, built from crowded and often one-sided cymes, massed into loose panicle-like or corymb-like clusters or into dense heads; single flowers are not mentioned. Juncus and Luzula (by general knowledge ~330 and ~115 spp) hold nearly every species and both flower in compound cymes (some Juncus in heads); solitary flowers belong only to the small cushion genera of the Andes and southern hemisphere (Distichia, Oxychloe, Rostkovia), so solitary drops to rarely. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.rosette": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
