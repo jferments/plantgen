@@ -39,7 +39,7 @@
       "nod": 10,
       "bud_size": 0.008,
       "leaf_area": 0.228,
-      "basal_area": 0.235,
+      "basal_area": 0.147,
       "basal_piece_area": 0.235,
       "flower_area": 0.657,
       "bud_area": 0.08,
@@ -66,7 +66,6 @@
           "template": "compound",
           "leaflets": 13,
           "leaflet_width": 0.45,
-          "teeth": 7,
           "petiole": 0.12
         }
       },
@@ -200,7 +199,8 @@
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.235)."}
   },
   "provenance": {
     "sources": [

@@ -81,6 +81,41 @@ impl Template {
     }
 }
 
+/// Leaf area an organ 1 m long shades with, m²: the area its leaves have.
+/// A needle card paints each needle as a line at least two texels wide
+/// ([`fine`]), far wider than a pine's needle on a card a few decimetres
+/// long, and its crossing card paints the same needles again, so its
+/// painted area is 2 to 5 times its needles' own. A needle card shades
+/// with its needles' own area, each needle its length times its width
+/// (`Needles::width` of it), counted once; every other look with the area
+/// it draws ([`drawn_area`]), which for a leaf card is its blade.
+#[must_use]
+pub fn shade_area(look: &Look, template: &Template) -> f64 {
+    match &look.shape {
+        Shape::Needles(s) if look.inflorescence.is_none() => needle_area(s),
+        _ => drawn_area(look, template),
+    }
+}
+
+/// The one-sided area of the needles a needle card 1 m long holds, m²:
+/// every needle the card's painter and the solid shoot draw, each its
+/// drawn length times `width` of that length.
+#[must_use]
+pub fn needle_area(s: &Needles) -> f64 {
+    let half = s.aspect * 0.5;
+    let fine = fine(&Shape::Needles(s.clone()));
+    let mut area = 0.0;
+    for (index, axis) in needle_axes(s).iter().enumerate() {
+        for i in 0..needle_count(s, axis) {
+            for k in 0..needles_per_place(s) {
+                let needle = needle_at(s, index, axis, i, k, (0, 1), half, fine);
+                area += needle.length * needle.length * s.width;
+            }
+        }
+    }
+    area
+}
+
 /// Leaf area an organ 1 m long draws with `look` and its `template`, m²:
 /// the card's covered area, plus the crossing card's for looks that have
 /// one. A cluster's card is its own length (`crate::clusters::CardFrame`).
@@ -767,7 +802,11 @@ fn simple_width(s: &Simple, length: f64, t: f64, margin: Option<&Margin>) -> f64
     let mut width = s.width * length * 0.5 * simple_profile(s, t);
     // A point beyond the tip bears no teeth.
     if let Some(margin) = margin.filter(|_| t < 1.0 - s.apex_point) {
-        let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
+        let drawn = Drawn {
+            round: s.round,
+            ..TOOTH
+        };
+        let fall = margin.fall(t, drawn, |share| margins::tooth_flank(share, s.round));
         width -= (s.tooth_depth * blade_fade(t)).min(DEEPEST * width) * fall;
     }
     width
@@ -868,6 +907,11 @@ fn shape_seed(shape: &Shape) -> u64 {
             ", sinus: 0.0, fan: 0, apex_taper: None, base_taper: None, apex_point: 0.0, apex_notch: 0.0 }",
             " }",
         );
+    // A simple leaf's saw teeth are the teeth it had before it could
+    // round them.
+    if matches!(&plain, Shape::Simple(s) if s.round == 0.0) {
+        text = text.replace(", round: 0.0, ", ", ");
+    }
     for field in [
         "pattern",
         "pinnules",

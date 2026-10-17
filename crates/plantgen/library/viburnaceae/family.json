@@ -15,7 +15,8 @@
       "max": 5
     },
     "leaf_arrangement": "opposite",
-    "fruit_type": "drupe"
+    "fruit_type": "drupe",
+    "rosette": "none"
   },
   "forms": {
     "shrub": {
@@ -46,6 +47,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 306 Adoxaceae (moschatel), with the elders and viburnums he still keeps in Caprifoliaceae, which APG joins as Viburnaceae (Adoxaceae): leaves opposite; fruit a drupe."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Dipsacales page (read 2026-10-16): Viburnum and Sambucus shrubs/trees; no order value proposed because Caprifoliaceae herbs often form basal rosettes."
     }
   }
 }

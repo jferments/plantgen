@@ -4,6 +4,7 @@
   "name": "Nartheciaceae",
   "parent": "order/dioscoreales",
   "traits": {
+    "flowering_position": "terminal",
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_venation": "parallel",
@@ -32,6 +33,7 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): racemes or thyrses at the scape tip (scapose herbs)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

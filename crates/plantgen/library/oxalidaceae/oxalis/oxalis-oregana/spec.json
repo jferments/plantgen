@@ -38,8 +38,8 @@
       "leaf_area": 0.387,
       "basal_area": 0.381,
       "basal_piece_area": 0.235,
-      "flower_area": 0.689,
-      "bud_area": 0.084,
+      "flower_area": 0.317,
+      "bud_area": 0.117,
       "fruit_area": 0.89
     }
   },
@@ -59,7 +59,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflet_width": 1.0, "teeth": 0, "petiole": 0.4, "spread": 240, "lowest": 1.0, "outline": [[0, 0.05], [0.1, 0.22], [0.3, 0.5], [0.5, 0.74], [0.7, 0.92], [0.85, 1], [0.95, 0.9], [0.99, 0.6], [1, 0]] },
+        "shape": { "template": "compound", "leaflet_width": 1.0, "petiole": 0.4, "spread": 240, "lowest": 1.0, "outline": [[0, 0.05], [0.1, 0.22], [0.3, 0.5], [0.5, 0.74], [0.7, 0.92], [0.85, 1], [0.95, 0.9], [0.99, 0.6], [1, 0]] },
         "face_up": 0.6
       },
       "flower": {
@@ -105,7 +105,12 @@
     "generator.params.bud_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: the bud is now its flower closed, where before it drew the fruit ovoid."
+      "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: the bud is now its flower closed, where before it drew the fruit ovoid; since 2026-10-16 the flower is its family's funnel of clawed petals (before, 0.084)."
+    },
+    "generator.params.flower_area": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf area its `flower` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: since 2026-10-16 the flower is its family's funnel of clawed petals, where before it opened flat (before, 0.689)."
     },
     "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its compound leaf, where before they drew the generic simple card (0.235)."},
     "generator.params": {

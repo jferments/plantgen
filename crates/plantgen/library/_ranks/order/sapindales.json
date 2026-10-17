@@ -2,5 +2,107 @@
   "schema": 1,
   "rank": "order",
   "name": "Sapindales",
-  "parent": "clade/malvids"
+  "parent": "clade/malvids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "rarely"
+    },
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "division_pattern": "pinnate",
+    "rosette": "none",
+    "life_span": "perennial",
+    "inflorescence": {
+      "panicle": "usually",
+      "cyme": "often",
+      "raceme": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "zygomorphy": "other",
+    "corolla_shape": "rotate",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 3
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page, order characterisation (read 2026-10-16): leaves spiral. Opposite leaves in some Sapindaceae (Acer, Aesculus) and Rutaceae (Melicope and kin)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): leaves spiral. Wikipedia, Burseraceae (read 2026-10-16): alternate and spiral."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): leaves odd-pinnate with opposite leaflets at order level. Wikipedia, Meliaceae (read 2026-10-16): usually pinnate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): odd-pinnate leaves, leaflets opposite. Wikipedia, Burseraceae (read 2026-10-16): odd-pinnate, some trifoliate."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): mostly woody plants with leafy stems; no rosettes described."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): mostly woody; Biebersteinia a perennial herb; Nitrariaceae include herbs (Peganum perennial)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): inflorescences cymose; Sapindaceae paniculate. Wikipedia, Meliaceae (read 2026-10-16): panicles, cymes or spikes; Rutaceae: cymes or panicles. Branched cymose panicles drawn as panicle."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Burseraceae (read 2026-10-16): flowers small and radial; APweb, Sapindales page (read 2026-10-16): monosymmetry only in parts of Sapindaceae (Aesculus and kin)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): zygomorphic Sapindaceae and Rutaceae have unequal petals, not lipped or pea plans."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): petals free (clawed in Biebersteinia), around an extrastaminal disc; shape inferred as spreading."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): a nectary disc inside or outside the stamens, not a floral cup."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): ovary superior throughout (stigma head of fused carpel tips above)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Sapindales page (read 2026-10-16): Sapindaceae (2)3(-6), Nitrariaceae 3(4), Biebersteinia 5. Wikipedia, Burseraceae (read 2026-10-16): 3-5 connate."
+    }
+  }
 }

@@ -13,13 +13,72 @@
       "simple": "usually",
       "compound": "rarely"
     },
-    "perianth": "sepals_and_petals"
+    "perianth": "sepals_and_petals",
+    "phyllotaxis_pattern": "decussate",
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "corolla_shape": {
+      "tubular": "usually",
+      "salverform": "often",
+      "funnelform": "sometimes",
+      "rotate": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "hypanthium": false,
+    "rosette": {
+      "none": "usually",
+      "basal": "rarely"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), orders 50 Loganiales, 51 Apocynales and 52 Rubiales and the gentian family, which APG joins as Gentianales: leaves opposite (whorled in some madders, rarely alternate in the dogbanes), simple or rarely compound; petals united; stamens as many as the corolla lobes, on the corolla."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Gentianales page, order characterisation (read 2026-10-16): leaves opposite, joined by a line across the node. DELTA: Rubiaceae and Gentianaceae usually opposite and decussate."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Gentianales page (read 2026-10-16): flowers usually radially symmetric with fused petals. DELTA: Rubiaceae, Apocynaceae, Gentianaceae regular."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Rubiaceae corolla tubular or salver-shaped (the largest family, two thirds of candidates); Apocynaceae funnel- or salver-shaped; Gentianaceae bell, funnel, rotate or salver. Weighting by Rubiaceae."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Apocynaceae and Asclepiadaceae hermaphrodite; Rubiaceae and Gentianaceae usually so (Rubiaceae with some monoecious, dioecious, polygamous)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Rubiaceae mostly trees and shrubs; Apocynaceae mostly lianas and shrubs; Asclepiadaceae perennial; Gentianaceae mostly herbs, with annuals and biennials. 'Usually perennial' by species weight."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): no free hypanthium described for Rubiaceae, Apocynaceae or Gentianaceae; the ones with candidates that state it say false."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Gentianaceae (read 2026-10-16): some species with a basal rosette; Rubiaceae and Apocynaceae woody or climbing. Inferred."
     }
   }
 }

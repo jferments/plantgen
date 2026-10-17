@@ -2,5 +2,69 @@
   "schema": 1,
   "rank": "order",
   "name": "Commelinales",
-  "parent": "clade/commelinids"
+  "parent": "clade/commelinids",
+  "traits": {
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "both": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "rarely"
+    },
+    "hypanthium": false,
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Commelinales page (read 2026-10-16): Commelinaceae with calyx and corolla; Pontederiaceae, Haemodoraceae and Hanguanaceae with tepals. Commelinaceae hold about 730 of the order's roughly 810 species, so the monocot value (tepals) is wrong by species weight here."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): inflorescence terminal in Hanguanaceae, Pontederiaceae and Haemodoraceae; Commelinaceae cymes often leaf-opposed (terminal in origin), some also axillary."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): flowers bisexual through most of the order, andromonoecy common in Commelinaceae; Hanguanaceae dioecious."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): superior in Hanguanaceae and Commelinaceae; at least partly inferior only in Haemodoraceae-Conostylidoideae."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): no floral cup described for any family; tepals free to partly joined."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): Hanguanaceae robust perennials, Commelinaceae perennial (some annual), Haemodoraceae rhizomatous or cormous perennials; Philydraceae (inherits) are perennial marsh herbs."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): Commelinaceae, Hanguanaceae and Pontederiaceae spiral; Philydraceae and Haemodoraceae two-ranked. 'Usually' by Commelinaceae's species weight."
+    }
+  }
 }

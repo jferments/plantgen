@@ -96,7 +96,7 @@
           "aspect": 0.5,
           "unripe": 0.5
         },
-        "inflorescence": { "flowers": 15, "size": 0.35 },
+        "inflorescence": { "kind": "head", "flowers": 15, "size": 0.35 },
         "colour": [0.55, 0.2, 0.12],
         "accent": [0.4, 0.48, 0.2],
         "season": {
@@ -157,9 +157,7 @@
     "woodiness": "woody",
     "leaf_width_m": {"min": 0.03, "max": 0.08},
     "leaf_margin": "serrate",
-    "sexual_system": "hermaphrodite",
-    "inflorescence": "corymb",
-    "inflorescence_length_m": {"min": 0.04, "max": 0.08}
+    "sexual_system": "hermaphrodite"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -251,9 +249,7 @@
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."},
-    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."},
-    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."}
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."}
   },
   "provenance": {
     "sources": [

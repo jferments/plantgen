@@ -80,7 +80,7 @@
     "variation": 0.15,
     "organs": {
       "leaf": {
-        "shape": { "leaflet_width": 0.25, "teeth": 0, "petiole": 0.35, "angle": 30, "pinnule_angle": 75, "petiolule": 0 }
+        "shape": { "leaflet_width": 0.25, "petiole": 0.35, "angle": 30, "pinnule_angle": 75, "petiolule": 0 }
       },
       "thorn": {
         "shape": {

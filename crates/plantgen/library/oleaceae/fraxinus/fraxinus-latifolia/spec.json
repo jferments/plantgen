@@ -70,7 +70,6 @@
           "template": "compound",
           "leaflets": 7,
           "leaflet_width": 0.45,
-          "teeth": 0,
           "petiole": 0.15
         },
         "families": {

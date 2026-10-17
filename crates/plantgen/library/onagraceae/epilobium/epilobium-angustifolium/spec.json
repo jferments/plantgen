@@ -58,7 +58,6 @@
           "widest": 0.4,
           "tip": 0.85,
           "base": 0.25,
-          "teeth": 0,
           "petiole": 0.03
         }
       },
@@ -125,7 +124,6 @@
     "fruiting_months": [8, 9, 10],
     "height_max_m": 2.5,
     "life_span": "perennial",
-    "leaf_habit": "deciduous",
     "rosette": "none",
     "perennation": "rhizome",
     "leaf_width_m": {"min": 0.008, "max": 0.03},
@@ -237,7 +235,6 @@
     },
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2790112), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2790112), as no source read gives it."},
-    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2790112), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2790112), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2790112), as no source read gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2790112), as no source read gives it."},

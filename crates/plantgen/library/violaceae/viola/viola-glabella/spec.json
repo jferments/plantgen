@@ -61,8 +61,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "teeth": 8,
-          "tooth_depth": 0.03,
           "petiole": 0.3
         }
       },

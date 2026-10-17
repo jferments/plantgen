@@ -73,8 +73,6 @@
           "widest": 0.55,
           "tip": 0.15,
           "base": 0.4,
-          "teeth": 14,
-          "tooth_depth": 0.01,
           "petiole": 0.1
         },
         "families": {

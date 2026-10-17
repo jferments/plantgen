@@ -33,7 +33,7 @@
       "extinction": 0.45,
       "pipe_rings": 1.4e-05,
       "leaf_area": 0.138,
-      "bloom_area": 0.031,
+      "bloom_area": 0.032,
       "path_half": 4.25
     }
   },
@@ -71,8 +71,6 @@
           "widest": 0.35,
           "tip": 0.85,
           "base": 0.3,
-          "teeth": 18,
-          "tooth_depth": 0.005,
           "petiole": 0.08
         },
         "families": {
@@ -117,12 +115,10 @@
     "rosette": "none",
     "leaf_shape": "lanceolate",
     "inflorescence_length_m": {"min": 0.03, "max": 0.1},
-    "flowering_months": [4, 5, 6],
-    "fruit_size_m": {"min": 0.004, "max": 0.008},
-    "fruiting_months": [6, 7]
+    "flower_symmetry": "actinomorphic",
+    "fruit_size_m": {"min": 0.004, "max": 0.008}
   },
   "evidence": {
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.639)."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
@@ -199,9 +195,9 @@
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
-    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.137)."}
   },
   "provenance": {
     "sources": [

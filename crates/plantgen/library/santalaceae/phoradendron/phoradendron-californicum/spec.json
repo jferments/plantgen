@@ -78,6 +78,7 @@
     "leaf_shape": "ovate",
     "sexual_system": "dioecious",
     "inflorescence_length_m": {"min": 0.005, "max": 0.02},
+    "flower_symmetry": "actinomorphic",
     "flowering_months": [1, 2, 3],
     "fruit_size_m": {"min": 0.003, "max": 0.005},
     "fruiting_months": [3, 4, 5, 6]
@@ -146,6 +147,7 @@
     "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
     "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."}

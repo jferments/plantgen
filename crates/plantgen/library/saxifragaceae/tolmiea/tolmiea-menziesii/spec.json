@@ -65,8 +65,6 @@
           "widest": 0.3,
           "tip": 0.4,
           "base": 1.0,
-          "teeth": 9,
-          "tooth_depth": 0.06,
           "petiole": 0.3
         }
       },
@@ -77,8 +75,6 @@
           "widest": 0.3,
           "tip": 0.4,
           "base": 1.0,
-          "teeth": 9,
-          "tooth_depth": 0.06,
           "petiole": 0.5
         }
       },

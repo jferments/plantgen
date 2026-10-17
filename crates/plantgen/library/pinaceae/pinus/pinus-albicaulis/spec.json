@@ -92,8 +92,6 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "twigs": 2,
-          "aspect": 0.4,
           "twig_angle": 35,
           "width": 0.012
         },

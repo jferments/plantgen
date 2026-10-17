@@ -39,8 +39,8 @@
       "bud_spacing": 0.45,
       "nod": 10,
       "bud_size": 0.015,
-      "leaf_area": 0.295,
-      "basal_area": 0.236,
+      "leaf_area": 0.292,
+      "basal_area": 0.234,
       "basal_piece_area": 0.235,
       "flower_area": 0.384,
       "bud_area": 0.127,
@@ -68,8 +68,6 @@
           "widest": 0.35,
           "tip": 0.4,
           "base": 0.3,
-          "teeth": 8,
-          "tooth_depth": 0.02,
           "petiole": 0.1
         }
       },
@@ -79,8 +77,6 @@
           "widest": 0.4,
           "tip": 0.3,
           "base": 0.2,
-          "teeth": 10,
-          "tooth_depth": 0.02,
           "petiole": 0.2
         }
       },

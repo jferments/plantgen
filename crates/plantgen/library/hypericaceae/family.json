@@ -4,6 +4,8 @@
   "name": "Hypericaceae",
   "parent": "order/malpighiales",
   "traits": {
+    "flowering_position": "terminal",
+    "phyllotaxis_pattern": "decussate",
     "flower_merosity": {"min": 4, "max": 5},
     "carpels": {"min": 3, "max": 5},
     "corolla_shape": "rotate",
@@ -39,6 +41,8 @@
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Guttiferae (read 2026-10-16): inflorescences terminal, cymose."},
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Guttiferae (incl. Hypericaceae, read 2026-10-16): leaves mostly opposite; family states opposite usually, so crossing pairs."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 312: 4 to 5 sepals and petals."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 312: ovary of 3 to 5 carpels."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 312: 4 to 5 free, often contorted petals. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},

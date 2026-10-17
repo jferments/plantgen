@@ -4,6 +4,7 @@
   "name": "Rutaceae",
   "parent": "order/sapindales",
   "traits": {
+    "phyllotaxis_pattern": {"spiral": "usually", "decussate": "sometimes"},
     "stamens": {"min": 8, "max": 10, "high": 200},
     "carpels": {"min": 4, "max": 5, "low": 1, "high": 50},
     "hypanthium": false,
@@ -42,6 +43,7 @@
     }
   },
   "evidence": {
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Rutaceae (read 2026-10-16) does not give arrangement; opposite-leaved genera (Melicope, Boronia, Correa) are a sizeable minority, so decussate kept as 'sometimes'. Inferred."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359, 362: stamens 8-10 to many, usually in two whorls. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359, 362: carpels 4 to 5, rarely 1 to many. Book writes ∞; 50 is our stand-in for the upper bound."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359, 505: flowers hypogynous, rarely epigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},

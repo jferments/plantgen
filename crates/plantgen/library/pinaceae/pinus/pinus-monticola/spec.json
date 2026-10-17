@@ -27,7 +27,6 @@
       "shade_death": 0.25,
       "pipe_organ": 0.009,
       "pipe_rings": 1e-05,
-      "spray_area": 0.428,
       "branch_reach": 4,
       "epi_chance": 0
     }
@@ -65,8 +64,6 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "twigs": 2,
-          "aspect": 0.55,
           "twig_angle": 35,
           "width": 0.012
         },

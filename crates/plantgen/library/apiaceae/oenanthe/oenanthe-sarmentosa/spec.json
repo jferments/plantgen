@@ -55,7 +55,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "teeth": 4, "petiole": 0.15, "angle": 55, "pinnule_angle": 55 }
+        "shape": { "petiole": 0.15, "angle": 55, "pinnule_angle": 55 }
       },
       "flower": {
         "shape": {

@@ -58,7 +58,6 @@
       "leaf": {
         "shape": {
           "leaflet_width": 0.9,
-          "teeth": 8,
           "petiole": 0.35,
           "angle": 70,
           "petiolule": 0.08,
@@ -69,7 +68,6 @@
         "shape": {
           "template": "compound",
           "leaflet_width": 0.9,
-          "teeth": 8,
           "petiole": 0.45,
           "angle": 70,
           "petiolule": 0.08,

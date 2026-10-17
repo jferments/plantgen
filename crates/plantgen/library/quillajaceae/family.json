@@ -33,13 +33,37 @@
       "min": 5,
       "max": 5,
       "high": 7
-    }
+    },
+    "hypanthium": true,
+    "flowering_position": "terminal",
+    "life_span": "perennial",
+    "phyllotaxis_pattern": "spiral"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Quillajaceae: leaves alternate; leaves simple; margins entire or serrate; veins pinnate; leaves evergreen; blades oblong or ovate; stipules present; plants hermaphrodite or polygamous; ovary superior; stems woody; flowers in corymbs; flowers actinomorphic; perianth sepals and petals; fruit follicle; parts of each whorl 5; stamens 10; carpels 5 (-7). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page, Quillajaceae (read 2026-10-16): hypanthium present."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page, Quillajaceae (read 2026-10-16): inflorescence terminal, cymose."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page (read 2026-10-16): small evergreen tree."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page (read 2026-10-16): leaves spiral."
     }
   }
 }

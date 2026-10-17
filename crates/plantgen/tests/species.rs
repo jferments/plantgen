@@ -100,7 +100,8 @@ fn builtin_species_grow_to_their_reference_sizes() {
 
 /// Every organ type of every built-in species shades with about the leaf
 /// area its look draws, so the light a plant grows by matches the foliage
-/// a viewer sees.
+/// a viewer sees; a needle card with its needles' own area, which its
+/// painted lines overstate (`templates::shade_area`).
 #[test]
 fn builtin_species_shade_with_the_area_they_draw() {
     let mut failures = Vec::new();
@@ -113,7 +114,7 @@ fn builtin_species_shade_with_the_area_they_draw() {
         // One look per organ type, then its leaves' families' looks.
         assert!(shading.len() <= looks.len());
         for ((look, template), shaded) in looks.iter().zip(&templates.templates).zip(&shading) {
-            let drawn = templates::drawn_area(look, template);
+            let drawn = templates::shade_area(look, template);
             if !spec::areas_agree(drawn, *shaded) {
                 failures.push(format!(
                     "{id} `{}` draws {drawn:.3} m² on an organ 1 m long but shades with {shaded:.3} m²",
@@ -128,7 +129,7 @@ fn builtin_species_shade_with_the_area_they_draw() {
         for (index, look) in looks.iter().enumerate().take(shading.len()) {
             let forms = look.forms;
             let area = |index: usize, size: f64| {
-                templates::drawn_area(&looks[index], &templates.templates[index]) * size * size
+                templates::shade_area(&looks[index], &templates.templates[index]) * size * size
             };
             // Juvenile leaves draw about what the type's own look draws.
             if let Some((juvenile, _)) = forms.juvenile
@@ -482,7 +483,8 @@ fn growth_history_is_consistent_between_keyframes() {
 fn woody_species_bear_their_fruit_when_old() {
     // Plant roadmap P4: every tree and shrub whose blooms are fruit (as in
     // mid-July) carries them at its oldest keyframe, at sizes from a small
-    // berry to a long raceme of samaras.
+    // berry to a long raceme of samaras, unless its stated months put it
+    // out of flower and fruit then.
     let mut checked = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
@@ -491,7 +493,18 @@ fn woody_species_bear_their_fruit_when_old() {
             .organs
             .get("bloom")
             .is_some_and(|look| matches!(look.shape, plantgen::looks::Shape::Fruit(_)));
-        if !grown_as_broadleaf(&spec) || !fruiting {
+        let gone = spec
+            .appearance
+            .organs
+            .get("bloom")
+            .and_then(|look| look.season.as_ref())
+            .is_some_and(|season| {
+                matches!(
+                    season.stage(plantgen::package::DEFAULT_DAY),
+                    plantgen::looks::Stage::Gone
+                )
+            });
+        if !grown_as_broadleaf(&spec) || !fruiting || (gone && !in_season_on_the_default_day(id)) {
             continue;
         }
         checked += 1;
@@ -503,11 +516,19 @@ fn woody_species_bear_their_fruit_when_old() {
             .iter()
             .position(|organ| organ.name == "bloom")
             .unwrap_or_else(|| panic!("{id}: no bloom organ"));
+        // A lone bloom is grown as wide as its flower and drawn in fruit
+        // at its season's share of that.
+        let in_fruit = spec
+            .appearance
+            .organs
+            .get("bloom")
+            .and_then(|look| look.season.as_ref())
+            .map_or(1.0, |season| season.fruit_size);
         let sizes: Vec<f64> = growth.keyframes[0]
             .organs
             .iter()
             .filter(|organ| usize::from(organ.organ) == bloom)
-            .map(|organ| organ.size)
+            .map(|organ| organ.size * in_fruit)
             .collect();
         assert!(!sizes.is_empty(), "{id}: no fruit at {oldest} years");
         assert!(
@@ -525,7 +546,8 @@ fn fruiting_species_have_a_year() {
     // blooms are fruit has a season, so its stage (bud, flower, unripe,
     // ripe, gone) follows the day a package is grown for, never one time
     // of year. Each stage comes round in the year, and on the forest's
-    // default day each bears its flowers or its fruit.
+    // default day each bears its flowers or its fruit where its stated
+    // months put it in flower or fruit then.
     use plantgen::looks::{Shape, Stage};
     let mut checked = 0;
     for (id, _) in spec::all_species() {
@@ -545,7 +567,8 @@ fn fruiting_species_have_a_year() {
         assert!(season.flower_look.is_some(), "{id}: no flower look");
         let day = plantgen::package::DEFAULT_DAY;
         assert!(
-            matches!(season.stage(day), Stage::Flower | Stage::Fruit { .. }),
+            matches!(season.stage(day), Stage::Flower | Stage::Fruit { .. })
+                || matches!(season.stage(day), Stage::Gone) && !in_season_on_the_default_day(id),
             "{id}: {:?} on day {day}",
             season.stage(day)
         );
@@ -1126,6 +1149,22 @@ fn a_tree_in_a_steady_wind_flags_downwind() {
 
 /// Whether `spec` is grown by `broadleaf` or by a program that extends it
 /// (growth plan G1: the maples' `sapindaceae`).
+/// Whether the species' stated months (`flowering_months`,
+/// `fruiting_months`) put it in flower or fruit in the month of the
+/// forest's default day; where it states none, its looks are hand-built
+/// for that day.
+fn in_season_on_the_default_day(id: &str) -> bool {
+    let traits = plantgen::library::Library::builtin().traits_of(id).unwrap();
+    let stated: Vec<_> = plantgen::checks::MONTHS
+        .iter()
+        .filter_map(|name| traits.get(*name))
+        .collect();
+    stated.is_empty()
+        || stated
+            .iter()
+            .any(|months| plantgen::checks::months_of(months).contains(&7))
+}
+
 fn grown_as_broadleaf(spec: &PlantSpec) -> bool {
     let library = plantgen::library::Library::builtin();
     let mut name = spec.generator.program.clone();

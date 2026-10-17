@@ -4,6 +4,7 @@
   "name": "Salicaceae",
   "parent": "order/malpighiales",
   "traits": {
+    "carpels": {"min": 2, "max": 4, "typical": 2},
     "perianth": {"absent": "often", "tepals": "often", "sepals_and_petals": "sometimes"},
     "flower_merosity": {"min": 4, "max": 7, "low": 3, "high": 12},
     "hypanthium": {"false": "usually", "true": "sometimes"},
@@ -46,6 +47,7 @@
     }
   },
   "evidence": {
+    "traits.carpels": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, DELTA family Salicaceae (Salix and Populus; read 2026-10-16): gynoecium of 2 to 4 joined carpels, usually 2. Stated here so the willows do not take Malpighiales' typical 3."},
     "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 315: perianth lacking, uniseriate or biseriate (formula K 0-8, C 0-8); Floral Diagrams p. 257: calyx valvate, corolla rare, perianth reduced to glands in Salix and Populus."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 256, 257: merism variable, general formula 3 to 7 or more sepals; Simpson p. 315 allows up to 15. Simpson's rare 15 is capped at the vocabulary's 12."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 315, 505: Simpson calls the flowers hypogynous; Floral Diagrams p. 257 adds that a hypanthium is often developed in the former Flacourtiaceae (e.g. Casearia)."},

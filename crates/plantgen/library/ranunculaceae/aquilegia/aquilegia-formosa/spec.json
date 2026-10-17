@@ -62,10 +62,10 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflet_width": 0.8, "teeth": 3, "petiole": 0.2, "spread": 140, "lowest": 0.9, "petiolule": 0.1 }
+        "shape": { "template": "compound", "leaflet_width": 0.8, "petiole": 0.2, "spread": 140, "lowest": 0.9, "petiolule": 0.1 }
       },
       "basal": {
-        "shape": { "template": "compound", "leaflet_width": 0.8, "teeth": 3, "petiole": 0.4, "spread": 160, "lowest": 0.9, "petiolule": 0.1 }
+        "shape": { "template": "compound", "leaflet_width": 0.8, "petiole": 0.4, "spread": 160, "lowest": 0.9, "petiolule": 0.1 }
       },
       "flower": {
         "shape": {

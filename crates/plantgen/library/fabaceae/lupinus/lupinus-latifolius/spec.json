@@ -75,7 +75,6 @@
       "leaf": {
         "shape": {
           "leaflet_width": 0.16,
-          "teeth": 0,
           "lowest": 0.6,
           "widest": 0.5,
           "tip": 0.5,
@@ -87,7 +86,6 @@
         "shape": {
           "template": "compound",
           "leaflet_width": 0.16,
-          "teeth": 0,
           "lowest": 0.6,
           "widest": 0.5,
           "tip": 0.5,

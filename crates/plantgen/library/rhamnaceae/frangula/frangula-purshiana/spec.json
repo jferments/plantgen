@@ -37,7 +37,7 @@
       "space_reach": 1.6,
       "space_kill": 0.45,
       "pipe_rings": 5.3e-06,
-      "leaf_area": 0.156,
+      "leaf_area": 0.139,
       "bloom_area": 0.765,
       "blooms": 1,
       "bloom_size": 0.03,
@@ -75,7 +75,6 @@
           "widest": 0.5,
           "tip": 0.3,
           "base": 0.5,
-          "teeth": 0,
           "petiole": 0.12
         },
         "families": {

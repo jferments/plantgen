@@ -34,7 +34,7 @@
       "bloom_size": 0.05,
       "bloom_angle": 150,
       "leaf_area": 0.304,
-      "bloom_area": 0.472,
+      "bloom_area": 0.890,
       "wind": 1.0,
       "wind_bend": 0.12,
       "wind_kill": 0.0,
@@ -77,8 +77,6 @@
           "widest": 0.4,
           "tip": 0.6,
           "base": 0.7,
-          "teeth": 8,
-          "tooth_depth": 0.05,
           "petiole": 0.08
         },
         "families": {
@@ -115,18 +113,16 @@
     "height_typical_m": {"min": 10, "max": 25},
     "height_max_m": 30,
     "life_span": "perennial",
-    "leaf_habit": "deciduous",
     "rosette": "none",
     "leaf_length_m": {"min": 0.02, "max": 0.04},
     "leaf_width_m": {"min": 0.012, "max": 0.025},
     "leaf_margin": "crenate",
-    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
     "flowering_months": [10, 11, 12],
     "fruit_size_m": {"min": 0.005, "max": 0.007},
     "fruiting_months": [1, 2, 3]
   },
   "evidence": {
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (0.639)."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Nothofagus pumilio (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 11 records in 7 sources); trunks 0.49, branches 0.51. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
@@ -186,15 +182,15 @@
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
-    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
-    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.472)."}
   },
   "provenance": {
     "sources": [

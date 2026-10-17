@@ -69,6 +69,7 @@
       "leaf": {
         "shape": {
           "template": "simple",
+          "width": 0.55,
           "widest": 0.45,
           "tip": 0.55,
           "base": 0.6,

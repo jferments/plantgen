@@ -103,6 +103,7 @@
           "unripe": 0.7
         },
         "inflorescence": {
+          "kind": "raceme",
           "flowers": 14,
           "size": 0.15,
           "spread": 40,

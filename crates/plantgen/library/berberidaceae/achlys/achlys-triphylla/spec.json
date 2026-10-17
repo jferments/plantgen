@@ -58,7 +58,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflet_width": 0.95, "teeth": 7, "petiole": 0.3, "spread": 190, "lowest": 0.95, "outline": [[0, 0.05], [0.2, 0.3], [0.4, 0.52], [0.6, 0.74], [0.8, 0.93], [0.9, 1], [0.97, 0.85], [0.995, 0.5], [1, 0]] },
+        "shape": { "template": "compound", "leaflet_width": 0.95, "petiole": 0.3, "spread": 190, "lowest": 0.95, "outline": [[0, 0.05], [0.2, 0.3], [0.4, 0.52], [0.6, 0.74], [0.8, 0.93], [0.9, 1], [0.97, 0.85], [0.995, 0.5], [1, 0]] },
         "face_up": 0.7
       },
       "flower": {

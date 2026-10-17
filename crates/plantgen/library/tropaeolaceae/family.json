@@ -4,6 +4,8 @@
   "name": "Tropaeolaceae",
   "parent": "order/brassicales",
   "traits": {
+    "flowering_position": "lateral",
+    "flower_merosity": 5,
     "leaf_arrangement": {
       "alternate": "usually",
       "opposite": "sometimes"
@@ -41,6 +43,8 @@
     "perennation": "tuber"
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Brassicales page, Tropaeolaceae (read 2026-10-16): flowers often axillary."},
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Brassicales page, Tropaeolaceae (read 2026-10-16): five calyx-like parts and 5 (2) clawed petals."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

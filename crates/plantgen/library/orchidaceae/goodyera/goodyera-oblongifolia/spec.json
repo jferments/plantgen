@@ -81,7 +81,6 @@
           "widest": 0.45,
           "tip": 0.7,
           "base": 0.5,
-          "teeth": 0,
           "petiole": 0.0
         }
       },
@@ -142,7 +141,6 @@
           "widest": 0.45,
           "tip": 0.6,
           "base": 0.5,
-          "teeth": 0,
           "petiole": 0.15
         },
         "accent": [

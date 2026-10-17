@@ -90,7 +90,6 @@
       "leaf": {
         "shape": {
           "template": "compound",
-          "teeth": 9,
           "petiole": 0.3,
           "spread": 200,
           "lowest": 0.7,

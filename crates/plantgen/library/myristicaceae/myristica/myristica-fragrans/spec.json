@@ -131,7 +131,8 @@
     ],
     "height_typical_m": {"min": 5, "max": 15},
     "life_span": "perennial",
-    "rosette": "none"
+    "rosette": "none",
+    "flower_symmetry": "actinomorphic"
   },
   "evidence": {
     "taxon": {
@@ -246,7 +247,8 @@
     },
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."},
-    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."}
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."}
   },
   "provenance": {
     "sources": [
