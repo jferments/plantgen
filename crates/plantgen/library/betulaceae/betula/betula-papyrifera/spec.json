@@ -24,8 +24,6 @@
       "branch_angle": 45,
       "apical_young": 0.72,
       "apical": 0.6,
-      "leaf_size": 0.32,
-      "spur_leaf": 0.28,
       "spur_pairs": 2,
       "leaf_angle": 55,
       "wiggle": 5,
@@ -35,7 +33,6 @@
       "blooms": 2,
       "bloom_size": 0.045,
       "bloom_angle": 130,
-      "leaf_area": 0.304,
       "bloom_area": 0.289,
       "path_half": 7.05
     }
@@ -70,9 +67,7 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 50,
+          "template": "simple",
           "width": 0.7,
           "widest": 0.35,
           "tip": 0.5,

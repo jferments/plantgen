@@ -37,15 +37,12 @@
       "pipe_rings": 3e-06,
       "space_reach": 1.02,
       "space_kill": 0.252,
-      "leaf_size": 0.1,
-      "spur_leaf": 0.09,
       "spur_pairs": 1,
       "leaf_angle": 50,
       "blooms": 2,
       "adult_age": 4,
       "bloom_size": 0.015,
       "bloom_angle": 120,
-      "leaf_area": 0.329,
       "bloom_area": 1.423,
       "path_half": 1.36
     }
@@ -67,10 +64,7 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 11,
-          "angle": 60,
-          "stalk": 0.1,
+          "template": "simple",
           "width": 0.65,
           "widest": 0.5,
           "tip": 0.2,
