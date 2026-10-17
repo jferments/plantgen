@@ -4,6 +4,9 @@
   "name": "Lamiaceae",
   "parent": "order/lamiales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "sometimes"},
+    "leaf_margin": {"serrate": "usually", "crenate": "often", "entire": "sometimes"},
+    "leaf_shape": {"ovate": "usually", "lanceolate": "often", "elliptic": "sometimes", "cordate": "sometimes", "linear": "sometimes"},
     "perianth": "sepals_and_petals",
     "carpels": 2,
     "ovary_position": "superior",
@@ -50,6 +53,9 @@
     "stem_cross_section": {"square": "usually"}
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Labiatae (read 2026-10-17): lamina entire or dissected, dissected ones pinnatifid or palmatifid; Flora of China family page (read 2026-10-17): simple to pinnately divided. Most species have undivided blades."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "Lucid family key, Lamiaceae (read 2026-10-17): leaves usually toothed; margins entire, crenate, dentate, serrate or sinuate. Reed College family page (read 2026-10-17): margin often serrate. DELTA, Labiatae (read 2026-10-17): entire, crenate or serrate. Wikipedia Salvia (read 2026-10-17): often entire, sometimes toothed, which keeps entire in the list."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "Lucid family key, Lamiaceae (read 2026-10-17): blade outlines linear, lanceolate, ovate, elliptic, oblong, oblanceolate, orbicular and needle-like; bases may be cordate. Ranking ours, weighted by genus size (Wikipedia Lamiaceae (read 2026-10-17) gives Salvia c. 900, Scutellaria 360, Stachys 300, Plectranthus 300, Hyptis 280 species): these mostly have ovate blades; narrow blades in Thymus and many shrubby Mediterranean genera."},
     "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: perianth biseriate, a 5-lobed fused calyx and a fused 4- or 5-lobed corolla (formula K (5) C (5))."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: gynoecium of 2 carpels, divided by false septa into 4 locules (formula G (2))."},
     "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: flowers hypogynous, ovary superior and often deeply 4-lobed with a gynobasic style."},

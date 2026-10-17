@@ -33,7 +33,11 @@
       "spiral": "usually"
     },
     "sexual_system": "hermaphrodite",
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "leaf_margin": {
+      "spiny": "usually",
+      "entire": "often"
+    }
   },
   "forms": {
     "forb": {
@@ -99,6 +103,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 288, family Berberidaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Berberidaceae (read 2026-10-17): margins entire or toothed, teeth usually prickly, lamina often spinose; Wikipedia Berberis: entire or spiny margins; Britannica: spiny-margined leaves. Weighted to Berberis incl. Mahonia, most of the family."
     }
   }
 }

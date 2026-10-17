@@ -16,7 +16,9 @@
       "polygamous": "usually",
       "monoecious": "often",
       "dioecious": "often"
-    }
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "acuminate"
   },
   "evidence": {
     "traits.fruit_type": {
@@ -48,6 +50,16 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia Cannabaceae (read 2026-10-16): often dioecious (Cannabis, Humulus). Celtis (~100 of ~170 spp.) polygamo-monoecious from my knowledge, hence polygamous first; medium confidence."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Celtis (read 2026-10-17): simple leaves ovate with drawn-out tip. Celtis is the largest genus of Cannabaceae s.l., so it decides (genus weighting)."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Celtis (read 2026-10-17): ovate-acuminate leaves."
     }
   }
 }

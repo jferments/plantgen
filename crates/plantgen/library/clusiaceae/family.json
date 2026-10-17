@@ -62,7 +62,8 @@
       "max": 5,
       "typical": 4,
       "high": 9
-    }
+    },
+    "leaf_incision": "none"
   },
   "evidence": {
     "traits": {
@@ -84,6 +85,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Guttiferae (read 2026-10-16): petals 2-6 (to 14). Typical 4 is my weighting from Garcinia (~400 of ~750 spp.)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Guttiferae (read 2026-10-17): simple, undivided lamina with entire margins; Wikipedia Clusia: simple, entire."
     }
   }
 }

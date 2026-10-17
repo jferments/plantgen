@@ -61,6 +61,10 @@
     "carpels": {
       "min": 2,
       "max": 15
+    },
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "rarely"
     }
   },
   "evidence": {
@@ -68,6 +72,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ochnaceae with Medusagynaceae, Quiinaceae, Strasburgeriaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes opposite or whorled; leaves usually simple, rarely compound; compound leaves pinnate; margins entire, serrate or dentate, sometimes crenate; veins pinnate; leaves evergreen; stipules usually present, sometimes absent; plants usually hermaphrodite, sometimes polygamous; ovary superior; floral cup absent; stems usually woody, rarely herbaceous; flowers in cymes, in racemes, in umbels or in panicles, sometimes solitary; flowers usually actinomorphic, sometimes zygomorphic; perianth sepals and petals; fruit capsule, berry or drupe, sometimes follicle; stamens 5 to 100; carpels 2 to 15. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Ochnaceae (read 2026-10-17): leaves usually simple; pinnately lobed or compound mainly in juvenile Quiinoideae, pinnate in Krukoviella, Rhytidanthera. DELTA: simple mostly."
     }
   }
 }

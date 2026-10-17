@@ -25,7 +25,8 @@
     "corolla_shape": {
       "campanulate": "usually",
       "rotate": "sometimes"
-    }
+    },
+    "leaf_incision": "none"
   },
   "evidence": {
     "traits": {
@@ -47,6 +48,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Sapotaceae (read 2026-10-16): corolla gamopetalous with short tube; 'campanulate' is our reading. Low-medium confidence."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Sapotaceae (read 2026-10-17): lamina undivided, margins entire."
     }
   }
 }
