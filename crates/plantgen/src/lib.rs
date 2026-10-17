@@ -609,7 +609,16 @@ pub mod venation;
 /// thrice-divided leaf whose divisions roll round their rachis sets its
 /// segments round each pinnule's too; a leaflet may be as narrow as a
 /// hundredth of its length (96 is the species-facts records, #171).
-/// 98: a lineage whose flowers end its shoots (`flowering_position`
+/// 98: variegation along a parallel-veined blade's veins (`veins`: a
+/// midrib stripe, then veinlet dashes, then a net round dark islands as
+/// the share grows; `slant` turns the cross veins into a pinnate blade's
+/// lateral veins), its inverse `between` (silver fields between the veins),
+/// `zone` (a band along the outline, or a V from the base), a rim the
+/// pattern never reaches, and patches on the upper face only (`faces`);
+/// a compound leaf's pattern lies on each leaflet; the rattlesnake
+/// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
+/// (97 is lacy leaves as geometry, #183).
+/// 99: a lineage whose flowers end its shoots (`flowering_position`
 /// terminal or both: `tip_bloom`, broadleaf revision 17) ends each shoot
 /// tip that has stopped at the crown's edge, once adult and in the light,
 /// in its year's blooms, nearly along the shoot, so its flowers and fruit
@@ -617,5 +626,5 @@ pub mod venation;
 /// other plants draw as before. Sarcandra and Chloranthus serratus state
 /// their terminal inflorescences. The leaf-arrangement check counts only
 /// leaves born with their internode, so short shoots crowding a node are
-/// not read as a whorl (97 is lacy leaves drawn as geometry, #183).
-pub const GENERATOR_REVISION: u32 = 98;
+/// not read as a whorl (98 is variegation along the veins, #175).
+pub const GENERATOR_REVISION: u32 = 99;
