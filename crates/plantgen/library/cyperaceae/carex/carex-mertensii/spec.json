@@ -160,7 +160,8 @@
     "inflorescence_length_m": {"min": 0.05, "max": 0.15},
     "flowering_months": [6, 7],
     "fruit_size_m": {"min": 0.002, "max": 0.003},
-    "fruiting_months": [7, 8]
+    "fruiting_months": [7, 8],
+    "leaf_habit": "deciduous"
   },
   "evidence": {
     "taxon": {
@@ -229,7 +230,8 @@
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L228604), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L228604), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L228604), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L228604), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L228604), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L228604), as no source read gives it."}
   },
   "provenance": {
     "sources": [

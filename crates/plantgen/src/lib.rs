@@ -628,4 +628,11 @@ pub mod venation;
 /// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
 /// are as long as its flora gives (98 is variegation along the
 /// veins, #175).
-pub const GENERATOR_REVISION: u32 = 99;
+/// 100: 23 species state facts the species-facts records give that the
+/// checks now judge as floras measure them (#189): basal leaf sizes of
+/// foxglove, columbine, foamflower, bull thistle, lupine and mule's ears,
+/// grasses' and sedges' deciduous blades, and fruit, flower, cluster,
+/// shape and height facts held back from 96; broom's stated obovate
+/// leaflets draw where a hand-drawn profile stood (99 is scaly stipe
+/// bases, #174).
+pub const GENERATOR_REVISION: u32 = 100;
