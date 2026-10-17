@@ -609,7 +609,26 @@ pub mod venation;
 /// thrice-divided leaf whose divisions roll round their rachis sets its
 /// segments round each pinnule's too; a leaflet may be as narrow as a
 /// hundredth of its length (96 is the species-facts records, #171).
-/// 98: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
+/// 98: variegation along a parallel-veined blade's veins (`veins`: a
+/// midrib stripe, then veinlet dashes, then a net round dark islands as
+/// the share grows; `slant` turns the cross veins into a pinnate blade's
+/// lateral veins), its inverse `between` (silver fields between the veins),
+/// `zone` (a band along the outline, or a V from the base), a rim the
+/// pattern never reaches, and patches on the upper face only (`faces`);
+/// a compound leaf's pattern lies on each leaflet; the rattlesnake
+/// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
+/// (97 is lacy leaves as geometry, #183).
+/// 99: a fern's stipe scales stand only on its base where its flora says
+/// so (`stipe_scale_extent`, fern program revision 9), as long as stated
+/// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
+/// stated `stipe_colour`; the fern families state whether their stipes are
+/// scaly as Flora of North America gives (scaly at the base in
+/// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
+/// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
+/// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
+/// are as long as its flora gives (98 is variegation along the
+/// veins, #175).
+/// 100: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
 /// and hairs gathered on its main veins (`Hairs::veins`, from
 /// `leaf_hairs_on_veins`); a face's strands stand on the face that wears
 /// them and on the drawn cells of a bent card, and a stated hair length
@@ -618,6 +637,6 @@ pub mod venation;
 /// drawn as stars, little trees and winding strands, white with air;
 /// glandular and stinging hairs among them (`glandular_hairs`,
 /// `stinging_hairs`), with round heads and glass needles on green feet;
-/// the strand budget spent on the hairs nearest the eye first (97 is
-/// thread segments, #183).
-pub const GENERATOR_REVISION: u32 = 98;
+/// the strand budget spent on the hairs nearest the eye first (99 is
+/// fern stipe scales, #174).
+pub const GENERATOR_REVISION: u32 = 100;

@@ -26,8 +26,8 @@
       "woody": "rarely"
     },
     "inflorescence": {
-      "raceme": "often",
-      "spike": "often"
+      "spike": "usually",
+      "raceme": "often"
     },
     "flower_symmetry": "zygomorphic",
     "zygomorphy": "other",
@@ -36,8 +36,9 @@
       "tepals": "sometimes"
     },
     "fruit_type": {
+      "capsule": "usually",
       "berry": "often",
-      "follicle": "often"
+      "follicle": "sometimes"
     },
     "stamens": {
       "min": 3,
@@ -60,6 +61,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Resedaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Resedaceae (read 2026-10-17): genus counts sum to ~92 spp, Reseda ~55 of them, the rest small (Forchhammeria 10, Ochradenus 8, Stixis 7, others 1-3). Wikipedia Reseda (read 2026-10-17): fruit a small dry many-seeded capsule. Capsule added and ranked first on Reseda's share (over half the family); berry and follicle kept from the current value for the small genera, which were not read."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Reseda (read 2026-10-17): flowers in a slender spike; Reseda holds ~55 of ~92 family species per Wikipedia Resedaceae (read 2026-10-17). Small genera not read; raceme kept second."
     }
   }
 }

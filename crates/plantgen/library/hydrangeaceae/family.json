@@ -11,13 +11,13 @@
     },
     "leaf_division": "simple",
     "leaf_margin": {
-      "entire": "often",
-      "serrate": "often",
-      "dentate": "often"
+      "serrate": "usually",
+      "dentate": "sometimes",
+      "entire": "sometimes"
     },
     "leaf_venation": {
       "pinnate": "often",
-      "palmate": "often"
+      "palmate": "sometimes"
     },
     "leaf_habit": {
       "evergreen": "often",
@@ -29,13 +29,13 @@
       "polygamous": "rarely"
     },
     "ovary_position": {
-      "half_inferior": "often",
       "inferior": "often",
-      "superior": "sometimes"
+      "half_inferior": "sometimes",
+      "superior": "rarely"
     },
     "hypanthium": {
-      "true": "often",
-      "false": "often"
+      "true": "usually",
+      "false": "sometimes"
     },
     "woodiness": {
       "woody": "often",
@@ -96,6 +96,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Hydrangeaceae (read 2026-10-17): lamina usually undivided, dissected and palmatifid in Kirengeshoma; Hydrangea quercifolia (oakleaf) is lobed."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-nepal",
+      "note": "Flora of Nepal Hydrangeaceae (RBGE, read 2026-10-17): family margins more or less serrate; genus accounts give serrate to doubly serrate Hydrangea (~30 spp as counted there), serrulate Deutzia (~60), distantly serrate Philadelphus (~80) and serrate Dichroa (12). All ~180 counted species serrate; entire and dentate kept as minorities."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-nepal",
+      "note": "Flora of Nepal Hydrangeaceae (read 2026-10-17): veins pinnate in Hydrangea (~30), Deutzia (~60) and Dichroa (12), but 3-5 veins from near the base in Philadelphus (~80). Tally pinnate ~102 vs palmate ~80 of ~182 counted, a lead of ~12%, so only often against sometimes. A wider Hydrangea (70+ spp in other treatments) would widen the lead."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-nepal",
+      "note": "Flora of Nepal Hydrangeaceae (read 2026-10-17): ovary inferior in Deutzia (~60) and Dichroa (12); inferior to slightly superior in Philadelphus (~80); inferior with a flat top to semi-superior in Hydrangea (~30). Every counted genus is inferior at least in part (~182 spp), with half-inferior only as the range's upper end; superior not reported, so lowered to rarely."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-nepal",
+      "note": "Flora of Nepal Hydrangeaceae (read 2026-10-17): in all four genera described (Hydrangea, Deutzia, Philadelphus, Dichroa; ~180 spp) the calyx forms a tube joined to the ovary, bearing the petals and stamens above it, i.e. a floral cup fused to an inferior ovary. No genus lacks it."
     }
   }
 }

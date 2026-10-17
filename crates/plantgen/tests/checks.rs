@@ -152,11 +152,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
     ),
     (
-        "jacobaea-vulgaris",
-        "leaf_width_m",
-        "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
-    ),
-    (
         "larrea-tridentata",
         "leaf_division",
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
@@ -243,13 +238,8 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
-        "leaf_length_m",
-        "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
-    ),
-    (
-        "program:grass",
-        "leaf_width_m",
-        "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
+        "leaf_habit",
+        "a cohort's blades turn to thatch the year after they grow, so a wintergreen grass, rush or sedge (the fescues, tufted hairgrass, orchardgrass, Yorkshire fog, soft rush, slough sedge) draws its leaves as deciduous until the grass program keeps a green blade through winter",
     ),
     (
         "program:grass",

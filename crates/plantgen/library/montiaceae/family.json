@@ -6,7 +6,7 @@
   "traits": {
     "leaf_arrangement": {
       "alternate": "often",
-      "opposite": "often"
+      "opposite": "sometimes"
     },
     "leaf_division": "simple",
     "leaf_margin": "entire",
@@ -31,24 +31,25 @@
       "half_inferior": "rarely"
     },
     "hypanthium": {
-      "true": "often",
-      "false": "often"
+      "false": "usually",
+      "true": "rarely"
     },
     "woodiness": {
       "woody": "often",
       "herbaceous": "often"
     },
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often"
+      "cyme": "usually",
+      "raceme": "sometimes",
+      "solitary": "sometimes"
     },
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
     },
     "perianth": {
-      "sepals_and_petals": "often",
-      "tepals": "often"
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
     },
     "fruit_type": "capsule",
     "stamens": {
@@ -67,6 +68,31 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Portulacaceae, which takes in Montiaceae: leaves alternate or opposite; leaves simple; margins entire; veins pinnate or single; blades linear, lanceolate, oblanceolate, ovate or obovate; stipules usually present, rarely absent; plants hermaphrodite; ovary usually superior, rarely half inferior; floral cup present or absent; stems woody or herbaceous; flowers solitary or in cymes; flowers actinomorphic or zygomorphic; perianth sepals and petals or tepals; fruit capsule; stamens 3 to 50; carpels (2-) 3 (-9). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "reed-plant-families",
+      "note": "Reed College Montiaceae family sheet (read 2026-10-17): flowers mostly in cymes, sometimes raceme-like, a few solitary. Weighted by genus: Calandrinia s.l. (Wikipedia: 37 spp plus 60-74 Australian species split off as Parakeelya/Rumicastrum, ~100+ together) has cymes; Claytonia (~26-33 spp, SEINet/FNA) has racemose or cymose one-sided clusters. Solitary flowers are the minority."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "reed-plant-families",
+      "note": "Reed College Montiaceae sheet (read 2026-10-17) gives the flowers as radial for the family; Calandrinia (Wikipedia) and Claytonia (SEINet/FNA, five spreading equal petals) are regular. No genus page read shows bilateral flowers, so zygomorphic drops to rarely."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The whole family shares one plan: two green, unequal outer parts and about five showy inner parts. SEINet/FNA Claytonia (read 2026-10-17) and Wikipedia Calandrinia call these sepals and petals; the Reed College sheet reads the outer pair as bracts and the inner as tepals. Drawn, it is a green pair under coloured petals, so sepals and petals leads."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "reed-plant-families",
+      "note": "Reed College Montiaceae sheet (read 2026-10-17): ovary superior and flowers hypogynous, no floral cup described; neither the Claytonia (SEINet/FNA) nor Calandrinia (Wikipedia) page mentions a cup."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Calandrinia (read 2026-10-17; with the Australian Parakeelya group ~100+ spp, the largest unit): leaves mostly in a basal rosette, alternate or opposite. SEINet/FNA Claytonia (~26-33 spp): basal rosette plus usually one opposite stem pair. Rosettes dominate the big genera, so alternate leads; the lead rests on two genera only, hence often."
     }
   }
 }
