@@ -123,7 +123,10 @@
         "if": {
           "properties": {
             "value": {
-              "const": "cannot tell"
+              "enum": [
+                "cannot tell",
+                "not applicable"
+              ]
             }
           }
         },
