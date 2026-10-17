@@ -7,10 +7,7 @@
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_venation": "parallel",
-    "leaf_habit": {
-      "evergreen": "often",
-      "deciduous": "often"
-    },
+    "leaf_habit": {"evergreen": "usually", "deciduous": "rarely"},
     "stipules": {
       "true": "often",
       "false": "often"
@@ -31,10 +28,7 @@
       "actinomorphic": "often",
       "zygomorphic": "often"
     },
-    "perianth": {
-      "tepals": "often",
-      "absent": "often"
-    },
+    "perianth": {"tepals": "usually", "absent": "sometimes"},
     "fruit_type": {
       "capsule": "often",
       "nut": "often",
@@ -60,6 +54,8 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Encyclopedia.pub Restionaceae entry (read 2026-10-17): restio flowers have six tepals (three outer, three inner). This covers the ~360 African and ~150 Australian restios (Wikipedia Restionaceae); naked flowers belong mainly to the small Centrolepis group now joined to the family."},
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Encyclopedia.pub Restionaceae entry (read 2026-10-17) calls the restios evergreen, grass-like plants; Wikipedia Restionaceae (read 2026-10-17): tufted or rhizomatous herbs whose green stems do the photosynthesis and whose leaves are reduced to sheaths. Applies to the ~570 species across the family, so evergreen leads by far."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
