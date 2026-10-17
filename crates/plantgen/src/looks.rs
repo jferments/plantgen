@@ -62,6 +62,11 @@ pub struct OrganLook {
     /// margins, centres, stripes, bands or spots, different on every leaf.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub variegation: Option<Variegation>,
+    /// A fern's sori on the lower face of its pinnae or segments
+    /// ([`Sori`]): round, oblong or linear clusters of sporangia, or a
+    /// band along the edge, where its flora places them. None if absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sori: Option<Sori>,
     /// How far a card that lies along its organ turns flat to face the
     /// sky, from 0 (as the program placed it) to 1 (level). Broad leaves
     /// held toward the light form the layered crowns of shade-tolerant
@@ -348,6 +353,155 @@ impl Variegation {
         within("variegation slant", self.slant, 0.0, 4.0)?;
         for channel in self.colour {
             within("variegation colour", f64::from(channel), 0.0, 1.0)?;
+        }
+        Ok(())
+    }
+}
+
+/// A fern's sori as its flora words them (Flora of North America: "Sori in
+/// 1 row between midrib and margin, round; indusia round-reniform",
+/// Dryopteris), painted on the lower face of its pinnae or segments:
+/// clusters of brown sporangia, each round, oblong along its vein, a line
+/// beside the midrib, or a band along the edge, part hidden under a pale
+/// indusium where it has one. Each segment of a card (a pinna, or each
+/// pinnule of a divided one) carries its own, placed by how far a point
+/// lies from the segment's midrib toward its edge (`crate::templates`).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Sori {
+    /// A sorus's outline.
+    pub shape: SorusShape,
+    /// Where on a segment the sori sit.
+    pub position: SorusPosition,
+    /// What covers each sorus.
+    pub indusium: Indusium,
+    /// Rows of sori on each side of a segment's midrib.
+    pub rows: f64,
+    /// A sorus's half-width, as a share of its segment's half-width
+    /// there: a round sorus's radius, a line's or band's half-width.
+    pub size: f64,
+    /// The share of cards that bear sori, 0 to 1: every fertile pinna, or
+    /// the share of a fern's pinnae that are fertile where they are alike.
+    pub amount: f64,
+    /// The ripe sporangia's colour, linear RGB.
+    pub colour: [f32; 3],
+    /// The indusium's colour, linear RGB.
+    pub indusium_colour: [f32; 3],
+}
+
+impl Default for Sori {
+    fn default() -> Self {
+        Self {
+            shape: SorusShape::Round,
+            position: SorusPosition::Medial,
+            indusium: Indusium::None,
+            rows: 1.0,
+            size: 0.25,
+            amount: 1.0,
+            colour: [0.155, 0.061, 0.017],
+            indusium_colour: [0.515, 0.43, 0.262],
+        }
+    }
+}
+
+/// A sorus's outline (the trait `sorus_shape`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SorusShape {
+    /// A round dot (Polystichum, Dryopteris).
+    #[default]
+    Round,
+    /// Short and oblong along its vein, two or three times as long as
+    /// wide (Athyrium, Asplenium).
+    Oblong,
+    /// A line beside the midrib or along a vein (Blechnum).
+    Linear,
+    /// A band along the segment's edge (Pteridium, Pteris, Adiantum).
+    Marginal,
+}
+
+/// Where on a segment its sori sit (the trait `sorus_position`), as a
+/// share of the way from its midrib to its edge.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SorusPosition {
+    /// Beside the midrib.
+    Costal,
+    /// About halfway to the edge.
+    #[default]
+    Medial,
+    /// Near the edge.
+    Submarginal,
+    /// On the edge.
+    Marginal,
+}
+
+impl SorusPosition {
+    /// The share of the way from midrib (0) to edge (1) the sori are
+    /// centred on.
+    #[must_use]
+    pub fn across(self) -> f64 {
+        match self {
+            Self::Costal => 0.22,
+            Self::Medial => 0.5,
+            Self::Submarginal => 0.7,
+            Self::Marginal => 0.9,
+        }
+    }
+}
+
+/// What covers a young sorus (the trait `indusium`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Indusium {
+    /// Nothing: the sporangia are bare (Polypodium).
+    #[default]
+    None,
+    /// A kidney-shaped flap attached at a notch (Dryopteris).
+    Kidney,
+    /// A round shield on a central stalk (Polystichum).
+    Shield,
+    /// A flap along one side (Athyrium, Asplenium, Blechnum).
+    Flap,
+    /// The leaf's own edge rolled over the sori (Pteridium, Pteris).
+    Margin,
+}
+
+impl Indusium {
+    /// Whether it covers a point of a sorus `reach` from the sorus's
+    /// middle (1 at its edge), on the side away from the midrib (`outer`;
+    /// along an oblong sorus, one side), in a kidney's sinus or not.
+    #[must_use]
+    pub fn veils(self, reach: f64, outer: bool, sinus: bool) -> bool {
+        match self {
+            Self::None => false,
+            Self::Kidney => reach < 0.85 && !sinus,
+            Self::Shield => reach < 0.75,
+            Self::Flap | Self::Margin => reach < 0.95 && outer,
+        }
+    }
+}
+
+impl Sori {
+    /// Whether a card with `seed` (0 to 1, see
+    /// [`crate::templates::card_seed`]) bears its sori: the cards whose
+    /// own number, drawn afresh from the seed so it does not follow the
+    /// card's variegation, falls below `amount`.
+    #[must_use]
+    pub fn borne(&self, seed: f64) -> bool {
+        (seed * 7.31 + 0.37).fract() < self.amount
+    }
+
+    /// Whether its values are in range.
+    ///
+    /// # Errors
+    /// Names the first value out of range.
+    pub fn validate(&self) -> Result<(), String> {
+        within("sori rows", self.rows, 1.0, 20.0)?;
+        within("sori size", self.size, 0.02, 1.0)?;
+        within("sori amount", self.amount, 0.0, 1.0)?;
+        for channel in self.colour.into_iter().chain(self.indusium_colour) {
+            within("sori colour", f64::from(channel), 0.0, 1.0)?;
         }
         Ok(())
     }
@@ -3057,6 +3211,8 @@ pub struct Look {
     /// Its lower face's colour ([`OrganLook::underside`]), if it differs.
     pub underside: Option<[f32; 3]>,
     pub variegation: Option<Variegation>,
+    /// Its sori ([`OrganLook::sori`]), if it bears any.
+    pub sori: Option<Sori>,
     pub face_up: f64,
     /// Degrees its card turns about its own length ([`OrganLook::roll`]).
     pub roll: f64,
@@ -3247,6 +3403,7 @@ pub fn resolve<'a>(
                     accent: look.accent.unwrap_or(colour),
                     underside: look.underside,
                     variegation: look.variegation,
+                    sori: look.sori,
                     face_up: look.face_up,
                     roll: look.roll,
                     insertion: look.insertion,
@@ -3278,6 +3435,7 @@ pub fn resolve<'a>(
             None => Look {
                 underside: None,
                 variegation: None,
+                sori: None,
                 organ: name.to_string(),
                 bend: crate::bend::Bend::default_for(&Shape::default_for(kind)),
                 form: crate::blooms::Form::default_for(&Shape::default_for(kind)),
@@ -3620,6 +3778,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
     Look {
         underside: None,
         variegation: None,
+        sori: None,
         organ: look.organ.clone(),
         shape: stage.shape.clone(),
         colour,
@@ -3905,6 +4064,12 @@ impl OrganLook {
         if let Some(variegation) = &self.variegation {
             variegation.validate()?;
         }
+        if let Some(sori) = &self.sori {
+            sori.validate()?;
+            if self.variegation.is_some() {
+                return Err("a look with sori is not variegated: both are painted from the same texture channel".to_string());
+            }
+        }
         if let Some(season) = &self.season {
             season.validate()?;
             self.check_stages(season)?;
@@ -4121,6 +4286,7 @@ mod tests {
                 hairs: None,
                 underside: None,
                 variegation: None,
+                sori: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Lobed(Lobed::default()),
@@ -4378,6 +4544,7 @@ mod tests {
                 hairs: None,
                 underside: None,
                 variegation: None,
+                sori: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4473,6 +4640,7 @@ mod tests {
             hairs: None,
             underside: None,
             variegation: None,
+            sori: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
@@ -4566,6 +4734,7 @@ mod tests {
                 hairs: None,
                 underside: None,
                 variegation: None,
+                sori: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4686,6 +4855,7 @@ mod tests {
             hairs: None,
             underside: None,
             variegation: None,
+            sori: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
