@@ -555,4 +555,13 @@ pub mod venation;
 /// colour on a ring at any distance, not as bare sticks; seventeen
 /// species state their fruiting months from their sources, so their year
 /// now bears fruit.
-pub const GENERATOR_REVISION: u32 = 87;
+/// 88: a lineage whose flowers end its shoots (`flowering_position`
+/// terminal or both: `tip_bloom`, broadleaf revision 17) ends each shoot
+/// tip that has stopped at the crown's edge, once adult and in the light,
+/// in its year's blooms, nearly along the shoot, so its flowers and fruit
+/// stand on the crown's surface, not only on the short shoots inside it;
+/// other plants draw as before. Sarcandra and Chloranthus serratus state
+/// their terminal inflorescences. The leaf-arrangement check counts only
+/// leaves born with their internode, so short shoots crowding a node are
+/// not read as a whorl.
+pub const GENERATOR_REVISION: u32 = 88;
