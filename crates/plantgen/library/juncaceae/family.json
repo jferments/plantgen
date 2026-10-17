@@ -4,6 +4,8 @@
   "name": "Juncaceae",
   "parent": "order/poales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_margin": "entire",
     "hypanthium": false,
     "flower_merosity": 3,
     "flower_symmetry": "actinomorphic",
@@ -59,6 +61,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Juncaceae (read 2026-10-17): leaves simple with undivided lamina; Wikipedia Juncaceae/Juncus describe flat or terete undivided blades, some reduced to sheaths."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Juncaceae (read 2026-10-17): lamina entire; leaves narrow (linear, acicular, subulate), parallel-veined. Wikipedia: Juncus leaves flat or cylindrical, Luzula flat with long white hairs on the edges; no teeth reported."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 261: Simpson states the hypanthium is absent; flowers hypogynous with 3+3 free, scarious tepals."},
     "traits": {
       "evidence": "SourceInferred",

@@ -233,8 +233,8 @@ pub struct SpineSet {
     pub length_spread: f64,
     /// How far each spine curves back toward the skin over its length.
     pub curve: f64,
-    /// How far its last fifth turns back as a hook: a fishhook's 120 to
-    /// 180.
+    /// How far its tip turns back as a hook: a fishhook's 120 to 180,
+    /// curled over the last eighth or so of its length.
     pub hook: f64,
     /// Width at the base, metres, and thickness over width: below 1 a
     /// flattened spine.
