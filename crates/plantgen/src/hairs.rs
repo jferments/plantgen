@@ -21,6 +21,11 @@
 //!   half a pixel wide, as a camera's blur draws a hair thinner than its
 //!   pixel, and lit as a fibre is (Kajiya and Kay, 1989), along its length
 //!   rather than across a face.
+//!
+//! The young stems and the leaf stalks bear the plant's stem hairs
+//! (`crate::spec::Appearance::stem_hairs`) the same two ways: a cast of
+//! their colour toward the hairs', wearing off as the wood ages
+//! ([`youth`]), and up close strands standing from them ([`Tube`]).
 
 // Texel and strand counts are small whole numbers, and texel positions
 // small signed ones: casts between them and to `f64` lose nothing.
@@ -58,6 +63,86 @@ pub const FRINGE_BRIGHTNESS: f32 = 1.5;
 /// Strands one plant draws at most ([`strand_mesh`]), each nine
 /// triangles: a close-up's budget.
 pub const MAX_STRANDS: usize = 60_000;
+
+/// Wood this many years old has lost its stem hairs: a flora's "young
+/// stems tomentose" are the shoots of the last year or two, bare once
+/// their bark forms (a liana's stems stay thin, so their thickness does
+/// not tell). Wood up to half of it keeps them all ([`youth`]).
+pub const YOUNG_YEARS: f64 = 2.0;
+
+/// How much of the plant's stem hairs wood `years` old keeps: all up to
+/// half of [`YOUNG_YEARS`], none from it on.
+#[must_use]
+pub fn youth(years: f64) -> f64 {
+    (2.0 * (YOUNG_YEARS - years) / YOUNG_YEARS).clamp(0.0, 1.0)
+}
+
+/// `colour` of wood keeping `youth` of the plant's stem `hairs`
+/// ([`youth`]), cast toward theirs as a blade's is ([`cast`]).
+#[must_use]
+pub fn cast_wood(colour: [f32; 3], youth: f64, hairs: Option<&Hairs>) -> [f32; 3] {
+    let Some(hairs) = hairs else {
+        return colour;
+    };
+    let weight = (cast(hairs.density) * youth) as f32;
+    std::array::from_fn(|c| colour[c] + (hairs.colour[c] - colour[c]) * weight)
+}
+
+/// A piece of young wood that bears hairs, on the nearest levels
+/// ([`crate::mesh::PlantMesh::hair_tubes`]): a stem's piece between two
+/// of its rings, or a leaf's stalk. Its hairs are the plant's stem hairs,
+/// their density already worn by its age ([`youth`]). Previews draw
+/// them as strands up close ([`strand_mesh`]); packages leave them out.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Tube {
+    pub start: [f32; 3],
+    pub end: [f32; 3],
+    pub radius: f32,
+    /// The wood's colour, which a clear hair shows through it.
+    pub colour: [f32; 3],
+    pub born: f32,
+    /// Infinity when it is never shed.
+    pub shed: f32,
+    pub segment: u32,
+    pub hairs: Hairs,
+}
+
+impl Tube {
+    /// A tube from `start` to `end` of wood `radius` thick keeping
+    /// `youth` of `hairs` ([`youth`]), or `None` where it keeps none or is
+    /// too short to bear any.
+    #[must_use]
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        start: Vec3,
+        end: Vec3,
+        radius: f64,
+        colour: [f32; 3],
+        (born, shed): (f64, Option<f64>),
+        segment: u32,
+        hairs: &Hairs,
+        youth: f64,
+    ) -> Option<Self> {
+        let density = hairs.density * youth;
+        if density <= 0.0 || hairs.length <= 0.0 || (end - start).length() <= 1e-6 {
+            return None;
+        }
+        Some(Self {
+            start: start.to_f32(),
+            end: end.to_f32(),
+            radius: radius as f32,
+            colour,
+            born: born as f32,
+            shed: shed.map_or(f32::INFINITY, |shed| shed as f32),
+            segment,
+            hairs: Hairs {
+                density,
+                edge: None,
+                ..hairs.clone()
+            },
+        })
+    }
+}
 
 /// A number in `[0, 1)` from two small integers and a salt.
 fn hash(a: u64, b: u64, salt: u64) -> f64 {
@@ -245,7 +330,6 @@ pub fn strand_light(
 /// A bent card's point at `u` across (0 left, 1 right) and `v` along, and
 /// its unit normal on the face side: as [`PlantMesh::card_mesh`] lays it.
 fn card_point(card: &Card, u: f64, v: f64) -> (Vec3, Vec3) {
-    let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
     card.bend.point(
         vector(card.base),
         vector(card.heading),
@@ -333,7 +417,10 @@ fn edges(templates: &crate::templates::Templates, template: usize) -> Vec<Edge> 
 
 /// Every hair on the bent cards of `plant` (the levels that keep a card
 /// per organ) whose look has hairs, as a strand at least two pixels long
-/// where `pixel` gives a pixel's width at a point: a tapering three-sided
+/// where `pixel` gives a pixel's width at a point (infinite where the
+/// point is out of view, which draws none there and spends none of the
+/// budget on it), and every hair on the plant's young wood and stalks
+/// ([`PlantMesh::hair_tubes`]): a tapering three-sided
 /// solid of nine triangles, its vertex normals its tangent (for
 /// [`strand_light`]), in its hairs' colour. At most [`MAX_STRANDS`], an
 /// even share of each card's kept where there would be more.
@@ -358,6 +445,9 @@ pub fn strand_mesh(
                 return (0, 0.0, 0.0);
             };
             let template = &templates.templates[usize::from(card.template)];
+            if !pixel(card_point(card, 0.5, 0.5).0).is_finite() {
+                return (0, 0.0, 0.0);
+            }
             let area = f64::from(card.length) * f64::from(card.length) * template.area();
             let spacing = (hairs.length * 0.9).max(1e-4);
             let face = hairs.density * area / (spacing * spacing);
@@ -367,7 +457,22 @@ pub fn strand_mesh(
             ((face + edge).round() as usize, face, edge)
         })
         .collect();
-    let total: usize = wanted.iter().map(|(n, _, _)| n).sum();
+    let tube_counts: Vec<usize> = plant
+        .hair_tubes
+        .iter()
+        .map(|tube| {
+            let (start, end) = (vector(tube.start), vector(tube.end));
+            if !pixel((start + end) * 0.5).is_finite() {
+                return 0;
+            }
+            let length = (end - start).length();
+            let spacing = (tube.hairs.length * 0.9).max(1e-4);
+            let area = 2.0 * math::PI * f64::from(tube.radius) * length;
+            (tube.hairs.density * area / (spacing * spacing)).round() as usize
+        })
+        .collect();
+    let total: usize =
+        wanted.iter().map(|(n, _, _)| n).sum::<usize>() + tube_counts.iter().sum::<usize>();
     let share = if total > MAX_STRANDS {
         MAX_STRANDS as f64 / total as f64
     } else {
@@ -485,7 +590,61 @@ pub fn strand_mesh(
             push_strand(&mut mesh, strand, colour, lifetime, card.segment);
         }
     }
+    // Hairs on the young stems and the stalks, standing out of the wood
+    // and leaning toward its tip as a blade's lean toward its own.
+    for (index, tube) in plant.hair_tubes.iter().enumerate() {
+        let (start, end) = (vector(tube.start), vector(tube.end));
+        let hairs = &tube.hairs;
+        if fringe_drawn(hairs, pixel((start + end) * 0.5)) {
+            continue;
+        }
+        let count = (tube_counts[index] as f64 * share).round() as u64;
+        let seed = mix64(index as u64 ^ 0x5455_4245);
+        let lie = hairs.lie.clamp(0.0, 1.0);
+        let curl = hairs.curl.clamp(0.0, 1.0);
+        let turn = |k: u64, salt: u64| hash(k, salt, seed) - 0.5;
+        let tipward = (end - start).normalize_or(Vec3::Y);
+        let across = math::any_perpendicular(tipward);
+        let other = tipward.cross(across);
+        let colour: [f32; 3] =
+            std::array::from_fn(|c| 0.45 * hairs.colour[c] + 0.55 * tube.colour[c].max(0.0));
+        let lifetime = (
+            f64::from(tube.born),
+            tube.shed.is_finite().then_some(f64::from(tube.shed)),
+        );
+        for k in 0..count {
+            let along = hash(k, 2, seed);
+            let angle = 2.0 * math::PI * hash(k, 3, seed);
+            let normal = across * math::cos(angle) + other * math::sin(angle);
+            let side = normal.cross(tipward);
+            let rise = math::radians((lie * 80.0 + turn(k, 4) * 24.0).clamp(3.0, 88.0));
+            let swing = math::radians(turn(k, 5) * (40.0 + curl * 120.0));
+            let first = (tipward * (math::cos(rise) * math::cos(swing))
+                + side * (math::cos(rise) * math::sin(swing))
+                + normal * math::sin(rise))
+            .normalize_or(normal);
+            let bow = (1.0 - lie) * 0.3 + curl * 0.8;
+            let second =
+                (first + side * (turn(k, 6) * 2.0 * curl) + (tipward - normal * 0.5) * (bow * 0.5))
+                    .normalize_or(first);
+            let length = hairs.length * (0.6 + 0.8 * hash(k, 1, seed));
+            let root = start + (end - start) * along + normal * f64::from(tube.radius);
+            let strand = Strand {
+                root,
+                first,
+                second,
+                length,
+                radius: (length * 0.012).max(0.5 * pixel(root)),
+            };
+            push_strand(&mut mesh, &strand, colour, lifetime, tube.segment);
+        }
+    }
     mesh
+}
+
+/// A point of a [`Tube`] or [`Card`], in double precision.
+fn vector(v: [f32; 3]) -> Vec3 {
+    Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]))
 }
 
 /// A strand's solid: a ring of three at its root, a narrower ring at its
@@ -694,5 +853,85 @@ mod tests {
         // Strigose (FNA: appressed-hirsute), and ciliate.
         assert!((hairs.density - 0.45).abs() < 1e-9 && hairs.lie < 0.1);
         assert_eq!(hairs.edge, Some(0.8));
+        // Its leaf stalks are crisped-hirsute (FNA): curled hairs.
+        let stems = spec.appearance.stem_hairs.as_ref().unwrap();
+        assert!(stems.drawn() && stems.curl > 0.8, "{stems:?}");
+    }
+
+    /// Stem hairs keep on the first year's wood, wear off in the second
+    /// and cast young wood toward their colour as they do a blade.
+    #[test]
+    fn stem_hairs_stay_on_young_wood() {
+        assert_eq!(youth(0.5), 1.0);
+        assert_eq!(youth(YOUNG_YEARS), 0.0);
+        assert!(youth(1.5) > 0.0 && youth(1.5) < 1.0);
+        let felt = Hairs {
+            density: 0.85,
+            colour: [0.8, 0.8, 0.76],
+            ..Hairs::default()
+        };
+        let bark = [0.2, 0.15, 0.1];
+        assert_eq!(cast_wood(bark, 1.0, None), bark);
+        assert_eq!(cast_wood(bark, 0.0, Some(&felt)), bark);
+        let young = cast_wood(bark, 1.0, Some(&felt));
+        assert!(young[0] > bark[0] + 0.1, "{young:?}");
+        // A tube keeps the hairs its age leaves, and none past it.
+        let tube = |youth| {
+            Tube::new(
+                Vec3::ZERO,
+                Vec3::new(0.0, 0.05, 0.0),
+                0.001,
+                bark,
+                (0.0, None),
+                0,
+                &felt,
+                youth,
+            )
+        };
+        assert!(tube(0.0).is_none());
+        assert!((tube(0.5).unwrap().hairs.density - 0.425).abs() < 1e-9);
+    }
+
+    /// Up close a hairy stalk's hairs stand out of it as strands; far
+    /// away, or out of view, it draws none.
+    #[test]
+    fn a_hairy_stalk_draws_strands_up_close() {
+        let tube = Tube::new(
+            Vec3::ZERO,
+            Vec3::new(0.0, 0.05, 0.0),
+            0.001,
+            [0.3, 0.2, 0.2],
+            (0.0, None),
+            0,
+            &villous(),
+            1.0,
+        )
+        .unwrap();
+        let plant = PlantMesh {
+            hair_tubes: vec![tube],
+            ..PlantMesh::default()
+        };
+        let templates = Templates::for_looks(&[]);
+        let near = strand_mesh(&plant, &templates, &|_| 0.0001);
+        // About a hair for each of its spacings squared it covers: 37.
+        assert!(near.indices.len() / 27 > 20, "{}", near.indices.len() / 27);
+        assert!(
+            strand_mesh(&plant, &templates, &|_| 0.01)
+                .indices
+                .is_empty()
+        );
+        assert!(
+            strand_mesh(&plant, &templates, &|_| f64::INFINITY)
+                .indices
+                .is_empty()
+        );
+        // Every hair roots on the stalk's surface and reaches out of it.
+        for p in &near.positions {
+            let out = f64::from(p[0]).hypot(f64::from(p[2]));
+            assert!(
+                out >= 0.0009 && out <= 0.001 + villous().length * 1.5,
+                "{p:?}"
+            );
+        }
     }
 }

@@ -864,15 +864,15 @@
       "group": "leaves",
       "organ": "leaf",
       "type": "enum",
-      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "hispid", "tomentose", "lanate"],
+      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "crisped", "hispid", "tomentose", "lanate"],
       "optional": true,
-      "why": "the hairs on a blade's upper side, as floras name them (Harris and Harris): none (glabrous), few or soon lost (glabrescent), minute (puberulent), short and soft (pubescent), pressed flat and stiff (strigose) or silky (sericeous), long and soft, sparse (pilose) or shaggy (villous), stiff and spreading (hirsute) or bristly (hispid), matted into a felt (tomentose) or a wool (lanate)"
+      "why": "the hairs on a blade's upper side, as floras name them (Harris and Harris): none (glabrous), few or soon lost (glabrescent), minute (puberulent), short and soft (pubescent), pressed flat and stiff (strigose) or silky (sericeous), long and soft, sparse (pilose) or shaggy (villous), stiff and spreading (hirsute), curled or kinked (crisped) or bristly (hispid), matted into a felt (tomentose) or a wool (lanate)"
     },
     "leaf_hairs_beneath": {
       "group": "leaves",
       "organ": "leaf",
       "type": "enum",
-      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "hispid", "tomentose", "lanate"],
+      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "crisped", "hispid", "tomentose", "lanate"],
       "optional": true,
       "why": "the hairs on a blade's underside, in the words of `leaf_hairs`"
     },
@@ -892,12 +892,20 @@
       "optional": true,
       "why": "a hair on a blade's upper side, from its foot to its tip"
     },
+    "stem_hairs": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "crisped", "hispid", "tomentose", "lanate"],
+      "optional": true,
+      "why": "the hairs on the young stems and the leaf stalks, in the blade's words: a flora's 'young stems tomentose' or 'petiole crisped-hirsute'; they wear off as the wood ages"
+    },
     "hair_colour": {
       "group": "leaves",
       "organ": "leaf",
       "type": "colour",
       "optional": true,
-      "why": "the colour of the hairs on a blade, where they are not white or colourless"
+      "why": "the colour of the hairs on a blade, its stalk and the young stems, where they are not white or colourless"
     },
     "leaf_lobes": {
       "group": "leaves",

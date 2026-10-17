@@ -49,9 +49,9 @@
   },
   "appearance": {
     "bark": [
-      0.3,
-      0.2,
-      0.17
+      0.15,
+      0.18,
+      0.07
     ],
     "foliage": [
       0.03,
@@ -228,7 +228,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after Wikipedia's article: glossy, dark green, kidney-shaped evergreen leaves on long stalks, the outline drawn by the kingdom's rules from the stated reniform shape, held nearly flat in a closed mat, as iNaturalist photographs show it (observations 87548580, 381126740)."
+      "note": "By eye, after Wikipedia's article: glossy, dark green, kidney-shaped evergreen leaves on long, hairy, pale green stalks, the outline drawn by the kingdom's rules from the stated reniform shape, held nearly flat in a closed mat, as iNaturalist photographs show it (observations 87548580, 381126740)."
     }
   },
   "provenance": {
