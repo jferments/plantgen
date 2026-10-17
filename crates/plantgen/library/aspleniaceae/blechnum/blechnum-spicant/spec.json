@@ -87,8 +87,8 @@
     "leaf_margin": {"entire": "usually"},
     "rosette": "terminal",
     "frond_dimorphism": "dimorphic",
-    "height_typical_m": {"min": 0.2, "max": 0.5},
-    "height_max_m": 0.75,
+    "height_typical_m": {"min": 0.4, "max": 1},
+    "height_max_m": 1.25,
     "woodiness": "herbaceous",
     "perennation": "rhizome",
     "leaf_arrangement": "alternate"
@@ -171,8 +171,8 @@
     "traits.frond_dimorphism": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: frond dimorphism dimorphic."},
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: blades lanceolate to narrowly elliptic. The spec stated {\"linear\": \"usually\", \"oblanceolate\": \"often\"}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
     "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: rhizome erect, sometimes branched. The spec stated \"short_creeping\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
-    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
-    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2): fertile leaves \"more erect and longer than sterile leaves\", \"Petioles of fertile leaves ... 15-60 cm\", \"Fertile blades erect ... 25-65 × 3-15 cm\". The plant is as tall as an erect fertile leaf, petiole and blade: read as 40 to 100 cm typically, in place of the species-facts estimate of 20 to 50 cm, which is the sterile rosette's."},
+    "traits.height_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2): fertile leaves \"more erect and longer than sterile leaves\", \"Petioles of fertile leaves ... 15-60 cm\", \"Fertile blades erect ... 25-65 × 3-15 cm\". The plant is as tall as an erect fertile leaf, petiole and blade: read as 40 to 100 cm typically, and at most the longest petiole and blade, 125 cm, in place of the species-facts estimate of 75 cm."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
     "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."}
