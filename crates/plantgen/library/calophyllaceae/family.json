@@ -29,20 +29,20 @@
       "herbaceous": "often"
     },
     "inflorescence": {
-      "solitary": "rarely",
-      "cyme": "often",
-      "umbel": "often",
-      "panicle": "often"
+      "cyme": "usually",
+      "panicle": "often",
+      "umbel": "sometimes",
+      "solitary": "rarely"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": {
-      "sepals_and_petals": "often",
-      "spiral": "often"
+      "sepals_and_petals": "usually",
+      "spiral": "sometimes"
     },
     "fruit_type": {
-      "capsule": "often",
+      "drupe": "usually",
       "berry": "often",
-      "drupe": "often"
+      "capsule": "often"
     },
     "stamens": {
       "min": 5,
@@ -67,6 +67,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Guttiferae (read 2026-10-16): mostly opposite (Caraipa, Kielmeyera alternate)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "DELTA Guttiferae s.l. (read 2026-10-17): capsule, berry or drupe, unweighted. Wikipedia (read 2026-10-17): Calophyllaceae ~475 spp in ~14 genera; Calophyllum alone has 204 spp (over 40%) with a thin-fleshed drupe. Other genera (Mammea, Kielmeyera, Mesua, Caraipa) not read; capsular Kielmeyera and Caraipa together are far smaller than Calophyllum."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "DELTA Guttiferae s.l. (read 2026-10-17): terminal cymose groups, often umbel-like or paniculate. Wikipedia Calophyllum (read 2026-10-17; 204 of ~475 family spp): axillary or terminal cymes or thyrses. Thyrse kept as panicle."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "DELTA Guttiferae s.l. (read 2026-10-17): calyx and corolla distinct or intergrading. Wikipedia Calophyllum (read 2026-10-17; over 40% of family species): sepals and petals in whorls, sometimes alike."
     }
   }
 }

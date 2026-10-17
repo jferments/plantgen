@@ -19,7 +19,11 @@
 //! frond) has its stipe, the axis below the lowest leaflet, its blade, the
 //! axis above, its width, twice the farthest a leaflet reaches out from
 //! the axis, and its leaflets (its pinnae, where they are drawn divided
-//! again), counted. Heads,
+//! again), counted. A plant with leaves at its foot (a rosette's, a
+//! tiller's) names its stem leaves `reduced`, `like_basal` or `none` by
+//! their median length (`cauline_leaves`); where they are reduced, its
+//! leaf sizes are measured on the leaves at its foot, as floras measure a
+//! herb's basal leaves and call the stem's reduced. Heads,
 //! spikelets, divided leaves and clusters measure their parts from their
 //! own layouts ([`crate::capitula::dimensions`],
 //! [`crate::spikelets::dimensions`], [`crate::divided::dimensions`],
@@ -109,7 +113,8 @@
 //! as an organ's size is; a leaf drawn in pieces, a fern's frond, as its
 //! structure); one that fell with its limb, or still stands at the end,
 //! is not counted. A plant is evergreen (`leaf_habit`) where a leaf stands
-//! on it into its second year, else deciduous. A cone takes to ripen
+//! on it into its second year, else deciduous; a grass blade turned to
+//! thatch is a dead leaf, not one kept. A cone takes to ripen
 //! (`cone_maturation_years`) the seasons the youngest cone drawn ripe has
 //! stood, its first counted, one value for the plant, and stays once ripe
 //! (`cone_retention_years`) its life less those.
@@ -225,7 +230,7 @@ pub const COUNTS: [&str; 25] = [
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 32] = [
+pub const KINDS: [&str; 33] = [
     "inflorescence",
     "inflorescence_unit",
     "inflorescence_posture",
@@ -258,6 +263,7 @@ pub const KINDS: [&str; 32] = [
     "glochids",
     "foliage_ranks",
     "leaf_habit",
+    "cauline_leaves",
 ];
 
 /// The months characters read from a grown plant's year (development,
@@ -627,6 +633,18 @@ impl Tally {
             .insert(state.to_owned());
     }
 
+    /// Another tally's values and kinds, but for the characters `skip`.
+    fn absorb(&mut self, other: Tally, skip: &[&str]) {
+        for (key, value) in other.seen {
+            if !skip.contains(&key.0) {
+                self.seen.entry(key).or_insert(value);
+            }
+        }
+        for (character, states) in other.kinds {
+            self.kinds.entry(character).or_default().extend(states);
+        }
+    }
+
     fn measures(self) -> (Measures, Kinds) {
         let mut measures = Measures::new();
         for ((character, _, _), value) in self.seen {
@@ -924,7 +942,8 @@ fn lives(grown: &Grown<'_>, ripening: Option<f64>, tally: &mut Tally) {
 
 /// Whether the plant keeps leaves through the winter (`leaf_habit`): an
 /// evergreen's stand on it into their second year or later, a deciduous
-/// plant's live out one season.
+/// plant's live out one season. A leaf drawn in pieces is alive while any
+/// of its pieces is not yet a later phase (a blade's thatch).
 fn leaf_habit(grown: &Grown<'_>, tally: &mut Tally) {
     let graph = grown.graph;
     let lone = graph
@@ -934,17 +953,25 @@ fn leaf_habit(grown: &Grown<'_>, tally: &mut Tally) {
             organ.within.is_none() && !grown.later(organ) && grown.term(organ) == "leaf"
         })
         .map(|organ| organ.born);
-    let fronds = graph
-        .structures
+    // A leaf structure lives while it holds a living piece: a grass blade
+    // turned to thatch is last year's dead leaf, not a leaf kept.
+    let living: BTreeSet<u32> = graph
+        .organs
         .iter()
-        .filter(|at| {
-            grown
-                .growth
-                .structure_types
-                .get(usize::from(at.structure))
-                .is_some_and(|kind| kind.term == "leaf")
+        .filter(|organ| !grown.later(organ))
+        .filter_map(|organ| organ.within)
+        .collect();
+    let fronds = (0_u32..)
+        .zip(&graph.structures)
+        .filter(|(index, at)| {
+            living.contains(index)
+                && grown
+                    .growth
+                    .structure_types
+                    .get(usize::from(at.structure))
+                    .is_some_and(|kind| kind.term == "leaf")
         })
-        .map(|at| at.born);
+        .map(|(_, at)| at.born);
     let mut oldest: Option<f64> = None;
     for born in lone.chain(fronds) {
         let age = graph.age - born;
@@ -1588,8 +1615,14 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
 }
 
 /// Every grown leaf: a leaf organ standing alone, or a structure termed
-/// `leaf` drawn in pieces.
+/// `leaf` drawn in pieces. A plant with leaves at its foot names its stem
+/// leaves (`cauline_leaves`) by their median length: reduced under
+/// [`REDUCED`] of the basal leaves', else like them, and none where it has
+/// none. Where they are reduced, its leaf sizes are those at its foot:
+/// floras measure a herb's basal leaves and call the stem's reduced.
+#[allow(clippy::too_many_lines)]
 fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tally) {
+    let (mut ground, mut stem) = (Tally::default(), Tally::default());
     // Pieces of each leaf structure: its index and the organs within it.
     let mut pieces: BTreeMap<u32, Vec<&GraphOrgan>> = BTreeMap::new();
     // Leaflets each leaf structure holds: a fern's pinnae on its rachis.
@@ -1608,7 +1641,12 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
             }
             None if term == "leaf" => {
                 if let Some((look, size)) = leaf_look(organ, looks) {
-                    leaf_sizes(&look.shape, size, organ.id, tally);
+                    let into = if organ.segment.is_none() {
+                        &mut ground
+                    } else {
+                        &mut stem
+                    };
+                    leaf_sizes(&look.shape, size, organ.id, into);
                 }
             }
             _ => {}
@@ -1629,7 +1667,12 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
             .and_then(|kind| grown.growth.structure_types.get(usize::from(kind)))
             .is_some_and(|kind| kind.term == "leaf");
         if leafy {
-            frond_sizes(*structure, members, drawn, looks, tally);
+            let into = if at_ground(*structure, members, drawn) {
+                &mut ground
+            } else {
+                &mut stem
+            };
+            frond_sizes(*structure, members, drawn, looks, into);
         }
     }
     for (structure, members) in pieces {
@@ -1639,6 +1682,11 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         if !leafy || kind_of(structure).is_some_and(|kind| feathered.contains(&kind)) {
             continue;
         }
+        let tally = if at_ground(structure, &members, drawn) {
+            &mut ground
+        } else {
+            &mut stem
+        };
         let id = drawn.structures[structure as usize].id;
         if let [one] = members.as_slice() {
             if let Some((look, size)) = leaf_look(one, looks) {
@@ -1678,8 +1726,56 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         tally.add("leaf_length_m", id, 0, length);
         tally.add("leaf_width_m", id, 0, width);
     }
+    let sizes = ["leaf_length_m", "leaf_width_m", "petiole_length_m"];
+    let lengths = |of: &Tally| {
+        let mut lengths: Vec<f64> = of
+            .seen
+            .iter()
+            .filter(|((character, _, _), _)| *character == "leaf_length_m")
+            .map(|(_, length)| *length)
+            .collect();
+        lengths.sort_by(f64::total_cmp);
+        lengths
+    };
+    let (at_foot, up_stems) = (lengths(&ground), lengths(&stem));
+    let reduced = !at_foot.is_empty()
+        && !up_stems.is_empty()
+        && rank(&up_stems, 0.5) < REDUCED * rank(&at_foot, 0.5);
+    if !at_foot.is_empty() {
+        tally.kind(
+            "cauline_leaves",
+            if up_stems.is_empty() {
+                "none"
+            } else if reduced {
+                "reduced"
+            } else {
+                "like_basal"
+            },
+        );
+    }
+    tally.absorb(ground, &[]);
+    tally.absorb(stem, if reduced { &sizes } else { &[] });
 }
 
+/// Of the basal leaves' median length, the stem leaves' under which they
+/// are reduced.
+const REDUCED: f64 = 0.75;
+
+/// Whether a leaf structure stands on the ground (a rosette's or a
+/// tiller's leaf), not on a stem: the axis its first organ's segments,
+/// followed out of the structure, stand on.
+fn at_ground(structure: u32, members: &[&GraphOrgan], drawn: &PlantGraph) -> bool {
+    let Some(first) = members.first() else {
+        return false;
+    };
+    let mut segment = first.segment.map(|s| s as usize);
+    while let Some(index) = segment
+        && drawn.segments[index].within == Some(structure)
+    {
+        segment = drawn.segments[index].parent.map(|p| p as usize);
+    }
+    segment.is_none()
+}
 /// Degrees past which a frond's rachis turns at one joint, more than an
 /// unrolled frond bends along its arch (a few degrees a joint); with
 /// pieces of its blade under half as long as its longest, the frond is

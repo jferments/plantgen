@@ -46,9 +46,9 @@
     "zygomorphy": "bilabiate",
     "perianth": "sepals_and_petals",
     "fruit_type": {
-      "capsule": "often",
+      "capsule": "usually",
       "drupe": "often",
-      "nut": "often",
+      "nut": "sometimes",
       "achene": "sometimes"
     },
     "flower_merosity": 5,
@@ -60,6 +60,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Goodeniaceae with Brunoniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, rarely opposite or whorled; leaves simple; margins entire, serrate or dentate; veins pinnate; stipules absent; leaf rosettes basal or none; plants hermaphrodite; ovary superior, half inferior or inferior; floral cup absent; stems herbaceous or woody; flowers solitary, in cymes, in racemes, in spikes or in heads; flowers usually zygomorphic, sometimes actinomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit capsule, drupe or nut, sometimes achene; parts of each whorl 5; stamens 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "lucid-ffpa",
+      "note": "Families of Flowering Plants of Australia, Goodeniaceae (read 2026-10-17; the family is almost wholly Australian): fruit mostly a dry capsule splitting along or between the locules, fleshy drupes also occurring (Scaevola). Wikipedia Goodeniaceae (read 2026-10-17; 12 genera, ~404 spp) lists drupe, nut or capsule and notes the winged seeds of the capsular members; capsular Goodenia is the largest genus."
     }
   }
 }

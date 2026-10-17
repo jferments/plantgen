@@ -26,7 +26,8 @@
     },
     "inflorescence": {
       "spike": "often",
-      "raceme": "often"
+      "raceme": "sometimes",
+      "panicle": "sometimes"
     },
     "ovary_position": {
       "inferior": "usually",
@@ -34,7 +35,7 @@
     },
     "fruit_type": {
       "samara": "often",
-      "drupe": "often"
+      "drupe": "sometimes"
     },
     "leaf_margin": "entire",
     "leaf_incision": "none",
@@ -63,6 +64,16 @@
       "evidence": "SourceInferred",
       "source": "lucid-ffpa",
       "note": "Lucid family key, Combretaceae (read 2026-10-17): bases cuneate, attenuate or cordate."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Ranked by genus (read 2026-10-17). Combretum (272 spp, Wikipedia Combretum; the Smithsonian Neotropical treatment gives ~271): fruit dry with four or five wings, a few only ribbed, so samara. Terminalia s.l. (~278 spp, count from the first pass's Wikipedia/POWO reading): Flora of Taiwan genus page gives fruit angular, flattened or lengthwise winged around a hard stone, so split between winged and drupe-like. Samara takes all of Combretum plus the winged Terminalia, drupe only part of Terminalia; the margin is not counted within Terminalia, hence often/sometimes."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Ranked by genus (read 2026-10-17). Terminalia s.l. (~278 spp): Flora of Taiwan genus page gives axillary spikes or spike-like racemes, sometimes panicled, so spike. Combretum (~272): Smithsonian treatment gives heads, racemes, spikes or compound panicles, the Neotropical ones axillary racemes or terminal panicles, so Combretum splits among raceme, spike and panicle. Spike gets all of Terminalia plus part of Combretum against at most Combretum for raceme: a lead, but not counted inside Combretum."
     }
   }
 }
