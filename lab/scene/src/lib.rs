@@ -14,15 +14,19 @@
 //!   [`Scene::templates`] (the layer plus one, so an alpha of at least 1
 //!   never trips a renderer's alpha mask): discard where the texel's
 //!   coverage (alpha) is below one half; else the albedo is
-//!   `mix(colour.rgb, accent * darkening, texel.g) * 2 * texel.r`, the
-//!   card's colour moved toward its template's accent colour
-//!   ([`Scene::template_accents`]) darkened for this card
-//!   ([`SceneMesh::darkening`]), times the texel's brightness, then moved
-//!   toward its hairs' colour darkened alike by their weight
-//!   ([`Scene::template_hairs`]). That is [`Templates::albedo`]
-//!   exactly (a test holds it so). Cards are two-sided. The hairs' sheen
-//!   and their strands up close (`plantgen::hairs`) are the preview
-//!   renderer's alone.
+//!   `mix(base, accent * darkening, texel.g) * 2 * texel.r`, where `base`
+//!   is the card's colour, or on the card's lower face its template's
+//!   underside colour times the darkening, moved toward the template's
+//!   variegated colour times the darkening by the variegation weight of
+//!   the texel's rank (`texel.b`) for the card's seed
+//!   ([`Scene::template_paints`], [`SceneMesh::faces`]); the accent is
+//!   its template's accent colour ([`Scene::template_accents`]) and the
+//!   darkening this card's ([`SceneMesh::darkening`]); then moved toward
+//!   its hairs' colour darkened alike by their weight
+//!   ([`Scene::template_hairs`]). That is [`Templates::paint`] exactly (a
+//!   test holds it so). Cards are two-sided. The hairs' sheen and their
+//!   strands up close (`plantgen::hairs`) are the preview renderer's
+//!   alone.
 
 use std::fmt::Write as _;
 use std::sync::Arc;
@@ -64,6 +68,12 @@ pub struct SceneMesh {
     /// Cards only: how much the template's accent colour is darkened for
     /// this card (`Templates::albedo`). Empty on other meshes.
     pub darkening: Vec<f32>,
+    /// Cards only: the card's face as packed into its PlantGen vertex
+    /// alpha above the template, over its span
+    /// ([`plantgen::templates::pack_face`]), 0 to 1: 0.45 of the card's
+    /// seed, plus one half when the card's normal points down. Empty on other
+    /// meshes.
+    pub faces: Vec<f32>,
     /// Wood only: the stem's radius at each vertex, metres, which the bark
     /// pattern is drawn by ([`Scene::bark`]); 0 off bark. Empty on other
     /// meshes and on wood without bark.
@@ -93,6 +103,7 @@ impl SceneMesh {
                 .map(|c| [c[0], c[1], c[2], 1.0])
                 .collect(),
             darkening: Vec::new(),
+            faces: Vec::new(),
             // PlantGen marks bark with the negative radius in alpha.
             bark_radius: if mesh.colors.iter().any(|c| c[3] < 0.0) {
                 mesh.colors.iter().map(|c| (-c[3]).max(0.0)).collect()
@@ -143,7 +154,7 @@ impl TemplateLayers {
                 rgba.extend([
                     plantgen::raster::to_u8(template.brightness[at] * 0.5),
                     plantgen::raster::to_u8(template.accent[at]),
-                    0,
+                    plantgen::raster::to_u8(template.pattern.get(at).copied().unwrap_or(1.0)),
                     plantgen::raster::to_u8(template.coverage[at]),
                 ]);
             }
@@ -157,13 +168,7 @@ impl TemplateLayers {
 /// brightness 1.
 #[must_use]
 pub fn card_accent(templates: &Templates, template: usize, colour: [f32; 3]) -> [f32; 3] {
-    let full = Texel {
-        coverage: 1.0,
-        brightness: 1.0,
-        accent: 1.0,
-        hair: 0.0,
-        fringe: false,
-    };
+    let full = Texel::plain(1.0);
     // Colours are small; f32 keeps them.
     #[allow(clippy::cast_possible_truncation)]
     templates
@@ -171,29 +176,63 @@ pub fn card_accent(templates: &Templates, template: usize, colour: [f32; 3]) -> 
         .map(|c| c as f32)
 }
 
-/// How much `template`'s accent colour is darkened on a card of
-/// `colour`: [`card_accent`] over the accent colour, read on its
-/// strongest channel (1 when the template has no accent colour).
+/// How much `template`'s other colours (accent, underside, variegation)
+/// are darkened on a card of `colour`
+/// ([`plantgen::templates::darkening`]; 1 for no template).
 #[must_use]
 pub fn darkening(templates: &Templates, template: usize, colour: [f32; 3]) -> f32 {
-    let Some(look) = templates.templates.get(template) else {
-        return 1.0;
-    };
-    let accent = card_accent(templates, template, colour);
-    let (k, strongest) =
-        look.accent_colour
-            .iter()
-            .copied()
-            .enumerate()
-            .fold(
-                (0, 0.0_f32),
-                |best, (k, c)| if c > best.1 { (k, c) } else { best },
-            );
-    if strongest > 1e-6 {
-        accent[k] / strongest
-    } else {
-        1.0
+    // Colours are small; f32 keeps them.
+    #[allow(clippy::cast_possible_truncation)]
+    templates.templates.get(template).map_or(1.0, |look| {
+        plantgen::templates::darkening(look, colour.map(f64::from)) as f32
+    })
+}
+
+/// A template's lower-face and variegation colours, as a card renderer
+/// reads them ([`Templates::paint`]).
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
+pub struct CardPaint {
+    /// The underside colour, linear RGB, and 1; all 0 for a template
+    /// whose lower face is its upper's.
+    pub underside: [f32; 4],
+    /// The variegated colour, linear RGB, and 1; all 0 for a template
+    /// without variegation.
+    pub patches: [f32; 4],
+    /// The variegation's amount and spread, then 0 and 0: a card of seed
+    /// `s` paints the texels ranked below `clamp(amount + spread * (s -
+    /// 0.5), 0, 1)`, with an edge [`plantgen::looks::VARIEGATION_EDGE`]
+    /// wide.
+    pub share: [f32; 4],
+}
+
+/// Each template's [`CardPaint`], one per layer.
+#[must_use]
+pub fn template_paints(templates: &Templates) -> Vec<CardPaint> {
+    if templates.templates.is_empty() {
+        return vec![CardPaint::default()];
     }
+    templates
+        .templates
+        .iter()
+        .map(|template| {
+            let underside = template
+                .underside
+                .map_or([0.0; 4], |c| [c[0], c[1], c[2], 1.0]);
+            let (patches, share) = template.variegation.map_or(([0.0; 4], [0.0; 4]), |v| {
+                // Shares are between 0 and 2; f32 keeps them.
+                #[allow(clippy::cast_possible_truncation)]
+                (
+                    [v.colour[0], v.colour[1], v.colour[2], 1.0],
+                    [v.amount as f32, v.spread as f32, 0.0, 0.0],
+                )
+            });
+            CardPaint {
+                underside,
+                patches,
+                share,
+            }
+        })
+        .collect()
 }
 
 /// Each template's accent colour, linear RGB, one per layer.
@@ -289,6 +328,8 @@ pub enum View {
     Side,
     /// From the south-east, a little above.
     ThreeQuarter,
+    /// From the south-east, 45 degrees down: the crown seen from above.
+    Oblique,
     /// Straight down.
     Top,
 }
@@ -299,6 +340,7 @@ impl View {
         Some(match name {
             "side" => Self::Side,
             "three-quarter" => Self::ThreeQuarter,
+            "oblique" => Self::Oblique,
             "top" => Self::Top,
             _ => return None,
         })
@@ -309,6 +351,7 @@ impl View {
         match self {
             Self::Side => "side",
             Self::ThreeQuarter => "three-quarter",
+            Self::Oblique => "oblique",
             Self::Top => "top",
         }
     }
@@ -437,6 +480,8 @@ pub struct Scene {
     pub template_accents: Vec<[f32; 3]>,
     /// Each layer's hairs' colour and weight ([`template_hairs`]).
     pub template_hairs: Vec<[f32; 4]>,
+    /// Each layer's underside and variegation.
+    pub template_paints: Vec<CardPaint>,
     /// The bark pattern drawn on the wood ([`SceneMesh::bark_radius`]);
     /// `None` for plain bark.
     pub bark: Option<plantgen::bark::BarkParams>,
@@ -846,6 +891,7 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         bark: templates.bark,
         template_accents: template_accents(templates),
         template_hairs: template_hairs(templates),
+        template_paints: template_paints(templates),
         ground_radius: (reach * 1.4 + gap + 0.6).max(reach + 0.3) as f32,
         framing,
         light: review_light(),
@@ -925,6 +971,12 @@ pub fn cut_cards(
         let half = f64::from(card.width) * 0.5;
         let length = f64::from(card.length);
         let colour = card.color.map(f64::from);
+        // One-sided, facing the card's front: its lower face when its
+        // normal points down.
+        let face = plantgen::templates::Face {
+            lower: plantgen::templates::card_flipped(card.heading, card.left),
+            seed: plantgen::templates::card_seed(card.base),
+        };
         index.fill(u32::MAX);
         for (cell, &keep) in cells.iter().enumerate() {
             if !keep {
@@ -945,7 +997,7 @@ pub fn cut_cards(
                             .point(base, heading, left, half, length, 2.0 * u - 1.0, v);
                     #[allow(clippy::cast_possible_truncation)]
                     let texel = templates.sample(template, u as f32, v as f32);
-                    let albedo = templates.albedo(template, colour, texel);
+                    let albedo = templates.paint(template, colour, texel, face);
                     index[at] = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
                     out.positions.push(position.to_f32());
                     out.normals.push(normal.to_f32());
@@ -975,10 +1027,11 @@ pub fn cut_cards(
 fn cards(mesh: &Mesh, templates: &Templates) -> SceneMesh {
     let mut out = SceneMesh::from_mesh(mesh);
     let mut darkening = Vec::with_capacity(mesh.colors.len());
+    let mut faces = Vec::with_capacity(mesh.colors.len());
     for (out_colour, c) in out.colors.iter_mut().zip(&mesh.colors) {
-        // The template index is a small whole number in alpha.
-        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let template = c[3].round() as usize;
+        // The template and the card's face are packed in alpha.
+        let (template, _, _) = plantgen::templates::unpack_face(c[3]);
+        faces.push(((c[3] - c[3].round()) / plantgen::templates::CARD_FACE_SPAN).clamp(0.0, 1.0));
         // A card naming no template is fully covered and plain: layer 0,
         // whose texels are, when there are no templates at all.
         let layer = if template < templates.templates.len() {
@@ -993,6 +1046,7 @@ fn cards(mesh: &Mesh, templates: &Templates) -> SceneMesh {
         darkening.push(self::darkening(templates, template, [c[0], c[1], c[2]]));
     }
     out.darkening = darkening;
+    out.faces = faces;
     out
 }
 
@@ -1602,6 +1656,7 @@ mod tests {
                     accent: weight,
                     hair,
                     fringe: false,
+                    pattern: 1.0,
                 };
                 let want = templates.albedo(template, colour.map(f64::from), texel);
                 let got: [f64; 3] = std::array::from_fn(|c| {
@@ -1612,6 +1667,77 @@ mod tests {
                 });
                 for c in 0..3 {
                     assert!((want[c] - got[c]).abs() < 1e-5, "{want:?} {got:?}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn the_card_paint_is_the_generators() {
+        // A template with an underside and variegation, painted as the card
+        // shader paints it from `CardPaint`, a vertex's face and a texel.
+        let spec = Library::builtin().spec("acer-macrophyllum").expect("maple");
+        let quality = quality::DRAFT;
+        let mut request = Request::typical(&spec, Library::builtin(), &quality);
+        request.age = 6.0;
+        let drawing = drawing::draw(&request).expect("draws");
+        let mut templates = drawing.templates.clone();
+        templates.templates[0].underside = Some([0.3, 0.35, 0.2]);
+        templates.templates[0].variegation = Some(plantgen::looks::Variegation {
+            pattern: plantgen::looks::VariegationPattern::Margin,
+            colour: [0.8, 0.8, 0.6],
+            amount: 0.3,
+            spread: 0.5,
+            scale: 0.08,
+        });
+        let paint = template_paints(&templates)[0];
+        let colour = [0.08_f32, 0.2, 0.05];
+        let dark = f64::from(darkening(&templates, 0, colour));
+        let hairs = template_hairs(&templates)[0];
+        let accent: [f64; 3] =
+            std::array::from_fn(|c| f64::from(templates.templates[0].accent_colour[c]) * dark);
+        for flipped in [false, true] {
+            for seed in [0.0_f32, 0.3, 0.9] {
+                let alpha = plantgen::templates::pack_face(0, seed, flipped);
+                let packed = (alpha - alpha.round()) / plantgen::templates::CARD_FACE_SPAN;
+                for front in [true, false] {
+                    for (rank, weight) in [(0.1_f32, 0.0_f32), (0.29, 0.5), (0.8, 1.0)] {
+                        let texel = Texel {
+                            coverage: 1.0,
+                            brightness: 1.2,
+                            accent: weight,
+                            hair: hairs[3],
+                            fringe: false,
+                            pattern: rank,
+                        };
+                        let face = plantgen::templates::card_face(alpha, front);
+                        let want = templates.paint(0, colour.map(f64::from), texel, face);
+                        // card.wgsl, line for line.
+                        let flip = packed >= 0.475;
+                        let s = ((packed - if flip { 0.5 } else { 0.0 }) / 0.45).clamp(0.0, 1.0);
+                        let mut base = colour.map(f64::from);
+                        if front == flip && paint.underside[3] > 0.5 {
+                            base = std::array::from_fn(|c| f64::from(paint.underside[c]) * dark);
+                        }
+                        let share = (paint.share[0] + paint.share[1] * (s - 0.5)).clamp(0.0, 1.0);
+                        let patch = if share <= 0.0 {
+                            0.0
+                        } else if share >= 1.0 {
+                            1.0
+                        } else {
+                            ((share - rank) / 0.02 + 0.5).clamp(0.0, 1.0)
+                        };
+                        for (c, value) in base.iter_mut().enumerate() {
+                            let p = f64::from(paint.patches[c]) * dark;
+                            *value += (p - *value) * f64::from(patch);
+                        }
+                        for c in 0..3 {
+                            let face = (base[c] + (accent[c] - base[c]) * f64::from(weight)) * 1.2;
+                            let h = f64::from(hairs[c]) * dark;
+                            let got = face + (h - face) * f64::from(hairs[3]);
+                            assert!((want[c] - got).abs() < 1e-4, "{want:?} {c} {got}");
+                        }
+                    }
                 }
             }
         }
