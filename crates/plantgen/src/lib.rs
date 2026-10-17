@@ -636,4 +636,10 @@ pub mod venation;
 /// fertile fronds rise from its spreading rosette as Flora of North America
 /// gives, and its reference height is theirs (99 is fern stipes scaly at
 /// their base, #174).
-pub const GENERATOR_REVISION: u32 = 100;
+/// 101: a fern's frond comes up as a crozier (fern program revision 11): a
+/// circinate frond's blade winds `coil_turns` turns (2.5 by `vernation`)
+/// into a tight inward spiral of shortening pieces, its pinnae small and
+/// folded inside, its scales on the coil if its stipe is scaly; it unrolls
+/// from its foot, and its stipe rises uncoiled as it lengthens (100 is
+/// dimorphic ferns, #178).
+pub const GENERATOR_REVISION: u32 = 101;
