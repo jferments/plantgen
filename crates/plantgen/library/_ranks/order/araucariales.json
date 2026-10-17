@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "order",
   "name": "Araucariales",
-  "parent": "subclass/pinidae"
+  "parent": "subclass/pinidae",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_habit": "evergreen",
+    "life_span": "perennial",
+    "rosette": "none"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "gymnosperm-database",
+      "note": "Gymnosperm Database (Earle), Podocarpaceae (read 2026-10-16): leaves usually spiral, sometimes opposite; Araucariaceae spiral (family already states). One leaf per node in nearly all."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "gymnosperm-database",
+      "note": "Gymnosperm Database (Earle), Podocarpaceae (read 2026-10-16): usually spiral, sometimes opposite."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "gymnosperm-database",
+      "note": "Gymnosperm Database (Earle), Podocarpaceae (read 2026-10-16): leaves scale-like, needle-like or flat linear to lanceolate, never divided; Araucariaceae likewise."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "gymnosperm-database",
+      "note": "Gymnosperm Database (Earle), Podocarpaceae (read 2026-10-16): evergreen shrubs or trees; Araucariaceae all evergreen. Replaces the inherited Pinidae value, whose 'deciduous rarely' has no member here."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "gymnosperm-database",
+      "note": "Gymnosperm Database (Earle), Podocarpaceae (read 2026-10-16): trees and shrubs."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "gymnosperm-database",
+      "note": "Gymnosperm Database (Earle), Podocarpaceae (read 2026-10-16): trees with leafy horizontal branches; no rosettes."
+    }
+  }
 }

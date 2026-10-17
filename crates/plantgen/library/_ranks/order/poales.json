@@ -126,6 +126,66 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The spikelet card's bracts stand in two ranks (ranks 2) or turn a golden angle each (ranks 0), as floras describe a grass's two-ranked glumes and lemmas or a sedge's spiral scales."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Gramineae (read 2026-10-16): leaves nearly always two-ranked at first; DELTA Cyperaceae: mostly three-ranked; APweb Poales page (read 2026-10-16): Bromeliaceae spiral, Typhaceae two-ranked. Weighting inferred by species: grasses (about 11,800 spp.) outnumber sedges (about 5,600) and the spiral-leaved families together."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA family pages (read 2026-10-16): grasses and sedges annual to perennial, rushes mostly perennial, bromeliads, Eriocaulaceae and Typhaceae perennial. 'Usually perennial' is our weighting across the order; the small families that inherit it (Rapateaceae, Flagellariaceae, Thurniaceae, Joinvilleaceae) are perennial herbs or climbers."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): inflorescences terminal in Typhaceae and Eriocaulaceae, morphologically terminal in Juncaceae (pushed sideways by a bract in Juncus), terminal or axillary in grasses; APweb Poales page (read 2026-10-16): Bromeliaceae inflorescence terminal."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): grass perianth vestigial or absent (lodicules only), sedge perianth bristles, scales or none, Typhaceae perianth of hairs; APweb (read 2026-10-16): Bromeliaceae with calyx and corolla. The monocot value (tepals) is wrong by species here: the reduced families hold roughly three quarters of the order."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): grasses (1-)2-3 or 6 (rarely many), sedges 1-3 (to 6), Typhaceae 1-5, usually 3. Typical 3 by species weight (grasses and sedges). Families with six (Bromeliaceae, Juncaceae, Rapateaceae, Thurniaceae, Joinvilleaceae) state their own."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): ovary superior in Gramineae, Cyperaceae, Typhaceae, Eriocaulaceae; the stated families are superior too except Bromeliaceae (see override)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): no floral cup described for grasses, sedges or Typhaceae (perianth reduced); the small families with perianths have free or basally joined parts."
     }
+  },
+  "traits": {
+    "phyllotaxis_pattern": {
+      "distichous": "usually",
+      "tristichous": "often",
+      "spiral": "sometimes"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "flowering_position": "terminal",
+    "perianth": {
+      "absent": "usually",
+      "tepals": "sometimes",
+      "sepals_and_petals": "sometimes"
+    },
+    "stamens": {
+      "min": 2,
+      "max": 6,
+      "typical": 3,
+      "low": 1
+    },
+    "ovary_position": "superior",
+    "hypanthium": false
   }
 }

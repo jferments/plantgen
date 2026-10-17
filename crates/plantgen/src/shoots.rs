@@ -318,6 +318,7 @@ mod tests {
     fn look(s: &Needles) -> Look {
         let shape = Shape::Needles(s.clone());
         Look {
+            hairs: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             organ: "spray".to_string(),

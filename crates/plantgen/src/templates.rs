@@ -1,7 +1,7 @@
 //! Organ card textures.
 //!
-//! Every organ card samples one square template: coverage, brightness and
-//! accent weight per texel. A species' templates are drawn from its looks
+//! Every organ card samples one square template: coverage, brightness,
+//! accent weight per texel, and the hairs on its face (`crate::hairs`). A species' templates are drawn from its looks
 //! (see [`crate::looks`]), one per organ type of its program, by a small
 //! procedural generator per [`Shape`]: needle shoots, scale sprays,
 //! palmate, simple, lobed and compound leaves, leafy sprigs, grass blades,
@@ -48,6 +48,11 @@ pub struct Texel {
     /// How far the texel's colour moves from the card's colour to the
     /// look's accent colour, 0 to 1: a flower's centre, a petiole.
     pub accent: f32,
+    /// How much of the texel's colour is its hairs', 0 on a bare face
+    /// (`crate::hairs::cast`, the same over a template's whole face).
+    pub hair: f32,
+    /// Whether the texel is a hair of the edge's fringe rather than face.
+    pub fringe: bool,
 }
 
 /// One organ type's template.
@@ -69,6 +74,11 @@ pub struct Template {
     pub coverage: Vec<f32>,
     pub brightness: Vec<f32>,
     pub accent: Vec<f32>,
+    /// The coverage the edge's fringe of hairs added to each texel, which
+    /// is no leaf; empty for a template without hairs.
+    pub fringe: Vec<f32>,
+    /// The hairs of its look, where it has any (`crate::hairs`).
+    pub hairs: Option<crate::looks::Hairs>,
 }
 
 impl Template {
@@ -77,8 +87,53 @@ impl Template {
     #[must_use]
     pub fn area(&self) -> f64 {
         let covered: f64 = self.coverage.iter().map(|&value| f64::from(value)).sum();
-        self.aspect * covered / to_f64(self.coverage.len().max(1))
+        let fringe: f64 = self.fringe.iter().map(|&value| f64::from(value)).sum();
+        self.aspect * (covered - fringe) / to_f64(self.coverage.len().max(1))
     }
+
+    /// How much of its face's colour its hairs' is ([`Texel::hair`]).
+    #[must_use]
+    pub fn hair(&self) -> f32 {
+        #[allow(clippy::cast_possible_truncation)]
+        self.hairs
+            .as_ref()
+            .map_or(0.0, |hairs| crate::hairs::cast(hairs.density) as f32)
+    }
+}
+
+/// Leaf area an organ 1 m long shades with, m²: the area its leaves have.
+/// A needle card paints each needle as a line at least two texels wide
+/// ([`fine`]), far wider than a pine's needle on a card a few decimetres
+/// long, and its crossing card paints the same needles again, so its
+/// painted area is 2 to 5 times its needles' own. A needle card shades
+/// with its needles' own area, each needle its length times its width
+/// (`Needles::width` of it), counted once; every other look with the area
+/// it draws ([`drawn_area`]), which for a leaf card is its blade.
+#[must_use]
+pub fn shade_area(look: &Look, template: &Template) -> f64 {
+    match &look.shape {
+        Shape::Needles(s) if look.inflorescence.is_none() => needle_area(s),
+        _ => drawn_area(look, template),
+    }
+}
+
+/// The one-sided area of the needles a needle card 1 m long holds, m²:
+/// every needle the card's painter and the solid shoot draw, each its
+/// drawn length times `width` of that length.
+#[must_use]
+pub fn needle_area(s: &Needles) -> f64 {
+    let half = s.aspect * 0.5;
+    let fine = fine(&Shape::Needles(s.clone()));
+    let mut area = 0.0;
+    for (index, axis) in needle_axes(s).iter().enumerate() {
+        for i in 0..needle_count(s, axis) {
+            for k in 0..needles_per_place(s) {
+                let needle = needle_at(s, index, axis, i, k, (0, 1), half, fine);
+                area += needle.length * needle.length * s.width;
+            }
+        }
+    }
+    area
 }
 
 /// Leaf area an organ 1 m long draws with `look` and its `template`, m²:
@@ -193,6 +248,8 @@ impl Templates {
                     coverage: drawn.coverage,
                     brightness: drawn.brightness,
                     accent: drawn.accent,
+                    fringe: Vec::new(),
+                    hairs: None,
                 });
             }
         }
@@ -254,6 +311,19 @@ impl Templates {
                         }
                     }
                 }
+                let painted = look.hairs.as_ref().map(|hairs| {
+                    crate::hairs::paint(
+                        TEMPLATE_SIZE,
+                        aspect,
+                        2,
+                        hairs,
+                        mix64(shape_seed(&look.shape) ^ 0x4841_4952),
+                        &mut coverage,
+                        &mut brightness,
+                        &mut accent,
+                    )
+                });
+                let fringe = painted.unwrap_or_default();
                 Template {
                     organ: look.organ.clone(),
                     shape: look.shape.name(),
@@ -264,6 +334,8 @@ impl Templates {
                     coverage,
                     brightness,
                     accent,
+                    fringe,
+                    hairs: look.hairs.clone(),
                 }
             })
             .collect();
@@ -284,6 +356,8 @@ impl Templates {
                 coverage: 1.0,
                 brightness: 1.0,
                 accent: 0.0,
+                hair: 0.0,
+                fringe: false,
             };
         };
         let size = self.size;
@@ -302,13 +376,17 @@ impl Templates {
             coverage: template.coverage[at],
             brightness: template.brightness[at],
             accent: template.accent[at],
+            hair: template.hair(),
+            fringe: template.fringe.get(at).is_some_and(|&added| added > 0.0),
         }
     }
 
     /// Albedo of a card texel: the card's colour, blended toward the look's
     /// accent colour by the texel's accent weight, times its brightness.
     /// The accent colour is darkened as much as the card's colour is
-    /// darker than the look's colour, so shaded flowers stay shaded.
+    /// darker than the look's colour, so shaded flowers stay shaded. Its
+    /// hairs then move it toward their colour, darkened alike, by the
+    /// texel's hair weight.
     #[must_use]
     pub fn albedo(&self, template: usize, colour: [f64; 3], texel: Texel) -> [f64; 3] {
         let brightness = f64::from(texel.brightness);
@@ -323,15 +401,23 @@ impl Templates {
         } else {
             1.0
         };
+        let hair = f64::from(texel.hair);
+        let hairs = template
+            .hairs
+            .as_ref()
+            .map_or([0.0; 3], |hairs| hairs.colour);
         std::array::from_fn(|channel| {
             let accent = f64::from(template.accent_colour[channel]) * darkening;
-            (colour[channel] + (accent - colour[channel]) * weight) * brightness
+            let face = (colour[channel] + (accent - colour[channel]) * weight) * brightness;
+            face + (f64::from(hairs[channel]) * darkening - face) * hair
         })
     }
 
     /// The templates side by side as an RGBA8 image, the package's organ
     /// atlas: brightness / 2 in red, the accent weight in green, coverage
-    /// in alpha. Blue is 0. Row 0 is the cards' base (`v` = 0).
+    /// in alpha. Blue is 0. A template's hairs (`crate::hairs`) are the
+    /// same over its whole face, so they go with its layer, not its texels.
+    /// Row 0 is the cards' base (`v` = 0).
     #[must_use]
     pub fn atlas_rgba(&self) -> (usize, usize, Vec<u8>) {
         self.image(|index, at| {
@@ -387,6 +473,8 @@ impl Templates {
                         coverage: template.coverage[at],
                         brightness: template.brightness[at],
                         accent: template.accent[at],
+                        hair: template.hair(),
+                        fringe: false,
                     };
                     let colour = self.albedo(index, template.colour.map(f64::from), texel);
                     let cover = texel.coverage.clamp(0.0, 1.0);
@@ -671,6 +759,58 @@ pub(crate) fn outline_profile(
     }
 }
 
+/// The share of a simple blade's length at each end that its apex and
+/// base shape (`Simple.apex_taper`, `Simple.base_taper`).
+pub const ENDS: f64 = 0.3;
+
+/// A point's half-width where it leaves the blade, as a share of the
+/// blade's widest.
+const POINT_WIDTH: f64 = 0.06;
+
+/// A simple blade's half-width at `t` along it, as a share of its widest:
+/// its outline (or `widest`, `base` and `tip`), its apex and base narrowed
+/// as their tapers say, and a point beyond its tip.
+fn simple_profile(s: &Simple, t: f64) -> f64 {
+    if !(0.0..=1.0).contains(&t) {
+        return 0.0;
+    }
+    let point = s.apex_point.clamp(0.0, 0.3);
+    let blade = 1.0 - point;
+    let outline = |u: f64| outline_profile(s.outline.as_deref(), u, s.widest, s.base, s.tip);
+    let u = t / blade;
+    let mut width = outline(u.min(1.0));
+    if u > 1.0 {
+        width = 0.0;
+    } else if let Some(power) = s.apex_taper
+        && u > 1.0 - ENDS
+    {
+        // Eased in from the outline, so the margin turns without a corner.
+        let share = (1.0 - u) / ENDS;
+        let tip = outline(1.0 - ENDS) * math::pow(share, power);
+        width += (tip - width) * math::smoothstep(0.0, 1.0, 1.0 - share);
+    }
+    if let Some(power) = s.base_taper
+        && s.sinus <= 0.0
+        && u < ENDS
+    {
+        let share = u / ENDS;
+        let foot = outline(ENDS) * math::pow(share, power);
+        width += (foot - width) * math::smoothstep(0.0, 1.0, 1.0 - share);
+    }
+    if point > 0.0 && t > blade - 0.5 * point {
+        let tail = POINT_WIDTH * (1.0 - (t - blade + 0.5 * point) / (1.5 * point));
+        width = width.max(tail);
+    }
+    width
+}
+
+/// Whether a point `x` across and `t` along a simple blade of `length`
+/// card units falls in the notch cut into its tip (`Simple.apex_notch`).
+fn in_notch(s: &Simple, x: f64, t: f64, length: f64) -> bool {
+    let notch = s.apex_notch;
+    notch > 0.0 && t > 1.0 - notch && x.abs() < 0.9 * (t - (1.0 - notch)) * length
+}
+
 /// Where a blade's teeth fade in from its base and out toward its tip.
 fn blade_fade(t: f64) -> f64 {
     math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t))
@@ -712,10 +852,14 @@ const DEEPEST: f64 = 0.85;
 /// A simple leaf's half-width at `t` along its blade of `length` card
 /// units, with the teeth of its side's `margin` if given.
 fn simple_width(s: &Simple, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
-    let profile = outline_profile(s.outline.as_deref(), t, s.widest, s.base, s.tip);
-    let mut width = s.width * length * 0.5 * profile;
-    if let Some(margin) = margin {
-        let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
+    let mut width = s.width * length * 0.5 * simple_profile(s, t);
+    // A point beyond the tip bears no teeth.
+    if let Some(margin) = margin.filter(|_| t < 1.0 - s.apex_point) {
+        let drawn = Drawn {
+            round: s.round,
+            ..TOOTH
+        };
+        let fall = margin.fall(t, drawn, |share| margins::tooth_flank(share, s.round));
         width -= (s.tooth_depth * blade_fade(t)).min(DEEPEST * width) * fall;
     }
     width
@@ -808,7 +952,19 @@ fn shape_seed(shape: &Shape) -> u64 {
         }
         _ => shape.clone(),
     };
-    let mut text = format!("{plain:?}").replace("outline: None, ", "");
+    // A blade without basal lobes, fanned veins or a shaped apex or base
+    // grows the veins it grew before cards had them.
+    let mut text = format!("{plain:?}")
+        .replace("outline: None, ", "")
+        .replace(
+            ", sinus: 0.0, fan: 0, apex_taper: None, base_taper: None, apex_point: 0.0, apex_notch: 0.0 }",
+            " }",
+        );
+    // A simple leaf's saw teeth are the teeth it had before it could
+    // round them.
+    if matches!(&plain, Shape::Simple(s) if s.round == 0.0) {
+        text = text.replace(", round: 0.0, ", ", ");
+    }
     for field in [
         "pattern",
         "pinnules",
@@ -856,12 +1012,14 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
     let seed = shape_seed(shape);
     match shape {
         Shape::Simple(s) => {
-            let length = 1.0 - s.petiole;
+            let length = 1.0 - junction(s);
+            let (below, lobe) = basal_lobes(s, length);
             Some(pinnate_leaf(
                 (s.teeth, TEETH),
                 &|t| simple_width(s, length, t, None) / length,
                 &|t, margin| simple_width(s, length, t, Some(margin)) / length,
                 (0.5 * s.width + 0.02, Growth::default()),
+                (below, &lobe, s.fan),
                 seed,
             ))
         }
@@ -876,6 +1034,7 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
                 &|t| lobed_width(s, length, t, None) / length,
                 &|t, margin| lobed_width(s, length, t, Some(margin)) / length,
                 (0.5 * s.width + 0.02, growth),
+                (0.0, &no_lobes, 0),
                 seed,
             ))
         }
@@ -888,6 +1047,7 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
                     &|t| leaflet_width(s, &form, 1.0, t, None),
                     &|t, margin| leaflet_width(s, &form, 1.0, t, Some(margin)),
                     (0.5 * s.leaflet_width + 0.02, Growth::default()),
+                    (0.0, &no_lobes, 0),
                     seed,
                 )
             })
@@ -897,6 +1057,7 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
             &|t| sprig_width(s, 1.0, t, None),
             &|t, margin| sprig_width(s, 1.0, t, Some(margin)),
             (0.5 * s.width + 0.02, Growth::default()),
+            (0.0, &no_lobes, 0),
             seed,
         )),
         Shape::Palmate(s) => Some(palmate_leaf(s, fine(shape), seed)),
@@ -913,6 +1074,75 @@ fn lean(heading: Option<(f64, f64)>, tangent: (f64, f64)) -> f64 {
     ((heading.0 * tangent.0 + heading.1 * tangent.1) / norm).clamp(0.0, 1.0)
 }
 
+/// Where a simple card's petiole meets its blade, from the card's base:
+/// at the petiole's length, or higher where the blade's basal lobes
+/// (`sinus`, a share of the blade's length) reach back farther than the
+/// petiole is long, so the lobes still fit on the card, hanging to its
+/// foot.
+pub(crate) fn junction(s: &Simple) -> f64 {
+    let sinus = s.sinus.max(0.0);
+    s.petiole.max(sinus / (1.0 + sinus))
+}
+
+/// A blade with no basal lobes, for [`pinnate_leaf`].
+fn no_lobes(_: (f64, f64)) -> bool {
+    false
+}
+
+/// A simple blade's basal lobes, in its frame (blade lengths across, and
+/// `t` along it from where its petiole meets it): how far back past that
+/// point they reach, 0 for none, and whether a point lies in one. Each
+/// lobe is a half ellipse hung from the blade's base, from a twenty-fifth
+/// of its half-width beside the midrib to its edge, so the sinus between them
+/// opens round the petiole and closes at its top.
+fn basal_lobes(s: &Simple, length: f64) -> (f64, impl Fn((f64, f64)) -> bool) {
+    let length = length.max(1e-6);
+    let below = s.sinus.max(0.0);
+    let half = simple_width(s, length, 0.0, None) / length;
+    let lobe = move |(x, t): (f64, f64)| {
+        below > 0.0 && t < 0.0 && t > -below && {
+            let reach = (1.0 - (t / below) * (t / below)).max(0.0).sqrt();
+            (x.abs() - 0.52 * half).abs() < 0.48 * half * reach
+        }
+    };
+    (below, lobe)
+}
+
+/// The main veins a palmately veined blade fans from its midrib's foot,
+/// `fan` a side: spread evenly up to 80° from the midrib, or past the
+/// perpendicular into its basal lobes where it has them, each run to 0.85
+/// of the way to the edge and curving a little toward the tip.
+fn fanned(fan: u32, lobed: bool, inside: &dyn Fn((f64, f64)) -> bool) -> Vec<Vec<(f64, f64)>> {
+    let spread = math::radians(if lobed { 130.0 } else { 80.0 });
+    let mut veins = Vec::new();
+    for k in 1..=fan {
+        let angle = spread * f64::from(k) / (f64::from(fan) + 0.5);
+        for sign in [1.0, -1.0] {
+            let ray = |along: f64, angle: f64| {
+                (sign * along * math::sin(angle), along * math::cos(angle))
+            };
+            let mut reach = 0.0;
+            let mut along = 0.005;
+            while along < 1.5 {
+                if inside(ray(along, angle)) {
+                    reach = along;
+                } else if along > 0.03 {
+                    break;
+                }
+                along += 0.005;
+            }
+            if reach > 0.05 {
+                veins.push(vec![
+                    (0.0, 0.0),
+                    ray(0.5 * reach, angle),
+                    ray(0.85 * reach, 0.88 * angle),
+                ]);
+            }
+        }
+    }
+    veins
+}
+
 /// Grow a pinnately veined blade: `count` teeth or lobes a side in its
 /// `zone`, on a blade whose untoothed half-width is `outline(t)` and whose
 /// half-width with a side's margin is `half(t, margin)`, both blade lengths;
@@ -924,6 +1154,7 @@ fn pinnate_leaf(
     outline: &dyn Fn(f64) -> f64,
     half: &dyn Fn(f64, &Margin) -> f64,
     (widest, growth): (f64, Growth),
+    (below, lobe, fan): (f64, &dyn Fn((f64, f64)) -> bool, u32),
     seed: u64,
 ) -> GrownLeaf {
     let mut margins: Vec<Margin> = (0..2_u64)
@@ -935,7 +1166,8 @@ fn pinnate_leaf(
     let inset = 0.5 * KILL * growth.secondary;
     let veins = {
         let inside = |p: (f64, f64)| {
-            (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1, &margins[usize::from(p.0 < 0.0)])
+            ((0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1, &margins[usize::from(p.0 < 0.0)]))
+                || lobe(p)
         };
         let tips = margins
             .iter()
@@ -947,10 +1179,12 @@ fn pinnate_leaf(
                 })
             })
             .collect();
+        let mut primaries = vec![vec![(0.0, 0.0), (0.0, 0.96)]];
+        primaries.extend(fanned(fan, below > 0.0, &inside));
         let blade = Lamina {
             inside: &inside,
-            bounds: ((-widest, 0.0), (widest, 1.0)),
-            primaries: vec![vec![(0.0, 0.0), (0.0, 0.96)]],
+            bounds: ((-widest, -below), (widest, 1.0)),
+            primaries,
             tips,
         };
         Venation::grow(&blade, &growth, seed)
@@ -1475,17 +1709,24 @@ fn simple(
     veins: Option<&Venation>,
     margins: &[Margin],
 ) -> Paint {
-    let base = s.petiole;
+    let base = junction(s);
     if y < base + 0.01 && x.abs() < fine {
         return Paint::solid(0.9, 1.0);
     }
     let length = 1.0 - base;
     let t = (y - base) / length.max(1e-6);
+    if t < 0.0 {
+        let (_, lobe) = basal_lobes(s, length);
+        if !lobe((x / length.max(1e-6), t)) {
+            return Paint::EMPTY;
+        }
+        return Paint::solid(0.95 + grown(veins, x / length, t, length, || 0.0), 0.0);
+    }
     let width = simple_width(s, length, t, margins.get(usize::from(x < 0.0)));
-    if x.abs() >= width {
+    if x.abs() >= width || in_notch(s, x, t, length) {
         return Paint::EMPTY;
     }
-    if t < 0.97 && x.abs() < fine * 0.7 {
+    if t < 0.97 - s.apex_notch && x.abs() < fine * 0.7 {
         return Paint::solid(1.2, 0.5);
     }
     let along = y - base;
@@ -1907,7 +2148,7 @@ fn flower(s: &Flower, colours: Colours, x: f64, y: f64) -> Paint {
     let (along, across) = petal_frame(x, y, s.petals);
     // Half-width of a petal where it is widest, as a share of the circle
     // at that radius.
-    let widest = BLOOM * 0.66 * math::tan(PI / f64::from(s.petals)) * s.petal_width;
+    let widest = BLOOM * 0.66 * math::tan(PI / f64::from(s.petals)) * s.petal_share();
     let notch = s.notch * 0.4 * (1.0 - across.abs() / (0.55 * widest)).max(0.0);
     let reach = BLOOM * (1.0 - notch);
     let u = along / reach;
@@ -3094,6 +3335,7 @@ mod tests {
             organs.insert(
                 name.clone(),
                 OrganLook {
+                    hairs: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: shape.clone(),
@@ -3302,6 +3544,52 @@ mod tests {
     /// at the card's width, and its sides parallel where theirs are;
     /// without one, it is drawn as before.
     #[test]
+    fn apex_and_base_words_shape_the_blade_ends() {
+        let plain = Simple::default();
+        let shaped = |apex: Option<f64>, base: Option<f64>| Simple {
+            apex_taper: apex,
+            base_taper: base,
+            ..Simple::default()
+        };
+        // Hollow sides draw a narrower tip than straight ones, and full
+        // sides a broader one; the middle of the blade keeps its width.
+        let near_tip = 0.9;
+        let acuminate = simple_profile(&shaped(Some(2.2), None), near_tip);
+        let acute = simple_profile(&shaped(Some(1.0), None), near_tip);
+        let rounded = simple_profile(&shaped(Some(0.35), None), near_tip);
+        assert!(
+            acuminate < acute && acute < rounded,
+            "{acuminate} {acute} {rounded}"
+        );
+        for t in [0.35, 0.5, 0.65] {
+            let width = simple_profile(&shaped(Some(2.2), Some(2.0)), t);
+            assert!((width - simple_profile(&plain, t)).abs() < 1e-12, "{t}");
+        }
+        // A truncate base is nearly full width just above it, an
+        // attenuate one narrow.
+        let truncate = simple_profile(&shaped(None, Some(0.12)), 0.05);
+        let attenuate = simple_profile(&shaped(None, Some(2.0)), 0.05);
+        assert!(truncate > 0.5 && attenuate < 0.1, "{truncate} {attenuate}");
+        // A tail stands beyond the blade's tip, narrow, with nothing
+        // past it.
+        let caudate = Simple {
+            apex_point: 0.15,
+            ..Simple::default()
+        };
+        let tail = simple_profile(&caudate, 0.92);
+        assert!(tail > 0.0 && tail <= POINT_WIDTH, "{tail}");
+        assert_eq!(simple_profile(&caudate, 1.0), 0.0);
+        // A notch cuts the tip along the midrib only.
+        let notched = Simple {
+            apex_notch: 0.03,
+            ..Simple::default()
+        };
+        assert!(in_notch(&notched, 0.0, 0.995, 1.0));
+        assert!(!in_notch(&notched, 0.0, 0.9, 1.0));
+        assert!(!in_notch(&plain, 0.0, 0.995, 1.0));
+    }
+
+    #[test]
     fn outlines_draw_the_blade_through_their_points() {
         let oblong = vec![
             [0.0, 0.0],
@@ -3425,6 +3713,8 @@ mod tests {
             coverage: 1.0,
             brightness: 1.0,
             accent: 1.0,
+            hair: 0.0,
+            fringe: false,
         };
         let lit = templates.albedo(0, [0.2, 0.4, 0.1], accent);
         let shaded = templates.albedo(0, [0.1, 0.2, 0.05], accent);

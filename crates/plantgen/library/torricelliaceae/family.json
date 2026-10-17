@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "family",
   "name": "Torricelliaceae",
-  "parent": "order/apiales"
+  "parent": "order/apiales",
+  "traits": {
+    "leaf_division": "simple",
+    "division_pattern": "palmate",
+    "leaf_habit": "deciduous",
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page, Torricelliaceae (read 2026-10-16): leaves simple or lobed."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page, Torricelliaceae (read 2026-10-16): Torricellia palmately veined and lobed (Aralidium pinnately lobed)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page, Torricelliaceae (read 2026-10-16): deciduous shrubs or trees."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page, Torricelliaceae (read 2026-10-16): flowers mostly unisexual (Melanophylla perfect)."
+    }
+  }
 }

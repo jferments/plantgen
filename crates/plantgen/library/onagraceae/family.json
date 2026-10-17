@@ -4,6 +4,7 @@
   "name": "Onagraceae",
   "parent": "order/myrtales",
   "traits": {
+    "leaf_habit": {"deciduous": "usually", "evergreen": "sometimes"},
     "corolla_shape": "rotate",
     "flower_merosity": 4,
     "perianth": "sepals_and_petals",
@@ -63,6 +64,7 @@
     }
   },
   "evidence": {
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Myrtales page, Onagraceae (read 2026-10-16): mostly herbs; above-ground leaves of temperate herbs die back. Weighting inferred, not stated."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: usually 4 free petals, valvate or imbricate, on the hypanthium rim. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
     "traits": {
       "evidence": "SourceInferred",

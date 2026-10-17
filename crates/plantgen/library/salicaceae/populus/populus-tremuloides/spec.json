@@ -30,7 +30,7 @@
       "extinction": 0.45,
       "pipe_rings": 2.16e-08,
       "leaf_area": 0.288,
-      "bloom_area": 0.031,
+      "bloom_area": 0.05,
       "path_half": 6.54,
       "pipe_tip": 0.00256,
       "pipe_organ": 0.00513
@@ -106,7 +106,7 @@
   },
   "evidence": {
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's quaking aspen review (Populus tremuloides, read 2026-10-16): \"Quaking aspen is shade intolerant and cannot reproduce beneath its own canopy.\""},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.639)."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.639), and since 2026-10-16 its family's two carpels and its order's regular flowers (before, 0.031), and since its flowers, which have no perianth, are drawn by their stamens grown to the flower's size (before, 0.0138)."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

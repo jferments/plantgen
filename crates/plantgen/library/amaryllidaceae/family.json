@@ -4,6 +4,7 @@
   "name": "Amaryllidaceae",
   "parent": "order/asparagales",
   "traits": {
+    "zygomorphy": "other",
     "hypanthium": {"true": "often", "false": "often"},
     "woodiness": "herbaceous",
     "leaf_venation": "parallel",
@@ -41,6 +42,7 @@
     "perennation": {"bulb": "usually", "rhizome": "rarely", "corm": "sometimes"}
   },
   "evidence": {
+    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Zygomorphic Amaryllidaceae (Hippeastrum, Sprekelia) are weakly bilateral with declinate parts, not labellate. Inferred."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 229, 227: Amaryllidaceae s.s. have a short to long hypanthial tube (formula 'hypanthium present', p. 229); Alliaceae, which APG includes, are hypogynous with the hypanthium absent (p. 227)."},
     "traits": {
       "evidence": "SourceInferred",

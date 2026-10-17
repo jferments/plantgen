@@ -27,7 +27,14 @@
     },
     "flowering_position": {
       "lateral": "usually"
-    }
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 4,
+      "high": 16
+    },
+    "leaf_habit": "evergreen"
   },
   "evidence": {
     "traits": {
@@ -44,6 +51,16 @@
       "evidence": "SourceInferred",
       "source": "floral-diagrams",
       "note": "Ronse De Craene, Floral Diagrams (2010) p. 302, 303, family Ebenaceae: flowering position lateral, usually; read as {\"lateral\": \"usually\"}."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Ebenaceae (read 2026-10-16): 2-5 carpels (rarely to 16). 'typical 4' ours (Diospyros)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Ebenaceae (read 2026-10-16): leathery leaves of mostly tropical trees; a few temperate Diospyros deciduous. Same as order's most usual; recorded for completeness."
     }
   }
 }

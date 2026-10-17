@@ -9,9 +9,14 @@
 # Revision 3: gives palm revision 7's trunk shape, crownshaft, leaflet
 # planes, fan arch and hang, all 0, so a tree fern draws as before.
 #
+# Revision 4: gives palm revision 9's values a tree fern shares with a
+# palm (fronds every year, no scale leaves, leaflet groups as before); its
+# mantle of roots (thicken), croziers (coil_short) and pinnae opening come
+# from the Cyatheaceae rank file (Hoshizaki and Moran 2001).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cyatheaceae 3 extends palm;
+lsystem cyatheaceae 4 extends palm;
 
 param vigour_spread = 0.1;   # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;            # how strongly a leaning trunk turns back up, radians a metre
@@ -44,6 +49,19 @@ param bulge_age = 0;
 param bulge_years = 1;
 param crownshaft = 0;        # a crownshaft's length; 0 none
 param shaft_cards = 8; param sheath_area = 0.235;
+param sheath_length = 0;     # no sheaths below a frond without a crownshaft
 param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
 param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
 param hang = 0;              # degrees a frond turns down over its life
+param flush_interval = 1;
+param cataphylls = 0;
+param cataphyll_length = 0.05;
+param cataphyll_angle = 10;
+param cataphyll_life = 1;
+param cataphyll_area = 0.02;
+param leaflet_groups = 2;
+param acanthophylls = 0;      # no spines among the leaflets
+param spine_length = 0.1;
+param spine_area = 0.004;
+param leaflet_fold = 0;       # pinnae coil in the frond's plane; they do not fold
+param boot_angle = 60;

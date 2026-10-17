@@ -4,6 +4,11 @@
   "name": "Cycadales",
   "parent": "subclass/cycadidae",
   "traits": {
+    "life_span": "perennial",
+    "division_pattern": "pinnate",
+    "leaf_division": "compound",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_arrangement": "alternate",
     "leaf_habit": "evergreen",
     "rosette": "terminal",
     "sexual_system": "dioecious"
@@ -35,9 +40,9 @@
           "leaflet_angle": 72,
           "leaflet_lift": 8,
           "season": 0.5,
-          "emerge_spread": 0.3,
+          "emerge_spread": 0.05,
           "unroll": 0.25,
-          "curl": 45,
+          "curl": 0,
           "droop": 0.006,
           "droop_years": 3,
           "boots": 1,
@@ -53,7 +58,18 @@
           "ray_area": 0.235,
           "dead_area": 0.235,
           "boot_area": 0.475,
-          "cone_area": 0.42
+          "cone_area": 0.42,
+          "thicken": 0.6,
+          "thicken_years": 40,
+          "flush_interval": 1,
+          "cataphylls": 16,
+          "cataphyll_length": 0.07,
+          "cataphyll_angle": 6,
+          "cataphyll_life": 60,
+          "cataphyll_area": 0.035,
+          "leaflet_young": 1,
+          "leaflet_fold": 0.85,
+          "boot_angle": 80
         }
       },
       "growth": {
@@ -66,7 +82,8 @@
         "seeds": [1]
       },
       "appearance": {
-        "bark": [0.36, 0.3, 0.22],
+        "bark": [0.107, 0.073, 0.04],
+        "leaf_axis": [0.1, 0.17, 0.05],
         "foliage": [0.07, 0.2, 0.07],
         "foliage_shade": [0.0315, 0.09, 0.0315],
         "variation": 0.1,
@@ -84,7 +101,7 @@
               "taper": 0.3,
               "aspect": 0.6
             },
-            "colour": [0.38, 0.3, 0.2]
+            "colour": [0.119, 0.073, 0.033]
           },
           "cone": {
             "shape": {
@@ -92,7 +109,15 @@
               "aspect": 0.32,
               "cone": 1
             },
-            "colour": [0.72, 0.55, 0.3]
+            "colour": [0.477, 0.263, 0.073]
+          },
+          "cataphyll": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.7,
+              "aspect": 0.35
+            },
+            "colour": [0.179, 0.095, 0.033]
           }
         }
       },
@@ -121,7 +146,78 @@
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "What the palm program's frond_length and trunk_rate mean for a cycad: one whole leaf, petiole included; metres of trunk a year once the stemless years are over; and the trunk's radius, which Mabberley (2017, under Cycas and Zamiaceae) gives no figure for, set by eye. The crown's rise of about 0.4 frond lengths is that of fronds opening to the built-in sago cycad's 68 degrees from the vertical (cos 68 degrees is 0.37)."
-        }
+        },
+        "generator.defaults.curl": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A cycad's young leaf rises straight and erect, its rachis not coiled as a fern's crozier is; only Cycas's leaflets coil, and only Bowenia and Stangeria have a coiled rachis (Whitelock 2002, p. 80, 286; Kaplan 2022, p. 792-793, which says the leaf's tip matures first, so it cannot coil as a fern's does). So the rachis draws no coil."
+        },
+        "generator.defaults.emerge_spread": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A grown cycad puts out all of a cycle's leaves together, usually at the start of the summer rains, rising erect through a ring of cataphylls (Whitelock 2002, p. 16-19; Kaplan 2022, p. 790-791); so a flush's fronds emerge within about a twentieth of the year. Macrozamia section Macrozamia, Stangeria and some Zamia make theirs one at a time (Whitelock p. 16, 251, 286) and should widen it."
+        },
+        "generator.defaults.thicken": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A cycad stem is narrow at its foot when young and widest at the crown; over decades the base of an old trunk thickens to about one and a half to twice the girth below the crown, as its slow cambium and cortex grow (Whitelock 2002, p. 16; Kaplan 2022, p. 788-789). Drawn as a segment thickening by 0.6 of its radius over about forty years, so the oldest part of a trunk is about 1.6 times as thick as its newest; the years are set by eye from photographs of old sago cycads."
+        },
+        "generator.defaults.thicken_years": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A cycad stem is narrow at its foot when young and widest at the crown; over decades the base of an old trunk thickens to about one and a half to twice the girth below the crown, as its slow cambium and cortex grow (Whitelock 2002, p. 16; Kaplan 2022, p. 788-789). Drawn as a segment thickening by 0.6 of its radius over about forty years, so the oldest part of a trunk is about 1.6 times as thick as its newest; the years are set by eye from photographs of old sago cycads."
+        },
+        "generator.defaults.flush_interval": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Most cycads flush once a year; Dioon flushes only every one to three years and some species skip years or put out a cone instead (Whitelock 2002, p. 139, 159-160). One a year here; a genus that flushes less often sets more."
+        },
+        "generator.defaults.cataphylls": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Each flush opens with a ring of cataphylls, small stiff scale leaves, often woolly, that stay short while the leaves rise through them (Whitelock 2002, p. 16-18; Kaplan 2022, p. 790-792, which counts 20 to 100 bud scales a cycle in Cycas circinalis). In Cycas revoluta they stay whole, pressed upright against the trunk, so with the leaf stubs they band it, one band a flush (Kaplan p. 791). Sixteen of 7 cm, standing 6 degrees out from the trunk, kept sixty years (bands stay for the trunk's life in Cycas revoluta, Encephalartos and Macrozamia; Kaplan p. 788-791); Cycas revoluta's are 4 to 5 cm by 1.5 to 2.3 cm, densely brown-felted (Flora of China, as the research note records), and longer ones come before a cone (Whitelock p. 18)."
+        },
+        "generator.defaults.cataphyll_length": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Each flush opens with a ring of cataphylls, small stiff scale leaves, often woolly, that stay short while the leaves rise through them (Whitelock 2002, p. 16-18; Kaplan 2022, p. 790-792, which counts 20 to 100 bud scales a cycle in Cycas circinalis). In Cycas revoluta they stay whole, pressed upright against the trunk, so with the leaf stubs they band it, one band a flush (Kaplan p. 791). Sixteen of 7 cm, standing 6 degrees out from the trunk, kept sixty years (bands stay for the trunk's life in Cycas revoluta, Encephalartos and Macrozamia; Kaplan p. 788-791); Cycas revoluta's are 4 to 5 cm by 1.5 to 2.3 cm, densely brown-felted (Flora of China, as the research note records), and longer ones come before a cone (Whitelock p. 18)."
+        },
+        "generator.defaults.cataphyll_angle": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Each flush opens with a ring of cataphylls, small stiff scale leaves, often woolly, that stay short while the leaves rise through them (Whitelock 2002, p. 16-18; Kaplan 2022, p. 790-792, which counts 20 to 100 bud scales a cycle in Cycas circinalis). In Cycas revoluta they stay whole, pressed upright against the trunk, so with the leaf stubs they band it, one band a flush (Kaplan p. 791). Sixteen of 7 cm, standing 6 degrees out from the trunk, kept sixty years (bands stay for the trunk's life in Cycas revoluta, Encephalartos and Macrozamia; Kaplan p. 788-791); Cycas revoluta's are 4 to 5 cm by 1.5 to 2.3 cm, densely brown-felted (Flora of China, as the research note records), and longer ones come before a cone (Whitelock p. 18)."
+        },
+        "generator.defaults.cataphyll_life": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Each flush opens with a ring of cataphylls, small stiff scale leaves, often woolly, that stay short while the leaves rise through them (Whitelock 2002, p. 16-18; Kaplan 2022, p. 790-792, which counts 20 to 100 bud scales a cycle in Cycas circinalis). In Cycas revoluta they stay whole, pressed upright against the trunk, so with the leaf stubs they band it, one band a flush (Kaplan p. 791). Sixteen of 7 cm, standing 6 degrees out from the trunk, kept sixty years (bands stay for the trunk's life in Cycas revoluta, Encephalartos and Macrozamia; Kaplan p. 788-791); Cycas revoluta's are 4 to 5 cm by 1.5 to 2.3 cm, densely brown-felted (Flora of China, as the research note records), and longer ones come before a cone (Whitelock p. 18)."
+        },
+        "generator.defaults.cataphyll_area": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Each flush opens with a ring of cataphylls, small stiff scale leaves, often woolly, that stay short while the leaves rise through them (Whitelock 2002, p. 16-18; Kaplan 2022, p. 790-792, which counts 20 to 100 bud scales a cycle in Cycas circinalis). In Cycas revoluta they stay whole, pressed upright against the trunk, so with the leaf stubs they band it, one band a flush (Kaplan p. 791). Sixteen of 7 cm, standing 6 degrees out from the trunk, kept sixty years (bands stay for the trunk's life in Cycas revoluta, Encephalartos and Macrozamia; Kaplan p. 788-791); Cycas revoluta's are 4 to 5 cm by 1.5 to 2.3 cm, densely brown-felted (Flora of China, as the research note records), and longer ones come before a cone (Whitelock p. 18)."
+        },
+        "generator.defaults.leaflet_young": {
+          "evidence": "SourceInferred",
+          "source": "kaplan-2022",
+          "note": "A zamiad's leaflets are folded flat against each other in the bud and swing out to their places on swollen bases as the leaf opens (Kaplan 2022, p. 795; Whitelock 2002, p. 80, which keeps coiled leaflets to Cycas). So they come up full length, lying 0.85 of the way to the rachis, and open from the leaf's foot up."
+        },
+        "generator.defaults.leaflet_fold": {
+          "evidence": "SourceInferred",
+          "source": "kaplan-2022",
+          "note": "A zamiad's leaflets are folded flat against each other in the bud and swing out to their places on swollen bases as the leaf opens (Kaplan 2022, p. 795; Whitelock 2002, p. 80, which keeps coiled leaflets to Cycas). So they come up full length, lying 0.85 of the way to the rachis, and open from the leaf's foot up."
+        },
+        "generator.defaults.boot_angle": {
+          "evidence": "SourceInferred",
+          "source": "kaplan-2022",
+          "note": "A cycad's old leaves break off at the petiole and leave their bases on the trunk as an armour of rhomboid stubs in a helix; in Cycas revoluta the stubs stand out nearly level from the trunk while the cataphylls lie pressed upright (Kaplan 2022, p. 789-791; Whitelock 2002, p. 16). Eighty degrees from the vertical."
+        },
+        "appearance.organs.cataphyll": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A cataphyll is a short, stiff, triangular scale leaf, often densely felted with brown hair (Whitelock 2002, p. 17-18; Cycas revoluta's are 4 to 5 cm by 1.5 to 2.3 cm, brown-felted, after Flora of China): a tapering card about a third as wide as long, felt brown."
+        },
+        "appearance.leaf_axis": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cycad's petiole and rachis are coloured with its leaf, not its trunk: Whitelock (2002) gives Encephalartos lanatus a yellowish rachis and E. laurentianus a golden-green one; a yellow green, which species refine."}
       },
       "rules": {
         "generator.params.frond_length": {
@@ -140,6 +236,11 @@
     }
   },
   "evidence": {
+    "traits.life_span": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): long-lived plants with stout woody trunks."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): pinnate, bipinnate in Bowenia and a few Cycas (still pinnate)."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): leaves pinnate, a central axis with leaflets each side."},
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): trunk scars helically arranged."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): leaves in a crown at the trunk top, leaf bases helically arranged (one per node)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-2008",

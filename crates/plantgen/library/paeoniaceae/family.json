@@ -4,6 +4,8 @@
   "name": "Paeoniaceae",
   "parent": "order/saxifragales",
   "traits": {
+    "flower_merosity": {"min": 5, "max": 10, "typical": 5},
+    "leaf_habit": "deciduous",
     "leaf_arrangement": "alternate",
     "leaf_division": {
       "compound": "usually",
@@ -22,10 +24,7 @@
       "woody": "sometimes",
       "herbaceous": "usually"
     },
-    "flower_symmetry": {
-      "actinomorphic": "sometimes",
-      "zygomorphic": "sometimes"
-    },
+    "flower_symmetry": "actinomorphic",
     "perianth": {
       "sepals_and_petals": "usually",
       "tepals": "sometimes"
@@ -48,6 +47,9 @@
     "bract_form": "leafy"
   },
   "evidence": {
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Paeoniaceae (read 2026-10-16): flowers regular, the only irregularity being somewhat unequal sepals, and the large petals form a regular corolla; so radial throughout."},
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Saxifragales page, Paeoniaceae (read 2026-10-16): many spiral perianth parts intergrading. Typical 5 sepals, 5-10 petals inferred."},
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Saxifragales page, Paeoniaceae (read 2026-10-16): perennial herbs or shrublets; herbaceous peonies die back and tree peonies drop leaves (latter inferred)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

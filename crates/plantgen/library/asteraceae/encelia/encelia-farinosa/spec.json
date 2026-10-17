@@ -130,7 +130,8 @@
     "disc_colour": [245, 200, 30],
     "fruit_size_m": 0.004,
     "pappus": "absent",
-    "flowering_months": [3, 4, 5, 6]
+    "flowering_months": [3, 4, 5, 6],
+    "fruiting_months": [5, 6, 7]
   },
   "evidence": {
     "traits.height_max_m": {
@@ -283,6 +284,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): March to June."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's white brittlebush review (Brahmsteadt 2024, read 2026-10-16): for plants flowering in late winter to spring, \"seeds mature and disperse between May and July\"; read as May to July."
     }
   },
   "provenance": {

@@ -33,9 +33,8 @@
       "spiral": "often"
     },
     "fruit_type": {
-      "capsule": "sometimes",
-      "berry": "sometimes",
-      "drupe": "usually"
+      "capsule": "usually",
+      "berry": "sometimes"
     },
     "stamens": {
       "min": 5,
@@ -61,6 +60,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 399, 400, family Theaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Theaceae (read 2026-10-16): the fruits are loculicidal capsules, or indehiscent berry-like or pome-like fruits, with no drupes mentioned; DELTA's broad Theaceae page adds that the Camellia tribe usually has capsules, so capsule leads and drupe (from the split-off Ternstroemieae/Pentaphylacaceae) is dropped."
     }
   }
 }

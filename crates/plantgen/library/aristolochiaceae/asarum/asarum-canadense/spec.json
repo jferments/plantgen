@@ -1,0 +1,262 @@
+{
+  "schema": 1,
+  "id": "asarum-canadense",
+  "taxon": {
+    "scientific_name": "Asarum canadense",
+    "common_name": "Canadian wild ginger",
+    "usda_symbol": "ASCA",
+    "family": "Aristolochiaceae",
+    "genus": "Asarum",
+    "plant_name_id": 2654269
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 8,
+      "stem_rate": 0.5,
+      "clump_radius": 0.2,
+      "stem_lean": 30,
+      "maturity": 1.2,
+      "adult_age": 0,
+      "stem_radius": 0.0015,
+      "wiggle": 2,
+      "nodes": 1,
+      "leaves_per_node": 2,
+      "bare": 0.7,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 80,
+      "raceme": 0,
+      "flowers": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.35,
+      0.22,
+      0.2
+    ],
+    "foliage": [
+      0.1,
+      0.19,
+      0.06
+    ],
+    "foliage_shade": [
+      0.033,
+      0.063,
+      0.02
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 1.0,
+          "widest": 0.3,
+          "tip": 0.3,
+          "base": 1.0,
+          "teeth": 0,
+          "tooth_depth": 0.03,
+          "petiole": 0
+        },
+        "face_up": 0.6
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.15,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.08,
+      "high": 0.2
+    },
+    "leaf_width_m": {
+      "min": 0.08,
+      "max": 0.14,
+      "high": 0.215
+    },
+    "petiole_length_m": {
+      "min": 0.06,
+      "max": 0.2
+    },
+    "leaf_shape": "reniform",
+    "leaf_habit": "deciduous",
+    "perennation": "rhizome",
+    "shoot_leaves": 2,
+    "flower_colour": [
+      95,
+      35,
+      45
+    ],
+    "flowering_months": [
+      4,
+      5
+    ],
+    "fruiting_months": [
+      6,
+      7
+    ],
+    "leaf_hairs": "strigose",
+    "leaf_hairs_beneath": "strigose",
+    "leaf_ciliate": true
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): blade 4-8(-20) cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): blade 8-14(-21.5) cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): petiole 6-20 cm, crisped-hairy."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): blade cordate-reniform to reniform, not mottled (Simpson p. 204: reniform to cordate)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): rhizomes horizontal and shallow, internodes 1-3.5 cm."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): the rhizome's leaves stand in pairs; read here as one node with its pair each year, as the western species (inferred)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 204, Asarum canadense: calyx three-parted, maroon and cup-shaped. The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): flowers spring to early summer (March to July); April-May are the model estimate's main months (species-facts-2026-10-15)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Western wild ginger's values (the same genus and habit): a creeping rhizome sends up a pair of long-stalked leaves at each node. Its leaf length comes from the flora's blade. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.15 m at 4 years in the open: leaves on stalks 6-20 cm (FNA vol. 3), within the model's usual 0.1-0.2 m. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3 and Simpson: hairy, purplish stalks; soft, dull green, kidney-shaped leaves (the western species' card)."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces adaxially appressed-hirsute, at least along main veins: stiff hairs pressed flat, which Harris and Harris call strigose."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces abaxially appressed-hirsute, usually sparsely so (strigose)."
+    },
+    "traits.leaf_ciliate": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): marginal hairs perpendicular to margin or curved toward apex."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from FNA vol. 3, drawing values from western wild ginger's."
+  }
+}

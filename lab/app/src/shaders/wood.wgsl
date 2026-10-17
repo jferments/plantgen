@@ -36,6 +36,7 @@ struct Bark {
 const BARK_SCALY: u32 = 4u;
 const BARK_SMOOTH: u32 = 5u;
 const BARK_PEELING: u32 = 6u;
+const BARK_RINGED: u32 = 7u;
 const BARK_CELL_SALT: u32 = 0x68e31da4u;
 const BARK_SHADE_SALT: u32 = 0x5bd1e995u;
 const BARK_PEEL_SALT: u32 = 0x2c1b3c6du;
@@ -43,6 +44,7 @@ const BARK_MOTTLE_SALT: u32 = 0x297a2d39u;
 const BARK_LENTICEL_SALT: u32 = 0x7feb352du;
 const BARK_GRAIN_SALT: u32 = 0x1b873593u;
 const BARK_FINE_SALT: u32 = 0xcc9e2d51u;
+const BARK_RING_SALT: u32 = 0x3c6ef372u;
 const BARK_TAU: f32 = 6.2831855;
 
 // PlantGen's `spines::pcg`.
@@ -177,8 +179,30 @@ struct Height {
     id: u32,
 }
 
+// bark.rs `rings`.
+fn bark_rings(q: vec3<f32>) -> Height {
+    let wave = bark_noise_gradient(vec3<f32>(0.7 * q.x, 0.7 * q.y, 0.5), BARK_RING_SALT);
+    let z = q.z + 0.3 * (wave.x - 0.5);
+    let offset = z - round(z);
+    let edge = 2.0 * abs(offset);
+    let w = max(bark.fissure, 1.0e-4);
+    let t = clamp(edge / w, 0.0, 1.0);
+    var out: Height;
+    out.h = t * t * (3.0 - 2.0 * t);
+    var slope = 0.0;
+    if t > 0.0 && t < 1.0 {
+        slope = 6.0 * t * (1.0 - t) / w * 2.0 * sign(offset);
+    }
+    out.gradient = vec3<f32>(slope * 0.21 * wave.y, slope * 0.21 * wave.z, slope);
+    out.id = bark_hash(vec3<i32>(0, 0, i32(floor(z))), BARK_CELL_SALT);
+    return out;
+}
+
 // bark.rs `height`.
 fn bark_height(q: vec3<f32>) -> Height {
+    if bark.kind == BARK_RINGED {
+        return bark_rings(q);
+    }
     let found = bark_cells(q, BARK_CELL_SALT);
     let edge = found.second - found.near;
     let w = max(bark.fissure, 1.0e-4);

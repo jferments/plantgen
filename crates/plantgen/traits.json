@@ -78,6 +78,12 @@
       "po": {"id": "PO:0025359", "name": "sorus"},
       "why": "a cluster of sporangia on a fern's leaf, on its underside or along its edge"
     },
+    "palea": {
+      "part_of": "leaf",
+      "category": "organ",
+      "when": {"stipe_scales": ["sparse", "dense"]},
+      "why": "a fern's scale: a thin, flat, often brown plate a few cells thick on its stipe, rachis and rhizome, largest and thickest at the frond's foot"
+    },
     "areole": {
       "part_of": "stem",
       "category": "organ",
@@ -231,6 +237,13 @@
       "when": {"reproduction": ["solitary_seeds"]},
       "po": {"id": "PO:0009010", "name": "seed"},
       "why": "a seed borne alone on a shoot, outside any fruit or cone, often in a fleshy cup or coat: the yew's aril, the ginkgo's outer coat"
+    },
+    "scale_leaf": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"reproduction": ["cones"]},
+      "po": {"id": "PO:0006003", "name": "scale leaf"},
+      "why": "a small leaf that is not a foliage leaf, often guarding a bud: a cycad's cataphylls, which ring its crown at each flush and stay on its trunk among the leaf bases"
     },
     "capsule": {
       "part_of": "plant",
@@ -589,6 +602,36 @@
       "when": {"spines": ["areoles"]},
       "why": "whether each spine wears a papery sheath, as a cholla's do"
     },
+    "stem_colour": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "colour",
+      "optional": true,
+      "why": "a green stem's skin, as a cactus's or a leafless shrub's, where no bark covers it"
+    },
+    "central_spine_colour": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "colour",
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "the central spines' colour where a flora gives it apart from the radials'"
+    },
+    "spine_colour_aged": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "colour",
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "an old spine's colour, once it has greyed or darkened"
+    },
+    "areole_wool_colour": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "colour",
+      "optional": true,
+      "why": "an areole's felt or wool"
+    },
     "spine_colour": {
       "group": "stem_and_bark",
       "organ": "spine",
@@ -676,6 +719,22 @@
       "values": ["linear", "lanceolate", "oblanceolate", "elliptic", "oblong", "ovate", "obovate", "orbicular", "deltate", "spatulate", "reniform", "cordate"],
       "why": "a blade's outline, or a compound leaf's leaflets'"
     },
+    "leaf_apex": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["acuminate", "caudate", "cuspidate", "mucronate", "aristate", "acute", "obtuse", "rounded", "truncate", "emarginate", "retuse"],
+      "optional": true,
+      "why": "a blade's tip: drawn out with hollow sides (acuminate) or into a tail (caudate), ending in a short sharp point (cuspidate), a tiny one (mucronate) or a bristle (aristate), narrowing straight to a point (acute), blunt (obtuse), rounded, cut square (truncate), or notched (emarginate, shallowly retuse)"
+    },
+    "leaf_base_shape": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["attenuate", "cuneate", "acute", "obtuse", "rounded", "truncate"],
+      "optional": true,
+      "why": "a blade's base where it meets its petiole: tapering long and gradually (attenuate), a straight wedge (cuneate), narrowing to a point (acute), blunt (obtuse), rounded, or cut square (truncate); a base with lobes either side of the petiole is the blade's shape, cordate or reniform"
+    },
     "leaf_venation": {
       "group": "leaves",
       "organ": "leaf",
@@ -753,6 +812,14 @@
       "range": [0, 5],
       "why": "the stalk between blade and shoot"
     },
+    "plication": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["induplicate", "reduplicate"],
+      "optional": true,
+      "why": "how a pleated leaf, as a palm's, splits into its leaflets or segments: along its upper folds, so each is V-shaped with its trough up (induplicate), or along its lower folds, so each is keeled, Λ-shaped (reduplicate)"
+    },
     "vernation": {
       "group": "leaves",
       "organ": "leaf",
@@ -792,6 +859,45 @@
       "type": "enum",
       "values": ["entire", "serrate", "dentate", "crenate", "spiny"],
       "why": "a blade's edge: smooth, or toothed (teeth pointing forward, outward, rounded, or ending in spines)"
+    },
+    "leaf_hairs": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "hispid", "tomentose", "lanate"],
+      "optional": true,
+      "why": "the hairs on a blade's upper side, as floras name them (Harris and Harris): none (glabrous), few or soon lost (glabrescent), minute (puberulent), short and soft (pubescent), pressed flat and stiff (strigose) or silky (sericeous), long and soft, sparse (pilose) or shaggy (villous), stiff and spreading (hirsute) or bristly (hispid), matted into a felt (tomentose) or a wool (lanate)"
+    },
+    "leaf_hairs_beneath": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "hispid", "tomentose", "lanate"],
+      "optional": true,
+      "why": "the hairs on a blade's underside, in the words of `leaf_hairs`"
+    },
+    "leaf_ciliate": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a blade's edge is fringed with hairs (ciliate), as floras say where its faces' hairs do not tell it"
+    },
+    "leaf_hair_length_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0.00002, 0.02],
+      "optional": true,
+      "why": "a hair on a blade's upper side, from its foot to its tip"
+    },
+    "hair_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the hairs on a blade, where they are not white or colourless"
     },
     "leaf_lobes": {
       "group": "leaves",
@@ -858,6 +964,14 @@
       "optional": true,
       "why": "the grown leaf's habit as a whole, its angle and its arch together, as floras word it for a frond or a blade: standing up, rising at a slant, bending over toward its tip, held out nearly level, or hanging"
     },
+    "stipe_scales": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["absent", "sparse", "dense"],
+      "optional": true,
+      "why": "how scaly a fern's stipe is, as floras word it: bare, a few scales, or densely scaly, its foot shaggy with them"
+    },
     "leaf_peltation": {
       "group": "leaves",
       "organ": "leaf",
@@ -901,6 +1015,13 @@
       "organ": "leaf",
       "type": "colour",
       "why": "a grown leaf's upper side in summer"
+    },
+    "stipe_scale_colour": {
+      "group": "leaves",
+      "organ": "palea",
+      "type": "colour",
+      "optional": true,
+      "why": "the scales on a fern's stipe, at its foot"
     },
     "leaf_colour_autumn": {
       "group": "leaves",
@@ -1009,6 +1130,22 @@
       "range": [0.0003, 0.5],
       "optional": true,
       "why": "a petal from its base to its tip, claw included"
+    },
+    "petal_shape": {
+      "group": "flowers",
+      "organ": "petal",
+      "type": "enum",
+      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular"],
+      "optional": true,
+      "why": "a petal's outline, or a tepal's: from a narrow strap (linear) to as broad as long (orbicular)"
+    },
+    "petal_apex": {
+      "group": "flowers",
+      "organ": "petal",
+      "type": "enum",
+      "values": ["acuminate", "acute", "obtuse", "rounded", "truncate", "emarginate", "bilobed"],
+      "optional": true,
+      "why": "a petal's tip, or a tepal's: drawn out to a fine point (acuminate), narrowing straight to a point (acute), blunt (obtuse), rounded, cut square (truncate), notched (emarginate) or cleft into two lobes (bilobed)"
     },
     "sepal_length_m": {
       "group": "flowers",
@@ -1377,6 +1514,15 @@
       "unit": "m",
       "range": [0.0005, 1],
       "why": "a ripe fruit at its longest"
+    },
+    "fruit_width_m": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0003, 1],
+      "optional": true,
+      "why": "a ripe fruit across at its widest"
     },
     "fruit_colour_ripe": {
       "group": "fruit_and_cones",

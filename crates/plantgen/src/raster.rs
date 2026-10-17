@@ -83,6 +83,9 @@ pub enum Material {
     /// where its vertices are bark (alpha minus the stem's radius,
     /// `crate::mesh::Mesh::colors`; `crate::bark`).
     Bark(crate::bark::BarkParams),
+    /// Hair strands (`crate::hairs::strand_mesh`): two-sided, their
+    /// vertex normals their tangents, lit as fibres.
+    Hair,
 }
 
 impl Material {
@@ -513,6 +516,7 @@ impl Surface<'_> {
 
     /// Depth-test, cut out and shade one pixel of the triangle with vertex
     /// indices `corners` at barycentric weights `k`.
+    #[allow(clippy::too_many_lines)]
     fn fragment(
         &self,
         target: &mut Target,
@@ -528,6 +532,7 @@ impl Surface<'_> {
         let mix = |values: [f64; 3]| k[0] * values[0] + k[1] * values[1] + k[2] * values[2];
         let mut albedo =
             [0, 1, 2].map(|channel| mix(corners.map(|i| f64::from(mesh.colors[i][channel]))));
+        let mut hair = None;
         let bark = self.bark(corners, k, depth);
         if let (Some((sample, _, _)), Material::Bark(params)) = (bark, self.material) {
             for (channel, value) in albedo.iter_mut().enumerate() {
@@ -547,7 +552,25 @@ impl Surface<'_> {
             if texel.coverage < 0.5 {
                 return;
             }
+            // Up close the edge's hairs are strands of their own.
+            if texel.fringe
+                && let Some(hairs) = self
+                    .templates
+                    .templates
+                    .get(template)
+                    .and_then(|drawn| drawn.hairs.as_ref())
+            {
+                let footprint = if self.perspective {
+                    self.pixel * depth
+                } else {
+                    self.pixel
+                };
+                if !crate::hairs::fringe_drawn(hairs, footprint) {
+                    return;
+                }
+            }
             albedo = self.templates.albedo(template, albedo, texel);
+            hair = Some(template);
         }
         target.depth[at] = depth;
         let Some(lighting) = self.lighting else {
@@ -569,6 +592,19 @@ impl Surface<'_> {
         } else {
             -self.forward
         };
+        if self.material == Material::Hair {
+            // A strand's normal is its tangent.
+            let lit = self
+                .shadow
+                .map_or(1.0, |map| map.visibility(world, lighting.sun, lighting.sun));
+            let light = crate::hairs::strand_light(albedo, normal, view, lit, lighting);
+            #[allow(clippy::cast_possible_truncation)]
+            {
+                target.color[at] = [light[0] as f32, light[1] as f32, light[2] as f32, 1.0];
+            }
+            target.normal[at] = view.to_f32();
+            return;
+        }
         if self.material == Material::Card && normal.dot(view) < 0.0 {
             normal = -normal;
         }
@@ -590,6 +626,21 @@ impl Surface<'_> {
             #[allow(clippy::cast_possible_truncation)]
             {
                 color[channel] = (albedo[channel] * light) as f32;
+            }
+        }
+        if let Some(template) = hair
+            && let Some(hairs) = self
+                .templates
+                .templates
+                .get(template)
+                .and_then(|drawn| drawn.hairs.as_ref())
+        {
+            let sheen = crate::hairs::sheen(hairs, normal, view, lit, lighting);
+            for channel in 0..3 {
+                #[allow(clippy::cast_possible_truncation)]
+                {
+                    color[channel] += sheen[channel] as f32;
+                }
             }
         }
         color[3] = 1.0;

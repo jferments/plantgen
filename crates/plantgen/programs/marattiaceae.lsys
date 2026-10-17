@@ -7,9 +7,15 @@
 # leaflet cards. Dead fronds fall; their bases (the stipules) stay as
 # boots on the stem.
 #
+# Revision 2: gives palm revision 9's new values: a stem that keeps its
+# girth, fronds every year with no scale leaves, croziers coiled tight
+# (coil_short) with their pinnae small until they unroll, and boots (the
+# fleshy stipules) standing out from the stem (Hoshizaki and Moran 2001,
+# p. 184-185).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem marattiaceae 1 extends palm;
+lsystem marattiaceae 2 extends palm;
 
 param vigour_spread = 0.1;
 param upturn = 0;
@@ -42,6 +48,23 @@ param bulge_age = 0;
 param bulge_years = 1;
 param crownshaft = 0;        # a crownshaft's length; 0 none
 param shaft_cards = 8; param sheath_area = 0.235;
+param sheath_length = 0;     # no sheaths below a frond without a crownshaft
 param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
 param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
 param hang = 0;              # degrees a frond turns down over its life
+param thicken = 0;
+param thicken_years = 1;
+param flush_interval = 1;
+param cataphylls = 0;
+param cataphyll_length = 0.05;
+param cataphyll_angle = 10;
+param cataphyll_life = 1;
+param cataphyll_area = 0.02;
+param leaflet_young = 0.3;
+param leaflet_fold = 0;
+param leaflet_groups = 2;
+param acanthophylls = 0;      # no spines among the leaflets
+param spine_length = 0.1;
+param spine_area = 0.004;
+param coil_short = 0.5;
+param boot_angle = 60;

@@ -19,6 +19,12 @@
     "fruit_type": {
       "berry": "usually",
       "capsule": "rarely"
+    },
+    "inflorescence": "cyme",
+    "flowering_position": "lateral",
+    "corolla_shape": {
+      "campanulate": "usually",
+      "rotate": "sometimes"
     }
   },
   "evidence": {
@@ -26,6 +32,21 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 207 Sapotaceae: trees or shrubs with milky sap, often flowering on the old wood; leaves simple, alternate, entire, leathery; stipules usually absent; flowers bisexual, regular, rather small; calyx and corolla 4- to 8-lobed; stamens on the corolla, opposite its lobes; ovary superior, of several cells; fruit often a rather hard berry (sapodilla, star apple), rarely a capsule."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Sapotaceae (read 2026-10-16): flowers solitary or in cymose bunches, terminal unit cymose."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Sapotaceae (read 2026-10-16): inflorescences axillary, sometimes on old wood."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Sapotaceae (read 2026-10-16): corolla gamopetalous with short tube; 'campanulate' is our reading. Low-medium confidence."
     }
   }
 }

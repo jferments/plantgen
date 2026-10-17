@@ -5,14 +5,49 @@
   "parent": "order/rosales",
   "traits": {
     "fruit_type": {
-      "achene": "usually"
+      "drupe": "usually",
+      "achene": "sometimes"
+    },
+    "perianth": "tepals",
+    "hypanthium": false,
+    "division_pattern": "palmate",
+    "inflorescence": "cyme",
+    "sexual_system": {
+      "polygamous": "usually",
+      "monoecious": "often",
+      "dioecious": "often"
     }
   },
   "evidence": {
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 327, family Cannabaceae: fruit type achene (per cladogram), usually; read as {\"achene\": \"usually\"}."
+      "source": "wikipedia",
+      "note": "Wikipedia, Cannabaceae (read 2026-10-16): fruit an achene or a drupe, and Celtis is by far the largest genus (about 100 species); Wikipedia's Celtis page calls its fruit a small drupe, so drupe leads and the achenes of Cannabis and Humulus come second."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Cannabaceae (read 2026-10-16): petals lacking; reduced perianth of one whorl."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Cannabaceae (read 2026-10-16): reduced petal-less flowers with a cup-like bracteole, no floral cup described."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Cannabaceae (read 2026-10-16): leaves often palmately lobed or palmately compound."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Cannabaceae (read 2026-10-16): flowers in cymes, male ones panicle-like."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Cannabaceae (read 2026-10-16): often dioecious (Cannabis, Humulus). Celtis (~100 of ~170 spp.) polygamo-monoecious from my knowledge, hence polygamous first; medium confidence."
     }
   }
 }

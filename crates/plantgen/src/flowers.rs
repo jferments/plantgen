@@ -54,6 +54,9 @@ const CLOSED: f64 = 95.0;
 const LEAN: f64 = 0.35;
 /// The `open` below which a flower's stamens and pistil are hidden.
 const SHOWN: f64 = 0.3;
+/// How far a flower with no perianth reaches: its stamens' tips, over its
+/// radius.
+const NAKED_REACH: f64 = 0.9;
 
 /// What a perianth part is.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -222,7 +225,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let n = flower.petals.max(1);
     let nf = f64::from(n);
     let length = (r - s).max(r * 0.1);
-    let spread = |count: f64, from: f64, to: f64| flower.petal_width * PI * (from + to) / count;
+    let spread = |count: f64, from: f64, to: f64| flower.petal_share() * PI * (from + to) / count;
     let width = spread(nf, s, r).clamp(length * 0.08, length);
     let open = flower.open.clamp(0.0, 1.0);
     // Closing raises every part toward the axis and shortens the petals.
@@ -683,6 +686,63 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         }
     };
 
+    // A flower with no perianth is only its stamens and pistil, so its
+    // stated size is theirs: they are grown to reach its radius (a
+    // chloranthus's connectives, a willow's catkin flower), as a
+    // perianth's flower is as wide as its petals reach.
+    let mut stamens = stamens;
+    let mut pistil = pistil;
+    let mut c = c;
+    if pieces.is_empty() && tube.is_none() && calyx_tube.is_none() && cup.is_none() {
+        let reach = stamens
+            .iter()
+            .map(|stamen| {
+                stamen.rod.radius
+                    + (stamen.rod.length + stamen.anther * 0.5) * math::sin(stamen.rod.lean)
+            })
+            .fold(c, f64::max);
+        if reach > 0.0 && reach < NAKED_REACH * r {
+            let k = NAKED_REACH * r / reach;
+            let grow = |rod: &mut Rod| {
+                rod.radius *= k;
+                rod.height *= k;
+                rod.length *= k;
+                rod.width *= k;
+            };
+            for stamen in &mut stamens {
+                grow(&mut stamen.rod);
+                stamen.anther *= k;
+            }
+            match &mut pistil {
+                Pistil::None => {}
+                Pistil::Dome {
+                    height,
+                    radius,
+                    rise,
+                } => {
+                    *height *= k;
+                    *radius *= k;
+                    *rise *= k;
+                }
+                Pistil::One { ovary, style, .. } => {
+                    if let Some((height, size)) = ovary {
+                        *height *= k;
+                        *size *= k;
+                    }
+                    grow(style);
+                }
+                Pistil::Free { dome, pistils } => {
+                    dome.0 *= k;
+                    dome.1 *= k;
+                    dome.2 *= k;
+                    pistils.iter_mut().for_each(grow);
+                }
+                Pistil::Column(rod) => grow(rod),
+            }
+            c = (c * k).min(r * 0.9);
+        }
+    }
+
     Floral {
         radius: r,
         centre: c,
@@ -1046,6 +1106,17 @@ pub(crate) fn draw_reduced(
     let first_index = mesh.indices.len();
     let axis = frame.axis;
     let leaf = part.leaf(frame.foot, axis, frame.side, 0.0, 0.0, colours.petal);
+    // A naked flower (no perianth, no tube) shows only its stamens and
+    // pistil, so they are what its colour is stated for (a chloranthus's
+    // white connectives): drawn in it at any size, as broad as a stamen's
+    // fleshy connective or anther, and from the flat steps as a disc as
+    // wide as they reach.
+    let naked = laid.pieces.is_empty() && laid.tube.is_none() && laid.calyx_tube.is_none();
+    let reach = laid
+        .stamens
+        .iter()
+        .map(|stamen| stamen.rod.radius + stamen.rod.length * math::sin(stamen.rod.lean))
+        .fold(laid.centre, f64::max);
     let both = |corners: &[Vec3], colour: [f32; 3], mesh: &mut Mesh| {
         for flip in [false, true] {
             let at = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
@@ -1067,7 +1138,9 @@ pub(crate) fn draw_reduced(
             .iter()
             .filter(|p| p.term != Term::Sepal)
             .collect();
-        let (ring, rise, paint) = if petals.is_empty() {
+        let (ring, rise, paint) = if naked && reach > 0.0 {
+            (reach, 0.0, colours.petal)
+        } else if petals.is_empty() {
             (laid.centre, 0.0, colours.accent)
         } else {
             #[allow(clippy::cast_precision_loss)]
@@ -1160,6 +1233,14 @@ pub(crate) fn draw_reduced(
                 .extend_from_slice(&[apex, ring + k, ring + (k + 1) % 6]);
         }
     };
+    if naked
+        && let Pistil::One {
+            ovary: Some((height, size)),
+            ..
+        } = &laid.pistil
+    {
+        pyramid(*height - *size, *size, mesh);
+    }
     match &laid.pistil {
         Pistil::Dome { height, radius, .. } => pyramid(*height, *radius, mesh),
         Pistil::Free { dome, .. } if dome.1 > 0.0 => pyramid(dome.0, dome.1, mesh),
@@ -1191,20 +1272,36 @@ pub(crate) fn draw_reduced(
         }
         Pistil::Free { .. } | Pistil::None => {}
     }
-    if part.coarse <= 1 && laid.radius * 2.0 >= 0.01 {
+    if part.coarse <= 1 && (naked || laid.radius * 2.0 >= 0.01) {
+        let (broad, colour) = if naked {
+            (0.2, colours.petal)
+        } else {
+            (0.06, colours.filament)
+        };
         for stamen in laid.stamens.iter().take(12) {
             let (foot, direction) = frame.rod(&stamen.rod);
             let across =
-                direction.cross(axis).normalize_or(frame.side) * (stamen.rod.length * 0.06);
-            both(
-                &[
-                    foot - across,
-                    foot + across,
-                    foot + direction * stamen.rod.length,
-                ],
-                colours.filament,
-                mesh,
-            );
+                direction.cross(axis).normalize_or(frame.side) * (stamen.rod.length * broad);
+            let tip = foot + direction * stamen.rod.length;
+            if naked {
+                // Blunt, broadest toward its tip: a fleshy connective or
+                // an anther, not a filament.
+                let shoulder = foot + direction * (stamen.rod.length * 0.7);
+                both(
+                    &[
+                        foot - across * 0.4,
+                        foot + across * 0.4,
+                        shoulder + across,
+                        tip + across * 0.5,
+                        tip - across * 0.5,
+                        shoulder - across,
+                    ],
+                    colour,
+                    mesh,
+                );
+            } else {
+                both(&[foot - across, foot + across, tip], colour, mesh);
+            }
         }
     }
     leaves::smooth_normals(mesh, first, first_index);

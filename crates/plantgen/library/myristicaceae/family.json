@@ -11,8 +11,8 @@
     "leaf_habit": "evergreen",
     "stipules": false,
     "sexual_system": {
-      "monoecious": "often",
-      "dioecious": "often"
+      "dioecious": "usually",
+      "monoecious": "rarely"
     },
     "ovary_position": "superior",
     "woodiness": "woody",
@@ -22,7 +22,9 @@
       "head": "often"
     },
     "perianth": "tepals",
-    "fruit_type": "legume",
+    "fruit_type": {
+      "follicle": "usually"
+    },
     "flower_merosity": 3,
     "stamens": {
       "min": 3,
@@ -36,6 +38,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Myristicaceae: leaves alternate; leaves simple; margins entire; veins pinnate; leaves evergreen; stipules absent; plants monoecious or dioecious; ovary superior; stems woody; flowers in cymes, in racemes or in heads; perianth tepals; fruit legume; parts of each whorl 3; stamens (2-) 3 to 30; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page, Myristicaceae (read 2026-10-16): the fruit is a follicle opening along both sides, only exceptionally indehiscent; the current 'legume' follows DELTA's wording for a one-carpel fruit splitting on both sutures, which the vocabulary's follicle fits better."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page, Myristicaceae (read 2026-10-16): the family is characterised as dioecious, with monoecy said to have arisen a few separate times; so dioecious is the usual state and monoecious the exception."
     }
   }
 }

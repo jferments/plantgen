@@ -503,6 +503,11 @@ impl Variant {
 #[serde(deny_unknown_fields)]
 pub struct Appearance {
     pub bark: [f32; 3],
+    /// Colour of the wood drawn within a leaf: a frond's petiole and
+    /// rachis, a fern's stipe. It is drawn plain, with no bark pattern,
+    /// moss or furrows. The bark's colour and bark if none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub leaf_axis: Option<[f32; 3]>,
     /// Colour of organs in full light, unless their look gives one.
     pub foliage: [f32; 3],
     /// Colour of organs in deep shade; shaded organs blend toward it.
@@ -1269,7 +1274,9 @@ impl PlantSpec {
     /// The shading area of each organ whose area is a program parameter
     /// this spec leaves unset: the area its look draws on an organ 1 m long
     /// (LANGUAGE.md 5.2, areas from looks), so the light model shades with
-    /// what the plant shows; where organs share a parameter, the first's.
+    /// what the plant shows, or for a needle card its needles' own area
+    /// ([`crate::templates::shade_area`]); where organs share a parameter,
+    /// the first's.
     fn drawn_areas(&self, program: &Program) -> BTreeMap<String, f64> {
         let names = program.organ_area_params();
         let unset: Vec<(usize, &str)> = names
@@ -1291,7 +1298,7 @@ impl PlantSpec {
             {
                 drawn
                     .entry(name.to_string())
-                    .or_insert_with(|| crate::templates::drawn_area(look, template));
+                    .or_insert_with(|| crate::templates::shade_area(look, template));
             }
         }
         drawn

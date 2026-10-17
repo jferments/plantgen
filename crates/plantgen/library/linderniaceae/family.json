@@ -4,6 +4,7 @@
   "name": "Linderniaceae",
   "parent": "order/lamiales",
   "traits": {
+    "life_span": {"annual": "usually", "perennial": "sometimes"},
     "leaf_arrangement": "opposite",
     "leaf_division": {
       "simple": "usually",
@@ -47,6 +48,7 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.life_span": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Linderniaceae (read 2026-10-16): mostly annual herbs, a few shrubs or subshrubs."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

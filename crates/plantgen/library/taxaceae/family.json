@@ -7,11 +7,12 @@
     "sexual_system": "dioecious",
     "leaf_form": "needle",
     "foliage_ranks": "two_ranked",
-    "phyllotaxis_pattern": {
-      "spiral": "often",
-      "decussate": "often"
-    },
-    "leaf_habit": "evergreen"
+    "phyllotaxis_pattern": "spiral",
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    }
   },
   "evidence": {
     "traits": {
@@ -21,13 +22,18 @@
     },
     "traits.phyllotaxis_pattern": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 158, family Taxaceae: phyllotaxis pattern spiral, often twisted so it looks 2-ranked, to decussate, usually; read as {\"spiral\": \"often\", \"decussate\": \"often\"}."
+      "source": "wikipedia",
+      "note": "Wikipedia, Taxaceae (read 2026-10-16): leaves spirally arranged, often twisted at the base to look two-ranked; the Amentotaxus page also says its leaves are spiral; neither page mentions decussate leaves, so no decussate state is kept (Cephalotaxus is a separate family in the library)."
     },
     "traits.leaf_habit": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 158, family Taxaceae: leaf habit evergreen; read as \"evergreen\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Taxaceae (read 2026-10-16): leaves spirally set, often twisted at the base so they look two-ranked; opposite in Amentotaxus (our addition)."
     }
   }
 }

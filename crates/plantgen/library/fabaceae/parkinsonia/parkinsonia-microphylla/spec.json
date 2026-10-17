@@ -123,7 +123,8 @@
     "inflorescence": "corymb",
     "flower_colour": [245, 232, 120],
     "fruit_size_m": {"min": 0.04, "max": 0.06},
-    "flowering_months": [3, 4, 5]
+    "flowering_months": [3, 4, 5],
+    "fruiting_months": [5, 6]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Parkinsonia microphylla (gwddagg_v2.2_species.csv, read): specific gravity 0.62 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.62, branches 0.59. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -266,6 +267,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1944",
       "note": "Abrams (vol. 2, 1944, p. 479), as Cercidium microphyllum: shrubby or small tree 2-8 m high with smooth light grey-green bark; branchlets spine-tipped but without side spines; leaves with no common rachis, the two stalkless pinnae 1-3 cm long; leaflets 4-8 pairs, elliptic, 1-2 mm long; pedicels 5-15 mm; petals yellow, 5-7 mm long; pods 4-6 cm, hardly flattened, 1-4-seeded, much constricted between the seeds, with a long pointed beak; March to May. Genus (p. 479): flowers in short corymb-like clusters; petals 5, yellow; stamens 10. Kearney and Peebles (p. 426) give April to May in Arizona."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's yellow paloverde review (Helmy 2022, read 2026-10-16): flowers late March or April until May, and \"about 6 weeks after flowering, seeds ripen and seed pods drop, typically just before the summer rains\"; read as May and June."
     }
   },
   "provenance": {

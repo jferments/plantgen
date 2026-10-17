@@ -2,5 +2,146 @@
   "schema": 1,
   "rank": "order",
   "name": "Brassicales",
-  "parent": "clade/malvids"
+  "parent": "clade/malvids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    },
+    "inflorescence": {
+      "raceme": "usually",
+      "solitary": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "zygomorphy": "other",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 4
+    },
+    "corolla_shape": "rotate",
+    "hypanthium": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "ovary_position": "superior",
+    "stamens": {
+      "min": 4,
+      "max": 10,
+      "typical": 6,
+      "high": 100
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 2
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely",
+      "polygamous": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page, order characterisation (read 2026-10-16): leaves spiral. Opposite in Salvadoraceae and Bataceae only."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): leaves spiral (Moringaceae, Limnanthaceae spiral too)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): compound leaves only in Akaniaceae, Moringaceae, Cleomaceae, some Caricaceae and Tropaeolaceae; Brassicaceae (most species) simple, often lobed."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): Limnanthaceae pinnate or pinnately lobed, Moringaceae and Akania odd-pinnate; palmate in Tropaeolaceae, Caricaceae, Cleomaceae. Brassicaceae lobing mostly pinnatifid (weighting inferred)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): woody families and vines leafy-stemmed; basal rosettes only in many Brassicaceae and Resedaceae, which state their own."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page, order characterisation (read 2026-10-16): inflorescence racemose. Single flowers in Tropaeolaceae and Limnanthaceae (state their own)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): racemes end the shoots in the bulk of the order; axillary flowers in Tropaeolaceae, Limnanthaceae, Caricaceae, Setchellanthaceae. Weighting inferred from Brassicaceae."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): monosymmetric in Tropaeolaceae, Moringaceae, weakly Bretschneidera; Brassicaceae regular."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): zygomorphic flowers (Tropaeolum, Moringa, Cleome, Reseda) are spurred or oblique, not lipped or pea-type."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16) gives 3-5-merous Limnanthaceae, 6-merous Setchellanthus; Brassicaceae (over 3/4 of species) 4-merous; Wikipedia, Caper (read 2026-10-16): 4 sepals, 4 petals. Typical 4 by species weight."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): petals free, often clawed, spreading; Brassicaceae already state rotate."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): floral cups only in small families (Tropaeolaceae spur-bearing receptacle, Moringaceae, Limnanthaceae)."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): ovaries superior throughout, often stalked."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): Tropaeolaceae 8, Moringaceae 5, Akania 10, Caricaceae 10, Limnanthaceae 2 x calyx; Brassicaceae 6 (four long, two short). Typical 6 by species weight."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page, order characterisation (read 2026-10-16): carpels 3 at the base of the order, but Brassicaceae, Cleomaceae and Capparaceae (most species) have 2."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page (read 2026-10-16): Caricaceae always unisexual; Batis dioecious or monoecious (Wikipedia, Batis (read 2026-10-16)); the rest bisexual."
+    }
+  }
 }

@@ -3187,8 +3187,12 @@ mod tests {
         // Sedges and alders: three ranks.
         assert_eq!(arrangement("carex-obnupta"), (None, Some(120.0)));
         assert_eq!(arrangement("alnus-rubra"), (Some(1.0), Some(120.0)));
-        // Creosote bush: pairs, which broadleaf crosses at 90 degrees.
-        assert_eq!(arrangement("larrea-tridentata"), (Some(2.0), None));
+        // Creosote bush: pairs, crossing at a quarter turn as its order's
+        // leaves do.
+        assert_eq!(arrangement("larrea-tridentata"), (Some(2.0), Some(90.0)));
+        // Foxglove: single leaves under its order's crossing pairs turn
+        // by the golden angle, as the genus's leaves decide.
+        assert_eq!(arrangement("digitalis-purpurea"), (Some(1.0), Some(137.5)));
         // A daisy family's tie sets nothing where the genus says nothing.
         let daisy = library.inherited("leucanthemum-vulgare").unwrap();
         assert_eq!(
@@ -3364,6 +3368,7 @@ mod tests {
     /// be with no trait stated anywhere, but for the values rules set from
     /// its characters, their spreads and their notes.
     #[test]
+    #[allow(clippy::too_many_lines)]
     fn characters_change_no_spec_until_a_rule_reads_them() {
         let library = Library::builtin();
         let mut stated = 0;
@@ -3377,6 +3382,30 @@ mod tests {
             {
                 parent.remove(key);
             }
+            // A rule's value may be all its section holds, as a flower's
+            // form is only its cup: the section goes with it, but a look
+            // stays, so later paths still find its notes.
+            let mut emptied = outer;
+            while let Some((above, key)) = emptied.rsplit_once('.') {
+                if above == "appearance.organs" {
+                    break;
+                }
+                let Some(parent) = above
+                    .split('.')
+                    .try_fold(&mut *spec, step)
+                    .and_then(serde_json::Value::as_object_mut)
+                else {
+                    break;
+                };
+                if !parent
+                    .get(key)
+                    .is_some_and(|inside| inside.as_object().is_some_and(serde_json::Map::is_empty))
+                {
+                    break;
+                }
+                parent.remove(key);
+                emptied = above;
+            }
             if let Some(notes) = spec
                 .get_mut("evidence")
                 .and_then(serde_json::Value::as_object_mut)
@@ -3385,9 +3414,15 @@ mod tests {
             }
         };
         // A rule whose path names `*` sets it in every look, and a rule on
-        // a look's shape in its season's flower and bud looks too.
+        // a look's shape in its season's flower and bud looks too. A rule
+        // for an organ's look sets its look in flower where its season
+        // took that look, and a fruit's rule sets a flowering look's own
+        // look where that is its fruit (`inherit::seasonal_looks`).
         let remove = |spec: &mut serde_json::Value, path: &str| {
-            let Some(rest) = path.strip_prefix("appearance.organs.*.") else {
+            let Some((organ, rest)) = path
+                .strip_prefix("appearance.organs.")
+                .and_then(|look| look.split_once('.'))
+            else {
                 return remove_one(spec, path);
             };
             let organs: Vec<String> = spec
@@ -3395,9 +3430,12 @@ mod tests {
                 .and_then(serde_json::Value::as_object)
                 .map(|organs| organs.keys().cloned().collect())
                 .unwrap_or_default();
-            for organ in organs {
+            for organ in organs
+                .into_iter()
+                .filter(|drawn| ["*", "fruit"].contains(&organ) || drawn == organ)
+            {
                 remove_one(spec, &format!("appearance.organs.{organ}.{rest}"));
-                if rest.starts_with("shape.") {
+                if rest.starts_with("shape.") || rest == "colour" || rest == "accent" {
                     for stage in ["flower_look", "bud_look"] {
                         remove_one(
                             spec,

@@ -1962,7 +1962,7 @@ fn draw_laid(
             (Shape::Flower(flower), Form::Flower(form)) => floret(
                 &Petals {
                     count: flower.petals.max(1),
-                    width: flower.petal_width,
+                    width: flower.petal_share(),
                     centre: flower.centre,
                     start: 0.6,
                 },
@@ -3084,6 +3084,7 @@ mod tests {
             &std::collections::BTreeMap::from([(
                 "bloom".to_string(),
                 crate::looks::OrganLook {
+                    hairs: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Fruit(Fruit {
@@ -3169,6 +3170,7 @@ mod tests {
             &std::collections::BTreeMap::from([(
                 "bloom".to_string(),
                 crate::looks::OrganLook {
+                    hairs: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape,
@@ -3203,6 +3205,7 @@ mod tests {
             ripening: 20.0,
             fall: 245.0,
             opening: 40.0,
+            fruit_size: 1.0,
             bud_look: None,
             flower_look: Some(crate::looks::StageLook {
                 shape: Shape::Flower(Flower::default()),

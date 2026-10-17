@@ -30,7 +30,7 @@
       "zygomorphic": "often",
       "asymmetric": "sometimes"
     },
-    "zygomorphy": "bilabiate",
+    "zygomorphy": "other",
     "perianth": {
       "sepals_and_petals": "usually",
       "tepals": "sometimes"
@@ -48,13 +48,42 @@
       "min": 2,
       "max": 6,
       "high": 10
-    }
+    },
+    "inflorescence": {
+      "raceme": "usually",
+      "solitary": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 6
+    },
+    "corolla_shape": "rotate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lecythidaceae with Asteranthaceae, Barringtoniaceae, Foetidiaceae, Napoleonaeaceae, Scytopetalaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins pinnate; stipules usually absent, sometimes present; plants hermaphrodite; ovary half inferior or inferior, sometimes superior; floral cup usually absent, sometimes present; stems usually woody, sometimes herbaceous; flowers actinomorphic or zygomorphic, sometimes asymmetric; irregular flowers bilabiate; perianth usually sepals and petals, sometimes tepals; fruit capsule or berry, sometimes drupe; stamens 40 to 1000; carpels 2 to 6 (-10). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Lecythidaceae (read 2026-10-16): flowers solitary or in inflorescences with racemose terminal unit."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Lecythidaceae (read 2026-10-16): 4-6 petals."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Lecythidaceae (read 2026-10-16): petals usually free, falling with the stamens; spreading (our reading)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Lecythidaceae (read 2026-10-16): irregular flowers owe their zygomorphy mainly to the androecium, which may form a one-sided ligule or hood, and the petals are unequal but not two-lipped; so 'other', not 'bilabiate'."
     }
   }
 }

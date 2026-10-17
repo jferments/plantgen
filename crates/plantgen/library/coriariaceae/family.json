@@ -42,13 +42,19 @@
       "min": 5,
       "max": 5,
       "high": 10
-    }
+    },
+    "phyllotaxis_pattern": "decussate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Coriariaceae: leaves usually opposite, rarely whorled; leaves simple; margins entire or dentate; veins palmate or parallel; blades lanceolate, oblanceolate, oblong or ovate; stipules present; plants hermaphrodite, monoecious or polygamous; ovary superior; floral cup absent; stems woody; flowers in racemes; flowers actinomorphic; perianth sepals and petals; fruit achene; parts of each whorl 5; stamens 10; carpels 5 (-10). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cucurbitales page (read 2026-10-16): leaves opposite (the family states opposite), so pairs; branches look like pinnate leaves."
     }
   }
 }

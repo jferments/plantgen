@@ -1,0 +1,330 @@
+{
+  "schema": 1,
+  "id": "aristolochia-californica",
+  "taxon": {
+    "scientific_name": "Aristolochia californica",
+    "common_name": "California pipevine",
+    "family": "Aristolochiaceae",
+    "genus": "Aristolochia",
+    "plant_name_id": 2651244
+  },
+  "growth_form": "vine",
+  "generator": {
+    "params": {
+      "shoots": 3,
+      "internode": 0.035,
+      "max_shoot": 4,
+      "cling": 0.3,
+      "hug": 0.45,
+      "climb": 0.15,
+      "seek": 0.6,
+      "drape": 0.15,
+      "free_years": 2,
+      "branch_chance": 0.12,
+      "branch_angle": 45,
+      "max_order": 3,
+      "leaf_angle": 70,
+      "renew": 0,
+      "adult_age": 3,
+      "fruiting": 0.1,
+      "fruit_size": 0.055,
+      "pipe_tip": 0.0018,
+      "pipe_organ": 0.0036,
+      "pipe_rings": 5e-06
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 0.25,
+    "keyframes": [
+      2,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "host": {
+    "species": "quercus-garryana",
+    "age": 25,
+    "environment": "open",
+    "seed": 1
+  },
+  "appearance": {
+    "bark": [
+      0.38,
+      0.32,
+      0.25
+    ],
+    "foliage": [
+      0.07,
+      0.14,
+      0.045
+    ],
+    "foliage_shade": [
+      0.023,
+      0.046,
+      0.015
+    ],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "teeth": 0,
+          "petiole": 0.18
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 6,
+      "environment": "open",
+      "height": 2.5,
+      "tolerance": 0.6
+    },
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 4.5,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 2,
+      "max": 5
+    },
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.12
+    },
+    "leaf_width_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "leaf_shape": "cordate",
+    "leaf_venation": "palmate",
+    "leaf_apex": {
+      "obtuse": "often",
+      "rounded": "often"
+    },
+    "leaf_hairs_beneath": "tomentose",
+    "leaf_habit": "deciduous",
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "flower_symmetry": "zygomorphic",
+    "flower_size_m": {
+      "min": 0.02,
+      "max": 0.04
+    },
+    "flower_colour": [
+      105,
+      55,
+      70
+    ],
+    "corolla_shape": "tubular",
+    "stamens": 6,
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.05,
+      "max": 0.06
+    },
+    "fruit_colour_ripe": [
+      120,
+      95,
+      60
+    ],
+    "flowering_months": [
+      2,
+      3,
+      4
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): twining woody lianas to 5 m; the lower bound is the model estimate's usual height (species-facts-2026-10-15)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): blade 4-12 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): blade 3-10 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): petiole 1-2.5 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): blade ovate to reniform, base cordate with a sinus 2-6 cm deep, apex obtuse to rounded; read as cordate, the outline the base gives."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): venation palmate-pinnate; read as palmate, the main veins from the base."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): blade apex obtuse to rounded."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): surfaces abaxially tomentose. The upper face is not described as hairy, so it is left unstated."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): solitary flowers in the leaf axils of new growth, on a peduncle 1-4 cm."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): flowers axillary on the new growth."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): calyx bent, a pendent utricle and a bent tube under a three-lobed limb."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): limb lobes 2 x 2 cm, utricle 0.5-5 cm long; read as a flower 2-4 cm across (inferred)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): calyx brown-purple, the limb purplish. The colour is our reading of the words."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): no petals; the calyx a bent cylindric tube 1-3 cm long."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): anthers 6."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): capsule ovoid to cylindric, opening from the base in 6 valves."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): capsule 5-6 cm long."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the genus's ripe capsules are brown (Dendrology p. 82, A. macrophylla)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): flowering spring; February-April are the model estimate's months, before the leaves are full (species-facts-2026-10-15)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dutchman's pipe's values (the same genus and habit, from California wild grape's), with short internodes and a gentler climb for a smaller liana (FNA: to 5 m, against 20 m), set so it reaches about 4.5 m at 12 years with four or more leaves to a shoot. Not fitted to measurements. Its host, a 25-year Oregon white oak, stands in for the streamside thickets and trees it twines through."
+    },
+    "host": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The host it is grown on for rendering, a built-in tree; not a botanical fact."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.5 m at 6 years and 4.5 m at 12 on its host, within FNA's 'to 5 m'. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3: young stems ribbed and felted; dull green heart-shaped leaves, felted beneath; the blade's outline, basal lobes and width are drawn by the kingdom's rules from its stated cordate shape, palmate veins and size. The leaf card's petiole is 0.18 of its length, the flora's petiole against blade and petiole together."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the second Magnoliidae batch (2026-10-16): sizes from FNA vol. 3, drawing values from Dutchman's pipe's."
+  }
+}

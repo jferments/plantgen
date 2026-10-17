@@ -4,6 +4,7 @@
   "name": "Nyctaginaceae",
   "parent": "order/caryophyllales",
   "traits": {
+    "phyllotaxis_pattern": "decussate",
     "leaf_arrangement": {
       "alternate": "sometimes",
       "opposite": "usually"
@@ -51,6 +52,7 @@
     }
   },
   "evidence": {
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Nyctaginaceae (read 2026-10-16): leaves usually opposite, pair members often unequal."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

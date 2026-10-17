@@ -25,13 +25,19 @@
       "max": 10,
       "low": 6,
       "high": 28
-    }
+    },
+    "fruit_type": "drupe"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Himantandraceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers solitary; flowers actinomorphic; perianth sepals and petals; stamens 15 to 35; carpels (6-) 7 to 10 (-28). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): fruit more or less syncarpous, fleshy with several stones."
     }
   }
 }

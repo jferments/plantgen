@@ -2,5 +2,46 @@
   "schema": 1,
   "rank": "order",
   "name": "Cupressales",
-  "parent": "subclass/pinidae"
+  "parent": "subclass/pinidae",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes",
+      "alternate": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "decussate": "usually",
+      "spiral": "sometimes"
+    },
+    "leaf_division": "simple",
+    "life_span": "perennial",
+    "rosette": "none"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cupressaceae (read 2026-10-16): leaves spiral, in crossing pairs, or in whorls of three or four by genus; family about 135 spp., most of the order, and most of them (cypresses, junipers, thujas) paired or in threes. Taxaceae and Cephalotaxaceae (about 35 spp.) spiral. Weighted by species."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cupressaceae (read 2026-10-16): paired or whorled leaves alternate between nodes (decussate) in most of the family; spiral in the redwood/Taxodium group and in Taxaceae, Cephalotaxaceae."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cupressaceae and Taxaceae (read 2026-10-16): leaves scales or needles, never divided."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cupressaceae and Taxaceae (read 2026-10-16): trees and shrubs."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cupressaceae and Taxaceae (read 2026-10-16): leaves along branches; Sciadopitys needles clustered in umbrella-like whorls at shoot ends, which is a whorl, not a rosette."
+    }
+  }
 }

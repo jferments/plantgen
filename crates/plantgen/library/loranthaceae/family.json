@@ -37,8 +37,8 @@
       "catkin": "sometimes"
     },
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
     },
     "zygomorphy": "bilabiate",
     "perianth": {
@@ -60,6 +60,12 @@
     "carpels": {
       "min": 3,
       "max": 4
+    },
+    "flower_merosity": {
+      "min": 5,
+      "max": 6,
+      "low": 4,
+      "high": 9
     }
   },
   "evidence": {
@@ -67,6 +73,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Loranthaceae with Eremolepidaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually opposite, sometimes alternate; leaves simple; margins entire; veins single, pinnate or parallel; leaves evergreen; stipules absent; plants usually hermaphrodite, sometimes dioecious, rarely monoecious; ovary usually inferior, sometimes half inferior; floral cup absent; joined corolla tubular; stems woody; flowers in cymes, in racemes, in spikes or in umbels, sometimes in catkins; flowers actinomorphic or zygomorphic; irregular flowers bilabiate; perianth usually sepals and petals, often tepals, sometimes absent; fruit berry or drupe, rarely nut; stamens (3-) 5 to 6 (-9); carpels 3 to 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Loranthaceae (read 2026-10-16): corolla and stamens mostly 5-6, up to 9 (low 4 from wider knowledge)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Loranthaceae (read 2026-10-16): flowers regular to somewhat irregular, any irregularity being in the perianth (a tube often bent and split down one side); radial leads, with zygomorphic flowers as a minority."
     }
   }
 }

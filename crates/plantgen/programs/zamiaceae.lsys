@@ -6,9 +6,14 @@
 # own (a cycad's crown, croziers and boots), with a cone at the crown's
 # centre, as every zamia bears one, female or male.
 #
+# Revision 2: palm revision 9's trunk thickening, flushes, scale leaves,
+# leaflet opening and boot angle come from the Cycadales and family rank
+# files (Whitelock 2002), not from here; leaflet groups and coil_short
+# are given as before (none).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem zamiaceae 1 extends palm;
+lsystem zamiaceae 2 extends palm;
 
 param vigour_spread = 0.1;
 param upturn = 0;
@@ -32,6 +37,12 @@ param bulge_age = 0;
 param bulge_years = 1;
 param crownshaft = 0;        # a crownshaft's length; 0 none
 param shaft_cards = 8; param sheath_area = 0.235;
+param sheath_length = 0;     # no sheaths below a frond without a crownshaft
 param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
 param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
 param hang = 0;              # degrees a frond turns down over its life
+param leaflet_groups = 2;
+param acanthophylls = 0;      # no spines among the leaflets
+param spine_length = 0.1;
+param spine_area = 0.004;
+param coil_short = 0;

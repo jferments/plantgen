@@ -1261,7 +1261,15 @@ fn wood(
         // Clamped to a small whole number of sides.
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let sides = (around.ceil() as u32).clamp(lod.min_sides.max(3), lod.max_sides.max(3));
-        let bark = Bark::new(appearance, flare, bottle, kept[0].radius, sides, segment.id);
+        let mut bark = Bark::new(appearance, flare, bottle, kept[0].radius, sides, segment.id);
+        // Wood within a leaf (structures are leaves) is its petiole and
+        // rachis: plain, in the leaf axis's colour, when the look gives one.
+        let leaf_axis = appearance.leaf_axis.filter(|_| segment.within.is_some());
+        if let Some(colour) = leaf_axis {
+            bark.colour = colour;
+            bark.ridges = None;
+            bark.moss = None;
+        }
         let level = match segment.order {
             0 => 0,
             1 => 1,
@@ -1313,24 +1321,27 @@ fn wood(
                 // u wraps once around; v runs along the axis in metres.
                 #[allow(clippy::cast_possible_truncation)]
                 let uv = [(f64::from(side) / f64::from(sides)) as f32, along as f32];
+                let colour = sky.colour(
+                    bark.colour(
+                        current.radius,
+                        surface,
+                        current.centre.y,
+                        along,
+                        angle,
+                        furrow,
+                    ),
+                    light,
+                );
                 out.push(Vertex {
                     position: footed(root, current.centre, direction * (radius * widen)),
                     normal: surface,
                     uv,
-                    color: bark_alpha(
-                        sky.colour(
-                            bark.colour(
-                                current.radius,
-                                surface,
-                                current.centre.y,
-                                along,
-                                angle,
-                                furrow,
-                            ),
-                            light,
-                        ),
-                        current.radius,
-                    ),
+                    // A leaf's axis keeps alpha 1: no bark pattern on it.
+                    color: if leaf_axis.is_some() {
+                        colour
+                    } else {
+                        bark_alpha(colour, current.radius)
+                    },
                     born: current.born,
                     shed: current.shed,
                     level,
@@ -3097,6 +3108,7 @@ mod tests {
             bottle: None,
             roots: None,
             bark_pattern: None,
+            leaf_axis: None,
             bodies: BTreeMap::new(),
             spreads: serde_json::Map::new(),
         }
@@ -3779,6 +3791,7 @@ mod tests {
 
     fn look(shape: Shape, face_up: f64) -> OrganLook {
         OrganLook {
+            hairs: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape,

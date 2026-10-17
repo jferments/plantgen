@@ -43,6 +43,14 @@
     },
     "phyllotaxis_pattern": {
       "spiral": "usually"
+    },
+    "corolla_shape": {
+      "tubular": "usually",
+      "campanulate": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
     }
   },
   "evidence": {
@@ -55,6 +63,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 435, 436, family Pittosporaceae: phyllotaxis pattern spiral (sometimes whorled at shoot tips), usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Pittosporaceae (read 2026-10-16): petals free or joined in a tube, often clawed; in Pittosporum the clawed petals stand together in a tube with spreading tips (our reading); Billardiera bell-like. Medium-low confidence."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Pittosporaceae (read 2026-10-16): at branch tips or in leaf axils. Same as order; recorded for completeness."
     }
   }
 }

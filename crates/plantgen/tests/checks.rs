@@ -32,6 +32,21 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
+        "aristolochia-macrophylla",
+        "shoot_leaves",
+        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18 (3 before its blades took their stated breadth, 10 to 35 cm, which drops one more on some shoots); the climber program grows few leaves on a shoot",
+    ),
+    (
+        "asarum-canadense",
+        "leaf_shape",
+        "its kidney-shaped blades (FNA vol. 3: reniform) are drawn on a simple card, at most as broad as long, so they read orbicular or ovate; no card draws a reniform blade yet",
+    ),
+    (
+        "asarum-canadense",
+        "leaf_width_m",
+        "a simple card is at most as broad as long, so its blades are drawn 5.5 to 6.5 cm wide, as wide as long, against FNA's 8 to 14 cm, broader than long",
+    ),
+    (
         "ascarina-lucida",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -152,6 +167,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its panicles are drawn about 7.5 cm long against the 10 to 25 cm Dendrology (2019) p. 318 gives",
     ),
     (
+        "houttuynia-cordata",
+        "inflorescence_bracts",
+        "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
+    ),
+    (
         "jacobaea-vulgaris",
         "leaf_width_m",
         "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
@@ -167,6 +187,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
     ),
     (
+        "liriodendron-tulipifera",
+        "carpels",
+        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so tulip tree's cone of 60 to 100 carpels is drawn with 30",
+    ),
+    (
         "lonicera-involucrata",
         "fruit_size_m",
         "its berries are drawn about 1.6 cm long against the 7 to 8 mm Dendrology (2019) p. 390 gives",
@@ -180,6 +205,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
+    ),
+    (
+        "magnolia-grandiflora",
+        "carpels",
+        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so southern magnolia's cone of 55 to 81 carpels is drawn with 30",
     ),
     (
         "nymphaea-odorata",
@@ -205,6 +235,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "parkinsonia-microphylla",
         "leaf_length_m",
         "a short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, so the crown keeps within the module limit, against Abrams's pinnae 1 to 3 cm",
+    ),
+    (
+        "piper-nigrum",
+        "fruit_size_m",
+        "the climber draws a fruiting spike as one fruit card, about 10 cm long (Flora of China: spikes to as long as the leaves), so the measure reads the spike against the 3 to 4 mm drupes on it",
+    ),
+    (
+        "piper-nigrum",
+        "shoot_leaves",
+        "a climbing shoot adds one or two nodes a season, each with one leaf, so it bears 1 to 2 leaves a year against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
         "program:broadleaf",
@@ -264,7 +304,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "program:pinidae",
         "leaf_life_years",
-        "Sitka spruce's needles live 8 to 10 years at the median, but some fall at 5, against the 7 to 10 it states (seen since the conifer lives, #96; not traced)",
+        "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 85; the shed limbs carry them)",
     ),
     (
         "program:rosette",
@@ -277,14 +317,14 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "program:typha",
-        "fruit_type",
-        "Typhaceae's fruit is a tiny achene on a hairy stalk (Simpson 2019), but a cattail's fruiting spike is drawn with the berry card",
-    ),
-    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
+    ),
+    (
+        "sassafras-albidum",
+        "leaf_width_m",
+        "its leaves are drawn on one card, the three-lobed form with broad rounded lobes as photographs show it, 16.9 cm wide, against FNA's 5 to 10 cm, which covers its narrower unlobed and mitten leaves too (inferred: FNA gives one width for all three forms)",
     ),
     (
         "tillandsia-usneoides",

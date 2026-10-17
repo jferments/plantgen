@@ -528,6 +528,7 @@ const UNRULED: [&str; 6] = [
 /// Checks one rule's shape: `null` (deleting an inherited rule), or an
 /// object with a `rule` (a formula over traits) or a `map` (one trait's
 /// values to spec values), and a `why`.
+#[allow(clippy::too_many_lines)]
 fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     if path.split('.').any(str::is_empty) {
         return Err("its path is keys joined by dots".into());
@@ -608,6 +609,16 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
             return Err("only a rule inside a look's `shape` names a card `template`".into());
         }
         (None, None) => {}
+    }
+    // The rule giving a flowering look its season names what it needs
+    // stated and sets nothing itself ([`seasonal_looks`]).
+    if path == SEASONAL {
+        return match (rule.get("rule"), rule.get("map"), rule.get("colour")) {
+            (None, None, None) if needs(rule).is_some_and(|names| !names.is_empty()) => Ok(()),
+            _ => Err(format!(
+                "`{SEASONAL}` gives a flowering look its season: it has the `needs` it reads, a `why`, and nothing else"
+            )),
+        };
     }
     if rule.contains_key("scale") && !rule.contains_key("colour") {
         return Err("only a `colour` rule has a `scale`".into());
@@ -915,7 +926,10 @@ fn every_look(
         {
             continue;
         }
-        if season_day(&at).is_some() && !look.get("season").is_some_and(Value::is_object) {
+        // A season's days and sizes are only a look's that has a season.
+        if (season_day(&at).is_some() || rest.starts_with("season."))
+            && !look.get("season").is_some_and(Value::is_object)
+        {
             continue;
         }
         if let Some(field) = shape_field(&at).map(str::to_string) {
@@ -1032,7 +1046,14 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("base", Number),
                 ("teeth", Count),
                 ("tooth_depth", Number),
+                ("round", Number),
                 ("petiole", Number),
+                ("sinus", Number),
+                ("fan", Count),
+                ("apex_taper", Number),
+                ("base_taper", Number),
+                ("apex_point", Number),
+                ("apex_notch", Number),
             ],
         ),
         (
@@ -1102,6 +1123,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
             &[
                 ("petals", Count),
                 ("petal_width", Number),
+                ("petal_ratio", Number),
                 ("point", Number),
                 ("taper", Number),
                 ("notch", Number),
@@ -2103,6 +2125,381 @@ fn fill_looks(
     notes.retain(|path, _| !within(path, "appearance.defaults"));
 }
 
+/// The rule that gives a flowering look a season ([`seasonal_looks`]):
+/// it names the characters it needs, and sets nothing else.
+pub const SEASONAL: &str = "appearance.organs.*.season";
+
+/// Rules run only on the looks [`SEASONAL`] gives a season: a season
+/// written by hand sizes and opens its stages itself.
+pub const SEASONAL_ONLY: [&str; 3] = [
+    "appearance.organs.*.season.flower_look.size",
+    "appearance.organs.*.season.fruit_size",
+    "appearance.organs.*.season.opening",
+];
+
+/// The card templates of a flowering organ's look that [`seasonal_looks`]
+/// gives a season: a lone flower or a cluster's, a head of florets, a
+/// grass's spikelet.
+const FLOWERING: [&str; 3] = ["flower", "head", "spikelet"];
+
+/// The fields of a flower's look that are its look in flower once its own
+/// look is its fruit ([`crate::looks::StageLook`]).
+const IN_FLOWER: [&str; 4] = ["shape", "colour", "accent", "form"];
+
+/// Move the value at `from` in `spec`, and its spread, to `to`, with
+/// their origins and notes.
+fn move_value(
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    notes: &mut BTreeMap<String, (Origin, Value)>,
+    from: &str,
+    to: &str,
+) {
+    let spreads = spread_path(from).zip(spread_path(to));
+    for (from, to) in std::iter::once((from.to_string(), to.to_string())).chain(spreads) {
+        let Some(value) = find(spec, &from).cloned() else {
+            continue;
+        };
+        remove(spec, &from);
+        set(spec, &to, value);
+        let moved = |path: &str| format!("{to}{}", &path[from.len()..]);
+        let taken: Vec<(String, Origin)> = origins
+            .iter()
+            .filter(|(path, _)| within(path, &from))
+            .map(|(path, origin)| (moved(path), origin.clone()))
+            .collect();
+        forget(origins, &from);
+        origins.extend(taken);
+        let taken: Vec<(String, (Origin, Value))> = notes
+            .iter()
+            .filter(|(path, _)| within(path, &from))
+            .map(|(path, note)| (moved(path), note.clone()))
+            .collect();
+        notes.retain(|path, _| !within(path, &from));
+        notes.extend(taken);
+    }
+}
+
+/// What is at `at` in `spec` and its spread, with their origins and notes,
+/// taken out of all three; [`put_back`] restores it.
+type Taken = (
+    Vec<(String, Value)>,
+    Vec<(String, Origin)>,
+    Vec<(String, (Origin, Value))>,
+);
+
+fn take(
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    notes: &mut BTreeMap<String, (Origin, Value)>,
+    at: &str,
+) -> Taken {
+    let mut taken: Taken = (Vec::new(), Vec::new(), Vec::new());
+    for path in std::iter::once(at.to_string()).chain(spread_path(at)) {
+        if let Some(value) = find(spec, &path).cloned() {
+            remove(spec, &path);
+            taken.0.push((path.clone(), value));
+        }
+        taken.1.extend(
+            origins
+                .iter()
+                .filter(|(inside, _)| within(inside, &path))
+                .map(|(inside, origin)| (inside.clone(), origin.clone())),
+        );
+        forget(origins, &path);
+        taken.2.extend(
+            notes
+                .iter()
+                .filter(|(inside, _)| within(inside, &path))
+                .map(|(inside, note)| (inside.clone(), note.clone())),
+        );
+        notes.retain(|inside, _| !within(inside, &path));
+    }
+    taken
+}
+
+fn put_back(
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    notes: &mut BTreeMap<String, (Origin, Value)>,
+    (values, taken_origins, taken_notes): Taken,
+) {
+    for (path, value) in values {
+        set(spec, &path, value);
+    }
+    origins.extend(taken_origins);
+    notes.extend(taken_notes);
+}
+
+/// Give a season to each flowering organ's look (a `flower` organ type of
+/// the species' program) that its files and rules left without one, where
+/// its taxa state the months it flowers and fruits in: it is then a bud,
+/// a flower and fruit on the days those months give, and gone outside
+/// them, as hand-built seasons are, where it was a flower all year and
+/// never fruited.
+///
+/// A lone flower's or a cluster's look becomes its look in flower (its
+/// season's `flower_look`, with its card, colours and form, their origins
+/// and notes) and its own look its fruit, a fruit card; the rules for a
+/// program's `fruit` organ then set it, over what the rules for its
+/// flower set (a cluster's unit's size: a fruit's, not a flower's). A
+/// head or a spikelet is drawn in each stage as itself (a head opens,
+/// then goes to seed), so it only takes the season. Then the rules for
+/// every look (`*`) set what they now reach in it: the season's days,
+/// the fruit's kind, the flower's size for its fruit's. A look whose
+/// season the rules leave without all its days stays as it was.
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
+fn seasonal_looks(
+    rules: &Rules,
+    layers: &[(String, &Part)],
+    traits: &BTreeMap<String, (Value, usize)>,
+    programs: &Programs,
+    ranged: &RefCell<BTreeMap<String, [f64; 5]>>,
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    notes: &mut BTreeMap<String, (Origin, Value)>,
+    outcomes: &mut BTreeMap<String, (String, Option<String>)>,
+) {
+    let Some((rule, index)) = rules.get(SEASONAL) else {
+        return;
+    };
+    let file = layers[*index].0.clone();
+    let mut why = None;
+    let mut set_any = false;
+    let program = spec
+        .get("generator")
+        .and_then(|generator| generator.get("program"))
+        .and_then(Value::as_str)
+        .map(str::to_string);
+    let names = needs(rule).unwrap_or_default();
+    if let Some(name) = names.iter().find(|name| !traits.contains_key(**name)) {
+        why = Some(format!("no `{name}` to read"));
+    }
+    let program = program.filter(|_| why.is_none());
+    let flowering: Vec<String> = program
+        .as_deref()
+        .map(|program| programs.organs(program))
+        .unwrap_or_default()
+        .iter()
+        .filter(|(organ, kind)| kind == "flower" && !organ.ends_with(MALE))
+        .map(|(organ, _)| organ.clone())
+        .collect();
+    let depth = names
+        .iter()
+        .filter_map(|name| traits.get(*name).map(|(_, at)| *at))
+        .fold(*index, usize::max);
+    let label = format!(
+        "{file}: rule on {}",
+        names
+            .iter()
+            .filter_map(|name| traits
+                .get(*name)
+                .map(|(_, at)| format!("{name} from {}", layers[*at].0)))
+            .collect::<Vec<_>>()
+            .join(", ")
+    );
+    let note = layers[*index]
+        .1
+        .notes
+        .get(&format!("rules.{SEASONAL}"))
+        .or_else(|| layers[*index].1.notes.get("rules"))
+        .cloned();
+    for organ in &flowering {
+        let at = format!("appearance.organs.{organ}");
+        let Some(look) = find(spec, &at).and_then(Value::as_object) else {
+            continue;
+        };
+        if let Some((label, _)) = origins
+            .iter()
+            .find(|(path, _)| within(path, &format!("{at}.season")))
+            .map(|(_, origin)| origin)
+        {
+            why.get_or_insert(format!("in its `{organ}` look, set by hand in {label}"));
+            continue;
+        }
+        if let Some((_, (label, _))) = by_hand(origins, &at) {
+            why.get_or_insert(format!(
+                "in its `{organ}` look, which is set by hand in {label}"
+            ));
+            continue;
+        }
+        let Some(template) = look
+            .get("shape")
+            .and_then(|shape| shape.get("template"))
+            .and_then(Value::as_str)
+            .map(str::to_string)
+        else {
+            continue;
+        };
+        if !FLOWERING.contains(&template.as_str()) {
+            why.get_or_insert(format!(
+                "its `{organ}` look is drawn with `{template}`, no flower, head or spikelet"
+            ));
+            continue;
+        }
+        let saved = (spec.clone(), origins.clone(), notes.clone());
+        let fruits = template == "flower";
+        if fruits {
+            let stage = format!("{at}.season.flower_look");
+            for field in IN_FLOWER {
+                move_value(
+                    spec,
+                    origins,
+                    notes,
+                    &format!("{at}.{field}"),
+                    &format!("{stage}.{field}"),
+                );
+            }
+            set(
+                spec,
+                &format!("{at}.shape"),
+                serde_json::json!({"template": "fruit"}),
+            );
+            let template = format!("{at}.shape.template");
+            origins.insert(template.clone(), (label.clone(), depth));
+            if let Some(note) = &note {
+                notes.insert(template, ((label.clone(), depth), note.clone()));
+            }
+        } else {
+            set(spec, &format!("{at}.season"), Value::Object(Map::new()));
+        }
+        let mut set_by = BTreeMap::new();
+        for (path, waits) in order(rules) {
+            if !waits.is_empty() {
+                continue;
+            }
+            let (rule, index) = &rules[path];
+            let fruit_rule = path
+                .strip_prefix("appearance.organs.fruit.")
+                .filter(|_| fruits);
+            let targets: Vec<String> = if let Some(rest) = fruit_rule {
+                vec![format!("{at}.{rest}")]
+            } else if path.starts_with(EVERY) {
+                every_look(spec, path, rule)
+                    .unwrap_or_default()
+                    .into_iter()
+                    .filter(|target| within(target, &at) && find(spec, target).is_none())
+                    .collect()
+            } else {
+                continue;
+            };
+            for target in targets {
+                // The fruit's rule replaces what a rule for the flower set.
+                let taken = (fruit_rule.is_some()
+                    && origins
+                        .get(&target)
+                        .is_some_and(|(label, _)| label.contains(": rule")))
+                .then(|| take(spec, origins, notes, &target));
+                let one = Ruled {
+                    path,
+                    at: &target,
+                    rule,
+                    index: *index,
+                    layers,
+                    traits,
+                    ranged,
+                };
+                match one.apply(program.as_deref(), programs, spec, origins, notes) {
+                    Ok(()) => {
+                        set_by.insert(path.to_string(), layers[*index].0.clone());
+                    }
+                    Err(_) => {
+                        if let Some(taken) = taken {
+                            put_back(spec, origins, notes, taken);
+                        }
+                    }
+                }
+            }
+        }
+        let whole = SEASON_DAYS
+            .iter()
+            .all(|day| find(spec, &format!("{at}.season.{day}")).is_some_and(Value::is_number));
+        if !whole {
+            (*spec, *origins, *notes) = saved;
+            why.get_or_insert(format!(
+                "in its `{organ}` look, the rules set not every day of its season"
+            ));
+            continue;
+        }
+        set_any = true;
+        for (path, file) in set_by {
+            outcomes.insert(path, (file, None));
+        }
+        if organ == "flower" {
+            stage_seasons(spec, origins, &at);
+        }
+    }
+    let why = (!set_any).then(|| why.unwrap_or_else(|| "it draws no flowering look".to_string()));
+    outcomes.insert(SEASONAL.to_string(), (file, why));
+}
+
+/// What a file set by hand in the look at `at`, if anything: not a rule,
+/// and not the default look of its kind ([`fill_looks`]).
+fn by_hand<'a>(
+    origins: &'a BTreeMap<String, Origin>,
+    at: &str,
+) -> Option<(&'a String, &'a Origin)> {
+    origins
+        .iter()
+        .find(|(path, (label, depth))| within(path, at) && *depth > 0 && !label.contains(": rule"))
+}
+
+/// Give the program's `bud` and `fruit` organs, which stand for a
+/// herb's `flower` (at `at`) before it opens and once it has set fruit,
+/// its season, each showing only in its own stage: the bud, its flower's
+/// look closed ([`closed_flower`]), from the flower's bud day to its fruit
+/// day; the fruit from its fruit day to its fall. A look a file set by
+/// hand keeps its own year.
+fn stage_seasons(spec: &mut Map<String, Value>, origins: &mut BTreeMap<String, Origin>, at: &str) {
+    let day = |spec: &Map<String, Value>, name: &str| {
+        find(spec, &format!("{at}.season.{name}")).and_then(Value::as_f64)
+    };
+    let (Some(bud), Some(flower), Some(fruit), Some(fall)) = (
+        day(spec, "bud"),
+        day(spec, "flower"),
+        day(spec, "fruit"),
+        day(spec, "fall"),
+    ) else {
+        return;
+    };
+    for (organ, draws, days) in [
+        (BUD, "flower", [bud, flower, fruit, fruit, fruit]),
+        (
+            "fruit",
+            "fruit",
+            [
+                fruit,
+                fruit,
+                fruit,
+                fruit.max(day(spec, "ripe").unwrap_or(fruit)),
+                fall,
+            ],
+        ),
+    ] {
+        let look = format!("appearance.organs.{organ}");
+        let fits = find(spec, &look)
+            .and_then(Value::as_object)
+            .is_some_and(|look| !look.contains_key("season"))
+            && find(spec, &format!("{look}.shape.template")).and_then(Value::as_str) == Some(draws);
+        if !fits || by_hand(origins, &look).is_some() {
+            continue;
+        }
+        for (name, value) in SEASON_DAYS.iter().zip(days) {
+            let path = format!("{look}.season.{name}");
+            #[allow(clippy::cast_possible_truncation)]
+            let value = if value.fract() == 0.0 {
+                Value::from(value as i64)
+            } else {
+                Value::from(value)
+            };
+            set(spec, &path, value);
+            if let Some(origin) = origins.get(&format!("{at}.season.{name}")).cloned() {
+                origins.insert(path, origin);
+            }
+        }
+    }
+}
+
 /// Drop each organ area parameter of the species' program that neither
 /// its own spec nor a rule set, a rank file's or a form's default: the
 /// organ shades with what its look draws instead (LANGUAGE.md 5.2, areas
@@ -2237,6 +2634,17 @@ impl Ruled<'_> {
         let mut outcomes = BTreeMap::new();
         let ranged = RefCell::new(BTreeMap::new());
         for (path, waits) in order(rules) {
+            // Its own pass, after the rest ([`seasonal_looks`]), with the
+            // rules only a look it gives a season takes.
+            if path == SEASONAL {
+                continue;
+            }
+            if SEASONAL_ONLY.contains(&path) {
+                let file = layers[rules[path].1].0.clone();
+                let why = "not set, only a look the season rule gives a year takes it";
+                outcomes.insert(path.to_string(), (file, Some(why.to_string())));
+                continue;
+            }
             let (rule, index) = &rules[path];
             let outcome = if waits.is_empty() {
                 let mut set = 0;
@@ -2280,6 +2688,17 @@ impl Ruled<'_> {
             };
             outcomes.insert(path.to_string(), (layers[*index].0.clone(), outcome));
         }
+        seasonal_looks(
+            rules,
+            layers,
+            traits,
+            programs,
+            &ranged,
+            spec,
+            origins,
+            notes,
+            &mut outcomes,
+        );
         drop_areas(layers, programs, spec, origins, notes);
         // A spread a rule replaced leaves no empty objects behind.
         for section in ["appearance", "generator"] {
@@ -2703,6 +3122,19 @@ fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
     // A rule reading a parameter waits on the rule setting it, one on a
     // card's field on the rule choosing that organ's card, and one inside
     // a cluster on the rule making that organ's look a cluster.
+    // A season's day reading its season's opening or ripening waits on
+    // the rule setting it.
+    let seasonal = |path: &str, rule: &Map<String, Value>| -> Vec<String> {
+        let Some((look, _)) = path.split_once(".season.") else {
+            return Vec::new();
+        };
+        reads(rule)
+            .into_iter()
+            .filter(|name| SEASON_READS.iter().any(|(read, _)| read == name))
+            .map(|name| format!("{look}.season.{name}"))
+            .filter(|wait| wait != path && rules.contains_key(wait))
+            .collect()
+    };
     let waits = |path: &str, rule: &Map<String, Value>| -> Vec<String> {
         let cards = rules.keys().filter(|card| {
             shape_field(card) == Some("template")
@@ -2728,6 +3160,7 @@ fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
             .filter(|path| rules.contains_key(path))
             .chain(cards.cloned())
             .chain(clusters.cloned())
+            .chain(seasonal(path, rule))
             .collect()
     };
     let mut done: BTreeSet<&str> = BTreeSet::new();
@@ -4077,7 +4510,7 @@ mod tests {
             .as_object()
             .unwrap()
             .iter()
-            .filter(|(path, _)| path.contains(".season."))
+            .filter(|(path, _)| super::season_day(path).is_some())
             .map(|(path, rule)| (path.clone(), rule.clone()))
             .collect();
         assert_eq!(rules.len(), 5);

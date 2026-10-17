@@ -2,5 +2,134 @@
   "schema": 1,
   "rank": "order",
   "name": "Oxalidales",
-  "parent": "clade/fabids"
+  "parent": "clade/fabids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "sometimes",
+      "distichous": "sometimes"
+    },
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "often"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "often"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "rarely"
+    },
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "rarely"
+    },
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "hypanthium": {
+      "false": "usually",
+      "true": "rarely"
+    },
+    "ovary_position": "superior",
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 5,
+      "low": 1,
+      "high": 10
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "sometimes",
+      "follicle": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): Oxalidaceae spiral/two-ranked, Elaeocarpaceae spiral or opposite, Connaraceae spiral/two-ranked; Cunoniaceae and Brunellia opposite."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): spiral in Oxalidaceae, Elaeocarpaceae, Cephalotus; two-ranked in Connaraceae and Huaceae (or spiral); opposite in Cunoniaceae."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page, order characterisation (read 2026-10-16): leaves compound, odd-pinnate; Elaeocarpaceae (~770 spp.) and Huaceae simple."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): order odd-pinnate (Cunoniaceae, Connaraceae, Brunellia, Averrhoa); Oxalis trifoliolate/palmate."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): woody families; Oxalis many bulbous herbs, Cephalotus rhizomatous herb with basal pitchers."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): trees, shrubs, lianes; Oxalis herbs mostly perennial (bulbs, rhizomes); some annual Oxalis (my knowledge)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): Huaceae evergreen; Elaeocarpaceae, Cunoniaceae, Connaraceae tropical/southern woody plants, evergreen from my knowledge. For bulbous Oxalis the trait is ill-defined (seasonally dormant)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): Elaeocarpaceae racemes or solitary in axils; Huaceae axillary. Oxalis axillary peduncles (my knowledge)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): Connaraceae radially symmetric; Oxalis, Cunoniaceae radial. Connaraceae 'zygomorphic often' as stated seems doubtful."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): broad hypanthium only in Cephalotus; none described for the larger families."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): no inferior ovaries described; Elaeocarpaceae and Cunoniaceae state rare exceptions."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): Oxalidaceae usually 5, Connaraceae up to 5 free, Elaeocarpaceae 2-9, Cunoniaceae 2-6, Huaceae 5."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): loculicidal capsule (Oxalidaceae, Elaeocarpaceae), septicidal capsule (Cunoniaceae), follicles (Connaraceae, Brunellia), drupes."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page (read 2026-10-16): Oxalis heterostylous bisexual; dioecy in parts of Cunoniaceae and Connaraceae."
+    }
+  }
 }

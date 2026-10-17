@@ -13,14 +13,16 @@
     "params": {
       "lean": 5,
       "trunk_rate": 0.045,
-      "trunk_radius": 0.22,
+      "trunk_radius": 0.13,
+      "thicken": 1.2,
+      "thicken_years": 50,
       "stemless_years": 6,
       "internode": 0.001,
       "fronds_per_year": 14,
-      "frond_life": 1.5,
+      "frond_life": 2,
       "frond_length": 2.4,
       "size_years": 10,
-      "young_angle": 12,
+      "young_angle": 25,
       "old_angle": 62,
       "open_years": 0.5,
       "petiole": 0.08,
@@ -28,15 +30,15 @@
       "pieces": 14,
       "fan": 0,
       "leaflet_length": 0.2,
-      "leaflet_peak": 0.45,
-      "leaflet_base": 0.3,
+      "leaflet_peak": 0.6,
+      "leaflet_base": 0.2,
       "leaflet_tip": 0.1,
       "leaflet_angle": 72,
       "leaflet_lift": 6,
       "season": 0.5,
       "emerge_spread": 0.3,
       "unroll": 0.3,
-      "curl": 45,
+      "curl": 100,
       "droop": 0.03,
       "droop_years": 1.5,
       "skirt": 1,
@@ -56,9 +58,10 @@
     "seeds": [1, 2, 3, 4]
   },
   "appearance": {
-    "bark": [0.3, 0.22, 0.15],
-    "foliage": [0.15, 0.32, 0.1],
-    "foliage_shade": [0.0675, 0.144, 0.045],
+    "bark": [0.073, 0.04, 0.02],
+    "leaf_axis": [0.2, 0.17, 0.07],
+    "foliage": [0.02, 0.084, 0.01],
+    "foliage_shade": [0.009, 0.0378, 0.0045],
     "variation": 0.1,
     "organs": {
       "leaflet": {
@@ -69,7 +72,7 @@
           "divided": 1,
           "stipe": 0.05
         },
-        "colour": [0.15, 0.32, 0.1]
+        "colour": [0.02, 0.084, 0.01]
       },
       "dead": {
         "shape": {
@@ -79,7 +82,7 @@
           "divided": 1,
           "stipe": 0.1
         },
-        "colour": [0.42, 0.32, 0.2]
+        "colour": [0.147, 0.084, 0.033]
       }
     }
   },
@@ -102,7 +105,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a thick, fibrous trunk of matted roots growing a few centimetres a year to 4 to 5 m, under a spreading crown of twice-divided fronds 2 to 3 m long that unroll from hairy croziers in spring; dead fronds hang in a skirt. Native to south-eastern Australia and Tasmania. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a thick, fibrous trunk of matted roots growing a few centimetres a year to 4 to 5 m, under a spreading crown of twice-divided fronds 2 to 3 m long that unroll from hairy croziers in spring; dead fronds hang in a skirt. Native to south-eastern Australia and Tasmania. Not fitted to measurements. Refitted from Hoshizaki and Moran (2001, p. 16, 109, 111, 281-283) and the research note's web sources: the trunk is about 25 to 30 cm across below the crown, its mantle of matted roots and old stipe bases widening it toward the foot (to 1 m or more in old plants), so a radius of 0.13 m thickening by 1.2 of itself over about fifty years; fronds live about two years; a crozier coils one and a half to three turns (Kaplan 2022, p. 346), so each coiled piece turns 100 degrees. Hoshizaki and Moran (2001, pp. 281, 283): the blade is narrowed at the base, widest above the middle (oblanceolate), so pinnae longest at 0.6 of the rachis (leaflet_peak) and the lowest a fifth of the longest (leaflet_base). Growing fronds lean 25 degrees from the vertical as they open into the spreading crown (young_angle, by eye)."
     },
     "allometry": {
       "evidence": "Authored",
@@ -110,9 +113,9 @@
       "note": "Rough heights from general knowledge of the species: about 2.5 m at 30 years and 4 m at 60. Wide tolerances."
     },
     "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: mid-green fronds, a dark brown fibrous trunk."
+      "evidence": "SourceInferred",
+      "source": "fern-growers-manual",
+      "note": "Hoshizaki and Moran (2001, p. 282): D. antarctica's stipes lose their hairs early, with tan or green rachises (leaf_axis a tan green). Colours otherwise chosen by eye from photographs: mid-green fronds, a dark brown fibrous trunk."
     },
     "taxon": {
       "evidence": "Authored",
