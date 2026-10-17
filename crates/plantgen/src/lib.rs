@@ -669,4 +669,12 @@ pub mod venation;
 /// `stinging_hairs`), with round heads and glass needles on green feet;
 /// the strand budget spent on the hairs nearest the eye first (104 is
 /// flowering branches, #188).
-pub const GENERATOR_REVISION: u32 = 105;
+/// 106: unripe fruit, and a fruit's stalk and cup, green as the foliage
+/// unless an accent is stated; a cluster ripens only its
+/// `fruits_per_inflorescence` (`Inflorescence::fruits`), its other units
+/// gone in fruit; an aggregate drawn as its `fruitlets` say: beaked
+/// follicles with their seeds hanging in `fruit_seed_colour`, samaras up a
+/// spindle, berries splayed from one stalk, or a hip; a fruit with a
+/// `fruit_cup_colour` stands in a cup on a swollen stalk (105 is hairs,
+/// #185).
+pub const GENERATOR_REVISION: u32 = 106;

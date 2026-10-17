@@ -2221,6 +2221,15 @@ pub struct Fruit {
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
     pub unripe: f64,
+    /// The colour of the seeds a ripe fruit shows: a magnolia's red seeds
+    /// hanging from its split follicles. Only follicles show them.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub seeds: Option<[f32; 3]>,
+    /// The colour of the cup a ripe fruit stands in and the swollen stalk
+    /// under it (a sassafras's red club and cup); no cup unless set. An
+    /// unripe fruit's cup is in the accent colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cup: Option<[f32; 3]>,
 }
 
 impl Default for Fruit {
@@ -2230,6 +2239,8 @@ impl Default for Fruit {
             cone: 0.0,
             kind: FruitKind::Berry,
             unripe: 0.0,
+            seeds: None,
+            cup: None,
         }
     }
 }
@@ -2243,6 +2254,8 @@ struct FruitCard {
     cone: f64,
     kind: FruitKind,
     unripe: f64,
+    seeds: Option<[f32; 3]>,
+    cup: Option<[f32; 3]>,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -2257,6 +2270,8 @@ impl Default for FruitCard {
             cone: fruit.cone,
             kind: fruit.kind,
             unripe: fruit.unripe,
+            seeds: None,
+            cup: None,
             count: None,
             cluster: None,
             size: None,
@@ -2286,6 +2301,8 @@ impl TryFrom<FruitCard> for Fruit {
             cone: card.cone,
             kind: card.kind,
             unripe: card.unripe,
+            seeds: card.seeds,
+            cup: card.cup,
         })
     }
 }
@@ -2318,6 +2335,15 @@ pub enum FruitKind {
     Pod,
     /// A capsule or follicle: ribbed lengthwise.
     Capsule,
+    /// An aggregate of follicles on a cone-like axis (magnolias), the
+    /// ripe ones split along their backs, each showing its seeds.
+    Follicles,
+    /// An aggregate of samaras overlapping up a spindle (the tulip tree):
+    /// a slender cone of upturned wings.
+    Samaras,
+    /// Several berries from one flower, splayed from one stalk (the
+    /// pawpaw's), each as wide as `aspect` makes it.
+    Berries,
 }
 
 impl FruitKind {
@@ -2414,6 +2440,12 @@ pub struct Inflorescence {
     /// peduncle (12 with neither set), and other kinds 12.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flowers: Option<u32>,
+    /// Units of the whole cluster that set fruit, 1 to 200: the rest fall
+    /// with their flowers and leave their pedicels bare (a laurel's umbel
+    /// of six flowers ripens one to three drupes). Every unit unless set;
+    /// only the cluster's own axis sets it.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fruits: Option<u32>,
     /// Branches the axis bears in place of units, making a compound
     /// cluster: 0 to 60; 8 in a panicle, 12 in a compound umbel, else 0.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -3009,6 +3041,9 @@ impl Shape {
             Self::Fruit(s) => {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
+                for channel in s.seeds.into_iter().chain(s.cup).flatten() {
+                    check("seeds or cup colour", f64::from(channel), 0.0, 1.0)?;
+                }
                 check("unripe", s.unripe, 0.0, 1.0)
             }
         }
@@ -3481,7 +3516,15 @@ pub fn resolve<'a>(
                     organ: name.to_string(),
                     colour,
                     shade,
-                    accent: look.accent.unwrap_or(colour),
+                    // Unripe fruit, and a fruit's stalk and cup, are
+                    // green as the foliage until an accent is stated.
+                    accent: look
+                        .accent
+                        .unwrap_or(if matches!(look.shape, Shape::Fruit(_)) {
+                            foliage
+                        } else {
+                            colour
+                        }),
                     underside: look.underside,
                     variegation: look.variegation,
                     sori: look.sori,
@@ -4659,6 +4702,40 @@ mod tests {
         assert!(looks[1].shade[0] < 0.6 && looks[1].shade[0] > 0.0);
     }
 
+    #[test]
+    fn unripe_fruit_is_green_as_the_foliage_unless_an_accent_is_stated() {
+        let types = [("bloom", OrganKind::Fruit)];
+        let fruit = |accent: Option<[f32; 3]>| {
+            let mut organs = BTreeMap::new();
+            organs.insert(
+                "bloom".to_string(),
+                OrganLook {
+                    hairs: None,
+                    hairs_beneath: None,
+                    underside: None,
+                    variegation: None,
+                    sori: None,
+                    roll: 0.0,
+                    insertion: crate::looks::Insertion::Marginal,
+                    shape: Shape::Fruit(Fruit::default()),
+                    colour: Some([0.1, 0.1, 0.4]),
+                    shade: None,
+                    accent,
+                    face_up: 0.0,
+                    solid: None,
+                    bend: None,
+                    form: None,
+                    season: None,
+                    families: None,
+                    inflorescence: None,
+                },
+            );
+            resolve(types, &organs, [0.1, 0.3, 0.05], [0.03, 0.1, 0.03])[0].accent
+        };
+        assert_eq!(fruit(None), [0.1, 0.3, 0.05]);
+        assert_eq!(fruit(Some([0.8, 0.7, 0.1])), [0.8, 0.7, 0.1]);
+    }
+
     fn cherry() -> Season {
         Season {
             bud: 95.0,
@@ -5199,6 +5276,11 @@ mod tests {
                         assert!(with(field, points).is_ok(), "{at}");
                         assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
                     }
+                    Field::Colour => {
+                        let red = serde_json::json!([0.8, 0.1, 0.1]);
+                        assert!(with(field, red).is_ok(), "{at}");
+                        assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
+                    }
                 }
             }
             // Every field the template writes is listed.
@@ -5245,7 +5327,7 @@ mod tests {
                     let error = with("none".into()).unwrap_err().to_string();
                     assert!(error.contains("unknown variant"), "{key}: {error}");
                 }
-                Field::Outline => panic!("{key} takes no outline"),
+                Field::Outline | Field::Colour => panic!("{key} takes no outline or colour"),
             }
         }
     }

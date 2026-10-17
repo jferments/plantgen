@@ -1717,6 +1717,36 @@
       "type": "months",
       "why": "the months its fruit is ripe in"
     },
+    "fruitlets": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["drupelets", "follicles", "samaras", "berries", "hip"],
+      "optional": true,
+      "why": "what a fruit from one flower's many free pistils is made of: drupelets (a blackberry), follicles on a cone-like axis (a magnolia), samaras overlapping up a spindle (the tulip tree), separate berries from one stalk (the pawpaw), or achenes inside a cup (a hip: roses, sweetshrub)"
+    },
+    "fruit_seed_colour": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "colour",
+      "optional": true,
+      "why": "the seeds a ripe fruit shows where it opens on them, as they are seen: a magnolia's red seeds hanging from its split follicles"
+    },
+    "fruit_cup_colour": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "colour",
+      "optional": true,
+      "why": "the cup a ripe fruit stands in and the swollen stalk under it, where it has one (a sassafras's red club and cup)"
+    },
+    "fruits_per_inflorescence": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "count",
+      "range": [1, 100000],
+      "optional": true,
+      "why": "the fruit one inflorescence ripens, where fewer than its flowers: most of a laurel's or a spicebush's umbel falls, leaving one to a few drupes"
+    },
     "fruit_posture": {
       "group": "fruit_and_cones",
       "organ": "fruit",

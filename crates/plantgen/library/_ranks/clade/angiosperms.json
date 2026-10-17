@@ -58,6 +58,20 @@
       "colour": "leaf_colour",
       "why": "A fruit's unripe share, and its stalk, are drawn in the green of the plant's leaves until a colour of its own is stated."
     },
+    "appearance.organs.fruit.shape.seeds": {
+      "template": "fruit",
+      "colour": "fruit_seed_colour",
+      "why": "A ripe fruit that opens on its seeds shows them in the colour they ripen to: a magnolia's red seeds hang from its split follicles."
+    },
+    "appearance.organs.fruit.shape.cup": {
+      "template": "fruit",
+      "colour": "fruit_cup_colour",
+      "why": "A fruit that stands in a cup on a swollen stalk is drawn in one, in the colour the cup ripens to."
+    },
+    "appearance.organs.fruit.inflorescence.fruits": {
+      "rule": "clamp(round(fruits_per_inflorescence), 1, 200)",
+      "why": "A cluster ripens as many fruit as floras count on one infructescence; its other flowers fall and leave their pedicels bare."
+    },
     "appearance.organs.fruit.inflorescence.size": {
       "rule": "clamp(fruit_size_m / inflorescence_length_m, 0.005, 1)",
       "why": "A cluster's fruit is as long, for the cluster's length, as floras measure the fruit and the inflorescence."
@@ -230,8 +244,8 @@
     },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
-      "map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}},
-      "why": "A berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
+      "map": {"fruitlets": {"drupelets": "drupelets", "follicles": "follicles", "samaras": "samaras", "berries": "berries", "hip": "hip"}}, "else": {"map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}}},
+      "why": "A fruit whose flora says what its free pistils make is drawn as that: drupelets, follicles on a cone-like axis, samaras up a spindle, separate berries from one stalk, or achenes in a hip. Otherwise a berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
     },
     "appearance.organs.*.inflorescence.peduncle": {
       "rule": "clamp(peduncle_length_m / (peduncle_length_m + inflorescence_length_m), 0, 0.9)",
@@ -304,6 +318,9 @@
     "rules.appearance.organs.fruit.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect."},
     "rules.appearance.organs.*.season": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a plant's year from the months floras give, a choice of the model's (seasonal looks, 2026-10-16): its flowers show in the months it flowers in and its fruit in the months it is ripe in, as the season rules set their days, where they had shown all year and never fruited."},
     "rules.appearance.organs.fruit.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours unripe fruit, a choice of the model's (seasonal looks, 2026-10-16): green as the leaves are, since floras state the ripe colour and seldom the unripe one."},
+    "rules.appearance.organs.fruit.shape.seeds": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws the seeds of an open aggregate, a choice of the model's (magnoliid fruit, 2026-10-17): one follicle in three split, its seed hanging out on a short thread."},
+    "rules.appearance.organs.fruit.shape.cup": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cupule, a choice of the model's (magnoliid fruit, 2026-10-17): a shallow cup over the fruit's lowest sixth on a stalk swelling toward it, green until ripe."},
+    "rules.appearance.organs.fruit.inflorescence.fruits": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster in fruit, a choice of the model's (magnoliid fruit, 2026-10-17): the units that set fruit are a fixed draw of the cluster's, and the rest are gone in fruit with their pedicels."},
     "rules.appearance.organs.fruit.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster in fruit, a choice of the model's (seasonal looks, 2026-10-16): each fruit as long, for the cluster's length, as floras measure the fruit, as its flowers are drawn as wide as they measure the flower."},
     "rules.appearance.organs.*.season.flower_look.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a flower against its fruit, a choice of the model's (seasonal looks, 2026-10-16): a stage's look is sized as a share of the organ in fruit, so a flower is the ratio of the stated flower and fruit sizes (flower_size_m, fruit_size_m), whether it is a cluster's unit or a lone flower."},
     "rules.appearance.organs.*.season.opening": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster that flowers and fruits at once, a choice of the model's (seasonal looks, 2026-10-16): where the stated fruiting months (fruiting_months) begin before the flowering months (flowering_months) end, a cluster's units open one after another from the first ripe month to the end of flowering, so the plant shows flowers and ripe fruit together as the floras describe."},

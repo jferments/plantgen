@@ -199,9 +199,10 @@ Usage:
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
-      the plant, metres from its foot with +Y up; --focus leaf:F or
-      stalk:F frames the middle of the leaf, or of the hairy young stem
-      or leaf stalk, F of the way up the plant's (0 lowest, 1 highest),
+      the plant, metres from its foot with +Y up; --focus leaf:F,
+      bloom:F or stalk:F frames the middle of the leaf, of the flower,
+      fruit or cone, or of the hairy young stem or leaf stalk, F of the
+      way up the plant's (0 lowest, 1 highest),
       SPAN 0.05 unless given; --view under looks up at it from below, at
       the lower faces of its leaves. --parts on (level 0)
       draws every flower, fruit, cone and needle shoot as its part mesh,
@@ -2213,8 +2214,9 @@ fn stand_command(args: &[String]) -> Result<(), Failure> {
 }
 
 #[allow(clippy::too_many_lines)]
-/// The point `--focus leaf:F` or `stalk:F` names on `plant`: the middle
-/// of the leaf card (or of the piece of hairy young stem or leaf stalk,
+/// The point `--focus leaf:F`, `bloom:F` or `stalk:F` names on `plant`:
+/// the middle of the leaf card (of the flower, fruit or cone card, or of
+/// the piece of hairy young stem or leaf stalk,
 /// `mesh::PlantMesh::hair_tubes`) `F` of the way up the plant's, from 0
 /// the lowest to 1 the highest.
 fn named_point(plant: &mesh::PlantMesh, what: &str, at: f64) -> Result<Vec3, Failure> {
@@ -2224,12 +2226,36 @@ fn named_point(plant: &mesh::PlantMesh, what: &str, at: f64) -> Result<Vec3, Fai
             .iter()
             .map(|card| vector(card.base) + vector(card.heading) * (f64::from(card.length) * 0.5))
             .collect(),
+        // The organs drawn as part meshes, or else the flat cards after
+        // the bent leaves: flowers, fruit and cones.
+        "bloom" => {
+            let middle = |card: &mesh::Card| {
+                vector(card.base) + vector(card.heading) * (f64::from(card.length) * 0.5)
+            };
+            if plant.sites.is_empty() {
+                plant.cards[plant.bent_cards()..]
+                    .iter()
+                    .map(middle)
+                    .collect()
+            } else {
+                plant
+                    .sites
+                    .iter()
+                    .filter_map(|&site| plant.cards.get(site as usize))
+                    .map(middle)
+                    .collect()
+            }
+        }
         "stalk" => plant
             .hair_tubes
             .iter()
             .map(|tube| (vector(tube.start) + vector(tube.end)) * 0.5)
             .collect(),
-        _ => return Err(format!("`--focus` names leaf:F or stalk:F, found `{what}`").into()),
+        _ => {
+            return Err(
+                format!("`--focus` names leaf:F, bloom:F or stalk:F, found `{what}`").into(),
+            );
+        }
     };
     if points.is_empty() {
         return Err(format!("`--focus {what}:F`: the plant has none drawn at this level").into());
@@ -2327,6 +2353,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let (mut looks, sizes) = looks_of(&spec, &growth, day);
     let graph = &*drawn(&growth.keyframes[0], &sizes);
     let bodies = bodies_of(&spec, &growth);
+    let mut bloom = None;
     let mut plant = if parted {
         // As a renderer that draws part meshes shows the plant near the
         // camera: each organ of a type with them drawn as one.
@@ -2341,6 +2368,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             level,
             Some(&types),
         );
+        // The organs to draw as part meshes are known only until they
+        // are placed.
+        if let Some((what, at)) = named.as_ref().filter(|(what, _)| what == "bloom") {
+            bloom = Some(named_point(&plant, what, *at)?);
+        }
         plantgen::parts::place(&mut plant, &looks, &parts);
         plant
     } else {
@@ -2398,7 +2430,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let focus = match named {
         Some((what, at)) => {
             let span: f64 = options.number("span")?.unwrap_or(0.05);
-            Some((named_point(&plant, &what, at)?, span))
+            let point = match bloom {
+                Some(point) => point,
+                None => named_point(&plant, &what, at)?,
+            };
+            Some((point, span))
         }
         None => focus,
     };

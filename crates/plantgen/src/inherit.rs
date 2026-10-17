@@ -686,6 +686,8 @@ pub enum Field {
     Word,
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
+    /// A colour, red, green and blue from 0 to 1: a fruit's seeds.
+    Colour,
 }
 
 /// The fields of a card that replace others where set, and those they
@@ -714,11 +716,12 @@ fn rivals(field: &str) -> Vec<&'static str> {
 /// (`crate::looks::Inflorescence`): every key but its `branch` and its
 /// `stalk` and `spathe_colour` colours. The looks module's tests hold this
 /// to the key.
-pub const INFLORESCENCE: [(&str, Field); 15] = {
+pub const INFLORESCENCE: [(&str, Field); 16] = {
     use Field::{Count, Number, Word};
     [
         ("kind", Word),
         ("flowers", Count),
+        ("fruits", Count),
         ("branches", Count),
         ("per_node", Count),
         ("divergence", Number),
@@ -1002,7 +1005,7 @@ fn every_look(
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
 pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
-    use Field::{Count, Number, Outline, Word};
+    use Field::{Colour, Count, Number, Outline, Word};
     [
         (
             "needles",
@@ -1224,6 +1227,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("seeds", Colour),
+                ("cup", Colour),
             ],
         ),
     ]
@@ -3113,6 +3118,12 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
                 })
             }),
             "`[u, w]` points",
+        ),
+        Some(Field::Colour) => (
+            value
+                .as_array()
+                .is_some_and(|rgb| rgb.len() == 3 && rgb.iter().all(Value::is_number)),
+            "a colour",
         ),
     };
     if fits {
