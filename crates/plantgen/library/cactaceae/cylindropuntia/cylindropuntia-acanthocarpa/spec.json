@@ -87,7 +87,6 @@
         "dome": 1.0,
         "base": 0.8,
         "tubercles": {
-          "height": 0.3,
           "width": 0.55,
           "point": 0.9,
           "stretch": 2.5
@@ -145,6 +144,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "tubercle_relief": "prominent",
     "spine_colour": [175, 130, 75],
     "spine_colour_aged": [140, 138, 132],
     "areole_wool_colour": [215, 200, 160],
@@ -155,6 +155,7 @@
     "radial_spine_length_m": {"min": 0.02, "max": 0.03}
   },
   "evidence": {
+    "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: tubercles prominent."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: spines yellow to tan to deep reddish brown, greying; tan here."},
     "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: the spines grey with age."},
     "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: wool white, yellow or tan, ageing greyish black; pale tan here."},

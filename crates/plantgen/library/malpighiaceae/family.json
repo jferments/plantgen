@@ -52,7 +52,8 @@
       "max": 3,
       "low": 2,
       "high": 5
-    }
+    },
+    "leaf_incision": "none"
   },
   "evidence": {
     "traits": {
@@ -69,6 +70,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add whorled (rarely): Simpson, Plant Systematics (2019) p. 312: subopposite or ternate."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Malpighiaceae (read 2026-10-17): lamina undivided, margins entire."
     }
   }
 }

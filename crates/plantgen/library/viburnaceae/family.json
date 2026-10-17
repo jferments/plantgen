@@ -16,7 +16,15 @@
     },
     "leaf_arrangement": "opposite",
     "fruit_type": "drupe",
-    "rosette": "none"
+    "rosette": "none",
+    "leaf_margin": {
+      "serrate": "usually",
+      "entire": "sometimes"
+    },
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "sometimes"
+    }
   },
   "forms": {
     "shrub": {
@@ -52,6 +60,16 @@
       "evidence": "SourceInferred",
       "source": "stevens-apweb",
       "note": "APweb, Dipsacales page (read 2026-10-16): Viburnum and Sambucus shrubs/trees; no order value proposed because Caprifoliaceae herbs often form basal rosettes."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Viburnum (read 2026-10-17) (about 165 species, most of the family): margins toothed or lobed, though it also calls them entire; Wikipedia Sambucus: leaflets with serrated margins."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Viburnum (read 2026-10-17): simple leaves, some toothed or lobed (lobed in V. opulus group). Sambucus compound."
     }
   }
 }

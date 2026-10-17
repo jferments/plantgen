@@ -4,6 +4,8 @@
   "name": "Onagraceae",
   "parent": "order/myrtales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "rarely"},
+    "leaf_shape": {"lanceolate": "usually", "ovate": "sometimes"},
     "leaf_habit": {"deciduous": "usually", "evergreen": "sometimes"},
     "corolla_shape": "rotate",
     "flower_merosity": 4,
@@ -64,6 +66,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Onagraceae (read 2026-10-17): lamina undivided or pinnatifid; mostly undivided in Epilobium, Ludwigia, Fuchsia (my weighting)."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Onagraceae (read 2026-10-17): most leaves simple and lance-shaped; Wikipedia Epilobium: ovate to lanceolate, willow-like."},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Myrtales page, Onagraceae (read 2026-10-16): mostly herbs; above-ground leaves of temperate herbs die back. Weighting inferred, not stated."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: usually 4 free petals, valvate or imbricate, on the hypanthium rim. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
     "traits": {

@@ -21,6 +21,10 @@
     "inflorescence": "raceme",
     "sexual_system": {
       "hermaphrodite": "usually"
+    },
+    "leaf_incision": {
+      "lobed": "usually",
+      "none": "rarely"
     }
   },
   "forms": {
@@ -72,6 +76,11 @@
       "evidence": "SourceInferred",
       "source": "floral-diagrams",
       "note": "Ronse De Craene, Floral Diagrams (2010) p. 200, 201, family Grossulariaceae: sexual system hermaphrodite (rarely unisexual, with staminodes in pistillate flowers), usually; read as {\"hermaphrodite\": \"usually\"}."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Grossulariaceae (read 2026-10-17): lamina usually palmatifid, roughly three-lobed, entire only in Ribes viburnifolium; German Wikipedia, Johannisbeeren (read 2026-10-17): often three- to five-lobed; English Wikipedia, Ribes: palmately lobed or compound."
     }
   }
 }

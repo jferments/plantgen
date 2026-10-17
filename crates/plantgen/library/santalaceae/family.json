@@ -31,7 +31,8 @@
       "max": 5,
       "typical": 4,
       "high": 8
-    }
+    },
+    "leaf_incision": "none"
   },
   "forms": {
     "shrub": {
@@ -67,6 +68,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA (read 2026-10-16): Santalaceae 4-5 (3-8), one per perianth lobe; Viscaceae usually 4 (2-4)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Santalaceae (read 2026-10-17): lamina undivided, one-veined or pinnate; some leaves much reduced or spiny. Wikipedia: simple, some reduced to scales."
     }
   }
 }

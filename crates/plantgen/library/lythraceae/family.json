@@ -4,6 +4,7 @@
   "name": "Lythraceae",
   "parent": "order/myrtales",
   "traits": {
+    "leaf_incision": "none",
     "woodiness": {
       "herbaceous": "often",
       "woody": "often"
@@ -46,6 +47,7 @@
     "stem_cross_section": {"square": "often"}
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Lythraceae (read 2026-10-17): lamina entire, simple; German Wikipedia, Weiderichgewächse (read 2026-10-17): simple blades, margin usually entire."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

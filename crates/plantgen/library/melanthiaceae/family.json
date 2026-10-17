@@ -4,6 +4,7 @@
   "name": "Melanthiaceae",
   "parent": "order/liliales",
   "traits": {
+    "leaf_margin": "entire",
     "leaf_division": "simple",
     "leaf_incision": "none",
     "ovary_position": "superior",
@@ -39,6 +40,7 @@
     }
   },
   "evidence": {
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Melanthiaceae (read 2026-10-17): lamina entire; German Wikipedia, Germergewächse (read 2026-10-17): blades simple, flat, entire-margined."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

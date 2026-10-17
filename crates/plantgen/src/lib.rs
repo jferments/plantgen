@@ -578,7 +578,14 @@ pub mod venation;
 /// bands, spots or mottles, a different share on every leaf; the royal
 /// palm's pinnae are paler below and the rattlesnake plantain's leaves
 /// carry their pale midvein band (90 is leaf hairs, #166).
-/// 92: a fern's stipe scales stand only on its base where its flora says
+/// 92: stem hairs (`stem_hairs`, `crate::hairs::Tube`): the hairs on
+/// young stems and leaf stalks, in a blade's words and `crisped`, cast
+/// the first year's wood toward their colour, wear off in its second and
+/// up close stand from it as strands (91 is leaves with two faces, #164).
+/// 93: a hooked spine curls into an open J at its tip: its shaft runs
+/// further and its hook turns over its last two pieces, not folded flat on
+/// the shaft over the last one (92 is stem hairs, #173).
+/// 94: a fern's stipe scales stand only on its base where its flora says
 /// so (`stipe_scale_extent`, fern program revision 9), as long as stated
 /// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
 /// stated `stipe_colour`; the fern families state whether their stipes are
@@ -586,5 +593,6 @@ pub mod venation;
 /// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
 /// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
 /// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
-/// are as long as its flora gives (91 is leaves with two faces, #164).
-pub const GENERATOR_REVISION: u32 = 92;
+/// are as long as its flora gives (93 is hooked spines that curl,
+/// #176).
+pub const GENERATOR_REVISION: u32 = 94;

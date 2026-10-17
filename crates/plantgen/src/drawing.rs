@@ -218,6 +218,7 @@ pub fn on_host(host: PlantMesh, guest: PlantMesh, host_types: usize) -> PlantMes
         card.template = card.template.saturating_add(shift);
         card
     }));
+    plant.hair_tubes.extend(guest.hair_tubes);
     plant
 }
 

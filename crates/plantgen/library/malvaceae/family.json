@@ -4,6 +4,8 @@
   "name": "Malvaceae",
   "parent": "order/malvales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "often"},
+    "leaf_margin": {"serrate": "usually", "entire": "sometimes"},
     "stamens": {"min": 5, "max": 200},
     "carpels": {"min": 2, "max": 50, "typical": 5, "low": 1},
     "hypanthium": {"false": "usually", "true": "rarely"},
@@ -51,6 +53,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia (read 2026-10-17): Sida typically unlobed, Abutilon mostly unlobed, Hibiscus entire or lobed, Malva palmately lobed; Malvaceae page: often palmately lobed or compound. DELTA (read 2026-10-17) covers Malvaceae in the narrow sense (Malvoideae) and calls the blade usually palmatifid; for the broad APG family (Grewioideae, Sterculioideae, Dombeyoideae, Tilia mostly unlobed) we weighted toward none."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Malvaceae (read 2026-10-17): margin may be entire; when toothed, a vein runs into each tooth (malvoid teeth). Wikipedia Sida: usually serrated edges; Abutilon: wavy or serrated; Tilia: toothed in all species; Hibiscus: entire or lobed. Weighted toward the toothed herbs and shrubs (Sida, Abutilon, Pavonia, Hermannia, Grewia)."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 355, 359: stamens 5 to many, filaments usually joined into a tube round the ovary or in 5 to 15 bundles. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 355, 359: carpels 2 to many, rarely 1; typical 5 is from Floral Diagrams p. 220 (general formula G (2-3) 5 to many). Book writes ∞; 50 is our stand-in for the upper bound."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 355, 505: flowers hypogynous, rarely perigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},

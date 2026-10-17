@@ -33,7 +33,14 @@
       "typical": 4,
       "high": 13
     },
-    "carpels": 2
+    "carpels": 2,
+    "leaf_shape": {
+      "ovate": "usually",
+      "orbicular": "sometimes",
+      "cordate": "sometimes",
+      "lanceolate": "rarely"
+    },
+    "leaf_incision": "none"
   },
   "forms": {
     "decurrent_tree": {
@@ -126,6 +133,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Betulaceae (read 2026-10-16): two joined carpels."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "lucid-ffpa",
+      "note": "Lucid family key, Betulaceae (read 2026-10-17): simple symmetric blades, lanceolate, ovate or orbicular; base cordate (Corylus). Ranking ours, weighted by Betula, Carpinus, Alnus: mostly ovate; rounded blades in some Alnus, Corylus."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Betulaceae (read 2026-10-17): lamina entire (uncut) and toothed; Wikipedia (read 2026-10-17): simple, doubly serrate leaves. The Lucid key lists lobed forms, which we take as rare."
     }
   }
 }
