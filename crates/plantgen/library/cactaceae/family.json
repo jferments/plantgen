@@ -49,6 +49,18 @@
       "else": 0.9,
       "why": "A cactus's inner tepals are broad and overlap at their bases in a wheel or a cup, a little narrower in a bell or a funnel, and narrow in a tube."
     },
+    "appearance.bodies.stem.tubercles.height": {
+      "map": {"tubercle_relief": {"barely": 0.01, "low": 0.03, "distinct": 0.2, "prominent": 0.42}},
+      "why": "A tubercle stands from the stem as far as a flora's word for it says, as a share of the stem's radius: barely a swelling under each areole of a ribbed barrel (Anderson's Ferocactus wislizeni), low knobs along undulate ribs (F. cylindraceus), distinct knobs, or the prominent ones a cholla's joint is knobbly with."
+    },
+    "appearance.bodies.stem.tubercles.stretch": {
+      "map": {"tubercle_shape": {"rounded": 1.2, "conical": 1.0, "cylindrical": 1.0, "elongate": 2.2, "broad": 1.5}},
+      "why": "A tubercle is as long along the stem, for its width, as its shape says: an ovoid one a little longer, an elongate one two to three times, a broadly oval one half as long again."
+    },
+    "appearance.bodies.stem.tubercles.point": {
+      "map": {"tubercle_shape": {"rounded": 0.9, "conical": 1.6, "cylindrical": 1.3, "elongate": 0.9, "broad": 0.8}},
+      "why": "A conical tubercle comes to a point, a cylindrical one stands steep-sided, and rounded, elongate and broad ones are low mounds."
+    },
     "appearance.bodies.stem.colour": {
       "colour": "stem_colour",
       "why": "A cactus's skin is drawn in the colour its flora gives the stem or joints; its ribs' valleys darken it."
