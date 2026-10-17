@@ -609,4 +609,13 @@ pub mod venation;
 /// thrice-divided leaf whose divisions roll round their rachis sets its
 /// segments round each pinnule's too; a leaflet may be as narrow as a
 /// hundredth of its length (96 is the species-facts records, #171).
-pub const GENERATOR_REVISION: u32 = 97;
+/// 98: variegation along a parallel-veined blade's veins (`veins`: a
+/// midrib stripe, then veinlet dashes, then a net round dark islands as
+/// the share grows; `slant` turns the cross veins into a pinnate blade's
+/// lateral veins), its inverse `between` (silver fields between the veins),
+/// `zone` (a band along the outline, or a V from the base), a rim the
+/// pattern never reaches, and patches on the upper face only (`faces`);
+/// a compound leaf's pattern lies on each leaflet; the rattlesnake
+/// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
+/// (97 is lacy leaves as geometry, #183).
+pub const GENERATOR_REVISION: u32 = 98;
