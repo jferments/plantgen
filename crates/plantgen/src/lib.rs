@@ -585,4 +585,8 @@ pub mod venation;
 /// 93: a hooked spine curls into an open J at its tip: its shaft runs
 /// further and its hook turns over its last two pieces, not folded flat on
 /// the shaft over the last one (92 is stem hairs, #173).
-pub const GENERATOR_REVISION: u32 = 93;
+/// 94: slender pedicels and short-shoot tufts (`Unit::stalk_width`): a
+/// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
+/// bundle of more than five, up to 45, is a short shoot's tuft spread all
+/// round, the tufts half a needle apart (93 is hooked spines, #176).
+pub const GENERATOR_REVISION: u32 = 94;

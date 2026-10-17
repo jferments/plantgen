@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "id": "lomatium-utriculatum",
+  "taxon": {
+    "scientific_name": "Lomatium utriculatum",
+    "common_name": "common lomatium",
+    "family": "Apiaceae",
+    "genus": "Lomatium",
+    "plant_name_id": 2344046
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 3,
+      "stem_rate": 0.5,
+      "clump_radius": 0.04,
+      "stem_lean": 15,
+      "maturity": 1.0,
+      "stem_radius": 0.002,
+      "wiggle": 2,
+      "nodes": 3,
+      "bare": 0.05,
+      "leaf_length": 0.12,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.4,
+      "leaf_base": 1.0,
+      "leaf_angle": 45,
+      "raceme": 0.04,
+      "flowers": 1,
+      "flower_size": 0.07,
+      "pedicel": 0.0,
+      "flower_angle": 10,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "basal_leaves": 5,
+      "basal_length": 0.12,
+      "basal_angle": 55,
+      "basal_pieces": 1
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.25,
+      0.32,
+      0.15
+    ],
+    "foliage": [
+      0.1,
+      0.2,
+      0.06
+    ],
+    "foliage_shade": [
+      0.025,
+      0.05,
+      0.012
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "teeth": 0,
+          "petiole": 0.25,
+          "angle": 50,
+          "pinnule_angle": 45
+        }
+      },
+      "flower": {
+        "shape": {
+          "petal_width": 0.7,
+          "point": 0.0,
+          "notch": 0.2,
+          "centre": 0.3
+        },
+        "inflorescence": {
+          "flowers": 20,
+          "size": 0.15,
+          "spread": 45,
+          "peduncle": 0.05,
+          "branch": {
+            "size": 0.15,
+            "spread": 50,
+            "peduncle": 0.5
+          }
+        },
+        "colour": [
+          0.95,
+          0.82,
+          0.15
+        ],
+        "accent": [
+          0.8,
+          0.7,
+          0.1
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.5,
+      "typical": 0.3
+    },
+    "inflorescence": "compound_umbel",
+    "inflorescence_branches": {
+      "min": 5,
+      "max": 13
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 3,
+    "pinnae": 7,
+    "leaflets": 5,
+    "terminal_leaflet": true,
+    "leaf_shape": "linear",
+    "leaflet_length_m": {
+      "min": 0.002,
+      "max": 0.025
+    },
+    "flower_colour": [
+      240,
+      205,
+      40
+    ],
+    "fruit_size_m": {
+      "min": 0.005,
+      "max": 0.011
+    },
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "life_span": "perennial"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: stemmed plants 10 cm to 50 cm tall, hairless to downy, from a long, slender taproot."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: 5 to 13 rays of unequal length, 1 cm to 12 cm, spreading or ascending."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: 5 to 13 rays, each ending in an umbellet on pedicels 2 mm to 9 mm long: a compound umbel."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: leaves three times pinnate, sometimes first divided in three."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: leaves three times pinnate, sometimes first divided in three."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: leaves three times pinnate, sometimes first divided in three."
+    },
+    "traits.pinnae": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Seven primary divisions, set by hand from general knowledge of the species: Abrams (1951 p. 255) gives no count."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five divisions to each primary division, set by hand from general knowledge of the species: Abrams (1951 p. 255) gives no count."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Odd-pinnate, each division ending in one, set by hand: Abrams (1951 p. 255) does not say."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: the last divisions of the leaf linear, 2 mm to 25 mm long."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: the last divisions of the leaf linear, 2 mm to 25 mm long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: yellow flowers; sRGB by eye."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: fruit ovate to oblong, 5 mm to 11 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: on grassy hillsides and plains, flowering March to June."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: perennial from a long, slender taproot."
+    },
+    "appearance.organs.flower": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: unequal rays 1 cm to 12 cm long, spreading or ascending, pedicels 2 mm to 9 mm, yellow flowers. Drawn as 9 rays of up to about 6 cm, each ending in an umbellet of 20 small yellow flowers about 1 cm across."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pacific water parsley's values, changed by hand for common lomatium: a few low stems from a taproot, their finely divided leaves largest near the base, each stem ending in a yellow compound umbel (Abrams 1951 p. 255). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 4 years in the open, the middle of Abrams's 1-5 dm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Abrams (1951 p. 255): yellow flowers; green, finely dissected leaves."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-17): sizes from Abrams, drawing values from Pacific water parsley's."
+  }
+}

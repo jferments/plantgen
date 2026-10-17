@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Larix",
+  "traits": {
+    "architectural_model": "rauh",
+    "foliage_ranks": "all_round",
+    "leaf_habit": "deciduous",
+    "cone_maturation_years": 1,
+    "cone_posture": "erect"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "farjon-2017",
+      "note": "Farjon (2017), Larix (printed pp. 497-498, 507-511): Rauh's model, branches spaced regularly up a monopodial trunk; deciduous needles spiral and remote on long shoots and in dense tufts on short shoots; seed cones single at short-shoot tips, more or less erect, even on hanging branches. Abrams (vol. 1, 1923, p. 60), Larix: leaves \"spirally arranged and remote on leading shoots, densely crowded on the lateral spur-like twigs\"; its key to the family (p. 51) puts Larix under \"Cones maturing the first year\"."
+    }
+  }
+}
