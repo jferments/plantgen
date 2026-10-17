@@ -128,7 +128,8 @@
     ],
     "leaf_hairs": "strigose",
     "leaf_hairs_beneath": "strigose",
-    "leaf_ciliate": true
+    "leaf_ciliate": true,
+    "stem_hairs": "crisped"
   },
   "evidence": {
     "taxon": {
@@ -240,6 +241,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces abaxially appressed-hirsute, usually sparsely so (strigose)."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): petiole 6-20 cm, crisped-hirsute: stiff hairs, curled (crisped). The plant has no stem above ground, so its hairs are drawn on its leaf stalks."
     },
     "traits.leaf_ciliate": {
       "evidence": "SourceInferred",

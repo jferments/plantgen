@@ -209,6 +209,11 @@ pub struct PlantMesh {
     /// the index in `cards` of the organ's card (the second of a crossed
     /// pair), in order. Empty otherwise.
     pub sites: Vec<u32>,
+    /// On the nearest levels (0 and 1), the young wood and leaf stalks
+    /// that bear the plant's stem hairs, which previews draw as strands
+    /// up close (`crate::hairs::strand_mesh`). Not packaged; empty where
+    /// the plant states none.
+    pub hair_tubes: Vec<crate::hairs::Tube>,
 }
 
 impl PlantMesh {
@@ -521,7 +526,11 @@ pub(crate) fn build_shaded(
     leaves::build(graph, looks, level, &colour, &mut mesh.wood);
     blooms::build(graph, looks, &blooms, &colour, &mut mesh.wood);
     if level <= 1 {
-        petioles(graph, looks, &mut mesh.wood);
+        let stem_hairs = appearance.stem_hairs.as_ref().filter(|hairs| hairs.drawn());
+        petioles(graph, looks, stem_hairs, &mut mesh);
+        if let Some(hairs) = stem_hairs {
+            stem_tubes(graph, appearance, lod, hairs, &mut mesh.hair_tubes);
+        }
     }
     mesh.cards = cards(graph, looks, &solid, twists, appearance.variation, lod);
     // Bent cards first, so a renderer draws them as one range.
@@ -1229,6 +1238,7 @@ fn wood(
 ) {
     let continuations = graph.continuations();
     let end_radii = graph.end_radii();
+    let stem_hairs = appearance.stem_hairs.as_ref().filter(|hairs| hairs.drawn());
     for (start, segment) in graph.segments.iter().enumerate() {
         // An axis starts at a segment that does not continue its parent,
         // or continues a fleshy body; bodies themselves are drawn by
@@ -1321,17 +1331,20 @@ fn wood(
                 // u wraps once around; v runs along the axis in metres.
                 #[allow(clippy::cast_possible_truncation)]
                 let uv = [(f64::from(side) / f64::from(sides)) as f32, along as f32];
-                let colour = sky.colour(
-                    bark.colour(
-                        current.radius,
-                        surface,
-                        current.centre.y,
-                        along,
-                        angle,
-                        furrow,
-                    ),
-                    light,
+                let surface_colour = bark.colour(
+                    current.radius,
+                    surface,
+                    current.centre.y,
+                    along,
+                    angle,
+                    furrow,
                 );
+                let [r, g, b] = crate::hairs::cast_wood(
+                    [surface_colour[0], surface_colour[1], surface_colour[2]],
+                    crate::hairs::youth(graph.age - current.born),
+                    stem_hairs,
+                );
+                let colour = sky.colour([r, g, b, surface_colour[3]], light);
                 out.push(Vertex {
                     position: footed(root, current.centre, direction * (radius * widen)),
                     normal: surface,
@@ -1682,8 +1695,16 @@ fn on_stalk(
 /// ([`crate::looks::Insertion`]), into `mesh` as wood each organ's segment
 /// bears: a slender stalk along the organ to where its blade sits, in the
 /// accent colour its card painted the petiole in, a hundredth as thick as
-/// it is long and at least half a millimetre.
-pub(crate) fn petioles(graph: &PlantGraph, looks: &[Look], mesh: &mut Mesh) {
+/// it is long and at least half a millimetre, cast toward the plant's
+/// stem `hairs` where it states them, which the stalk bears as a
+/// [`crate::hairs::Tube`].
+pub(crate) fn petioles(
+    graph: &PlantGraph,
+    looks: &[Look],
+    hairs: Option<&crate::looks::Hairs>,
+    plant: &mut PlantMesh,
+) {
+    let mesh = &mut plant.wood;
     for organ in &graph.organs {
         let Some(look) = looks.get(usize::from(organ.organ)) else {
             continue;
@@ -1696,12 +1717,30 @@ pub(crate) fn petioles(graph: &PlantGraph, looks: &[Look], mesh: &mut Mesh) {
             continue;
         }
         let first = mesh.positions.len();
+        let along = organ.heading.normalize_or(Vec3::Y);
+        let radius = (0.005 * length).max(0.0005);
+        // A living leaf's stalk keeps its hairs.
+        let colour = crate::hairs::cast_wood(look.accent, 1.0, hairs);
+        if let Some(tube) = hairs.and_then(|hairs| {
+            crate::hairs::Tube::new(
+                organ.position,
+                organ.position + along * length,
+                radius,
+                look.accent,
+                (organ.born, organ.shed),
+                organ.segment.unwrap_or(GROUNDED),
+                hairs,
+                1.0,
+            )
+        }) {
+            plant.hair_tubes.push(tube);
+        }
         crate::fruit::stalk_between(
             organ.position,
-            organ.heading.normalize_or(Vec3::Y),
+            along,
             length,
-            (0.005 * length).max(0.0005),
-            look.accent,
+            radius,
+            colour,
             crate::blooms::Part {
                 born: organ.born,
                 shed: organ.shed,
@@ -1710,6 +1749,37 @@ pub(crate) fn petioles(graph: &PlantGraph, looks: &[Look], mesh: &mut Mesh) {
             mesh,
         );
         mesh.bear(first, organ.segment.unwrap_or(GROUNDED));
+    }
+}
+
+/// The young wood the plant's stem `hairs` grow on, into `tubes`: every
+/// piece of an axis drawn at this level younger than
+/// [`crate::hairs::YOUNG_YEARS`], in its wood's colour.
+fn stem_tubes(
+    graph: &PlantGraph,
+    appearance: &Appearance,
+    lod: &LodSpec,
+    hairs: &crate::looks::Hairs,
+    tubes: &mut Vec<crate::hairs::Tube>,
+) {
+    for (index, segment) in graph.segments.iter().enumerate() {
+        if segment.body != 0 || (segment.radius < lod.min_radius && segment.parent.is_some()) {
+            continue;
+        }
+        let colour = appearance
+            .leaf_axis
+            .filter(|_| segment.within.is_some())
+            .unwrap_or(appearance.bark);
+        tubes.extend(crate::hairs::Tube::new(
+            segment.start,
+            segment.end,
+            segment.radius,
+            colour,
+            (segment.born, segment.shed),
+            u32::try_from(index).unwrap_or(NO_SEGMENT),
+            hairs,
+            crate::hairs::youth(graph.age - segment.born),
+        ));
     }
 }
 
@@ -3109,6 +3179,7 @@ mod tests {
             roots: None,
             bark_pattern: None,
             leaf_axis: None,
+            stem_hairs: None,
             bodies: BTreeMap::new(),
             spreads: serde_json::Map::new(),
         }

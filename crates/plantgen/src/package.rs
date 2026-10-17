@@ -2774,11 +2774,13 @@ pub fn decode_mesh(bytes: &[u8]) -> Result<PlantMesh, PackageError> {
         }
     }
     input.finish()?;
+    // Packages carry no hair tubes ([`PlantMesh::hair_tubes`]).
     Ok(PlantMesh {
         wood,
         cards,
         tufts,
         sites,
+        hair_tubes: Vec::new(),
     })
 }
 
