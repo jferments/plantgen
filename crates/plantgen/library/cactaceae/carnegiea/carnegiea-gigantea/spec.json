@@ -78,8 +78,7 @@
           "point": 0,
           "notch": 0,
           "centre": 0.3,
-          "tube": 1.2,
-          "stamens": 200
+          "tube": 1.2
         },
         "accent": [0.8, 0.62, 0.12]
       },
@@ -175,7 +174,13 @@
     "ribs": {"min": 12, "max": 24},
     "stem_diameter_max_m": {"min": 0.3, "max": 0.65},
     "areole_spacing_m": {"min": 0.012, "max": 0.03, "typical": 0.023},
-    "central_spine_length_m": 0.07
+    "central_spine_length_m": 0.07,
+    "height_typical_m": {"min": 4, "max": 12},
+    "height_max_m": 16,
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [4, 5, 6],
+    "fruiting_months": [6, 7]
   },
   "evidence": {
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 26 and 139, Carnegiea gigantea: stems green, pale grey-green in the plate (p. 26); a pale grey-green here."},
@@ -254,7 +259,13 @@
       "evidence": "SourceInferred",
       "source": "kew-powo",
       "note": "Its flower laid out whorl by whorl (spec rework P5): tepals on a spiral, from green outer ones to waxy white inner ones, on a floral tube and an inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. By hand (as search results quote them; the pages themselves were not read): the pericarpel and floral tube, 6 to 10 cm of a flower 8.5 to 12.5 cm long, as 1.2 of the flower's radius; 200 stamens, the most a flower draws, for the thousands floras count."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -69,11 +69,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 1.0,
           "widest": 0.3,
           "tip": 0.3,
           "base": 1.0,
-          "teeth": 0,
           "tooth_depth": 0.03,
           "petiole": 0
         },
@@ -129,7 +127,13 @@
     "leaf_hairs": "strigose",
     "leaf_hairs_beneath": "strigose",
     "leaf_ciliate": true,
-    "stem_hairs": "crisped"
+    "stem_hairs": "crisped",
+    "height_max_m": 0.3,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "rosette": "basal",
+    "leaf_margin": "entire",
+    "fruit_size_m": {"min": 0.01, "max": 0.02}
   },
   "evidence": {
     "taxon": {
@@ -251,7 +255,13 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): marginal hairs perpendicular to margin or curved toward apex."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."}
   },
   "provenance": {
     "sources": [

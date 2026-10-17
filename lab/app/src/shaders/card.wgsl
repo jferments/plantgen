@@ -32,7 +32,8 @@ struct CardAccents {
     undersides: array<vec4<f32>, 64>,
     // Its variegated colour and 1, or all 0 for none.
     patches: array<vec4<f32>, 64>,
-    // Its variegation's amount and spread.
+    // Its variegation's amount and spread, then 1 when only the upper face
+    // is variegated.
     shares: array<vec4<f32>, 64>,
     // Its sporangia's colour and the share of cards that bear them.
     sporangia: array<vec4<f32>, 64>,
@@ -80,7 +81,8 @@ fn fragment(in: VertexOutput, @builtin(front_facing) is_front: bool) -> Fragment
         base = under.rgb * darkening;
     }
     let patches = card.patches[layer];
-    if patches.a > 0.5 {
+    let lower = is_front == flipped;
+    if patches.a > 0.5 && !(lower && card.shares[layer].z > 0.5) {
         let share = clamp(card.shares[layer].x + card.shares[layer].y * (seed - 0.5), 0.0, 1.0);
         var weight = clamp((share - t.b) / VARIEGATION_EDGE + 0.5, 0.0, 1.0);
         if share <= 0.0 {

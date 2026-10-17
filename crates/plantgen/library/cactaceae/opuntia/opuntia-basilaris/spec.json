@@ -59,7 +59,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "stamens": 200,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.25
@@ -127,7 +126,13 @@
     "fruit_size_m": {"min": 0.025, "max": 0.03},
     "fruit_width_m": {"min": 0.015, "max": 0.022},
     "joint_length_m": {"min": 0.08, "max": 0.2},
-    "radial_spines": 0
+    "radial_spines": 0,
+    "height_typical_m": {"min": 0.15, "max": 0.4},
+    "height_max_m": 0.6,
+    "woodiness": "semi",
+    "rosette": "none",
+    "flowering_months": [3, 4, 5, 6],
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: stem segments blue-green, often tinged purple."},
@@ -185,7 +190,13 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -19,9 +19,9 @@
     },
     "ovary_position": "superior",
     "fruit_type": {
+      "capsule": "usually",
       "berry": "often",
-      "capsule": "often",
-      "drupe": "rarely"
+      "drupe": "sometimes"
     },
     "sexual_system": {
       "dioecious": "usually",
@@ -50,6 +50,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Meliaceae (read 2026-10-17): margins usually entire, at times crenate, serrate, dentate or lobed (e.g. Azadirachta, Melia serrate leaflets)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Meliaceae (read 2026-10-17; ~575 spp, ~50 genera): fruit fleshy or dry, a capsule, berry or drupe, rarely a nut; no ranking. Weighted by genus size (approximate, not read this session): capsular Trichilia (~90), Guarea (~70), Turraea (~65), Dysoxylum s.l. (~80), Chisocheton, Aphanamixis and the woody-capsuled Swietenia, Khaya, Cedrela, Toona outweigh berry-like Aglaia (~120), Lansium and Walsura; drupes in Melia and Azadirachta, so raised from rarely to sometimes."
     }
   }
 }

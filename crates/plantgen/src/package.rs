@@ -321,8 +321,8 @@ pub struct AtlasLayer {
     /// `share` is 0, 1 where it is 1), where `rank` is the atlas texel's
     /// blue and `share` is `clamp(amount + spread * (seed - 0.5), 0, 1)`
     /// for the card's seed ([`crate::templates::card_seed`], from its
-    /// base); before the accent blend ([`Templates::paint`]). Absent for
-    /// none.
+    /// base); before the accent blend ([`Templates::paint`]). With
+    /// `faces: "upper"` a lower face blends nothing. Absent for none.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub variegation: Option<crate::looks::Variegation>,
     /// Its sori, on its cards' lower faces only and on the cards that bear

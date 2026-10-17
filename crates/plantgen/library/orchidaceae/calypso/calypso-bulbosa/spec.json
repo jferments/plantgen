@@ -30,7 +30,6 @@
       "leaf_angle": 70,
       "raceme": 0.02,
       "flowers": 1,
-      "flower_size": 0.042,
       "pedicel": 0.0,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -38,7 +37,6 @@
       "nod": 40,
       "scape": 1,
       "basal_leaves": 1,
-      "basal_length": 0.052,
       "basal_angle": 70
     }
   },
@@ -80,11 +78,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.7,
           "widest": 0.4,
           "tip": 0.6,
           "base": 0.5,
-          "teeth": 0,
           "petiole": 0.15
         }
       },
@@ -137,11 +133,9 @@
       "basal": {
         "shape": {
           "template": "simple",
-          "width": 0.7,
           "widest": 0.4,
           "tip": 0.6,
           "base": 0.5,
-          "teeth": 0,
           "petiole": 0.15
         }
       }
@@ -179,7 +173,10 @@
     "fruiting_months": [
       7,
       8
-    ]
+    ],
+    "height_max_m": 0.22,
+    "leaf_width_m": {"min": 0.02, "max": 0.04},
+    "leaf_shape": "ovate"
   },
   "evidence": {
     "taxon": {
@@ -266,7 +263,10 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as the FEIS review read gives no months."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L32237), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L32237), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L32237), as no source read gives it."}
   },
   "provenance": {
     "sources": [

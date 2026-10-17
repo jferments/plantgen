@@ -35,10 +35,7 @@
       "berry": "rarely",
       "nut": "rarely"
     },
-    "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
-    },
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
     "zygomorphy": "other",
     "leaf_arrangement": {
       "alternate": "often",
@@ -95,11 +92,7 @@
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 289 Onagraceae: herbs, rarely shrubs; leaves simple, opposite or alternate; stipules mostly absent or falling early; fruit a capsule, berry or nut."
     },
-    "traits.flower_symmetry": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Onagraceae with Trapaceae: flowers regular or irregular as coded, a state the authors qualify keeping its word (spec-rework/b1/delta/mapdelta.py)."
-    },
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Onagraceae (read 2026-10-17, ~640 spp): flowers regular to very irregular. The big genera (Epilobium, Oenothera, Fuchsia, Ludwigia, together most of the family) have regular 4-merous flowers; zygomorphy is limited to Lopezia, some Clarkia and the former Gaura. Genus sizes are not from the pages read."},
     "traits.zygomorphy": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

@@ -199,10 +199,10 @@ pub struct CardPaint {
     /// The variegated colour, linear RGB, and 1; all 0 for a template
     /// without variegation.
     pub patches: [f32; 4],
-    /// The variegation's amount and spread, then 0 and 0: a card of seed
-    /// `s` paints the texels ranked below `clamp(amount + spread * (s -
-    /// 0.5), 0, 1)`, with an edge [`plantgen::looks::VARIEGATION_EDGE`]
-    /// wide.
+    /// The variegation's amount and spread, then 1 when only the upper
+    /// face is variegated (else 0), then 0: a card of seed `s` paints the
+    /// texels ranked below `clamp(amount + spread * (s - 0.5), 0, 1)`,
+    /// with an edge [`plantgen::looks::VARIEGATION_EDGE`] wide.
     pub share: [f32; 4],
     /// The sori's sporangia colour, linear RGB, and the share of cards
     /// that bear them ([`plantgen::looks::Sori::borne`]); all 0 for a
@@ -233,7 +233,12 @@ pub fn template_paints(templates: &Templates) -> Vec<CardPaint> {
                 #[allow(clippy::cast_possible_truncation)]
                 (
                     [v.colour[0], v.colour[1], v.colour[2], 1.0],
-                    [v.amount as f32, v.spread as f32, 0.0, 0.0],
+                    [
+                        v.amount as f32,
+                        v.spread as f32,
+                        if v.faces.is_both() { 0.0 } else { 1.0 },
+                        0.0,
+                    ],
                 )
             });
             let (sporangia, indusium) = template.sori.map_or(([0.0; 4], [0.0; 4]), |s| {
@@ -1704,17 +1709,33 @@ mod tests {
         let drawing = drawing::draw(&request).expect("draws");
         let mut templates = drawing.templates.clone();
         templates.templates[0].underside = Some([0.3, 0.35, 0.2]);
-        templates.templates[0].variegation = Some(plantgen::looks::Variegation {
-            pattern: plantgen::looks::VariegationPattern::Margin,
-            colour: [0.8, 0.8, 0.6],
-            amount: 0.3,
-            spread: 0.5,
-            scale: 0.08,
-        });
-        let paint = template_paints(&templates)[0];
+        for faces in [
+            plantgen::looks::VariegationFaces::Both,
+            plantgen::looks::VariegationFaces::Upper,
+        ] {
+            templates.templates[0].variegation = Some(plantgen::looks::Variegation {
+                pattern: plantgen::looks::VariegationPattern::Margin,
+                colour: [0.8, 0.8, 0.6],
+                amount: 0.3,
+                spread: 0.5,
+                scale: 0.08,
+                lines: 3,
+                cross: 0.07,
+                rim: 0.0,
+                faces,
+                at: 0.6,
+                from: plantgen::looks::ZoneFrom::Midrib,
+                slant: 0.0,
+            });
+            the_card_paint_matches(&templates);
+        }
+    }
+
+    fn the_card_paint_matches(templates: &Templates) {
+        let paint = template_paints(templates)[0];
         let colour = [0.08_f32, 0.2, 0.05];
-        let dark = f64::from(darkening(&templates, 0, colour));
-        let hairs = template_hairs(&templates)[0];
+        let dark = f64::from(darkening(templates, 0, colour));
+        let hairs = template_hairs(templates)[0];
         let accent: [f64; 3] =
             std::array::from_fn(|c| f64::from(templates.templates[0].accent_colour[c]) * dark);
         for flipped in [false, true] {
@@ -1742,7 +1763,9 @@ mod tests {
                             base = std::array::from_fn(|c| f64::from(paint.underside[c]) * dark);
                         }
                         let share = (paint.share[0] + paint.share[1] * (s - 0.5)).clamp(0.0, 1.0);
-                        let patch = if share <= 0.0 {
+                        let patch = if front == flip && paint.share[2] > 0.5 {
+                            0.0
+                        } else if share <= 0.0 {
                             0.0
                         } else if share >= 1.0 {
                             1.0

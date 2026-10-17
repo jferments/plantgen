@@ -21,11 +21,14 @@
 //! nothing, a loose spray's divisions rise and scatter, and a
 //! bottlebrush's stand all round the rachis. Each leaflet of a division
 //! then turns about the division's own rachis by its place times the
-//! inner roll, and half the scatter. The leaf then droops over its length
-//! as its card would ([`crate::bend::Bend`]'s droop).
+//! inner roll, and half the scatter; in a thrice-divided leaf, each
+//! segment likewise about its pinnule's rachis, where the divisions roll
+//! at all. The leaf then droops over its length as its card would
+//! ([`crate::bend::Bend`]'s droop).
 //!
 //! A leaflet is a ribbon along its midrib, as wide as the card draws it,
-//! with a face on each side; a rachis is a three-sided tube in the look's
+//! with a face on each side, or a round thread, bowed a little, where it
+//! is at least [`THREAD`] times as long as it is wide; a rachis is a three-sided tube in the look's
 //! accent colour, thinner at each order; a dissected blade's wing a ribbon
 //! along its rachis. The geometry is part of the plant's wood mesh, with
 //! the organ's colour per vertex, its birth and shed ages, and wind level
@@ -44,6 +47,22 @@ pub const MAX_LEVELS: u8 = 2;
 /// and as a share of the half-width of the widest leaflet it bears.
 const RACHIS: [f64; 3] = [0.004, 0.0025, 0.0015];
 const RACHIS_SHARE: [f64; 3] = [0.5, 0.4, 0.35];
+
+/// A segment at least this many times as long as it is wide is a thread
+/// (lacy leaves, technique T2: fennel's "capillary divisions"), drawn
+/// round, not as a flat ribbon.
+pub const THREAD: f64 = 10.0;
+
+/// How far a thread bows from its chord at its middle, as a share of its
+/// length (fennel's threads "slightly curved").
+const THREAD_BOW: f64 = 0.12;
+
+/// Whether `c`'s last divisions are threads: as long, for their width,
+/// as [`THREAD`] says.
+#[must_use]
+pub fn threads(c: &Compound) -> bool {
+    c.leaflet_width * THREAD <= 1.0
+}
 
 /// Whether `c` is drawn as lace at `level`.
 #[must_use]
@@ -269,6 +288,37 @@ impl<'a> Lace<'a> {
         })
     }
 
+    /// How the segment `leaflet` of a thrice-divided leaf turns about its
+    /// pinnule's rachis, once its pinnule has turned by `turns`: only a
+    /// leaf whose divisions roll round their rachis (`inner_roll`) sets
+    /// its segments round the pinnule's too, each by its place times the
+    /// roll and half the scatter.
+    fn tertiary(&self, layout: &Layout, leaflet: &Leaflet, turns: &[Turn]) -> Option<Turn> {
+        let segment = leaflet.segment?;
+        let roll = math::radians(self.c.inner_roll.unwrap_or(0.0));
+        if roll == 0.0 {
+            return None;
+        }
+        let axis = layout.axes.iter().find(|a| {
+            a.order == 2 && a.division == Some(leaflet.division) && a.within == leaflet.within
+        })?;
+        let mut from = Vec3::new(axis.from.0, axis.from.1, 0.0);
+        let mut to = Vec3::new(axis.to.0, axis.to.1, 0.0);
+        for turn in turns {
+            from = turn.apply(from);
+            to = turn.apply(to);
+        }
+        let scatter = math::radians(self.c.scatter.unwrap_or(0.0)) * 0.5;
+        let key = (u64::from(leaflet.division) * 4096 + u64::from(leaflet.within.unwrap_or(0)))
+            * 4096
+            + u64::from(segment);
+        Some(Turn {
+            at: from,
+            axis: (to - from).normalize_or(Vec3::Y),
+            angle: f64::from(segment) * roll + scatter * self.draw_of(3, key),
+        })
+    }
+
     fn vertex(&self, position: Vec3, normal: Vec3, colour: [f32; 3]) -> Vertex {
         Vertex {
             position,
@@ -322,7 +372,7 @@ impl<'a> Lace<'a> {
                 .map(|l| 0.5 * self.c.leaflet_width * l.length * (1.0 - form.petiolule))
                 .fold(0.0, f64::max);
             let radius = RACHIS[order].min(RACHIS_SHARE[order] * borne);
-            self.tube(from, to, radius, order, mesh);
+            self.tube(from, to, radius, self.rachis_colour(order), mesh);
             if axis.wing > 0.0 {
                 let wing = |t: f64| axis.wing * (1.0 - 0.7 * t);
                 self.ribbon(from, to, face, &wing, self.colour, mesh);
@@ -332,10 +382,14 @@ impl<'a> Lace<'a> {
         for leaflet in &layout.leaflets {
             let first = turns(Some(leaflet.division));
             let second = self.secondary(layout, leaflet, first);
+            let mut turned: Vec<Turn> = [first, second].into_iter().flatten().collect();
+            if let Some(third) = self.tertiary(layout, leaflet, &turned) {
+                turned.push(third);
+            }
             let mut base = Vec3::new(leaflet.base.0, leaflet.base.1, 0.0);
             let mut direction = Vec3::new(leaflet.direction.0, leaflet.direction.1, 0.0);
             let mut face = Vec3::Z;
-            for turn in [first, second].into_iter().flatten() {
+            for turn in &turned {
                 base = turn.apply(base);
                 direction = turn.direction(direction);
                 face = turn.direction(face);
@@ -344,9 +398,18 @@ impl<'a> Lace<'a> {
             let foot = base + direction * stalk;
             let tip = base + direction * leaflet.length;
             if stalk > 0.0 {
-                self.tube(base, foot, RACHIS[2], 2, mesh);
+                self.tube(base, foot, RACHIS[2], self.rachis_colour(2), mesh);
             }
             let blade = leaflet.length - stalk;
+            if threads(self.c) {
+                let radius = 0.5 * self.c.leaflet_width * blade;
+                let key = u64::from(leaflet.division) << 24
+                    | u64::from(leaflet.within.unwrap_or(0)) << 12
+                    | u64::from(leaflet.segment.unwrap_or(0));
+                let bow = face.rotate_about(direction, std::f64::consts::PI * self.draw_of(4, key));
+                self.thread(foot, tip, bow, radius, mesh);
+                continue;
+            }
             let half = |t: f64| {
                 0.5 * self.c.leaflet_width
                     * blade
@@ -430,15 +493,36 @@ impl<'a> Lace<'a> {
         }
     }
 
-    /// A three-sided tube of `radius` card lengths from `from` to `to` in
-    /// the local frame, a rachis of order `order`.
-    fn tube(&self, from: Vec3, to: Vec3, radius: f64, order: usize, mesh: &mut Mesh) {
-        // The petiole and rachis in the accent colour, toward the leaf's
-        // own as they divide: a pinna's rachis is green.
-        let colour = match order {
+    /// A thread from `from` to `tip` in the local frame, `radius` thick,
+    /// bowed toward `bow` by [`THREAD_BOW`] of its length: a thread is too
+    /// slender to hold straight.
+    fn thread(&self, from: Vec3, tip: Vec3, bow: Vec3, radius: f64, mesh: &mut Mesh) {
+        let length = (tip - from).length();
+        let point =
+            |t: f64| from + (tip - from) * t + bow * (THREAD_BOW * length * 4.0 * t * (1.0 - t));
+        let pieces = if self.midrib { 3 } else { 2 };
+        for k in 0..pieces {
+            let (a, b) = (
+                f64::from(k) / f64::from(pieces),
+                f64::from(k + 1) / f64::from(pieces),
+            );
+            self.tube(point(a), point(b), radius, self.colour, mesh);
+        }
+    }
+
+    /// The colour of a rachis of order `order`: the petiole and rachis in
+    /// the accent colour, toward the leaf's own as they divide, so a
+    /// pinna's rachis is green.
+    fn rachis_colour(&self, order: usize) -> [f32; 3] {
+        match order {
             0 => mix(self.accent, self.colour, 0.4),
             _ => scaled(self.colour, 0.95),
-        };
+        }
+    }
+
+    /// A three-sided tube of `radius` card lengths from `from` to `to` in
+    /// the local frame, in `colour`.
+    fn tube(&self, from: Vec3, to: Vec3, radius: f64, colour: [f32; 3], mesh: &mut Mesh) {
         let along = (to - from).normalize_or(Vec3::Y);
         if (to - from).length() <= 0.0 {
             return;
@@ -567,5 +651,47 @@ mod tests {
             (reach - laid.reach * 0.2 * across).abs() < 0.2 * 0.05,
             "{reach}"
         );
+    }
+
+    #[test]
+    fn a_thread_is_round_and_a_broader_segment_flat() {
+        assert!(threads(&compound(|c| c.leaflet_width = 0.05)));
+        assert!(!threads(&compound(|_| {})));
+        // A flat leaf's ribbons lie in its plane; its threads, bowed
+        // either way, leave it.
+        let leave = |mesh: &Mesh| {
+            mesh.positions
+                .iter()
+                .filter(|p| p[2].abs() > 0.0005)
+                .count()
+        };
+        let flat = drawn(&compound(|_| {}));
+        let thread = drawn(&compound(|c| c.leaflet_width = 0.05));
+        assert!(
+            leave(&thread) > 4 * leave(&flat),
+            "{} {}",
+            leave(&thread),
+            leave(&flat)
+        );
+    }
+
+    #[test]
+    fn segments_roll_round_their_pinnule_only_where_divisions_roll() {
+        let height = |mesh: &Mesh| {
+            mesh.positions
+                .iter()
+                .map(|p| f64::from(p[2]).abs())
+                .fold(0.0, f64::max)
+        };
+        // Divisions and segments rolled round: segments leave the
+        // pinnule's plane, so the leaf is deeper than with its divisions
+        // rolled alone.
+        let c = compound(|c| c.inner_roll = Some(137.5));
+        let laid = divided::layout(&c);
+        let rolled = drawn(&c);
+        assert!(laid.leaflets.iter().any(|l| l.segment.is_some()));
+        assert!(height(&rolled) > 0.2 * 0.01, "{}", height(&rolled));
+        let unrolled = drawn(&compound(|_| {}));
+        assert!(height(&unrolled) < 0.2 * 0.01, "{}", height(&unrolled));
     }
 }

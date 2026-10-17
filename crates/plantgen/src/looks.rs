@@ -182,10 +182,96 @@ pub struct Variegation {
     /// card's length; margins and centres follow the blade's outline.
     #[serde(default = "default_variegation_scale")]
     pub scale: f64,
+    /// For `veins`: the longitudinal veins each side of the midrib that the
+    /// pale tissue follows, after the midrib.
+    #[serde(default = "default_variegation_lines")]
+    pub lines: u32,
+    /// For `veins`: the gap between the cross veinlets that join the
+    /// longitudinal veins, as a share of the blade's length.
+    #[serde(default = "default_variegation_cross")]
+    pub cross: f64,
+    /// For `veins` and `between`: how far the cross veins run toward the
+    /// tip as they go out to the margin, in blade half-widths per
+    /// half-width; 0 for a parallel-veined blade's square net, about 1 for
+    /// a pinnate blade's lateral veins.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub slant: f64,
+    /// A rim along the margin, as a share of the blade's half-width, that
+    /// stays the organ's colour whatever the share: Goodyera's dark edge.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub rim: f64,
+    /// Whether the patches show on both faces (chimeras: the pale tissue
+    /// lacks chlorophyll through the blade) or only the upper (patterns
+    /// in the upper tissue or its air spaces, which the lower face hardly
+    /// shows).
+    #[serde(default, skip_serializing_if = "VariegationFaces::is_both")]
+    pub faces: VariegationFaces,
+    /// For `zone`: where the band lies, 0 to 1 of the way out from the
+    /// midrib to the margin (or, `from` the base, along the blade). The
+    /// share widens it about this line.
+    #[serde(default = "default_variegation_at")]
+    pub at: f64,
+    /// For `zone`: what the band follows.
+    #[serde(default, skip_serializing_if = "ZoneFrom::is_midrib")]
+    pub from: ZoneFrom,
+}
+
+/// What a `zone` variegation's band follows.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ZoneFrom {
+    /// The outline: a band at a constant share of the way from the
+    /// midrib to the margin, which follows the blade's shape (Cyclamen's
+    /// hastate silver, Hepatica's ring of brown inside its lobes).
+    #[default]
+    Midrib,
+    /// The base: a band across the blade at a share of its length, its
+    /// arms leaning back toward the base at the margins, a V opening to
+    /// the base (white clover's mark).
+    Base,
+}
+
+impl ZoneFrom {
+    // Serde's `skip_serializing_if` passes a reference.
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    #[must_use]
+    pub fn is_midrib(&self) -> bool {
+        *self == Self::Midrib
+    }
+}
+
+/// Which faces of a blade a [`Variegation`] shows on.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum VariegationFaces {
+    #[default]
+    Both,
+    Upper,
+}
+
+impl VariegationFaces {
+    // Serde's `skip_serializing_if` passes a reference.
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    #[must_use]
+    pub fn is_both(&self) -> bool {
+        *self == Self::Both
+    }
 }
 
 fn default_variegation_spread() -> f64 {
     0.3
+}
+
+fn default_variegation_lines() -> u32 {
+    3
+}
+
+fn default_variegation_cross() -> f64 {
+    0.07
+}
+
+fn default_variegation_at() -> f64 {
+    0.6
 }
 
 fn default_variegation_scale() -> f64 {
@@ -211,6 +297,21 @@ pub enum VariegationPattern {
     /// Irregular mottling and marbling, fine and coarse together
     /// (cyclamen, trout lily, Pothos 'Marble Queen').
     Mottle,
+    /// Along the veins of a parallel-veined blade, spreading out from
+    /// the midrib as the share grows: a pale midrib stripe, then pale
+    /// cross veinlets beside it, then the longitudinal veins, and at last
+    /// a net round dark green islands (rattlesnake plantains, jewel
+    /// orchids). The midrib's stripe widens and narrows with the blade.
+    Veins,
+    /// Between the veins of a `veins` net: the islands turn pale first,
+    /// the farthest from the midrib soonest, and the veins stay green
+    /// (silver air-space fields: yellow archangel, many begonias). `rim`
+    /// keeps a green margin.
+    Between,
+    /// A band that follows the blade's outline or crosses it at a share of
+    /// its length (`at`, `from`), its edge a little toothed: Cyclamen's
+    /// silver, white clover's V, Hepatica's brown ring.
+    Zone,
 }
 
 impl Variegation {
@@ -245,6 +346,11 @@ impl Variegation {
         within("variegation amount", self.amount, 0.0, 1.0)?;
         within("variegation spread", self.spread, 0.0, 2.0)?;
         within("variegation scale", self.scale, 0.005, 1.0)?;
+        within("variegation lines", f64::from(self.lines), 0.0, 12.0)?;
+        within("variegation cross", self.cross, 0.01, 0.5)?;
+        within("variegation rim", self.rim, 0.0, 0.5)?;
+        within("variegation at", self.at, 0.0, 1.0)?;
+        within("variegation slant", self.slant, 0.0, 4.0)?;
         for channel in self.colour {
             within("variegation colour", f64::from(channel), 0.0, 1.0)?;
         }
@@ -2484,7 +2590,7 @@ impl Shape {
                 ..s.clone()
             }),
             Self::Compound(s) => Self::Compound(Compound {
-                leaflet_width: wide(s.leaflet_width, 0.05, 1.0, 0.2, 0.15),
+                leaflet_width: wide(s.leaflet_width, 0.01, 1.0, 0.2, 0.15),
                 ..s.clone()
             }),
             Self::Sprig(s) => {
@@ -3018,7 +3124,7 @@ impl Compound {
         if form.segments > 0 {
             inner("segments", form.segments)?;
         }
-        check("leaflet_width", self.leaflet_width, 0.05, 1.0)?;
+        check("leaflet_width", self.leaflet_width, 0.01, 1.0)?;
         if self.teeth > 30 {
             return Err(format!(
                 "compound teeth must be between 0 and 30, found {}",
@@ -4006,6 +4112,35 @@ impl OrganLook {
 #[allow(clippy::float_cmp)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_veins_variegation_reads_its_defaults_and_checks_its_ranges() {
+        let read = |json: &str| serde_json::from_str::<Variegation>(json).expect("reads");
+        let veins = read(r#"{"pattern": "veins", "colour": [0.4, 0.5, 0.4], "amount": 0.2}"#);
+        assert_eq!(veins.lines, 3);
+        assert!((veins.cross - 0.07).abs() < 1e-12 && veins.rim.abs() < 1e-12);
+        assert!(veins.faces.is_both() && veins.validate().is_ok());
+        let upper = read(
+            r#"{"pattern": "veins", "colour": [0.4, 0.5, 0.4], "amount": 0.2, "faces": "upper"}"#,
+        );
+        assert_eq!(upper.faces, VariegationFaces::Upper);
+        // Written back, the defaults stay out.
+        let written = serde_json::to_string(&veins).expect("writes");
+        assert!(
+            !written.contains("faces") && !written.contains("rim"),
+            "{written}"
+        );
+        for wrong in [
+            Variegation { lines: 13, ..veins },
+            Variegation {
+                cross: 0.0,
+                ..veins
+            },
+            Variegation { rim: 0.6, ..veins },
+        ] {
+            assert!(wrong.validate().is_err(), "{wrong:?}");
+        }
+    }
 
     #[test]
     fn a_petal_drawn_from_its_ratio_is_as_wide_among_any_count() {
