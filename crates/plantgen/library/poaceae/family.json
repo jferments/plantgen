@@ -4,6 +4,8 @@
   "name": "Poaceae",
   "parent": "order/poales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_apex": {"acuminate": "usually", "acute": "often"},
     "inflorescence_unit": "spikelet",
     "scale_arrangement": "distichous",
     "leaf_form": "blade",
@@ -65,6 +67,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Gramineae (read 2026-10-17): lamina simple, margins nearly always entire, no lobing anywhere in the description; English Wikipedia also gives smooth margins."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "wikipedia", "note": "German Wikipedia, Süßgräser (read 2026-10-17): the blade is always elongate and narrows gradually to a more or less sharp point; a long gradual taper is acuminate, a shorter one acute. DELTA and English Wikipedia do not state the tip."},
     "rules.appearance.organs.panicle.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "traits.inflorescence_unit": {
       "evidence": "SourceInferred",

@@ -87,6 +87,7 @@
           "aspect": 0.045
         },
         "colour": [0.05, 0.13, 0.035],
+        "underside": [0.09, 0.19, 0.07],
         "bend": {
           "cup": 0,
           "droop": 50,
@@ -111,7 +112,17 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 570
+    "wood_density_basic_kg_m3": 570,
+    "height_typical_m": {"min": 15, "max": 25},
+    "height_max_m": 30,
+    "leaf_length_m": {"min": 3, "max": 5},
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.6, "max": 1},
+    "flowering_months": [4, 5, 6, 7],
+    "fruit_size_m": {"min": 0.01, "max": 0.015},
+    "fruiting_months": [8, 9, 10, 11]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Roystonea regia (gwddagg_v2.2_species.csv, read): specific gravity 0.57 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.56, branches 0.56. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -128,7 +139,7 @@
     "appearance": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",
-      "note": "Sargent (1922, Roystonea regia, pp. 107-108): pinnae deep green with slender conspicuous veins, paler below with minute pale dots (foliage and leaflet colour a deep green; the paler underside not drawn, as a card has one colour); the petiole and rachis green with the leaf (leaf_axis), not the trunk's grey; petioles enlarged into bright green cylindrical clasping bases, the crownshaft (sheath colour bright green); the trunk covered with light gray rind tinged with orange (bark a warm grey). Dransfield et al. (2008, Genera Palmarum p. 392): stem tan, grey or white, ringed by prominent or obscure leaf scars; leaflets narrow, tapering to a point (taper 0.6), rather thin (droop 50 degrees, as they hang in photographs). The rings drawn one a leaf, about 3.4 cm apart (0.4 m of trunk a year over twelve leaves), each a darker groove half the gap wide, the bands between them uneven in shade; each frond's sheath drawn as eight cards wrapping the crownshaft, wide enough to close it. Exact shades and the ring pattern set by eye from photographs."
+      "note": "Sargent (1922, Roystonea regia, pp. 107-108): pinnae deep green with slender conspicuous veins, paler below with minute pale dots (foliage and leaflet colour a deep green; the leaflets' underside a paler, greyer green, the dots too small to draw); the petiole and rachis green with the leaf (leaf_axis), not the trunk's grey; petioles enlarged into bright green cylindrical clasping bases, the crownshaft (sheath colour bright green); the trunk covered with light gray rind tinged with orange (bark a warm grey). Dransfield et al. (2008, Genera Palmarum p. 392): stem tan, grey or white, ringed by prominent or obscure leaf scars; leaflets narrow, tapering to a point (taper 0.6), rather thin (droop 50 degrees, as they hang in photographs). The rings drawn one a leaf, about 3.4 cm apart (0.4 m of trunk a year over twelve leaves), each a darker groove half the gap wide, the bands between them uneven in shade; each frond's sheath drawn as eight cards wrapping the crownshaft, wide enough to close it. Exact shades and the ring pattern set by eye from photographs."
     },
     "taxon": {
       "evidence": "Authored",
@@ -159,7 +170,17 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.leaf_division": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L180149), as no source read gives it."}
   },
   "provenance": {
     "sources": [

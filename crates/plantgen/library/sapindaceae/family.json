@@ -29,18 +29,8 @@
       "spiral": "usually",
       "decussate": "sometimes"
     },
-    "leaf_division": {
-      "compound": "often",
-      "simple": "often"
-    },
-    "inflorescence": {
-      "cyme": "often",
-      "panicle": "often",
-      "raceme": "often",
-      "corymb": "sometimes",
-      "umbel": "sometimes",
-      "solitary": "rarely"
-    },
+    "leaf_division": {"compound": "usually", "simple": "often"},
+    "inflorescence": {"panicle": "usually", "cyme": "often", "raceme": "often", "corymb": "sometimes", "umbel": "sometimes", "solitary": "rarely"},
     "fruit_type": {
       "capsule": "often",
       "nut": "often",
@@ -88,16 +78,8 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 362-364, family Sapindaceae: leaves usually spiral, but opposite in Hippocastanoideae (Acer, Aesculus), whose pairs cross. Read as {\"spiral\": \"usually\", \"decussate\": \"sometimes\"}."
     },
-    "traits.leaf_division": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 362, 363, 364, family Sapindaceae: leaf division simple, palmate, trifoliolate, pinnate or bipinnate; read as {\"compound\": \"often\", \"simple\": \"often\"}."
-    },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 362, 363, 364, family Sapindaceae: inflorescence cyme, thyrse or raceme, sometimes umbel- or corymb-like, usually; read as {\"cyme\": \"often\", \"panicle\": \"often\", \"raceme\": \"often\", \"corymb\": \"sometimes\", \"umbel\": \"sometimes\"}. The books add solitary (rarely): Simpson, Plant Systematics (2019) p. 362, 363, 364: solitary."
-    },
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Sapindaceae (read 2026-10-17): most leaves pinnately compound, Aesculus palmately compound, maples simple and palmate; DELTA Sapindaceae (soapberries without maples and buckeyes) codes leaves usually ternate, pinnate or more compound. By genus size: compound-leaved Serjania (~220), Allophylus (~200, trifoliolate) and Paullinia (~180) outweigh simple-leaved Acer (~110) and Dodonaea. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Sapindaceae (read 2026-10-17): flowers mostly in cymes gathered into panicles; DELTA Sapindaceae: usually cymes, thyrses or cincinni. A thyrse (panicle of cymes) is drawn as a panicle, so panicle leads, with the cymose units and the racemose thyrses of Serjania and Paullinia kept as often. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.fruit_type": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

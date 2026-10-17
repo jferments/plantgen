@@ -4,6 +4,8 @@
   "name": "Primulaceae",
   "parent": "order/ericales",
   "traits": {
+    "leaf_base_shape": {"attenuate": "usually"},
+    "leaf_incision": {"none": "usually", "dissected": "rarely"},
     "stamens": {"min": 4, "max": 5, "typical": 5, "low": 3, "high": 9},
     "carpels": 5,
     "woodiness": {
@@ -35,11 +37,7 @@
       "superior": "usually",
       "half_inferior": "rarely"
     },
-    "fruit_type": {
-      "capsule": "often",
-      "berry": "often",
-      "drupe": "sometimes"
-    },
+    "fruit_type": {"drupe": "usually", "capsule": "often", "berry": "sometimes"},
     "rosette": {
       "basal": "often",
       "none": "often",
@@ -62,6 +60,9 @@
     "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Primulaceae (read 2026-10-17): 2,790 species, Myrsinoideae 38 of 53 genera, the primrose subfamily about 600 species (chiefly Androsace and Primula), its fruit a capsule. Wikipedia Ardisia: over 700 species, fruit a somewhat fleshy drupe; Wikipedia Primula: about 430 to 528 species. So the woody myrsines (Ardisia plus Myrsine and kin, roughly 1,700 species less capsular Lysimachia) outnumber the capsular primroses (~600 plus Lysimachia); berries only in small Maesa and Theophrastoideae. Myrsine and Lysimachia sizes not read from a page."},
+    "traits.leaf_base_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Primulaceae (read 2026-10-17): petiole short or blade narrowing gradually to the base, as in the rosette leaves of Primula."},
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Primulaceae (read 2026-10-17): lamina usually undivided, finely pinnatifid in Hottonia."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 394: Simpson (Primulaceae s.s.): stamens 5, rarely 3 to 9, as many as and opposite the corolla lobes; Floral Diagrams p. 307 (Myrsinaceae, part of APG's Primulaceae) gives 4 to 5, rarely 3."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 394: ovary usually of 5 carpels with one locule and free-central placentation (Floral Diagrams p. 305-307 agrees, G5)."},
     "traits": {

@@ -4,6 +4,8 @@
   "name": "Onagraceae",
   "parent": "order/myrtales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "rarely"},
+    "leaf_shape": {"lanceolate": "usually", "ovate": "sometimes"},
     "leaf_habit": {"deciduous": "usually", "evergreen": "sometimes"},
     "corolla_shape": "rotate",
     "flower_merosity": 4,
@@ -33,10 +35,7 @@
       "berry": "rarely",
       "nut": "rarely"
     },
-    "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
-    },
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
     "zygomorphy": "other",
     "leaf_arrangement": {
       "alternate": "often",
@@ -64,6 +63,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Onagraceae (read 2026-10-17): lamina undivided or pinnatifid; mostly undivided in Epilobium, Ludwigia, Fuchsia (my weighting)."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Onagraceae (read 2026-10-17): most leaves simple and lance-shaped; Wikipedia Epilobium: ovate to lanceolate, willow-like."},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Myrtales page, Onagraceae (read 2026-10-16): mostly herbs; above-ground leaves of temperate herbs die back. Weighting inferred, not stated."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: usually 4 free petals, valvate or imbricate, on the hypanthium rim. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
     "traits": {
@@ -91,11 +92,7 @@
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 289 Onagraceae: herbs, rarely shrubs; leaves simple, opposite or alternate; stipules mostly absent or falling early; fruit a capsule, berry or nut."
     },
-    "traits.flower_symmetry": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Onagraceae with Trapaceae: flowers regular or irregular as coded, a state the authors qualify keeping its word (spec-rework/b1/delta/mapdelta.py)."
-    },
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Onagraceae (read 2026-10-17, ~640 spp): flowers regular to very irregular. The big genera (Epilobium, Oenothera, Fuchsia, Ludwigia, together most of the family) have regular 4-merous flowers; zygomorphy is limited to Lopezia, some Clarkia and the former Gaura. Genus sizes are not from the pages read."},
     "traits.zygomorphy": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

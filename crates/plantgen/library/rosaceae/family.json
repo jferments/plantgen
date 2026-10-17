@@ -4,6 +4,8 @@
   "name": "Rosaceae",
   "parent": "order/rosales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "sometimes"},
+    "leaf_margin": {"serrate": "usually", "crenate": "sometimes", "entire": "rarely"},
     "stamens": {"min": 20, "max": 200, "low": 1},
     "carpels": {"min": 1, "max": 50},
     "corolla_shape": "rotate",
@@ -36,13 +38,7 @@
     "stipules": {
       "true": "usually"
     },
-    "fruit_type": {
-      "aggregate": "often",
-      "drupe": "often",
-      "pome": "often",
-      "follicle": "sometimes",
-      "capsule": "sometimes"
-    }
+    "fruit_type": {"aggregate": "often", "pome": "sometimes", "achene": "sometimes", "drupe": "sometimes", "follicle": "rarely", "capsule": "rarely"}
   },
   "forms": {
     "decurrent_tree": {
@@ -71,6 +67,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Rosaceae (read 2026-10-17): simple blades either undivided or dissected. Wikipedia (read 2026-10-17): Prunus leaves unlobed, Cotoneaster entire, Crataegus with lobed or serrated margins, Rubus simple, lobed or compound, Sorbus (Torminalis) maple-like lobes. Weighted by the large unlobed genera (Prunus, Cotoneaster, most Crataegus) and by compound-leaved Rubus/Rosa/Potentilla, whose leaflets are not cut."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China family account (read 2026-10-17): blade margin often saw-toothed, only rarely smooth. DELTA (read 2026-10-17) lists crenate, serrate and dentate margins with entire ones fairly infrequent; Wikipedia Rosaceae says the margin is most often serrate and the Rose page gives serrated leaflets. Cotoneaster (entire) is the main exception among big genera."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 325, 327: stamens 20 to many, rarely 1 or 5, arising centripetally. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 325, 327: carpels 1 to many, gynoecium apocarpous or syncarpous (one in Prunus, five in the apple group, many in Rosa and Fragaria). Book writes ∞; 50 is our stand-in for the upper bound."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 325: corolla apopetalous, usually 5 free petals on the hypanthium rim. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
@@ -110,11 +108,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 325, 327, 328, family Rosaceae: stipules true, often fused to petiole base, usually; read as {\"true\": \"usually\"}."
     },
-    "traits.fruit_type": {
-      "evidence": "SourceInferred",
-      "source": "diversity-evolution-land-plants",
-      "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type follicle (Spiraeoideae), usually. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type drupe (Prunoideae). Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type aggregate (Rosoideae), often. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type pome (Maloideae). Read together as {\"aggregate\": \"often\", \"drupe\": \"often\", \"pome\": \"often\", \"follicle\": \"sometimes\"}. The books add capsule (sometimes): Simpson, Plant Systematics (2019) p. 325, 327, 328: drupe, pome, hip, follicetum, achenecetum or capsule."
-    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Rosaceae and Rubus (read 2026-10-17): genus sizes there put the aggregates first: Rubus (250 to over 1,000 spp, drupelet aggregate) with Potentilla (~500, a head of achenes), Fragaria and Geum, against pomes of Sorbus, Crataegus and Cotoneaster (~260 each, ~800-900 with Malus, Pyrus) and Prunus drupes (~340). Single achenes (Alchemilla ~270, Rosa hips ~100) added as sometimes. Margin depends on Rubus's count. Re-ranks the earlier value, from diversity-evolution-land-plants, whose top states were tied."},
     "traits.ovary_position": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add half_inferior (sometimes): Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164: superior, half_inferior or inferior."}
   }
 }

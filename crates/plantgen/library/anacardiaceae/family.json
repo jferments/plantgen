@@ -4,6 +4,7 @@
   "name": "Anacardiaceae",
   "parent": "order/sapindales",
   "traits": {
+    "leaf_margin": {"entire": "usually"},
     "stamens": {"min": 5, "max": 10, "low": 1, "high": 200},
     "carpels": {"min": 1, "max": 5, "typical": 3, "high": 12},
     "corolla_shape": "rotate",
@@ -13,10 +14,7 @@
       "alternate": "usually",
       "opposite": "rarely"
     },
-    "leaf_division": {
-      "compound": "often",
-      "simple": "often"
-    },
+    "leaf_division": {"compound": "usually", "simple": "often"},
     "stipules": false,
     "flower_symmetry": "actinomorphic",
     "perianth": {
@@ -43,6 +41,8 @@
     "inflorescence": "panicle"
   },
   "evidence": {
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Anacardiaceae (read 2026-10-17): leaves most often odd-pinnate, some trifoliolate, simple or unifoliolate. DELTA (read 2026-10-17): simple or compound, ternate or odd-pinnate. Compound genera (Searsia, Rhus, Lannea, Schinus, Toxicodendron, Spondias, Pistacia) outnumber the simple ones (Mangifera, Semecarpus, Gluta, Anacardium); genus counts not on the pages read."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Anacardiaceae (read 2026-10-17): margins entire at family level; toothed Rhus/Searsia are not singled out there."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359: stamens 5 to 10, rarely 1 or many. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359: carpels 1 to 3 or 5, rarely 12; typical 3 follows Floral Diagrams p. 232 (general formula G (1) 3-13)."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359: usually 5 free petals. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},

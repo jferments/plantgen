@@ -33,7 +33,6 @@
       "bloom_age": 3,
       "joint_flowers": 4,
       "flower_angle": 30,
-      "flower_size": 0.07,
       "bud_share": 0.2,
       "fruit_share": 0.3,
       "bud_size": 0.025,
@@ -62,14 +61,10 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 16,
-          "stamens": 200,
-          "petal_width": 1.0,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.35
         },
-        "colour": [0.85, 0.75, 0.15],
         "accent": [0.6, 0.1, 0.05]
       },
       "bud": {
@@ -89,7 +84,6 @@
     },
     "bodies": {
       "stem": {
-        "colour": [0.22, 0.12, 0.2],
         "flatten": 0.12,
         "dome": 1.0,
         "base": 1.0,
@@ -103,7 +97,6 @@
             "role": "radial",
             "angle": 30,
             "width": 0.001,
-            "colour": [0.35, 0.2, 0.12],
             "angle_spread": 15,
             "aim": 180,
             "arc": 120,
@@ -139,10 +132,18 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [130, 85, 120],
+    "spine_colour": [150, 80, 50],
+    "flower_colour": [225, 190, 45],
+    "flower_size_m": 0.065,
     "radial_spines": {"min": 0, "max": 2, "high": 3},
     "radial_spine_length_m": {"min": 0.04, "max": 0.05, "high": 0.1}
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: stem segments usually reddish or purplish."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: spines rust to yellowish to brownish red; rust here."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: flowers yellow, to 7.5 cm across (typical a little short of it, by hand); fruit ovoid, spineless, its colour and size not given, so they stay set by hand."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: flowers yellow, to 7.5 cm across (typical a little short of it, by hand); fruit ovoid, spineless, its colour and size not given, so they stay set by hand."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",

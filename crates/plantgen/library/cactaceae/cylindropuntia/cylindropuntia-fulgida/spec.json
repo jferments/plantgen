@@ -35,11 +35,10 @@
       "bud_share": 0.2,
       "fruit_share": 0.3,
       "bud_size": 0.015,
-      "fruit_size": 0.04,
       "chains": 0.5,
       "chain_max": 7,
       "bud_rate": 0.55,
-      "flower_area": 0.264,
+      "flower_area": 0.369,
       "bud_area": 0.636,
       "fruit_area": 0.954
     }
@@ -62,14 +61,10 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 8,
-          "stamens": 200,
-          "petal_width": 0.8,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.25
         },
-        "colour": [0.65, 0.3, 0.45],
         "accent": [0.6, 0.5, 0.3]
       },
       "bud": {
@@ -81,35 +76,26 @@
       },
       "fruit": {
         "shape": {
-          "template": "fruit",
-          "aspect": 0.75
-        },
-        "colour": [0.12, 0.22, 0.06]
+          "template": "fruit"
+        }
       }
     },
     "bodies": {
       "stem": {
-        "colour": [0.1, 0.17, 0.07],
-        "valley": [0.05, 0.09, 0.035],
         "dome": 1.0,
         "base": 0.8,
         "tubercles": {
-          "height": 0.18,
-          "width": 0.6,
-          "point": 0.9,
-          "stretch": 1.5
+          "width": 0.6
         },
         "areoles": {
           "spacing": 0.014,
-          "felt_radius": 0.002,
-          "felt": [0.55, 0.5, 0.35]
+          "felt_radius": 0.002
         },
         "spines": [
           {
             "role": "radial",
             "angle": 45,
             "width": 0.0006,
-            "colour": [0.75, 0.68, 0.45],
             "angle_spread": 25,
             "length_spread": 0.35,
             "tip": [0.7, 0.65, 0.5]
@@ -126,7 +112,6 @@
           }
         ],
         "greying": {
-          "colour": [0.25, 0.22, 0.18],
           "years": 6
         },
         "cork": {
@@ -155,13 +140,37 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "tubercle_shape": "broad",
+    "stem_colour": [110, 130, 100],
+    "spine_colour": [215, 190, 100],
+    "spine_colour_aged": [120, 100, 70],
+    "areole_wool_colour": [195, 160, 90],
+    "flower_colour": [190, 80, 140],
+    "fruit_colour_ripe": [115, 135, 100],
+    "fruit_size_m": {"min": 0.02, "max": 0.055},
+    "fruit_width_m": {"min": 0.013, "max": 0.045},
     "joint_length_m": {"min": 0.1, "max": 0.2},
     "joint_width_m": {"min": 0.03, "max": 0.05},
     "stem_diameter_max_m": {"min": 0.1, "max": 0.2},
     "radial_spines": {"min": 2, "max": 12},
-    "radial_spine_length_m": {"min": 0.025, "max": 0.035}
+    "radial_spine_length_m": {"min": 0.025, "max": 0.035},
+    "height_typical_m": {"min": 1, "max": 3},
+    "height_max_m": 4,
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [6, 7, 8],
+    "fruiting_months": [9, 10, 11, 12]
   },
   "evidence": {
+    "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 209, Cylindropuntia fulgida: tubercles broadly oval."},
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: stem segments grey-green, becoming blackish."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: spines yellow, ageing darker."},
+    "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: spines ageing darker; a dark yellowish brown here, by hand."},
+    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: wool gold to tan, becoming grey to black."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: fruit 2 to 5.5 cm long and 1.3 to 4.5 cm in diameter."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
@@ -216,7 +225,13 @@
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
       "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here small, whitish to light yellow. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -96,12 +96,9 @@
           "template": "sprig",
           "leaves": 7,
           "angle": 50,
-          "width": 0.75,
           "widest": 0.65,
           "tip": 0.3,
           "base": 0.4,
-          "teeth": 10,
-          "tooth_depth": 0.05,
           "petiole": 0.15
         },
         "families": {
@@ -116,12 +113,10 @@
       "bloom": {
         "shape": {
           "template": "fruit",
-          "kind": "pome",
           "aspect": 0.85,
           "unripe": 0.7
         },
         "inflorescence": {
-          "kind": "corymb",
           "flowers": 10,
           "size": 0.3,
           "spread": 40
@@ -203,7 +198,12 @@
     "fruiting_months": [
       7,
       8
-    ]
+    ],
+    "height_typical_m": {"min": 3, "max": 8},
+    "woodiness": "woody",
+    "leaf_width_m": {"min": 0.02, "max": 0.05},
+    "sexual_system": "hermaphrodite",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.07}
   },
   "evidence": {
     "taxon": {
@@ -290,7 +290,12 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: grey bark carrying moss and lichen (FEIS: \"Numerous mosses and lichens are present upon the entire bark system\"); broad leaves toothed toward the tip; white flowers; shiny black fruit."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2945426), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2945426), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2945426), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2945426), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2945426), as no source read gives it."}
   },
   "provenance": {
     "sources": [

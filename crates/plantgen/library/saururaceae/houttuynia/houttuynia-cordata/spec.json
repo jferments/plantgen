@@ -56,11 +56,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.75,
           "widest": 0.3,
           "tip": 0.4,
           "base": 1.0,
-          "teeth": 0,
           "petiole": 0.22
         }
       }
@@ -140,7 +138,8 @@
       8,
       9,
       10
-    ]
+    ],
+    "height_max_m": 0.6
   },
   "evidence": {
     "taxon": {
@@ -282,7 +281,8 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after Flora of China and Simpson: stems often purplish red; heart-shaped leaves green above, purplish below, drawn on a simple card widest near its full base, 0.75 as broad as long (Flora of China: blades 4-10 x 2.5-6 cm), as no cordate card is drawn yet. The leaf card's petiole is 0.22 of its length, the flora's petiole against blade and petiole together."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L385534), as no source read gives it."}
   },
   "provenance": {
     "sources": [

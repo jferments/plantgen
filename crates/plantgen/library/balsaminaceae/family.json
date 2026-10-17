@@ -17,9 +17,9 @@
     },
     "leaf_venation": "pinnate",
     "leaf_shape": {
-      "linear": "often",
+      "ovate": "usually",
       "oblong": "often",
-      "ovate": "often"
+      "linear": "rarely"
     },
     "stipules": {
       "false": "usually",
@@ -50,7 +50,8 @@
     },
     "flower_merosity": 5,
     "stamens": 5,
-    "carpels": 5
+    "carpels": 5,
+    "leaf_incision": "none"
   },
   "evidence": {
     "traits": {
@@ -67,6 +68,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Balsaminaceae (read 2026-10-16): fruit an elastically dehiscent capsule in Impatiens and a berry-like drupe in Hydrocera, out of about 600 species; Impatiens is nearly all of them, so capsule usually and drupe (DELTA's term, not berry) rarely."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Balsaminaceae (read 2026-10-17): lamina entire, simple; German Wikipedia, Springkräuter (read 2026-10-17): simple blades (margins sometimes sinuate, not cut into lobes)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Balsaminaceae (read 2026-10-17): blades needle-like to linear, or oblong to ovate; c. 600 spp., almost all Impatiens. The narrow forms belong to Hydrocera (one species) and a few Impatiens; broad blades in the rest (genus knowledge)."
     }
   }
 }

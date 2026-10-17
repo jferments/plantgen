@@ -4,6 +4,7 @@
   "name": "Hypericaceae",
   "parent": "order/malpighiales",
   "traits": {
+    "leaf_incision": "none",
     "flowering_position": "terminal",
     "phyllotaxis_pattern": "decussate",
     "flower_merosity": {"min": 4, "max": 5},
@@ -33,14 +34,11 @@
       "drupe": "rarely"
     },
     "leaf_margin": "entire",
-    "inflorescence": {
-      "corymb": "often",
-      "cyme": "often",
-      "solitary": "often"
-    },
+    "inflorescence": {"cyme": "usually", "corymb": "often", "solitary": "often"},
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Guttiferae incl. Hypericaceae (read 2026-10-17): lamina undivided, margins entire."},
     "traits.flowering_position": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Guttiferae (read 2026-10-16): inflorescences terminal, cymose."},
     "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Guttiferae (incl. Hypericaceae, read 2026-10-16): leaves mostly opposite; family states opposite usually, so crossing pairs."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 312: 4 to 5 sepals and petals."},
@@ -57,11 +55,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 309, 311, 312, family Hypericaceae: leaf margin entire; read as \"entire\"."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 309, 311, 312, family Hypericaceae: inflorescence cyme, corymb or solitary; terminal or axillary; read as {\"corymb\": \"often\", \"cyme\": \"often\", \"solitary\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Hypericum (read 2026-10-17): c. 490-518 species, the great majority of Hypericaceae (~600-700 spp). NZ Flora genus factsheet for Hypericum (read 2026-10-17): inflorescences terminal, in cymes or panicles. The family file's earlier DELTA Guttiferae reading also says terminal and cymose. So cyme leads; corymbiform cymes (many Hypericum, Vismia, Harungana) and single flowers (small-flowered and shrubby Hypericum) stay often. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.sexual_system": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

@@ -28,7 +28,6 @@
       "leaf_angle": 70,
       "raceme": 0.25,
       "flowers": 1,
-      "flower_size": 0.05,
       "pedicel": 0.005,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -60,11 +59,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.8,
           "widest": 0.3,
           "tip": 0.6,
           "base": 1.0,
-          "teeth": 0,
           "tooth_depth": 0.03,
           "petiole": 0.15
         },
@@ -93,6 +90,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_apex": "acute",
+    "leaf_shape": "cordate",
     "height_typical_m": {
       "min": 0.15,
       "max": 0.35,
@@ -111,9 +110,20 @@
     "units_per_inflorescence": {"min": 15, "max": 40},
     "flower_merosity": 2,
     "stamens": 4,
-    "carpels": 2
+    "carpels": 2,
+    "height_max_m": 0.4,
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "alternate",
+    "sexual_system": "hermaphrodite",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.06},
+    "flowering_months": [5, 7],
+    "fruit_size_m": {"min": 0.005, "max": 0.007},
+    "fruiting_months": [8, 9]
   },
   "evidence": {
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Maianthemum dilatatum (beta.floranorthamerica.org, read 2026-10-17): the blade's tip is sharply acute."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Maianthemum dilatatum (beta.floranorthamerica.org, read 2026-10-17): leaf blades heart-shaped, the base lobed either side of a deep notch, the upper leaves deeply so. Stated here so the species does not take Asparagaceae's narrow strap-like blade."},
     "generator.params.bud_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -194,7 +204,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its raceme drawn flower by flower (spec rework L1c): its kind and its flowers from its characters, by the rules at the flowering plants; three flowers at each node, each a white star of four tepals about 5 mm across (tepals 2 to 3.2 mm in the Flora of North America), on short pedicels. From floras and extension pages as quoted in search results; the pages themselves were not read. Its flower laid out whorl by whorl (spec rework P5b): four white tepals in two pairs, four stamens and a two-carpelled pistil, from the characters of its own and Asparagaceae's by the rules at the flowering plants."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L281335), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -625,8 +625,8 @@ fn conifers_bear_cones_once_old() {
         );
     }
     assert_eq!(
-        checked, 16,
-        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock and subalpine fir"
+        checked, 17,
+        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir and western larch"
     );
 }
 
@@ -710,8 +710,8 @@ fn open_conifers_keep_their_lower_crowns() {
         );
     }
     assert_eq!(
-        checked, 11,
-        "the open-grown conifers that are not pines, Alaska and incense cedars, mountain hemlock and subalpine fir among them"
+        checked, 12,
+        "the open-grown conifers that are not pines, Alaska and incense cedars, mountain hemlock, subalpine fir and western larch among them"
     );
 }
 
@@ -749,8 +749,8 @@ fn conifers_keep_above_the_ground() {
         }
     }
     assert_eq!(
-        checked, 16,
-        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock and subalpine fir"
+        checked, 17,
+        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir and western larch"
     );
 }
 
@@ -794,8 +794,8 @@ fn needled_species_grow_solid_shoots() {
         }
     }
     assert_eq!(
-        checked, 13,
-        "the needled conifers (whitebark pine, mountain hemlock and subalpine fir among them), the bald cypress and the juniper's juvenile needles"
+        checked, 14,
+        "the needled conifers (whitebark pine, mountain hemlock, subalpine fir and western larch among them), the bald cypress and the juniper's juvenile needles"
     );
 }
 
@@ -843,15 +843,18 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 89,
+        checked, 103,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
          thorn's heads from their taxa (visual forms Skill 4), and the six clusters of the core \
-         expansion's first ten species, five of its second ten and five of its third, the spikes \
+         expansion's first ten species, five of its second ten, five of its third and three of its fourth, the spikes \
          of the four Chloranthaceae, and sassafras's racemes, avocado's panicles, fish mint's spikes, \
          the umbels of spicebush, California bay, bay laurel and winter's bark, and nutmeg's cymes of \
-         the magnoliids"
+         the magnoliids, the eight the species-facts records name (step 6): bur-sage's and \
+         baneberry's racemes, ragwort's and foothill palo verde's corymbs, golden bamboo's \
+         panicles, and the catkins of quaking aspen and two willows, and the umbels of fennel, \
+         wild carrot and poison hemlock (lacy leaves)"
     );
 }
 

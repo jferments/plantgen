@@ -19,7 +19,8 @@
 //! for its tilt $`\tau`$ from the axis, with
 //! $`(c_x, c_z) = \sin\tau\,(\cos\varphi, \pm\sin\varphi)`$ for a needle at
 //! azimuth $`\varphi`$ round a shoot needled all round (the needles of a
-//! fascicle share a place and fan 0.25 rad apart in azimuth), and
+//! fascicle share a place and fan 0.25 rad apart in azimuth, a short
+//! shoot's tuft of more than 25 evenly all round), and
 //! $`(c_x, c_z) = (\pm\sin\tau, 0)`$ in two ranks. The painter draws each
 //! needle's projection, from $`\mathbf b`$ to $`\mathbf b + \ell\,(\cos\tau\,\mathbf d + c_x\,\mathbf n)`$;
 //! the solid draws it whole, a three-sided pyramid from a base
@@ -318,6 +319,9 @@ mod tests {
     fn look(s: &Needles) -> Look {
         let shape = Shape::Needles(s.clone());
         Look {
+            hairs: None,
+            underside: None,
+            variegation: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             organ: "spray".to_string(),

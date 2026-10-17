@@ -49,9 +49,9 @@
   },
   "appearance": {
     "bark": [
-      0.3,
-      0.2,
-      0.17
+      0.15,
+      0.18,
+      0.07
     ],
     "foliage": [
       0.03,
@@ -68,7 +68,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "teeth": 0,
           "petiole": 0
         },
         "face_up": 0.85
@@ -117,7 +116,13 @@
     "fruiting_months": [
       6,
       7
-    ]
+    ],
+    "height_max_m": 0.15,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "rosette": "none",
+    "leaf_margin": "entire",
+    "fruit_size_m": {"min": 0.01, "max": 0.015}
   },
   "evidence": {
     "taxon": {
@@ -228,8 +233,14 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after Wikipedia's article: glossy, dark green, kidney-shaped evergreen leaves on long stalks, the outline drawn by the kingdom's rules from the stated reniform shape, held nearly flat in a closed mat, as iNaturalist photographs show it (observations 87548580, 381126740)."
-    }
+      "note": "By eye, after Wikipedia's article: glossy, dark green, kidney-shaped evergreen leaves on long, hairy, pale green stalks, the outline drawn by the kingdom's rules from the stated reniform shape, held nearly flat in a closed mat, as iNaturalist photographs show it (observations 87548580, 381126740)."
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654312), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654312), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654312), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654312), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654312), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654312), as no source read gives it."}
   },
   "provenance": {
     "sources": [

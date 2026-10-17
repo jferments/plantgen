@@ -233,8 +233,8 @@ pub struct SpineSet {
     pub length_spread: f64,
     /// How far each spine curves back toward the skin over its length.
     pub curve: f64,
-    /// How far its last fifth turns back as a hook: a fishhook's 120 to
-    /// 180.
+    /// How far its tip turns back as a hook: a fishhook's 120 to 180,
+    /// curled over the last eighth or so of its length.
     pub hook: f64,
     /// Width at the base, metres, and thickness over width: below 1 a
     /// flattened spine.
@@ -492,6 +492,20 @@ impl BodyLook {
         if spacing <= 0.0 {
             return (self.colour, 0.0);
         }
+        // Areoles sit along the crests, so each has the skin from its own
+        // crest halfway to the next on either side; without ribs, a square
+        // of the areoles' spacing.
+        let width = self
+            .ribs
+            .as_ref()
+            .map_or(spacing, |ribs| ribs.spacing.max(spacing));
+        (self.tint_aged(0.0), spines::cover(self, spacing * width))
+    }
+
+    /// The far colour of spines and felt where the spines are `grey` of
+    /// the way to their greying colour (0 young, 1 fully grey).
+    #[must_use]
+    pub fn tint_aged(&self, grey: f64) -> [f32; 3] {
         let felt = self.areoles.felt_radius;
         let felt_area = PI * felt * felt;
         let spine_area: f64 = self
@@ -500,24 +514,19 @@ impl BodyLook {
             .map(|set| f64::from(set.count[0] + set.count[1]) * 0.5 * set.length * set.width)
             .sum();
         let total = felt_area + spine_area;
-        let colour = if total > 0.0 {
-            let spines = spines::colour(self);
-            #[allow(clippy::cast_possible_truncation)]
-            let share = (spine_area / total) as f32;
-            std::array::from_fn(|channel| {
-                self.areoles.felt[channel] + (spines[channel] - self.areoles.felt[channel]) * share
-            })
-        } else {
-            self.colour
+        if total <= 0.0 {
+            return self.colour;
+        }
+        let young = spines::colour(self);
+        let spines = match &self.greying {
+            Some(greying) if grey > 0.0 => mix(young, greying.colour, grey),
+            _ => young,
         };
-        // Areoles sit along the crests, so each has the skin from its own
-        // crest halfway to the next on either side; without ribs, a square
-        // of the areoles' spacing.
-        let width = self
-            .ribs
-            .as_ref()
-            .map_or(spacing, |ribs| ribs.spacing.max(spacing));
-        (colour, spines::cover(self, spacing * width))
+        #[allow(clippy::cast_possible_truncation)]
+        let share = (spine_area / total) as f32;
+        std::array::from_fn(|channel| {
+            self.areoles.felt[channel] + (spines[channel] - self.areoles.felt[channel]) * share
+        })
     }
 }
 
@@ -567,6 +576,9 @@ const MIN_PER_TUBERCLE: f64 = 1.5;
 const MAX_RING_STRETCH: f64 = 2.0;
 const MIN_CAP_RINGS: u32 = 3;
 const MIN_SMOOTH_SIDES: u32 = 12;
+/// How much less the far levels' spine tint covers deep in a rib valley
+/// than on a crest, where the areoles stand.
+const VALLEY_SHOWS: f64 = 0.5;
 
 /// `along` of the way from `a` to `b`, geometrically.
 fn between(a: f64, b: f64, along: f64) -> f64 {
@@ -2009,6 +2021,12 @@ impl Body<'_> {
         let mut previous: Option<u32> = None;
         for &s in &rings {
             let station = self.line.at(s);
+            // Spines grey with age, as the near levels' cards do.
+            let tint = match &look.greying {
+                Some(greying) if cover > 0.0 => look
+                    .tint_aged(((self.graph.age - station.born) / greying.years).clamp(0.0, 1.0)),
+                _ => tint,
+            };
             let first = u32::try_from(wood.positions.len()).unwrap_or(u32::MAX);
             for side in 0..=sides {
                 let t = self.phase
@@ -2029,7 +2047,8 @@ impl Body<'_> {
                     colour = mix(colour, cork.colour, weight);
                 }
                 if cover > 0.0 {
-                    colour = mix(colour, tint, cover);
+                    // Spines stand on the crests, so valleys show more skin.
+                    colour = mix(colour, tint, cover * (1.0 - VALLEY_SHOWS * deep));
                 }
                 if surface.wool > 0.0 {
                     colour = mix(colour, look.areoles.felt, apex_wool(self.line, s));

@@ -113,7 +113,12 @@
     "leaf_length_m": {"min": 0.1, "max": 0.2},
     "leaf_width_m": {"min": 0.005, "max": 0.015},
     "flowering_months": [6, 7, 8, 9],
-    "fruiting_months": [7, 8]
+    "fruiting_months": [7, 8],
+    "height_typical_m": {"min": 0.6, "max": 2},
+    "height_max_m": 2.5,
+    "rosette": "none",
+    "perennation": "rhizome",
+    "fruit_size_m": {"min": 0.003, "max": 0.004}
   },
   "evidence": {
     "traits.culm_length_m": {
@@ -230,7 +235,12 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's reed canarygrass review (Waggy 2010, read 2026-10-16): \"In the Pacific Northwest, reed canarygrass seed matures in late July and early August\"; read as July and August."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."}
   },
   "provenance": {
     "sources": [

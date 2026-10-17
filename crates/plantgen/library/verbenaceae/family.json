@@ -25,8 +25,8 @@
       "typical": 4
     },
     "fruit_type": {
-      "drupe": "often",
-      "schizocarp": "often"
+      "schizocarp": "usually",
+      "drupe": "often"
     },
     "leaf_division": {
       "simple": "usually"
@@ -43,6 +43,13 @@
     },
     "sexual_system": {
       "hermaphrodite": "usually"
+    },
+    "leaf_shape": {
+      "ovate": "usually",
+      "elliptic": "often",
+      "lanceolate": "sometimes",
+      "oblong": "sometimes",
+      "linear": "rarely"
     }
   },
   "evidence": {
@@ -80,6 +87,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 424, 425, 426, family Verbenaceae: sexual system hermaphrodite (rarely dioecious), usually; read as {\"hermaphrodite\": \"usually\"}."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "lucid-ffpa",
+      "note": "Lucid family key, Verbenaceae (read 2026-10-17): outlines from linear to lanceolate, ovate, elliptic, oblanceolate, oblong, orbicular. Ranking ours, weighted by Verbena, Lippia, Lantana, Citharexylum, Stachytarpheta (largest genera in the narrow family), mostly ovate to elliptic."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Verbenaceae (read 2026-10-17) gives genus sizes: Lippia 140, Stachytarpheta 120, Lantana 100, Glandularia 88, Citharexylum 60, Verbena 57, Junellia 38, Aloysia 36, Duranta 31, Chascanum 27. Genera whose dry fruit splits into two or four nutlets (Lippia, Stachytarpheta, Glandularia, Verbena, Junellia, Aloysia, Chascanum: ~500 spp) outnumber the drupe genera Lantana, Citharexylum and Duranta (~190). The page names no fruit types; each genus's fruit is assigned from general knowledge, not a page read, hence medium."
     }
   }
 }

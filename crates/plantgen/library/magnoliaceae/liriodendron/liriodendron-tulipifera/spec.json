@@ -158,7 +158,12 @@
     "fruiting_months": [
       9,
       10
-    ]
+    ],
+    "height_typical_m": {"min": 25, "max": 40},
+    "life_span": "perennial",
+    "rosette": "none",
+    "leaf_shape": "orbicular",
+    "leaf_margin": "entire"
   },
   "evidence": {
     "taxon": {
@@ -305,7 +310,12 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after FNA vol. 3: light grey, deeply furrowed bark; bright green leaves, squarish with two shallow lobes at the tip and two at the sides, on a long petiole (5-11.5 cm against a blade 7.5-15 cm); drawn on the palmate card with five lobes, the card's odd count nearest the leaf's four lobes and notched tip, its broad, short lobes cut 0.3 of the radius, so the blade is drawn a little broader than long (FNA: blade 7.5-15 cm, 12.5-18.5 cm wide), against iNaturalist photographs of its squarish leaf (observations 240131367, 173949336); deeper sinuses fit the width better but draw narrow, pointed lobes the leaf does not have."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L113859), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L113859), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L113859), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L113859), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L113859), as no source read gives it."}
   },
   "provenance": {
     "sources": [

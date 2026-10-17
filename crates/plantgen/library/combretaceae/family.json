@@ -35,6 +35,12 @@
     "fruit_type": {
       "samara": "often",
       "drupe": "often"
+    },
+    "leaf_margin": "entire",
+    "leaf_incision": "none",
+    "leaf_base_shape": {
+      "cuneate": "usually",
+      "attenuate": "sometimes"
     }
   },
   "evidence": {
@@ -42,6 +48,21 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 167 Combretaceae: trees or shrubs, often climbing; leaves opposite, alternate or rarely whorled, simple; no stipules; flowers in spikes or racemes, mostly small; calyx tube joined to the ovary, its limb 4- to 8-lobed; petals 4 or 5 or none; stamens 4 to 10; ovary inferior, rarely half-inferior; fruit often winged (Combretum, read as a samara), rarely opening; Terminalia's drupes (Indian almond) from common knowledge."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Combretaceae (read 2026-10-17): lamina entire; Lucid key (read 2026-10-17): entire."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-17): simple, uncut lamina."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "lucid-ffpa",
+      "note": "Lucid family key, Combretaceae (read 2026-10-17): bases cuneate, attenuate or cordate."
     }
   }
 }

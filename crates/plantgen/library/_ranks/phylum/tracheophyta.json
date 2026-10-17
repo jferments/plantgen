@@ -31,6 +31,26 @@
       "map": {"leaf_venation": {"palmate": 2}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a palmately veined blade's main veins fan from the top of its petiole, two a side with the midrib."
     },
+    "appearance.organs.leaf.hairs.length": {
+      "rule": "leaf_hair_length_m",
+      "why": "A blade's hairs are as long as a flora measures them."
+    },
+    "appearance.organs.leaf.hairs.colour": {
+      "colour": "hair_colour",
+      "why": "A blade's hairs are drawn in the colour they are stated in; white where none is."
+    },
+    "appearance.organs.basal.hairs.length": {
+      "rule": "leaf_hair_length_m",
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade's hairs are as long as a flora measures them."
+    },
+    "appearance.organs.basal.hairs.colour": {
+      "colour": "hair_colour",
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade's hairs are drawn in the colour they are stated in; white where none is."
+    },
+    "appearance.stem_hairs.colour": {
+      "colour": "hair_colour",
+      "why": "The hairs on young stems and leaf stalks are drawn in the colour the plant's hairs are stated in; white where none is."
+    },
     "appearance.organs.leaf.shape.apex_taper": {"template": "simple", "map": {"leaf_apex": {"acuminate": 2.2, "caudate": 2.0, "cuspidate": 0.6, "mucronate": 0.4, "aristate": 0.4, "acute": 1.0, "obtuse": 0.6, "rounded": 0.35, "truncate": 0.12, "emarginate": 0.35, "retuse": 0.35}}, "between": true, "why": "A blade narrows to its tip as its apex is stated, over its last three tenths: with hollow sides drawn out (acuminate, caudate), straight sides to a point (acute), fuller and blunt (obtuse), rounded, or cut square (truncate); a mucro, cusp or bristle stands on a rounded or blunt tip, and a notched tip is rounded."},
     "appearance.organs.leaf.shape.apex_point": {"template": "simple", "map": {"leaf_apex": {"caudate": 0.15, "cuspidate": 0.04, "mucronate": 0.025, "aristate": 0.08}}, "between": true, "why": "A caudate blade ends in a tail, a cuspidate one in a short sharp point, a mucronate one in a tiny point and an aristate one in a bristle, beyond the blade's tip."},
     "appearance.organs.leaf.shape.apex_notch": {"template": "simple", "map": {"leaf_apex": {"emarginate": 0.03, "retuse": 0.012}}, "between": true, "why": "An emarginate blade's tip is notched along its midrib, a retuse one's shallowly."},
@@ -134,6 +154,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "What the broadleaf program's crown_height means: the top of the space the crown may fill, which rises with age at crown_rate toward it and never passes it, so the tallest the plant grows, the height a flora gives as its greatest. Where that greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it."
-    }
+    },
+    "rules.appearance.organs.leaf.hairs.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn as long as the species' stated leaf_hair_length_m; that the stated length is the drawn one is the model's choice."},
+    "rules.appearance.organs.leaf.hairs.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."},
+    "rules.appearance.organs.basal.hairs.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn as long as the species' stated leaf_hair_length_m; that the stated length is the drawn one is the model's choice."},
+    "rules.appearance.organs.basal.hairs.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."},
+    "rules.appearance.stem_hairs.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The hairs on young stems and leaf stalks are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."}
   }
 }

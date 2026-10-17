@@ -25,7 +25,15 @@
       "min": 4,
       "max": 50
     },
-    "carpels": 2
+    "carpels": 2,
+    "leaf_shape": {
+      "lanceolate": "usually",
+      "linear": "often"
+    },
+    "leaf_margin": {
+      "entire": "usually",
+      "serrate": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
@@ -37,6 +45,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Cleomaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "POWO, Cleome (Flora Zambesiaca text) (read 2026-10-17): leaflets narrow, linear to lanceolate, 3-9 per leaf; Wikipedia Cleomaceae (read 2026-10-17): palmately compound, mostly 3-7 leaflets, Cleome the largest genus (199 species). Shape is the leaflets'."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "POWO, Cleome (read 2026-10-17): leaflets entire or finely serrulate (Cayman Islands and Flora Zambesiaca texts)."
     }
   }
 }

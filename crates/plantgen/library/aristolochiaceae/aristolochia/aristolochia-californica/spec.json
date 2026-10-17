@@ -27,7 +27,6 @@
       "renew": 0,
       "adult_age": 3,
       "fruiting": 0.1,
-      "fruit_size": 0.055,
       "pipe_tip": 0.0018,
       "pipe_organ": 0.0036,
       "pipe_rings": 5e-06
@@ -117,6 +116,12 @@
     },
     "leaf_shape": "cordate",
     "leaf_venation": "palmate",
+    "leaf_apex": {
+      "obtuse": "often",
+      "rounded": "often"
+    },
+    "leaf_hairs_beneath": "tomentose",
+    "stem_hairs": "tomentose",
     "leaf_habit": "deciduous",
     "inflorescence": "solitary",
     "flowering_position": "lateral",
@@ -213,6 +218,21 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): venation palmate-pinnate; read as palmate, the main veins from the base."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): blade apex obtuse to rounded."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): young stem ribbed, tomentose. The petiole's hairs are not described; it is drawn with the young stem's (inferred)."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): surfaces abaxially tomentose. The upper face is not described as hairy, so it is left unstated."
     },
     "traits.leaf_habit": {
       "evidence": "Authored",

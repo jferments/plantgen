@@ -33,7 +33,7 @@
 //! | `mesh` | one level of detail, `APMESH1` (below) |
 //! | `impostor-albedo` | PNG, sRGB colour with coverage in alpha |
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
-//! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, coverage in alpha |
+//! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, variegation rank in blue (255 without variegation), coverage in alpha |
 //! | `parts` | the part meshes, `APPARTS2` (below) |
 //! | `part-steps` | the part meshes' coarser steps, `APSTEPS2` (below) |
 //! | `mechanics` | one keyframe's bones and branches, JSON, in motion packages only ([`crate::motion`]) |
@@ -304,6 +304,27 @@ pub struct AtlasLayer {
     /// (`crate::bend`); absent for flat cards.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bend: Option<crate::bend::Bend>,
+    /// The hairs on the template's face (`crate::hairs`): each texel's
+    /// colour then moves toward theirs, darkened alike, by
+    /// [`crate::hairs::cast`] of their density, and they add their sheen
+    /// ([`crate::hairs::sheen`]); absent for a bare face.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hairs: Option<crate::looks::Hairs>,
+    /// The colour of its cards' lower faces, linear RGB, darkened as the
+    /// accent is; absent when it is the card's colour. A card's lower face
+    /// is the back (the side `heading × left` points away from) when that
+    /// normal points up, else the front ([`crate::templates::Face`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub underside: Option<[f32; 3]>,
+    /// Its variegation: a card blends toward `colour`, darkened as the
+    /// accent is, by `clamp((share - rank) / 0.02 + 0.5, 0, 1)` (0 where
+    /// `share` is 0, 1 where it is 1), where `rank` is the atlas texel's
+    /// blue and `share` is `clamp(amount + spread * (seed - 0.5), 0, 1)`
+    /// for the card's seed ([`crate::templates::card_seed`], from its
+    /// base); before the accent blend ([`Templates::paint`]). Absent for
+    /// none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub variegation: Option<crate::looks::Variegation>,
 }
 
 /// Sizes of the plant at one keyframe.
@@ -1572,6 +1593,9 @@ fn assemble(
                     colour: template.colour,
                     accent: template.accent_colour,
                     bend: (!template.bend.is_flat()).then_some(template.bend),
+                    hairs: template.hairs.clone(),
+                    underside: template.underside,
+                    variegation: template.variegation,
                 })
                 .collect(),
         },
@@ -2767,11 +2791,13 @@ pub fn decode_mesh(bytes: &[u8]) -> Result<PlantMesh, PackageError> {
         }
     }
     input.finish()?;
+    // Packages carry no hair tubes ([`PlantMesh::hair_tubes`]).
     Ok(PlantMesh {
         wood,
         cards,
         tufts,
         sites,
+        hair_tubes: Vec::new(),
     })
 }
 

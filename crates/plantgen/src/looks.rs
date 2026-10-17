@@ -51,6 +51,17 @@ pub struct OrganLook {
     /// centre, a leaf's petiole. The main colour if absent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub accent: Option<[f32; 3]>,
+    /// Colour of its lower (abaxial) face in full light, where it differs
+    /// from the upper: the pale, waxy or hairy undersides of many leaves
+    /// (a royal palm's pinnae "paler below", whitebeam, silver maple). The
+    /// same as the upper face if absent. A card's upper face is the one
+    /// that looks more toward the sky (see [`crate::templates::Face`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub underside: Option<[f32; 3]>,
+    /// Patches of another colour on its blades ([`Variegation`]): pale
+    /// margins, centres, stripes, bands or spots, different on every leaf.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub variegation: Option<Variegation>,
     /// How far a card that lies along its organ turns flat to face the
     /// sky, from 0 (as the program placed it) to 1 (level). Broad leaves
     /// held toward the light form the layered crowns of shade-tolerant
@@ -87,7 +98,158 @@ pub struct OrganLook {
     /// juvenile leaves on a young plant. Without them every leaf is alike.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub families: Option<Families>,
+    /// The hairs on its face (its indumentum, [`Hairs`]); a bare face if
+    /// absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hairs: Option<Hairs>,
 }
+
+/// The hairs on an organ's face, its indumentum (Harris and Harris, *Plant
+/// Identification Terminology*: glabrous, pubescent, pilose, villous,
+/// tomentose and the rest), as a renderer draws them: a sheen and a soft
+/// grey cast on its card where they are too fine to see one by one, a
+/// fringe along its edge, and up close, strands of their own
+/// (`crate::hairs`).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Hairs {
+    /// How much of the face the hairs hide, 0 (bare) to 1 (a felt that
+    /// hides it).
+    pub density: f64,
+    /// A hair's length, metres.
+    pub length: f64,
+    /// How a hair stands, 0 (pressed flat, pointing toward the organ's
+    /// tip) to 1 (straight out from the face).
+    pub lie: f64,
+    /// How a hair bends along its length, 0 (straight) to 1 (curled and
+    /// tangled, as wool).
+    pub curl: f64,
+    /// Their colour, linear RGB: white hairs unless stated.
+    pub colour: [f32; 3],
+    /// How thickly they fringe its edge, 0 to 1, where that differs from
+    /// the face's `density`: a ciliate edge on a bare blade.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub edge: Option<f64>,
+}
+
+impl Default for Hairs {
+    fn default() -> Self {
+        Self {
+            density: 0.0,
+            length: 0.001,
+            lie: 0.5,
+            curl: 0.0,
+            colour: [0.8, 0.8, 0.76],
+            edge: None,
+        }
+    }
+}
+
+impl Hairs {
+    /// Whether there are any to draw.
+    #[must_use]
+    pub fn drawn(&self) -> bool {
+        (self.density > 0.0 || self.edge.is_some_and(|edge| edge > 0.0)) && self.length > 0.0
+    }
+}
+
+/// Patches of a second colour on an organ's blades: variegation, where
+/// part of a leaf lacks chlorophyll or another pigment masks it, in the
+/// patterns horticulture names (marginata, medio-picta, striata, zebrina,
+/// maculata), and natural mottling (cyclamen, trout lily). Every card
+/// draws its own share of patches, so leaves differ, as on a variegated
+/// plant, some nearly plain where `spread` is wide.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Variegation {
+    pub pattern: VariegationPattern,
+    /// The patches' colour in full light, linear RGB; darkened in shade
+    /// as the organ's colour is.
+    pub colour: [f32; 3],
+    /// Share of the blade the patches cover on an average leaf, 0 to 1.
+    pub amount: f64,
+    /// How much that share differs from leaf to leaf, 0 to 2: each card's
+    /// share is `amount` plus `spread` times a number of its own from -0.5
+    /// to 0.5.
+    #[serde(default = "default_variegation_spread")]
+    pub spread: f64,
+    /// Size of the stripes, bands, spots or mottles, as a share of the
+    /// card's length; margins and centres follow the blade's outline.
+    #[serde(default = "default_variegation_scale")]
+    pub scale: f64,
+}
+
+fn default_variegation_spread() -> f64 {
+    0.3
+}
+
+fn default_variegation_scale() -> f64 {
+    0.08
+}
+
+/// Where a [`Variegation`]'s patches lie on a blade.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum VariegationPattern {
+    /// Along the margin, narrowest at the tips of lobes and teeth
+    /// (marginata: variegated hollies, hostas, Dracaena marginata).
+    Margin,
+    /// In the middle of the blade, the margin left green (medio-picta).
+    Centre,
+    /// Stripes along the blade (striata: spider plant, variegated grasses
+    /// and irises, Pandanus).
+    Stripes,
+    /// Bands across the blade (zebrina: zebra grass, snake plant).
+    Bands,
+    /// Round spots (maculata: Aucuba, lungwort, Dieffenbachia).
+    Spots,
+    /// Irregular mottling and marbling, fine and coarse together
+    /// (cyclamen, trout lily, Pothos 'Marble Queen').
+    Mottle,
+}
+
+impl Variegation {
+    /// The share of the blade a card with `seed` (0 to 1, see
+    /// [`crate::templates::card_seed`]) covers in patches, 0 to 1.
+    #[must_use]
+    pub fn share(&self, seed: f64) -> f64 {
+        (self.amount + self.spread * (seed - 0.5)).clamp(0.0, 1.0)
+    }
+
+    /// How far a texel of pattern value `pattern` (its rank among the
+    /// blade's texels, 0 to 1; see `crate::templates`) is painted in the
+    /// patches' colour on a card whose patches cover `share` of its blade:
+    /// the texels ranked below `share`, with an edge a fiftieth of the
+    /// blade wide.
+    #[must_use]
+    pub fn weight(pattern: f64, share: f64) -> f64 {
+        if share <= 0.0 {
+            0.0
+        } else if share >= 1.0 {
+            1.0
+        } else {
+            ((share - pattern) / VARIEGATION_EDGE + 0.5).clamp(0.0, 1.0)
+        }
+    }
+
+    /// Whether its values are in range.
+    ///
+    /// # Errors
+    /// Names the first value out of range.
+    pub fn validate(&self) -> Result<(), String> {
+        within("variegation amount", self.amount, 0.0, 1.0)?;
+        within("variegation spread", self.spread, 0.0, 2.0)?;
+        within("variegation scale", self.scale, 0.005, 1.0)?;
+        for channel in self.colour {
+            within("variegation colour", f64::from(channel), 0.0, 1.0)?;
+        }
+        Ok(())
+    }
+}
+
+/// Width of a variegated patch's edge, in the pattern's ranks: a
+/// fiftieth of the blade fades from one colour to the other.
+pub const VARIEGATION_EDGE: f64 = 0.02;
 
 /// Where a leaf's petiole meets its blade (Kaplan, ch. 18: epeltate and
 /// peltate blades). A blade that is not `marginal` is drawn on a petiole
@@ -697,8 +859,8 @@ pub struct Needles {
     /// pine's long thin ones. The card draws needles as fine lines.
     pub width: f64,
     /// Needles in a fascicle, which fan a little round the shoot from one
-    /// place on it: 2, 3 or 5 for a pine; 1 for needles borne singly. Only
-    /// all round a shoot.
+    /// place on it: 2, 3 or 5 for a pine; 1 for needles borne singly; up
+    /// to 45 for a short shoot's tuft, a larch's. Only all round a shoot.
     pub bundle: u32,
 }
 
@@ -905,6 +1067,15 @@ pub struct Compound {
     /// 0 for a leaf divided once.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pinnules: Option<u32>,
+    /// Segments on each pinnule of a thrice-divided leaf (tripinnate,
+    /// triternate, ternate-pinnate), set as `inner` says; unset or 0 for
+    /// a leaf divided twice or once.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub segments: Option<u32>,
+    /// How the divisions after the first are set, where not as `pattern`
+    /// says: a ternate-pinnate leaf's three divisions are each pinnate.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inner: Option<Pattern>,
     /// How far each division's base runs along its rachis as a wing: 0
     /// separate leaflets, 1 a dissected blade's segments.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -916,6 +1087,9 @@ pub struct Compound {
     /// Degrees between a pinna's leaflets and its rachis.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pinnule_angle: Option<f64>,
+    /// Degrees between a pinnule's segments and its rachis.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub segment_angle: Option<f64>,
     /// Degrees between a palmate leaf's outermost leaflets.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub spread: Option<f64>,
@@ -944,6 +1118,34 @@ pub struct Compound {
     /// Each leaflet's stalk, as a share of its length.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub petiolule: Option<f64>,
+    /// The blade's width over its length, where it bounds a pinnate
+    /// leaf's laterals: they reach no farther than its edge, as a
+    /// strap-shaped leaf's short pinnae do.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub blade_width: Option<f64>,
+    /// The nearest levels of detail on which the leaf is drawn as
+    /// geometry, its rachises and each leaflet or segment in three
+    /// dimensions, instead of on its card (`crate::lace`); unset or 0 for
+    /// the card on every level.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lace: Option<u8>,
+    /// Degrees each primary division rises out of the leaf's plane, drawn
+    /// as geometry.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lift: Option<f64>,
+    /// Degrees each division turns at random about its rachis, either way,
+    /// at most: a loose spray.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub scatter: Option<f64>,
+    /// Degrees each primary division turns about the rachis from the one
+    /// below, 0 for two ranks in the leaf's plane, 137.5 for divisions all
+    /// round it.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub roll: Option<f64>,
+    /// Degrees each leaflet of a division turns about its rachis from the
+    /// one before: a bottlebrush's segments all round each pinna.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inner_roll: Option<f64>,
 }
 
 impl Default for Compound {
@@ -955,9 +1157,12 @@ impl Default for Compound {
             petiole: 0.15,
             pattern: None,
             pinnules: None,
+            segments: None,
+            inner: None,
             confluent: None,
             angle: None,
             pinnule_angle: None,
+            segment_angle: None,
             spread: None,
             largest: None,
             lowest: None,
@@ -967,6 +1172,12 @@ impl Default for Compound {
             tip: None,
             base: None,
             petiolule: None,
+            blade_width: None,
+            lace: None,
+            lift: None,
+            scatter: None,
+            roll: None,
+            inner_roll: None,
         }
     }
 }
@@ -2119,7 +2330,7 @@ impl Shape {
                 ..s.clone()
             }),
             Self::Compound(s) => Self::Compound(Compound {
-                leaflet_width: wide(s.leaflet_width, 0.05, 1.0, 0.2, 0.15),
+                leaflet_width: wide(s.leaflet_width, 0.01, 1.0, 0.2, 0.15),
                 ..s.clone()
             }),
             Self::Sprig(s) => {
@@ -2179,7 +2390,7 @@ impl Shape {
                     return Err(format!("needles ranks must be 0 or 2, found {}", s.ranks));
                 }
                 check("width", s.width, 0.003, 0.3)?;
-                count("bundle", s.bundle, 1, 5)?;
+                count("bundle", s.bundle, 1, 45)?;
                 if s.bundle > 1 && s.ranks != 0 {
                     return Err(
                         "needles in bundles stand all round the shoot: ranks must be 0".to_string(),
@@ -2582,7 +2793,7 @@ impl Compound {
     /// once.
     #[must_use]
     pub fn leaflet_length(&self) -> f64 {
-        crate::divided::longest(self.leaflets, self.petiole)
+        crate::divided::Form::of(self).primary_longest()
     }
 
     fn aspect(&self) -> f64 {
@@ -2616,8 +2827,8 @@ impl Compound {
         };
         let divisions = |field: &str, n: u32| -> Result<(), String> {
             match form.pattern {
-                Pattern::Pinnate if !(2..=41).contains(&n) => Err(format!(
-                    "compound {field} of a pinnate leaf must be 2 to 41, found {n}"
+                Pattern::Pinnate if !(2..=81).contains(&n) => Err(format!(
+                    "compound {field} of a pinnate leaf must be 2 to 81, found {n}"
                 )),
                 Pattern::Palmate if !(3..=17).contains(&n) => Err(format!(
                     "compound {field} of a palmate leaf must be 3 to 17, found {n}"
@@ -2625,17 +2836,35 @@ impl Compound {
                 _ => Ok(()),
             }
         };
+        let inner = |field: &str, n: u32| -> Result<(), String> {
+            match form.inner {
+                Pattern::Pinnate if !(2..=41).contains(&n) => Err(format!(
+                    "compound {field} of a pinnate division must be 2 to 41, found {n}"
+                )),
+                Pattern::Palmate if !(3..=17).contains(&n) => Err(format!(
+                    "compound {field} of a palmate division must be 3 to 17, found {n}"
+                )),
+                _ => Ok(()),
+            }
+        };
         divisions("leaflets", self.leaflets)?;
+        if self.segments.unwrap_or(0) > 0 && form.pinnules == 0 {
+            return Err("compound segments are borne on pinnules: set `pinnules`".to_owned());
+        }
         if form.pinnules > 0 {
-            divisions("pinnules", form.pinnules)?;
-            if self.leaflets * form.pinnules > 1200 {
+            inner("pinnules", form.pinnules)?;
+            let segments = form.segments.max(1);
+            if self.leaflets * form.pinnules * segments > 1200 {
                 return Err(format!(
-                    "a compound leaf has at most 1200 leaflets, found {} pinnae of {}",
+                    "a compound leaf has at most 1200 leaflets, found {} pinnae of {} of {segments}",
                     self.leaflets, form.pinnules
                 ));
             }
         }
-        check("leaflet_width", self.leaflet_width, 0.05, 1.0)?;
+        if form.segments > 0 {
+            inner("segments", form.segments)?;
+        }
+        check("leaflet_width", self.leaflet_width, 0.01, 1.0)?;
         if self.teeth > 30 {
             return Err(format!(
                 "compound teeth must be between 0 and 30, found {}",
@@ -2643,11 +2872,18 @@ impl Compound {
             ));
         }
         check("petiole", self.petiole, 0.0, 0.7)?;
+        if self.lace.is_some_and(|levels| levels > 2) {
+            return Err(format!(
+                "compound lace is drawn on at most the 2 nearest levels, found {}",
+                self.lace.unwrap_or(0)
+            ));
+        }
         let set = |value: Option<f64>| value.unwrap_or(f64::NAN);
         for (field, value, low, high) in [
             ("confluent", self.confluent, 0.0, 1.0),
             ("angle", self.angle, 20.0, 90.0),
             ("pinnule_angle", self.pinnule_angle, 20.0, 90.0),
+            ("segment_angle", self.segment_angle, 20.0, 90.0),
             ("spread", self.spread, 30.0, 340.0),
             ("largest", self.largest, 0.0, 1.0),
             ("lowest", self.lowest, 0.2, 1.0),
@@ -2656,6 +2892,11 @@ impl Compound {
             ("tip", self.tip, 0.0, 1.0),
             ("base", self.base, 0.0, 1.0),
             ("petiolule", self.petiolule, 0.0, 0.5),
+            ("blade_width", self.blade_width, 0.02, 3.0),
+            ("lift", self.lift, -90.0, 90.0),
+            ("scatter", self.scatter, 0.0, 90.0),
+            ("roll", self.roll, 0.0, 360.0),
+            ("inner_roll", self.inner_roll, 0.0, 360.0),
         ] {
             if value.is_some() {
                 check(field, set(value), low, high)?;
@@ -2707,6 +2948,9 @@ pub struct Look {
     pub colour: [f32; 3],
     pub shade: [f32; 3],
     pub accent: [f32; 3],
+    /// Its lower face's colour ([`OrganLook::underside`]), if it differs.
+    pub underside: Option<[f32; 3]>,
+    pub variegation: Option<Variegation>,
     pub face_up: f64,
     /// Degrees its card turns about its own length ([`OrganLook::roll`]).
     pub roll: f64,
@@ -2725,6 +2969,8 @@ pub struct Look {
     /// drawn as one ([`Look::of`]). Empty for a look that does not vary;
     /// its card is always drawn with the look itself.
     pub varieties: Vec<Look>,
+    /// The hairs on its face, where it has any to draw.
+    pub hairs: Option<Hairs>,
 }
 
 /// The varieties of each look that varies (spec rework VARY): as many as
@@ -2893,6 +3139,8 @@ pub fn resolve<'a>(
                     colour,
                     shade,
                     accent: look.accent.unwrap_or(colour),
+                    underside: look.underside,
+                    variegation: look.variegation,
                     face_up: look.face_up,
                     roll: look.roll,
                     insertion: look.insertion,
@@ -2918,9 +3166,12 @@ pub fn resolve<'a>(
                     }),
                     shape: drawn,
                     varieties: Vec::new(),
+                    hairs: look.hairs.clone().filter(Hairs::drawn),
                 }
             }
             None => Look {
+                underside: None,
+                variegation: None,
                 organ: name.to_string(),
                 bend: crate::bend::Bend::default_for(&Shape::default_for(kind)),
                 form: crate::blooms::Form::default_for(&Shape::default_for(kind)),
@@ -2935,6 +3186,7 @@ pub fn resolve<'a>(
                 forms: Forms::default(),
                 inflorescence: None,
                 varieties: Vec::new(),
+                hairs: None,
             },
         })
         .collect::<Vec<_>>()
@@ -3260,6 +3512,8 @@ fn in_units(
 fn in_stage(look: &Look, stage: &StageLook) -> Look {
     let colour = stage.colour.unwrap_or(look.colour);
     Look {
+        underside: None,
+        variegation: None,
         organ: look.organ.clone(),
         shape: stage.shape.clone(),
         colour,
@@ -3276,6 +3530,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         // A stage look draws the whole organ.
         inflorescence: None,
         varieties: Vec::new(),
+        hairs: None,
     }
 }
 
@@ -3533,10 +3788,16 @@ impl OrganLook {
                 );
             }
         }
-        for colour in [self.colour, self.shade, self.accent].into_iter().flatten() {
+        for colour in [self.colour, self.shade, self.accent, self.underside]
+            .into_iter()
+            .flatten()
+        {
             for channel in colour {
                 within("colours", f64::from(channel), 0.0, 1.0)?;
             }
+        }
+        if let Some(variegation) = &self.variegation {
+            variegation.validate()?;
         }
         if let Some(season) = &self.season {
             season.validate()?;
@@ -3722,6 +3983,9 @@ mod tests {
         let organs = BTreeMap::from([(
             "leaf".to_string(),
             OrganLook {
+                hairs: None,
+                underside: None,
+                variegation: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Lobed(Lobed::default()),
@@ -3976,6 +4240,9 @@ mod tests {
         organs.insert(
             "bloom".to_string(),
             OrganLook {
+                hairs: None,
+                underside: None,
+                variegation: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4068,6 +4335,9 @@ mod tests {
     fn an_organ_looks_as_it_is_on_the_day() {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
+            hairs: None,
+            underside: None,
+            variegation: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
@@ -4158,6 +4428,9 @@ mod tests {
         organs.insert(
             "bloom".to_string(),
             OrganLook {
+                hairs: None,
+                underside: None,
+                variegation: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4275,6 +4548,9 @@ mod tests {
     /// A cherry's umbel of six (or `kind` of `flowers`), with `season`.
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
+            hairs: None,
+            underside: None,
+            variegation: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),

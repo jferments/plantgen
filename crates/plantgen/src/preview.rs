@@ -308,6 +308,51 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
             },
         },
     };
+    // Hairs long enough to see one by one, as strands of their own.
+    #[allow(clippy::cast_precision_loss)]
+    let samples = (options.height * options.supersample.max(1)).max(1) as f64;
+    // Out of view (with a margin for a card's reach past its middle), a
+    // pixel is infinitely wide: no strands there.
+    let forward = (camera.target - camera.eye).normalize_or(Vec3::Z);
+    let rightward = forward
+        .cross(camera.up)
+        .normalize_or(crate::math::any_perpendicular(forward));
+    let upward = rightward.cross(forward);
+    let pixel = |at: Vec3| {
+        let offset = at - camera.eye;
+        let (half_height, depth) = match camera.projection {
+            Projection::Perspective { fov_y } => {
+                let depth = offset.dot(forward);
+                (
+                    depth.max(1e-6) * crate::math::tan(crate::math::radians(fov_y * 0.5)),
+                    depth,
+                )
+            }
+            Projection::Orthographic { half_height } => (half_height, 1.0),
+        };
+        let (x, y) = (
+            offset.dot(rightward) / (half_height * aspect),
+            offset.dot(upward) / half_height,
+        );
+        if depth <= 0.0 || x.abs() > 1.5 || y.abs() > 1.5 {
+            f64::INFINITY
+        } else {
+            2.0 * half_height / samples
+        }
+    };
+    let strands = if !plant.hair_tubes.is_empty()
+        || templates
+            .templates
+            .iter()
+            .any(|template| template.hairs.is_some())
+    {
+        crate::hairs::strand_mesh(plant, templates, &pixel)
+    } else {
+        Mesh::default()
+    };
+    if !strands.indices.is_empty() {
+        meshes.push((&strands, Material::Hair));
+    }
     let mut shaded = vec![(&figure_mesh, Material::Opaque)];
     shaded.extend(items);
     // A close-up's shadow map covers only a box round what it frames, so its

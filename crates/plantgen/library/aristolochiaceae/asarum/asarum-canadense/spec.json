@@ -50,9 +50,9 @@
   },
   "appearance": {
     "bark": [
-      0.35,
-      0.22,
-      0.2
+      0.17,
+      0.2,
+      0.08
     ],
     "foliage": [
       0.1,
@@ -69,11 +69,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 1.0,
           "widest": 0.3,
           "tip": 0.3,
           "base": 1.0,
-          "teeth": 0,
           "tooth_depth": 0.03,
           "petiole": 0
         },
@@ -125,7 +123,17 @@
     "fruiting_months": [
       6,
       7
-    ]
+    ],
+    "leaf_hairs": "strigose",
+    "leaf_hairs_beneath": "strigose",
+    "leaf_ciliate": true,
+    "stem_hairs": "crisped",
+    "height_max_m": 0.3,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "rosette": "basal",
+    "leaf_margin": "entire",
+    "fruit_size_m": {"min": 0.01, "max": 0.02}
   },
   "evidence": {
     "taxon": {
@@ -226,8 +234,34 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FNA vol. 3 and Simpson: hairy, purplish stalks; soft, dull green, kidney-shaped leaves (the western species' card)."
-    }
+      "note": "By eye, after FNA vol. 3 and Simpson: hairy stalks, pale green with a reddish cast as iNaturalist photographs show them (observations 7864289, 117742491, 340807025); soft, dull green, kidney-shaped leaves (the western species' card)."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces adaxially appressed-hirsute, at least along main veins: stiff hairs pressed flat, which Harris and Harris call strigose."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces abaxially appressed-hirsute, usually sparsely so (strigose)."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): petiole 6-20 cm, crisped-hirsute: stiff hairs, curled (crisped). The plant has no stem above ground, so its hairs are drawn on its leaf stalks."
+    },
+    "traits.leaf_ciliate": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): marginal hairs perpendicular to margin or curved toward apex."
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654269), as no source read gives it."}
   },
   "provenance": {
     "sources": [

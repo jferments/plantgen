@@ -535,6 +535,20 @@ impl Unit {
         }
     }
 
+    /// How thick, over its length, a unit draws the pedicel that bears it,
+    /// as a share of its [`Self::width`]: a flower's pedicel is far
+    /// thinner than the flower is wide (a brodiaea's or a rhododendron's 1
+    /// to 2 mm under a flower 3 to 4 cm long), so it is drawn as for a
+    /// unit 0.35 as wide; a head, a fruit and a spikelet are as wide as
+    /// they are.
+    #[must_use]
+    pub fn stalk_width(self) -> f64 {
+        match self {
+            Self::Flower => 0.35,
+            unit => unit.width(),
+        }
+    }
+
     /// How far across the unit spans over its length, a spikelet's awns
     /// included: what a card must hold.
     #[must_use]
@@ -1314,7 +1328,7 @@ fn lay(
     let width = if cluster.branch.is_some() {
         1.0
     } else {
-        unit.width()
+        unit.stalk_width()
     };
     for &(_, from, to) in &axis.stalks {
         laid.layout.stalks.push(Stalk {
@@ -1882,7 +1896,7 @@ fn draw_laid(
     } else {
         (part, 1.0)
     };
-    let width = cluster.unit.width();
+    let width = cluster.unit.stalk_width();
     let detail = Detail::for_count(
         u32::try_from(laid.units.len()).unwrap_or(u32::MAX),
         part.coarse,
@@ -3084,6 +3098,9 @@ mod tests {
             &std::collections::BTreeMap::from([(
                 "bloom".to_string(),
                 crate::looks::OrganLook {
+                    hairs: None,
+                    underside: None,
+                    variegation: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Fruit(Fruit {
@@ -3169,6 +3186,9 @@ mod tests {
             &std::collections::BTreeMap::from([(
                 "bloom".to_string(),
                 crate::looks::OrganLook {
+                    hairs: None,
+                    underside: None,
+                    variegation: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape,

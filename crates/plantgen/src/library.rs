@@ -2630,7 +2630,7 @@ mod tests {
         assert_eq!(home.home.as_deref(), Some("pinaceae/family.json"));
         assert_eq!(home.extends.as_deref(), Some("conifer"));
         assert_eq!(home.named_by, ["pinaceae/family.json"]);
-        assert_eq!(home.species.len(), 10);
+        assert_eq!(home.species.len(), 11);
         let base = homes.iter().find(|home| home.name == "conifer").unwrap();
         assert_eq!(base.home, None);
         assert_eq!(base.species.len(), 0);
@@ -3193,14 +3193,8 @@ mod tests {
         // Foxglove: single leaves under its order's crossing pairs turn
         // by the golden angle, as the genus's leaves decide.
         assert_eq!(arrangement("digitalis-purpurea"), (Some(1.0), Some(137.5)));
-        // A daisy family's tie sets nothing where the genus says nothing.
-        let daisy = library.inherited("leucanthemum-vulgare").unwrap();
-        assert_eq!(
-            daisy.rules["generator.params.leaves_per_node"].1.as_deref(),
-            Some(
-                "`leaf_arrangement` has no one most usual state: alternate and opposite are each often"
-            )
-        );
+        // Oxeye daisy: single leaves, as most of its family's are.
+        assert_eq!(arrangement("leucanthemum-vulgare").0, Some(1.0));
         // Maples: their genus's opposite leaves, in pairs crossing at a
         // quarter turn, though most of their family's leaves are spiral.
         assert_eq!(arrangement("acer-macrophyllum"), (Some(2.0), Some(90.0)));
@@ -3381,6 +3375,30 @@ mod tests {
                 .and_then(serde_json::Value::as_object_mut)
             {
                 parent.remove(key);
+            }
+            // A rule's value may be all its section holds, as a flower's
+            // form is only its cup: the section goes with it, but a look
+            // stays, so later paths still find its notes.
+            let mut emptied = outer;
+            while let Some((above, key)) = emptied.rsplit_once('.') {
+                if above == "appearance.organs" {
+                    break;
+                }
+                let Some(parent) = above
+                    .split('.')
+                    .try_fold(&mut *spec, step)
+                    .and_then(serde_json::Value::as_object_mut)
+                else {
+                    break;
+                };
+                if !parent
+                    .get(key)
+                    .is_some_and(|inside| inside.as_object().is_some_and(serde_json::Map::is_empty))
+                {
+                    break;
+                }
+                parent.remove(key);
+                emptied = above;
             }
             if let Some(notes) = spec
                 .get_mut("evidence")

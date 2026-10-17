@@ -46,9 +46,11 @@ pub mod gltf;
 pub mod graph;
 pub mod ground;
 pub mod grow;
+pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
+pub mod lace;
 pub mod leaves;
 pub mod library;
 pub mod litter;
@@ -555,7 +557,59 @@ pub mod venation;
 /// colour on a ring at any distance, not as bare sticks; seventeen
 /// species state their fruiting months from their sources, so their year
 /// now bears fruit.
-/// 88: a lineage whose flowers end its shoots (`flowering_position`
+/// 88: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
+/// scales (the new `palea` organ, in `stipe_scale_colour`), largest at
+/// its foot, on its frond and on the stipe bases of an old crown; a
+/// rachis narrows from its foot to its tip, and a small frond's is
+/// thinner (fern program revision 8); the sword fern's stipe is as long
+/// as Flora of North America gives (87 is flowers with no perianth,
+/// #168).
+/// 89: a far level's spine tint greys with each station's age as the near
+/// levels' spines do, covers a rib valley half as much as a crest, and
+/// hides half the skin it did, so a spiny cactus keeps its colour and rib
+/// shading from afar; cacti state stem, spine, old spine and wool colours,
+/// which the family's rules draw (88 is scaly fern stipes, #163).
+/// 90: hairs (`crate::hairs`): a blade's hairs as floras name them
+/// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
+/// sheen and a backlit glow, fringe its edge, and up close stand from it
+/// as strands of their own (89 is cactus colours, #156).
+/// 91: leaves with two faces and variegation: a look's `underside` colour
+/// paints its cards' lower faces (the side that looks more toward the
+/// ground), and its `variegation` paints pale margins, centres, stripes,
+/// bands, spots or mottles, a different share on every leaf; the royal
+/// palm's pinnae are paler below and the rattlesnake plantain's leaves
+/// carry their pale midvein band (90 is leaf hairs, #166).
+/// 92: stem hairs (`stem_hairs`, `crate::hairs::Tube`): the hairs on
+/// young stems and leaf stalks, in a blade's words and `crisped`, cast
+/// the first year's wood toward their colour, wear off in its second and
+/// up close stand from it as strands (91 is leaves with two faces, #164).
+/// 93: a hooked spine curls into an open J at its tip: its shaft runs
+/// further and its hook turns over its last two pieces, not folded flat on
+/// the shaft over the last one (92 is stem hairs, #173).
+/// 94: slender pedicels and short-shoot tufts (`Unit::stalk_width`): a
+/// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
+/// bundle of more than five, up to 45, is a short shoot's tuft spread all
+/// round, the tufts half a needle apart (93 is hooked spines, #176).
+/// 95: lacy leaves: a compound leaf divides up to three times (`segments`,
+/// `inner`); one whose taxa say how its divisions are held
+/// (`division_planes`) is drawn on the two nearest levels as geometry, its
+/// divisions lifted, scattered or set all round their rachis
+/// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
+/// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
+/// 96: species draw from the species-facts records: 189 species state the
+/// characters no source of theirs gives (heights, leaf sizes, shapes,
+/// margins and habits, inflorescence and fruit sizes, months, rosettes)
+/// as the records estimate them, and a look a species set by hand gives
+/// way wherever a rule fed by a stated fact now sets it (leaf widths,
+/// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
+/// strap leaf is never narrower than its card draws (95 is lacy
+/// leaves, #180).
+/// 97: lacy leaves drawn as geometry: a segment at least ten times as long
+/// as it is wide is a round thread, bowed a little (`lace::THREAD`), and a
+/// thrice-divided leaf whose divisions roll round their rachis sets its
+/// segments round each pinnule's too; a leaflet may be as narrow as a
+/// hundredth of its length (96 is the species-facts records, #171).
+/// 98: a lineage whose flowers end its shoots (`flowering_position`
 /// terminal or both: `tip_bloom`, broadleaf revision 17) ends each shoot
 /// tip that has stopped at the crown's edge, once adult and in the light,
 /// in its year's blooms, nearly along the shoot, so its flowers and fruit
@@ -563,5 +617,5 @@ pub mod venation;
 /// other plants draw as before. Sarcandra and Chloranthus serratus state
 /// their terminal inflorescences. The leaf-arrangement check counts only
 /// leaves born with their internode, so short shoots crowding a node are
-/// not read as a whorl.
-pub const GENERATOR_REVISION: u32 = 88;
+/// not read as a whorl (97 is lacy leaves drawn as geometry, #183).
+pub const GENERATOR_REVISION: u32 = 98;

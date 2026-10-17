@@ -13,8 +13,8 @@
     "stipules": true,
     "sexual_system": "monoecious",
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
     },
     "zygomorphy": "other",
     "inflorescence": {
@@ -41,7 +41,11 @@
       "typical": 30,
       "low": 4
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
@@ -83,6 +87,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Begoniaceae (read 2026-10-16): mostly perennial succulent herbs."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Begoniaceae (read 2026-10-17): lamina usually uncut, sometimes palmatifid."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Begoniaceae (read 2026-10-17): flowers somewhat to very irregular in perianth, stamens or both; c. 920 spp., nearly all Begonia. Regular flowers only in Hillebrandia and some female Begonia flowers."
     }
   }
 }

@@ -10,7 +10,7 @@
 //! it.
 //!
 //! A spine is a tapered solid of three sides along a centreline of three
-//! pieces that bends by its set's curve and, over its last piece, its hook
+//! pieces that bends by its set's curve and, over its last two, its hook
 //! ([`solid`]); the felt is a low six-sided cone round the areole. Farther
 //! away an areole is two cards whose templates are rendered from one tuft's
 //! spines: the star seen face on and the fan seen from the side ([`star`],
@@ -39,6 +39,18 @@ pub const FELT_TRIANGLES: usize = 6;
 /// radius there as a share of the base's.
 const JOINTS: [f32; 2] = [0.45, 0.8];
 const TAPER: [f32; 3] = [1.0, 0.62, 0.3];
+
+/// Where a spine's joints sit for a hook of `hook` degrees. A hook is the
+/// curl at the very tip: past 90 degrees the shaft runs to 72% of the
+/// length, the next piece turns half the hook and the last the whole, so a
+/// fishhook is an open J rather than a tip folded flat on its shaft.
+fn hook_joints(hook: f32) -> [f32; 2] {
+    let k = (hook / 90.0).clamp(0.0, 1.0);
+    [
+        JOINTS[0] + (0.72 - JOINTS[0]) * k,
+        JOINTS[1] + (0.88 - JOINTS[1]) * k,
+    ]
+}
 
 /// One areole of a body: where its spines grow from.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -273,18 +285,24 @@ pub fn expand(tuft: &Tuft, look: &BodyLook, out: &mut Vec<Spine>) {
                 scale(toward, felt * 0.45),
             );
             let bend = |share: f32| radians(curve * share);
+            let hook = single(set.hook);
+            let joints = hook_joints(hook);
             let pieces = [
-                (JOINTS[0], rotate(direction, axis, -bend(JOINTS[0] * 0.5))),
+                (joints[0], rotate(direction, axis, -bend(joints[0] * 0.5))),
                 (
-                    JOINTS[1] - JOINTS[0],
-                    rotate(direction, axis, -bend((JOINTS[0] + JOINTS[1]) * 0.5)),
-                ),
-                (
-                    1.0 - JOINTS[1],
+                    joints[1] - joints[0],
                     rotate(
                         direction,
                         axis,
-                        -(bend((JOINTS[1] + 1.0) * 0.5) + radians(single(set.hook))),
+                        -(bend((joints[0] + joints[1]) * 0.5) + radians(hook * 0.5)),
+                    ),
+                ),
+                (
+                    1.0 - joints[1],
+                    rotate(
+                        direction,
+                        axis,
+                        -(bend((joints[1] + 1.0) * 0.5) + radians(hook)),
                     ),
                 ),
             ];
@@ -769,7 +787,9 @@ pub fn cover(look: &BodyLook, area: f64) -> f64 {
     for set in &look.spines {
         let count = f64::from(set.count[0] + set.count[1].max(set.count[0])) * 0.5;
         let lying = crate::math::cos(crate::math::radians(set.angle)).max(0.2);
-        hidden += count * set.length * lying * set.width * 0.7;
+        // Thin spines hide less than their outline: 0.35 keeps the far
+        // levels' mean colour with the nearest level's across the cacti.
+        hidden += count * set.length * lying * set.width * 0.35;
     }
     (hidden / area).clamp(0.0, 0.85)
 }
@@ -875,6 +895,20 @@ mod tests {
         let first = normalize(sub(a[0].points[1], a[0].points[0]), [0.0; 3]);
         assert!(dot(heading(&a[0]), first) > 0.99);
         assert!(dot(heading(&b[0]), first) < -0.5, "a fishhook turns back");
+        // An open J: the tip stands clear of the shaft, and the hook takes
+        // only the end of the spine.
+        let p = &b[0].points;
+        let off = sub(p[3], p[0]);
+        let across = sub(off, scale(first, dot(off, first)));
+        let gap = dot(across, across).sqrt();
+        assert!(
+            gap > 0.1 * 0.05,
+            "the hook's tip folds onto its shaft: {gap}"
+        );
+        assert!(
+            dot(sub(p[1], p[0]), first) > 0.65 * 0.05,
+            "the shaft runs on"
+        );
     }
 
     #[test]

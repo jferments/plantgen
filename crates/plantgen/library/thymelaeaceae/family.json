@@ -50,7 +50,8 @@
       "drupe": "usually",
       "nut": "sometimes",
       "capsule": "sometimes"
-    }
+    },
+    "leaf_incision": "none"
   },
   "evidence": {
     "traits": {
@@ -87,6 +88,11 @@
       "evidence": "SourceInferred",
       "source": "stevens-apweb",
       "note": "APweb, Malvales page, Thymelaeaceae (read 2026-10-16): capsule, drupe or achene-like. Wikipedia (read 2026-10-16): fruit olive-like. 'usually' drupe inferred."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Thymelaeaceae (read 2026-10-17): lamina undivided. Wikipedia, Daphne: undivided leaves."
     }
   }
 }

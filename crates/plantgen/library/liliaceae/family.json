@@ -4,6 +4,8 @@
   "name": "Liliaceae",
   "parent": "order/liliales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_margin": "entire",
     "flower_merosity": 3,
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -51,6 +53,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Liliaceae (read 2026-10-17): leaves simple, lamina undivided."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-17): lamina entire; Wikipedia Liliaceae: margins entire."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "kew-powo",

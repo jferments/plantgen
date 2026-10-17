@@ -69,9 +69,19 @@
 # years, a short stub leaning out among the living fronds' feet, so an
 # old crown is clothed in old stipe bases (Dryopteris, p. 297).
 #
+# Revision 8 (visual forms fern crown): a rachis narrows from its foot to
+# rachis_tip of its foot's radius at its tip, and a small frond's is
+# thinner, as the square root of its length's share of a full frond. A
+# stipe may be scaly: `scales` scales round each of its pieces, pressed
+# toward its tip scale_angle degrees off it, scale_length long at its
+# foot and scale_top of that at the stipe's top, as floras word a
+# fern's scales, "gradually diminishing in size distally" (Flora of
+# North America, Polystichum munitum). A stipe base that outlives its
+# frond keeps its scales, so an old crown is a shaggy clump of them.
+
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem polypodiidae 7;
+lsystem polypodiidae 8;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -88,6 +98,13 @@ param angle_spread = 8;       # spread of each frond's angle
 param frond_radius = 0.002;   # the rachis' radius at its foot
 param pieces = 12;            # pieces of the rachis
 param stipe = 0.25;           # share of the frond's length without pinnae
+param rachis_tip = 0.35;      # the rachis' radius at its tip, as a share of its foot's
+# Scales on the stipe.
+param scales = 0;             # scales round each piece of the stipe; none by default
+param scale_length = 0.012;   # a scale at the stipe's foot, m
+param scale_top = 0.4;        # a scale at the stipe's top, as a share of one at its foot
+param scale_angle = 12;       # how far a scale stands off the stipe
+param palea_area;             # leaf area of a scale 1 m long, m²; its look's by default
 # Pinnae.
 param pinna_length = 0.2;     # the longest pinna, as a share of the frond's length
 param pinna_peak = 0.3;       # where it sits along the blade, 0 to 1
@@ -126,9 +143,12 @@ module Pq(z);                 # a pair of pinnae z long
 module Cn(n, c);              # a new crown on its rhizome, the n-th, starting c years old
 module Sb(s, a);              # a frond's stipe base, its frond s long, opening at a degrees
 module Fe(l, e);              # a frond l long and its foot, emerging at phase e
+module Sk(z, r, n, o);        # n scales z long in a ring round a stipe r in radius, turned o degrees
+module Sq(z, r, l);           # a piece of stipe l long and r in radius, scales z long along it
 module Fb(r, j, e);           # a frond's foot, r of crown_radius out at j degrees from its side, its frond emerging at phase e
 
 organ pinna leaf as leaflet area pinna_area;
+organ palea leaf as palea area palea_area;
 
 structure frond leaf;         # one frond: its rachis and its pinnae
 
@@ -166,7 +186,7 @@ rule Fb(r, j, e) : age + dt >= frond_life + stub_life -> ;
 # A frond: it opens from the vertical with age and sags as it ages, then its
 # rachis, piece by piece.
 decompose Fr(s, a, e) ->
-    frond !(frond_radius) Pc(0, max(1, round(pieces)), s, e);
+    frond !(frond_radius * sqrt(min(1, s / frond_length))) Pc(0, max(1, round(pieces)), s, e);
 decompose Pc(k, m, s, e) : m > 1 ->
     Pc(k, floor(m / 2), s, e) Pc(k + floor(m / 2), m - floor(m / 2), s, e);
 
@@ -181,8 +201,12 @@ interpret Pc(k, m, s, e) -> Pp(k, s, e);
 
 interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe ->
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
-    F(s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
+    !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
+    Sq(scale_length * lerp(1, scale_top, (k + 0.5) / pieces / stipe),
+       frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces),
+       s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
 interpret Pp(k, s, e) ->
+    !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
     F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
     Pn(k, s, e, 0)
@@ -202,8 +226,25 @@ interpret Fb(r, j, e) ->
 # narrowing to its broken end.
 interpret Sb(s, a) : age + dt < frond_life -> ;
 interpret Sb(s, a) ->
-    &(a + 10) !(frond_radius * 1.3) F(s * stub * 0.5)
-    &(8) !(frond_radius * 0.8) F(s * stub * 0.5);
+    &(a + 10) !(frond_radius * 1.3) Sq(scale_length, frond_radius * 1.3, s * stub * 0.5)
+    &(8) !(frond_radius * 0.8) Sq(scale_length * 0.8, frond_radius * 0.8, s * stub * 0.5);
+
+# A piece of stipe clothed in its scales: three rings of a third of them
+# along it, each turned from the last, so they overlap like shingles.
+interpret Sq(z, r, l) : scales >= 1 ->
+    Sk(z, r, ceil(scales / 3), 0) F(l / 3)
+    Sk(z, r, ceil(scales / 3), 40) F(l / 3)
+    Sk(z, r, ceil(scales / 3), 80) F(l / 3);
+interpret Sq(z, r, l) -> F(l);
+
+# A ring of scales round a stipe, each from its surface and pressed toward
+# its tip, turned a little at random; halved till one is left, so the
+# ring nests no deeper than a few levels.
+interpret Sk(z, r, n, o) : n >= 2 -> Sk(z, r, floor(n / 2), o) Sk(z, r, n - floor(n / 2), o);
+interpret Sk(z, r, n, o) : n >= 1 ->
+    [ /(o + uniform(-20, 20)) &(90) f(r) ^(90 - scale_angle) palea(z * uniform(0.7, 1.3)) ]
+    /(360 / ceil(scales / 3));
+interpret Sk(z, r, n, o) -> ;
 
 # A pair of pinnae half a piece along: sized along the blade (b from 0 at
 # the stipe's top to 1 at the tip), folded small while coiled.

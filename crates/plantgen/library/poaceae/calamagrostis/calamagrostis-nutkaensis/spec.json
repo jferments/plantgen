@@ -120,7 +120,15 @@
     "clonal": true,
     "lower_glume_length_m": {"min": 0.005, "max": 0.007},
     "awn_form": "geniculate",
-    "flowering_months": [7, 8]
+    "flowering_months": [7, 8],
+    "height_typical_m": {"min": 0.6, "max": 1.5},
+    "height_max_m": 1.8,
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "perennation": "rhizome",
+    "leaf_length_m": {"min": 0.3, "max": 0.8},
+    "fruit_size_m": {"min": 0.002, "max": 0.003},
+    "fruiting_months": [7, 8]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -227,7 +235,15 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Calamagrostis no. 8, fig. 356): flowers July-August, along the coast from Alaska to central California."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L403123), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L403123), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L403123), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L403123), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L403123), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L403123), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L403123), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L403123), as no source read gives it."}
   },
   "provenance": {
     "sources": [
