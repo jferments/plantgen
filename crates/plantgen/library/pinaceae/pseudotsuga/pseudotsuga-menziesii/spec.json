@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 0.6,
       "cone_chance": 0.12,
       "cone_area": 0.589,
       "height_rate": 0.018,
@@ -153,6 +154,11 @@
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
       "note": "The Woody Plant Seed Manual (Pseudotsuga, table 3, read): var. menziesii bears seed from 7 to 10 years, commercial collections from 20 to 25. FEIS (Uchytil 1991, read): appreciable seed from 20 to 30 years in open-grown coast Douglas-fir. The range runs from the earliest seed to appreciable crops. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 15 years set by hand."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of the leader's yearly growth a branch grows, fitted so the drawn crown's widths match the photographed open-grown trees', mature (5 trees): .00 .38 .50 .60 .54 .54 .40 .34 .24 .07; drawn at 60 years .35 .47 .54 .62 .64 .54 .42 .30 .21 .11."
     },
     "generator.params": {
       "evidence": "Authored",

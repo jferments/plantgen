@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 0.55,
       "cone_chance": 0.15,
       "cone_years": 1,
       "height_rate": 0.019,
@@ -201,6 +202,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923) p. 63, Tsuga mertensiana: \"cones sessile, oblong-cylindric, narrowed toward both ends, 25-75 mm. long\"."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of the leader's yearly growth a branch grows, fitted so the drawn crown's widths match the photographed open-grown trees', young (3 trees): .69 .65 .58 .56 .50 .41 .37 .28 .18 .07; drawn at 60 years .68 .71 .57 .58 .44 .37 .30 .24 .15 .07."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 0.5,
       "cone_chance": 0.12,
       "cone_years": 2,
       "cone_area": 0.55,
@@ -132,6 +133,11 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS (Griffith 1992, read): sexual maturity varies from 20 to 40 years. The Woody Plant Seed Manual (Picea, table 2, read): minimum seed-bearing age 20. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 20 years set by hand."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of the leader's yearly growth a branch grows, fitted so the drawn crown's widths match the photographed open-grown trees', young (3 trees): .70 .72 .68 .62 .52 .43 .40 .33 .23 .08; drawn at 60 years .57 .69 .64 .58 .51 .42 .31 .24 .15 .08."
     },
     "generator.params": {
       "evidence": "Authored",

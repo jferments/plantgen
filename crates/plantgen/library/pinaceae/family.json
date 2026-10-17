@@ -16,15 +16,19 @@
   },
   "rules": {
     "generator.params.apical": {
-      "rule": "0.6",
-      "why": "A fir, spruce, hemlock or Douglas-fir holds its branches under its leader (apical control): a branch's yearly shoot stays under about six tenths of the leader's, so as the leader slows near the tree's height the top branches slow too and the crown stays pointed and conical."
+      "rule": "0.5",
+      "why": "A fir, spruce, hemlock or Douglas-fir holds its branches under its leader (apical control): each year a branch grows about half as far as the leader rises, so the crown is a cone about as wide as its depth, and stays pointed as the leader slows."
+    },
+    "generator.params.bend_set": {
+      "rule": "0.15",
+      "why": "The family's limbs spring back from most of each year's sag: Farjon gives its branches as horizontal or spreading, the lower ones curving down only at their ends. Keeping half of each year's sag, a limb grown 150 years hung flat against the trunk and the old crown stood as a column."
     }
   },
   "evidence": {
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Old conifers (pinidae revision 13): apical control as Wilson (2000) describes it, the leader holding its branches' growth below its own. The share, 0.6, is fitted by eye at 150 years to Farjon's crowns: Sitka spruce pyramidal or broad conical, Douglas-fir columnar when old with a pointed top. Uncapped, the branches kept their pace while the leader slowed and the crowns stood as tubes with flat heads."
+      "note": "Old conifers (pinidae revision 13): apical control as Wilson (2000) describes it, the leader holding its branches' growth below its own. A branch's yearly shoot is a share of the leader's, so a whorl's branches lengthen as the leader above them rises and the crown is a cone. With a fixed yearly length instead, the crowns stood as tubes whose top halves were twice as wide as photographed open-grown trees' (inaturalist-crowns-2026-10); 0.5 is the middle of the six species fitted to those photographs, 0.36 to 0.6. bend_set 0.15 (the same revision): at the Pinidae's 0.5, grand fir and western hemlock grown 150 years carried their limbs hanging against the trunk; at 0.15 grand fir's old crown stays conical."
     },
     "traits": {
       "evidence": "SourceInferred",

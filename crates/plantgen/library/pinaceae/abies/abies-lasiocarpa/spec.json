@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 0.36,
       "cone_chance": 0.12,
       "cone_length": 0.08,
       "height_rate": 0.03,
@@ -186,6 +187,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923) p. 66, Abies lasiocarpa: \"cones oblong- cylindric, 6-10 cm. long, dark purple\"."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of the leader's yearly growth a branch grows, fitted so the drawn crown's widths match the photographed open-grown trees', young (4 trees): .47 .53 .51 .47 .36 .26 .19 .18 .12 .05, a narrow spire; drawn at 60 years .48 .49 .44 .38 .32 .28 .21 .15 .11 .05."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 0.55,
       "cone_chance": 0.12,
       "cone_length": 0.09,
       "cone_area": 0.524,
@@ -130,6 +131,11 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS (Howard and Aleksoff 2000, read): cone and seed production begins at 20 to 50 years of age. The Woody Plant Seed Manual (Abies, table 3, read) gives 20 as the minimum age for commercial seed bearing in northern Idaho. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 20 years set by hand."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of the leader's yearly growth a branch grows, fitted so the drawn crown's widths match the photographed open-grown trees', young (3 trees): widths .67 .71 .69 .63 .55 .42 .36 .25 .16 .09 of height at each tenth from the ground; drawn at 60 years .68 .70 .67 .61 .51 .46 .35 .26 .16 .09."
     },
     "generator.params": {
       "evidence": "Authored",

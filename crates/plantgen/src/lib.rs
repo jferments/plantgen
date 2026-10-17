@@ -612,8 +612,9 @@ pub mod venation;
 /// `bud_length` sets proportionally fewer side buds, so a slow crown no
 /// longer smothers itself; and a pine's limbs keep a tenth of each year's
 /// sag, not half, so old pines' limbs no longer hang to the ground; and
-/// a branch's yearly shoot may be capped at a share of the leader's
-/// (`apical`, set for Pinaceae other than pines), so old crowns stay
-/// conical instead of standing as flat-headed tubes (96 is
+/// a branch's yearly shoot may be a share of the leader's (`apical`,
+/// fitted to photographed crowns for six Pinaceae, 0.5 for the rest but
+/// pines; `branch_floor`), so crowns are cones instead of tubes, and the
+/// family's limbs keep 0.15 of each year's sag (96 is
 /// nodding leaders, #167).
 pub const GENERATOR_REVISION: u32 = 97;

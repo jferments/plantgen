@@ -161,12 +161,16 @@
 # slow tree (whitebark pine's leader grows about 2 cm a year as a seedling,
 # FEIS) packed thousands of shoots into a sapling's crown and smothered
 # itself.
-# And a branch's yearly shoot may be capped at a share of the leader's
-# that year (apical, Wilson 2000's apical control). The leader slows as
-# the tree nears its height while the branches had kept their pace, so old
-# crowns grew as wide at the top as below and stood as tubes with flat
-# heads; capped, the top stays pointed and the crown conical. Off by
-# default; pines leave it off, as their crowns flatten and dome with age.
+# And a branch's yearly shoot may be a share of the leader's that year
+# (apical; Wilson 2000's apical control) instead of a fixed length slowed
+# with the branch's reach. A whorl's branches then lengthen as the leader
+# above them rises, so the crown is a cone whose breadth is that share:
+# with a fixed length the branches near the top grew as fast as the
+# leader allowed room for, and the crowns stood as tubes, their top
+# halves twice as wide as photographs of open-grown trees show
+# (conifers/crown-profiles-photos-2026-10-17.md in the PlantGen
+# workspace). Once the leader slows near the tree's height the branches
+# keep at least branch_floor. Off by default.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -193,7 +197,8 @@ param branch_angle = 64;       # angle between the leader and a new branch
 param upturn = 0.0075;         # how strongly shoots bend toward the sky
 param branch_growth = 0.3;     # yearly shoot of a first-order branch in full light
 param branch_reach = 6;        # wood from the stem at which a branch's yearly shoot is half as long
-param apical = 0;              # a branch's yearly shoot is at most this share of the leader's that year (apical control); 0: no cap
+param apical = 0;              # a first-order branch's yearly shoot in full light is this share of the leader's that year (apical control); 0: branch_growth, slowed by branch_reach
+param branch_floor = 0.02;     # with apical, the least yearly shoot of a first-order branch in full light, once the leader slows
 param side_growth = 0.55;      # side shoots grow this fraction as fast
 param side_chance = 0.75;      # chance of a side shoot on each side each year
 param side_angle = 50;         # angle between a branch and its side shoots
@@ -311,15 +316,15 @@ interpret N -> &(0.5 * nod * max(0, 1 - age / nod_years));
 rule C(o, v, s, w) : sd < ground_gap + 0.05 -> ;
 rule C(o, v, s, w) : light < shade_death && s + 1 >= shade_years -> ;
 rule C(o, v, s, w) : o > 1 && side_years > 0 && age >= side_years -> ;
-rule C(o, v, s, w) : v * pow(side_growth, o - 1) * min(branch_growth / (1 + pow(w / branch_reach, 2)), (apical > 0 ? apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) : branch_growth))
+rule C(o, v, s, w) : v * pow(side_growth, o - 1) * (apical > 0 ? max(branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth / (1 + pow(w / branch_reach, 2)))
                      * (0.3 + 0.7 * light) < min_shoot -> ;
-rule C(o, v, s, w) -> G(o, v * pow(side_growth, o - 1) * min(branch_growth / (1 + pow(w / branch_reach, 2)), (apical > 0 ? apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) : branch_growth))
+rule C(o, v, s, w) -> G(o, v * pow(side_growth, o - 1) * (apical > 0 ? max(branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth / (1 + pow(w / branch_reach, 2)))
                            * (0.3 + 0.7 * light),
                         needle_years * 2 / (1 + needle_low) * (1 + (needle_low - 1) * max(0, 1 - py / max(height, 0.1))),
                         w)
                       Z(light)
                       C(o, v, light < shade_death ? s + 1 : 0,
-                        w + v * pow(side_growth, o - 1) * min(branch_growth / (1 + pow(w / branch_reach, 2)), (apical > 0 ? apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) : branch_growth))
+                        w + v * pow(side_growth, o - 1) * (apical > 0 ? max(branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth / (1 + pow(w / branch_reach, 2)))
                             * (0.3 + 0.7 * light));
 
 # One year's leader shoot: its foliage, with the interwhorl branches halfway.
