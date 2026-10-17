@@ -21,8 +21,6 @@
       "branch_angle": 40,
       "apical_young": 0.62,
       "apical": 0.52,
-      "leaf_size": 0.22,
-      "spur_leaf": 0.2,
       "spur_pairs": 2,
       "leaf_angle": 45,
       "lean": 10,
@@ -60,6 +58,7 @@
       0.34,
       0.28
     ],
+    "twig": [0.3,  0.08,  0.02],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.03,
@@ -85,9 +84,7 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 35,
+          "template": "simple",
           "width": 0.4,
           "widest": 0.65,
           "tip": 0.35,
@@ -155,6 +152,7 @@
     ]
   },
   "evidence": {
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"stout branchlets marked by scattered yellow lenticels, coated when they first appear with pale early deciduous pubescence, becoming bright yellow or dark orange color, and in their second year dark red-brown\". Colour chosen by eye between dark orange and red-brown."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -701,6 +701,8 @@ fn flare_rings(rings: &[Ring], flare: &Flare) -> Vec<Ring> {
 /// How a species' wood surface is shaped and coloured, for one axis.
 struct Bark<'a> {
     colour: [f32; 3],
+    /// Young twigs' colour and the radius they keep it below.
+    twig: Option<([f32; 3], f64)>,
     /// The stem's flare and the angle its buttresses start from; only on
     /// the plant's first axis.
     flare: Option<(&'a Flare, f64)>,
@@ -733,6 +735,12 @@ impl<'a> Bark<'a> {
         });
         Self {
             colour: appearance.bark,
+            twig: appearance.twig.map(|twig| {
+                (
+                    twig,
+                    appearance.twig_radius.unwrap_or(crate::spec::TWIG_RADIUS),
+                )
+            }),
             flare: flare.map(|flare| (flare, unit(mix64(id ^ 0xF1A2)) * 2.0 * math::PI)),
             bottle,
             ridges,
@@ -788,7 +796,15 @@ impl<'a> Bark<'a> {
         let contrast = self.ridges.map_or(0.0, |(ridges, _)| ridges.contrast);
         #[allow(clippy::cast_possible_truncation)]
         let dark = 1.0 - contrast * furrow as f32;
-        let mut colour = self.colour.map(|channel| channel * dark);
+        let mut colour = self.colour;
+        if let Some((twig, radius)) = self.twig {
+            #[allow(clippy::cast_possible_truncation)]
+            let barked = math::smoothstep(radius, 3.0 * radius, segment_radius) as f32;
+            for (channel, value) in colour.iter_mut().enumerate() {
+                *value = twig[channel] + (*value - twig[channel]) * barked;
+            }
+        }
+        let mut colour = colour.map(|channel| channel * dark);
         if let Some(moss) = self.moss {
             let cover = math::smoothstep(moss.min_radius, moss.min_radius * 2.0, segment_radius);
             let facing = ((normal.y + 0.25) / 0.9).clamp(0.0, 1.0);
@@ -3186,6 +3202,8 @@ mod tests {
             bark_pattern: None,
             leaf_axis: None,
             stem_hairs: None,
+            twig: None,
+            twig_radius: None,
             bodies: BTreeMap::new(),
             spreads: serde_json::Map::new(),
         }
@@ -3833,6 +3851,37 @@ mod tests {
         };
         assert!(green(true) > 0.0);
         assert!(green(false).abs() < 1e-6);
+    }
+
+    #[test]
+    fn young_twigs_wear_their_own_colour_and_limbs_their_bark() {
+        let mut look = appearance();
+        look.twig = Some([1.0, 0.0, 0.0]);
+        let green = |radius: f64| -> f32 {
+            let stem = PlantGraph {
+                age: 5.0,
+                height: 1.0,
+                segments: vec![segment(
+                    None,
+                    false,
+                    Vec3::ZERO,
+                    Vec3::new(0.0, 1.0, 0.0),
+                    radius,
+                )],
+                organs: Vec::new(),
+                structures: Vec::new(),
+            };
+            let mesh = build_plain(&stem, &looks(), &look, &lod(0.0, 0.0, 0.0)).wood;
+            mesh.colors
+                .iter()
+                .map(|c| c[1] / c[0].max(1e-6))
+                .sum::<f32>()
+                / mesh.colors.len() as f32
+        };
+        // A twig is red; a limb past three times twig_radius is the bark's
+        // brown, with green two thirds of red.
+        assert!(green(0.002) < 0.01);
+        assert!((green(0.05) - 0.2 / 0.3).abs() < 0.05);
     }
 
     fn organ(heading: Vec3, left: Vec3) -> GraphOrgan {

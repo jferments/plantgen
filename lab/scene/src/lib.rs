@@ -340,10 +340,21 @@ impl View {
         Some(match name {
             "side" => Self::Side,
             "three-quarter" => Self::ThreeQuarter,
-            "oblique" => Self::Oblique,
+            "oblique" | "above" => Self::Oblique,
             "top" => Self::Top,
             _ => return None,
         })
+    }
+
+    /// From the plant toward the camera, for the views that look across
+    /// it (the top view looks straight down).
+    fn direction(self) -> Vec3 {
+        match self {
+            Self::Side => Vec3::new(0.0, 0.04, 1.0),
+            Self::Oblique => Vec3::new(0.7, 0.99, 0.7),
+            Self::ThreeQuarter | Self::Top => Vec3::new(0.7, 0.3, 0.7),
+        }
+        .normalize_or(Vec3::Z)
     }
 
     #[must_use]
@@ -1158,12 +1169,7 @@ pub fn scale(height: f64, x: f64) -> (SceneMesh, f64, f64) {
 fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> Framing {
     if let Some((point, span)) = shot.focus {
         let target = Vec3::new(point[0], point[1], point[2]);
-        let direction = if shot.view == View::Side {
-            Vec3::new(0.0, 0.04, 1.0)
-        } else {
-            Vec3::new(0.7, 0.3, 0.7)
-        }
-        .normalize_or(Vec3::Z);
+        let direction = shot.view.direction();
         let half_fov = (FOV_Y_DEG.to_radians() * 0.5).tan();
         #[allow(clippy::cast_possible_truncation)]
         return Framing {
@@ -1194,12 +1200,7 @@ fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> F
     #[allow(clippy::cast_possible_truncation)]
     match shot.view {
         View::Side | View::ThreeQuarter | View::Oblique => {
-            let direction = match shot.view {
-                View::Side => Vec3::new(0.0, 0.04, 1.0),
-                View::Oblique => Vec3::new(0.7, 0.99, 0.7),
-                _ => Vec3::new(0.7, 0.3, 0.7),
-            }
-            .normalize_or(Vec3::Z);
+            let direction = shot.view.direction();
             Framing {
                 eye: (target + direction * distance).to_f32(),
                 target: target.to_f32(),
@@ -1358,6 +1359,7 @@ pub fn review_sheet(base: &Shot, library: &Library) -> Result<Sheet, String> {
     let mature_row = vec![
         (View::Side, None, "side"),
         (View::ThreeQuarter, None, "from the south-east"),
+        (View::Oblique, None, "45 degrees down"),
         (View::Top, None, "from above"),
         (
             View::ThreeQuarter,

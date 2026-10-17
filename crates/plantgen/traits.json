@@ -1811,6 +1811,13 @@
       "type": "bool",
       "why": "whether it sheds its own shaded limbs"
     },
+    "shade_tolerance": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["intolerant", "intermediate", "tolerant"],
+      "why": "how much shade it can grow in, as silvics classes a tree: an intolerant one needs full light and loses what grows in shade"
+    },
     "architectural_model": {
       "group": "architecture",
       "organ": "plant",
