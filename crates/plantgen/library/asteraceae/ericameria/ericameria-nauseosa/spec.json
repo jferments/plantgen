@@ -26,7 +26,7 @@
       "steer_weight": 0.4,
       "droop": 0.02,
       "wiggle": 10,
-      "crown_radius": 0.5,
+      "crown_radius": 0.35,
       "crown_rate": 0.22,
       "space_density": 500,
       "internode": 0.04,
@@ -40,7 +40,7 @@
       "pipe_tip": 0.0012,
       "pipe_organ": 0.002,
       "pipe_rings": 1.5e-06,
-      "space_reach": 0.425,
+      "space_reach": 0.34,
       "space_kill": 0.105,
       "blooms": 3,
       "adult_age": 2,
@@ -232,7 +232,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Brittlebush's values, changed by hand for rubber rabbitbrush: several upright stems from the base branching into a rounded bush (FEIS, Tirmenstein 1999), crowded thread-like leaves, and flat-topped clusters of small yellow heads at the stem tips. Not fitted to measurements."
+      "note": "Brittlebush's values, changed by hand for rubber rabbitbrush: several upright stems from the base branching into a rounded bush (FEIS, Tirmenstein 1999), crowded thread-like leaves, and flat-topped clusters of small yellow heads at the stem tips. Not fitted to measurements. Crown radius 0.35 and space_reach 0.34 (were 0.5 and 0.425) since broadleaf revision 17 (woody forms, 2026-10-17), when buds stopped shading like leaves and its crown grew past the flora's 1 m width."
     },
     "allometry": {
       "evidence": "Authored",

@@ -19,7 +19,7 @@
       "max_shoot": 3,
       "branch_angle": 40,
       "apical_young": 0.62,
-      "apical": 0.52,
+      "apical": 0.5,
       "apical_years": 8,
       "bud_years": 40,
       "leaf_size": 0.13,
@@ -167,7 +167,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, open, often leaning tree 4 to 8 m tall along desert washes, with long, narrow, willow-like leaves and fragrant pink to lavender trumpet flowers through the summer. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a small, open, often leaning tree 4 to 8 m tall along desert washes, with long, narrow, willow-like leaves and fragrant pink to lavender trumpet flowers through the summer. Not fitted to measurements. Apical 0.5 (was 0.52) since broadleaf revision 17 (woody forms, 2026-10-17), when buds stopped shading like leaves and its tallest plant grew past the flora's 6 m."
     },
     "generator.params.bud_years": {
       "evidence": "SourceInferred",

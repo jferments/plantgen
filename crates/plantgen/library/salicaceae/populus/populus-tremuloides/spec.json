@@ -29,8 +29,8 @@
       "pipe_rings": 2.16e-08,
       "bloom_area": 0.05,
       "path_half": 6.54,
-      "pipe_tip": 0.0021,
-      "pipe_organ": 0.0042
+      "pipe_tip": 0.00182,
+      "pipe_organ": 0.00365
     }
   },
   "growth": {

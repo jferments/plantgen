@@ -151,9 +151,16 @@
 # crown_fullness. All are off, or as before, unless a lineage or species
 # sets them, so every crown grows as it did.
 #
+# Revision 17 (woody forms: leaf area): a living tip adds a bud's own
+# area, two square centimetres, to the light model's leaf area (bud), where
+# it added 100 cm2, as large as a whole leaf. Every short shoot is a living
+# tip, so a crown of small leaves shaded itself as if it carried twice its
+# leaves and stopped leafing out at half the leaf area that open-grown
+# trees of its genus carry (USDA Urban Tree Database).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 16;
+lsystem broadleaf 17;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -271,7 +278,7 @@ organ bloom flower area bloom_area;
 organ thorn leaf as spine area thorn_area;
 organ bloom_male flower area bloom_area;
 
-tool light@1 { cell = light_cell, extinction = extinction, bud = 0.01 };
+tool light@1 { cell = light_cell, extinction = extinction, bud = 0.0002 };
 tool space@4 {
     base = crown_base * (1 - exp(-crown_rate * (t + 3))),
     height = room_height * crown_height * (1 - exp(-crown_rate * (t + 3))),
