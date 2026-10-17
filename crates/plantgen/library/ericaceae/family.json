@@ -4,6 +4,7 @@
   "name": "Ericaceae",
   "parent": "order/ericales",
   "traits": {
+    "leaf_incision": "none",
     "hypanthium": false,
     "inflorescence": {
       "raceme": "often",
@@ -88,6 +89,7 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Ericaceae (read 2026-10-17): lamina given as undivided only."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 389, 505: Simpson calls the flowers hypogynous or epigynous, neither of which has a hypanthium. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",

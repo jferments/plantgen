@@ -27,6 +27,12 @@
       "dioecious": "usually",
       "polygamous": "often",
       "hermaphrodite": "sometimes"
+    },
+    "leaf_margin": {
+      "entire": "usually",
+      "serrate": "sometimes",
+      "crenate": "rarely",
+      "dentate": "rarely"
     }
   },
   "evidence": {
@@ -39,6 +45,11 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia, Meliaceae (read 2026-10-16): flowers apparently cryptically unisexual. Weighting toward dioecious inferred (Aglaia, Dysoxylum); low confidence."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Meliaceae (read 2026-10-17): margins usually entire, at times crenate, serrate, dentate or lobed (e.g. Azadirachta, Melia serrate leaflets)."
     }
   }
 }

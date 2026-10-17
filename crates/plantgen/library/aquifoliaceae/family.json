@@ -62,7 +62,20 @@
     "phyllotaxis_pattern": {
       "spiral": "usually"
     },
-    "flowering_position": "lateral"
+    "flowering_position": "lateral",
+    "leaf_shape": {
+      "elliptic": "usually",
+      "oblong": "often",
+      "orbicular": "rarely"
+    },
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "rarely"
+    },
+    "leaf_base_shape": {
+      "cuneate": "usually",
+      "attenuate": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
@@ -84,6 +97,21 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add spiny (rarely): Simpson, Plant Systematics (2019) p. 428, 430, 431: spiny."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "lucid-ffpa",
+      "note": "Lucid family key, Aquifoliaceae (read 2026-10-17): simple symmetric blades, elliptic, oblong or orbicular. Ilex (over 570 species, Wikipedia (read 2026-10-17)) is the family."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Aquifoliaceae (read 2026-10-17): lamina entire or cut, cut ones pinnatifid or spiny (holly type)."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "lucid-ffpa",
+      "note": "Lucid family key, Aquifoliaceae (read 2026-10-17): base cuneate or attenuate."
     }
   }
 }
