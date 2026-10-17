@@ -140,6 +140,40 @@ pub struct Hairs {
     /// veins". Absent for an even spread.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub veins: Option<f64>,
+    /// How each hair branches ([`Branching`]): a plain hair unless a
+    /// flora says its hairs are stellate or dendritic (mullein's felt).
+    #[serde(skip_serializing_if = "Branching::is_simple")]
+    pub branching: Branching,
+    /// Glandular hairs standing among these, each a stalk ending in a
+    /// round head of resin (a tomato's stems, FNA's "glandular-pubescent"),
+    /// in their own density, length and lie.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub glands: Option<Box<Hairs>>,
+    /// Stinging hairs standing among these (a nettle's): a stiff glassy
+    /// needle on a swollen green foot, straight and erect, sparse among
+    /// the soft hairs, in their own density, length and lie.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stings: Option<Box<Hairs>>,
+}
+
+/// How a hair branches (Harris and Harris): a plain hair, a star of
+/// arms spreading over the face from a short stalk (stellate), or a stalk
+/// with whorls of arms up its length, a little tree (dendritic, the
+/// candelabra hairs of mullein).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Branching {
+    #[default]
+    Simple,
+    Stellate,
+    Dendritic,
+}
+
+impl Branching {
+    #[must_use]
+    pub fn is_simple(&self) -> bool {
+        *self == Self::Simple
+    }
 }
 
 impl Default for Hairs {
@@ -152,15 +186,48 @@ impl Default for Hairs {
             colour: [0.8, 0.8, 0.76],
             edge: None,
             veins: None,
+            branching: Branching::Simple,
+            glands: None,
+            stings: None,
         }
     }
 }
 
 impl Hairs {
-    /// Whether there are any to draw.
+    /// Whether there are any to draw: these, or glandular or stinging
+    /// hairs among them.
     #[must_use]
     pub fn drawn(&self) -> bool {
+        self.own_drawn()
+            || self.glands.as_deref().is_some_and(Self::own_drawn)
+            || self.stings.as_deref().is_some_and(Self::own_drawn)
+    }
+
+    /// Whether these hairs themselves, leaving out the glandular and
+    /// stinging hairs among them, are any to draw.
+    #[must_use]
+    pub fn own_drawn(&self) -> bool {
         (self.density > 0.0 || self.edge.is_some_and(|edge| edge > 0.0)) && self.length > 0.0
+    }
+
+    /// These hairs with `share` of each kind kept: young wood's, worn by
+    /// its age.
+    #[must_use]
+    pub fn thinned(&self, share: f64) -> Self {
+        let thin = |hairs: &Option<Box<Self>>| {
+            hairs.as_ref().map(|hairs| {
+                Box::new(Self {
+                    density: hairs.density * share,
+                    ..(**hairs).clone()
+                })
+            })
+        };
+        Self {
+            density: self.density * share,
+            glands: thin(&self.glands),
+            stings: thin(&self.stings),
+            ..self.clone()
+        }
     }
 }
 
@@ -2825,6 +2892,7 @@ impl Compound {
         crate::divided::reach(self) * 2.0 + 0.03
     }
 
+    #[allow(clippy::too_many_lines)]
     fn validate(&self) -> Result<(), String> {
         let form = crate::divided::Form::of(self);
         let check = |field: &str, value: f64, low: f64, high: f64| {

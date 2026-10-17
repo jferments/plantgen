@@ -613,5 +613,11 @@ pub mod venation;
 /// and hairs gathered on its main veins (`Hairs::veins`, from
 /// `leaf_hairs_on_veins`); a face's strands stand on the face that wears
 /// them and on the drawn cells of a bent card, and a stated hair length
-/// wins over the word's (97 is thread segments, #183).
+/// wins over the word's; branched hairs (`hair_branching`: stellate,
+/// dendritic) and wool (simple hairs curled through more than a turn)
+/// drawn as stars, little trees and winding strands, white with air;
+/// glandular and stinging hairs among them (`glandular_hairs`,
+/// `stinging_hairs`), with round heads and glass needles on green feet;
+/// the strand budget spent on the hairs nearest the eye first (97 is
+/// thread segments, #183).
 pub const GENERATOR_REVISION: u32 = 98;

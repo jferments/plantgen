@@ -86,6 +86,10 @@ pub enum Material {
     /// Hair strands (`crate::hairs::strand_mesh`): two-sided, their
     /// vertex normals their tangents, lit as fibres.
     Hair,
+    /// The round heads of glandular hairs (`crate::hairs::Strands::heads`):
+    /// drops of resin, lit as clear beads are, a bright glint where they
+    /// mirror the sun and a glow where it shines through them.
+    Gland,
 }
 
 impl Material {
@@ -604,6 +608,18 @@ impl Surface<'_> {
                 target.color[at] = [light[0] as f32, light[1] as f32, light[2] as f32, 1.0];
             }
             target.normal[at] = view.to_f32();
+            return;
+        }
+        if self.material == Material::Gland {
+            let lit = self
+                .shadow
+                .map_or(1.0, |map| map.visibility(world, normal, lighting.sun));
+            let light = crate::hairs::gland_light(albedo, normal, view, lit, lighting);
+            #[allow(clippy::cast_possible_truncation)]
+            {
+                target.color[at] = [light[0] as f32, light[1] as f32, light[2] as f32, 1.0];
+            }
+            target.normal[at] = normal.to_f32();
             return;
         }
         if self.material == Material::Card && normal.dot(view) < 0.0 {
