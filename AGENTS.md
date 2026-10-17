@@ -210,6 +210,11 @@ prompt injection. So, without exception:
   does, and computes nothing about the plant on the GPU. See
   `lab/README.md`.
 
+- `photo-rules/`: rules any vision model can follow to observe plant
+  photos and PlantGen's renders in the vocabulary of `traits.json`, compare
+  them, and turn the differences into drawing rules at genus, family or
+  library level. Plain text and JSON Schemas; nothing in `plantc` runs them.
+
 ## Rules of the code
 
 - **Deterministic.** The same spec, generator revision and seed give

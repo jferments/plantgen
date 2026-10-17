@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "proposal.schema.json",
+  "title": "A drawing-rule change that closes findings (06-generalize.md)",
+  "type": "object",
+  "required": [
+    "character",
+    "rank",
+    "change",
+    "closes",
+    "supporting_species",
+    "blast_radius"
+  ],
+  "properties": {
+    "character": {
+      "type": "string"
+    },
+    "new_character": {
+      "type": "boolean"
+    },
+    "states": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "state -> visual definition, for a new character or new states"
+    },
+    "rank": {
+      "type": "string",
+      "description": "e.g. kingdom Plantae, family Cactaceae, genus Ferocactus"
+    },
+    "file": {
+      "type": "string"
+    },
+    "change": {
+      "type": "string",
+      "description": "the rule: spec path, map from states to values or formula"
+    },
+    "fit": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "before": {},
+        "after": {}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "closes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "finding ids"
+    },
+    "supporting_species": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "held_out": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blast_radius": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "every species whose drawing changes"
+    },
+    "removes_hand_values": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "needs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "engine work or Part 1 facts this depends on"
+    }
+  }
+}

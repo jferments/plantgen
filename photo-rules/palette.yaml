@@ -1,0 +1,50 @@
+# Colour families for observations (v0, 2026-10-17).
+# Name the nearest family, then give a hex of a lit, in-focus patch.
+# The hex anchors are typical midpoints, not limits; comparison is done in
+# CIELAB on the reported hex, within the same lighting.
+
+families:
+  # greens (foliage)
+  yellow-green:   "#9acd32"
+  bright-green:   "#4caf50"
+  mid-green:      "#5a8a3a"
+  dark-green:     "#2f4f2f"
+  blue-green:     "#5f8f80"
+  grey-green:     "#8a9a80"
+  olive:          "#6b6b2f"
+  # browns and greys (bark, twigs, dry fruit, spines)
+  white:          "#f4f4f0"
+  cream:          "#f3e9c6"
+  silver-grey:    "#c0c0c0"
+  light-grey:     "#a9a9a9"
+  dark-grey:      "#555555"
+  black:          "#1e1e1e"
+  grey-brown:     "#8b7d6b"
+  tan:            "#c8a878"
+  orange-brown:   "#b8642c"
+  red-brown:      "#8b3a2a"
+  dark-brown:     "#4a3020"
+  # flowers and fruit
+  lemon-yellow:   "#f5e94a"
+  golden-yellow:  "#f2b705"
+  orange:         "#f28c28"
+  salmon:         "#f08070"
+  red:            "#d22b2b"
+  crimson:        "#b0103a"
+  maroon:         "#6e2330"
+  pink:           "#f4a6c0"
+  magenta:        "#c2187a"
+  purple:         "#7b3f9e"
+  violet:         "#8a6fd1"
+  blue:           "#4a6fd1"
+  lavender:       "#c3b1e1"
+  white-flower:   "#fafaf5"
+  green-flower:   "#b8c890"
+
+lighting:
+  - direct sun
+  - shade
+  - overcast
+  - flash
+  - studio
+  - render

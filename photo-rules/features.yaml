@@ -1,0 +1,1086 @@
+# PlantGen photo features (v0, 2026-10-17)
+#
+# Each feature is one question an observer answers about one image.
+# - id:          scale.name, stable; answers use it as the key.
+# - question:    what to look at, in plain words.
+# - type:        state (one of states) | states (any of states) | ordinal |
+#                ratio | share | angle | count | colour
+# - states:      allowed answers with a visual definition each; "cannot tell"
+#                is always allowed and never listed.
+# - views:       view codes that can answer it (see 01-triage.md).
+# - maps_to:     trait: a character in jferments/plantgen
+#                       crates/plantgen/traits.json (states spelled the same)
+#                measure: a `plantc measure` metric for renders
+#                proposed: a character PlantGen does not have yet; answers
+#                       still count, and the gap is a finding (cause D5)
+#                related_trait: a character the answer bears on but does
+#                       not map to one for one (a bool, or a coarser word)
+#                extra_states: states the feature allows that the trait
+#                       lacks; such an answer is a finding (cause D3)
+# - reliability: good | fair | poor for a capable vision model by eye, and
+#                the better tool where one exists.
+# - notes:       traps.
+#
+# Trait names and states checked against plantgen main ca5feba.
+
+version: 0
+features:
+
+# ---------------------------------------------------------------- 1. habit
+- id: habit.growth_form
+  scale: habit
+  question: What kind of plant is this, by its overall form?
+  type: state
+  views: [V1, V3]
+  maps_to: {trait: growth_form}
+  states:
+    excurrent_tree: one straight trunk running to the top, narrow pointed crown (most spruces, firs)
+    decurrent_tree: trunk divides into several large limbs, broad rounded or spreading crown (oaks, maples)
+    scale_leaved_tree: tree with tiny scale leaves pressed to the twigs (cypresses, junipers)
+    shrub: several woody stems from or near the ground, no single trunk
+    graminoid: grass-like, narrow leaves from the base, no woody stem
+    forb: soft-stemmed herb with broad leaves
+    fern: fronds uncoiling from a crown or rhizome, no flowers
+    vine: climbs or trails on other plants or supports
+    stem_succulent: thick green stem does the work of leaves (cacti)
+    rosette_succulent: thick fleshy leaves in a rosette (agaves, aloes)
+  reliability: good
+
+- id: habit.stems_from_base
+  scale: habit
+  question: How many separate stems or trunks rise from the ground?
+  type: ordinal
+  views: [V1, V2]
+  maps_to: {proposed: stems_from_base}
+  states:
+    "1": a single stem or trunk at ground level
+    "2-3": two or three stems from the base
+    "4-10": a clump of four to ten stems
+    many: more than ten, a thicket or colony
+  reliability: good
+  notes: Trunks that fork above knee height count as one. Several trees grown from one bird cache (whitebark pine) count as several.
+
+- id: habit.height_over_width
+  scale: habit
+  question: Total height divided by the widest crown width.
+  type: ratio
+  views: [V1]
+  maps_to: {measure: "height / crown width"}
+  reliability: fair (masks are better)
+  notes: Only with base and top in frame and the plant not leaning toward the camera.
+
+- id: habit.widest_at
+  scale: habit
+  question: At what height is the crown widest, as a share of total height from the ground?
+  type: ordinal
+  views: [V1]
+  maps_to: {measure: widest_at}
+  states:
+    low: lowest third (cone, pyramid, skirt to the ground)
+    middle: middle third (egg, globe)
+    high: upper third (vase, umbrella, inverted cone)
+  reliability: good
+
+- id: habit.crown_base
+  scale: habit
+  question: How far up the trunk do the lowest living leafy branches start, as a share of total height?
+  type: share
+  views: [V1, V2]
+  maps_to: {related_trait: self_pruning, measure: "crown base height"}
+  reliability: fair
+  notes: Answer in tenths. 0 means foliage to the ground. Forest trees self-prune higher than open-grown ones; triage records which.
+
+- id: habit.crown_outline
+  scale: habit
+  question: Which word best fits the crown's outline seen from the side?
+  type: state
+  views: [V1]
+  maps_to: {trait: crown_form}
+  states:
+    rounded: a dome or globe, about as wide as tall
+    spreading: much wider than tall, broad and low
+    umbrella: flat top on a bare trunk, foliage in a canopy layer
+    vase: narrow at the base, widening upward, branches arching out
+    conical: widest at the base tapering to a pointed top
+    columnar: narrow, nearly parallel sides, much taller than wide
+    weeping: branch tips hang down like a curtain
+    irregular: no regular shape; broken, flat-topped with age, or wind-shaped
+  reliability: good
+
+- id: habit.see_through
+  scale: habit
+  question: What share of the crown's outline shows sky through it?
+  type: share
+  views: [V1]
+  maps_to: {trait: crown_see_through, measure: sky}
+  reliability: fair (masks are better)
+  notes: Answer in tenths. In leaf only; a leafless crown is V2.
+
+- id: habit.symmetry
+  scale: habit
+  question: How regular is the plant's shape?
+  type: state
+  views: [V1]
+  maps_to: {measure: "outline fit"}
+  states:
+    regular: close to a symmetrical geometric shape
+    lopsided: fuller on one side, or leaning
+    irregular: lumpy outline, gaps, broken or dead parts
+  reliability: good
+
+# --------------------------------------------------------- 2. architecture
+- id: arch.branching
+  scale: architecture
+  question: How does the main stem branch?
+  type: state
+  views: [V1, V2]
+  maps_to: {trait: branching}
+  states:
+    excurrent: one leader runs to the top with smaller side branches
+    decurrent: the trunk divides into several large limbs; no single leader in the crown
+    columnar: unbranched or few-branched upright column (cacti, palms)
+    cane: arching unbranched canes from the base
+    unbranched: a single unbranched stem
+  reliability: good
+
+- id: arch.trunk_form
+  scale: architecture
+  question: The form of the trunk or main stems.
+  type: state
+  views: [V1, V2]
+  maps_to: {proposed: trunk_form}
+  states:
+    straight: straight and upright
+    sinuous: curving or twisting
+    leaning: straight but leaning
+    forked_low: divides into two or more trunks below a third of the height
+    swollen: bottle-shaped or much thicker than the crown seems to need (pachycaul)
+  reliability: good
+
+- id: arch.trunk_diameter_over_height
+  scale: architecture
+  question: Trunk diameter at chest height (or a fifth of the way up) divided by total height.
+  type: ratio
+  views: [V1, V2]
+  maps_to: {trait: stem_diameter_max_m, measure: "dbh / height"}
+  reliability: poor by eye; good with a person for scale
+  notes: Round to 0.01. Gives age matching too.
+
+- id: arch.main_limbs
+  scale: architecture
+  question: How many main limbs can you follow from the trunk into the crown?
+  type: ordinal
+  views: [V2, V1]
+  maps_to: {proposed: main_limbs}
+  states:
+    "0": none; one leader with only small side branches
+    "2-4": a few dominant limbs
+    "5-10": several limbs of similar size
+    many: many limbs of similar thinness, none dominant
+  reliability: fair
+
+- id: arch.limb_hierarchy
+  scale: architecture
+  question: Are the limbs graded in thickness, or all much the same?
+  type: state
+  views: [V2, V1]
+  maps_to: {proposed: limb_hierarchy}
+  states:
+    strong: a few thick limbs carry many thinner ones
+    weak: many limbs of similar thickness
+  reliability: fair
+
+- id: arch.limb_angle
+  scale: architecture
+  question: Angle from vertical of a typical main limb where it leaves the trunk, in the middle of the crown.
+  type: angle
+  views: [V2, V1]
+  maps_to: {proposed: branch_angle}
+  reliability: fair
+  notes: 0 up, 90 level, 180 down; nearest 15 degrees.
+
+- id: arch.limb_course
+  scale: architecture
+  question: How does a typical main limb run from the trunk to its tip?
+  type: state
+  views: [V2, V1]
+  maps_to: {proposed: limb_course}
+  states:
+    straight: holds its line
+    upturned: rises toward its tip
+    arching: rises then curves down
+    drooping: sags or hangs, tip below its base
+    zigzag: changes direction at each fork (sympodial)
+  reliability: fair
+  notes: Lower and upper limbs often differ (Douglas-fir); answer for the middle crown and note the others.
+
+- id: arch.tiers
+  scale: architecture
+  question: Do the branches come off in distinct tiers or whorls with gaps between?
+  type: state
+  views: [V1, V2]
+  maps_to: {proposed: tiered_branches}
+  states:
+    "yes": clear layers of branches with bare trunk between
+    "no": branches spread evenly up the trunk
+  reliability: good
+
+- id: arch.flat_top
+  scale: architecture
+  question: Is the top of the crown flat?
+  type: state
+  views: [V1]
+  maps_to: {related_trait: crown_form}
+  states:
+    "yes": a flat or tabular top
+    "no": rounded or pointed top
+  reliability: good
+
+# ---------------------------------------------------------- 3. foliage mass
+- id: foliage.placement
+  scale: foliage
+  question: Where does the foliage sit in the crown?
+  type: state
+  views: [V1, V2]
+  maps_to: {proposed: foliage_clumping, related_trait: short_shoots}
+  states:
+    even_shell: an even skin over the whole crown outline
+    lobes: separate rounded clumps with sky or shadow between them
+    limb_end_tufts: tufts or brushes at the ends of bare limbs
+    along_limbs: foliage all along the limbs to near the trunk
+    layers: flat horizontal layers or sprays
+  reliability: good
+
+- id: foliage.density
+  scale: foliage
+  question: How dense and opaque are the foliage masses themselves?
+  type: ordinal
+  views: [V1, V4]
+  maps_to: {proposed: foliage_density}
+  states:
+    sparse: twigs and sky show through each clump
+    medium: clumps mostly opaque, edges ragged
+    dense: clumps solid and dark inside
+  reliability: good
+
+- id: foliage.colour
+  scale: foliage
+  question: Colour of the foliage mass on a lit part of the crown.
+  type: colour
+  views: [V1, V4]
+  maps_to: {trait: leaf_colour}
+  reliability: fair
+  notes: Mass colour includes shading between leaves; leaf.colour_upper is the single leaf.
+
+- id: foliage.gloss
+  scale: foliage
+  question: Do lit leaves show bright highlights?
+  type: state
+  views: [V1, V4, V5]
+  maps_to: {proposed: leaf_gloss}
+  states:
+    matte: no highlights
+    satin: soft sheen
+    glossy: sharp white highlights like polished leather
+  reliability: good (in direct sun only)
+
+# ------------------------------------------------------------------ 4. shoot
+- id: shoot.leaf_arrangement
+  scale: shoot
+  question: How many leaves at each node?
+  type: state
+  views: [V4]
+  maps_to: {trait: leaf_arrangement}
+  states:
+    alternate: one leaf per node, nodes staggered along the stem
+    opposite: two leaves at each node, facing each other
+    whorled: three or more leaves in a ring at each node
+  reliability: good
+  notes: Crowded alternate leaves at a shoot tip can look whorled; check further down the shoot.
+
+- id: shoot.phyllotaxis
+  scale: shoot
+  question: Seen along the shoot, how do the leaves stand around it?
+  type: state
+  views: [V4]
+  maps_to: {trait: phyllotaxis_pattern}
+  states:
+    spiral: leaves set all round the stem in a spiral
+    distichous: leaves in two rows, in one plane, like a feather
+    tristichous: leaves in three rows
+    decussate: opposite pairs, each pair at right angles to the last
+  reliability: fair
+
+- id: shoot.leaf_crowding
+  scale: shoot
+  question: How are the leaves spaced along the shoot?
+  type: state
+  views: [V4]
+  maps_to: {proposed: leaf_clustering, related_trait: rosette}
+  states:
+    even: evenly spaced along the shoot
+    toward_tip: crowded toward the shoot tip, lower shoot bare
+    false_whorl: crowded into a ring at the top of the stem
+    spurs: in tufts on very short side shoots along older wood
+    rosette: in a ground-level rosette
+  reliability: good
+  notes: Pawpaw, magnolia, Hedyosmum (toward_tip); Chloranthus (false_whorl); larch, ginkgo, apples (spurs).
+
+- id: shoot.leaf_posture
+  scale: shoot
+  question: Which way does a typical leaf point relative to the ground?
+  type: state
+  views: [V4, V1]
+  maps_to: {trait: leaf_posture}
+  states:
+    erect: pointing up, close to vertical
+    ascending: angled up
+    spreading: roughly horizontal
+    arching: out and then curving down
+    pendent: hanging down
+  reliability: good
+
+- id: shoot.leaf_angle
+  scale: shoot
+  question: Angle between a leaf (or needle) and its shoot, toward the shoot tip.
+  type: angle
+  views: [V4]
+  maps_to: {proposed: leaf_insertion_angle}
+  reliability: fair
+  notes: Measured to the parent axis, not to vertical. 0 = pressed flat against the shoot pointing forward, 90 = at right angles.
+
+- id: shoot.internode_over_leaf
+  scale: shoot
+  question: Bare stem between two neighbouring leaves divided by a leaf's length.
+  type: ratio
+  views: [V4]
+  maps_to: {proposed: internode_ratio}
+  reliability: fair
+
+- id: shoot.twig_colour
+  scale: shoot
+  question: Colour of this year's twigs.
+  type: colour
+  views: [V4, V8]
+  maps_to: {proposed: twig_colour}
+  reliability: fair
+
+- id: shoot.needles_per_fascicle
+  scale: shoot
+  question: Pines only. How many needles per bundle?
+  type: count
+  views: [V4, V8]
+  maps_to: {trait: needles_per_fascicle}
+  reliability: fair (close-ups only)
+
+- id: shoot.needle_direction
+  scale: shoot
+  question: Needles and narrow leaves. Which way do they point along the twig?
+  type: state
+  views: [V4]
+  maps_to: {proposed: needle_posture, related_trait: foliage_ranks}
+  states:
+    forward: pointing forward toward the twig tip, close to it (connivent)
+    spreading: standing out from the twig all round
+    two_ranked: in two flat rows either side of the twig
+    upswept: rising above the twig, a bare underside
+    drooping: hanging down from the twig
+  reliability: good
+
+# ------------------------------------------------------------------- 5. leaf
+- id: leaf.form
+  scale: leaf
+  question: Is the leaf a flat blade, a needle, or a scale?
+  type: state
+  views: [V4, V5]
+  maps_to: {trait: leaf_form}
+  states:
+    blade: flat, broad or narrow blade
+    needle: long, narrow, stiff, round or angled in section
+    scale: tiny, pressed against the twig, overlapping
+  reliability: good
+
+- id: leaf.division
+  scale: leaf
+  question: Is the blade one piece or divided into separate leaflets?
+  type: state
+  views: [V5, V4]
+  maps_to: {trait: leaf_division}
+  states:
+    simple: one blade (lobes still joined by blade tissue)
+    compound: separate leaflets on a common stalk
+  reliability: good
+  notes: A leaflet has no bud at its base; a leaf does. If unsure, say cannot tell.
+
+- id: leaf.incision
+  scale: leaf
+  question: How deeply is the blade cut?
+  type: state
+  views: [V5]
+  maps_to: {trait: leaf_incision}
+  states:
+    none: no lobes
+    lobed: cut less than halfway to the midrib
+    cleft: cut about halfway
+    parted: cut most of the way
+    dissected: cut into many fine segments
+  reliability: good
+
+- id: leaf.division_pattern
+  scale: leaf
+  question: If lobed or compound, how are the lobes or leaflets arranged?
+  type: state
+  views: [V5]
+  maps_to: {trait: division_pattern}
+  states:
+    pinnate: along the midrib, like a feather
+    palmate: from one point, like fingers of a hand
+  reliability: good
+
+- id: leaf.leaflets
+  scale: leaf
+  question: Number of leaflets on a compound leaf.
+  type: count
+  views: [V5]
+  maps_to: {trait: leaflets}
+  reliability: good up to 15
+
+- id: leaf.lobes
+  scale: leaf
+  question: Number of lobes on a lobed leaf.
+  type: count
+  views: [V5]
+  maps_to: {trait: leaf_lobes}
+  reliability: good
+
+- id: leaf.shape
+  scale: leaf
+  question: Overall outline of the blade (or of a leaflet on a compound leaf).
+  type: state
+  views: [V5]
+  maps_to: {trait: leaf_shape}
+  states:
+    linear: very long and narrow, sides parallel (more than 6 times as long as wide)
+    lanceolate: long, widest below the middle, tapering to the tip (3-6 times as long as wide)
+    oblanceolate: like lanceolate but widest above the middle
+    elliptic: widest at the middle, both ends similar
+    oblong: sides roughly parallel for much of the length, ends rounded
+    ovate: egg-shaped, widest below the middle
+    obovate: egg-shaped, widest above the middle
+    orbicular: round
+    deltate: triangular, widest at a straight base
+    spatulate: like a spoon, broad rounded end on a long narrow base
+    reniform: kidney-shaped, wider than long, notched base
+    cordate: heart-shaped, notched at the base with two rounded lobes
+  reliability: good
+  notes: Shade leaves are often broader than sun leaves.
+
+- id: leaf.length_over_width
+  scale: leaf
+  question: Blade length (base to tip, without the stalk) divided by its widest width.
+  type: ratio
+  views: [V5]
+  maps_to: {trait: [leaf_length_m, leaf_width_m]}
+  reliability: fair by eye; good with masks
+
+- id: leaf.widest_point
+  scale: leaf
+  question: Where along the blade is it widest?
+  type: state
+  views: [V5]
+  maps_to: {related_trait: leaf_shape}
+  states:
+    lower_third: nearer the base
+    middle: about halfway
+    upper_third: nearer the tip
+  reliability: good
+
+- id: leaf.apex
+  scale: leaf
+  question: Shape of the leaf tip.
+  type: state
+  views: [V5]
+  maps_to: {trait: leaf_apex}
+  states:
+    acuminate: tapering to a long narrow point, sides concave
+    caudate: ending in a tail
+    cuspidate: abruptly narrowed to a sharp stiff point
+    mucronate: rounded tip with a tiny bristle point
+    aristate: ending in a long bristle
+    acute: pointed, sides straight, angle under 90 degrees
+    obtuse: blunt, angle over 90 degrees
+    rounded: an even curve
+    truncate: cut straight across
+    emarginate: shallowly notched at the tip
+    retuse: tip rounded with a slight notch
+  reliability: good
+
+- id: leaf.base
+  scale: leaf
+  question: Shape of the blade's base where it meets the stalk.
+  type: state
+  views: [V5]
+  maps_to: {trait: leaf_base_shape, extra_states: [cordate, sagittate, oblique]}
+  states:
+    attenuate: tapering gradually into the stalk
+    cuneate: wedge-shaped, straight sides narrowing to the stalk
+    acute: pointed, angle under 90 degrees
+    obtuse: blunt, angle over 90 degrees
+    rounded: an even curve
+    truncate: cut straight across
+    cordate: notched, two rounded lobes either side of the stalk
+    sagittate: two pointed lobes pointing back, like an arrowhead
+    oblique: one side meets the stalk lower than the other
+  reliability: good
+  notes: cordate, sagittate and oblique are not yet states of leaf_base_shape (cordate is a leaf_shape state); an answer of these is a D3/D5 finding.
+
+- id: leaf.margin
+  scale: leaf
+  question: The edge of the blade.
+  type: state
+  views: [V5]
+  maps_to: {trait: leaf_margin}
+  states:
+    entire: smooth, no teeth
+    serrate: sharp teeth pointing forward toward the tip, like a saw
+    dentate: sharp teeth pointing straight out
+    crenate: rounded, scalloped teeth
+    spiny: teeth ending in spines
+  reliability: good
+  notes: Note doubly serrate (big teeth with small teeth on them) and irregular teeth in the note.
+
+- id: leaf.teeth_per_side
+  scale: leaf
+  question: Number of teeth along one side of the blade.
+  type: count
+  views: [V5]
+  maps_to: {proposed: teeth_per_side}
+  reliability: fair up to 15; points beyond
+
+- id: leaf.tooth_depth
+  scale: leaf
+  question: Tooth depth compared with the blade's half-width.
+  type: ordinal
+  views: [V5]
+  maps_to: {proposed: tooth_depth}
+  states:
+    shallow: under a tenth
+    medium: a tenth to a quarter
+    deep: over a quarter
+  reliability: fair
+
+- id: leaf.venation
+  scale: leaf
+  question: Pattern of the main veins.
+  type: state
+  views: [V5]
+  maps_to: {trait: leaf_venation}
+  states:
+    pinnate: one midrib with side veins along it
+    palmate: several main veins from the base
+    parallel: many veins running side by side base to tip
+    dichotomous: veins forking repeatedly in twos (ginkgo, ferns)
+    single: one vein only (needles)
+  reliability: good
+
+- id: leaf.petiole_over_blade
+  scale: leaf
+  question: Leaf stalk length divided by blade length.
+  type: ratio
+  views: [V5, V4]
+  maps_to: {trait: petiole_length_m}
+  reliability: fair
+  notes: 0 for a stalkless (sessile) leaf; note if the base clasps the stem.
+
+- id: leaf.colour_upper
+  scale: leaf
+  question: Colour of the leaf's upper face, lit.
+  type: colour
+  views: [V5, V4]
+  maps_to: {trait: leaf_colour}
+  reliability: fair
+
+- id: leaf.colour_lower
+  scale: leaf
+  question: Colour of the leaf's underside, if visible.
+  type: colour
+  views: [V5, V4]
+  maps_to: {proposed: leaf_colour_abaxial}
+  reliability: fair
+  notes: Southern magnolia's rusty felted underside is the case that raised this.
+
+- id: leaf.hairs
+  scale: leaf
+  question: Hairs visible on the blade or stalk?
+  type: state
+  views: [V5, V4]
+  maps_to: {proposed: indumentum}
+  states:
+    none: smooth
+    sparse: scattered hairs at the edge or on veins
+    dense: felted, woolly or velvety
+  reliability: fair (close-ups only)
+
+# --------------------------------------------------------------- 6. flower
+- id: flower.colour
+  scale: flower
+  question: Colour of the showy parts (petals, tepals or rays), lit.
+  type: colour
+  views: [V6, V7]
+  maps_to: {trait: flower_colour}
+  reliability: fair
+  notes: Report the main colour; patterns go in flower.pattern.
+
+- id: flower.pattern
+  scale: flower
+  question: Any pattern on the showy parts?
+  type: states
+  views: [V6]
+  maps_to: {proposed: flower_pattern}
+  states:
+    none: one even colour
+    blotch: a patch of another colour at the base or centre
+    band: a ring or band of another colour
+    veins: darker lines
+    spots: dots or speckles
+    edge: a different-coloured margin
+  reliability: good
+
+- id: flower.symmetry
+  scale: flower
+  question: Face-on, how are the parts arranged?
+  type: state
+  views: [V6]
+  maps_to: {trait: flower_symmetry}
+  states:
+    actinomorphic: an even star or wheel; looks the same after turning by one part
+    zygomorphic: one plane of symmetry only; a lip, a hood, or one part set apart
+    asymmetric: no symmetry
+  reliability: fair (small models miss one part set apart)
+
+- id: flower.parts
+  scale: flower
+  question: Number of petals, tepals or showy lobes on one flower.
+  type: count
+  views: [V6]
+  maps_to: {trait: perianth_parts}
+  reliability: good up to 15; bins beyond
+
+- id: flower.corolla_shape
+  scale: flower
+  question: Side view of one flower. Its shape.
+  type: state
+  views: [V7, V6]
+  maps_to: {trait: corolla_shape}
+  states:
+    rotate: flat, parts spread in one plane like a wheel
+    cupped: a shallow bowl
+    campanulate: a bell, as deep as wide
+    funnelform: a narrow tube widening gradually to a flared mouth
+    tubular: a long narrow tube, barely widening
+    salverform: a slender tube ending abruptly in a flat face
+    urceolate: an urn, swollen and narrowed at the mouth
+  reliability: good
+
+- id: flower.posture
+  scale: flower
+  question: Which way does an open flower face?
+  type: state
+  views: [V7, V1]
+  maps_to: {proposed: flower_posture}
+  states:
+    upward: facing the sky
+    outward: facing sideways
+    nodding: facing down from a bent stalk
+  reliability: good
+
+- id: flower.part_shape
+  scale: flower
+  question: Shape of one petal, tepal or ray.
+  type: state
+  views: [V6]
+  maps_to: {trait: petal_shape}
+  states:
+    linear: long and narrow, parallel sides
+    lanceolate: narrow, widest below the middle
+    elliptic: widest at the middle
+    oblong: parallel sides, rounded ends
+    ovate: widest below the middle
+    obovate: widest above the middle
+    spatulate: spoon-shaped
+    orbicular: round
+  reliability: good
+
+- id: flower.part_apex
+  scale: flower
+  question: Tip of one petal, tepal or ray.
+  type: state
+  views: [V6]
+  maps_to: {trait: petal_apex, related_trait: ray_apex, extra_states: [toothed]}
+  states:
+    acuminate: long tapering point
+    acute: pointed
+    obtuse: blunt
+    rounded: evenly rounded
+    truncate: squared off
+    emarginate: notched
+    bilobed: split into two lobes
+    toothed: squared off with two or three small teeth
+  reliability: good
+  notes: For daisy rays this answers ray_apex (acute, rounded, truncate, toothed).
+
+- id: flower.part_gaps
+  scale: flower
+  question: Do neighbouring petals or rays overlap, touch, or stand apart?
+  type: state
+  views: [V6]
+  maps_to: {proposed: perianth_overlap}
+  states:
+    overlap: edges overlap
+    touch: edges just meet
+    gaps: narrow gaps between them
+    spaced: wide gaps; parts stand well apart
+  reliability: good
+
+- id: flower.ray_sides
+  scale: flower
+  question: Daisy-type heads. Do the rays have parallel sides or taper?
+  type: state
+  views: [V6]
+  maps_to: {proposed: ray_taper}
+  states:
+    parallel: strap-like, parallel sides
+    tapering: narrowing toward the tip
+  reliability: good
+
+- id: flower.disc_shape
+  scale: flower
+  question: Daisy-type heads, side or oblique view. Shape of the central disc.
+  type: state
+  views: [V7, V6]
+  maps_to: {trait: receptacle_shape}
+  states:
+    flat: flat
+    convex: a low dome
+    hemispheric: a half-ball
+    conic: a cone
+  reliability: good
+
+- id: flower.anther_colour
+  scale: flower
+  question: Colour of the anthers (pollen sacs), if visible.
+  type: colour
+  views: [V6]
+  maps_to: {proposed: anther_colour}
+  reliability: fair
+
+- id: flower.size_over_leaf
+  scale: flower
+  question: Diameter of one open flower (or head) divided by the length of a nearby leaf blade.
+  type: ratio
+  views: [V4, V6]
+  maps_to: {trait: flower_size_m}
+  reliability: fair
+  notes: Only when both are in the same plane at the same distance.
+
+# --------------------------------------------------------- 7. inflorescence
+- id: infl.type
+  scale: inflorescence
+  question: How are the flowers grouped?
+  type: state
+  views: [V7, V1, V4]
+  maps_to: {trait: inflorescence}
+  states:
+    solitary: one flower on its own stalk
+    raceme: stalked flowers along an unbranched axis
+    spike: stalkless flowers along an unbranched axis
+    catkin: a dense, often hanging spike of tiny flowers
+    corymb: stalks of different lengths bringing flowers to one flat top
+    umbel: stalks all from one point, like an umbrella
+    compound_umbel: umbels on the rays of an umbel
+    panicle: a branched cluster
+    cyme: each axis ends in a flower, side branches flower later
+    scorpioid: a coiled one-sided cyme uncurling as it flowers
+    head: many stalkless flowers packed on one base (daisy, clover)
+    spadix: a fleshy spike, usually with a hood (spathe)
+  reliability: fair
+
+- id: infl.posture
+  scale: inflorescence
+  question: Which way does the whole cluster point?
+  type: state
+  views: [V7, V1]
+  maps_to: {trait: inflorescence_posture}
+  states:
+    erect: upright
+    nodding: bent over at the top
+    pendent: hanging
+  reliability: good
+
+- id: infl.position
+  scale: inflorescence
+  question: Where on the shoots do the flowers or clusters sit?
+  type: state
+  views: [V4, V1]
+  maps_to: {trait: flowering_position}
+  states:
+    terminal: at the shoot tips
+    lateral: along the shoots, in the leaf axils or on old wood
+    both: both
+  reliability: good
+
+- id: infl.density
+  scale: inflorescence
+  question: How closely packed are the flowers along the cluster?
+  type: ordinal
+  views: [V7]
+  maps_to: {proposed: inflorescence_density}
+  states:
+    loose: clear stalk between neighbouring flowers
+    medium: flowers touch here and there
+    dense: flowers packed, hiding the axis
+  reliability: good
+  notes: The lupine raceme drawn sparse where the flora says dense is the case that raised this.
+
+- id: infl.open_share
+  scale: inflorescence
+  question: Share of the cluster's flowers that are open (not bud, not fruit).
+  type: share
+  views: [V7]
+  maps_to: {proposed: opening_order}
+  reliability: fair
+  notes: Depends on the date; the comparison uses it to match the render day.
+
+- id: infl.length_over_height
+  scale: inflorescence
+  question: Length of one flower cluster divided by the plant's height (herbs) or by a leaf's length (trees and shrubs).
+  type: ratio
+  views: [V1, V4, V7]
+  maps_to: {trait: inflorescence_length_m}
+  reliability: fair
+
+# -------------------------------------------------------- 8. fruit and cone
+- id: fruit.shape
+  scale: fruit
+  question: Shape of one fruit.
+  type: state
+  views: [V8]
+  maps_to: {proposed: fruit_shape}
+  states:
+    globose: round
+    ovoid: egg-shaped, wider at the base
+    obovoid: egg-shaped, wider at the tip
+    obconic: an upside-down cone, flat top
+    clavate: club-shaped, narrow base, swollen tip
+    ellipsoid: oval, both ends alike
+    cylindric: long, parallel sides
+    flattened: pod, samara or other flat fruit
+  reliability: good
+
+- id: fruit.colour
+  scale: fruit
+  question: Colour of ripe fruit.
+  type: colour
+  views: [V8, V4]
+  maps_to: {trait: fruit_colour_ripe}
+  reliability: fair
+  notes: Unripe fruit colour goes in the note with the stage.
+
+- id: fruit.posture
+  scale: fruit
+  question: Which way do the fruits hang?
+  type: state
+  views: [V8, V4]
+  maps_to: {trait: fruit_posture}
+  states:
+    erect: pointing up
+    spreading: held out sideways
+    deflexed: bent down
+    pendent: hanging
+  reliability: good
+
+- id: fruit.arrangement
+  scale: fruit
+  question: How are the fruits grouped?
+  type: state
+  views: [V8, V4]
+  maps_to: {proposed: fruit_arrangement}
+  states:
+    single: one at a time
+    cluster: several together
+    spike: many small fruits along a hanging or upright axis
+    chain: fruits growing from fruits in chains
+  reliability: good
+
+- id: fruit.surface
+  scale: fruit
+  question: Surface of the fruit.
+  type: state
+  views: [V8]
+  maps_to: {proposed: fruit_surface}
+  states:
+    smooth: smooth or glossy
+    scaly: covered in scales
+    spiny: with spines or spine clusters
+    hairy: hairy or woolly
+    winged: with wings
+  reliability: good
+
+- id: fruit.size_over_leaf
+  scale: fruit
+  question: Fruit length divided by a nearby leaf blade's length.
+  type: ratio
+  views: [V4, V8]
+  maps_to: {trait: fruit_size_m}
+  reliability: fair
+
+- id: cone.posture
+  scale: fruit
+  question: Conifers. Which way do the seed cones point?
+  type: state
+  views: [V4, V8]
+  maps_to: {trait: cone_posture}
+  states:
+    erect: upright on the branch
+    spreading: held out sideways
+    deflexed: bent down
+    pendent: hanging
+  reliability: good
+
+- id: cone.length_over_width
+  scale: fruit
+  question: Closed seed cone length divided by its width.
+  type: ratio
+  views: [V8]
+  maps_to: {trait: [cone_length_m, cone_width_m]}
+  reliability: fair
+
+- id: cone.colour
+  scale: fruit
+  question: Colour of a mature seed cone.
+  type: colour
+  views: [V8]
+  maps_to: {proposed: cone_colour}
+  reliability: fair
+
+# ---------------------------------------------------------------- 9. surface
+- id: surface.bark_texture
+  scale: surface
+  question: Bark texture on the lower trunk.
+  type: state
+  views: [V8, V1]
+  maps_to: {trait: bark_texture}
+  states:
+    smooth: smooth, unbroken
+    furrowed: deep vertical furrows with ridges between
+    plated: broken into large flat plates
+    scaly: small flakes or scales
+    peeling: peeling in strips or sheets
+    fibrous: stringy, shredding fibres
+  reliability: good
+
+- id: surface.bark_colour
+  scale: surface
+  question: Colour of the bark on the lower trunk, lit.
+  type: colour
+  views: [V8, V1]
+  maps_to: {trait: bark_colour}
+  reliability: fair
+  notes: Note if furrows and ridges differ in colour (ponderosa has orange plates and dark furrows).
+
+- id: surface.stem_colour
+  scale: surface
+  question: Colour of a green stem's skin (cacti, herbs, succulents), lit.
+  type: colour
+  views: [V8, V1]
+  maps_to: {proposed: stem_colour}
+  reliability: fair
+
+- id: surface.ribs
+  scale: surface
+  question: Cacti and ribbed stems. Number of ribs around the stem.
+  type: count
+  views: [V3, V8]
+  maps_to: {trait: ribs}
+  reliability: fair up to 15; bins beyond (from above is best)
+
+- id: surface.tubercle_relief
+  scale: surface
+  question: Cacti. How strongly do bumps (tubercles) stand out under the spine clusters?
+  type: ordinal
+  views: [V8]
+  maps_to: {related_trait: tubercles, proposed: tubercle_relief}
+  states:
+    absent: smooth ribs, no bumps
+    barely: ribs with only a slight swelling under each spine cluster
+    low: low rounded bumps
+    distinct: clear bumps, ribs still visible
+    prominent: large bumps; ribs broken into separate knobs or absent
+  reliability: good
+
+- id: surface.areole_spacing
+  scale: surface
+  question: Cacti. Distance between neighbouring spine clusters along a rib, divided by the stem's diameter.
+  type: ratio
+  views: [V8]
+  maps_to: {trait: areole_spacing_m}
+  reliability: fair
+
+- id: surface.spine_cover
+  scale: surface
+  question: Cacti. Share of the stem's skin hidden by spines, from about 1 m away.
+  type: share
+  views: [V8, V1]
+  maps_to: {proposed: spine_cover}
+  reliability: fair
+
+- id: surface.spine_colour
+  scale: surface
+  question: Cacti. Colour of the spines; note young (top) and old (base) separately.
+  type: colour
+  views: [V8]
+  maps_to: {trait: spine_colour}
+  reliability: fair
+
+- id: surface.spine_form
+  scale: surface
+  question: Cacti. Shape of the longest central spine.
+  type: state
+  views: [V8]
+  maps_to: {trait: central_spine_form}
+  states:
+    straight: straight
+    curved: gently curved
+    hooked: ending in a sharp hook
+    flattened: flat and ribbon-like
+    twisted: twisted
+  reliability: fair (close-ups only)
+
+# ---------------------------------------------------------------- 10. season
+- id: season.stage
+  scale: season
+  question: What stage is the plant at?
+  type: state
+  views: [V1, V4, V6, V7, V8]
+  maps_to: {trait: [flowering_months, fruiting_months]}
+  states:
+    vegetative: no flowers or fruit
+    bud: flower buds, none open
+    flowering: flowers open
+    fruiting: fruit present, no flowers
+    mixed: flowers and fruit together
+  reliability: good
+  notes: With the photo's date and hemisphere, this sets the render day for matching.
+
+- id: season.leaf_state
+  scale: season
+  question: State of the foliage.
+  type: state
+  views: [V1, V4]
+  maps_to: {trait: [leaf_out_months, leaf_fall_months, leaf_colour_autumn]}
+  states:
+    leafless: no leaves
+    flushing: new leaves expanding
+    full: full foliage
+    autumn_colour: leaves turning colour
+  reliability: good
