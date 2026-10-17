@@ -28,8 +28,8 @@
       "umbel": "often"
     },
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
     },
     "perianth": {
       "sepals_and_petals": "usually",
@@ -62,6 +62,11 @@
       "evidence": "SourceInferred",
       "source": "stevens-apweb",
       "note": "APweb, Cornales page, Nyssaceae (read 2026-10-16): leaves spiral (sometimes opposite)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Nyssaceae (read 2026-10-16): flowers small and regular or only somewhat irregular, with a regular corolla; radial symmetry is the usual state, so the even tie is replaced (kept qualified rather than bare because of the 'somewhat irregular' state)."
     }
   }
 }

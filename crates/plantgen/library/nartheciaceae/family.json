@@ -17,7 +17,7 @@
       "none": "often"
     },
     "sexual_system": "hermaphrodite",
-    "ovary_position": "superior",
+    "ovary_position": {"half_inferior": "usually", "superior": "sometimes"},
     "woodiness": "herbaceous",
     "inflorescence": {
       "raceme": "often",
@@ -33,6 +33,7 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Dioscoreales page, Nartheciaceae (read 2026-10-16): the gynoecium is superior to half inferior, with the ovary only secondarily superior in Metanarthecium and Narthecium; Aletris has about 30 of the 41 species, so half inferior is the usual state."},
     "traits.flowering_position": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): racemes or thyrses at the scape tip (scapose herbs)."},
     "traits": {
       "evidence": "SourceInferred",

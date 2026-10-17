@@ -37,8 +37,8 @@
       "catkin": "sometimes"
     },
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
     },
     "zygomorphy": "bilabiate",
     "perianth": {
@@ -78,6 +78,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Loranthaceae (read 2026-10-16): corolla and stamens mostly 5-6, up to 9 (low 4 from wider knowledge)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Loranthaceae (read 2026-10-16): flowers regular to somewhat irregular, any irregularity being in the perianth (a tube often bent and split down one side); radial leads, with zygomorphic flowers as a minority."
     }
   }
 }

@@ -32,9 +32,7 @@
     "stipules": {
       "false": "usually"
     },
-    "fruit_type": {
-      "berry": "often"
-    }
+    "fruit_type": {"achene": "usually", "berry": "sometimes", "drupe": "rarely"}
   },
   "forms": {
     "shrub": {
@@ -88,10 +86,6 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 435, 437, family Caprifoliaceae: stipules false (or reduced), usually; read as {\"false\": \"usually\"}."
     },
-    "traits.fruit_type": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 435, 437, family Caprifoliaceae: fruit type berry (or capsule, drupe), often; read as {\"berry\": \"often\"}."
-    }
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Dipsacales page, Caprifoliaceae (read 2026-10-16): of about 890 species, Dipsacoideae (about 290) have a dry one-seeded fruit and Linnaeoideae (20) an achene, while only Caprifolieae (about 181) have berries (Lonicera) or drupes (Symphoricarpos); DELTA Valerianaceae adds an achene-like fruit for the roughly 400 valerians, so achene is the usual state."}
   }
 }
