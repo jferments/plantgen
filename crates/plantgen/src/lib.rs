@@ -605,4 +605,12 @@ pub mod venation;
 /// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
 /// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
 /// are as long as its flora gives (95 is lacy leaves, #180).
-pub const GENERATOR_REVISION: u32 = 96;
+/// 97: a dimorphic fern bears fertile fronds as well as sterile ones
+/// (fern program revision 10): `frond_dimorphism` dimorphic makes about
+/// three in ten fertile, standing nearer the crown's centre, as long, as
+/// stalked and as upright as their stated `fertile_*` characters give, with
+/// their own pinnae (`fertile_pinna`, as narrow as stated); the deer fern's
+/// erect fertile fronds rise from its spreading rosette as Flora of North
+/// America gives, and its reference height is theirs (96 is fern stipes
+/// scaly at their base, #174).
+pub const GENERATOR_REVISION: u32 = 97;
