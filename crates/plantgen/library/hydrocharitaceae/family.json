@@ -17,11 +17,11 @@
       "parallel": "often"
     },
     "leaf_shape": {
-      "linear": "sometimes",
-      "obovate": "often",
-      "orbicular": "often",
-      "oblong": "often",
-      "ovate": "often"
+      "linear": "often",
+      "oblong": "sometimes",
+      "ovate": "sometimes",
+      "obovate": "sometimes",
+      "orbicular": "sometimes"
     },
     "stipules": {
       "true": "often",
@@ -43,7 +43,7 @@
     "woodiness": "herbaceous",
     "inflorescence": {
       "solitary": "often",
-      "cyme": "often"
+      "cyme": "sometimes"
     },
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -90,6 +90,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA (read 2026-10-16): mostly perennial."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Najadaceae (read 2026-10-17): Najas, the family's largest genus (38 spp on Wikipedia, 50 in DELTA, of ~135 in the family per Wikipedia Hydrocharitaceae), has narrow linear blades. The Victorian KeyBase genus key (read 2026-10-17) adds linear leaves for Vallisneria and narrow whorled leaves for Hydrilla, Egeria and Elodea; only Ottelia (elliptic to roundish) and Halophila (paired petiolate blades) are broad. Linear was wrongly the lowest; it leads."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Najadaceae (read 2026-10-17): Najas flowers are single in the leaf axils; Najas is the largest genus (38-50 of ~135 spp). Wikipedia Hydrocharitaceae: flowers sit within a forked spathe or between two bracts, usually one female flower per spathe, so solitary leads; clustered male flowers make cyme the runner-up."
     }
   }
 }
