@@ -572,4 +572,8 @@ pub mod venation;
 /// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
 /// sheen and a backlit glow, fringe its edge, and up close stand from it
 /// as strands of their own (89 is cactus colours, #156).
-pub const GENERATOR_REVISION: u32 = 90;
+/// 91: stem hairs (`stem_hairs`, `crate::hairs::Tube`): the hairs on
+/// young stems and leaf stalks, in a blade's words and `crisped`, cast
+/// the first year's wood toward their colour, wear off in its second and
+/// up close stand from it as strands (90 is leaf hairs, #166).
+pub const GENERATOR_REVISION: u32 = 91;
