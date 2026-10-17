@@ -114,7 +114,14 @@
     "culm_length_m": {"min": 0.3, "max": 0.8},
     "leaf_length_m": {"min": 0.1, "max": 0.4},
     "leaf_width_m": {"min": 0.0005, "max": 0.0007},
-    "inflorescence_length_m": {"min": 0.06, "max": 0.12}
+    "inflorescence_length_m": {"min": 0.06, "max": 0.12},
+    "height_typical_m": {"min": 0.3, "max": 0.7},
+    "height_max_m": 0.9,
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "flowering_months": [1, 11, 12],
+    "fruit_size_m": {"min": 0.003, "max": 0.004},
+    "fruiting_months": [1, 2, 3]
   },
   "evidence": {
     "appearance.organs.panicle": {
@@ -206,7 +213,14 @@
       "evidence": "SourceInferred",
       "source": "kew-grassbase",
       "note": "GrassBase's entry (as search results quote it; the page itself was not read): panicle open, lanceolate, 6-12 cm long, the spikelets borne singly."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L415293), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L415293), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L415293), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L415293), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L415293), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L415293), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L415293), as no source read gives it."}
   },
   "provenance": {
     "sources": [

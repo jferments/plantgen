@@ -42,12 +42,7 @@
       "max": 10
     },
     "ovary_position": "inferior",
-    "fruit_type": {
-      "capsule": "often",
-      "berry": "often",
-      "drupe": "often",
-      "schizocarp": "sometimes"
-    },
+    "fruit_type": {"drupe": "usually", "capsule": "often", "berry": "often", "schizocarp": "sometimes"},
     "phyllotaxis_pattern": {
       "decussate": "often"
     },
@@ -112,6 +107,6 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 409, 411, 412, family Rubiaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     },
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add schizocarp (sometimes): Simpson, Plant Systematics (2019) p. 409, 411, 412: berry, capsule, drupe or schizocarp."}
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Rubiaceae (read 2026-10-17): fruit a berry, capsule, drupe or schizocarp; drupes in Coffea and Psychotria, capsules in Oldenlandia. Tallied by the page's genus and tribe sizes: Psychotria alone c. 1,645 spp. plus Palicoureeae c. 1,112 (both drupaceous) outweigh Spermacoceae c. 1,553 (mostly capsular) and Rubieae c. 969 (mostly schizocarps). Berries (Gardenia, Randia and allies) left at often. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."}
   }
 }

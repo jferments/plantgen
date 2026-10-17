@@ -17,9 +17,9 @@
     },
     "leaf_venation": "pinnate",
     "leaf_shape": {
-      "linear": "often",
+      "ovate": "usually",
       "oblong": "often",
-      "ovate": "often"
+      "linear": "rarely"
     },
     "stipules": {
       "false": "usually",
@@ -73,6 +73,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Balsaminaceae (read 2026-10-17): lamina entire, simple; German Wikipedia, Springkräuter (read 2026-10-17): simple blades (margins sometimes sinuate, not cut into lobes)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Balsaminaceae (read 2026-10-17): blades needle-like to linear, or oblong to ovate; c. 600 spp., almost all Impatiens. The narrow forms belong to Hydrocera (one species) and a few Impatiens; broad blades in the rest (genus knowledge)."
     }
   }
 }

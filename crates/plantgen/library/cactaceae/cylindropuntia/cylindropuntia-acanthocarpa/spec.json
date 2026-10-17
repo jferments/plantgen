@@ -34,7 +34,6 @@
       "bud_share": 0.2,
       "fruit_share": 0.3,
       "bud_size": 0.02,
-      "fruit_size": 0.03,
       "bud_rate": 0.5,
       "flower_area": 0.368,
       "bud_area": 0.636,
@@ -59,7 +58,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "stamens": 200,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.3
@@ -153,7 +151,14 @@
     "fruit_colour_ripe": [175, 150, 100],
     "wood_density_basic_kg_m3": 640,
     "radial_spines": {"min": 8, "max": 25},
-    "radial_spine_length_m": {"min": 0.02, "max": 0.03}
+    "radial_spine_length_m": {"min": 0.02, "max": 0.03},
+    "height_typical_m": {"min": 1, "max": 2},
+    "height_max_m": 3,
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [4, 5],
+    "fruit_size_m": {"min": 0.02, "max": 0.04},
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: tubercles prominent."},
@@ -218,7 +223,14 @@
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
       "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here numerous, yellow. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."}
   },
   "provenance": {
     "sources": [

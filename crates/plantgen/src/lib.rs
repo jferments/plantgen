@@ -596,14 +596,28 @@ pub mod venation;
 /// divisions lifted, scattered or set all round their rachis
 /// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
 /// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
-/// 96: a spine set can keep to the upper areoles of a pad or joint
+/// 96: species draw from the species-facts records: 189 species state the
+/// characters no source of theirs gives (heights, leaf sizes, shapes,
+/// margins and habits, inflorescence and fruit sizes, months, rosettes)
+/// as the records estimate them, and a look a species set by hand gives
+/// way wherever a rule fed by a stated fact now sets it (leaf widths,
+/// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
+/// strap leaf is never narrower than its card draws (95 is lacy
+/// leaves, #180).
+/// 97: lacy leaves drawn as geometry: a segment at least ten times as long
+/// as it is wide is a round thread, bowed a little (`lace::THREAD`), and a
+/// thrice-divided leaf whose divisions roll round their rachis sets its
+/// segments round each pinnule's too; a leaflet may be as narrow as a
+/// hundredth of its length (96 is the species-facts records, #171).
+/// 103: a spine set can keep to the upper areoles of a pad or joint
 /// (`SpineSet::distal`, from `lower_areole_spines`): its lower areoles
 /// carry fewer spines or none and draw smaller far cards, and a tuft
-/// stores where it sits along its segment (95 is lacy leaves, #180).
-/// 97: a cactus column's flowers may open down its flank as well as round
+/// stores where it sits along its segment (98 to 102 are
+/// queued at the merge desk).
+/// 104: a cactus column's flowers may open down its flank as well as round
 /// its crown (`column` revision 3, `flank`: the pieces of its last flank
 /// years open a few on their sides; `cactaceae` revision 9), from the new
 /// `flower_zone`: a hedgehog's along the upper half of its stems, an organ
-/// pipe's near the tips and down their sides (96 is spines on the upper
-/// areoles).
-pub const GENERATOR_REVISION: u32 = 97;
+/// pipe's near the tips and down their sides (103 is spines on the
+/// upper areoles).
+pub const GENERATOR_REVISION: u32 = 104;

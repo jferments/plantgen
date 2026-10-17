@@ -54,10 +54,7 @@
       "berry": "often",
       "drupe": "sometimes"
     },
-    "leaf_habit": {
-      "evergreen": "often",
-      "deciduous": "often"
-    },
+    "leaf_habit": {"evergreen": "usually", "deciduous": "sometimes"},
     "leaf_venation": "pinnate",
     "sexual_system": {"hermaphrodite": "usually", "dioecious": "rarely"},
     "life_span": "perennial"
@@ -126,11 +123,7 @@
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 152 Ericaceae and 157 Vacciniaceae (blueberries and huckleberries), which APG joins as Ericaceae: shrubs or undershrubs, rarely trees; leaves mostly alternate, simple, mostly evergreen; stipules absent; fruit a capsule, berry or drupe."
     },
-    "traits.leaf_habit": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ericaceae as that work draws it, there coded together with Empetraceae, Epacridaceae, Monotropaceae, Pyrolaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
-    },
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Ericaceae (read 2026-10-17): leaves usually evergreen; DELTA Ericaceae (read 2026-10-17): persistent or deciduous. Subfamily sizes from Wikipedia: Ericoideae c. 1,790 spp. (Erica, Rhododendron, mostly evergreen; deciduous azaleas a minority) and Epacridoideae c. 545 (evergreen) outweigh the deciduous part of Vaccinioideae (c. 1,580, many tropical evergreen). Re-ranks the earlier value, from watson-dallwitz-1992, whose top states were tied."},
     "traits.leaf_venation": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
