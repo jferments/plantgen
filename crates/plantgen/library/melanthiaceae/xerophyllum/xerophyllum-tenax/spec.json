@@ -151,7 +151,8 @@
       6,
       7,
       8
-    ]
+    ],
+    "fruiting_months": [9, 10]
   },
   "evidence": {
     "taxon": {
@@ -243,6 +244,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as the FEIS review read gives no months."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's common beargrass review (Crane 1990, read 2026-10-16): in Washington fruits green on August 27, half brown by September 10, opening and shedding seed by September 25, all open on October 10; read as September and October."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -3382,12 +3382,12 @@ mod tests {
             {
                 parent.remove(key);
             }
-            // A section a rule filled alone (a look's hairs) goes with it,
-            // but never the look itself, whose other rules the organs'
-            // list still names.
-            let mut section = outer;
-            while let Some((above, key)) = section.rsplit_once('.') {
-                if above.split('.').count() < 3 {
+            // A rule's value may be all its section holds, as a flower's
+            // form is only its cup: the section goes with it, but a look
+            // stays, so later paths still find its notes.
+            let mut emptied = outer;
+            while let Some((above, key)) = emptied.rsplit_once('.') {
+                if above == "appearance.organs" {
                     break;
                 }
                 let Some(parent) = above
@@ -3397,11 +3397,14 @@ mod tests {
                 else {
                     break;
                 };
-                if parent.get(key) != Some(&serde_json::json!({})) {
+                if !parent
+                    .get(key)
+                    .is_some_and(|inside| inside.as_object().is_some_and(serde_json::Map::is_empty))
+                {
                     break;
                 }
                 parent.remove(key);
-                section = above;
+                emptied = above;
             }
             if let Some(notes) = spec
                 .get_mut("evidence")

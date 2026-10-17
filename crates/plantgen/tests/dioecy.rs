@@ -210,15 +210,17 @@ fn a_mistletoes_male_clumps_bear_no_berries() {
 fn a_cactuss_male_plants_bear_flowers_in_place_of_fruit() {
     for id in ["carnegiea-gigantea", "cylindropuntia-fulgida"] {
         let plants = males_bear_no_fruit(id, &["fruit", "flower"]);
-        let most = |female: bool| {
-            plants
+        // Plants differ in size by seed, so compare each sex's mean.
+        #[allow(clippy::cast_precision_loss)]
+        let mean = |female: bool| {
+            let counts: Vec<usize> = plants
                 .iter()
                 .filter(|(own, _)| *own == female)
                 .map(|(_, counts)| counts[1])
-                .max()
-                .unwrap()
+                .collect();
+            counts.iter().sum::<usize>() as f64 / counts.len() as f64
         };
-        assert!(most(false) > most(true), "{id}: {plants:?}");
+        assert!(mean(false) > mean(true), "{id}: {plants:?}");
     }
 }
 

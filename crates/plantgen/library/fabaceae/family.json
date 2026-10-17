@@ -20,7 +20,7 @@
     "division_pattern": {"pinnate": "usually", "palmate": "sometimes"},
     "sexual_system": {"hermaphrodite": "usually", "monoecious": "sometimes", "polygamous": "sometimes"},
     "phyllotaxis_pattern": {"spiral": "usually"},
-    "flower_symmetry": {"actinomorphic": "often", "zygomorphic": "often"},
+    "flower_symmetry": {"zygomorphic": "usually", "actinomorphic": "sometimes"},
     "zygomorphy": "papilionaceous"
   },
   "forms": {
@@ -104,7 +104,7 @@
       "note": "How the herb program draws a palmate leaf from a flora's petiole and leaflet lengths, a choice of the model's (spec rework E4): its card is the petiole and a leaflet end to end, so the leaf is as long as both and the petiole's share is its length over theirs."
     },
     "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 320, 321, family Fabaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."},
-    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 320, 321, family Fabaceae: flower symmetry actinomorphic or zygomorphic; read as {\"actinomorphic\": \"often\", \"zygomorphic\": \"often\"}."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fabaceae (read 2026-10-16): Faboideae (about 14,000 species) have zygomorphic flowers and Caesalpinioideae often do, while the mimosoid clade (about 3,200 species) has actinomorphic flowers; zygomorphic is the usual state."},
     "traits.zygomorphy": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 150, 151, 152, family Fabaceae: zygomorphy papilionaceous; read as \"papilionaceous\"."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family low 5: Simpson, Plant Systematics (2019) p. 320, 321: 5 or 10-∞. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   },

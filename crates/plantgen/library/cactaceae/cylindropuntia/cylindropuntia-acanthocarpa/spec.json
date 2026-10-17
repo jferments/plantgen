@@ -36,7 +36,7 @@
       "bud_size": 0.02,
       "fruit_size": 0.03,
       "bud_rate": 0.5,
-      "flower_area": 0.270,
+      "flower_area": 0.368,
       "bud_area": 0.636,
       "fruit_area": 0.89
     }
@@ -59,14 +59,11 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 10,
           "stamens": 200,
-          "petal_width": 0.8,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.3
         },
-        "colour": [0.75, 0.35, 0.08],
         "accent": [0.55, 0.45, 0.2]
       },
       "bud": {
@@ -80,8 +77,7 @@
         "shape": {
           "template": "fruit",
           "aspect": 0.7
-        },
-        "colour": [0.45, 0.4, 0.15]
+        }
       }
     },
     "bodies": {
@@ -98,15 +94,13 @@
         },
         "areoles": {
           "spacing": 0.02,
-          "felt_radius": 0.002,
-          "felt": [0.5, 0.45, 0.35]
+          "felt_radius": 0.002
         },
         "spines": [
           {
             "role": "radial",
             "angle": 40,
             "width": 0.0006,
-            "colour": [0.65, 0.55, 0.35],
             "angle_spread": 25,
             "length_spread": 0.35,
             "tip": [0.55, 0.45, 0.3]
@@ -123,7 +117,6 @@
           }
         ],
         "greying": {
-          "colour": [0.3, 0.27, 0.22],
           "years": 6
         },
         "cork": {
@@ -152,11 +145,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "spine_colour": [175, 130, 75],
+    "spine_colour_aged": [140, 138, 132],
+    "areole_wool_colour": [215, 200, 160],
+    "flower_colour": [195, 105, 30],
+    "fruit_colour_ripe": [175, 150, 100],
     "wood_density_basic_kg_m3": 640,
     "radial_spines": {"min": 8, "max": 25},
     "radial_spine_length_m": {"min": 0.02, "max": 0.03}
   },
   "evidence": {
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: spines yellow to tan to deep reddish brown, greying; tan here."},
+    "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: the spines grey with age."},
+    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: wool white, yellow or tan, ageing greyish black; pale tan here."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 204 to 205, Cylindropuntia acanthocarpa: flowers bright yellow to bronze to brick red (bronze here, the middle of the words); fruit dry, tan at maturity. Anderson gives the flower's length (2 to 3 cm) but not its width and no fruit size, so their sizes stay set by hand."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 204 to 205, Cylindropuntia acanthocarpa: flowers bright yellow to bronze to brick red (bronze here, the middle of the words); fruit dry, tan at maturity. Anderson gives the flower's length (2 to 3 cm) but not its width and no fruit size, so their sizes stay set by hand."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cylindropuntia acanthocarpa (gwddagg_v2.2_species.csv, read): specific gravity 0.64 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.64, branches 0.58. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits": {
       "evidence": "SourceInferred",
