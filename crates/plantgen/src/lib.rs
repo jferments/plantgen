@@ -578,12 +578,16 @@ pub mod venation;
 /// bands, spots or mottles, a different share on every leaf; the royal
 /// palm's pinnae are paler below and the rattlesnake plantain's leaves
 /// carry their pale midvein band (90 is leaf hairs, #166).
-/// 92: species draw from the species-facts records: 189 species state the
+/// 92: stem hairs (`stem_hairs`, `crate::hairs::Tube`): the hairs on
+/// young stems and leaf stalks, in a blade's words and `crisped`, cast
+/// the first year's wood toward their colour, wear off in its second and
+/// up close stand from it as strands (91 is leaves with two faces, #164).
+/// 93: species draw from the species-facts records: 189 species state the
 /// characters no source of theirs gives (heights, leaf sizes, shapes,
 /// margins and habits, inflorescence and fruit sizes, months, rosettes)
 /// as the records estimate them, and a look a species set by hand gives
 /// way wherever a rule fed by a stated fact now sets it (leaf widths,
 /// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
-/// strap leaf is never narrower than its card draws (91 is leaves with
-/// two faces and variegation, #164).
-pub const GENERATOR_REVISION: u32 = 92;
+/// strap leaf is never narrower than its card draws (92 is stem
+/// hairs, #173).
+pub const GENERATOR_REVISION: u32 = 93;

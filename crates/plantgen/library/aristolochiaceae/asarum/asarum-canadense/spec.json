@@ -50,9 +50,9 @@
   },
   "appearance": {
     "bark": [
-      0.35,
-      0.22,
-      0.2
+      0.17,
+      0.2,
+      0.08
     ],
     "foliage": [
       0.1,
@@ -132,7 +132,8 @@
     "woodiness": "herbaceous",
     "rosette": "basal",
     "leaf_margin": "entire",
-    "fruit_size_m": {"min": 0.01, "max": 0.02}
+    "fruit_size_m": {"min": 0.01, "max": 0.02},
+    "stem_hairs": "crisped"
   },
   "evidence": {
     "taxon": {
@@ -233,7 +234,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FNA vol. 3 and Simpson: hairy, purplish stalks; soft, dull green, kidney-shaped leaves (the western species' card)."
+      "note": "By eye, after FNA vol. 3 and Simpson: hairy stalks, pale green with a reddish cast as iNaturalist photographs show them (observations 7864289, 117742491, 340807025); soft, dull green, kidney-shaped leaves (the western species' card)."
     },
     "traits.leaf_hairs": {
       "evidence": "SourceInferred",
@@ -244,6 +245,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces abaxially appressed-hirsute, usually sparsely so (strigose)."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): petiole 6-20 cm, crisped-hirsute: stiff hairs, curled (crisped). The plant has no stem above ground, so its hairs are drawn on its leaf stalks."
     },
     "traits.leaf_ciliate": {
       "evidence": "SourceInferred",
