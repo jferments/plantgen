@@ -107,7 +107,8 @@
     "awn_insertion": "apical",
     "rhizome_habit": "none",
     "clonal": false,
-    "flowering_months": [6, 7, 8]
+    "flowering_months": [6, 7, 8],
+    "fruiting_months": [8]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -204,6 +205,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Dactylis glomerata, fig. 449): flowers June-August as an escape along roadsides and waste places in the Pacific States."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's orchardgrass review (Sullivan 1992, read 2026-10-16): \"Seed shattering takes place in late summer\"; read as August. Flora of China gives \"Fl. and fr. May-Aug.\""
     }
   },
   "provenance": {

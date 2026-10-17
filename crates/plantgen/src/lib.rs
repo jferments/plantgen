@@ -549,11 +549,17 @@ pub mod venation;
 /// which flowered all year and never fruited, now bud, flower, fruit and
 /// drop in their months, as do the magnoliids that state their months
 /// (85 is conifer foliage along the limbs, #142).
-/// 87: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
+/// 87: a flower with no perianth (no petals, tube, calyx or cup) spreads
+/// its stamens and pistil over the reach its pieces would have taken, and
+/// the reduced drawing shows them as small blunt stamens in the flower's
+/// colour on a ring at any distance, not as bare sticks; seventeen
+/// species state their fruiting months from their sources, so their year
+/// now bears fruit.
+/// 88: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
 /// scales (the new `palea` organ, in `stipe_scale_colour`), largest at
 /// its foot, on its frond and on the stipe bases of an old crown; a
 /// rachis narrows from its foot to its tip, and a small frond's is
 /// thinner (fern program revision 8); the sword fern's stipe is as long
-/// as Flora of North America gives (86 is a flowering look's year,
-/// #159).
-pub const GENERATOR_REVISION: u32 = 87;
+/// as Flora of North America gives (87 is flowers with no perianth,
+/// #168).
+pub const GENERATOR_REVISION: u32 = 88;

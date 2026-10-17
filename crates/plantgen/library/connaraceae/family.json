@@ -20,8 +20,8 @@
       "raceme": "often"
     },
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
     },
     "perianth": "sepals_and_petals",
     "fruit_type": {
@@ -43,6 +43,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Connaraceae: leaves alternate; leaves compound; compound leaves pinnate; stipules absent; plants usually hermaphrodite, sometimes dioecious; ovary superior; floral cup absent; stems woody; flowers in panicles or in racemes; flowers actinomorphic or zygomorphic; perianth sepals and petals; fruit follicle or nut; parts of each whorl 5; stamens 5 to 10; carpels 1 to 8. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Connaraceae (read 2026-10-16): flowers small and regular or somewhat irregular, with a regular corolla; radial is the usual state (qualified rather than bare because of the 'somewhat irregular' state)."
     }
   }
 }
