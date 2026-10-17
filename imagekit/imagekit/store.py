@@ -56,7 +56,17 @@ def jsonl(path: Path):
                     yield json.loads(line)
 
 
+SEALED = ".pushed.json"  # in a batch or run folder: it is on data.plantgen.io and takes no more rows
+
+
+def check_open(folder: Path) -> None:
+    if (folder / SEALED).exists():
+        raise SystemExit(f"{folder.name} is already on data.plantgen.io and takes no more rows: "
+                         "use a new batch or run name (--batch / --run)")
+
+
 def append_jsonl(path: Path, rows) -> None:
+    check_open(path.parent)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "a", encoding="utf-8") as fh:
         for row in rows:
@@ -99,6 +109,10 @@ class Store:
 
     def run_dir(self, run: str) -> Path:
         return self.root / "sources" / "image-analyses" / run
+
+    def sealed(self, kind: str, name: str) -> bool:
+        d = self.batch_dir(name) if kind == "batch" else self.run_dir(name)
+        return (d / SEALED).exists()
 
     def batches(self) -> list[str]:
         d = self.root / "sources" / "images"

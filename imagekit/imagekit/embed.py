@@ -22,7 +22,7 @@ import sys
 import time
 
 from . import __version__, analyzer
-from .store import Store, append_jsonl, jsonl, now
+from .store import Store, append_jsonl, check_open, jsonl, now
 
 
 def register(subparsers) -> None:
@@ -70,6 +70,7 @@ def embed(store: Store, name: str, *, batches=None, run: str | None = None, devi
     if not todo:
         return {"model": name, "analyzer": aid, "embedded": 0, "failed": 0, "seconds": 0.0}
     run = run or f"embed-{name}-{time.strftime('%Y-%m-%d')}"
+    check_open(store.run_dir(run))
     t_load = time.perf_counter()
     enc = vectors.load_embedder(name, revision, defn["params"]["image_px"], device)
     load_s = time.perf_counter() - t_load

@@ -11,11 +11,11 @@ from pathlib import Path
 from . import __version__, analyzer, licences
 from .fetch import Downloader, archive, commons, gbif, inat, inat_dump, local
 from .ingest import MAX_PX, ingest
-from .store import DEFAULT_ROOT, Store, jsonl
+from .store import DEFAULT_ROOT, Store, check_open, jsonl
 
 # Commands that live in their own modules, each with register(subparsers). Their
 # heavy imports (models, numpy) happen inside the command, so `fetch` stays light.
-COMMAND_MODULES = ("run", "embed", "search")
+COMMAND_MODULES = ("run", "embed", "search", "sync")
 
 FETCHERS = {
     "inat": inat.fetch, "inat-dump": inat_dump.fetch, "gbif": gbif.fetch, "commons": commons.fetch,
@@ -99,6 +99,7 @@ def cmd_fetch(args, store) -> None:
         args.licences |= {licences.norm(args.licence)}
         args.licence = licences.norm(args.licence)
     batch = args.batch or f"{args.source if args.source != 'inat-dump' else 'inat'}-{time.strftime('%Y-%m-%d')}"
+    check_open(store.batch_dir(batch))
     dl = Downloader(store, batch, max_mb=args.max_mb, dry_run=args.dry_run, allowed=args.licences)
     dl.note_command(sys.argv[1:])
     FETCHERS[args.source](args, dl)

@@ -93,6 +93,7 @@ sources/image-analyses/<run>/         one analysis run
 analyzers.jsonl                       each analyzer id's definition (schemas/analyzer.schema.json)
 incoming/<batch>/                     downloads not yet ingested
 index.sqlite                          a lookup index; `imagekit reindex` rebuilds it from the files
+<batch or run>/.pushed.json           the seal `imagekit push` and `pull` write: no more rows
 ```
 
 **One image, one key.** An image is named by the SHA-256 of its stored
@@ -213,6 +214,33 @@ a rerun embeds nothing and a stopped run picks up where it left off.
 reciprocal-rank fusion. `--by-species` ranks species by the mean of their
 best three images, and `--html` writes a contact sheet with each photo's
 credit and licence.
+
+## Share through data.plantgen.io
+
+```sh
+imagekit push --dry-run      # what would go up
+imagekit push                # every batch and finished run not yet pushed
+imagekit pull                # every batch and run this store lacks
+imagekit pull --run pilot-2026-10-14 --no-images
+```
+
+The server keeps the store's layout in two private sources of the
+plantgen-io catalogue: `images` (one version per batch: its records and the
+image files it holds) and `image-analyses` (one version per run: its rows,
+raw answers, vectors and the analyzers it used). `push` hands each one to
+`pgio push`, so it needs plantgen-io's uploader and the owner's AWS login;
+set `IMAGEKIT_PGIO` if `pgio` is not on the path. A run with Claude batches
+still to collect is skipped.
+
+A pushed batch or run is sealed: it takes no more rows, so the copy on the
+server never goes stale. Later work goes in a new batch or run, and nothing
+already answered is sent again, because `missing` sees the answers in every
+run.
+
+`pull` needs only the reader key (`PGIO_READER_KEY`; a cloud session's
+proxy adds it). It checks every file's SHA-256, keeps nothing that does not
+match, merges the analyzers and rebuilds the index. A session that pulls
+first pays only for images and analyzers nobody has run yet.
 
 ## Tests
 

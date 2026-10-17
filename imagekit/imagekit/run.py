@@ -25,7 +25,7 @@ from PIL import Image
 
 from . import analyzer, backends
 from .prompts import TASKS, Rules, first_json, problems
-from .store import Store, append_jsonl, jsonl, now
+from .store import Store, append_jsonl, check_open, jsonl, now
 
 IMAGE_PX = {"triage": 512, "observe": 1536, "describe": 1024}
 TOKENS_OUT = {"triage": 400, "observe": 1500, "describe": 500}  # answer sizes measured on the replay set, plus margin
@@ -272,6 +272,7 @@ def cmd_run(args, store: Store) -> None:
         if est is not None and est > ASK_OVER_USD and not args.yes:
             raise SystemExit(f"estimated ${est:.2f}: rerun with --yes to go ahead (and --max-usd to cap it)")
     run = args.run or f"{job.task}-{args.backend}-{time.strftime('%Y-%m-%d')}"
+    check_open(store.run_dir(run))
     analyzer.register(store, job.definition)
     if job.backend is None:
         return chat(args, store, job, run)
