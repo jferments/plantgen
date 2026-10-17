@@ -2,9 +2,10 @@
 
 As photo-rules/README.md says for an API: the system text is
 00-ground-rules.md; the user text is the task file (plus, for observing,
-palette.yaml and the features of the image's views), the image's opaque
-id, and the answer's JSON Schema; then one image. The species is never
-named.
+palette.yaml and the features of the image's views) and the answer's JSON
+Schema, then one image and its opaque id. Everything before the image is
+the same for every image of a task, so servers that cache prompts charge
+it once. The species is never named.
 """
 from __future__ import annotations
 
@@ -67,7 +68,8 @@ class Rules:
     def features_for(self, views: list[str]) -> list[dict]:
         return [f for f in self.features if set(f.get("views") or []) & set(views)]
 
-    def user(self, task: str, photo_id: str, views: list[str] | None = None) -> str:
+    def shared(self, task: str, views: list[str] | None = None) -> str:
+        """The user text every image of a task (and view set) shares; it comes first so servers can cache it."""
         parts = [self.read(TASKS[task][0])]
         if task == "observe":
             parts.append("## palette.yaml\n\n" + self.read("palette.yaml"))
@@ -76,10 +78,16 @@ class Rules:
                          + yaml.safe_dump({"features": feats}, sort_keys=False, allow_unicode=True))
         if task == "triage":
             parts.append('You are not told the species: set "species_match" to "unsure". Leave "kind" out.')
-        parts.append(f"Photo id: {photo_id}")
-        parts.append("Answer with exactly one JSON object for this image, valid against this JSON Schema, "
+        parts.append("Answer with exactly one JSON object for the image, valid against this JSON Schema, "
                      "and nothing else:\n\n" + json.dumps(self.schema(task), ensure_ascii=False))
         return "\n\n".join(parts)
+
+    def parts(self, task: str, photo_id: str, views: list[str] | None = None) -> list[str]:
+        """[shared text, per-image text]: the request's user text, sent around the image."""
+        return [self.shared(task, views), f"Photo id: {photo_id}"]
+
+    def user(self, task: str, photo_id: str, views: list[str] | None = None) -> str:
+        return "\n\n".join(self.parts(task, photo_id, views))
 
     def template_hash(self, task: str) -> str:
         """The prompt without the image, its id or the per-image feature list: one per task and rules version."""

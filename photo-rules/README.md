@@ -49,8 +49,10 @@ and `COMPARE.md`: someone with the repository can carry on from there.
    object per line. Start a fresh chat for each species so earlier answers
    do not leak into later ones.
 2. **API.** For each photo, send one request: system text =
-   `00-ground-rules.md`; user text = the task file plus the photo id; one
-   image. Parse the first JSON object in the answer and validate it against
+   `00-ground-rules.md`; user text = the task file and the schema, then
+   one image, then its photo id. Everything before the image is the same
+   for every photo of a task, so a server that caches prompts charges it
+   once (`imagekit run` does this). Parse the first JSON object in the answer and validate it against
    the schema; on failure, retry once with the validation error appended.
    Keep the raw answers.
 3. **Local models.** The same requests to a local VLM server. Use a

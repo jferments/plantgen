@@ -144,8 +144,11 @@ class Job:
         im.convert("RGB").save(out, "JPEG", quality=90)
         return out.getvalue()
 
+    def parts(self, sha: str) -> list[str]:
+        return self.rules.parts(self.task, self.photo_id(sha), self.views.get(sha))
+
     def user(self, sha: str) -> str:
-        return self.rules.user(self.task, self.photo_id(sha), self.views.get(sha))
+        return "\n\n".join(self.parts(sha))
 
     def per_image_usd(self) -> tuple[float | None, str]:
         hist = [r for run in self.store.runs() for r in jsonl(self.store.run_dir(run) / "analyses.jsonl")
@@ -234,14 +237,14 @@ def judge(job: Job, text: str):
 
 def ask_one(job: Job, sha: str):
     b = job.backend
-    system, user, image = job.rules.system(), job.user(sha), job.image(sha)
+    system, user, image = job.rules.system(), job.parts(sha), job.image(sha)
     t = time.monotonic()
     first = b.ask(system, user, image, job.schema)
     status, obj, errs = judge(job, first.text)
     replies = [first]
     if status == "invalid":  # once more, with what was wrong (photo-rules/README.md, "API")
-        again = b.ask(system, user + "\n\nYour previous answer was not valid: " + "; ".join(errs)
-                      + "\nAnswer again with one valid JSON object.", image, job.schema)
+        again = b.ask(system, [*user, "Your previous answer was not valid: " + "; ".join(errs)
+                               + "\nAnswer again with one valid JSON object."], image, job.schema)
         replies.append(again)
         status, obj, errs = judge(job, again.text)
     total = backends.Reply(text=replies[-1].text, model=replies[-1].model,
@@ -306,7 +309,7 @@ def submit_batch(args, store: Store, job: Job, run: str) -> None:
     b = job.backend
     if b.kind != "anthropic":
         raise SystemExit("--claude-batch needs a Claude backend")
-    reqs = [(sha, b.params(job.rules.system(), job.user(sha), job.image(sha), job.schema)) for sha in job.todo]
+    reqs = [(sha, b.params(job.rules.system(), job.parts(sha), job.image(sha), job.schema)) for sha in job.todo]
     bid = b.submit(reqs)
     d = store.run_dir(run)
     d.mkdir(parents=True, exist_ok=True)

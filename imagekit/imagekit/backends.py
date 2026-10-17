@@ -89,14 +89,18 @@ class OpenAICompat:
             h["Authorization"] = f"Bearer {key}"
         return h
 
-    def body(self, system: str, user: str, image: bytes, schema: dict, mode: str) -> dict:
+    def body(self, system: str, user: list[str], image: bytes, schema: dict, mode: str) -> dict:
+        shared = {"type": "text", "text": user[0]}
+        if self.cache_marks():
+            shared["cache_control"] = {"type": "ephemeral"}
         b = {
             "model": self.model,
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": [
-                    {"type": "text", "text": user},
+                    shared,
                     {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64," + jpeg_b64(image)}},
+                    *({"type": "text", "text": t} for t in user[1:]),
                 ]},
             ],
             "temperature": self.cfg.get("temperature", 0),
@@ -110,7 +114,11 @@ class OpenAICompat:
             b["usage"] = {"include": True}  # OpenRouter then reports the cost
         return b
 
-    def ask(self, system: str, user: str, image: bytes, schema: dict) -> Reply:
+    def cache_marks(self) -> bool:
+        """OpenRouter caches Claude and Gemini prompts only where the request marks them; others cache on their own."""
+        return "openrouter.ai" in self.base_url and self.model.startswith(("anthropic/", "google/"))
+
+    def ask(self, system: str, user: list[str], image: bytes, schema: dict) -> Reply:
         modes = ["schema", "object", "none"]
         for mode in modes[modes.index(self.json_mode):]:
             req = urllib.request.Request(self.base_url + "/chat/completions", method="POST", headers=self.headers(),
@@ -160,14 +168,15 @@ class AnthropicAPI:
         self.anthropic = anthropic
         self.use_format = True  # off after the API refuses a schema it cannot constrain to
 
-    def params(self, system: str, user: str, image: bytes, schema: dict) -> dict:
+    def params(self, system: str, user: list[str], image: bytes, schema: dict) -> dict:
         p = {
             "model": self.model,
             "max_tokens": int(self.cfg.get("max_tokens", 16000)),
             "system": [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
             "messages": [{"role": "user", "content": [
+                {"type": "text", "text": user[0], "cache_control": {"type": "ephemeral"}},
                 {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": jpeg_b64(image)}},
-                {"type": "text", "text": user},
+                *({"type": "text", "text": t} for t in user[1:]),
             ]}],
             "output_config": {"effort": self.effort},
         }
@@ -193,7 +202,7 @@ class AnthropicAPI:
                      + (u.cache_creation_input_tokens or 0), tokens_out=u.output_tokens,
                      usd=self.usd(u, batch), model=msg.model, raw=json.loads(msg.model_dump_json()))
 
-    def ask(self, system: str, user: str, image: bytes, schema: dict) -> Reply:
+    def ask(self, system: str, user: list[str], image: bytes, schema: dict) -> Reply:
         try:
             msg = self.client.messages.create(**self.params(system, user, image, schema))
         except self.anthropic.BadRequestError as err:

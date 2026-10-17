@@ -51,7 +51,7 @@ class FakeServer(BaseHTTPRequestHandler):
         fmt = (body.get("response_format") or {}).get("type")
         if self.no_schema and fmt == "json_schema":
             return self.send(400, {"error": {"message": "response_format json_schema is not supported"}})
-        user = body["messages"][1]["content"][0]["text"]
+        user = "\n\n".join(c["text"] for c in body["messages"][1]["content"] if c["type"] == "text")
         ans = answer_for(user)
         if self.bad_first and "previous answer was not valid" not in user:
             ans.pop("overall", None)
@@ -117,7 +117,10 @@ class TestOpenAICompat(RunBase):
         sent = FakeServer.requests[0]
         self.assertEqual(sent["response_format"]["type"], "json_schema")
         self.assertNotIn("Acer", json.dumps(sent))  # the species is never named
-        self.assertTrue(sent["messages"][1]["content"][1]["image_url"]["url"].startswith("data:image/jpeg;base64,"))
+        shared, image, tail = sent["messages"][1]["content"]
+        self.assertTrue(image["image_url"]["url"].startswith("data:image/jpeg;base64,"))
+        self.assertTrue(tail["text"].startswith("Photo id: img-"))
+        self.assertNotIn("Photo id", shared["text"])  # everything before the image is the same for every image
         raw = Path(self.store_dir) / "sources" / "image-analyses" / "t1" / "raw" / "answers.jsonl.gz"
         self.assertEqual(len(gzip.open(raw, "rt").read().splitlines()), 4)
         info = json.loads((raw.parents[1] / "run.json").read_text())
@@ -136,7 +139,7 @@ class TestOpenAICompat(RunBase):
         FakeServer.requests.clear()
         self.go("run", "observe", "--backend", "box", "--run", "o1")
         self.assertEqual(len(FakeServer.requests), 4)
-        user = FakeServer.requests[0]["messages"][1]["content"][0]["text"]
+        user = FakeServer.requests[0]["messages"][1]["content"][0]["text"]  # the shared part, before the image
         self.assertIn("views V3", user)
         self.assertIn("palette.yaml", user)
         self.assertTrue(all(r["status"] == "ok" for r in self.analyses("o1")))
@@ -199,7 +202,7 @@ class FakeClaude:
 
     @staticmethod
     def message(params):
-        user = params["messages"][0]["content"][1]["text"]
+        user = "\n\n".join(c["text"] for c in params["messages"][0]["content"] if c["type"] == "text")
         from anthropic.types import Message
         return Message.model_validate({
             "id": "msg_1", "type": "message", "role": "assistant", "model": params["model"], "stop_reason": "end_turn",
@@ -244,6 +247,8 @@ class TestClaude(RunBase):
         self.assertEqual(p["output_config"]["effort"], "low")
         self.assertEqual(p["output_config"]["format"]["type"], "json_schema")
         self.assertEqual(p["system"][0]["cache_control"], {"type": "ephemeral"})
+        self.assertEqual(p["messages"][0]["content"][0]["cache_control"], {"type": "ephemeral"})
+        self.assertEqual(p["messages"][0]["content"][1]["type"], "image")
         rows = self.analyses("c1")
         self.assertEqual(len(rows), 4)
         self.assertAlmostEqual(rows[0]["usd"], (900 + 100 * 0.1) * 0.1e-6 + 300 * 0.5e-6)
