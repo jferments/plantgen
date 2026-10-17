@@ -609,4 +609,7 @@ pub mod venation;
 /// thrice-divided leaf whose divisions roll round their rachis sets its
 /// segments round each pinnule's too; a leaflet may be as narrow as a
 /// hundredth of its length (96 is the species-facts records, #171).
-pub const GENERATOR_REVISION: u32 = 97;
+/// 103: a flowering herb's top leaf nodes may each bear a side branch
+/// ending in a raceme (`flowering_branches`; herb program revision 10)
+/// (98 to 102 are held for #175, #174, #178, #181 and #182).
+pub const GENERATOR_REVISION: u32 = 103;
