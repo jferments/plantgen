@@ -47,7 +47,7 @@
       "bloom_size": 0.02,
       "bloom_angle": 40,
       "leaf_area": 0.273,
-      "path_half": 0.85
+      "path_half": 0.75
     }
   },
   "growth": {
@@ -142,7 +142,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an evergreen shrub 1 to 3 m tall of many slender, upright grey stems from the base, open below, with small, resinous, dark olive leaflets in pairs at the twig tips and small yellow flowers after rain. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: an evergreen shrub 1 to 3 m tall of many slender, upright grey stems from the base, open below, with small, resinous, dark olive leaflets in pairs at the twig tips and small yellow flowers after rain. Not fitted to measurements. path_half 0.75 (was 0.85) since broadleaf revision 18 divides its stems at the ground, where they grew taller than its greatest 2 m."
     },
     "allometry": {
       "evidence": "Authored",

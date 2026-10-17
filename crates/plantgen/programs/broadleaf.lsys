@@ -158,9 +158,14 @@
 # leaves and stopped leafing out at half the leaf area that open-grown
 # trees of its genus carry (USDA Urban Tree Database).
 #
+# Revision 18 (woody forms: shrub stems): a stem whose fork height lies
+# within its first node divides at the ground, so a shrub whose stems rise
+# from its root crown no longer stands on a short trunk as long as its
+# first year's shoot.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 17;
+lsystem broadleaf 18;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -327,8 +332,12 @@ rule B : life > 0 && t >= life -> ;
 rule A(split) : light < shade_death -> ;
 rule B : light < shade_death || age >= bud_years -> ;
 
-# Where the stem reaches its fork height it divides into equal stems.
-rule A(split) : split > 0 && py >= split && vigour >= 1 -> Fk(fork_stems);
+# Where the stem reaches its fork height it divides into equal stems; a
+# fork height within the first node divides it at the ground (revision 18),
+# where it divided atop the first year's shoot. A mat's near-level stems
+# (fork_angle past 60) keep that first shoot's rise, as nothing holds them
+# above the ground.
+rule A(split) : split > 0 && (py >= split || (py <= 0 && split < internode / unit_nodes && fork_angle <= 60)) && vigour >= 1 -> Fk(fork_stems);
 
 # A long shoot in the light, old enough to flower, grows its year's nodes,
 # ends them in a flower cluster and forks into twin shoots from the buds
