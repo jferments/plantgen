@@ -33,11 +33,7 @@
       "lobed": "often"
     },
     "division_pattern": "pinnate",
-    "inflorescence": {
-      "raceme": "often",
-      "solitary": "often",
-      "spike": "often"
-    },
+    "inflorescence": {"spike": "often", "raceme": "sometimes", "solitary": "rarely"},
     "perennation": {"rhizome": "usually", "tuber": "rarely"}
   },
   "forms": {
@@ -106,11 +102,7 @@
       "source": "plantgen-authors",
       "note": "APG's Orobanchaceae is mostly the half-parasites that the floras kept in Scrophulariaceae (Pedicularis, Castilleja, Euphrasia, Rhinanthus, Melampyrum) with the old broomrapes, whose leaves are scales. Watson and Dallwitz (DELTA data, family Orobanchaceae, the broomrapes alone): leaves simple and entire. Pedicularis, the largest genus, has pinnately lobed to divided leaves, and Castilleja's are entire or lobed: so leaves simple, unlobed usually and lobed often, the lobes pinnate (inferred from the genera, not traced)."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 416, 420, family Orobanchaceae: inflorescence raceme, spike or solitary, usually; read as {\"raceme\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Orobanchaceae (read 2026-10-17): flowers in racemes, in spikes, or single at the stem tip; ~2,000 spp. Wikipedia Pedicularis (read 2026-10-17): 600+ spp, bees work its spikes, so the largest genus (~30% of the family) counts as spike, with Castilleja, Euphrasia and Orobanche (spikes or spike-like racemes) behind it; single terminal flowers are confined to small holoparasite genera (Aeginetia, Christisonia). Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orobanchaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome, rarely tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

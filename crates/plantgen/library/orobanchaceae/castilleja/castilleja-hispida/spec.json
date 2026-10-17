@@ -26,13 +26,13 @@
       "leaf_top": 0.6,
       "leaf_base": 0.7,
       "leaf_angle": 45,
-      "raceme": 0.35,
-      "flowers": 16,
-      "flower_size": 0.03,
-      "pedicel": 0.003,
-      "flower_angle": 30,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_size": 0.09,
+      "pedicel": 0.0,
+      "flower_angle": 0,
       "fruit_below": 0,
-      "buds_above": 0.85,
+      "buds_above": 1,
       "bud_spacing": 0.35,
       "nod": 0,
       "bud_size": 0.02,
@@ -63,6 +63,7 @@
         "shape": { "template": "lobed", "width": 0.4, "lobes": 2, "depth": 0.5, "round": 0.0, "petiole": 0 }
       },
       "flower": {
+        "inflorescence": { "flowers": 16, "size": 0.33 },
         "shape": {
           "template": "flower",
           "petal_width": 0.8,
@@ -114,7 +115,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a hairy herb of a few stems topped by spikes of scarlet, lobed bracts that hide the small greenish flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a hairy herb of a few stems topped by spikes of scarlet, lobed bracts that hide the small greenish flowers. Each stem ends in one spike drawn as a cluster (flowers 1, flower_size 0.09 within the 3 cm to 15 cm the species states; its look's inflorescence 16 flowers, each a third of its length), now that Orobanchaceae's flowers are mostly in spikes; before, the stem bore 16 single flowers. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
