@@ -163,8 +163,8 @@ fn each_plant_draws_its_parameters_from_their_spreads() {
             spec.generator.spreads
         );
     }
-    // Redwood sorrel states no range a parameter is set from.
-    let spec = PlantSpec::builtin("oxalis-oregana").unwrap();
+    // Oxeye daisy states no range a parameter is set from.
+    let spec = PlantSpec::builtin("leucanthemum-vulgare").unwrap();
     let (program, params) = spec.program().unwrap();
     assert_eq!(spec.seeded_params(&program, &params, 3), params);
 }

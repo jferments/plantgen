@@ -59,7 +59,7 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {"template": "spikelet", "glume": 1.15, "awned": 0.5},
+        "shape": {"template": "spikelet", "awned": 0.5},
         "inflorescence": {
           "branches": 18,
           "per_node": 2,
@@ -119,7 +119,13 @@
     "lower_glume_length_m": 0.004,
     "upper_glume_length_m": 0.004,
     "leaf_length_m": {"min": 0.05, "max": 0.2},
-    "flowering_months": [6, 7]
+    "flowering_months": [6, 7],
+    "height_typical_m": {"min": 0.2, "max": 0.8},
+    "height_max_m": 1,
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "fruit_size_m": {"min": 0.002, "max": 0.003},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -221,7 +227,13 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Notholcus lanatus, no. 1, fig. 367): flowers June-July, abundantly escaped on the Pacific Coast."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L419046), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L419046), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L419046), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L419046), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L419046), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L419046), as no source read gives it."}
   },
   "provenance": {
     "sources": [

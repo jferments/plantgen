@@ -85,7 +85,8 @@
     "crown_see_through": {
       "min": 0.0,
       "max": 0.15
-    }
+    },
+    "rosette": "none"
   },
   "evidence": {
     "taxon": {
@@ -207,7 +208,8 @@
       "evidence": "SourceInferred",
       "source": "inaturalist-photos-2026-10",
       "note": "Seen from the side, a grown bush shows almost no sky or background through its outline: its leaves overlap from the outer shell inward (observations 186249737, 259778304, 358527588), under a sixth of it read by eye."
-    }
+    },
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654503), as no source read gives it."}
   },
   "provenance": {
     "sources": [

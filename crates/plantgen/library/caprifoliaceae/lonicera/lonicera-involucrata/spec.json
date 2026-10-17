@@ -46,7 +46,7 @@
       "bloom_size": 0.025,
       "bloom_angle": 60,
       "leaf_area": 0.282,
-      "bloom_area": 0.812,
+      "bloom_area": 0.218,
       "path_half": 1.47
     }
   },
@@ -68,11 +68,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.5,
           "widest": 0.45,
           "tip": 0.55,
           "base": 0.4,
-          "teeth": 0,
           "petiole": 0.05
         }
       },
@@ -82,7 +80,7 @@
           "aspect": 1.0,
           "unripe": 0.3
         },
-        "inflorescence": { "kind": "raceme", "flowers": 2, "per_node": 2, "divergence": 90, "pedicel": 0.1375, "peduncle": 1, "size": 0.55, "spread": 25 },
+        "inflorescence": { "flowers": 2, "per_node": 2, "divergence": 90, "pedicel": 0.1375, "peduncle": 1, "size": 0.55, "spread": 25 },
         "colour": [0.04, 0.03, 0.05],
         "accent": [0.4, 0.48, 0.18],
         "season": {
@@ -129,7 +127,13 @@
     "flower_size_m": {"min": 0.012, "max": 0.015},
     "bract_form": "leafy",
     "bract_length_m": {"min": 0.007, "max": 0.012},
-    "fruit_size_m": {"min": 0.007, "max": 0.008}
+    "fruit_size_m": {"min": 0.007, "max": 0.008},
+    "height_typical_m": {"min": 1, "max": 3},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -216,7 +220,14 @@
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: flower size 12-15 mm long."},
     "traits.bract_form": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: bract form leafy, reddish-/greenish-purple involucre."},
     "traits.bract_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: bract length 7-12 mm."},
-    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: fruit size 7-8 mm."}
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: fruit size 7-8 mm."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2339738), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2339738), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2339738), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2339738), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2339738), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2339738), as no source read gives it."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.812)."}
   },
   "provenance": {
     "sources": [

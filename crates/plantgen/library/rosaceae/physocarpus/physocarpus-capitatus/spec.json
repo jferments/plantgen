@@ -152,7 +152,11 @@
       "max": 0.0762
     },
     "flowering_months": [5, 6],
-    "fruiting_months": [6, 7, 8, 9, 10, 11, 12]
+    "fruiting_months": [6, 7, 8, 9, 10, 11, 12],
+    "height_typical_m": {"min": 2, "max": 4},
+    "woodiness": "woody",
+    "leaf_width_m": {"min": 0.03, "max": 0.08},
+    "sexual_system": "hermaphrodite"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -239,7 +243,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Pink buds, a third of the flower's width, as described for the species."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2952780), as no source read gives it."}
   },
   "provenance": {
     "sources": [

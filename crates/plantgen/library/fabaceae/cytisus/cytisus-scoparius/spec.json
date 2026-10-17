@@ -73,11 +73,9 @@
           "leaves": 11,
           "angle": 35,
           "stalk": 0.05,
-          "width": 0.3,
           "widest": 0.5,
           "tip": 0.3,
           "base": 0.3,
-          "teeth": 0,
           "petiole": 0.02
         }
       },
@@ -138,7 +136,15 @@
     "flowering_months": [4, 5, 6],
     "fruit_size_m": {"min": 0.015, "max": 0.06},
     "fruit_colour_ripe": [30, 25, 20],
-    "fruiting_months": [6, 7]
+    "fruiting_months": [6, 7],
+    "height_max_m": 3,
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.005, "max": 0.02},
+    "leaf_width_m": {"min": 0.002, "max": 0.008},
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.05, "max": 0.3},
+    "flower_symmetry": "zygomorphic"
   },
   "evidence": {
     "traits.fruiting_months": {
@@ -296,7 +302,15 @@
       "evidence": "SourceInferred",
       "source": "abrams-1944",
       "note": "Its flowers stand alone or two or three together in the leaf axils (Abrams vol. 2, 1944, p. 519), not in a raceme, so each bloom is one flower and its pod; the flower's card is sized so it draws about 2 cm long, as Abrams's 18 to 20 mm."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2754907), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2754907), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2754907), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2754907), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2754907), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2754907), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2754907), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2754907), as no source read gives it."}
   },
   "provenance": {
     "sources": [

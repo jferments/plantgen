@@ -85,7 +85,8 @@
       63
     ],
     "crown_form": "vase",
-    "self_pruning": true
+    "self_pruning": true,
+    "rosette": "none"
   },
   "evidence": {
     "taxon": {
@@ -212,7 +213,8 @@
       "evidence": "SourceInferred",
       "source": "inaturalist-photos-2026-10",
       "note": "The straight trunk forks into its ascending limbs about 3 m up, read by eye in the same photographs (observations 18404648, 7733707)."
-    }
+    },
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2840911), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -195,7 +195,16 @@
     "wood_density_basic_kg_m3": 430,
     "juvenile_period_years": {"min": 50, "max": 70},
     "rosette": "terminal",
-    "inflorescence": "panicle"
+    "inflorescence": "panicle",
+    "height_typical_m": {"min": 4, "max": 9},
+    "height_max_m": 12,
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": "alternate",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [2, 3, 4, 5],
+    "fruit_size_m": {"min": 0.06, "max": 0.12},
+    "fruiting_months": [5, 6]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Yucca brevifolia (gwddagg_v2.2_species.csv, read): specific gravity 0.43 (wsg_est, the database's hierarchical-model species mean, from 2 records in 2 sources); trunks 0.43, branches 0.46. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -250,7 +259,16 @@
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
     "traits.rosette": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 226, Yucca brevifolia: rosette terminal tufts of short stiff leaves at branch tips."},
-    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 226, Yucca brevifolia: inflorescence panicle, terminal, dense, ovoid."}
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 226, Yucca brevifolia: inflorescence panicle, terminal, dense, ovoid."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291788), as no source read gives it."}
   },
   "provenance": {
     "sources": [
