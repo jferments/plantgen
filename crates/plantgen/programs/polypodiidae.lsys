@@ -122,7 +122,10 @@
 # again, so a form whose appearance gives a young_axis colour draws its
 # croziers and new stipes green and its summer stipes as before. A
 # crozier carries rings of scales only where the stipe is scaly all
-# along, so a fern scaly at its base alone has a smooth coil.
+# along, so a fern scaly at its base alone has a smooth coil. A coiled
+# pinna lies closer along the coil (25 degrees off the rachis and 60
+# toward its upper face, from 45 and 30), so the pinnae hug the coil's
+# sides instead of standing out from it as small open fronds.
 
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -377,11 +380,11 @@ interpret Pn(k, s, fe, h, d, w) ->
        * lerp(1, coil_pinna * exp(-coil_tight * max(0, d)), smoothstep(0, 0.15, d + (h - 0.5) / pieces)),
        fe, smoothstep(0, 0.15, d + (h - 0.5) / pieces));
 interpret Pq(z, fe, c) : fe > 0.5 ->
-    [ +(lerp(pinna_angle, 45, c)) ^(lerp(pinna_lift, 30, c)) fertile_pinna(z) ]
-    [ -(lerp(pinna_angle, 45, c)) ^(lerp(pinna_lift, 30, c)) fertile_pinna(z) ];
+    [ +(lerp(pinna_angle, 25, c)) ^(lerp(pinna_lift, 60, c)) fertile_pinna(z) ]
+    [ -(lerp(pinna_angle, 25, c)) ^(lerp(pinna_lift, 60, c)) fertile_pinna(z) ];
 interpret Pq(z, fe, c) ->
-    [ +(lerp(pinna_angle, 45, c)) ^(lerp(pinna_lift, 30, c)) pinna(z) ]
-    [ -(lerp(pinna_angle, 45, c)) ^(lerp(pinna_lift, 30, c)) pinna(z) ];
+    [ +(lerp(pinna_angle, 25, c)) ^(lerp(pinna_lift, 60, c)) pinna(z) ]
+    [ -(lerp(pinna_angle, 25, c)) ^(lerp(pinna_lift, 60, c)) pinna(z) ];
 
 # A new crown: out along the rhizome, then up.
 decompose Cn(n, c) ->
