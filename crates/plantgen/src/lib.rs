@@ -628,11 +628,31 @@ pub mod venation;
 /// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
 /// are as long as its flora gives (98 is variegation along the
 /// veins, #175).
-/// 100: a zone's edge drawn out along the lateral veins (`feather`),
+/// 100: a dimorphic fern bears fertile fronds as well as sterile ones (fern
+/// program revision 10): `frond_dimorphism` dimorphic makes about three in
+/// ten fertile, standing nearer the crown's centre, as long, as stalked and
+/// as upright as their stated `fertile_*` characters give, with their own
+/// pinnae (`fertile_pinna`, as narrow as stated); the deer fern's erect
+/// fertile fronds rise from its spreading rosette as Flora of North America
+/// gives, and its reference height is theirs (99 is fern stipes scaly at
+/// their base, #174).
+/// 101: a fern's frond comes up as a crozier (fern program revision 11): a
+/// circinate frond's blade winds `coil_turns` turns (2.5 by `vernation`)
+/// into a tight inward spiral of shortening pieces, its pinnae small and
+/// folded inside, its scales on the coil if its stipe is scaly; it unrolls
+/// from its foot, and its stipe rises uncoiled as it lengthens (100 is
+/// dimorphic ferns, #178).
+/// 102: a fern's pinnae bear sori on their lower faces (`looks::Sori`):
+/// round, oblong, linear or marginal as `sorus_shape` says, where
+/// `sorus_position` puts them on each segment the card's outline gives,
+/// under the `indusium` stated; most pinnae of a fern whose fronds are
+/// alike, and only the fertile pinnae of a dimorphic one (101 is fern
+/// fiddleheads, #181).
+/// 103: a zone's edge drawn out along the lateral veins (`feather`),
 /// spots and mottle drawn out along the blade (`stretch`), and a simple
 /// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
 /// trout lily's long blotches and its veins meeting at the tip; and a
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
-/// white clover's are (99 is fern stipe scales, #174).
-pub const GENERATOR_REVISION: u32 = 100;
+/// white clover's are (102 is fern sori, #182).
+pub const GENERATOR_REVISION: u32 = 103;

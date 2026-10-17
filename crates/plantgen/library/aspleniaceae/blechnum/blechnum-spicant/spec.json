@@ -27,8 +27,7 @@
       "crown_age": 4,
       "season": 0.5,
       "emerge_spread": 0.3,
-      "unroll": 0.3,
-      "curl": 45
+      "unroll": 0.3
     }
   },
   "growth": {
@@ -61,12 +60,17 @@
     {
       "age": 8,
       "environment": "open",
-      "height": 0.35,
+      "height": 0.7,
       "tolerance": 0.35
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fertile_leaf_length_m": {"min": 0.25, "max": 0.65},
+    "fertile_petiole_length_m": {"min": 0.15, "max": 0.6},
+    "fertile_leaf_posture": "erect",
+    "fertile_leaflet_length_m": {"min": 0.025, "max": 0.032},
+    "fertile_leaflet_width_m": {"min": 0.0015, "max": 0.002},
     "stipe_scale_extent": "base",
     "stipe_colour": [95, 45, 30],
     "rhizome_habit": {"short_creeping": "usually", "erect": "often"},
@@ -82,13 +86,18 @@
     "leaf_margin": {"entire": "usually"},
     "rosette": "terminal",
     "frond_dimorphism": "dimorphic",
-    "height_typical_m": {"min": 0.2, "max": 0.5},
-    "height_max_m": 0.75,
+    "height_typical_m": {"min": 0.4, "max": 1},
+    "height_max_m": 1.25,
     "woodiness": "herbaceous",
     "perennation": "rhizome",
     "leaf_arrangement": "alternate"
   },
   "evidence": {
+    "traits.fertile_leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Leaves dimorphic, cespitose, erect or spreading, fertile leaves more erect and longer than sterile leaves. Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. ... Fertile blades erect, narrowly rhombic, 1-pinnate, without conform terminal pinna, 25-65 × 3-15 cm, glabrous. ... Fertile pinnae not articulate to rachis, sessile, decurrent and surcurrent to rachis; larger pinnae slightly curved, linear, 25-32 × 1.5-2 mm; margins entire, slightly to moderately revolute\". Fertile blades 25 to 65 cm."},
+    "traits.fertile_petiole_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Leaves dimorphic, cespitose, erect or spreading, fertile leaves more erect and longer than sterile leaves. Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. ... Fertile blades erect, narrowly rhombic, 1-pinnate, without conform terminal pinna, 25-65 × 3-15 cm, glabrous. ... Fertile pinnae not articulate to rachis, sessile, decurrent and surcurrent to rachis; larger pinnae slightly curved, linear, 25-32 × 1.5-2 mm; margins entire, slightly to moderately revolute\". Fertile petioles 15 to 60 cm."},
+    "traits.fertile_leaf_posture": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Leaves dimorphic, cespitose, erect or spreading, fertile leaves more erect and longer than sterile leaves. Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. ... Fertile blades erect, narrowly rhombic, 1-pinnate, without conform terminal pinna, 25-65 × 3-15 cm, glabrous. ... Fertile pinnae not articulate to rachis, sessile, decurrent and surcurrent to rachis; larger pinnae slightly curved, linear, 25-32 × 1.5-2 mm; margins entire, slightly to moderately revolute\". Fertile blades erect; read as erect."},
+    "traits.fertile_leaflet_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Leaves dimorphic, cespitose, erect or spreading, fertile leaves more erect and longer than sterile leaves. Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. ... Fertile blades erect, narrowly rhombic, 1-pinnate, without conform terminal pinna, 25-65 × 3-15 cm, glabrous. ... Fertile pinnae not articulate to rachis, sessile, decurrent and surcurrent to rachis; larger pinnae slightly curved, linear, 25-32 × 1.5-2 mm; margins entire, slightly to moderately revolute\". Larger fertile pinnae 25 to 32 mm."},
+    "traits.fertile_leaflet_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Leaves dimorphic, cespitose, erect or spreading, fertile leaves more erect and longer than sterile leaves. Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. ... Fertile blades erect, narrowly rhombic, 1-pinnate, without conform terminal pinna, 25-65 × 3-15 cm, glabrous. ... Fertile pinnae not articulate to rachis, sessile, decurrent and surcurrent to rachis; larger pinnae slightly curved, linear, 25-32 × 1.5-2 mm; margins entire, slightly to moderately revolute\". Larger fertile pinnae 1.5 to 2 mm wide."},
     "traits.stipe_scale_extent": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. Petioles of sterile leaves reddish brown, 2-30 cm, coarsely scaly proximally.\" Read as base."},
     "traits.stipe_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. Petioles of sterile leaves reddish brown, 2-30 cm, coarsely scaly proximally.\" Read as a reddish brown, the sterile fronds' and most fertile ones'."},
     "traits.leaf_length_m": {
@@ -109,7 +118,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 0.35 m tall at 8 years in the open. Replace with measured data before calling this species calibrated."
+      "note": "Rough sizes: 0.7 m tall at 8 years in the open, the height of its erect fertile fronds, which Flora of North America gives as blades 25 to 65 cm on petioles 15 to 60 cm, \"more erect and longer than sterile leaves\" (visual forms fern dimorphism, 2026-10-17); it was 0.35 m from general knowledge, the height of the spreading sterile fronds alone. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
@@ -161,8 +170,8 @@
     "traits.frond_dimorphism": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: frond dimorphism dimorphic."},
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: blades lanceolate to narrowly elliptic. The spec stated {\"linear\": \"usually\", \"oblanceolate\": \"often\"}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
     "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: rhizome erect, sometimes branched. The spec stated \"short_creeping\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
-    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
-    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2): fertile leaves \"more erect and longer than sterile leaves\", \"Petioles of fertile leaves ... 15-60 cm\", \"Fertile blades erect ... 25-65 × 3-15 cm\". The plant is as tall as an erect fertile leaf, petiole and blade: read as 40 to 100 cm typically, in place of the species-facts estimate of 20 to 50 cm, which is the sterile rosette's."},
+    "traits.height_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2): fertile leaves \"more erect and longer than sterile leaves\", \"Petioles of fertile leaves ... 15-60 cm\", \"Fertile blades erect ... 25-65 × 3-15 cm\". The plant is as tall as an erect fertile leaf, petiole and blade: read as 40 to 100 cm typically, and at most the longest petiole and blade, 125 cm, in place of the species-facts estimate of 75 cm."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
     "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."}
