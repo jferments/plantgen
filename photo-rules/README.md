@@ -77,6 +77,8 @@ answers. See `02b-check-named.md` for why both passes are run.
 - `05-diagnose.md`: the twelve causes of a difference and how to test each.
 - `06-generalize.md`: from a cause to a drawing rule at the right rank.
 - `07-calibrate.md`: checking an AI before trusting it.
+- `08-describe.md`: a description in words, stored with each image so people
+  can search the library by how plants look.
 - `SOURCES.md`: photo sources, licences and access.
 - `CAPTURE.md`: how to take reference photos yourself.
 - `schemas/`: JSON Schemas for triage, observation, check, aggregate,

@@ -32,7 +32,7 @@ create index if not exists images_b2 on images(b2);
 create index if not exists images_b3 on images(b3);
 create table if not exists refs (key text primary key, sha256 text, source text, taxon text, batch text);
 create index if not exists refs_taxon on refs(source, taxon);
-create table if not exists analyses (sha256 text, region int, analyzer text, run text,
+create table if not exists analyses (sha256 text, region int, analyzer text, run text, task text, status text,
     primary key (sha256, region, analyzer));
 create table if not exists taxa (name text primary key, record text);
 """
@@ -68,6 +68,14 @@ class Store:
         self.root = Path(root).expanduser()
         self.root.mkdir(parents=True, exist_ok=True)
         self.db = sqlite3.connect(self.root / "index.sqlite")
+        cols = {r[1] for r in self.db.execute("pragma table_info(analyses)")}
+        if cols and "status" not in cols:  # an index from imagekit 0.1: rebuild the analyses part
+            self.db.execute("drop table analyses")
+            self.db.executescript(SCHEMA)
+            for r in self.runs():
+                for row in jsonl(self.run_dir(r) / "analyses.jsonl"):
+                    self.index_analysis(row, r)
+            self.db.commit()
         self.db.executescript(SCHEMA)
 
     def close(self) -> None:
@@ -147,8 +155,9 @@ class Store:
                         (src["key"], row["sha256"], src["source"], row["taxon"].get("name_as_given"), row["batch"]))
 
     def index_analysis(self, row: dict, run: str) -> None:
-        self.db.execute("insert or ignore into analyses values (?,?,?,?)",
-                        (row["sha256"], row.get("region", 0), row["analyzer"], run))
+        self.db.execute("insert or replace into analyses values (?,?,?,?,?,?)",
+                        (row["sha256"], row.get("region", 0), row["analyzer"], run, row.get("task"),
+                         row.get("status", "ok")))
 
     def commit(self) -> None:
         self.db.commit()
@@ -168,10 +177,14 @@ class Store:
         return {"image rows": n_img, "analysis rows": n_an}
 
     # analyses
-    def missing(self, analyzer: str, shas, region: int = 0) -> list[str]:
-        """The images among shas with no analysis under this analyzer: the only ones a run may send."""
+    def missing(self, analyzer: str, shas, region: int = 0, redo: tuple[str, ...] = ()) -> list[str]:
+        """The images among shas with no analysis under this analyzer: the only ones a run may send.
+
+        redo names statuses (e.g. "invalid") whose images are sent again; an "ok" answer never is.
+        """
         done = {r[0] for r in self.db.execute(
-            "select sha256 from analyses where analyzer=? and region=?", (analyzer, region))}
+            "select sha256 from analyses where analyzer=? and region=? and status not in (%s)"
+            % ",".join("?" * len(redo) or ["''"]), (analyzer, region, *redo))}
         return [s for s in shas if s not in done]
 
     def all_images(self) -> list[str]:

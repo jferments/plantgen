@@ -16,14 +16,14 @@ What it does now:
   it at 2048 px, strip camera metadata (GPS included), and record where it
   came from;
 - keep **analyses** keyed by image and analyzer, so a model run skips every
-  image that already has an answer from the same model, rules and settings.
-
-Running vision models on the images (local servers, OpenRouter, the Claude
-API) and searching the library by look come next.
+  image that already has an answer from the same model, rules and settings;
+- **run** a `photo-rules/` task (triage, observe, describe) on the images
+  that lack it, through a model on your own machine, OpenRouter, the Claude
+  API or a chat window, with the cost estimated first and capped.
 
 ## Install
 
-Python 3.10 or newer.
+Python 3.11 or newer.
 
 ```sh
 cd ~/code/plantgen
@@ -31,8 +31,8 @@ uv tool install ./imagekit            # or: pipx install ./imagekit
 imagekit --help
 ```
 
-Add `[parquet]` (`uv tool install './imagekit[parquet]'`) to also write
-each batch as Parquet.
+Extras: `[parquet]` writes each batch as Parquet too, and `[claude]` adds
+the Claude API's SDK (`uv tool install './imagekit[claude]'`).
 
 ## Fetch
 
@@ -112,11 +112,86 @@ imagekit import-analyses pilot.jsonl --run pilot-2026-10-14
 in answers made elsewhere, such as a pilot or a chat session, so they are
 not paid for twice.
 
+## Run a model
+
+```sh
+imagekit plan triage --backend workstation        # images to send, and the cost
+imagekit run triage --backend workstation
+imagekit run observe --backend workstation        # uses the triage's views
+imagekit run describe --backend openrouter --model qwen/qwen3-vl-235b-a22b-instruct --max-usd 3
+```
+
+Every request is built from `photo-rules/` the same way for every model:
+`00-ground-rules.md` as the system text, then the task file (for
+`observe`, the palette and the features of the views triage found), an
+opaque photo id, the answer's JSON Schema and one image. The species is
+never sent. An answer that breaks the schema is asked for once more with
+the problems listed; if it still fails it is kept with status `invalid`
+(`--retry-invalid` sends those again). Each answer goes in the run's
+`analyses.jsonl` with its tokens, cost and the model the server named, and
+the full reply in `raw/answers.jsonl.gz`.
+
+**Nothing twice.** Before sending, the run drops every image that already
+has an answer under the same analyzer. A second run with the same model,
+rules and settings sends nothing; a new model, a changed rule file or
+another image size is a new analyzer.
+
+**Cost.** `plan` and `run` estimate the cost from earlier answers under the
+same analyzer, else from list prices. Over $1 a run needs `--yes`, and it
+stops once `--max-usd` (default $5) is spent. Local servers cost nothing.
+
+**Backends** are named in `~/.config/imagekit/backends.toml`. Keys are
+read only from the environment:
+
+```toml
+[workstation]                 # vLLM, SGLang, llama.cpp, Ollama, LM Studio
+kind = "openai"
+base_url = "http://localhost:8000/v1"
+model = "Qwen/Qwen3-VL-8B-Instruct"
+revision = "<the Hugging Face commit>"
+parallel = 8
+
+[openrouter]
+kind = "openai"
+base_url = "https://openrouter.ai/api/v1"
+key_env = "OPENROUTER_API_KEY"
+model = "qwen/qwen3-vl-235b-a22b-instruct"
+usd_per_mtok_in = 0.21        # for the estimate before the first answers
+usd_per_mtok_out = 1.90
+
+[claude]
+kind = "anthropic"
+key_env = "ANTHROPIC_API_KEY"
+model = "claude-haiku-5-5"
+effort = "low"
+```
+
+`openrouter`, `vllm`, `ollama`, `claude` and `chat` work without a config
+file; `--model`, `--base-url` and `--parallel` override any backend's.
+Servers that cannot hold an answer to a JSON Schema are asked for plain
+JSON instead.
+
+**The Claude API** uses structured outputs and caches the rules. With
+`--claude-batch` the requests go through the Message Batches API at half
+price; `imagekit run --collect RUN --backend claude` reads the answers
+back once the batch has finished (within a day).
+
+**A chat window** costs nothing beyond a subscription:
+
+```sh
+imagekit run describe --backend chat --model "Claude app" --chat-dir ~/chat-describe
+```
+
+writes the system text, and each image with its prompt, to the folder. Paste
+them into a chat, save each answer as `<photo id>.json` beside them, and run
+the same command again to read them in.
+
 ## Tests
 
 ```sh
 cd ~/code/plantgen/imagekit && python3 -m unittest discover -s tests
 ```
 
-They fake the network and need only Pillow (and jsonschema for the schema
-test).
+They fake the network, a model server and the Claude API, and need only
+Pillow and PyYAML (plus jsonschema for the schema tests and the
+`anthropic` SDK for the Claude tests, which are skipped without it).

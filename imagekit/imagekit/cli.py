@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import sys
 import time
@@ -11,6 +12,10 @@ from . import __version__, analyzer, licences
 from .fetch import Downloader, archive, commons, gbif, inat, inat_dump, local
 from .ingest import MAX_PX, ingest
 from .store import DEFAULT_ROOT, Store, jsonl
+
+# Commands that live in their own modules, each with register(subparsers). Their
+# heavy imports (models, numpy) happen inside the command, so `fetch` stays light.
+COMMAND_MODULES = ("run",)
 
 FETCHERS = {
     "inat": inat.fetch, "inat-dump": inat_dump.fetch, "gbif": gbif.fetch, "commons": commons.fetch,
@@ -171,8 +176,11 @@ def main(argv=None) -> None:
     p = sub.add_parser("import-analyses", help="add analyses made elsewhere as a run (JSON Lines)")
     p.add_argument("file")
     p.add_argument("--run", required=True)
+    for name in COMMAND_MODULES:  # each adds its parsers with set_defaults(func=...)
+        importlib.import_module(f"imagekit.{name}").register(sub)
     args = ap.parse_args(argv)
-    run = {"fetch": cmd_fetch, "ingest": cmd_ingest, "status": cmd_status, "reindex": cmd_reindex,
-           "analyzer-id": cmd_analyzer, "missing": cmd_missing, "import-analyses": cmd_import}[args.cmd]
+    run = getattr(args, "func", None) or {
+        "fetch": cmd_fetch, "ingest": cmd_ingest, "status": cmd_status, "reindex": cmd_reindex,
+        "analyzer-id": cmd_analyzer, "missing": cmd_missing, "import-analyses": cmd_import}[args.cmd]
     with Store(args.store) as store:
         run(args, store)
