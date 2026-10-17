@@ -34,11 +34,7 @@
       "drupe": "rarely"
     },
     "leaf_margin": "entire",
-    "inflorescence": {
-      "corymb": "often",
-      "cyme": "often",
-      "solitary": "often"
-    },
+    "inflorescence": {"cyme": "usually", "corymb": "often", "solitary": "often"},
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
@@ -59,11 +55,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 309, 311, 312, family Hypericaceae: leaf margin entire; read as \"entire\"."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 309, 311, 312, family Hypericaceae: inflorescence cyme, corymb or solitary; terminal or axillary; read as {\"corymb\": \"often\", \"cyme\": \"often\", \"solitary\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Hypericum (read 2026-10-17): c. 490-518 species, the great majority of Hypericaceae (~600-700 spp). NZ Flora genus factsheet for Hypericum (read 2026-10-17): inflorescences terminal, in cymes or panicles. The family file's earlier DELTA Guttiferae reading also says terminal and cymose. So cyme leads; corymbiform cymes (many Hypericum, Vismia, Harungana) and single flowers (small-flowered and shrubby Hypericum) stay often. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.sexual_system": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

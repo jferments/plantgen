@@ -15,9 +15,9 @@
     },
     "division_pattern": "pinnate",
     "leaf_margin": {
-      "entire": "often",
       "serrate": "often",
-      "dentate": "often",
+      "entire": "sometimes",
+      "dentate": "sometimes",
       "crenate": "sometimes"
     },
     "leaf_venation": "pinnate",
@@ -49,9 +49,9 @@
     },
     "perianth": "sepals_and_petals",
     "fruit_type": {
-      "capsule": "often",
-      "berry": "often",
       "drupe": "often",
+      "capsule": "sometimes",
+      "berry": "sometimes",
       "follicle": "sometimes"
     },
     "stamens": {
@@ -77,6 +77,16 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia Ochnaceae (read 2026-10-17): leaves usually simple; pinnately lobed or compound mainly in juvenile Quiinoideae, pinnate in Krukoviella, Rhytidanthera. DELTA: simple mostly."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Ochnaceae (read 2026-10-17): leaves often markedly serrate, the intro calls margins toothed; ~550 spp, with Ouratea (200), Ochna (85) and Campylospermum (65) the largest genera."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Ochnaceae (read 2026-10-17) mentions capsules and also drupelets on a swollen red receptacle. Weighted by its genus sizes: the drupelet genera Ouratea (200), Ochna (85) and Campylospermum (65), ~350 of ~550 spp, outnumber capsular Sauvagesia (39) and allies; Quiinoideae (~48) are berry-like."
     }
   }
 }
