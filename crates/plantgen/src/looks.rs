@@ -223,6 +223,14 @@ pub struct Variegation {
         skip_serializing_if = "is_one"
     )]
     pub stretch: f64,
+    /// How much of a leaf's share is its plant's rather than its own, 0 to
+    /// 1: at 1 every leaf of a plant has the same share and plants differ
+    /// by `spread` (air-space and pigment patterns: Cyclamen's silver,
+    /// "varying between plants, but consistent within each plant"), at 0
+    /// every leaf draws its own (chimeras). See
+    /// [`crate::mesh::PlantMesh::vary_by_plant`].
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub plants: f64,
 }
 
 /// What a `zone` variegation's band follows.
@@ -366,6 +374,7 @@ impl Variegation {
         within("variegation slant", self.slant, 0.0, 4.0)?;
         within("variegation feather", self.feather, 0.0, 0.5)?;
         within("variegation stretch", self.stretch, 1.0, 10.0)?;
+        within("variegation plants", self.plants, 0.0, 1.0)?;
         for channel in self.colour {
             within("variegation colour", f64::from(channel), 0.0, 1.0)?;
         }
@@ -3990,7 +3999,10 @@ mod tests {
         // Written back, the defaults stay out.
         let written = serde_json::to_string(&veins).expect("writes");
         assert!(
-            !written.contains("faces") && !written.contains("rim") && !written.contains("stretch"),
+            !written.contains("faces")
+                && !written.contains("rim")
+                && !written.contains("stretch")
+                && !written.contains("plants"),
             "{written}"
         );
         assert!((veins.stretch - 1.0).abs() < 1e-12 && veins.feather.abs() < 1e-12);
@@ -4007,6 +4019,10 @@ mod tests {
             },
             Variegation {
                 feather: 0.6,
+                ..veins
+            },
+            Variegation {
+                plants: 1.5,
                 ..veins
             },
         ] {

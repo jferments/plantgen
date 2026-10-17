@@ -823,6 +823,7 @@ mod tests {
                 ..crate::bend::Bend::FLAT
             },
             segment: crate::mesh::NO_SEGMENT,
+            seed: 0.5,
         };
         let plant = PlantMesh {
             cards: vec![card],

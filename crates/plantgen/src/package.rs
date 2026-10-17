@@ -320,8 +320,10 @@ pub struct AtlasLayer {
     /// accent is, by `clamp((share - rank) / 0.02 + 0.5, 0, 1)` (0 where
     /// `share` is 0, 1 where it is 1), where `rank` is the atlas texel's
     /// blue and `share` is `clamp(amount + spread * (seed - 0.5), 0, 1)`
-    /// for the card's seed ([`crate::templates::card_seed`], from its
-    /// base); before the accent blend ([`Templates::paint`]). With
+    /// for the card's seed as its vertices' alpha packs it
+    /// ([`crate::mesh::Card::seed`]: its own from its base, moved toward
+    /// its plant's by `plants`); before the accent blend
+    /// ([`Templates::paint`]). With
     /// `faces: "upper"` a lower face blends nothing. Absent for none.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub variegation: Option<crate::looks::Variegation>,
@@ -1105,12 +1107,13 @@ pub fn compare_allometry(
     records
 }
 
-/// Every level of detail of keyframe `graph` as a package holds them,
-/// nearest first: the meshes [`build`] bakes, for checks outside the
-/// crate (such as nothing below the ground, `crate::mesh::below`).
+/// Every level of detail of keyframe `graph` of the plant grown from
+/// `seed`, as a package holds them, nearest first: the meshes [`build`]
+/// bakes, for checks outside the crate (such as nothing below the ground,
+/// `crate::mesh::below`).
 #[must_use]
-pub fn keyframe_meshes(graph: &PlantGraph, inputs: &Inputs) -> Vec<PlantMesh> {
-    level_meshes(graph, inputs, false)
+pub fn keyframe_meshes(graph: &PlantGraph, inputs: &Inputs, seed: u64) -> Vec<PlantMesh> {
+    level_meshes(graph, inputs, seed, false)
         .into_iter()
         .map(|(mesh, _)| mesh)
         .collect()
@@ -1128,13 +1131,15 @@ struct BakedKeyframe {
     impostor: impostor::Impostor,
 }
 
-/// Every level of detail of keyframe `graph`, as a package holds them;
+/// Every level of detail of keyframe `graph` of the plant grown from
+/// `seed`, as a package holds them;
 /// with `unshaded`, each with its bark's shade kept out of its colour and
 /// one shade per wood vertex beside it (`mesh::build_unshaded`), else
 /// with no shades.
 pub(crate) fn level_meshes(
     graph: &PlantGraph,
     inputs: &Inputs,
+    seed: u64,
     unshaded: bool,
 ) -> Vec<(PlantMesh, Vec<f32>)> {
     // The package's graph object keeps every organ; the meshes draw them as
@@ -1147,6 +1152,7 @@ pub(crate) fn level_meshes(
         meshes.push(level_mesh(
             drawn,
             inputs,
+            seed,
             &lod.for_height(graph.height),
             (level, 0.0),
             finer,
@@ -1163,9 +1169,12 @@ pub(crate) fn level_meshes(
 /// the one before it, which drew `finer` triangles of wood: where the
 /// sticks standing in for the thin wood it drops (`mesh::twigs`) would
 /// make it, it is built again with fewer, thicker sticks covering as much.
+/// Its cards' seeds follow the plant grown from `seed` where its looks ask
+/// (`PlantMesh::vary_by_plant`).
 pub(crate) fn level_mesh(
     drawn: &PlantGraph,
     inputs: &Inputs,
+    seed: u64,
     lod: &LodSpec,
     (level, along): (usize, f64),
     finer: Option<usize>,
@@ -1192,6 +1201,7 @@ pub(crate) fn level_mesh(
         let tubes = build(Some(0)).0.wood.triangle_count();
         level_mesh = build(Some(finer.saturating_sub(tubes) / mesh::STICK_TRIANGLES));
     }
+    level_mesh.0.vary_by_plant(&inputs.looks, seed);
     level_mesh
 }
 
@@ -1199,8 +1209,9 @@ fn bake_keyframe(
     graph: &PlantGraph,
     organ_types: &[OrganType],
     inputs: &Inputs,
+    seed: u64,
 ) -> Result<BakedKeyframe, PackageError> {
-    let meshes = keyframe_meshes(graph, inputs);
+    let meshes = keyframe_meshes(graph, inputs, seed);
     let motion = match &inputs.motion {
         Some(motion) => {
             let found = motion.of_graph(graph, organ_types);
@@ -1458,7 +1469,12 @@ impl Work<'_> {
         };
         let graph = &growth.keyframes[keyframe];
         let started = Instant::now();
-        let result = bake_keyframe(graph, &growth.organ_types, self.inputs);
+        let result = bake_keyframe(
+            graph,
+            &growth.organ_types,
+            self.inputs,
+            self.variants[variant].seed,
+        );
         if let Ok(baked) = &result {
             (self.say)(&format!(
                 "baked {} at {} years: LOD0 {} triangles, LOD3 {}, impostor {}² ({:.1} s)",
@@ -2724,6 +2740,7 @@ fn decode_cards(input: &mut Reader<'_>) -> Result<Vec<Card>, PackageError> {
             shed: sheds[index],
             bend: crate::bend::Bend::FLAT,
             segment: crate::mesh::NO_SEGMENT,
+            seed: crate::templates::card_seed(bases[index]),
         })
         .collect();
     input.skip_padding()?;

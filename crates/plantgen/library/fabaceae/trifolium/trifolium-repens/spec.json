@@ -71,8 +71,9 @@
           "from": "base",
           "at": 0.5,
           "colour": [0.15, 0.24, 0.14],
-          "amount": 0.2,
-          "spread": 0.3,
+          "amount": 0.15,
+          "spread": 0.4,
+          "plants": 1,
           "faces": "upper"
         }
       },
@@ -206,7 +207,7 @@
     "appearance.organs.basal.variegation": {
       "evidence": "Authored",
       "source": "inaturalist-photos-2026-10",
-      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants without flowers, read 2026-10-17; for example observation 65571123): a pale grey-green V, air space under the upper skin, across each leaflet, opening toward the leaflet's base, at about 0.4 to 0.6 of its length, the band a tenth to a fifth of it wide, absent on some plants and alike on one plant's leaves. Drawn as the zone variegation from the base at 0.5, upper face only."
+      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants without flowers, read 2026-10-17; for example observation 65571123): a pale grey-green V, air space under the upper skin, across each leaflet, opening toward the leaflet's base, at about 0.4 to 0.6 of its length, the band a tenth to a fifth of it wide, absent on some plants and alike on one plant's leaves. Drawn as the zone variegation from the base at 0.5, upper face only, its share set by the plant (plants 1) and wide enough between plants (amount 0.15, spread 0.4) that some plants have none."
     }
   },
   "provenance": {

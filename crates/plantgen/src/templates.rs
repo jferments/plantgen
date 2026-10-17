@@ -117,6 +117,16 @@ pub fn card_seed(base: [f32; 3]) -> f32 {
     seed
 }
 
+/// A plant's own number from 0 to 1, from the seed it grew from, which
+/// [`crate::mesh::PlantMesh::vary_by_plant`] moves its cards' seeds toward.
+#[must_use]
+pub fn plant_seed(seed: u64) -> f32 {
+    // The top 24 bits fit an f32 exactly.
+    #[allow(clippy::cast_precision_loss)]
+    let plant = (mix64(seed ^ 0x504c_414e_5453_4545) >> 40) as f32 / 16_777_216.0;
+    plant
+}
+
 /// Whether a card's normal (`heading × left`) points down, so that its
 /// front, the side the normal points to, is its lower face ([`Face`]).
 #[must_use]
@@ -4325,6 +4335,7 @@ mod tests {
             slant: 0.0,
             feather: 0.0,
             stretch: 1.0,
+            plants: 0.0,
         });
         let templates = Templates::for_looks(&looks);
         let template = &templates.templates[0];
@@ -4396,6 +4407,7 @@ mod tests {
             slant: 0.0,
             feather: 0.0,
             stretch: 1.0,
+            plants: 0.0,
         });
         let templates = Templates::for_looks(&looks);
         let step = 1.0 / TEMPLATE_SIZE as f32;

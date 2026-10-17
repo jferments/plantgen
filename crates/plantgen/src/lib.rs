@@ -621,6 +621,8 @@ pub mod venation;
 /// 99: a zone's edge drawn out along the lateral veins (`feather`),
 /// spots and mottle drawn out along the blade (`stretch`), and a simple
 /// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
-/// trout lily's long blotches and its veins meeting at the tip (98 is
-/// variegation along the veins, #175).
+/// trout lily's long blotches and its veins meeting at the tip; and a
+/// variegation's share set by the plant rather than the leaf (`plants`,
+/// the card's packed seed moved toward the plant's), as Cyclamen's and
+/// white clover's are (98 is variegation along the veins, #175).
 pub const GENERATOR_REVISION: u32 = 99;
