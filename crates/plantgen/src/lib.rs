@@ -655,4 +655,7 @@ pub mod venation;
 /// shape and height facts held back from 96; broom's stated obovate
 /// leaflets draw where a hand-drawn profile stood (102 is fern sori,
 /// #182).
-pub const GENERATOR_REVISION: u32 = 103;
+/// 104: a flowering herb's top leaf nodes may each bear a side branch
+/// ending in a raceme (`flowering_branches`; herb program revision 10)
+/// (103 is held-back species facts, #192).
+pub const GENERATOR_REVISION: u32 = 104;
