@@ -582,4 +582,7 @@ pub mod venation;
 /// young stems and leaf stalks, in a blade's words and `crisped`, cast
 /// the first year's wood toward their colour, wear off in its second and
 /// up close stand from it as strands (91 is leaves with two faces, #164).
-pub const GENERATOR_REVISION: u32 = 92;
+/// 93: a hooked spine curls into an open J at its tip: its shaft runs
+/// further and its hook turns over its last two pieces, not folded flat on
+/// the shaft over the last one (92 is stem hairs, #173).
+pub const GENERATOR_REVISION: u32 = 93;

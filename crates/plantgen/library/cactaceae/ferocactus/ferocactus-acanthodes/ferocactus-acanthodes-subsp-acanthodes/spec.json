@@ -94,7 +94,6 @@
           "lean": 30
         },
         "tubercles": {
-          "height": 0.03,
           "width": 0.5,
           "point": 1.0
         },
@@ -151,6 +150,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "tubercle_relief": "low",
     "areole_wool_colour": [175, 145, 100],
     "flower_colour": [225, 185, 40],
     "flower_size_m": {"min": 0.04, "max": 0.06},
@@ -167,6 +167,7 @@
     "central_spines": {"min": 4, "max": 7}
   },
   "evidence": {
+    "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 328 to 329, Ferocactus cylindraceus: tuberculate, the ribs sometimes undulate with transverse creases."},
     "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 118 to 121: a very thick tannish mat of wool over the apex (Anderson p. 328 gives the spines white, red, yellow or brown, too variable to state one colour)."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 328 to 329, as Ferocactus cylindraceus (F. acanthodes is its synonym): flowers funnelform, yellow, sometimes tinged red, 4 to 6 cm across; fruit globose, yellow, fleshy, to 3 cm long (typical a little short of it, by hand)."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 328 to 329, as Ferocactus cylindraceus (F. acanthodes is its synonym): flowers funnelform, yellow, sometimes tinged red, 4 to 6 cm across; fruit globose, yellow, fleshy, to 3 cm long (typical a little short of it, by hand)."},

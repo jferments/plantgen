@@ -94,7 +94,6 @@
           "lean": 30
         },
         "tubercles": {
-          "height": 0.04,
           "width": 0.5,
           "point": 1.0
         },
@@ -168,6 +167,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "tubercle_relief": "barely",
     "flower_colour": [220, 130, 30],
     "flower_size_m": {"min": 0.04, "max": 0.05},
     "fruit_colour_ripe": [215, 175, 45],
@@ -182,6 +182,7 @@
     "central_spine_form": "hooked"
   },
   "evidence": {
+    "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: barely tuberculate, the ribs with at most a swelling under each areole."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: flowers funnelform, yellow to yellowish orange to red (yellowish orange, the middle of the words), 4 to 5 cm long and wide; fruit ovoid, yellow, to 5 cm long (typical a little short of it, by hand)."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: flowers funnelform, yellow to yellowish orange to red (yellowish orange, the middle of the words), 4 to 5 cm long and wide; fruit ovoid, yellow, to 5 cm long (typical a little short of it, by hand)."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: flowers funnelform, yellow to yellowish orange to red (yellowish orange, the middle of the words), 4 to 5 cm long and wide; fruit ovoid, yellow, to 5 cm long (typical a little short of it, by hand)."},
