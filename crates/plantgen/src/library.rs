@@ -3382,9 +3382,14 @@ mod tests {
             {
                 parent.remove(key);
             }
-            // A section a rule filled alone (a look's hairs) goes with it.
+            // A section a rule filled alone (a look's hairs) goes with it,
+            // but never the look itself, whose other rules the organs'
+            // list still names.
             let mut section = outer;
             while let Some((above, key)) = section.rsplit_once('.') {
+                if above.split('.').count() < 3 {
+                    break;
+                }
                 let Some(parent) = above
                     .split('.')
                     .try_fold(&mut *spec, step)
