@@ -49,7 +49,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.15, 0.1, 0.05],
     "foliage": [0.035, 0.1, 0.03],
     "foliage_shade": [0.01, 0.032, 0.01],
     "variation": 0.2,
@@ -76,6 +75,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stipe_scale_extent": "base",
+    "stipe_colour": [95, 45, 30],
     "rhizome_habit": {"short_creeping": "usually", "erect": "often"},
     "leaf_habit": "evergreen",
     "leaf_division": "compound",
@@ -91,6 +92,8 @@
     "frond_dimorphism": "dimorphic"
   },
   "evidence": {
+    "traits.stipe_scale_extent": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. Petioles of sterile leaves reddish brown, 2-30 cm, coarsely scaly proximally.\" Read as base."},
+    "traits.stipe_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Blechnum spicant: \"Petioles of fertile leaves reddish brown to purple-black, 15-60 cm, coarsely scaly proximally. Petioles of sterile leaves reddish brown, 2-30 cm, coarsely scaly proximally.\" Read as a reddish brown, the sterile fronds' and most fertile ones'."},
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -114,7 +117,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark glossy green fronds."
+      "note": "Colours chosen by eye: dark glossy green fronds. Its stipes take their stated colour (stipe_colour)."
     },
     "taxon": {
       "evidence": "Authored",

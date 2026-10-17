@@ -572,4 +572,13 @@ pub mod venation;
 /// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
 /// sheen and a backlit glow, fringe its edge, and up close stand from it
 /// as strands of their own (89 is cactus colours, #156).
-pub const GENERATOR_REVISION: u32 = 90;
+/// 91: a fern's stipe scales stand only on its base where its flora says
+/// so (`stipe_scale_extent`, fern program revision 9), as long as stated
+/// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
+/// stated `stipe_colour`; the fern families state whether their stipes are
+/// scaly as Flora of North America gives (scaly at the base in
+/// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
+/// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
+/// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
+/// are as long as its flora gives (90 is hairs on leaves, #166).
+pub const GENERATOR_REVISION: u32 = 91;

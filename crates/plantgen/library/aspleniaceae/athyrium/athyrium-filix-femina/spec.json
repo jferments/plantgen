@@ -14,7 +14,6 @@
     "params": {
       "fronds_per_year": 10,
       "frond_life": 1,
-      "frond_length": 1.15,
       "frond_seed": 0.2,
       "size_years": 2,
       "young_angle": 8,
@@ -23,7 +22,6 @@
       "angle_spread": 8,
       "frond_radius": 0.0025,
       "pieces": 14,
-      "stipe": 0.12,
       "pinna_length": 0.13,
       "pinna_peak": 0.4,
       "pinna_base": 0.4,
@@ -53,7 +51,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.25, 0.22, 0.12],
     "foliage": [0.1, 0.21, 0.05],
     "foliage_shade": [0.03, 0.065, 0.015],
     "variation": 0.2,
@@ -78,6 +75,13 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_length_m": {"min": 0.25, "max": 1.2},
+    "petiole_length_m": {"min": 0.15, "max": 0.45, "high": 0.6},
+    "stipe_scales": "dense",
+    "stipe_scale_extent": "base",
+    "stipe_scale_length_m": {"min": 0.01, "max": 0.02},
+    "stipe_scale_colour": [100, 65, 35],
+    "stipe_colour": [205, 185, 125],
     "rhizome_habit": {"erect": "usually", "ascending": "often", "short_creeping": "sometimes"},
     "division_order": {"min": 2, "max": 3, "typical": 3},
     "leaf_shape": "lanceolate",
@@ -89,6 +93,13 @@
     "indusium": {"flap": "usually"}
   },
   "evidence": {
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum, the northwestern lady fern of the Puget Sound lowlands: \"Petiole 15--45(--60) cm, base densely scaly; scales brown or dark brown, lanceolate or ovate-lanceolate, (7--)10--20 × (1--)2--5 mm, ± crisped. Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\"; the species: \"Petiole straw-colored distally ... base dark red-brown or black, swollen\". Read as 25 to 120 cm."},
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum, the northwestern lady fern of the Puget Sound lowlands: \"Petiole 15--45(--60) cm, base densely scaly; scales brown or dark brown, lanceolate or ovate-lanceolate, (7--)10--20 × (1--)2--5 mm, ± crisped. Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\"; the species: \"Petiole straw-colored distally ... base dark red-brown or black, swollen\". Read as 15 to 45 cm, rarely 60."},
+    "traits.stipe_scales": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum, the northwestern lady fern of the Puget Sound lowlands: \"Petiole 15--45(--60) cm, base densely scaly; scales brown or dark brown, lanceolate or ovate-lanceolate, (7--)10--20 × (1--)2--5 mm, ± crisped. Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\"; the species: \"Petiole straw-colored distally ... base dark red-brown or black, swollen\". Densely scaly at the base; read as dense."},
+    "traits.stipe_scale_extent": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum, the northwestern lady fern of the Puget Sound lowlands: \"Petiole 15--45(--60) cm, base densely scaly; scales brown or dark brown, lanceolate or ovate-lanceolate, (7--)10--20 × (1--)2--5 mm, ± crisped. Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\"; the species: \"Petiole straw-colored distally ... base dark red-brown or black, swollen\". Read as base."},
+    "traits.stipe_scale_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum, the northwestern lady fern of the Puget Sound lowlands: \"Petiole 15--45(--60) cm, base densely scaly; scales brown or dark brown, lanceolate or ovate-lanceolate, (7--)10--20 × (1--)2--5 mm, ± crisped. Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\"; the species: \"Petiole straw-colored distally ... base dark red-brown or black, swollen\". Read as 10 to 20 mm."},
+    "traits.stipe_scale_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum, the northwestern lady fern of the Puget Sound lowlands: \"Petiole 15--45(--60) cm, base densely scaly; scales brown or dark brown, lanceolate or ovate-lanceolate, (7--)10--20 × (1--)2--5 mm, ± crisped. Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\"; the species: \"Petiole straw-colored distally ... base dark red-brown or black, swollen\". Brown or dark brown, read as a dark brown."},
+    "traits.stipe_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum, the northwestern lady fern of the Puget Sound lowlands: \"Petiole 15--45(--60) cm, base densely scaly; scales brown or dark brown, lanceolate or ovate-lanceolate, (7--)10--20 × (1--)2--5 mm, ± crisped. Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\"; the species: \"Petiole straw-colored distally ... base dark red-brown or black, swollen\". Straw-coloured over most of its length, read as a pale straw; its dark base is not drawn."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
@@ -97,7 +108,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a delicate, deciduous fern: a vase of soft, lacy, twice-divided fronds widest in the middle. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a delicate, deciduous fern: a vase of soft, lacy, twice-divided fronds widest in the middle. Not fitted to measurements. Frond length and stipe share (visual forms fern stipes, 2026-10-17) now come from the blade and petiole Flora of North America gives (traits), in place of a hand-set 1.15 m frond with a stipe 0.12 of it, which the flora's \"blades ca. 2 times length of petioles\" contradicts."
     },
     "allometry": {
       "evidence": "Authored",
@@ -107,7 +118,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: light yellow-green fronds."
+      "note": "Colours chosen by eye: light yellow-green fronds. Its stipes take their stated colour (stipe_colour)."
     },
     "taxon": {
       "evidence": "Authored",

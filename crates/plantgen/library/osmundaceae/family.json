@@ -12,7 +12,8 @@
       "dimorphic": "often",
       "monomorphic": "sometimes"
     },
-    "indusium": "none"
+    "indusium": "none",
+    "stipe_scales": "absent"
   },
   "evidence": {
     "traits": {
@@ -24,6 +25,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 107, family Osmundaceae: indusium none, sori absent; read as \"none\"."
+    },
+    "traits.stipe_scales": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 2), Osmundaceae: stems \"scales absent\", indument \"of reddish to light brown hairs\". Read as absent."
     }
   }
 }
