@@ -104,7 +104,7 @@ class OpenAICompat:
                 ]},
             ],
             "temperature": self.cfg.get("temperature", 0),
-            "max_tokens": int(self.cfg.get("max_tokens", 4000)),
+            "max_tokens": int(self.cfg.get("max_tokens", 16000)),  # thinking models spend part of it before answering
         }
         if mode == "schema":
             b["response_format"] = {"type": "json_schema", "json_schema": {"name": "answer", "schema": schema}}
