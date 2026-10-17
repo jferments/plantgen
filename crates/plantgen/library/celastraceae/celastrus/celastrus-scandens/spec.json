@@ -15,11 +15,11 @@
     }
   },
   "growth": {
-    "years": 12,
+    "years": 10,
     "step": 0.25,
     "keyframes": [
       4,
-      12
+      10
     ]
   },
   "variants": {
@@ -262,7 +262,7 @@
     "allometry": {
       "evidence": "SourceInferred",
       "source": "britton-brown-1913",
-      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): climbing trees to 25 ft or more; Mathews (1912, p. 254): 6-25 ft; Wikipedia: 30 ft or more. Drawn on an 8-year paper birch, so it reaches about 8 m by its twelfth year."
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): climbing trees to 25 ft or more; Mathews (1912, p. 254): 6-25 ft; Wikipedia: 30 ft or more. Drawn on a young paper birch (its 4-year keyframe), over whose crown it reaches 6 to 8 m by its tenth year."
     },
     "host": {
       "evidence": "Authored",
@@ -272,13 +272,13 @@
   },
   "host": {
     "species": "betula-papyrifera",
-    "age": 8,
+    "age": 4,
     "environment": "open",
     "seed": 1
   },
   "allometry": [
     {
-      "age": 12,
+      "age": 10,
       "environment": "open",
       "height": 8,
       "tolerance": 0.3

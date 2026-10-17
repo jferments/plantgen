@@ -35,6 +35,14 @@
       1
     ]
   },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.5
+    }
+  ],
   "tier": "procedural_proxy",
   "traits": {
     "life_span": "perennial",
@@ -136,6 +144,11 @@
       "source": "plantgen-authors",
       "note": "Drawing values no character gives (nightshades, 2026-10-17): a patch of stems from creeping rootstocks (Bentham p. 154) by eye from photographs (iNaturalist 176260134); thin stems; five leaf pairs below a raceme a third of the stem, about 14 flowers, by eye from photographs (iNaturalist 99562952)."
     },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Circaea lutetiana' (read 2026-10-17): 20-60 cm tall; Hooker p. 159: 1-2 ft. A patch four years from its rootstock stands about the middle of that."
+    },
     "traits.life_span": {
       "evidence": "SourceInferred",
       "source": "bentham-hooker-1908",
@@ -220,19 +233,6 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it: fruit July-September."
-    },
-    "allometry": {
-      "evidence": "SourceInferred",
-      "source": "wikipedia",
-      "note": "Wikipedia, 'Circaea lutetiana' (read 2026-10-17): 20-60 cm tall; Hooker p. 159: 1-2 ft. A patch four years from its rootstock stands about the middle of that."
     }
-  },
-  "allometry": [
-    {
-      "age": 4,
-      "environment": "open",
-      "height": 0.4,
-      "tolerance": 0.5
-    }
-  ]
+  }
 }

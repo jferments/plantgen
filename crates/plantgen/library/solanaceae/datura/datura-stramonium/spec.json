@@ -32,6 +32,14 @@
       1
     ]
   },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.4
+    }
+  ],
   "tier": "procedural_proxy",
   "traits": {
     "life_span": "annual",
@@ -148,6 +156,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; a stout stem (Britton and Brown) 18 mm at the foot and six leaves below the first fork, by eye from photographs (iNaturalist 54718314)."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Stramonium, p. 1838 (read on the Internet Archive, 2026-10-17): 2 or 3 ft or more in rich soil; Britton and Brown 1-5 ft; Bentham 1-2 ft; Wikipedia 2-5 ft. Its reference height is the middle of that range, 0.9 m, at its last keyframe."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

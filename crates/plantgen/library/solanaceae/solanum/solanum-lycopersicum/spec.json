@@ -33,6 +33,14 @@
       1
     ]
   },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.4
+    }
+  ],
   "tier": "procedural_proxy",
   "traits": {
     "life_span": "annual",
@@ -147,6 +155,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; stem 14 mm thick at the foot by eye from photographs (iNaturalist 184420443); three side shoots from the upper axils below the first cluster (Bailey vol. 4 p. 1931: much branched, with spreading branches; Wikipedia 'Tomato': lateral buds take over); a weak stem that bends over a little, as Bailey's 'straggling' and Wikipedia's decumbent vines."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Lycopersicon, c. pp. 167-168 (read on the Internet Archive, 2026-10-17): 1-3 ft high; Wikipedia 'Tomato': vines become decumbent, up to 3 m long, bush cultivars mostly under 1 m. Its reference height is the middle of that range, 0.6 m, at its last keyframe."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

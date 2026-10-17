@@ -33,6 +33,14 @@
       1
     ]
   },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 1.05,
+      "tolerance": 0.4
+    }
+  ],
   "tier": "procedural_proxy",
   "traits": {
     "life_span": "perennial",
@@ -151,6 +159,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Drawing values no character gives (nightshades, 2026-10-17): three stems from the stout rootstock (Hooker p. 287) by eye from photographs (iNaturalist 114160319); stem 14 mm at the foot; six leaves below the first fork, by eye."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "hooker-1884",
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Atropa, p. 287 (read on the Internet Archive, 2026-10-17): stem 2-3 ft; King's (vol. 1 p. 331): about 3 ft; Wikipedia 'Atropa bella-donna': up to 2 m, more commonly 1.5 m. Its reference height is the middle of that range, 1.05 m, at its last keyframe."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

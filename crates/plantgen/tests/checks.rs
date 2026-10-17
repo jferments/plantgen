@@ -67,6 +67,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the smaller leaf of each geminate pair is drawn half the larger and the sympodium's leaves shrink to three quarters upward, so the least draw about 1.2 cm wide, against the 2 to 6.4 cm Bailey gives the leaves of its varieties",
     ),
     (
+        "celastrus-scandens",
+        "shoot_leaves",
+        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18, from maples' long shoots; the climber program grows few leaves on a shoot (as on aristolochia-macrophylla)",
+    ),
+    (
         "chloranthus-serratus",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",

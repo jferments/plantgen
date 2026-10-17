@@ -30,6 +30,14 @@
       1
     ]
   },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 4.0,
+      "tolerance": 0.4
+    }
+  ],
   "tier": "procedural_proxy",
   "traits": {
     "life_span": "perennial",
@@ -124,6 +132,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Drawing values no character gives (nightshades, 2026-10-17): a trunk of a few stems (Wikipedia: often a many-branched trunk)."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-17): 3-5 m; Bailey (vol. 2 p. 971, as Datura suaveolens): 10-15 ft. Its reference height is the middle of that range, 4.0 m, at its last keyframe."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

@@ -33,6 +33,14 @@
       1
     ]
   },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.68,
+      "tolerance": 0.4
+    }
+  ],
   "tier": "procedural_proxy",
   "traits": {
     "life_span": "annual",
@@ -136,6 +144,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; stem 10 mm at the foot and two side shoots below the first fork by eye from photographs (iNaturalist 88011298), Bailey (vol. 2 p. 659) giving the varieties as very branchy to few-branched."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum annuum, p. 659 (read on the Internet Archive, 2026-10-17): the varieties about 2 to 2.5 ft; Wikipedia 'Capsicum annuum': up to 2 m with support. Its reference height is the middle of that range, 0.68 m, at its last keyframe."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

@@ -33,6 +33,14 @@
       1
     ]
   },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.75,
+      "tolerance": 0.4
+    }
+  ],
   "tier": "procedural_proxy",
   "traits": {
     "life_span": "annual",
@@ -155,6 +163,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; stem 16 mm at the foot, seven leaves below the first cluster and two side shoots, by eye from photographs (iNaturalist 133102788), Bailey (vol. 6 p. 3182) calling it much branched."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): 2-3 ft; Wikipedia 'Eggplant': 40-150 cm. Its reference height is the middle of that range, 0.75 m, at its last keyframe."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
