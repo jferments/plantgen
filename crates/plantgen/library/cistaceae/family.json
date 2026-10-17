@@ -27,8 +27,8 @@
       "herbaceous": "often"
     },
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often"
+      "cyme": "usually",
+      "solitary": "often"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
@@ -54,6 +54,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Cistaceae (read 2026-10-17): simple, unlobed lamina."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "POWO Helianthemum (read 2026-10-17): 114 accepted species, flowers in raceme-like cymes (Flora of Somalia account). Helianthemum is over half of the family's ~170-200 species (Wikipedia Cistaceae, read by the first pass), so cymes lead; the single-flowered habit of part of Cistus, Fumana and Tuberaria keeps solitary at often. Only Helianthemum was read at genus level."
     }
   }
 }

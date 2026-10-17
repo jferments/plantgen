@@ -134,7 +134,10 @@
     "flower_colour": [175, 130, 200],
     "fruit_size_m": {"min": 0.04, "max": 0.06},
     "flowering_months": [5, 6],
-    "fruiting_months": [6, 7]
+    "fruiting_months": [6, 7],
+    "rosette": "none",
+    "leaf_margin": "entire",
+    "flower_symmetry": "zygomorphic"
   },
   "evidence": {
     "traits.height_max_m": {
@@ -294,7 +297,10 @@
       "evidence": "SourceInferred",
       "source": "abrams-1944",
       "note": "Each bloom is a short raceme of pea flowers (Kearney and Peebles 1942, p. 466), as long as Abrams gives the racemes, 3 to 5 cm (vol. 2, 1944, p. 562), so 4 cm; its flowers are as wide as the corolla is long, 8 to 10 mm, by the cluster rules."
-    }
+    },
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2389100), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2389100), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2389100), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -47,7 +47,7 @@
       "life": 100,
       "snag_fall": 0.12,
       "leaf_area": 0.041,
-      "bloom_area": 0.09,
+      "bloom_area": 0.216,
       "thorn_area": 0.059,
       "path_half": 3.4,
       "bud_break": 2
@@ -80,7 +80,7 @@
     "variation": 0.15,
     "organs": {
       "leaf": {
-        "shape": { "leaflet_width": 0.25, "teeth": 0, "petiole": 0.35, "angle": 30, "pinnule_angle": 75, "petiolule": 0 }
+        "shape": { "leaflet_width": 0.25, "petiole": 0.35, "angle": 30, "pinnule_angle": 75, "petiolule": 0 }
       },
       "thorn": {
         "shape": {
@@ -98,8 +98,7 @@
           "notch": 0.0,
           "centre": 0.4
         },
-        "inflorescence": { "kind": "spike", "flowers": 150, "size": 0.06, "spread": 70 },
-        "colour": [0.92, 0.88, 0.45]
+        "inflorescence": { "flowers": 150, "size": 0.06, "spread": 70 }
       }
     },
     "ridges": {
@@ -144,7 +143,13 @@
     "flowering_months": [4, 5, 6, 7, 8],
     "fruiting_months": [7, 8, 9],
     "fruit_size_m": {"min": 0.07, "max": 0.18},
-    "fruit_colour_ripe": [195, 160, 100]
+    "fruit_colour_ripe": [195, 160, 100],
+    "height_typical_m": {"min": 3, "max": 9},
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.08, "max": 0.15},
+    "leaf_width_m": {"min": 0.05, "max": 0.1},
+    "leaf_margin": "entire"
   },
   "evidence": {
     "generator.params.bud_break": {
@@ -327,7 +332,14 @@
       "evidence": "SourceInferred",
       "source": "vicflora",
       "note": "VicFlora, as search results quote it (the page itself was not read): pods yellowish-brown. As RGB."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2383876), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2383876), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2383876), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2383876), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2383876), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2383876), as no source read gives it."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.090)."}
   },
   "provenance": {
     "sources": [

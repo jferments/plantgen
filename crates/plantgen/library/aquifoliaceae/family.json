@@ -23,24 +23,24 @@
       "false": "often"
     },
     "sexual_system": {
-      "dioecious": "often",
-      "polygamous": "often",
-      "hermaphrodite": "sometimes"
+      "dioecious": "usually",
+      "polygamous": "sometimes",
+      "hermaphrodite": "rarely"
     },
     "ovary_position": "superior",
     "hypanthium": false,
     "woodiness": "woody",
     "inflorescence": {
+      "cyme": "usually",
       "solitary": "rarely",
-      "panicle": "often",
-      "cyme": "often",
-      "raceme": "sometimes"
+      "panicle": "rarely",
+      "raceme": "rarely"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": {
-      "sepals_and_petals": "often",
-      "tepals": "often",
-      "absent": "often"
+      "sepals_and_petals": "usually",
+      "tepals": "rarely",
+      "absent": "rarely"
     },
     "fruit_type": "drupe",
     "flower_merosity": {
@@ -112,6 +112,21 @@
       "evidence": "SourceInferred",
       "source": "lucid-ffpa",
       "note": "Lucid family key, Aquifoliaceae (read 2026-10-17): base cuneate or attenuate."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Ilex (read 2026-10-17): over 570 species, i.e. nearly all of Aquifoliaceae (Ilex is its only genus in the APG sense); hollies generally dioecious, male and female flowers on separate plants. Polygamous and bisexual flowers kept as minor states from the family's DELTA coding."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Ilex (read 2026-10-17): the small greenish-white flower has four petals; with Ilex making up almost all of the family, a calyx-and-corolla perianth is the norm. The tepals and absent states came from the small genera DELTA merges in (Phellinaceae, Sphenostemonaceae), so they drop to rarely."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "POWO Aquifoliaceae (read 2026-10-17): the family is now the single genus Ilex (500-600 spp, Nemopanthus sunk), so the genus decides. All four accounts quoted there (Neotropikey, Kew Temperate Families handbook, Flora Zambesiaca, Flora of Tropical East Africa) give axillary cymes or fascicles of cyme origin, sometimes apparently single flowers; none names panicles or racemes, so those drop to rarely."
     }
   }
 }

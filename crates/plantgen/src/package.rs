@@ -33,7 +33,7 @@
 //! | `mesh` | one level of detail, `APMESH1` (below) |
 //! | `impostor-albedo` | PNG, sRGB colour with coverage in alpha |
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
-//! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, variegation rank in blue (255 without variegation), coverage in alpha |
+//! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, variegation rank in blue (255 without variegation), or the sorus value for a layer with sori, coverage in alpha |
 //! | `parts` | the part meshes, `APPARTS2` (below) |
 //! | `part-steps` | the part meshes' coarser steps, `APSTEPS2` (below) |
 //! | `mechanics` | one keyframe's bones and branches, JSON, in motion packages only ([`crate::motion`]) |
@@ -321,10 +321,20 @@ pub struct AtlasLayer {
     /// `share` is 0, 1 where it is 1), where `rank` is the atlas texel's
     /// blue and `share` is `clamp(amount + spread * (seed - 0.5), 0, 1)`
     /// for the card's seed ([`crate::templates::card_seed`], from its
-    /// base); before the accent blend ([`Templates::paint`]). Absent for
-    /// none.
+    /// base); before the accent blend ([`Templates::paint`]). With
+    /// `faces: "upper"` a lower face blends nothing. Absent for none.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub variegation: Option<crate::looks::Variegation>,
+    /// Its sori, on its cards' lower faces only and on the cards that bear
+    /// them ([`crate::looks::Sori::borne`] of the card's seed): the atlas
+    /// texel's blue `v`, when above 0, paints the sporangia's `colour`
+    /// with weight `2v` up to 0.5, and above it moves from that colour to
+    /// `indusium_colour` by `2v - 1` with weight 1, darkened as the accent
+    /// is, after the underside colour and before the accent blend
+    /// ([`Templates::paint`]). A layer with sori has no variegation.
+    /// Absent for none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sori: Option<crate::looks::Sori>,
 }
 
 /// Sizes of the plant at one keyframe.
@@ -1596,6 +1606,7 @@ fn assemble(
                     hairs: template.hairs.clone(),
                     underside: template.underside,
                     variegation: template.variegation,
+                    sori: template.sori,
                 })
                 .collect(),
         },

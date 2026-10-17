@@ -53,11 +53,9 @@
           "leaves": 7,
           "angle": 35,
           "stalk": 0.15,
-          "width": 0.15,
           "widest": 0.4,
           "tip": 0.3,
           "base": 0.6,
-          "teeth": 0,
           "petiole": 0.02
         }
       },
@@ -172,7 +170,13 @@
       "evidence": "SourceInferred",
       "source": "kew-grassbase",
       "note": "GrassBase's entry (as search results quote it; the page itself was not read): fertile lemma ovate, about 15 mm long."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L434053), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L434053), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L434053), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L434053), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L434053), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L434053), as no source read gives it."}
   },
   "provenance": {
     "sources": [
@@ -192,6 +196,12 @@
     "leaf_width_m": {"min": 0.005, "max": 0.02},
     "spikelet_length_m": {"min": 0.018, "max": 0.025},
     "florets_per_spikelet": 2,
-    "lemma_length_m": 0.015
+    "lemma_length_m": 0.015,
+    "height_typical_m": {"min": 3, "max": 8},
+    "height_max_m": 10,
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.08}
   }
 }

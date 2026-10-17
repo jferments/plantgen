@@ -37,16 +37,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18 (3 before its blades took their stated breadth, 10 to 35 cm, which drops one more on some shoots); the climber program grows few leaves on a shoot",
     ),
     (
-        "asarum-canadense",
-        "leaf_shape",
-        "its kidney-shaped blades (FNA vol. 3: reniform) are drawn on a simple card, at most as broad as long, so they read orbicular or ovate; no card draws a reniform blade yet",
-    ),
-    (
-        "asarum-canadense",
-        "leaf_width_m",
-        "a simple card is at most as broad as long, so its blades are drawn 5.5 to 6.5 cm wide, as wide as long, against FNA's 8 to 14 cm, broader than long",
-    ),
-    (
         "ascarina-lucida",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -83,11 +73,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "cornus-sericea",
-        "inflorescence",
-        "Cornaceae's flowers are in cymes (Simpson 2019), and red-osier dogwood's flat-topped clusters are cymes, but its look draws them as an umbel",
-    ),
-    (
-        "cornus-sericea",
         "fruit_size_m",
         "its drupes are drawn about 1.6 cm across against the 6 to 8 mm Dendrology (2019) p. 196 gives (seen since the book's sizes joined the spec)",
     ),
@@ -110,11 +95,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
-    ),
-    (
-        "digitalis-purpurea",
-        "corolla_shape",
-        "its bell is joined 0.8 of its length round a wide mouth, its lobes short (Flora of New Zealand), but the angiosperms draw every bell joined 0.45 and a funnel 0.6, so its corolla is nearest a funnel; a longer bell needs the rule's shapes to allow one",
     ),
     (
         "echinocereus-engelmannii",
@@ -165,11 +145,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "houttuynia-cordata",
         "inflorescence_bracts",
         "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
-    ),
-    (
-        "jacobaea-vulgaris",
-        "leaf_width_m",
-        "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
     ),
     (
         "larrea-tridentata",
@@ -253,13 +228,8 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
-        "leaf_length_m",
-        "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
-    ),
-    (
-        "program:grass",
-        "leaf_width_m",
-        "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
+        "leaf_habit",
+        "a cohort's blades turn to thatch the year after they grow, so a wintergreen grass, rush or sedge (the fescues, tufted hairgrass, orchardgrass, Yorkshire fog, soft rush, slough sedge) draws its leaves as deciduous until the grass program keeps a green blade through winter",
     ),
     (
         "program:grass",
@@ -330,11 +300,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
-    ),
-    (
-        "viola-glabella",
-        "zygomorphy",
-        "a violet's two upper, two side and one spurred lower petal are no named kind (`other`), and it is drawn two-lipped by hand, the nearest corolla that spurs one lower petal",
     ),
 ];
 

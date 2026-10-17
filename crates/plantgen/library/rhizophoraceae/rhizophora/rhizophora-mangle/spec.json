@@ -71,11 +71,9 @@
           "leaves": 7,
           "angle": 50,
           "stalk": 0.1,
-          "width": 0.45,
           "widest": 0.5,
           "tip": 0.5,
           "base": 0.6,
-          "teeth": 0,
           "petiole": 0.06
         }
       },
@@ -116,7 +114,21 @@
     },
     "wood_density_basic_kg_m3": 830,
     "stamens": 8,
-    "architectural_model": {"attims": "usually"}
+    "architectural_model": {"attims": "usually"},
+    "height_typical_m": {"min": 3, "max": 10},
+    "life_span": "perennial",
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.06, "max": 0.12},
+    "leaf_width_m": {"min": 0.03, "max": 0.05},
+    "leaf_shape": "elliptic",
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "cyme",
+    "flowering_months": [4, 5, 6, 7, 8, 9],
+    "fruit_type": "berry",
+    "fruit_size_m": {"min": 0.02, "max": 0.03},
+    "fruiting_months": [7, 8, 9, 10, 11]
   },
   "evidence": {
     "traits.height_max_m": {
@@ -180,7 +192,21 @@
       "source": "little-skolmen-1989",
       "note": "Little and Skolmen's Common Forest Trees of Hawaii, as quoted in search results; the page itself was not read: sepals 4, narrow, pale yellow, almost 13 mm long, leathery and persistent; petals 4, narrow, about 10 mm, whitish, woolly inside; a two-celled ovary mostly inferior but conical at its apex. The New York Botanical Garden's account (as quoted in search results; the page itself was not read) gives 8 stamens round the style."
     },
-    "traits.architectural_model": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 478, Rhizophora mangle: architectural model attims."}
+    "traits.architectural_model": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 478, Rhizophora mangle: architectural model attims."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.fruit_type": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2523199), as no source read gives it."}
   },
   "provenance": {
     "sources": [

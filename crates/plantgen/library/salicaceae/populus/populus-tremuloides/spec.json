@@ -27,7 +27,7 @@
       "lean": 2,
       "extinction": 0.45,
       "pipe_rings": 2.16e-08,
-      "bloom_area": 0.05,
+      "bloom_area": 0.137,
       "path_half": 6.54,
       "pipe_tip": 0.00182,
       "pipe_organ": 0.00365
@@ -59,12 +59,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.95,
           "widest": 0.45,
           "tip": 0.25,
-          "base": 0.6,
-          "teeth": 14,
-          "tooth_depth": 0.01
+          "base": 0.6
         },
         "families": {
           "plasticity": 0.4
@@ -98,12 +95,20 @@
     "wood_modulus_green_mpa": 5900,
     "wood_rupture_green_mpa": 35,
     "wood_moisture_green_share": {"min": 0.95, "max": 1.13, "typical": 1.04},
-    "juvenile_period_years": {"min": 2, "max": 3}
+    "juvenile_period_years": {"min": 2, "max": 3},
+    "height_typical_m": {"min": 10, "max": 25},
+    "life_span": "perennial",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.03, "max": 0.07},
+    "inflorescence_length_m": {"min": 0.03, "max": 0.08},
+    "flower_symmetry": "actinomorphic",
+    "flowering_months": [4, 5],
+    "fruit_size_m": {"min": 0.004, "max": 0.006},
+    "fruiting_months": [5, 6]
   },
   "evidence": {
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Populus tremuloides: \"slender branchlets covered with scattered oblong orange-colored lenticels, bright red-brown and very lustrous during their first season, gradually turning light gray tinged with red, ultimately dark gray\". Colour chosen by eye for bright red-brown."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's quaking aspen review (Populus tremuloides, read 2026-10-16): \"Quaking aspen is shade intolerant and cannot reproduce beneath its own canopy.\""},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.639), and since 2026-10-16 its family's two carpels and its order's regular flowers (before, 0.031), and since its flowers, which have no perianth, are drawn by their stamens grown to the flower's size (before, 0.0138)."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
@@ -178,7 +183,17 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.050)."}
   },
   "provenance": {
     "sources": [

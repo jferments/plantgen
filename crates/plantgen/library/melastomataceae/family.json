@@ -34,14 +34,12 @@
       "half_inferior": "sometimes",
       "superior": "rarely"
     },
-    "fruit_type": {
-      "capsule": "often",
-      "berry": "often"
-    },
+    "fruit_type": {"berry": "usually", "capsule": "often"},
     "inflorescence": "cyme",
     "stem_cross_section": {"square": "often"}
   },
   "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Melastomataceae (read 2026-10-17): fruit a loculicidal capsule or a berry, about 4,400 species. Wikipedia: family about 5,100 species; Miconia alone nearly 1,900 (with Clidemia, Leandra, Conostegia and others sunk into it), its fruits eaten by birds, so fleshy. That one berry-fruited genus is over a third of the family; with Henrietteae (a berry-fruited tribe) and the Old World berry genera, fleshy fruits outnumber the capsular Melastomeae (Tibouchina and allies) and Sonerileae. Medinilla's size and berry not read from a page."},
     "traits.leaf_base_shape": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "Lucid family key, Melastomataceae (read 2026-10-17): base usually cuneate, rarely attenuate."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Melastomataceae (read 2026-10-17): leaves simple, no lobing described; Lucid key (read 2026-10-17): no lobing."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Melastomataceae (read 2026-10-17): margins entire or serrate; Lucid family key (read 2026-10-17): entire. Toothed (often finely) blades occur in a minority of species."},

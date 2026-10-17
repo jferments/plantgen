@@ -82,7 +82,6 @@
           "widest": 0.35,
           "tip": 0.6,
           "base": 0.4,
-          "teeth": 0,
           "petiole": 0.05
         }
       },
@@ -108,7 +107,6 @@
           "widest": 0.15,
           "tip": 0.6,
           "base": 1.0,
-          "teeth": 0,
           "petiole": 0.45
         }
       }
@@ -145,7 +143,14 @@
       250,
       205,
       20
-    ]
+    ],
+    "height_max_m": 0.8,
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "inflorescence_length_m": {"min": 0.05, "max": 0.1},
+    "flowering_months": [5, 6, 7],
+    "fruit_size_m": {"min": 0.007, "max": 0.01},
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
     "taxon": {
@@ -237,7 +242,14 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: grey-green woolly leaves (FEIS: \"wooly pubescence\"); bright yellow sunflower-like heads."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."}
   },
   "provenance": {
     "sources": [

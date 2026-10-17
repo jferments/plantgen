@@ -65,11 +65,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.65,
           "widest": 0.5,
           "tip": 0.2,
           "base": 0.6,
-          "teeth": 0,
           "petiole": 0.03
         }
       },
@@ -124,7 +122,12 @@
     "stamens": {"min": 8, "max": 10},
     "carpels": {"min": 4, "max": 5},
     "flowering_months": [3, 4, 5],
-    "fruiting_months": [6, 7, 8, 9, 10]
+    "fruiting_months": [6, 7, 8, 9, 10],
+    "height_typical_m": {"min": 1, "max": 4},
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.005, "max": 0.015},
+    "leaf_shape": "elliptic",
+    "leaf_margin": "entire"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -206,7 +209,12 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Its flower laid out whorl by whorl (spec rework P5): an urn on an inferior ovary from the characters by the rules at the flowering plants. Five petals and five tiny calyx lobes by hand, as the Flora of North America has them, as search results quote it (the page itself was not read); it gives no count."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2457263), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2457263), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2457263), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2457263), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2457263), as no source read gives it."}
   },
   "provenance": {
     "sources": [

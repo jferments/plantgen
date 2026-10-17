@@ -85,8 +85,6 @@
           "widest": 0.65,
           "tip": 0.35,
           "base": 0.25,
-          "teeth": 0,
-          "tooth_depth": 0.005,
           "petiole": 0.08
         },
         "families": {
@@ -145,7 +143,11 @@
     "fruiting_months": [
       5,
       6
-    ]
+    ],
+    "height_typical_m": {"min": 2, "max": 10},
+    "life_span": "perennial",
+    "rosette": "none",
+    "inflorescence_length_m": {"min": 0.02, "max": 0.05}
   },
   "evidence": {
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"stout branchlets marked by scattered yellow lenticels, coated when they first appear with pale early deciduous pubescence, becoming bright yellow or dark orange color, and in their second year dark red-brown\". Colour chosen by eye between dark orange and red-brown."},
@@ -243,7 +245,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after FEIS (Anderson 2001): smooth to flaky grey bark; leaves obovate to oblanceolate, mostly untoothed, with paler undersides. The bark colour after Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"Bark thin, dark brown slightly tinged with red, and divided into broad flat ridges\"; a dark grey-brown between it and FEIS's grey, chosen by eye, where a pale grey had made its limbs the lightest thing in the crown."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."}
   },
   "provenance": {
     "sources": [

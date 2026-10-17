@@ -12,8 +12,8 @@
 #
 #   u = clamp((age + season - e) / unroll, 0, 1)
 #
-# of its length; each piece beyond u coils back by up to `curl` degrees and
-# its pinnae are folded small. As the frond ages it opens from young_angle
+# of its length; the blade beyond u is wound into a crozier (revision 11)
+# and its pinnae are folded small. As the frond ages it opens from young_angle
 # to old_angle off the vertical, and it sags under its own weight: a
 # tropism toward the ground of elasticity droop * min(a, droop_years) for
 # its age a since it emerged, so old fronds arch over further. A frond
@@ -78,10 +78,48 @@
 # fern's scales, "gradually diminishing in size distally" (Flora of
 # North America, Polystichum munitum). A stipe base that outlives its
 # frond keeps its scales, so an old crown is a shaggy clump of them.
+#
+# Revision 9 (visual forms fern stipes): a stipe's scales may stand only
+# on its foot, as floras word most ferns' ("scales usually persistent at
+# base", Flora of North America, Dryopteridaceae): they go scale_reach of
+# the way up it, diminishing to scale_top of their size there.
+# A scaly piece is drawn as one segment, as a bare one is, so scales no
+# longer make a stipe bend further (three segments took the tropism
+# three times).
+#
+# Revision 10 (visual forms fern dimorphism): a fern may bear two kinds of
+# frond, as floras word a dimorphic fern's (Flora of North America,
+# Blechnum spicant: "Leaves dimorphic ... fertile leaves more erect and
+# longer than sterile leaves"). fertile_fronds of each year's fronds are
+# fertile: fertile_length long with fertile_stipe of it bare, standing at
+# fertile_angle with fertile_arch and fertile_droop, from nearer the
+# crown's centre, and bearing `fertile_pinna` pinnae (their own organ,
+# so their own look: a fertile pinna is often narrow, contracted or
+# brown with sporangia), the longest fertile_pinna_length of the frond.
+# Each defaults to its sterile frond's, so a fern stated alike draws as
+# before.
+
+# Revision 11 (visual forms fiddleheads): a frond comes up as a crozier,
+# its blade coiled from the tip downward toward its upper face and
+# unrolling from its foot, so its lower pinnae open while its tip is
+# still coiled (Hoshizaki and Moran 2001, p. 17; Kaplan 2022, p. 358-359,
+# 369). The blade beyond the share unrolled winds coil_turns turns in all,
+# each coiled piece shorter the nearer the tip (exp(-coil_tight d) of
+# coil_size of its length, d its distance beyond the share unrolled), so
+# the coil is a tight inward spiral, not a ring; each coiled piece is
+# four short segments, so the spiral is round. A coiled pinna is small
+# (coil_pinna of its size at the outer turn, less inward) and pressed
+# toward the frond's tip and upper face, inside the coil, as each pinna
+# coils as its frond does (Kaplan 2022, p. 352). A crozier is "often
+# protected by hairs or scales" (Hoshizaki and Moran 2001, p. 17): a
+# scaly fern's coil carries rings of its scales. The stipe does not
+# coil: a piece of it not yet grown is short, so a new crozier stands
+# low and rises on its lengthening stipe. Fronds that are not circinate
+# (coil_turns 0) open straight. `curl`, a coiled piece's turn, is gone.
 
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem polypodiidae 8;
+lsystem polypodiidae 11;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -102,7 +140,8 @@ param rachis_tip = 0.35;      # the rachis' radius at its tip, as a share of its
 # Scales on the stipe.
 param scales = 0;             # scales round each piece of the stipe; none by default
 param scale_length = 0.012;   # a scale at the stipe's foot, m
-param scale_top = 0.4;        # a scale at the stipe's top, as a share of one at its foot
+param scale_top = 0.4;        # a scale at the top of the scaly share, as a share of one at its foot
+param scale_reach = 1;        # share of the stipe, from its foot, that bears scales
 param scale_angle = 12;       # how far a scale stands off the stipe
 param palea_area;             # leaf area of a scale 1 m long, m²; its look's by default
 # Pinnae.
@@ -113,11 +152,24 @@ param pinna_tip = 0.1;        # the topmost pinna, as a share of the longest
 param pinna_angle = 70;       # angle of a pinna to the rachis
 param pinna_lift = 10;        # degrees the pinnae rise out of the frond's plane
 param pinna_area = 0.23;      # leaf area of a pinna 1 m long, m²
+# Fertile fronds, where they differ from the sterile ones; a negative
+# value takes the sterile frond's.
+param fertile_fronds = 0;     # share of each year's fronds that are fertile
+param fertile_length = -1;    # a full-size fertile frond, stipe included
+param fertile_stipe = -1;     # its share without pinnae
+param fertile_angle = -1;     # the angle it opens to
+param fertile_arch = -1;      # how far it bends over its length once unrolled
+param fertile_droop = -1;     # its sag per year
+param fertile_pinna_length = -1;  # its longest pinna, as a share of its length
+param fertile_pinna_area;     # leaf area of a fertile pinna 1 m long; its look's by default
 # Unrolling and sagging.
 param season = 0.5;           # share of the year at the keyframe
 param emerge_spread = 0.3;    # fronds emerge over this share of the year
 param unroll = 0.25;          # share of a year a frond takes to unroll
-param curl = 40;              # degrees each coiled piece turns back
+param coil_turns = 2.5;       # turns of a frond's blade coiled in its crozier; 0 for one that expands straight
+param coil_size = 0.22;       # a coiled piece's length at the crozier's outer turn, as a share of its open length
+param coil_tight = 2;         # how fast the coiled pieces shorten toward the tip: exp(-coil_tight d)
+param coil_pinna = 0.12;      # a coiled pinna at the crozier's outer turn, as a share of its open size
 param droop = 0.02;           # sag per year of a frond's age
 param arch = 60;              # about how far a frond's rachis bends toward the ground over its length once unrolled
 param crown_radius = 0.02;    # fronds stand round a crown up to this far from its centre
@@ -135,20 +187,24 @@ param crown_start = 0;        # a new crown's age, as a share of its parent crow
 
 module Y(v, n, c0);           # a crown: vigour, crowns sent out so far, age it started at
 module Fc(i, m, c);           # fronds i to i + m - 1 of this year's cohort, on a crown c years old
-module Fr(s, a, e);           # a frond s long at a degrees, emerging at phase e of its year
-module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
-module Pp(k, s, e);           # a drawn piece of a rachis
-module Pn(k, s, e, h);        # a pair of pinnae h of a piece along piece k
-module Pq(z);                 # a pair of pinnae z long
+module Fr(s, a, e, fe);        # a frond s long at a degrees, emerging at phase e of its year; fe 1 if fertile
+module Pc(k, m, s, e, fe);     # pieces k to k + m - 1 of a frond's rachis
+module Pp(k, s, e, fe);        # a drawn piece of a rachis
+module Pr(k, s, fe, d, w, r);  # a drawn piece of a rachis, d beyond the share unrolled, of a frond w of it stipe, r in radius
+module Pw(a, q, r, z);        # half a coiled piece: two segments q long turned a degrees, crozier scales z long
+module Ck(z, r);              # a ring of crozier scales z long round a rachis r in radius
+module Pn(k, s, fe, h, d, w);  # a pair of pinnae h of a piece along piece k
+module Pq(z, fe, c);           # a pair of pinnae z long, c coiled
 module Cn(n, c);              # a new crown on its rhizome, the n-th, starting c years old
 module Sb(s, a);              # a frond's stipe base, its frond s long, opening at a degrees
-module Fe(l, e);              # a frond l long and its foot, emerging at phase e
+module Fe(l, e, fe);           # a frond l long and its foot, emerging at phase e; fe 1 if fertile
 module Sk(z, r, n, o);        # n scales z long in a ring round a stipe r in radius, turned o degrees
 module Sq(z, r, l);           # a piece of stipe l long and r in radius, scales z long along it
 module Fb(r, j, e);           # a frond's foot, r of crown_radius out at j degrees from its side, its frond emerging at phase e
 
 organ pinna leaf as leaflet area pinna_area;
 organ palea leaf as palea area palea_area;
+organ fertile_pinna leaf as leaflet area fertile_pinna_area;
 
 structure frond leaf;         # one frond: its rachis and its pinnae
 
@@ -165,53 +221,99 @@ rule Y(v, n, c0) ->
 
 decompose Fc(i, m, c) : m > 1 ->
     Fc(i, floor(m / 2), c) Fc(i + floor(m / 2), m - floor(m / 2), c);
+# A frond is fertile with the chance fertile_fronds; a fern with none
+# draws no extra number, so it grows as before.
+decompose Fc(i, m, c) : m == 1 && fertile_fronds > 0 ->
+    /(137.5 + gauss() * 4)
+    Fe(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years))),
+       uniform(0, emerge_spread), rand() < fertile_fronds ? 1 : 0);
 decompose Fc(i, m, c) : m == 1 ->
     /(137.5 + gauss() * 4)
     Fe(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years))),
-       uniform(0, emerge_spread));
+       uniform(0, emerge_spread), 0);
 decompose Fc(i, m, c) -> ;
 
 # A frond on its foot, and the stipe base that stays when it dies.
-decompose Fe(l, e) ->
-    [ Fb(uniform(0.3, 1), gauss() * 25, e)
-      [ Fr(l * uniform(1 - frond_spread, 1 + frond_spread), gauss() * angle_spread, e) ]
+# A fertile frond stands nearer the crown's centre.
+decompose Fe(l, e, fe) ->
+    [ Fb(uniform(0.3, 1) * (fe > 0.5 ? 0.5 : 1), gauss() * 25, e)
+      [ Fr(l * uniform(1 - frond_spread, 1 + frond_spread)
+             * (fe > 0.5 && fertile_length > 0 ? fertile_length / frond_length : 1),
+           gauss() * angle_spread, e, fe) ]
       Sb(l, old_angle) ];
 # A frond dies after frond_life years; its rachis pieces with it. Its stipe
 # base stays stub_life years more.
-rule Pc(k, m, s, e) : age + dt >= frond_life -> ;
+rule Pc(k, m, s, e, fe) : age + dt >= frond_life -> ;
 rule frond : age + dt >= frond_life -> ;
 rule Sb(s, a) : age + dt >= frond_life + stub_life -> ;
 rule Fb(r, j, e) : age + dt >= frond_life + stub_life -> ;
 
 # A frond: it opens from the vertical with age and sags as it ages, then its
 # rachis, piece by piece.
-decompose Fr(s, a, e) ->
-    frond !(frond_radius * sqrt(min(1, s / frond_length))) Pc(0, max(1, round(pieces)), s, e);
-decompose Pc(k, m, s, e) : m > 1 ->
-    Pc(k, floor(m / 2), s, e) Pc(k + floor(m / 2), m - floor(m / 2), s, e);
+decompose Fr(s, a, e, fe) ->
+    frond !(frond_radius * sqrt(min(1, s / frond_length))) Pc(0, max(1, round(pieces)), s, e, fe);
+decompose Pc(k, m, s, e, fe) : m > 1 ->
+    Pc(k, floor(m / 2), s, e, fe) Pc(k + floor(m / 2), m - floor(m / 2), s, e, fe);
 
 # One piece: the first opens and sags the frond; a piece beyond the unrolled
 # share coils back, and its pinnae are folded small.
-interpret Pc(k, m, s, e) : k == 0 ->
+interpret Pc(k, m, s, e, fe) : k == 0 && fe > 0.5 ->
+    &(lerp(min(young_angle, fertile_angle < 0 ? old_angle : fertile_angle),
+           fertile_angle < 0 ? old_angle : fertile_angle,
+           1 - exp(-max(0, age + season - e) / open_years)))
+    T(0, -1, 0, (fertile_arch < 0 ? arch : fertile_arch) * pi / 180 / (1.5 * pieces) * clamp((age + season - e) / unroll, 0, 1)
+               + (fertile_droop < 0 ? droop : fertile_droop) * min(max(0, age + season - e), droop_years)) rest(rest_gap)
+    Pp(k, s, e, fe);
+interpret Pc(k, m, s, e, fe) : k == 0 ->
     &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years)))
     T(0, -1, 0, arch * pi / 180 / (1.5 * pieces) * clamp((age + season - e) / unroll, 0, 1)
                + droop * min(max(0, age + season - e), droop_years)) rest(rest_gap)
-    Pp(k, s, e);
-interpret Pc(k, m, s, e) -> Pp(k, s, e);
+    Pp(k, s, e, fe);
+interpret Pc(k, m, s, e, fe) -> Pp(k, s, e, fe);
 
-interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe ->
-    ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
-    !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
-    Sq(scale_length * lerp(1, scale_top, (k + 0.5) / pieces / stipe),
-       frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces),
-       s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
-interpret Pp(k, s, e) ->
-    !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
-    ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
-    F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
-    Pn(k, s, e, 0)
-    F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
-    Pn(k, s, e, 0.5);
+# A piece of rachis: Pr knows d, how far the piece lies beyond the share
+# unrolled (as a share of the frond), w, the frond's stipe share, and r,
+# the rachis' radius there.
+interpret Pp(k, s, e, fe) ->
+    Pr(k, s, fe, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1),
+       fe > 0.5 && fertile_stipe >= 0 ? fertile_stipe : stipe,
+       frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces));
+
+# The stipe does not coil: a piece of it not yet grown is short, so a new
+# crozier stands low and rises as its stipe lengthens.
+interpret Pr(k, s, fe, d, w, r) : (k + 0.5) / pieces < w * scale_reach ->
+    !(r) Sq(scale_length * lerp(1, scale_top, (k + 0.5) / pieces / (w * scale_reach)), r,
+            s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, d)));
+interpret Pr(k, s, fe, d, w, r) : (k + 0.5) / pieces < w ->
+    !(r) F(s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, d)));
+# A coiled piece of blade: four short segments, each turned toward the
+# frond's upper face, a quarter of the piece's share of coil_turns, and
+# shorter the nearer the tip, so the crozier winds inward as a tight
+# spiral. Its scales clothe it, and no tropism bends it.
+interpret Pr(k, s, fe, d, w, r) : d > 0.075 && coil_turns > 0 ->
+    T(0, -1, 0, 0) !(r)
+    Pw(coil_turns * 360 / max(1, pieces * (1 - w)) * smoothstep(0, 0.15, d) / 4,
+       s / pieces * lerp(1, coil_size * exp(-coil_tight * d), smoothstep(0, 0.15, d)) / 4,
+       r, scale_length * scale_top * 0.7 * sqrt(min(1, s / frond_length)))
+    Pn(k, s, fe, 0, d, w)
+    Pw(coil_turns * 360 / max(1, pieces * (1 - w)) * smoothstep(0, 0.15, d) / 4,
+       s / pieces * lerp(1, coil_size * exp(-coil_tight * d), smoothstep(0, 0.15, d)) / 4,
+       r, scale_length * scale_top * 0.7 * sqrt(min(1, s / frond_length)))
+    Pn(k, s, fe, 0.5, d, w);
+# A piece of blade unrolled, or still turning as it opens.
+interpret Pr(k, s, fe, d, w, r) ->
+    !(r)
+    ^(coil_turns * 360 / max(1, pieces * (1 - w)) * smoothstep(0, 0.15, d))
+    F(s / pieces * 0.5 * lerp(1, coil_size * exp(-coil_tight * max(0, d)), smoothstep(0, 0.15, d)))
+    Pn(k, s, fe, 0, d, w)
+    F(s / pieces * 0.5 * lerp(1, coil_size * exp(-coil_tight * max(0, d)), smoothstep(0, 0.15, d)))
+    Pn(k, s, fe, 0.5, d, w);
+
+# Half a coiled piece: two segments q long, each turned a degrees, with a
+# ring of crozier scales z long at the end of each.
+interpret Pw(a, q, r, z) -> ^(a) F(q) Ck(z, r) ^(a) F(q) Ck(z, r);
+interpret Ck(z, r) : scales >= 1 -> [ Sk(z, r, ceil(scales / 6), 0) ];
+interpret Ck(z, r) -> ;
 
 # A frond's foot: out from the crown's centre toward the side the frond
 # opens to (turned j degrees off it), from near the centre while it is a
@@ -230,11 +332,16 @@ interpret Sb(s, a) ->
     &(8) !(frond_radius * 0.8) Sq(scale_length * 0.8, frond_radius * 0.8, s * stub * 0.5);
 
 # A piece of stipe clothed in its scales: three rings of a third of them
-# along it, each turned from the last, so they overlap like shingles.
+# along it, each turned from the last, so they overlap like shingles. The
+# piece is drawn whole and the rings set back along it in a branch, so a
+# scaly stipe bends as a bare one does (a tropism acts once a segment)
+# and its scales stand on the piece that bears them.
 interpret Sq(z, r, l) : scales >= 1 ->
-    Sk(z, r, ceil(scales / 3), 0) F(l / 3)
-    Sk(z, r, ceil(scales / 3), 40) F(l / 3)
-    Sk(z, r, ceil(scales / 3), 80) F(l / 3);
+    F(l)
+    [ ^(180) f(l) ^(180)
+      Sk(z, r, ceil(scales / 3), 0) f(l / 3)
+      Sk(z, r, ceil(scales / 3), 40) f(l / 3)
+      Sk(z, r, ceil(scales / 3), 80) ];
 interpret Sq(z, r, l) -> F(l);
 
 # A ring of scales round a stipe, each from its surface and pressed toward
@@ -247,14 +354,22 @@ interpret Sk(z, r, n, o) : n >= 1 ->
 interpret Sk(z, r, n, o) -> ;
 
 # A pair of pinnae half a piece along: sized along the blade (b from 0 at
-# the stipe's top to 1 at the tip), folded small while coiled.
-interpret Pn(k, s, e, h) ->
-    Pq(s * pinna_length
-       * (((k + h) / pieces - stipe) / (1 - stipe) < pinna_peak
-          ? lerp(pinna_base, 1, ((k + h) / pieces - stipe) / (1 - stipe) / pinna_peak)
-          : lerp(1, pinna_tip, (((k + h) / pieces - stipe) / (1 - stipe) - pinna_peak) / (1 - pinna_peak)))
-       * lerp(0.15, 1, 1 - smoothstep(0, 0.15, (k + h) / pieces - clamp((age + season - e) / unroll, 0, 1))));
-interpret Pq(z) -> [ +(pinna_angle) ^(pinna_lift) pinna(z) ] [ -(pinna_angle) ^(pinna_lift) pinna(z) ];
+# the stipe's top to 1 at the tip). While coiled a pinna is small and
+# folded against the rachis toward the frond's upper face, inside the
+# crozier, as each pinna coils as its frond does (Kaplan 2022, p. 352).
+interpret Pn(k, s, fe, h, d, w) ->
+    Pq(s * (fe > 0.5 && fertile_pinna_length >= 0 ? fertile_pinna_length : pinna_length)
+       * (((k + h) / pieces - w) / (1 - w) < pinna_peak
+          ? lerp(pinna_base, 1, ((k + h) / pieces - w) / (1 - w) / pinna_peak)
+          : lerp(1, pinna_tip, (((k + h) / pieces - w) / (1 - w) - pinna_peak) / (1 - pinna_peak)))
+       * lerp(1, coil_pinna * exp(-coil_tight * max(0, d)), smoothstep(0, 0.15, d + (h - 0.5) / pieces)),
+       fe, smoothstep(0, 0.15, d + (h - 0.5) / pieces));
+interpret Pq(z, fe, c) : fe > 0.5 ->
+    [ +(lerp(pinna_angle, 45, c)) ^(lerp(pinna_lift, 30, c)) fertile_pinna(z) ]
+    [ -(lerp(pinna_angle, 45, c)) ^(lerp(pinna_lift, 30, c)) fertile_pinna(z) ];
+interpret Pq(z, fe, c) ->
+    [ +(lerp(pinna_angle, 45, c)) ^(lerp(pinna_lift, 30, c)) pinna(z) ]
+    [ -(lerp(pinna_angle, 45, c)) ^(lerp(pinna_lift, 30, c)) pinna(z) ];
 
 # A new crown: out along the rhizome, then up.
 decompose Cn(n, c) ->
