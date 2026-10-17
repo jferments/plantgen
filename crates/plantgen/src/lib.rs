@@ -596,4 +596,8 @@ pub mod venation;
 /// divisions lifted, scattered or set all round their rachis
 /// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
 /// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
-pub const GENERATOR_REVISION: u32 = 95;
+/// 96: lacy leaves drawn as geometry: a segment at least ten times as long
+/// as it is wide is a round thread, bowed a little (`lace::THREAD`), and a
+/// thrice-divided leaf whose divisions roll round their rachis sets its
+/// segments round each pinnule's too.
+pub const GENERATOR_REVISION: u32 = 96;
