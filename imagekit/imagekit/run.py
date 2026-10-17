@@ -28,7 +28,7 @@ from .prompts import TASKS, Rules, first_json, problems
 from .store import Store, append_jsonl, jsonl, now
 
 IMAGE_PX = {"triage": 512, "observe": 1536, "describe": 1024}
-TOKENS_OUT = {"triage": 600, "observe": 3000, "describe": 1200}  # rough, for estimates before any history exists
+TOKENS_OUT = {"triage": 400, "observe": 1500, "describe": 500}  # answer sizes measured on the replay set, plus margin
 ASK_OVER_USD = 1.0
 
 
@@ -49,12 +49,12 @@ def register(sub) -> None:
         p.add_argument("--image-px", type=int, help="long side sent to the model (default: triage 512, observe 1536, describe 1024)")
         p.add_argument("--triage", help="observe: the triage analyzer whose views to use (default: the one with most answers)")
         p.add_argument("--retry-invalid", action="store_true", help="send again the images whose answer failed the schema")
+        p.add_argument("--claude-batch", action="store_true", help="send through the Message Batches API (half price)")
         p.set_defaults(func=cmd_plan if name == "plan" else cmd_run)
         if name == "run":
             p.add_argument("--run", help="run name (default <task>-<backend>-<date>)")
             p.add_argument("--max-usd", type=float, default=5.0, help="stop once this much is spent (default 5)")
             p.add_argument("--yes", action="store_true", help=f"needed when the estimate is over ${ASK_OVER_USD:.0f}")
-            p.add_argument("--claude-batch", action="store_true", help="send through the Message Batches API (half price)")
             p.add_argument("--collect", metavar="RUN", help="collect the finished Claude batches of a run")
             p.add_argument("--chat-dir", help="chat backend: where prompts are written and answers read back")
 
@@ -276,6 +276,9 @@ def cmd_run(args, store: Store) -> None:
     if job.backend is None:
         return chat(args, store, job, run)
     if args.claude_batch:
+        if s["estimate usd"] is not None and s["estimate usd"] > args.max_usd:  # a batch cannot be stopped halfway
+            raise SystemExit(f"estimated ${s['estimate usd']:.2f} is over --max-usd ${args.max_usd:.2f}; "
+                             "raise it, or send part with --limit")
         return submit_batch(args, store, job, run)
     spent, counts, t0 = 0.0, {"ok": 0, "invalid": 0, "errors": 0}, time.monotonic()
     with ThreadPoolExecutor(max_workers=job.backend.parallel) as pool:
