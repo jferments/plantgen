@@ -20,6 +20,11 @@ pub enum View {
     Oblique,
     /// Straight down.
     Top,
+    /// From the south, looking up from below: a close-up 20 degrees under
+    /// its point, or the whole plant 6 degrees under its middle, to show
+    /// the lower faces of its leaves (a fern's sori). The camera stays a
+    /// little above the ground.
+    Under,
 }
 
 impl View {
@@ -30,6 +35,7 @@ impl View {
             "three-quarter" => Self::ThreeQuarter,
             "oblique" => Self::Oblique,
             "top" => Self::Top,
+            "under" => Self::Under,
             _ => return None,
         })
     }
@@ -51,6 +57,11 @@ pub struct PreviewOptions {
     /// many metres of it from the bottom of the picture to the top, and
     /// no figure.
     pub focus: Option<(Vec3, f64)>,
+}
+
+/// `eye`, raised to stand at least 3 cm above the ground.
+fn above_ground(eye: Vec3) -> Vec3 {
+    Vec3::new(eye.x, eye.y.max(0.03), eye.z)
 }
 
 pub const SKY: [f32; 3] = [0.52, 0.62, 0.74];
@@ -270,30 +281,32 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     }
     meshes.extend(items);
     let camera = match (options.view, options.focus) {
-        (View::Side | View::ThreeQuarter | View::Oblique, Some((target, span))) => {
+        (View::Side | View::ThreeQuarter | View::Oblique | View::Under, Some((target, span))) => {
             let direction = match options.view {
                 View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Under => Vec3::new(0.0, -0.36, 1.0),
                 View::Oblique => Vec3::new(0.7, 0.99, 0.7),
                 _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
             Camera {
-                eye: target + direction * (span * 0.5 / half_fov),
+                eye: above_ground(target + direction * (span * 0.5 / half_fov)),
                 target,
                 up: Vec3::Y,
                 projection: Projection::Perspective { fov_y: fov },
             }
         }
-        (View::Side | View::ThreeQuarter | View::Oblique, None) => {
+        (View::Side | View::ThreeQuarter | View::Oblique | View::Under, None) => {
             let target = Vec3::new(center_x, height * 0.5, 0.0);
             let direction = match options.view {
                 View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Under => Vec3::new(0.0, -0.1, 1.0),
                 View::Oblique => Vec3::new(0.7, 0.99, 0.7),
                 _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
             Camera {
-                eye: target + direction * distance,
+                eye: above_ground(target + direction * distance),
                 target,
                 up: Vec3::Y,
                 projection: Projection::Perspective { fov_y: fov },
