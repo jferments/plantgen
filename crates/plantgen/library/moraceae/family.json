@@ -29,10 +29,7 @@
       "achene": "sometimes"
     },
     "leaf_habit": "evergreen",
-    "rosette": {
-      "basal": "often",
-      "none": "often"
-    },
+    "rosette": {"none": "usually", "basal": "rarely"},
     "life_span": "perennial",
     "inflorescence": {
       "catkin": "often",
@@ -73,11 +70,7 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Moraceae: how long the leaves last (character 37), coded evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     },
-    "traits.rosette": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Moraceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
-    },
+    "traits.rosette": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Moraceae (read 2026-10-16): trees, shrubs, lianas and stranglers, with only a few herbs, which may have a basal leaf cluster; so no rosette is usual and basal is rare."},
     "traits.life_span": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

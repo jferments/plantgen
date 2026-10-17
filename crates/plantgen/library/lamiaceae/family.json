@@ -36,11 +36,7 @@
       "berry": "sometimes"
     },
     "rosette": "none",
-    "life_span": {
-      "annual": "often",
-      "biennial": "often",
-      "perennial": "often"
-    },
+    "life_span": {"perennial": "usually", "annual": "sometimes"},
     "flower_symmetry": {
       "zygomorphic": "usually",
       "actinomorphic": "rarely"
@@ -68,11 +64,7 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Labiatae: whether the leaves gather in rosettes (character 22), coded no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     },
-    "traits.life_span": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Labiatae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
-    },
+    "traits.life_span": {"evidence": "SourceInferred", "source": "britannica", "note": "Britannica, Lamiaceae (read 2026-10-16): most members are perennial or annual herbs and some are woody shrubs or subshrubs; the woody members are all perennial, so perennial leads; no page read mentions biennials, so that state is dropped rather than kept as rarely."},
     "traits.flower_symmetry": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
