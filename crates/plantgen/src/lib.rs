@@ -618,11 +618,21 @@ pub mod venation;
 /// a compound leaf's pattern lies on each leaflet; the rattlesnake
 /// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
 /// (97 is lacy leaves as geometry, #183).
-/// 99: a zone's edge drawn out along the lateral veins (`feather`),
+/// 99: a fern's stipe scales stand only on its base where its flora says
+/// so (`stipe_scale_extent`, fern program revision 9), as long as stated
+/// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
+/// stated `stipe_colour`; the fern families state whether their stipes are
+/// scaly as Flora of North America gives (scaly at the base in
+/// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
+/// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
+/// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
+/// are as long as its flora gives (98 is variegation along the
+/// veins, #175).
+/// 100: a zone's edge drawn out along the lateral veins (`feather`),
 /// spots and mottle drawn out along the blade (`stretch`), and a simple
 /// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
 /// trout lily's long blotches and its veins meeting at the tip; and a
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
-/// white clover's are (98 is variegation along the veins, #175).
-pub const GENERATOR_REVISION: u32 = 99;
+/// white clover's are (99 is fern stipe scales, #174).
+pub const GENERATOR_REVISION: u32 = 100;

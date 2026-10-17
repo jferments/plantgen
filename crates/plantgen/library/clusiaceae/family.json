@@ -17,10 +17,10 @@
       "false": "often"
     },
     "sexual_system": {
-      "hermaphrodite": "often",
-      "monoecious": "often",
-      "polygamous": "often",
-      "dioecious": "often"
+      "dioecious": "usually",
+      "polygamous": "sometimes",
+      "hermaphrodite": "sometimes",
+      "monoecious": "rarely"
     },
     "ovary_position": "superior",
     "hypanthium": false,
@@ -90,6 +90,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Guttiferae (read 2026-10-17): simple, undivided lamina with entire margins; Wikipedia Clusia: simple, entire."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "DELTA Guttiferae (read 2026-10-17) lists bisexual, monoecious, dioecious and polygamous plants without weighting (its bisexual records are mostly Hypericaceae, now apart). Wikipedia (read 2026-10-17): Clusiaceae ~750 spp; Garcinia (416 spp) dioecious; Clusia (327 spp) unisexual flowers on separate plants. The two genera hold nearly the whole family."
     }
   }
 }

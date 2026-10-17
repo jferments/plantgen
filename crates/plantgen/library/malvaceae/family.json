@@ -27,10 +27,7 @@
       "spiral": "usually"
     },
     "leaf_division": {"simple": "usually", "compound": "sometimes"},
-    "inflorescence": {
-      "cyme": "often",
-      "solitary": "often"
-    },
+    "inflorescence": {"solitary": "often", "cyme": "sometimes"},
     "sexual_system": {
       "hermaphrodite": "usually"
     }
@@ -66,11 +63,7 @@
       "note": "Simpson, Plant Systematics (2019) p. 355, 356, 357, 358, 359, family Malvaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
     },
     "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Malvaceae (read 2026-10-17): leaves often palmately lobed, sometimes compound. The biggest genera it names (Hibiscus 434, Pavonia 291, Sida 275, Ayenia 216, Dombeya 197) all have simple blades; palmately compound leaves are mainly in the bombacoid trees (Ceiba, Pachira, Adansonia, Bombax), a few hundred species at most out of ~4,225. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 355, 356, 357, 358, 359, family Malvaceae: inflorescence solitary, paired or cyme-like; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China Malvaceae s.s. (iplant.cn PDF, read 2026-10-17): flowers mostly single in the leaf axils, less often in small cymes or clusters, at times gathered into end racemes or panicles; genus accounts read there: Abutilon (~200 spp; single, paired or small cymes), Sida (100-150; single or paired, often in racemes/panicles), Malva (~30), Alcea (~60), Lavatera (~25) all single or fascicled in the axils. Genus sizes from Wikipedia (Hibiscus ~430, Grewia 275, Dombeya ~200; their pages read 2026-10-17 do not describe flower grouping). Counted solitary: Abutilon, Sida, Malva, Alcea, Lavatera, Althaea, Malvastrum (~490) plus the earlier pass's Hibiscus and Pavonia (~720, Wikipedia Malvaceae) against cymose Grewioideae/Byttnerioideae/Dombeyoideae (Grewia, Dombeya, Ayenia, Hermannia; ~900-1,000). Margin modest, so often against sometimes. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.sexual_system": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
