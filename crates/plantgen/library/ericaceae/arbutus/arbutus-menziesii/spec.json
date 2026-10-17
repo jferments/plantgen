@@ -53,6 +53,7 @@
   },
   "appearance": {
     "bark": [0.42, 0.13, 0.06],
+    "twig": [0.4,  0.1,  0.03],
     "bark_pattern": {
       "kind": "peeling",
       "scale": 0.08,
@@ -154,6 +155,7 @@
     "fruiting_months": [10, 11, 12]
   },
   "evidence": {
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Arbutus Menziesii: \"slender branchlets light red, pea-green, or orange-colored and glabrous when they first appear ... becoming in their first winter bright reddish brown\". Colour chosen by eye for bright reddish brown."},
     "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Grown stems stand bare of branches for several metres below the crown in iNaturalist photographs (observations 263721768, 1914072): the crown from 5 m (crown_base), the stem forking at 4 m (fork_height), leaning and crooked (lean 20, wiggle 12, were 15 and 8), with fewer, bigger limbs (space_density 4, was 7) and an inner crown that thins (spur_light 0.25)."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs (observations 263721768, 1914072, 145154232): leaning, crooked red stems carry a rounded, irregular crown, clear of branches below."},
     "traits.flowering_months": {

@@ -53,6 +53,7 @@
   },
   "appearance": {
     "bark": [0.33, 0.32, 0.3],
+    "twig": [0.3,  0.13,  0.06],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.035,
@@ -148,6 +149,7 @@
     "fruiting_months": [8, 9, 10]
   },
   "evidence": {
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Quercus Garryana: \"stout branchlets coated at first with thick pale rufous pubescence, pubescent or tomentose and light or dark orange color during their first winter, becoming glabrous and rather bright reddish brown in their second year and ultimately gray\". Colour chosen by eye between the pubescent orange and the reddish brown."},
     "generator.params.spur_pairs": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "An oak's leaves crowd at its twig tips, where the internodes are short (University of Washington botany notes), and a short growth unit bears about 5 to 8 leaves (Hallé, Oldeman and Tomlinson 1978, the general figure for preformed short shoots); three pairs is six. With single leaves at their flora length (woody forms, 2026-10-17), two pairs left the open-grown crown at 2.0 m² of leaf per m² of crown, the bottom of the Urban Tree Database's valley oaks, where Karlik and McKay (2002) measured 4.4 under a blue oak's crown."},
     "generator.params.crown_base": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The crown starts about 4 m up and the stem forks into its big limbs about 5 m up (fork_height), read by eye against the trunk in iNaturalist photographs of open-grown trees (observations 28744863, 83148498)."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Open-grown trees in iNaturalist research-grade photographs (observations 28744863, 28832264, 83148498) spread wider than tall on a few big limbs that rise from a short trunk and arch outward."},

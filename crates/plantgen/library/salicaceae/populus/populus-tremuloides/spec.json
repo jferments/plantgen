@@ -44,6 +44,7 @@
   },
   "appearance": {
     "bark": [0.62, 0.62, 0.55],
+    "twig": [0.26,  0.06,  0.026],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.1,
@@ -100,6 +101,7 @@
     "juvenile_period_years": {"min": 2, "max": 3}
   },
   "evidence": {
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Populus tremuloides: \"slender branchlets covered with scattered oblong orange-colored lenticels, bright red-brown and very lustrous during their first season, gradually turning light gray tinged with red, ultimately dark gray\". Colour chosen by eye for bright red-brown."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's quaking aspen review (Populus tremuloides, read 2026-10-16): \"Quaking aspen is shade intolerant and cannot reproduce beneath its own canopy.\""},
     "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.639), and since 2026-10-16 its family's two carpels and its order's regular flowers (before, 0.031), and since its flowers, which have no perianth, are drawn by their stamens grown to the flower's size (before, 0.0138)."},
     "traits.height_max_m": {

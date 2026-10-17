@@ -498,6 +498,12 @@ impl Variant {
     }
 }
 
+/// The radius below which wood keeps its twig colour when a species
+/// states none ([`Appearance::twig_radius`]): 4 mm, a twig about a
+/// centimetre thick, so a tree's twigs and finest branches keep it and
+/// its limbs wear their bark.
+pub const TWIG_RADIUS: f64 = 0.004;
+
 /// How the plant looks. Colours are linear RGB in 0 to 1.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -514,6 +520,17 @@ pub struct Appearance {
     /// up close stand from it as strands. None where none are stated.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub stem_hairs: Option<crate::looks::Hairs>,
+    /// Colour of young twigs before their bark forms, where it differs
+    /// from the bark's: wood thinner than `twig_radius` is this colour,
+    /// turning to the bark's by three times that radius, as a paper
+    /// birch's dark red twigs turn to its white bark. The bark's colour
+    /// throughout if none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub twig: Option<[f32; 3]>,
+    /// The radius below which wood keeps its twig colour, metres
+    /// (default [`TWIG_RADIUS`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub twig_radius: Option<f64>,
     /// Colour of organs in full light, unless their look gives one.
     pub foliage: [f32; 3],
     /// Colour of organs in deep shade; shaded organs blend toward it.

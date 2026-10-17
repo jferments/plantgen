@@ -51,6 +51,7 @@
   },
   "appearance": {
     "bark": [0.38, 0.37, 0.33],
+    "twig": [0.22,  0.06,  0.03],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.06,
@@ -152,6 +153,7 @@
     "fruiting_months": [8, 9, 10]
   },
   "evidence": {
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Alnus rubra: \"slender branchlets marked by minute scattered pale lenticels, light green and coated at first with hoary tomentum ..., becoming during the first winter bright red and lustrous and ultimately ashy gray\". Colour chosen by eye for the red of twigs past their first summer, which carry most of a crown's twig wood."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's red alder review (Alnus rubra, read 2026-10-16): \"Due to red alder's shade intolerance, stands are self-thinning\"; its rapid juvenile growth gives \"the shade-intolerant red alder\" its edge over conifers."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
