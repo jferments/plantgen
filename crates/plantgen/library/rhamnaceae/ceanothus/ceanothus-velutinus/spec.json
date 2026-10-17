@@ -45,8 +45,7 @@
       "bloom_size": 0.08,
       "bloom_angle": 30,
       "path_half": 1.42,
-      "leaf_years": 2,
-      "adult_age": 4
+      "leaf_years": 2
     }
   },
   "growth": {
@@ -87,24 +86,19 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.6,
           "widest": 0.45,
           "tip": 0.4,
           "base": 0.45,
-          "teeth": 8,
-          "tooth_depth": 0.03,
           "petiole": 0.15
         }
       },
       "bloom": {
         "shape": {
           "template": "fruit",
-          "kind": "capsule",
           "aspect": 0.8,
           "unripe": 0.4
         },
         "inflorescence": {
-          "kind": "panicle",
           "flowers": 40,
           "size": 0.3,
           "spread": 40
@@ -195,7 +189,12 @@
       7,
       8,
       9
-    ]
+    ],
+    "height_typical_m": {"min": 0.6, "max": 2},
+    "life_span": "perennial",
+    "rosette": "none",
+    "leaf_shape": "ovate",
+    "leaf_margin": "serrate"
   },
   "evidence": {
     "taxon": {
@@ -302,7 +301,12 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: glossy dark green, finely toothed ovate leaves; dense plumes of tiny white flowers; brown 3-lobed capsules."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2706917), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2706917), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2706917), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2706917), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2706917), as no source read gives it."}
   },
   "provenance": {
     "sources": [

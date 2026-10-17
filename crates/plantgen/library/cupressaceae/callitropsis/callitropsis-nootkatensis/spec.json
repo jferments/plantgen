@@ -123,7 +123,15 @@
     },
     "leaf_length_m": 0.0032,
     "cone_length_m": 0.01,
-    "sexual_system": "monoecious"
+    "sexual_system": "monoecious",
+    "height_typical_m": {"min": 20, "max": 40},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.001, "max": 0.002},
+    "leaf_division": "simple",
+    "leaf_shape": "ovate",
+    "leaf_margin": "entire"
   },
   "evidence": {
     "taxon": {
@@ -190,7 +198,15 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: grey, shreddy bark (FEIS: \"the bark is shreddy\"); dull blue-green hanging sprays; round green cones."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L456789), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L456789), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L456789), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L456789), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L456789), as no source read gives it."},
+    "traits.leaf_division": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L456789), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L456789), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L456789), as no source read gives it."}
   },
   "provenance": {
     "sources": [

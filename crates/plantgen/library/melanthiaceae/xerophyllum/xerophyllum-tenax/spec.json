@@ -36,7 +36,6 @@
       "nod": 0,
       "adult_age": 4,
       "basal_leaves": 24,
-      "basal_length": 0.6,
       "basal_angle": 50,
       "basal_arch": 10,
       "flowering_share": 0.6
@@ -80,8 +79,7 @@
       "leaf": {
         "shape": {
           "template": "blade",
-          "taper": 1,
-          "aspect": 0.01
+          "taper": 1
         }
       },
       "flower": {
@@ -91,8 +89,7 @@
           "point": 0.4,
           "notch": 0.0,
           "centre": 0.3,
-          "sepal_length": 1.0,
-          "stamens": 6
+          "sepal_length": 1.0
         },
         "colour": [
           0.97,
@@ -108,8 +105,7 @@
       "basal": {
         "shape": {
           "template": "blade",
-          "taper": 1,
-          "aspect": 0.01
+          "taper": 1
         }
       }
     }
@@ -152,7 +148,11 @@
       7,
       8
     ],
-    "fruiting_months": [9, 10]
+    "fruiting_months": [9, 10],
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "sexual_system": "hermaphrodite",
+    "fruit_size_m": {"min": 0.005, "max": 0.007}
   },
   "evidence": {
     "taxon": {
@@ -264,7 +264,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: grey-green wiry leaves; creamy white flowers."
-    }
+    },
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291495), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291495), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291495), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291495), as no source read gives it."}
   },
   "provenance": {
     "sources": [
