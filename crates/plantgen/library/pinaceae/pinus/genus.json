@@ -11,6 +11,21 @@
     "generator.params.needle_low": {
       "rule": "max(leaf_life_years) / min(leaf_life_years)",
       "why": "A pine's needles live longest at the crown's foot and shortest at its top, as in other conifers, but within the years its flora gives them: the longest at the foot, the shortest at the top."
+    },
+    "appearance.organs.*.shape.twigs": {
+      "rule": "round(2 * (1 - step(0.4, leaf_length_m / (1.2 * spray_base))))",
+      "template": "needles",
+      "why": "A pine's needles stand in bundles on dwarf shoots all round its long shoot. Where they are long for its card (more than the 0.4 of it a card with side twigs holds), the card is one brush of them; shorter needles leave room for two side twigs, which stand for the shoots the program does not grow."
+    },
+    "appearance.organs.*.shape.needle": {
+      "rule": "clamp(leaf_length_m / (1.2 * spray_base), 0.01, 0.6)",
+      "template": "needles",
+      "why": "As at the Pinidae, the usual needle is the stated one; a card with no side twigs has room across it for needles up to 0.6 of its length, so a long-needled pine's needles are drawn their stated length, not cut to the 0.4 a card with twigs holds."
+    },
+    "appearance.organs.*.shape.aspect": {
+      "rule": "clamp(1.7 * clamp(leaf_length_m / (1.2 * spray_base), 0.01, 0.6) + 0.05, 0.3, 1.2)",
+      "template": "needles",
+      "why": "A brush's needles lean out about 58 degrees from its shoot, so they reach 0.85 of their length to each side: the card is as wide as its needles reach."
     }
   },
   "evidence": {
@@ -23,7 +38,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Conifer lives (M6): the ratio of the longest to the shortest needle life a species states, in place of the Pinidae program's 1.56 (a western redcedar's, Harlow et al. 2005), which kept western white and ponderosa pines' lowest needles up to 5 and 6 years against their stated 2 to 3 and 3 to 4."
+      "note": "Conifer lives (M6): the ratio of the longest to the shortest needle life a species states, in place of the Pinidae program's 1.56 (a western redcedar's, Harlow et al. 2005), which kept western white and ponderosa pines' lowest needles up to 5 and 6 years against their stated 2 to 3 and 3 to 4. Long-needled pines (conifers, needle shading): a long-needled pine's spray card is a single brush with no side twigs (Abrams' needles in bundles on dwarf shoots, standing out all round the twig), its needles their stated length up to 0.6 of the card and the card as wide as they reach; the 0.4 cap at the Pinidae drew ponderosa pine's 12 to 25 cm needles 9.8 cm long."
     }
   }
 }

@@ -3368,6 +3368,7 @@ mod tests {
     /// be with no trait stated anywhere, but for the values rules set from
     /// its characters, their spreads and their notes.
     #[test]
+    #[allow(clippy::too_many_lines)]
     fn characters_change_no_spec_until_a_rule_reads_them() {
         let library = Library::builtin();
         let mut stated = 0;
@@ -3389,9 +3390,15 @@ mod tests {
             }
         };
         // A rule whose path names `*` sets it in every look, and a rule on
-        // a look's shape in its season's flower and bud looks too.
+        // a look's shape in its season's flower and bud looks too. A rule
+        // for an organ's look sets its look in flower where its season
+        // took that look, and a fruit's rule sets a flowering look's own
+        // look where that is its fruit (`inherit::seasonal_looks`).
         let remove = |spec: &mut serde_json::Value, path: &str| {
-            let Some(rest) = path.strip_prefix("appearance.organs.*.") else {
+            let Some((organ, rest)) = path
+                .strip_prefix("appearance.organs.")
+                .and_then(|look| look.split_once('.'))
+            else {
                 return remove_one(spec, path);
             };
             let organs: Vec<String> = spec
@@ -3399,9 +3406,12 @@ mod tests {
                 .and_then(serde_json::Value::as_object)
                 .map(|organs| organs.keys().cloned().collect())
                 .unwrap_or_default();
-            for organ in organs {
+            for organ in organs
+                .into_iter()
+                .filter(|drawn| ["*", "fruit"].contains(&organ) || drawn == organ)
+            {
                 remove_one(spec, &format!("appearance.organs.{organ}.{rest}"));
-                if rest.starts_with("shape.") {
+                if rest.starts_with("shape.") || rest == "colour" || rest == "accent" {
                     for stage in ["flower_look", "bud_look"] {
                         remove_one(
                             spec,

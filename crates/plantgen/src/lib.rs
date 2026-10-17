@@ -520,11 +520,40 @@ pub mod venation;
 /// kingdom), where its own look draws none: Chloranthaceae's leaves, and
 /// rosette leaves that take the species' margin; a species' own teeth
 /// stand (83 is leaf tip, base and petal words, #161).
-/// 85: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
+/// 85: the conifers' pipe model takes its exponent from a parameter
+/// (`pinidae` revision 11, `pipe_exponent`, 2.4 as before), and ponderosa
+/// pine's stout shoots (0.7 to 2 cm, Farjon 2017) grow on stout limbs that
+/// hold their line at 100 years, where thin limbs under its heavy needle
+/// tufts hung as whips; a conifer with short shoots (`spur_years`, as
+/// in larches) leafs out again along its older wood each year, so a
+/// deciduous larch keeps its needle tufts along its branches; and a
+/// needle card shades with its needles' own area, not its painted lines,
+/// which drew each needle at least two texels wide and counted the
+/// crossing card's needles again, 2.2 to 4.6 times their area: conifers'
+/// crowns had starved to tufts at their limb tips and now carry foliage
+/// along their limbs, a pine's card is one brush of needles at their
+/// stated length (Pinus rules), and the module limit is 4,000,000; a
+/// conifer's apex lives on shoots down to 5 mm, not 25, so a narrow,
+/// slow crown such as subalpine fir's stays dense along its limbs (84 is
+/// leaf teeth, #157).
+/// 86: a flowering look the files leave without a year takes one from the
+/// months its taxa state it flowers and fruits in (`appearance.organs.*.
+/// season`): a flower's look becomes its look in flower and its own look
+/// its fruit, drawn by the fruit's rules (its colour, a cluster's fruit at
+/// its stated size, unripe fruit in the leaf green); a head or spikelet
+/// keeps its look; a herb's bud and fruit organs show only in their own
+/// stages. A lone flower's fruit is drawn at the fruit's size, not the
+/// flower's (`season.fruit_size`), a cluster whose fruit outgrow it grows
+/// to hold them, and a cluster still flowering when its first fruit ripen
+/// opens over those months (`season.opening`). The four Chloranthaceae,
+/// which flowered all year and never fruited, now bud, flower, fruit and
+/// drop in their months, as do the magnoliids that state their months
+/// (85 is conifer foliage along the limbs, #142).
+/// 87: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
 /// scales (the new `palea` organ, in `stipe_scale_colour`), largest at
 /// its foot, on its frond and on the stipe bases of an old crown; a
 /// rachis narrows from its foot to its tip, and a small frond's is
 /// thinner (fern program revision 8); the sword fern's stipe is as long
-/// as Flora of North America gives (84 is leaf teeth from stated
-/// margins, #157).
-pub const GENERATOR_REVISION: u32 = 85;
+/// as Flora of North America gives (86 is a flowering look's year,
+/// #159).
+pub const GENERATOR_REVISION: u32 = 87;
