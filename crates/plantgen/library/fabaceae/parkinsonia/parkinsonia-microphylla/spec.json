@@ -72,7 +72,7 @@
     "variation": 0.15,
     "organs": {
       "leaf": {
-        "shape": { "leaflet_width": 0.6, "teeth": 0, "petiole": 0.2, "angle": 22, "pinnule_angle": 60, "widest": 0.4, "tip": 0.2, "base": 0.6 }
+        "shape": { "leaflet_width": 0.6, "petiole": 0.2, "angle": 22, "pinnule_angle": 60, "widest": 0.4, "tip": 0.2, "base": 0.6 }
       },
       "thorn": {
         "shape": {
@@ -124,7 +124,10 @@
     "flower_colour": [245, 232, 120],
     "fruit_size_m": {"min": 0.04, "max": 0.06},
     "flowering_months": [3, 4, 5],
-    "fruiting_months": [5, 6]
+    "fruiting_months": [5, 6],
+    "rosette": "none",
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.02, "max": 0.04}
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Parkinsonia microphylla (gwddagg_v2.2_species.csv, read): specific gravity 0.62 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.62, branches 0.59. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -272,7 +275,10 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's yellow paloverde review (Helmy 2022, read 2026-10-16): flowers late March or April until May, and \"about 6 weeks after flowering, seeds ripen and seed pods drop, typically just before the summer rains\"; read as May and June."
-    }
+    },
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2531007), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2531007), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2531007), as no source read gives it."}
   },
   "provenance": {
     "sources": [

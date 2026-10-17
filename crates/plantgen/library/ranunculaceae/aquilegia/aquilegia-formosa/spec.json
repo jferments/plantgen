@@ -38,7 +38,6 @@
       "buds_above": 0.85,
       "nod": 10,
       "bud_size": 0.015,
-      "fruit_length": 0.025,
       "leaf_area": 0.58,
       "basal_area": 0.313,
       "basal_piece_area": 0.235,
@@ -63,10 +62,10 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "pinnules": 0, "leaflet_width": 0.8, "teeth": 3, "petiole": 0.2, "spread": 140, "lowest": 0.9, "petiolule": 0.1 }
+        "shape": { "template": "compound", "leaflet_width": 0.8, "petiole": 0.2, "spread": 140, "lowest": 0.9, "petiolule": 0.1 }
       },
       "basal": {
-        "shape": { "template": "compound", "leaflet_width": 0.8, "teeth": 3, "petiole": 0.4, "spread": 160, "lowest": 0.9, "petiolule": 0.1 }
+        "shape": { "template": "compound", "leaflet_width": 0.8, "petiole": 0.4, "spread": 160, "lowest": 0.9, "petiolule": 0.1 }
       },
       "flower": {
         "shape": {
@@ -77,8 +76,7 @@
           "centre": 0.35,
           "sepal_length": 1.5,
           "calyx": [0.85, 0.15, 0.08],
-          "spur": 0.8,
-          "stamens": 40
+          "spur": 0.8
         },
         "colour": [0.85, 0.15, 0.08],
         "accent": [0.95, 0.8, 0.2],
@@ -113,7 +111,14 @@
     "perianth": "sepals_and_petals",
     "spur_length_m": {"min": 0.013, "max": 0.021},
     "carpels": 5,
-    "fruit_type": "follicle"
+    "fruit_type": "follicle",
+    "height_max_m": 1,
+    "leaf_habit": "deciduous",
+    "leaf_margin": "crenate",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
+    "flowering_months": [5, 8],
+    "fruit_size_m": {"min": 0.015, "max": 0.03},
+    "fruiting_months": [7, 9]
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -220,7 +225,14 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "The Flora of North America's account of Aquilegia formosa, on the SEINet and NEON portals, as search results quote it (the page itself was not read): sepals red, 10 to 26 mm, held square to the flower's axis; petal blades yellow, 0 to 6 mm, each with a red spur 13 to 21 mm; stamens many, 12 to 17 mm; scalelike staminodes between the stamens and pistils; follicles 5 (the genus 5 to 10)."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."}
   },
   "provenance": {
     "sources": [

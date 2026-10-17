@@ -139,7 +139,14 @@
     "flowering_months": [4, 5],
     "fruiting_months": [8],
     "inflorescence": "raceme",
-    "fruit_type": "pome"
+    "fruit_type": "pome",
+    "height_typical_m": {"min": 1, "max": 5},
+    "woodiness": "woody",
+    "leaf_length_m": {"min": 0.02, "max": 0.05},
+    "leaf_width_m": {"min": 0.015, "max": 0.04},
+    "sexual_system": "hermaphrodite",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.06},
+    "fruit_size_m": {"min": 0.008, "max": 0.015}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -218,7 +225,14 @@
       "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
     },
     "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 68, Amelanchier alnifolia: inflorescence raceme, erect, 2-4(-6) cm, 5-11(-15) flowers."},
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 68, Amelanchier alnifolia: fruit type pome, dark purple-black, 1-1.5 cm."}
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 68, Amelanchier alnifolia: fruit type pome, dark purple-black, 1-1.5 cm."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."}
   },
   "provenance": {
     "sources": [

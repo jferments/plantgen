@@ -5,9 +5,11 @@
   "traits": {
     "ovary_position": "superior",
     "stamens": 15,
-    "carpels": 5
+    "carpels": 5,
+    "fruit_type": "drupe"
   },
   "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Oemleria cerasiformis (read 2026-10-17): each of the five free pistils can ripen into a plum-like drupe, reddish pink turning deep blue. Stated here so the genus does not take Rosaceae's aggregate fruit."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

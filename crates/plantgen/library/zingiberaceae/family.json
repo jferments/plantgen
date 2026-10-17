@@ -20,10 +20,7 @@
     "stamens": 1,
     "carpels": 3,
     "ovary_position": "inferior",
-    "fruit_type": {
-      "capsule": "often",
-      "berry": "often"
-    },
+    "fruit_type": {"capsule": "usually", "berry": "often"},
     "leaf_habit": "evergreen",
     "rosette": {
       "none": "usually",
@@ -37,6 +34,7 @@
     "perennation": {"rhizome": "usually", "tuber": "rarely"}
   },
   "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Zingiberaceae (read 2026-10-17): ~1,600 spp in 59 genera; fruit as a rule a dry capsule, a fleshy berry only at times. No genus counts on the page; by general knowledge the capsular genera (Zingiber, Curcuma, Hedychium, Globba, Kaempferia, most Alpinia and Amomum) outweigh the berry-fruited ones (Aframomum, some Alpinia)."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Zingiberaceae (read 2026-10-17): lamina undivided."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Zingiberaceae (read 2026-10-17): leaves two-ranked with smooth edges."},
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Zingiberaceae (read 2026-10-17): blades linear, lanceolate, oblanceolate, oblong or ovate. Wikipedia, Zingiberaceae: elliptic. Wikipedia, Alpinia (large genus): lance-shaped to oblong."},
