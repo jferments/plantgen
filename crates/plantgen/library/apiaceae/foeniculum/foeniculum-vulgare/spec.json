@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "id": "foeniculum-vulgare",
+  "taxon": {
+    "scientific_name": "Foeniculum vulgare",
+    "common_name": "fennel",
+    "family": "Apiaceae",
+    "genus": "Foeniculum",
+    "plant_name_id": 2813604
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "stem_rate": 0.5,
+      "clump_radius": 0.08,
+      "stem_lean": 8,
+      "maturity": 1.2,
+      "stem_radius": 0.008,
+      "wiggle": 2,
+      "nodes": 9,
+      "bare": 0.15,
+      "leaf_peak": 0.1,
+      "leaf_angle": 55,
+      "basal_leaves": 3,
+      "basal_angle": 45,
+      "raceme": 0.08,
+      "flowers": 1,
+      "flower_size": 0.1,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.42,
+      0.52,
+      0.36
+    ],
+    "foliage": [
+      0.2,
+      0.3,
+      0.2
+    ],
+    "foliage_shade": [
+      0.022,
+      0.05,
+      0.012
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "teeth": 0,
+          "petiole": 0.25,
+          "angle": 70,
+          "pinnule_angle": 55
+        }
+      },
+      "basal": {
+        "shape": {
+          "teeth": 0,
+          "petiole": 0.35,
+          "angle": 70,
+          "pinnule_angle": 55,
+          "template": "compound"
+        }
+      },
+      "flower": {
+        "shape": {
+          "petal_width": 0.9,
+          "point": 0.0,
+          "notch": 0.35,
+          "centre": 0.2,
+          "sepals": 0
+        },
+        "inflorescence": {
+          "flowers": 15,
+          "size": 0.3,
+          "spread": 55,
+          "peduncle": 0.05,
+          "branch": {
+            "size": 0.12,
+            "spread": 50,
+            "peduncle": 0.5
+          }
+        },
+        "colour": [
+          0.9,
+          0.82,
+          0.2
+        ],
+        "accent": [
+          0.75,
+          0.7,
+          0.15
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.5,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.9,
+      "max": 2.1,
+      "typical": 1.5
+    },
+    "inflorescence": "compound_umbel",
+    "inflorescence_branches": {
+      "min": 15,
+      "max": 40
+    },
+    "inflorescence_bracts": 0,
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.4
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 3,
+    "pinnae": 7,
+    "pinnules": 4,
+    "leaflets": 4,
+    "terminal_leaflet": true,
+    "division_planes": "all_round",
+    "leaf_shape": "linear",
+    "leaflet_length_m": {
+      "min": 0.005,
+      "max": 0.04
+    },
+    "leaflet_width_m": {
+      "min": 0.0003,
+      "max": 0.0006
+    },
+    "leaf_hairs": "glabrous",
+    "flower_colour": [
+      235,
+      210,
+      50
+    ],
+    "fruit_size_m": {
+      "min": 0.0035,
+      "max": 0.004
+    },
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "life_span": "perennial"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: a branched perennial 9 dm to 21 dm tall."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: large umbels of 15 to 40 rays, each ending in an umbellet: a compound umbel."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: 15 to 40 rays, glaucous, 1 cm to 6.5 cm long."
+    },
+    "traits.inflorescence_bracts": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum: no involucre and no involucels."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 10 cm to 40 cm long."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: leaves very finely and pinnately cut into hair-like divisions."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: leaves very finely and pinnately cut into hair-like divisions."
+    },
+    "traits.division_order": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Three times divided, the first pinnae in opposite pairs on the rachis, each forking again close to its base, set by hand from iNaturalist photos (observations 164703714, 218863504, 22065994, 26304743, 268799418, 309097232, 77514348): the floras give no count or measure."
+    },
+    "traits.pinnae": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Seven primary divisions, three pairs and a terminal one, set by hand from iNaturalist photos (observations 164703714, 218863504, 22065994, 26304743, 268799418, 309097232, 77514348): the floras give no count or measure."
+    },
+    "traits.pinnules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Four divisions to each primary division, set by hand from iNaturalist photos (observations 164703714, 218863504, 22065994, 26304743, 268799418, 309097232, 77514348): the floras give no count or measure."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Four threads to each last fork (2 to 5 in the photos), set by hand from iNaturalist photos (observations 164703714, 218863504, 22065994, 26304743, 268799418, 309097232, 77514348): the floras give no count or measure."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each division ending in one, set by hand from the photos: Abrams (1951 p. 241) does not say."
+    },
+    "traits.division_planes": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Threads standing out in every direction, the leaf a loose three-dimensional cloud, set by hand from iNaturalist photos (observations 164703714, 218863504, 22065994, 26304743, 268799418, 309097232, 77514348): the floras give no count or measure."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: hair-like (capillary) last divisions; the genus has linear or capillary ones (p. 241)."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Threads 5 mm to 40 mm long, set by hand from iNaturalist photos (observations 164703714, 218863504, 22065994, 26304743, 268799418, 309097232, 77514348): the floras give no count or measure."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Threads round and 0.3 mm to 0.6 mm thick, set by hand from iNaturalist photos (observations 164703714, 218863504, 22065994, 26304743, 268799418, 309097232, 77514348): the floras give no count or measure."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum: hairless and glaucous herbs smelling of anise."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum: yellow flowers; sRGB by eye."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: fruit oblong, about 3.5 mm to 4 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: along roadsides and in waste places, flowering May to September."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: perennial."
+    },
+    "appearance.organs.flower": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: large umbels of 15 to 40 rays 1 cm to 6.5 cm long, slender pedicels 2 mm to 10 mm, yellow flowers. Drawn as umbellets of 15 small yellow flowers on about 25 rays."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Cow parsnip's values, changed by hand for fennel: a few tall stems from the crown, many stem leaves on broad clasping petioles (Abrams 1951 p. 241), each stem ending in a yellow compound umbel. Abrams's plant is branched; the herb program grows no side branches, so each stem is drawn unbranched. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.5 m tall at 4 years in the open, the middle of Abrams's 9-21 dm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Abrams (1951 p. 241): glaucous blue-green, hairless leaves and stems; yellow flowers."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lacy-leaf work (2026-10-17): sizes from Abrams, leaf divisions from photos, drawing values from cow parsnip's."
+  }
+}
