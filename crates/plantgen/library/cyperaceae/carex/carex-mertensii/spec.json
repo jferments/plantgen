@@ -1,0 +1,234 @@
+{
+  "schema": 1,
+  "id": "carex-mertensii",
+  "taxon": {
+    "scientific_name": "Carex mertensii",
+    "common_name": "Mertens's sedge",
+    "family": "Cyperaceae",
+    "genus": "Carex",
+    "plant_name_id": 228604
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "params": {
+      "tillers": 30,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.1,
+      "tiller_lean": 10,
+      "leaves": 4,
+      "leaf_length": 0.4,
+      "leaf_spread": 0.3,
+      "leaf_angle": 18,
+      "arch": 10,
+      "pieces": 6,
+      "flowering": 0.4,
+      "culm_radius": 0.0015,
+      "culm_leaves": 0,
+      "culm_lean": 12,
+      "panicle_length": 0.15,
+      "panicle_nod": 50
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.3,
+      0.18
+    ],
+    "foliage": [
+      0.09,
+      0.18,
+      0.06
+    ],
+    "foliage_shade": [
+      0.015,
+      0.038,
+      0.01
+    ],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 0,
+          "aspect": 0.07
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.07
+        }
+      },
+      "thatch": {
+        "shape": {
+          "template": "blade",
+          "taper": 0,
+          "aspect": 0.07
+        },
+        "colour": [
+          0.38,
+          0.31,
+          0.18
+        ],
+        "shade": [
+          0.12,
+          0.1,
+          0.05
+        ]
+      },
+      "panicle": {
+        "shape": {
+          "template": "spikelet",
+          "florets": 30,
+          "glumes": 0,
+          "ranks": 0,
+          "lemma": 0.15,
+          "aspect": 0.3,
+          "gape": 10
+        },
+        "inflorescence": {
+          "kind": "raceme",
+          "flowers": 8,
+          "size": 0.2,
+          "spread": 40,
+          "pedicel": 0.15,
+          "droop": 45,
+          "peduncle": 0.05,
+          "stalk": [
+            0.3,
+            0.32,
+            0.18
+          ]
+        },
+        "colour": [
+          0.33,
+          0.38,
+          0.2
+        ],
+        "shade": [
+          0.12,
+          0.13,
+          0.07
+        ],
+        "accent": [
+          0.34,
+          0.2,
+          0.18
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 0.3,
+      "max": 1.0,
+      "typical": 0.7
+    },
+    "leaf_width_m": {
+      "min": 0.004,
+      "max": 0.007
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 332, Carex mertensii: \"Cespitose and short stoloniferous, the culms 3-10 dm. high, sharply triangular, rough\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 332, Carex mertensii: \"Leaf-blades flat, 4-7 mm. wide, the lower sheaths brownish purple tinged\"."
+    },
+    "appearance.organs.panicle": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 332, Carex mertensii: \"spikes 6-10, gynaecandrous\" ... \"1-4 cm. long, 7-10 mm. wide, the upper approximate, the lower more remote on capillary peduncles, the perigynia numerous, appressed-ascending\"; perigynia \"light green, purple spotted\"; scales \"brown with light midvein and margins\". Drawn as a raceme of 8 spikes, each about 3 cm by 9 mm on a thread-like stalk that droops, the light green perigynia over brown scales."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dewey's and slough sedges' values, changed by hand for Mertens's sedge: a loose tuft of flat leaves shorter than the culms, the culms rising above them and nodding under their drooping spikes (Abrams 1923 p. 332). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.7 m tall at 4 years in the open, inside Abrams's 3-10 dm culms. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Abrams (1923 p. 332): green leaves over \"brownish purple tinged\" lower sheaths; light green spikes flecked brown by their scales."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-17): sizes from Abrams, drawing values from slough sedge's."
+  }
+}

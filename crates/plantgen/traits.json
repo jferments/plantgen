@@ -726,7 +726,7 @@
       "type": "count",
       "range": [1, 5],
       "when": {"leaf_division": ["compound"], "leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
-      "why": "how many times the leaflets or lobes divide: 1 once (pinnate), 2 twice (bipinnate)"
+      "why": "how many times the leaflets or lobes divide: 1 once (pinnate), 2 twice (bipinnate), 3 three times (tripinnate)"
     },
     "leaf_shape": {
       "group": "leaves",
@@ -943,7 +943,7 @@
       "organ": "leaflet",
       "type": "count",
       "range": [2, 2000],
-      "why": "leaflets on a compound leaf, or on each pinna of a twice-divided one, as floras count them (a flora's pairs of leaflets are twice as many)"
+      "why": "leaflets on a compound leaf, on each pinna of a twice-divided one, or on each pinnule of a thrice-divided one, as floras count them (a flora's pairs of leaflets are twice as many)"
     },
     "leaflet_length_m": {
       "group": "leaves",
@@ -969,6 +969,33 @@
       "when": {"leaf_division": ["compound"]},
       "optional": true,
       "why": "the pinnae of a twice-divided leaf: its primary divisions, each bearing leaflets of its own (a mesquite's one or two pairs)"
+    },
+    "pinnules": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [2, 100],
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "the divisions on each pinna of a thrice-divided leaf (tripinnate, triternate), each bearing leaflets or segments of its own"
+    },
+    "inner_division_pattern": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["pinnate", "palmate"],
+      "when": {"leaf_division": ["compound"], "leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
+      "optional": true,
+      "why": "how the divisions after the first are set, where they differ from the first: a ternate-pinnate leaf's three divisions are each pinnate"
+    },
+    "division_planes": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["flat", "spray", "all_round"],
+      "when": {"leaf_division": ["compound"], "leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
+      "optional": true,
+      "why": "how a divided leaf's divisions are held: all in one plane, rising loosely out of it as a spray, or standing all round each rachis so the leaf is a bottlebrush"
     },
     "cauline_leaves": {
       "group": "leaves",

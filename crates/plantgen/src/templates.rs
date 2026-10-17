@@ -1113,6 +1113,14 @@ fn shape_seed(shape: &Shape) -> u64 {
             if c.pinnules == Some(0) {
                 c.pinnules = None;
             }
+            if c.segments == Some(0) {
+                c.segments = None;
+            }
+            // How it is drawn as geometry leaves its card as it was.
+            (c.lace, c.lift, c.scatter, c.roll, c.inner_roll) = (None, None, None, None, None);
+            if c.inner == c.pattern.or(Some(Pattern::Pinnate)) {
+                c.inner = None;
+            }
             if c.confluent.is_some_and(|share| share <= 0.0) {
                 c.confluent = None;
             }
@@ -1136,9 +1144,12 @@ fn shape_seed(shape: &Shape) -> u64 {
     for field in [
         "pattern",
         "pinnules",
+        "segments",
+        "inner",
         "confluent",
         "angle",
         "pinnule_angle",
+        "segment_angle",
         "spread",
         "largest",
         "lowest",
@@ -1148,6 +1159,12 @@ fn shape_seed(shape: &Shape) -> u64 {
         "tip",
         "base",
         "petiolule",
+        "blade_width",
+        "lace",
+        "lift",
+        "scatter",
+        "roll",
+        "inner_roll",
     ] {
         text = text.replace(&format!(", {field}: None"), "");
     }
@@ -1540,9 +1557,13 @@ pub(crate) fn needle_axes(s: &Needles) -> Vec<NeedleAxis> {
 }
 
 /// The spacing of needles along an axis whose needles are `needle` long:
-/// close all round a shoot, wider in two ranks.
+/// close all round a shoot, wider in two ranks. A bundle of more than
+/// five is a short shoot's tuft (a larch's 15 to 40 needles on each spur,
+/// Farjon 2017), and tufts stand apart in proportion: thirty needles a
+/// place, half a needle's length apart.
 pub(crate) fn needle_pitch(s: &Needles, needle: f64) -> f64 {
-    needle * if s.ranks == 0 { 0.085 } else { 0.22 }
+    let tuft = f64::from(s.bundle.max(5)) / 5.0;
+    needle * if s.ranks == 0 { 0.085 * tuft } else { 0.22 }
 }
 
 /// The needles that leave an axis at one place: a fascicle of `bundle`
@@ -1555,7 +1576,8 @@ pub(crate) fn needles_per_place(s: &Needles) -> usize {
     }
 }
 
-/// How far apart the needles of a fascicle fan round the shoot, radians.
+/// How far apart the needles of a fascicle fan round the shoot, radians;
+/// a tuft of more than 25 spreads evenly all round.
 const FAN: f64 = 0.25;
 
 /// One needle of a spray, in the frame of its axis: from `along` on the
@@ -1597,8 +1619,11 @@ pub(crate) fn needle_at(
     let n = u64::try_from(i).unwrap_or(0);
     #[allow(clippy::cast_precision_loss)]
     let shift = between as f64 / steps.max(1) as f64;
+    // A tuft's filling needles join its own place, turned between its
+    // needles, so the tufts stay apart.
+    let tuft = s.ranks == 0 && s.bundle > 5;
     #[allow(clippy::cast_precision_loss)]
-    let along = (i as f64 + 0.5 + shift) * pitch;
+    let along = (i as f64 + 0.5 + if tuft { 0.0 } else { shift }) * pitch;
     let shorten = 1.0 - 0.35 * along / axis.length;
     // A fascicle's needles share their place's draw of its azimuth.
     let per_place = needles_per_place(s);
@@ -1612,9 +1637,13 @@ pub(crate) fn needle_at(
     // two ranks, flat in the card's plane, the first to the left.
     let (across, out) = if s.ranks == 0 {
         #[allow(clippy::cast_precision_loss)]
-        let fan = (k as f64 - (per_place as f64 - 1.0) * 0.5) * FAN;
+        let spacing = FAN.min(std::f64::consts::TAU / per_place as f64);
         #[allow(clippy::cast_precision_loss)]
-        let phi = (i as f64 + shift) * 2.399_963 + hash(place, salt, 13) + fan;
+        let fan =
+            (k as f64 - (per_place as f64 - 1.0) * 0.5 + if tuft { shift } else { 0.0 }) * spacing;
+        let turn = if tuft { 0.0 } else { shift };
+        #[allow(clippy::cast_precision_loss)]
+        let phi = (i as f64 + turn) * 2.399_963 + hash(place, salt, 13) + fan;
         (
             math::sin(tilt) * math::cos(phi),
             math::sin(tilt) * math::sin(phi),
@@ -1968,7 +1997,11 @@ fn compound(
         if along < 0.0 || along >= length {
             continue;
         }
-        let half = if axis.order == 0 { fine } else { 0.75 * fine };
+        let half = match axis.order {
+            0 => fine,
+            1 => 0.75 * fine,
+            _ => 0.5 * fine,
+        };
         if across.abs() < half {
             return Paint::solid(0.9, 1.0);
         }
