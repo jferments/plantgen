@@ -654,4 +654,8 @@ pub mod venation;
 /// scaly all along, its pinnae lie along its coil, and a ternate frond
 /// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (103
 /// is branched flowering herbs, #188).
-pub const GENERATOR_REVISION: u32 = 104;
+/// 105: each pinna in a fern's crozier is rolled as its frond is (fern
+/// program revision 13): a short green coil of its own on each side of the
+/// rachis while coiled, its card small until it unrolls (104 is green
+/// croziers and the eagle's claw, #186).
+pub const GENERATOR_REVISION: u32 = 105;
