@@ -53,11 +53,7 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.38,
-      0.34,
-      0.28
-    ],
+    "bark": [0.1, 0.065, 0.045],
     "twig": [0.3,  0.08,  0.02],
     "bark_pattern": {
       "kind": "smooth",
@@ -246,7 +242,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FEIS (Anderson 2001): smooth to flaky grey bark; leaves obovate to oblanceolate, mostly untoothed, with paler undersides."
+      "note": "By eye, after FEIS (Anderson 2001): smooth to flaky grey bark; leaves obovate to oblanceolate, mostly untoothed, with paler undersides. The bark colour after Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"Bark thin, dark brown slightly tinged with red, and divided into broad flat ridges\"; a dark grey-brown between it and FEIS's grey, chosen by eye, where a pale grey had made its limbs the lightest thing in the crown."
     }
   },
   "provenance": {

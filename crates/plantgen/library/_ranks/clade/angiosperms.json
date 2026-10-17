@@ -20,9 +20,9 @@
       "why": "Leaves smaller than the card's longest stand on side twigs as well as the main one, as a shoot's leaves stand on its side shoots, so the twig covers about as much of its card with leaves as the area the program shades with: about two and a half side twigs for each time its leaves go into the longest a card's leaf may be (0.45 of the card), less one."
     },
     "generator.params.short_share": {
-      "map": {"short_shoots": {"true": {"rule": "min(1 - long_share, 1 / unit_nodes)"}}},
+      "map": {"short_shoots": {"true": {"rule": "1 - long_share"}}},
       "else": {"rule": "min(1, 1 / (3 * unit_nodes))"},
-      "why": "Where a taxon grows short shoots, they fill most of its crown and bear most of its leaves (Wilson's red maple, Hall\u00e9, Oldeman and Tomlinson 1978, pp. 59-60): as many of a growth unit's buds grow short shoots as grow long ones, from the nodes behind them, so each year's growth ends in long shoots with tufts of leaves behind. Elsewhere a third as many as the long ones, as at the seed plants."
+      "why": "Where a taxon grows short shoots, they fill most of its crown and bear most of its leaves (Wilson's red maple, Hall\u00e9, Oldeman and Tomlinson 1978, pp. 59-60): every bud of a growth unit that does not grow a long shoot grows a short one, from the nodes behind them, so each year's growth ends in long shoots with tufts of leaves behind, in a shrub as in a tree (decurrent_tree). Until 2026-10-17 a shrub grew only as many short shoots as long ones, which left beaked hazel with a quarter of a tree's leaf area per crown area. Elsewhere a third as many as the long ones, as at the seed plants."
     },
     "generator.params.bud_years": {
       "map": {"short_shoots": {"true": 10}},
