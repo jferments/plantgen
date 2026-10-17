@@ -18,6 +18,7 @@
       "leaves_per_node": 2,
       "basal_leaves": 6,
       "basal_angle": 50,
+      "stem_height": 0.2,
       "bare": 0.35,
       "raceme": 0.03,
       "flowers": 1,
@@ -72,7 +73,7 @@
     {
       "age": 3,
       "environment": "open",
-      "height": 0.3,
+      "height": 0.35,
       "tolerance": 0.35
     }
   ],
@@ -265,7 +266,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "0.3 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+      "note": "0.35 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {

@@ -843,12 +843,13 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 104,
+        checked, 109,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
          thorn's heads from their taxa (visual forms Skill 4), and the six clusters of the core \
-         expansion's first ten species, five of its second ten, five of its third and three of its fourth, the spikes \
+         expansion's first ten species, five of its second ten, five of its third and three of its fourth, the five of phase C's first nine (buckwheat's umbels, \
+         bistort's spikes, sheep sorrel's panicles, candy flower's racemes and collomia's heads), the spikes \
          of the four Chloranthaceae, and sassafras's racemes, avocado's panicles, fish mint's spikes, \
          the umbels of spicebush, California bay, bay laurel and winter's bark, and nutmeg's cymes of \
          the magnoliids, the eight the species-facts records name (step 6): bur-sage's and \
