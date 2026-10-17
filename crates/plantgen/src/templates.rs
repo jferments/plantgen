@@ -1150,6 +1150,14 @@ fn shape_seed(shape: &Shape) -> u64 {
             if c.pinnules == Some(0) {
                 c.pinnules = None;
             }
+            if c.segments == Some(0) {
+                c.segments = None;
+            }
+            // How it is drawn as geometry leaves its card as it was.
+            (c.lace, c.lift, c.scatter, c.roll, c.inner_roll) = (None, None, None, None, None);
+            if c.inner == c.pattern.or(Some(Pattern::Pinnate)) {
+                c.inner = None;
+            }
             if c.confluent.is_some_and(|share| share <= 0.0) {
                 c.confluent = None;
             }
@@ -1173,9 +1181,12 @@ fn shape_seed(shape: &Shape) -> u64 {
     for field in [
         "pattern",
         "pinnules",
+        "segments",
+        "inner",
         "confluent",
         "angle",
         "pinnule_angle",
+        "segment_angle",
         "spread",
         "largest",
         "lowest",
@@ -1185,6 +1196,12 @@ fn shape_seed(shape: &Shape) -> u64 {
         "tip",
         "base",
         "petiolule",
+        "blade_width",
+        "lace",
+        "lift",
+        "scatter",
+        "roll",
+        "inner_roll",
     ] {
         text = text.replace(&format!(", {field}: None"), "");
     }
@@ -2017,7 +2034,11 @@ fn compound(
         if along < 0.0 || along >= length {
             continue;
         }
-        let half = if axis.order == 0 { fine } else { 0.75 * fine };
+        let half = match axis.order {
+            0 => fine,
+            1 => 0.75 * fine,
+            _ => 0.5 * fine,
+        };
         if across.abs() < half {
             return Paint::solid(0.9, 1.0);
         }
