@@ -21,8 +21,8 @@
     },
     "leaf_shape": {
       "linear": "often",
-      "oblong": "often",
-      "ovate": "often"
+      "oblong": "sometimes",
+      "ovate": "sometimes"
     },
     "stipules": {
       "true": "rarely",
@@ -80,6 +80,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Potamogetonaceae (read 2026-10-16): leaves mostly alternate and then two-ranked."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA Potamogeton (read 2026-10-17): ~100 spp, the bulk of the family; submersed blades range from linear to nearly round, floating ones elliptic to ovate. Wikipedia Potamogeton (read 2026-10-17) splits the genus into a linear-leaved and a broad-leaved group. The joined genera Stuckenia, Zannichellia, Ruppia and Groenlandia are all narrow-leaved, which tips the lead to linear; broad shapes stay common, hence often."
     }
   }
 }

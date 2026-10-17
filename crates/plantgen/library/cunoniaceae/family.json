@@ -6,7 +6,7 @@
   "traits": {
     "leaf_arrangement": {
       "opposite": "often",
-      "whorled": "often",
+      "whorled": "sometimes",
       "alternate": "rarely"
     },
     "leaf_division": {
@@ -29,11 +29,11 @@
     },
     "woodiness": "woody",
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often",
       "raceme": "often",
-      "head": "often",
-      "panicle": "sometimes"
+      "cyme": "sometimes",
+      "head": "sometimes",
+      "panicle": "sometimes",
+      "solitary": "sometimes"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": {
@@ -66,6 +66,16 @@
       "evidence": "SourceInferred",
       "source": "stevens-apweb",
       "note": "APweb, Oxalidales page, Cunoniaceae (read 2026-10-16): leaves opposite (some whorled; whorls alternate)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Weinmannia (read 2026-10-17): 90 spp, the family's largest genus (about a third of ~280 spp), with stipules between the leaf stalks, which only occurs where leaves are paired; so Weinmannia is opposite-leaved. Whorled leaves are a feature of a few smaller genera (e.g. Pancheria). Lead rests on one genus, hence often."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Weinmannia (read 2026-10-17): 90 spp, flowers in racemes; Weinmannia is the largest genus by a wide margin. Other genera (heads in Pancheria, cymes or panicles elsewhere, solitary flowers in Eucryphia and Bauera) were not read, so raceme leads at often only."
     }
   }
 }

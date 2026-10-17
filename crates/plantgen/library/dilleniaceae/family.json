@@ -10,8 +10,8 @@
     },
     "leaf_division": "simple",
     "leaf_margin": {
-      "entire": "often",
-      "serrate": "often"
+      "entire": "usually",
+      "serrate": "sometimes"
     },
     "leaf_venation": {
       "single": "often",
@@ -40,10 +40,10 @@
     },
     "perianth": "sepals_and_petals",
     "fruit_type": {
-      "capsule": "often",
-      "follicle": "often",
-      "achene": "often",
-      "aggregate": "often"
+      "follicle": "usually",
+      "aggregate": "sometimes",
+      "capsule": "sometimes",
+      "achene": "sometimes"
     },
     "stamens": {
       "min": 1,
@@ -58,8 +58,9 @@
     "phyllotaxis_pattern": "spiral",
     "vernation": "conduplicate",
     "inflorescence": {
-      "cyme": "often",
-      "solitary": "often"
+      "solitary": "usually",
+      "cyme": "sometimes",
+      "raceme": "sometimes"
     }
   },
   "evidence": {
@@ -80,8 +81,18 @@
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
-      "source": "floral-diagrams",
-      "note": "Ronse De Craene, Floral Diagrams (2010) p. 159, 160, 161, 162, family Dilleniaceae: inflorescence solitary terminal or various cymes, usually; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
+      "source": "wikipedia",
+      "note": "Wikipedia Hibbertia (read 2026-10-17; ~400 spp): flowers mostly single in leaf axils or at shoot tips. Wikipedia Dillenia (read 2026-10-17; 60 spp): flowers single or in terminal racemes (raceme added). Cymes and panicles are left to the smaller climbing genera (Tetracera and allies), far fewer species. Re-ranks the earlier value, from floral-diagrams, whose top states were tied."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Weighted by genus: Wikipedia Hibbertia (read 2026-10-17; about 400 spp, the bulk of a family Britannica puts at 11 genera) gives smooth leaf edges, only rarely toothed or lobed. Toothed blades belong to the much smaller tree and liana genera (Dillenia, 60 spp per Wikipedia/POWO; Tetracera and the neotropical lianas), so entire margins cover well over half the species."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Hibbertia (read 2026-10-17; ~400 spp, the large majority of the family): fruit of follicles holding arillate seeds. Dillenia (60 spp, Wikipedia read the same day: 5-20 free carpels) gives the clustered, sepal-wrapped aggregate; capsule and achene stay as minor states from the old value."
     }
   }
 }
