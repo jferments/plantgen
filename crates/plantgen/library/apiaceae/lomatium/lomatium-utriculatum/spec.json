@@ -195,32 +195,32 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"Plants caulescent, 1-5 dm. tall, glabrous to pubescent, from a long slender taproot\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: stemmed plants 10 cm to 50 cm tall, hairless to downy, from a long, slender taproot."
     },
     "traits.inflorescence_branches": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"rays 5-13, spreading to ascending, un- equal, 1-12 cm. long\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: 5 to 13 rays of unequal length, 1 cm to 12 cm, spreading or ascending."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: rays 5-13, each ending in an umbellet on pedicels \"2-9 mm. long\": a compound umbel."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: 5 to 13 rays, each ending in an umbellet on pedicels 2 mm to 9 mm long: a compound umbel."
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"Leaves tripinnate, sometimes ternate, then tripinnate\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: leaves three times pinnate, sometimes first divided in three."
     },
     "traits.division_pattern": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"Leaves tripinnate, sometimes ternate, then tripinnate\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: leaves three times pinnate, sometimes first divided in three."
     },
     "traits.division_order": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"Leaves tripinnate, sometimes ternate, then tripinnate\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: leaves three times pinnate, sometimes first divided in three."
     },
     "traits.pinnae": {
       "evidence": "Authored",
@@ -240,37 +240,37 @@
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"leaf-divisions linear, 2-25 mm. long\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: the last divisions of the leaf linear, 2 mm to 25 mm long."
     },
     "traits.leaflet_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"leaf-divisions linear, 2-25 mm. long\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: the last divisions of the leaf linear, 2 mm to 25 mm long."
     },
     "traits.flower_colour": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"flowers yellow\"; sRGB by eye."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: yellow flowers; sRGB by eye."
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"fruit ovate to oblong, 5-11 mm. long\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: fruit ovate to oblong, 5 mm to 11 mm long."
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: \"Grassy hillsides and plains\" ... \"March-June\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: on grassy hillsides and plains, flowering March to June."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: perennial from \"a long slender taproot\"."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: perennial from a long, slender taproot."
     },
     "appearance.organs.flower": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: rays \"spreading to ascending, un- equal, 1-12 cm. long\"; pedicels \"2-9 mm. long\"; \"flowers yellow\". Drawn as 9 rays of up to about 6 cm, each ending in an umbellet of 10 small yellow flowers about 1 cm across."
+      "note": "Abrams vol. 3 (1951) p. 255, Lomatium utriculatum: unequal rays 1 cm to 12 cm long, spreading or ascending, pedicels 2 mm to 9 mm, yellow flowers. Drawn as 9 rays of up to about 6 cm, each ending in an umbellet of 20 small yellow flowers about 1 cm across."
     },
     "generator.params": {
       "evidence": "Authored",

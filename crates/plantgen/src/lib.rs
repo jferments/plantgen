@@ -582,4 +582,8 @@ pub mod venation;
 /// young stems and leaf stalks, in a blade's words and `crisped`, cast
 /// the first year's wood toward their colour, wear off in its second and
 /// up close stand from it as strands (91 is leaves with two faces, #164).
-pub const GENERATOR_REVISION: u32 = 92;
+/// 93: slender pedicels and short-shoot tufts (`Unit::stalk_width`): a
+/// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
+/// bundle of more than five, up to 45, is a short shoot's tuft spread all
+/// round, the tufts half a needle apart (92 is stem hairs, #173).
+pub const GENERATOR_REVISION: u32 = 93;
