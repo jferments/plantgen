@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plantgen-imagekit"
+version = "0.1.0"
+description = "Fetch open-licence plant images with their licences, keep one record per image, and never analyse an image twice"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = ["Pillow>=10"]
+
+[project.optional-dependencies]
+parquet = ["pyarrow>=15"]
+test = ["jsonschema>=4"]
+
+[project.scripts]
+imagekit = "imagekit.cli:main"
+
+[tool.setuptools]
+packages = ["imagekit", "imagekit.fetch"]
