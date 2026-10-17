@@ -134,7 +134,15 @@
     "cone_length_m": {
       "min": 0.06,
       "max": 0.1
-    }
+    },
+    "height_typical_m": {"min": 10, "max": 30},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.0015, "max": 0.002},
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "linear",
+    "leaf_margin": "entire"
   },
   "evidence": {
     "taxon": {
@@ -201,7 +209,15 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: thin, grey, smooth young bark (FEIS: \"Bark on young trees is thin, gray, and smooth\"); bluish green needles (Abrams 1923 p. 66); dark purple cones."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L381853), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L381853), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L381853), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L381853), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L381853), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L381853), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L381853), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L381853), as no source read gives it."}
   },
   "provenance": {
     "sources": [

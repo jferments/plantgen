@@ -596,7 +596,20 @@ pub mod venation;
 /// divisions lifted, scattered or set all round their rachis
 /// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
 /// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
-/// 96: variegation along a parallel-veined blade's veins (`veins`: a
+/// 96: species draw from the species-facts records: 189 species state the
+/// characters no source of theirs gives (heights, leaf sizes, shapes,
+/// margins and habits, inflorescence and fruit sizes, months, rosettes)
+/// as the records estimate them, and a look a species set by hand gives
+/// way wherever a rule fed by a stated fact now sets it (leaf widths,
+/// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
+/// strap leaf is never narrower than its card draws (95 is lacy
+/// leaves, #180).
+/// 97: lacy leaves drawn as geometry: a segment at least ten times as long
+/// as it is wide is a round thread, bowed a little (`lace::THREAD`), and a
+/// thrice-divided leaf whose divisions roll round their rachis sets its
+/// segments round each pinnule's too; a leaflet may be as narrow as a
+/// hundredth of its length (96 is the species-facts records, #171).
+/// 98: variegation along a parallel-veined blade's veins (`veins`: a
 /// midrib stripe, then veinlet dashes, then a net round dark islands as
 /// the share grows; `slant` turns the cross veins into a pinnate blade's
 /// lateral veins), its inverse `between` (silver fields between the veins),
@@ -604,5 +617,5 @@ pub mod venation;
 /// pattern never reaches, and patches on the upper face only (`faces`);
 /// a compound leaf's pattern lies on each leaflet; the rattlesnake
 /// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
-/// (95 is lacy leaves, #180).
-pub const GENERATOR_REVISION: u32 = 96;
+/// (97 is lacy leaves as geometry, #183).
+pub const GENERATOR_REVISION: u32 = 98;

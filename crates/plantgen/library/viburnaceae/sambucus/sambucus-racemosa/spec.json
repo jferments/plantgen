@@ -45,7 +45,7 @@
       "adult_age": 3,
       "bloom_size": 0.06,
       "bloom_angle": 60,
-      "leaf_area": 0.246,
+      "leaf_area": 0.194,
       "bloom_area": 0.423,
       "path_half": 2.38
     }
@@ -77,7 +77,6 @@
           "template": "compound",
           "leaflets": 7,
           "leaflet_width": 0.35,
-          "teeth": 9,
           "petiole": 0.12
         }
       },
@@ -87,7 +86,7 @@
           "aspect": 1.0,
           "unripe": 0.15
         },
-        "inflorescence": { "kind": "panicle", "branches": 9, "flowers": 7, "size": 0.45, "spread": 65, "peduncle": 0.45, "pedicel": 0.0, "branch": {"kind": "cyme", "spread": 45, "pedicel": 0.25} },
+        "inflorescence": { "branches": 9, "flowers": 7, "size": 0.45, "spread": 65, "peduncle": 0.45, "pedicel": 0.0, "branch": {"kind": "cyme", "spread": 45, "pedicel": 0.25} },
         "colour": [0.8, 0.08, 0.06],
         "accent": [0.4, 0.5, 0.15],
         "season": {
@@ -141,7 +140,17 @@
     "inflorescence": "panicle",
     "flowering_months": [4, 5],
     "fruiting_months": [6, 7],
-    "fruit_type": "drupe"
+    "fruit_type": "drupe",
+    "height_typical_m": {"min": 1, "max": 4},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "leaf_length_m": {"min": 0.1, "max": 0.25},
+    "leaf_width_m": {"min": 0.08, "max": 0.2},
+    "leaf_division": "compound",
+    "sexual_system": "hermaphrodite",
+    "inflorescence_length_m": {"min": 0.04, "max": 0.1},
+    "fruit_size_m": {"min": 0.004, "max": 0.006}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -224,7 +233,18 @@
       "source": "jepson-eflora",
       "note": "Jepson eFlora's account of the species, as quoted in search results (the page itself was not read): inflorescence a terminal panicle of cymes, generally more or less dome-shaped, 4 to 12 cm across, its central axis generally dominant. Its cluster is drawn as a panicle of nine cymes, its lower branches longest, so it stands broad and dome-shaped (Abrams vol. 4: \"commonly broadly ovoid and dense\")."
     },
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 613, Sambucus racemosa: fruit type drupe."}
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 613, Sambucus racemosa: fruit type drupe."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.leaf_division": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486552), as no source read gives it."},
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.246)."}
   },
   "provenance": {
     "sources": [

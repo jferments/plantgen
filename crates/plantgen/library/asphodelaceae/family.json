@@ -25,10 +25,7 @@
       "terminal": "sometimes"
     },
     "life_span": "perennial",
-    "phyllotaxis_pattern": {
-      "distichous": "often",
-      "spiral": "often"
-    },
+    "phyllotaxis_pattern": {"spiral": "usually", "distichous": "sometimes"},
     "leaf_venation": "parallel",
     "leaf_margin": {
       "entire": "often",
@@ -85,11 +82,7 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asphodelaceae as that work draws it, there coded together with Xeronemataceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     },
-    "traits.phyllotaxis_pattern": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 229, 230, family Asphodelaceae: phyllotaxis pattern spiral to distichous, usually; read as {\"distichous\": \"often\", \"spiral\": \"often\"}."
-    },
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Asphodelaceae (read 2026-10-17): leaves alternate, usually spiral, at times two-ranked. Wikipedia Aloe (read 2026-10-17): Aloe, over 600 of the family's c. 900 spp. (Wikipedia Asphodelaceae), forms rosettes; two-ranked fans mainly in Gasteria and Hemerocallis. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.leaf_venation": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

@@ -67,11 +67,9 @@
           "leaves": 7,
           "angle": 50,
           "stalk": 0.1,
-          "width": 0.45,
           "widest": 0.5,
           "tip": 0.5,
           "base": 0.6,
-          "teeth": 0,
           "petiole": 0.06
         }
       }
@@ -112,7 +110,12 @@
       "min": 15.24,
       "max": 18.288
     },
-    "wood_density_basic_kg_m3": 450
+    "wood_density_basic_kg_m3": 450,
+    "height_typical_m": {"min": 10, "max": 18},
+    "leaf_length_m": {"min": 0.06, "max": 0.13},
+    "leaf_width_m": {"min": 0.03, "max": 0.06},
+    "leaf_margin": "entire",
+    "fruit_size_m": {"min": 0.008, "max": 0.012}
   },
   "evidence": {
     "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
@@ -171,7 +174,12 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."}
   },
   "provenance": {
     "sources": [

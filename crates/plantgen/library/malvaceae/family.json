@@ -26,10 +26,7 @@
     "phyllotaxis_pattern": {
       "spiral": "usually"
     },
-    "leaf_division": {
-      "compound": "often",
-      "simple": "often"
-    },
+    "leaf_division": {"simple": "usually", "compound": "sometimes"},
     "inflorescence": {
       "cyme": "often",
       "solitary": "often"
@@ -68,11 +65,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 355, 356, 357, 358, 359, family Malvaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
     },
-    "traits.leaf_division": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 355, 356, 357, 358, 359, family Malvaceae: leaf division simple or palmately compound; read as {\"compound\": \"often\", \"simple\": \"often\"}."
-    },
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Malvaceae (read 2026-10-17): leaves often palmately lobed, sometimes compound. The biggest genera it names (Hibiscus 434, Pavonia 291, Sida 275, Ayenia 216, Dombeya 197) all have simple blades; palmately compound leaves are mainly in the bombacoid trees (Ceiba, Pachira, Adansonia, Bombax), a few hundred species at most out of ~4,225. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
