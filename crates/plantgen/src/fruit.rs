@@ -481,15 +481,16 @@ impl One {
         };
         let other = self.direction.cross(self.across);
         let golden = math::radians(GOLDEN_DEGREES);
-        let (a, b) = (self.length * 0.5, self.width * 0.5);
+        let (long, wide) = (self.length * 0.5, self.width * 0.5);
         for i in 0..count {
             // From near the base (z = -0.75) to below the crown (z = 0.8).
             let z = -0.75 + 1.55 * (f64::from(i) + 0.5) / f64::from(count);
             let ring = math::sqrt((1.0 - z * z).max(0.0));
             let angle = golden * f64::from(i);
             let radial = self.across * math::cos(angle) + other * math::sin(angle);
-            let at = self.at(0.5) + self.direction * (z * a) + radial * (ring * b);
-            let normal = (self.direction * (z / a) + radial * (ring / b)).normalize_or(radial);
+            let at = self.at(0.5) + self.direction * (z * long) + radial * (ring * wide);
+            let normal =
+                (self.direction * (z / long) + radial * (ring / wide)).normalize_or(radial);
             // Up the skin toward the tip, and across it.
             let up =
                 (self.direction - normal * self.direction.dot(normal)).normalize_or(self.direction);
@@ -497,12 +498,12 @@ impl One {
             if kind == FruitKind::Scaly {
                 // Broad and rounded, pressed to the skin and reaching
                 // toward the tip, a little darker.
-                let size = self.width * 0.24;
+                let scale = self.width * 0.24;
                 Spheroid {
-                    centre: at + up * (size * 0.3) + normal * (size * 0.05),
-                    a: size * 0.12,
-                    b: size * 0.45,
-                    c: size * 0.6,
+                    centre: at + up * (scale * 0.3) + normal * (scale * 0.05),
+                    a: scale * 0.12,
+                    b: scale * 0.45,
+                    c: scale * 0.6,
                     ribs: 0,
                     rib_depth: 0.0,
                     waves: 0,
