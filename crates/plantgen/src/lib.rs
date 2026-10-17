@@ -648,7 +648,14 @@ pub mod venation;
 /// under the `indusium` stated; most pinnae of a fern whose fronds are
 /// alike, and only the fertile pinnae of a dimorphic one (101 is fern
 /// fiddleheads, #181).
-/// 103: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
+/// 103: 23 species state facts the species-facts records give that the
+/// checks now judge as floras measure them (#189): basal leaf sizes of
+/// foxglove, columbine, foamflower, bull thistle, lupine and mule's ears,
+/// grasses' and sedges' deciduous blades, and fruit, flower, cluster,
+/// shape and height facts held back from 96; broom's stated obovate
+/// leaflets draw where a hand-drawn profile stood (102 is fern sori,
+/// #182).
+/// 104: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
 /// and hairs gathered on its main veins (`Hairs::veins`, from
 /// `leaf_hairs_on_veins`); a face's strands stand on the face that wears
 /// them and on the drawn cells of a bent card, and a stated hair length
@@ -657,6 +664,6 @@ pub mod venation;
 /// drawn as stars, little trees and winding strands, white with air;
 /// glandular and stinging hairs among them (`glandular_hairs`,
 /// `stinging_hairs`), with round heads and glass needles on green feet;
-/// the strand budget spent on the hairs nearest the eye first (102 is
-/// fern sori, #182).
-pub const GENERATOR_REVISION: u32 = 103;
+/// the strand budget spent on the hairs nearest the eye first (103 is
+/// the held-back facts, #192).
+pub const GENERATOR_REVISION: u32 = 104;
