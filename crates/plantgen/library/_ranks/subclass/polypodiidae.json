@@ -15,6 +15,10 @@
     }
   },
   "rules": {
+    "generator.params.coil_turns": {
+      "map": {"vernation": {"circinate": 2.5, "conduplicate": 0, "involute": 0, "flat": 0}},
+      "why": "A circinate frond comes up as a crozier, its blade wound from the tip inward in a tight spiral that unrolls from its foot (Hoshizaki and Moran 2001, p. 17; Kaplan 2022, p. 358-359, 369), about two and a half turns by eye; a frond that is not circinate expands straight."
+    },
     "generator.params.crown_start": {
       "map": {"rhizome_habit": {"none": 0, "erect": 1, "ascending": 1, "short_creeping": 1, "long_creeping": 1}},
       "why": "A crown a fern's rhizome branches into is part of the same plant and fed by it, so its first fronds are as large as the crown it came from; only a fern with no rhizome starts each crown from a spore."

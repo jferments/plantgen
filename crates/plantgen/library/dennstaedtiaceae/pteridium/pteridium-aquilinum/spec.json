@@ -36,8 +36,7 @@
       "rhizome": 0.45,
       "season": 0.5,
       "emerge_spread": 0.3,
-      "unroll": 0.3,
-      "curl": 45
+      "unroll": 0.3
     }
   },
   "growth": {
