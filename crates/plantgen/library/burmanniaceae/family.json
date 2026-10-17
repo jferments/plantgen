@@ -44,7 +44,12 @@
     "fruit_type": "capsule",
     "flower_merosity": 3,
     "stamens": 3,
-    "carpels": 3
+    "carpels": 3,
+    "flowering_position": "terminal",
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
@@ -56,6 +61,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Burmanniaceae with Corsiaceae, Thismiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): small cymes of 1-3 flowers ending the stem."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): leaves usually reduced to scales, sometimes two-ranked."
     }
   }
 }

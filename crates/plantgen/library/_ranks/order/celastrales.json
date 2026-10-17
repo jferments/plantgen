@@ -2,5 +2,99 @@
   "schema": 1,
   "rank": "order",
   "name": "Celastrales",
-  "parent": "clade/fabids"
+  "parent": "clade/fabids",
+  "traits": {
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "rarely"
+    },
+    "life_span": "perennial",
+    "inflorescence": {
+      "cyme": "usually",
+      "raceme": "rarely"
+    },
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "rotate",
+    "hypanthium": {
+      "false": "usually",
+      "true": "rarely"
+    },
+    "ovary_position": "superior",
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "sometimes",
+      "berry": "sometimes",
+      "samara": "rarely"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "sometimes",
+      "dioecious": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Celastrales page (read 2026-10-16): Celastraceae simple; Lepidobotrys simple with an articulated (unifoliolate) blade."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Celastrales page (read 2026-10-16): shrubs, trees, lianes, rarely herbs; Parnassia herbs with basal leaves (my knowledge)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Celastrales page (read 2026-10-16): woody, the few herbs (Parnassia) perennial."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Celastrales page, order characterisation (read 2026-10-16): inflorescence cymose."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Celastraceae (read 2026-10-16): cymes or fascicles terminal or axillary; axillary most common (my weighting, e.g. Euonymus, Maytenus)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Celastraceae (read 2026-10-16): flowers regular."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Celastraceae (read 2026-10-16): free spreading petals around a disc; Celastraceae states rotate."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Celastrales page (read 2026-10-16): hypanthium not general, present in Stackhousioideae."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Celastraceae (read 2026-10-16): superior, rarely partly inferior; APweb: ovary often sunk in the disc."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Celastraceae (read 2026-10-16): capsule, berry, drupe, samara or achene-like; APweb: capsules often loculicidal or septicidal, seeds arillate. Capsule first is my weighting."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Celastraceae (read 2026-10-16): usually hermaphrodite, some monoecious or dioecious; APweb order: functionally imperfect flowers common."
+    }
+  }
 }

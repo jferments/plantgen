@@ -7,6 +7,7 @@
     "program": "cactaceae"
   },
   "traits": {
+    "flowering_position": {"lateral": "usually", "terminal": "rarely"},
     "stamens": {"min": 20, "max": 200},
     "carpels": {"min": 4, "max": 18, "low": 3},
     "flower_symmetry": {
@@ -111,6 +112,7 @@
     }
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cactus (read 2026-10-16): flowers arise from areoles (upper part), mostly near the growing stem tips; DELTA Cactaceae: terminal or lateral. Areoles are lateral short shoots, so lateral, clustered near the apex."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 374: stamens numerous, spiral or in clusters on the hypanthium (Floral Diagrams p. 192: arising centrifugally on a ring). Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 192: carpels (3) 4 to 5, up to 18; Simpson p. 374 says 3 to many."},
     "traits.spines": {

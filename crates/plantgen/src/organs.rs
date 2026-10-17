@@ -792,6 +792,7 @@ mod tests {
             ripening: 20.0,
             fall: 245.0,
             opening: 0.0,
+            fruit_size: 1.0,
             bud_look: None,
             flower_look: None,
         };
@@ -997,6 +998,7 @@ mod tests {
             ripening: 20.0,
             fall: 245.0,
             opening: 0.0,
+            fruit_size: 1.0,
             bud_look: None,
             flower_look: None,
         };

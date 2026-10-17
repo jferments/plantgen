@@ -2,5 +2,45 @@
   "schema": 1,
   "rank": "order",
   "name": "Polypodiales",
-  "parent": "subclass/polypodiidae"
+  "parent": "subclass/polypodiidae",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    },
+    "division_pattern": "pinnate",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "life_span": "perennial"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Polypodiaceae (read 2026-10-16): fronds borne singly along an upright to long-creeping scaly rhizome; never paired at a node (our general knowledge for the rest of the order)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Polypodiaceae (read 2026-10-16): stems from erect to long-creeping. Erect and short-creeping rhizomes carry fronds all round (spiral); long-creeping dorsiventral rhizomes (Polypodium, Davallia, Pteridium) often in two rows. Weighting is our inference, medium confidence."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Polypodiaceae (read 2026-10-16): fronds simple, pinnatifid, forked or pinnate; across the order divided fronds are overwhelmingly pinnate (one to several times). Palmate/pedate fronds are rare exceptions."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Polypodiaceae (read 2026-10-16): simple to compound fronds; most of the order pinnate."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Polypodiaceae (read 2026-10-16): perennial rhizomatous ferns; a few short-lived Pteridaceae (Anogramma, Ceratopteris) are exceptions."
+    }
+  }
 }

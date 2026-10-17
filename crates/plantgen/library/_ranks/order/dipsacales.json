@@ -9,13 +9,62 @@
       "whorled": "rarely"
     },
     "ovary_position": "inferior",
-    "stipules": false
+    "stipules": false,
+    "phyllotaxis_pattern": "decussate",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "head": "sometimes"
+    },
+    "hypanthium": false,
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 3
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 48 Caprifoliaceae, 306 Adoxaceae, 312 Valerianaceae and 313 Dipsacaceae, which make APG's Dipsacales (Caprifoliaceae in the wide sense, and Viburnaceae): leaves opposite, rarely whorled; stipules absent or very small; the calyx on an inferior ovary."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Dipsacales page, order characterisation (read 2026-10-16): leaves opposite, bases often joined; opposite pairs cross (decussate)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Dipsacales page (read 2026-10-16): leaves mostly simple; Sambucus compound, some Dipsacoideae and Valerianoideae pinnate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Dipsacales page, order characterisation (read 2026-10-16): branches cymose; Viburnaceae flat-topped many-flowered cymes; Dipsacoideae heads."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Dipsacales page (read 2026-10-16): ovary inferior with persistent calyx; no free hypanthium described."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Dipsacales page, order characterisation (read 2026-10-16): carpels three. Replaces the campanulid inherited 2; families state their own."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Dipsacales page (read 2026-10-16): no order statement; flowers perfect in most; dioecy reported (uncertain) in some Valerianoideae and Viburnum."
     }
   }
 }

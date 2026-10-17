@@ -29,13 +29,25 @@
     "carpels": {
       "min": 6,
       "max": 18
-    }
+    },
+    "flowering_position": "lateral",
+    "phyllotaxis_pattern": "spiral"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Eupteleaceae: leaves alternate; leaves simple; margins serrate or dentate; veins pinnate; leaves deciduous; stipules absent; plants hermaphrodite or polygamous; ovary superior; stems woody; perianth absent; fruit samara; stamens 7 to 20 (-50); carpels 6 to 18. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Ranunculales page, Eupteleaceae (read 2026-10-16): axillary fascicles or umbels."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Ranunculales page, Eupteleaceae (read 2026-10-16): leaves spiral."
     }
   }
 }

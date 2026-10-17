@@ -4,6 +4,8 @@
   "name": "Oxalidaceae",
   "parent": "order/oxalidales",
   "traits": {
+    "corolla_shape": {"funnelform": "usually", "rotate": "sometimes"},
+    "division_pattern": {"palmate": "usually", "pinnate": "sometimes"},
     "flower_merosity": 5,
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
@@ -38,6 +40,8 @@
     }
   },
   "evidence": {
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Oxalidales page (read 2026-10-16): corolla contorted, petals clawed; claws held together form a funnel (my reading)."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Oxalidales page, Oxalidaceae (read 2026-10-16): Oxalis trifoliolate or palmate; pinnate in Averrhoideae and Biophytum."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

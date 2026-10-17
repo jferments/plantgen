@@ -4,6 +4,7 @@
   "name": "Typhaceae",
   "parent": "order/poales",
   "traits": {
+    "carpels": 1,
     "leaf_arrangement": "alternate",
     "phyllotaxis_pattern": "distichous",
     "woodiness": "herbaceous",
@@ -40,6 +41,7 @@
     }
   },
   "evidence": {
+    "traits.carpels": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Typhaceae (read 2026-10-16): gynoecium of one carpel; APweb Poales page (read 2026-10-16): G 1, possibly pseudomonomerous."},
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

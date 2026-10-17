@@ -4,6 +4,7 @@
   "name": "Araliaceae",
   "parent": "order/apiales",
   "traits": {
+    "division_pattern": {"palmate": "usually", "pinnate": "sometimes"},
     "flower_merosity": {"min": 5, "max": 5, "low": 3, "high": 12},
     "stamens": {"min": 5, "max": 10, "low": 3, "high": 120},
     "carpels": {"min": 2, "max": 5, "low": 1, "high": 200},
@@ -62,6 +63,7 @@
     }
   },
   "evidence": {
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Apiales page, Araliaceae (read 2026-10-16): Aralioideae pinnately to palmately compound. 'usually palmate' is our weighting (Schefflera s.l., Oreopanax, Hedera and Hydrocotyle palmate or palmately lobed; Polyscias, Aralia pinnate)."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431, 435: 5, rarely 3 to 12, petals."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431, 435: stamens 5 to 10, rarely 3 to many; Floral Diagrams p. 340 gives up to 120."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431, 435: carpels 2 to 5, rarely to many; Floral Diagrams p. 340 general formula 1 to 10, up to 200."},

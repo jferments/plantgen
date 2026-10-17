@@ -26,6 +26,16 @@
     },
     "sexual_system": {
       "hermaphrodite": "usually"
+    },
+    "stamens": {
+      "min": 6,
+      "max": 12,
+      "typical": 6
+    },
+    "carpels": {
+      "min": 4,
+      "max": 6,
+      "typical": 6
     }
   },
   "forms": {
@@ -72,6 +82,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 203, 204, family Aristolochiaceae: sexual system hermaphrodite (gynomonoecious in Lactoris), usually. Read together as {\"hermaphrodite\": \"usually\"}."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): stamens 6 in perianth-opposed pairs (Aristolochia); Asarum 12. No order value proposed; stated for the family itself."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): carpels basically free to joined, inferior; six in most (range our reading, medium confidence). No order value proposed."
     }
   }
 }

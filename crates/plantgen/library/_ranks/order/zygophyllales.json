@@ -2,5 +2,102 @@
   "schema": 1,
   "rank": "order",
   "name": "Zygophyllales",
-  "parent": "clade/fabids"
+  "parent": "clade/fabids",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "decussate": "usually",
+      "spiral": "sometimes"
+    },
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "division_pattern": "pinnate",
+    "rosette": "none",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "corolla_shape": "rotate",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Zygophyllales page (read 2026-10-16): Zygophyllaceae (~325 spp.) usually opposite; Krameria (18 spp.) spiral."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): usually opposite (decussate not named; inferred from opposite pairs); Krameria spiral (APweb)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Zygophyllales page (read 2026-10-16): Zygophyllaceae usually compound; Krameria simple (or trifoliolate)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): compound leaves bifoliolate, ternate or paripinnate."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): shrubs, trees, herbs with jointed leafy stems."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): herbs usually perennial, some Tribulus, Kallstroemia, Zygophyllum annual; Krameria shrubs."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): solitary flowers axillary or leaf-opposed, or terminal; weighting mine."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): regular; APweb: Krameria monosymmetric."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): free spreading clawed petals."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Zygophyllales page (read 2026-10-16): all floral parts free apart from the carpels; no hypanthium mentioned."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): ovary superior."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-16): mostly hermaphrodite; Neoluederitzia dioecious."
+    }
+  }
 }

@@ -43,7 +43,8 @@
       "min": 3,
       "max": 100
     },
-    "leaf_margin": "serrate"
+    "leaf_margin": "serrate",
+    "phyllotaxis_pattern": "decussate"
   },
   "evidence": {
     "traits": {
@@ -55,6 +56,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 196, family Atherospermataceae: leaf margin serrate; read as \"serrate\"."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): leaves opposite, coarsely toothed."
     }
   }
 }

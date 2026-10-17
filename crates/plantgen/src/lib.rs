@@ -498,9 +498,60 @@ pub mod venation;
 /// rachis take the leaf axis's colour, a palm trunk may be ringed by its
 /// leaf scars, and a crownshaft is a closed column (80 is shape and
 /// fruit words, #155).
-/// 82: a far level's spine tint greys with each station's age as the near
+/// 82: palms, cycads and tree ferns in their described shades (palm
+/// program revision 10): colours their authors chose by eye as screen
+/// (sRGB) shades are read as the linear light a colour field holds, so
+/// trunks, fronds, boots and dead fronds no longer draw near white;
+/// Phoenix's lowest leaflets are spines (`acanthophylls`), and a palm
+/// without a crownshaft may clasp its stem with its fronds' sheaths
+/// (`sheath_length`), the California fan palm's chestnut leaf bases
+/// (81 is cycads, palms and tree ferns told apart, #154).
+/// 83: a blade's tip and base draw as stated (`leaf_apex`,
+/// `leaf_base_shape`): hollow-sided, straight, blunt, rounded or square
+/// over its last and first three tenths (`Simple.apex_taper`,
+/// `Simple.base_taper`), with a tail, cusp, mucro or bristle beyond its
+/// tip (`Simple.apex_point`) or a notch in it (`Simple.apex_notch`); a
+/// petal is as broad for its length as its outline is stated among any
+/// count of petals (`Flower.petal_ratio`, from `petal_shape`) and its tip
+/// as pointed or notched as stated (`petal_apex`) (82 is palm, cycad
+/// and tree fern shades, #162).
+/// 84: a blade stated serrate, dentate, crenate or spiny draws teeth
+/// (`teeth`, `tooth_depth` and the new `round`, from `leaf_margin`, at the
+/// kingdom), where its own look draws none: Chloranthaceae's leaves, and
+/// rosette leaves that take the species' margin; a species' own teeth
+/// stand (83 is leaf tip, base and petal words, #161).
+/// 85: the conifers' pipe model takes its exponent from a parameter
+/// (`pinidae` revision 11, `pipe_exponent`, 2.4 as before), and ponderosa
+/// pine's stout shoots (0.7 to 2 cm, Farjon 2017) grow on stout limbs that
+/// hold their line at 100 years, where thin limbs under its heavy needle
+/// tufts hung as whips; a conifer with short shoots (`spur_years`, as
+/// in larches) leafs out again along its older wood each year, so a
+/// deciduous larch keeps its needle tufts along its branches; and a
+/// needle card shades with its needles' own area, not its painted lines,
+/// which drew each needle at least two texels wide and counted the
+/// crossing card's needles again, 2.2 to 4.6 times their area: conifers'
+/// crowns had starved to tufts at their limb tips and now carry foliage
+/// along their limbs, a pine's card is one brush of needles at their
+/// stated length (Pinus rules), and the module limit is 4,000,000; a
+/// conifer's apex lives on shoots down to 5 mm, not 25, so a narrow,
+/// slow crown such as subalpine fir's stays dense along its limbs (84 is
+/// leaf teeth, #157).
+/// 86: a flowering look the files leave without a year takes one from the
+/// months its taxa state it flowers and fruits in (`appearance.organs.*.
+/// season`): a flower's look becomes its look in flower and its own look
+/// its fruit, drawn by the fruit's rules (its colour, a cluster's fruit at
+/// its stated size, unripe fruit in the leaf green); a head or spikelet
+/// keeps its look; a herb's bud and fruit organs show only in their own
+/// stages. A lone flower's fruit is drawn at the fruit's size, not the
+/// flower's (`season.fruit_size`), a cluster whose fruit outgrow it grows
+/// to hold them, and a cluster still flowering when its first fruit ripen
+/// opens over those months (`season.opening`). The four Chloranthaceae,
+/// which flowered all year and never fruited, now bud, flower, fruit and
+/// drop in their months, as do the magnoliids that state their months
+/// (85 is conifer foliage along the limbs, #142).
+/// 87: a far level's spine tint greys with each station's age as the near
 /// levels' spines do, covers a rib valley half as much as a crest, and
 /// hides half the skin it did, so a spiny cactus keeps its colour and rib
 /// shading from afar; cacti state stem, spine, old spine and wool colours,
-/// which the family's rules draw (81 is cycads, palms and tree ferns, #154).
-pub const GENERATOR_REVISION: u32 = 82;
+/// which the family's rules draw (86 is flowering years, #159).
+pub const GENERATOR_REVISION: u32 = 87;

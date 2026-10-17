@@ -32,18 +32,26 @@
         "generator.params.dead_angle": {
           "rule": "172",
           "why": "A dead frond hangs close against the stem, as the built-in California fan palm's do."
+        },
+        "generator.params.acanthophylls": {
+          "rule": "10",
+          "why": "The lowest leaflets of every Phoenix leaf are spines (acanthophylls): ten pairs, set by eye from photographs, a few of the leaf's seventy-odd pairs."
+        },
+        "generator.params.spine_length": {
+          "rule": "0.2",
+          "why": "The highest spine 20 cm, the lowest 8 cm, set by eye from photographs: stiff, as long as a short leaflet near the leaf base."
         }
       },
       "evidence": {
         "rules": {
           "evidence": "SourceInferred",
           "source": "genera-palmarum-2008",
-          "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its dead leaves stay on the stem (marcescent) rather than falling cleanly."
+          "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its dead leaves stay on the stem (marcescent) rather than falling cleanly. The proximal leaflets are modified as spines, acanthophylls, by which the genus is instantly recognised (p. 242); how many and how long set by eye from photographs."
         },
         "appearance": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "A dead frond drawn as the built-in palms draw theirs: a brown fan for a fan palm, a brown feather frond for a feather palm."
+          "note": "A dead frond drawn as the built-in palms draw theirs: a brown fan for a fan palm, a brown feather frond for a feather palm. Dead fronds a mid brown (linear [0.2, 0.15, 0.1]; they drew near white at [0.5, 0.42, 0.3]); spines stiff, narrow and tapering to a point, yellowish green as in photographs."
         }
       },
       "appearance": {
@@ -56,7 +64,15 @@
               "divided": 0,
               "stipe": 0.2
             },
-            "colour": [0.5, 0.42, 0.3]
+            "colour": [0.2, 0.15, 0.1]
+          },
+          "spine": {
+            "shape": {
+              "template": "blade",
+              "taper": 1,
+              "aspect": 0.06
+            },
+            "colour": [0.22, 0.2, 0.09]
           }
         }
       }

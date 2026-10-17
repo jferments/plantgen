@@ -30,13 +30,19 @@
     "carpels": {
       "min": 3,
       "max": 4
-    }
+    },
+    "rosette": "none"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Myrothamnaceae: leaves opposite; leaves simple; margins dentate; veins palmate; blades oblong or obovate; stipules present; plants dioecious; ovary superior; stems woody; flowers in spikes or in catkins; flowers actinomorphic; perianth absent; fruit follicle; stamens 3 to 8; carpels 3 to 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Gunnerales (read 2026-10-16): Myrothamnus a shrub of dry places."
     }
   }
 }

@@ -347,6 +347,13 @@ pub struct Season {
     /// by default.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub opening: f64,
+    /// Its size in fruit as a share of its size as grown, 0.05 to 20; 1
+    /// by default. A lone flower's organ is grown as wide as its flower, so
+    /// its fruit is this share of it, and every stage's size is this share
+    /// of the organ's; a cluster grown as long as its inflorescence is
+    /// drawn this much longer in fruit, where its fruit outgrow it.
+    #[serde(default = "full_size", skip_serializing_if = "is_full_size")]
+    pub fruit_size: f64,
     /// Its look in bud; without one, a third the size of its flower: a
     /// lone flower or head itself, closed; else a closed bud in the
     /// flower's colour half turned to the foliage's, whole where its
@@ -590,6 +597,7 @@ impl Season {
         }
         within("season ripening", self.ripening, 0.0, 200.0)?;
         within("season opening", self.opening, 0.0, 180.0)?;
+        within("season fruit size", self.fruit_size, 0.05, 20.0)?;
         for look in [&self.bud_look, &self.flower_look].into_iter().flatten() {
             look.shape.validate()?;
             for colour in [look.colour, look.accent].into_iter().flatten() {
@@ -786,6 +794,10 @@ pub struct Simple {
     /// Teeth on each side; 0 for an entire margin.
     pub teeth: u32,
     pub tooth_depth: f64,
+    /// How rounded the teeth are, from 0 (saw teeth pointing to the tip,
+    /// serrate) to 1 (rounded scallops, crenate), as a sprig's leaves'.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub round: f64,
     pub petiole: f64,
     /// How far the blade's two basal lobes reach back past where the
     /// petiole meets it, beside the petiole, as a share of the blade's
@@ -798,6 +810,26 @@ pub struct Simple {
     /// blade, whose veins all leave the midrib along its length.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub fan: u32,
+    /// How the blade narrows over its last [`crate::templates::ENDS`] to
+    /// its tip, as the power of that narrowing: 1 straight sides to a
+    /// point (acute), above 1 hollow sides drawn out (acuminate), below 1
+    /// full sides, rounded near 0.35 and cut nearly square near 0.1
+    /// (truncate). Unset, the outline (or `tip`) alone shapes the tip.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub apex_taper: Option<f64>,
+    /// The same, for the blade's first stretch above its base: 1 a
+    /// straight wedge (cuneate), above 1 a long taper (attenuate), below
+    /// 1 rounded or cut square (truncate).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base_taper: Option<f64>,
+    /// A narrow point beyond the blade's tip, as a share of the blade's
+    /// length: a mucro, a cusp, a tail (caudate). 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub apex_point: f64,
+    /// How deep a notch cuts into the blade's tip along the midrib, as a
+    /// share of the blade's length (emarginate, retuse). 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub apex_notch: f64,
 }
 
 impl Default for Simple {
@@ -810,9 +842,14 @@ impl Default for Simple {
             base: 0.5,
             teeth: 0,
             tooth_depth: 0.03,
+            round: 0.0,
             petiole: 0.15,
             sinus: 0.0,
             fan: 0,
+            apex_taper: None,
+            base_taper: None,
+            apex_point: 0.0,
+            apex_notch: 0.0,
         }
     }
 }
@@ -1058,6 +1095,11 @@ pub struct Flower {
     /// elliptic petal with an acute tip.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub taper: Option<f64>,
+    /// A petal's width over its length where widest, as its outline is
+    /// stated (`petal_shape`): set, it gives `petal_width` for the
+    /// flower's own count of petals (see [`Flower::petal_share`]).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub petal_ratio: Option<f64>,
     /// Depth of a notch in each petal tip, 0 to 1; a lip's lobes.
     pub notch: f64,
     /// Radius of the centre, in the accent colour, over the flower's.
@@ -1169,6 +1211,7 @@ impl Default for Flower {
             petal_width: 1.0,
             point: 0.0,
             taper: None,
+            petal_ratio: None,
             notch: 0.0,
             centre: 0.18,
             perianth: Perianth::Corolla,
@@ -1203,6 +1246,18 @@ impl Default for Flower {
 }
 
 impl Flower {
+    /// Petal width as `petal_width` gives it, 1 leaving a little gap
+    /// between neighbours: from `petal_ratio` where it is set, a petal as
+    /// wide for its length as its outline is stated, among as many petals
+    /// as the flower draws.
+    #[must_use]
+    pub fn petal_share(&self) -> f64 {
+        self.petal_ratio.map_or(self.petal_width, |ratio| {
+            let half = std::f64::consts::PI / f64::from(self.petals.max(3));
+            (ratio / (1.32 * crate::math::tan(half))).clamp(0.1, 1.5)
+        })
+    }
+
     /// Whether the flower is drawn as before P5: one whorl of alike petals
     /// round a centre dome, nothing that the layout adds.
     #[must_use]
@@ -2111,7 +2166,14 @@ impl Shape {
         match self {
             Self::Needles(s) => {
                 count("twigs", s.twigs, 0, 12)?;
-                check("needle", s.needle, 0.01, 0.4)?;
+                // A shoot with no side twigs (a pine's tuft) has room across
+                // its card for longer needles.
+                check(
+                    "needle",
+                    s.needle,
+                    0.01,
+                    if s.twigs == 0 { 0.6 } else { 0.4 },
+                )?;
                 check("twig_angle", s.twig_angle, 10.0, 80.0)?;
                 if s.ranks != 0 && s.ranks != 2 {
                     return Err(format!("needles ranks must be 0 or 2, found {}", s.ranks));
@@ -2161,8 +2223,17 @@ impl Shape {
                 check("base", s.base, 0.0, 1.0)?;
                 count("teeth", s.teeth, 0, 60)?;
                 check("tooth_depth", s.tooth_depth, 0.0, 0.2)?;
+                check("round", s.round, 0.0, 1.0)?;
                 check("sinus", s.sinus, 0.0, 0.5)?;
                 count("fan", s.fan, 0, 4)?;
+                if let Some(power) = s.apex_taper {
+                    check("apex_taper", power, 0.05, 4.0)?;
+                }
+                if let Some(power) = s.base_taper {
+                    check("base_taper", power, 0.05, 4.0)?;
+                }
+                check("apex_point", s.apex_point, 0.0, 0.3)?;
+                check("apex_notch", s.apex_notch, 0.0, 0.2)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Lobed(s) => {
@@ -2215,6 +2286,9 @@ impl Shape {
                     ));
                 }
                 check("petal_width", s.petal_width, 0.1, 1.5)?;
+                if let Some(ratio) = s.petal_ratio {
+                    check("petal_ratio", ratio, 0.05, 2.0)?;
+                }
                 check("point", s.point, 0.0, 1.0)?;
                 if let Some(taper) = s.taper {
                     check("taper", taper, 0.2, 3.0)?;
@@ -2982,8 +3056,23 @@ pub fn staged(graph: &crate::graph::PlantGraph, sizes: &[f64]) -> Option<crate::
     })
 }
 
-/// `look` as it is on `day` of `season`, and its size as a share.
+/// `look` as it is on `day` of `season`, and its size as a share of its
+/// size as grown: a lone organ's every stage, and a cluster in fruit,
+/// scaled by the season's `fruit_size`.
 fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look, f64) {
+    let lone = look.inflorescence.is_none();
+    let fruit = matches!(season.stage(day), Stage::Fruit { .. });
+    let (look, size) = in_stage_of(look, season, day, foliage);
+    if lone || fruit {
+        (look, size * season.fruit_size)
+    } else {
+        (look, size)
+    }
+}
+
+/// `look` as it is on `day` of `season`, and its size as a share of its
+/// size in fruit.
+fn in_stage_of(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look, f64) {
     let stage = season.stage(day);
     let whole = match stage {
         Stage::Bud => season.bud(&look.shape, look.colour, foliage).whole,
@@ -3492,6 +3581,26 @@ impl OrganLook {
 mod tests {
     use super::*;
 
+    #[test]
+    fn a_petal_drawn_from_its_ratio_is_as_wide_among_any_count() {
+        let ratio = |petals: u32| Flower {
+            petals,
+            petal_ratio: Some(0.5),
+            ..Flower::default()
+        };
+        // The plain card's widest petal over its length (`templates.rs`):
+        // 1.32 tan(pi / petals) times the share.
+        for petals in [3, 5, 8] {
+            let flower = ratio(petals);
+            let drawn = 1.32
+                * crate::math::tan(std::f64::consts::PI / f64::from(petals))
+                * flower.petal_share();
+            assert!((drawn - 0.5).abs() < 1e-9, "{petals}");
+        }
+        let unset = Flower::default();
+        assert_eq!(unset.petal_share(), unset.petal_width);
+    }
+
     /// Only a leaf on a petiole, drawn on a card, has an insertion.
     #[test]
     fn an_insertion_is_a_leafs() {
@@ -3904,6 +4013,7 @@ mod tests {
             ripening: 20.0,
             fall: 245.0,
             opening: 0.0,
+            fruit_size: 1.0,
             bud_look: None,
             flower_look: Some(StageLook {
                 shape: Shape::Flower(Flower::default()),
@@ -4035,6 +4145,7 @@ mod tests {
             ripening: 10.0,
             fall: 200.0,
             opening: 10.0,
+            fruit_size: 1.0,
             bud_look: None,
             flower_look: None,
         }

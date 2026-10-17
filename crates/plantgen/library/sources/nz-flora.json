@@ -1,0 +1,10 @@
+{
+  "id": "nz-flora",
+  "title": "Flora of New Zealand (online factsheets); each note names the taxon page and the date it was read",
+  "authors": "Manaaki Whenua - Landcare Research",
+  "year": 2026,
+  "url": "https://www.nzflora.info/",
+  "licence": "copyrighted text; facts only",
+  "tier": 1,
+  "kind": "text"
+}

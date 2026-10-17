@@ -2,5 +2,133 @@
   "schema": 1,
   "rank": "order",
   "name": "Malpighiales",
-  "parent": "clade/fabids"
+  "parent": "clade/fabids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "often",
+      "decussate": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "division_pattern": {
+      "palmate": "usually",
+      "pinnate": "sometimes"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "rarely"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "raceme": "sometimes",
+      "panicle": "sometimes",
+      "solitary": "sometimes"
+    },
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "hypanthium": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "rarely"
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 3,
+      "low": 1,
+      "high": 20
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "often",
+      "berry": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae and Phyllanthaceae (read 2026-10-16): mostly alternate; DELTA Guttiferae: mostly opposite. Opposite in Clusiaceae, Hypericaceae, Calophyllaceae, Malpighiaceae, Rhizophoraceae (~3,500 of ~16,000 spp.), hence 'sometimes'."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae (read 2026-10-16): spiral or distichous; DELTA Chrysobalanaceae and Erythroxylaceae: spiral (mostly). Weighting by Euphorbiaceae; opposite-leaved families overridden to decussate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae (read 2026-10-16): leaves usually simple, palmate when compound; Phyllanthaceae, Chrysobalanaceae, Erythroxylaceae simple."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae (read 2026-10-16): compound leaves palmate (Hevea, Manihot, Ricinus lobing); Passiflora lobing palmate (my knowledge); Ochnaceae pinnate rarely."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA pages read (2026-10-16) describe trees, shrubs, leafy herbs; rosettes only in some Viola and Achariaceae (both state their own)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae/Phyllanthaceae (read 2026-10-16): trees, shrubs, herbs; annuals in Euphorbia, Phyllanthus, Linum, Viola, Elatine. 'usually' is my weighting (mostly woody tropical order)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae (read 2026-10-16): ultimate units nearly always cymose; DELTA Phyllanthaceae: axillary thyrses or glomerules; DELTA Erythroxylaceae: axillary fascicles."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Phyllanthaceae and Erythroxylaceae (read 2026-10-16): axillary; DELTA Euphorbiaceae: terminal or axillary; DELTA Guttiferae: terminal. Weighting is mine."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae, Phyllanthaceae, Erythroxylaceae (read 2026-10-16): regular; DELTA Chrysobalanaceae: usually irregular; Violaceae and many Malpighiaceae zygomorphic."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Chrysobalanaceae (read 2026-10-16): free tubular hypanthium, unusual in the order; Euphorbiaceae, Phyllanthaceae none. Passifloraceae and Rhizophoraceae overridden."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae, Phyllanthaceae (read 2026-10-16): superior; half-inferior or inferior only in Rhizophoraceae and some Dichapetalaceae/Achariaceae (they state it)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malpighiales page, order characterisation (read 2026-10-16): gynoecium often of three carpels."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Euphorbiaceae (read 2026-10-16): mostly dry schizocarpic/capsular fruits; Phyllanthaceae capsule, berry or drupe; Chrysobalanaceae and Erythroxylaceae drupes."
+    }
+  }
 }
