@@ -40,10 +40,7 @@
     "phyllotaxis_pattern": {
       "spiral": "usually"
     },
-    "leaf_division": {
-      "compound": "often",
-      "simple": "often"
-    },
+    "leaf_division": {"compound": "usually", "simple": "often"},
     "flowering_position": {
       "terminal": "usually"
     }
@@ -89,11 +86,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 431, family Araliaceae: phyllotaxis pattern spiral (rarely opposite or whorled), usually; read as {\"spiral\": \"usually\"}."
     },
-    "traits.leaf_division": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 431, family Araliaceae: leaf division palmate, pinnate or simple (often lobed); read as {\"compound\": \"often\", \"simple\": \"often\"}."
-    },
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Araliaceae (read 2026-10-17; old circumscription, ~700 spp, 49 genera, Hydrocotyle excluded) codes leaves as mostly simple, often dissected, otherwise ternate, pinnate, palmate or decompound; its ranking counts genera, not species. Weighted by species (approximate modern sizes, not read this session): palmately compound Schefflera s.l. with Heptapleurum and Didymopanax (~600), pinnate Polyscias (~160), Aralia (~70), Eleutherococcus and Panax outweigh simple-leaved Hydrocotyle (~150), Oreopanax (mostly simple, ~150), Dendropanax (~90), Hedera, Fatsia, Trevesia. DELTA's genus-based 'mostly simple' conflicts, so medium. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.flowering_position": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
