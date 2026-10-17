@@ -4,11 +4,13 @@
   "name": "Carnegiea",
   "parent": "subfamily/cactoideae",
   "traits": {
+    "fruit_surface": "scaly",
     "wood_density_basic_kg_m3": 380,
     "stem_form": "columnar",
     "tubercles": false
   },
   "evidence": {
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: a long pericarpel and tube with many distinct clasping scales and felted areoles; the fruit red, fleshy, with scales."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Carnegiea (gwddagg_v2.2_genus.csv, read): specific gravity 0.38 (wsg_est, the hierarchical-model genus mean, from 1 record in 1 source); trunks 0.38, branches 0.42. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
     "traits": {
       "evidence": "SourceInferred",

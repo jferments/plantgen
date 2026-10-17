@@ -620,4 +620,10 @@ pub mod venation;
 /// `flower_zone`: a hedgehog's along the upper half of its stems, an organ
 /// pipe's near the tips and down their sides (103 is spines on the
 /// upper areoles).
-pub const GENERATOR_REVISION: u32 = 104;
+/// 105: a cactus's fruit wears its pericarpel (`FruitKind::Scaly`,
+/// `Areolate` and `Spiny`, from the new `fruit_surface`): broad scales on
+/// a barrel's or the saguaro's, felted areoles with glochids on a prickly
+/// pear's, areoles with short spines on a hedgehog's, the organ pipe's or
+/// a spiny cholla's, each crowned by its dried perianth (104 is flank
+/// flowers).
+pub const GENERATOR_REVISION: u32 = 105;

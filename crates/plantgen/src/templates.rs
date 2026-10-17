@@ -3360,6 +3360,29 @@ fn one_fruit(
             let seeds = (math::cos(std::f64::consts::TAU * 5.0 * t)).max(0.0);
             Paint::solid(0.65 + 0.25 * seeds + 0.2 * math::sqrt(1.0 - d), 0.0)
         }
+        FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
+            let d = ellipse(0.5, 0.5, 1.0);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            // The dried perianth's dark crown, and the scales or felted
+            // areoles in offset rows over the skin.
+            if ellipse(0.94, 0.08, 0.32) < 1.0 {
+                return Paint::solid(0.4, 0.0);
+            }
+            let rows = 5.0;
+            let row = (t * rows).floor();
+            let offset = if row % 2.0 == 0.0 { 0.0 } else { 0.5 };
+            let du = frac(t * rows) - 0.5;
+            let dv = frac(v * 1.6 + offset) - 0.5;
+            let dot = du * du + dv * dv < 0.03;
+            let bright = match (dot, s.kind) {
+                (false, _) => ball(d, 0.5, 0.5),
+                (true, FruitKind::Scaly) => 0.55,
+                (true, _) => 1.25,
+            };
+            Paint::solid(bright, 0.0)
+        }
         FruitKind::Capsule => {
             let d = ellipse(0.5, 0.5, 1.0);
             if d >= 1.0 {

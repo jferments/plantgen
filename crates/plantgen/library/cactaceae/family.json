@@ -49,6 +49,11 @@
       "else": 0.9,
       "why": "A cactus's inner tepals are broad and overlap at their bases in a wheel or a cup, a little narrower in a bell or a funnel, and narrow in a tube."
     },
+    "appearance.organs.*.shape.kind": {
+      "template": "fruit",
+      "map": {"fruit_surface": {"naked": "crowned", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny"}},
+      "why": "A cactus's fruit is its pericarpel grown on, crowned by the dried perianth, and its bud the same pericarpel under the closed tepals: naked in a pincushion's, under broad scales in a barrel's or the saguaro's, studded with felted areoles in a prickly pear's, and with spines on those areoles in a hedgehog's, the organ pipe's or a spiny cholla's (Anderson, The Cactus Family pp. 31 to 33)."
+    },
     "appearance.bodies.stem.tubercles.height": {
       "map": {"tubercle_relief": {"barely": 0.01, "low": 0.03, "distinct": 0.2, "prominent": 0.42}},
       "why": "A tubercle stands from the stem as far as a flora's word for it says, as a share of the stem's radius: barely a swelling under each areole of a ribbed barrel (Anderson's Ferocactus wislizeni), low knobs along undulate ribs (F. cylindraceus), distinct knobs, or the prominent ones a cholla's joint is knobbly with."

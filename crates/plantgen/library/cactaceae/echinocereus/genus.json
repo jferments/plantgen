@@ -4,12 +4,14 @@
   "name": "Echinocereus",
   "parent": "subfamily/cactoideae",
   "traits": {
+    "fruit_surface": "spiny",
     "corolla_shape": "funnelform",
     "flower_zone": "upper_half",
     "stem_form": "columnar",
     "tubercles": false
   },
   "evidence": {
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 31, 33 and 231, Echinocereus: areoles with spines, bristles and sometimes wool on the pericarpel and floral tube; the fruit usually spiny, the spines sometimes shed, the dried perianth on top."},
     "traits.flower_zone": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001), Echinocereus: flowers lateral, from areoles below the stem apex, or bursting through the epidermis above them; E. engelmannii (pp. 235 to 236): flowers on the upper half of the stem."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 231, Echinocereus: flowers funnelform, with a green stigma, on a spiny pericarpel."},
     "traits": {

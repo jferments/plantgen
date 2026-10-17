@@ -1566,6 +1566,14 @@
       "values": ["berry", "drupe", "pome", "capsule", "pod", "legume", "nut", "samara", "achene", "cypsela", "caryopsis", "follicle", "schizocarp", "aggregate", "multiple"],
       "why": "what a fruit is (pod for dry pods that split other than a legume; cypsela for the achene of the daisy family)"
     },
+    "fruit_surface": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["naked", "scaly", "areolate", "spiny"],
+      "when": {"spines": ["areoles"]},
+      "why": "what a cactus's pericarpel, and the fruit it grows into, bears on its skin: nothing (naked), broad scales, felted areoles (with glochids but no spines), or areoles with spines"
+    },
     "fruit_size_m": {
       "group": "fruit_and_cones",
       "organ": "fruit",

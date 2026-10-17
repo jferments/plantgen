@@ -1980,6 +1980,15 @@ pub enum FruitKind {
     Pod,
     /// A capsule or follicle: ribbed lengthwise.
     Capsule,
+    /// A cactus fruit under broad scales, crowned by its dried perianth
+    /// (Ferocactus, saguaro).
+    Scaly,
+    /// A cactus fruit studded with felted areoles, crowned by its dried
+    /// perianth (prickly pears, spineless chollas).
+    Areolate,
+    /// A cactus fruit whose areoles bear short spines, crowned by its
+    /// dried perianth (hedgehogs, organ pipe, spiny chollas).
+    Spiny,
 }
 
 impl FruitKind {

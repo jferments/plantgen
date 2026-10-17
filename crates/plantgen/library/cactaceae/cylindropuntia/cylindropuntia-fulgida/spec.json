@@ -140,6 +140,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_surface": "areolate",
     "tubercle_shape": "broad",
     "stem_colour": [110, 130, 100],
     "spine_colour": [215, 190, 100],
@@ -162,6 +163,7 @@
     "fruiting_months": [9, 10, 11, 12]
   },
   "evidence": {
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: fruit obconical, fleshy, mostly spineless, the tubercles obscure."},
     "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 209, Cylindropuntia fulgida: tubercles broadly oval."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: stem segments grey-green, becoming blackish."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: spines yellow, ageing darker."},

@@ -24,6 +24,9 @@
 //! | husked | a nut in its first third inside a husk drawn out into a beak |
 //! | pod | flat (a third as thick as wide), bulging over its seeds |
 //! | capsule | ribbed with three ribs |
+//! | scaly | the crowned berry under broad scales on a Fibonacci spiral |
+//! | areolate | the crowned berry studded with felted areoles on a spiral, each with a tuft of glochids |
+//! | spiny | the areolate berry, each areole with a star of short spines |
 //!
 //! A cone (`cone` of a half or more) is drawn as a single cone is
 //! (`crate::blooms`). Fruit in large clusters take fewer facets, so a
@@ -36,6 +39,15 @@ use crate::looks::{Fruit, FruitKind};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
+
+/// The tan felt of a cactus fruit's areoles.
+const FELT: [f32; 3] = [0.74, 0.66, 0.52];
+
+/// The straw of a cactus fruit's spines.
+const STRAW: [f32; 3] = [0.86, 0.8, 0.62];
+
+/// The brown a cactus fruit's perianth dries to, and its glochids.
+const DRIED: [f32; 3] = [0.36, 0.26, 0.16];
 
 /// The golden angle, degrees.
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
@@ -408,6 +420,13 @@ impl One {
                 capsule.rib_depth = 0.14;
                 capsule.draw(self.direction, self.across, body, part, mesh);
             }
+            FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
+                self.body()
+                    .draw(self.direction, self.across, body, part, mesh);
+                self.areoles(kind, body, part, mesh);
+                let dried = [0, 1, 2].map(|k| body[k] * 0.3 + DRIED[k] * 0.7);
+                self.calyx(0.95, 8, 0.3, 0.1, dried, part, mesh);
+            }
         }
         leaves::smooth_normals(mesh, first, first_index);
     }
@@ -442,6 +461,107 @@ impl One {
                 part,
                 mesh,
             );
+        }
+    }
+
+    /// A cactus fruit's skin, the pericarpel grown on (Anderson, The
+    /// Cactus Family pp. 31 to 33): broad scales lying toward its tip, or
+    /// felted areoles, each with a star of short spines on a spiny one,
+    /// on a Fibonacci spiral from near its base to below its crown.
+    fn areoles(&self, kind: FruitKind, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        let count: u32 = match self.detail.around {
+            10.. => 21,
+            8..=9 => 13,
+            _ => 8,
+        };
+        let spines: u32 = match self.detail.around {
+            14.. => 3,
+            10..=13 => 2,
+            _ => 0,
+        };
+        let other = self.direction.cross(self.across);
+        let golden = math::radians(GOLDEN_DEGREES);
+        let (a, b) = (self.length * 0.5, self.width * 0.5);
+        for i in 0..count {
+            // From near the base (z = -0.75) to below the crown (z = 0.8).
+            let z = -0.75 + 1.55 * (f64::from(i) + 0.5) / f64::from(count);
+            let ring = math::sqrt((1.0 - z * z).max(0.0));
+            let angle = golden * f64::from(i);
+            let radial = self.across * math::cos(angle) + other * math::sin(angle);
+            let at = self.at(0.5) + self.direction * (z * a) + radial * (ring * b);
+            let normal = (self.direction * (z / a) + radial * (ring / b)).normalize_or(radial);
+            // Up the skin toward the tip, and across it.
+            let up =
+                (self.direction - normal * self.direction.dot(normal)).normalize_or(self.direction);
+            let side = normal.cross(up);
+            if kind == FruitKind::Scaly {
+                // Broad and rounded, pressed to the skin and reaching
+                // toward the tip, a little darker.
+                let size = self.width * 0.24;
+                Spheroid {
+                    centre: at + up * (size * 0.3) + normal * (size * 0.05),
+                    a: size * 0.12,
+                    b: size * 0.45,
+                    c: size * 0.6,
+                    ribs: 0,
+                    rib_depth: 0.0,
+                    waves: 0,
+                    wave_depth: 0.0,
+                    detail: Detail {
+                        around: 6,
+                        rings: 2,
+                        fine: None,
+                    },
+                }
+                .draw(normal, side, blooms::shade(colour, 0.82), part, mesh);
+                continue;
+            }
+            // A round cushion of felt, half sunk in the skin.
+            let felt = self.width * 0.05;
+            let lifted = at + normal * (felt * 0.15);
+            Spheroid {
+                centre: lifted,
+                a: felt * 0.4,
+                b: felt,
+                c: felt,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: Detail {
+                    around: 5,
+                    rings: 2,
+                    fine: None,
+                },
+            }
+            .draw(normal, side, FELT, part, mesh);
+            // Spines on a spiny fruit; a tuft of short glochids on one
+            // with felted areoles alone.
+            let (reach, thin, spines, colour) = if kind == FruitKind::Spiny {
+                (
+                    self.length * 0.28,
+                    self.width * 0.012,
+                    spines + spines / 3,
+                    STRAW,
+                )
+            } else {
+                (self.length * 0.06, self.width * 0.006, spines, DRIED)
+            };
+            for k in 0..spines {
+                let turn = std::f64::consts::TAU * f64::from(k) / f64::from(spines) + angle;
+                let out = (side * math::cos(turn) + up * math::sin(turn)) * 0.75 + normal;
+                let out = out.normalize_or(normal);
+                let across = out.cross(normal).normalize_or(side) * thin;
+                blooms::wedge(
+                    lifted - across,
+                    lifted + across,
+                    lifted + out * reach,
+                    normal * thin,
+                    colour,
+                    part,
+                    mesh,
+                );
+            }
         }
     }
 
@@ -723,6 +843,9 @@ mod tests {
             FruitKind::Husked,
             FruitKind::Pod,
             FruitKind::Capsule,
+            FruitKind::Scaly,
+            FruitKind::Areolate,
+            FruitKind::Spiny,
         ];
         let organ = GraphOrgan {
             id: 11,

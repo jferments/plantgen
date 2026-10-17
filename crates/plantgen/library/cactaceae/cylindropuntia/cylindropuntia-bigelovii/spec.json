@@ -143,6 +143,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_surface": "areolate",
     "tubercle_relief": "prominent",
     "tubercle_shape": "elongate",
     "spine_colour": [215, 180, 80],
@@ -161,6 +162,7 @@
     "fruiting_months": [5, 6, 7]
   },
   "evidence": {
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: fruit leathery-fleshy, spineless, the tubercles fading."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
     "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: spines yellow to golden, becoming brown."},
