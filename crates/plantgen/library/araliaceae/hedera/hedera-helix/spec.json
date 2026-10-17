@@ -12,7 +12,7 @@
   "generator": {
     "params": {
       "shoots": 5,
-      "internode": 0.12,
+      "internode": 0.11,
       "max_shoot": 3,
       "cling": 0.2,
       "hug": 0.5,
@@ -137,7 +137,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an evergreen woody vine that climbs by clinging roots up trunks into the crowns of trees, with glossy, dark, three- to five-lobed leaves on climbing shoots and flowering, black-berried shoots where it reaches the light; introduced and invasive in the forests of the Pacific Northwest, where it smothers bigleaf maples. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: an evergreen woody vine that climbs by clinging roots up trunks into the crowns of trees, with glossy, dark, three- to five-lobed leaves on climbing shoots and flowering, black-berried shoots where it reaches the light; introduced and invasive in the forests of the Pacific Northwest, where it smothers bigleaf maples. Not fitted to measurements. Internode 0.11 (was 0.12) since woody forms (2026-10-17), when its host maple's fuller crown let it climb past its reference heights."
     },
     "allometry": {
       "evidence": "Authored",

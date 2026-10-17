@@ -24,9 +24,9 @@
       "apical_years": 15,
       "leaves_per_node": 1,
       "bud_years": 40,
-      "leaf_size": 0.14,
       "spur_leaf": 0.26,
       "spur_pairs": 3,
+      "short_share": 0.0833,
       "leaf_angle": 50,
       "leaf_years": 2,
       "lean": 12,
@@ -148,6 +148,7 @@
       "source": "plantgen-authors",
       "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long. Fitted so the tallest of five plants (seeds 1 to 5) stays within Jepson (1925): 4.57 m to 7.62 m tall. Once a leaf stayed one season, not two (leaf life, generator revision 44), more light reached the crown and, at 6.04, a plant reached 8.11 m."
     },
+    "generator.params.short_share": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (woody forms, 2026-10-17): a twelfth of its nodes grow short shoots, the share the flowering plants gave before every bud of a tree that does not grow long was made a short shoot. With that many short shoots this slow desert tree's long shoots fall below the vigour to grow by 25 years and it dies back, a fault of the model, not of the plant (desert ironwood bears its leaves in clusters on short shoots)."},
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
