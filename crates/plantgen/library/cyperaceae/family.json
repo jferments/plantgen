@@ -4,6 +4,8 @@
   "name": "Cyperaceae",
   "parent": "order/poales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_margin": {"entire": "usually", "serrate": "sometimes"},
     "leaf_arrangement": "alternate",
     "phyllotaxis_pattern": {
       "tristichous": "usually",
@@ -39,6 +41,8 @@
     "stem_cross_section": {"trigonous": "usually"}
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Cyperaceae (read 2026-10-17): lamina undivided in all; Britannica says blades mostly linear, flat or folded, never lobed."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Cyperaceae (read 2026-10-17): blade edges mostly entire but often carrying prickle hairs (a minutely scabrid, forward-toothed edge); Wikipedia Carex notes some broad blades with very sharp edges. Weighted to Carex and Cyperus, the largest genera; at drawing scale the edge reads as entire."},
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
       "source": "fna-23-cyperaceae",

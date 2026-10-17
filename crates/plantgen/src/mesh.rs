@@ -509,6 +509,9 @@ pub(crate) fn build_shaded(
     // Organs drawn as solid leaves, flowers or fruit at this level leave
     // the cards.
     let mut solid = leaves::solid_types(looks, level);
+    for (solid, lace) in solid.iter_mut().zip(crate::lace::lace_types(looks, level)) {
+        *solid |= lace;
+    }
     let blooms: Vec<bool> = looks
         .iter()
         .enumerate()
@@ -526,6 +529,7 @@ pub(crate) fn build_shaded(
     let colour =
         |look: &Look, organ: &GraphOrgan| organ_color(look, variation, organ.light, organ.id);
     leaves::build(graph, looks, level, &colour, &mut mesh.wood);
+    crate::lace::build(graph, looks, level, &colour, &mut mesh.wood);
     blooms::build(graph, looks, &blooms, &colour, &mut mesh.wood);
     if level <= 1 {
         let stem_hairs = appearance.stem_hairs.as_ref().filter(|hairs| hairs.drawn());
