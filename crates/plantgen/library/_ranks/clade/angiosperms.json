@@ -24,13 +24,42 @@
       "why": "A tree's or shrub's flowers borne in clusters of known length are drawn as the clusters; solitary flowers stay single."
     },
     "appearance.organs.*.inflorescence.size": {
-      "rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)",
-      "why": "A cluster's flower is as wide, for the cluster's length, as floras measure the flower and the inflorescence."
+      "map": {"inflorescence": {"raceme": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "spike": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "catkin": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "corymb": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "umbel": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "compound_umbel": 0.3, "panicle": 0.4, "cyme": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "scorpioid": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "head": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "spadix": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}, "solitary": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"}}},
+      "else": {"rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)"},
+      "why": "A cluster's flower is as wide, for the cluster's length, as floras measure the flower and the inflorescence; a panicle's or compound umbel's size is its branches' length, as their clusters draw it unless set."
     },
     "generator.params.flower_size": {
       "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "solitary": {"rule": "flower_size_m"}}},
       "else": {"rule": "flower_size_m"},
       "why": "A herb's flowering organ is as long as its inflorescence where its flowers are in clusters, else as wide as its flower."
+    },
+    "generator.params.units": {
+      "map": {"sympodium": {"none": 0, "monochasial": 6, "dichasial": 4}},
+      "why": "A stem that grows on past its flowers is drawn as a sympodium: six units above the first inflorescence where one bud grows on each time, four where two do (sixteen tips), so either reaches its height in units as long as its leaves allow; one that grows on from its tip ends in a raceme."
+    },
+    "generator.params.forks": {
+      "map": {"sympodium": {"monochasial": 1, "dichasial": 2}},
+      "why": "One shoot grows on past each inflorescence of a monochasium, two of a dichasium."
+    },
+    "generator.params.fork_angle": {
+      "map": {"sympodium": {"monochasial": 12, "dichasial": 30}},
+      "why": "A monochasium's shoot grows on nearly in line, the inflorescence pushed aside, so the stem zigzags a little; a dichasium's two shoots spread apart round the flower in their fork."
+    },
+    "generator.params.unit_leaves": {
+      "rule": "sympodial_unit_leaves",
+      "why": "Each unit of a sympodium bears as many leaves as its taxa state."
+    },
+    "generator.params.geminate": {
+      "map": {"leaves_geminate": {"true": 0.5, "false": 0}},
+      "why": "Geminate leaves are drawn as a pair at one node, the smaller half as long as the larger."
+    },
+    "generator.params.flower_tilt": {
+      "map": {"flower_posture": {"erect": 15, "ascending": 45, "spreading": 90, "nodding": 135, "pendent": 170}},
+      "why": "A flower on a sympodium's peduncle faces as its posture says: up, at a slant, level, down and out, or straight down."
+    },
+    "generator.params.bloom_angle": {
+      "map": {"flower_posture": {"erect": 20, "ascending": 45, "spreading": 80, "nodding": 120, "pendent": 150}},
+      "why": "A woody plant's bloom stands from its shoot as the flower's posture says; past a right angle it hangs."
     },
     "generator.params.bloom_size": {
       "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "solitary": {"rule": "flower_size_m"}}},
@@ -185,6 +214,11 @@
       "map": {"corolla_shape": {"rotate": 0.3, "cupped": 0.3, "campanulate": 0.45, "funnelform": 0.4, "tubular": 0.2, "salverform": 0.12, "urceolate": 0.1}}, "between": true,
       "why": "A tube's mouth, over a petal's length: wide for a bell, narrow for a tube, narrower for a salver's or an urn's."
     },
+    "appearance.organs.*.shape.tube_reach": {
+      "template": "flower",
+      "rule": "clamp(corolla_tube_length_m / (0.5 * flower_size_m), 0, 12)",
+      "why": "A corolla tube a flora measures is drawn that long, over the flower's radius, however short its lobes leave it: a trumpet longer than it is wide."
+    },
     "appearance.organs.*.shape.belly": {
       "template": "flower",
       "map": {"corolla_shape": {"rotate": 0, "cupped": 0, "campanulate": 0, "funnelform": 0, "tubular": 0, "salverform": 0, "urceolate": 0.25}}, "between": true,
@@ -292,11 +326,19 @@
     "rules.appearance.organs.*.inflorescence.pedicel": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's stalk in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): as long as floras measure the pedicel, for the cluster's length."},
     "rules.appearance.organs.flower.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.bloom.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
-    "rules.appearance.organs.*.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
+    "rules.appearance.organs.*.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state. A panicle's branches, or a compound umbel's rays, are drawn 0.4 or 0.3 of its length, the clusters' own defaults, so its flowers are sized on the branch (nightshades, 2026-10-17)."},
     "rules.generator.params.fruit_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a fruit (morphology terms to drawing rules, 2026-10-16): a herb's fruit card is as long as the stated ripe fruit at its longest (fruit_size_m), where before every herb drew the program's 6 cm."},
     "rules.generator.params.fruit_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a fruit (morphology terms to drawing rules, 2026-10-16): a climber's, column's or epiphyte's fruit is as long as the stated ripe fruit at its longest (fruit_size_m)."},
     "rules.appearance.organs.*.shape.kind": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille's fruit types (pp. 162-163 of the PDF), with Simpson's Moraceae multiples: an achene, a cypsela (an achene from an inferior ovary) and a caryopsis (a grain) are small dry one-seeded fruits that do not open, a nut the same with a hard wall, so each is drawn as a plain ellipsoid; a schizocarp splits lengthwise into one-seeded mericarps, drawn ribbed lengthwise as a capsule; an aggregate fruit comes from the many free pistils of one flower and a multiple fruit from the flowers of a whole inflorescence, each a cluster of small fleshy units, drawn as drupelets."},
     "rules.generator.params.flower_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
+    "rules.generator.params.units": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a sympodial stem (nightshades, 2026-10-17): herb revision 10's sympodium, its units counted so a plant forks about as often as the floras' figures and photographs of tomato, jimsonweed and belladonna show; the floras say the stems fork or bear leaf-opposed clusters, not how many times."},
+    "rules.generator.params.forks": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a sympodial stem (nightshades, 2026-10-17): monochasial and dichasial are the botanist's words for one and two shoots growing on past a terminal flower."},
+    "rules.generator.params.fork_angle": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a sympodial stem (nightshades, 2026-10-17): angles by eye from photographs of tomato and jimsonweed (iNaturalist observations 184420443, 99933529)."},
+    "rules.generator.params.unit_leaves": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a sympodial stem (nightshades, 2026-10-17): the stated count drawn as it is."},
+    "rules.generator.params.geminate": {"evidence": "SourceInferred", "source": "kings-american-dispensatory-1898", "note": "King's American Dispensatory (1898 text, 1905 printing read on the Internet Archive, 2026-10-17), Belladonna, p. 332, citing Kilmer: the leaves come in two sizes, the smaller about half the larger. Drawn so for every species stating geminate leaves until one states its own ratio."},
+    "rules.generator.params.flower_tilt": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's posture (nightshades, 2026-10-17): the floras' words erect, ascending, spreading, nodding and pendent as angles from straight up, by eye from photographs of jimsonweed, pepper, belladonna and angel's trumpet (iNaturalist 99933529, 88011298, 133257326, 180856408)."},
+    "rules.generator.params.bloom_angle": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's posture (nightshades, 2026-10-17): the same words as angles from the shoot, a bloom past 90 degrees hanging, as the broadleaf program reads it."},
+    "rules.appearance.organs.*.shape.tube_reach": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a measured corolla tube (nightshades, 2026-10-17): its stated length over half the flower's stated width, so a trumpet is as long as the flora says, its limb as wide."},
     "rules.generator.params.bloom_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.bloom.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},

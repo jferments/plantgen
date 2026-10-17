@@ -20,8 +20,9 @@
 //! $`\mathrm{clamp}(\texttt{petal\_width}\cdot\pi(s+R)/n,\ 0.08L,\ L)`$ wide,
 //! and rises the form's `cup`. Roles (`corolla`) change the shape by place;
 //! a fused corolla is one surface of revolution from radius $`s`$ to
-//! `throat` $`\cdot L`$ over `fused` $`\cdot L`$, its petals free lobes on
-//! its mouth. Up to $`2n`$ stamens stand in whorls at $`0.5c`$ and
+//! `throat` $`\cdot L`$ over `fused` $`\cdot L`$ (or `tube_reach`
+//! $`\cdot R`$, a trumpet longer than its petals), its petals free lobes
+//! on its mouth. Up to $`2n`$ stamens stand in whorls at $`0.5c`$ and
 //! $`0.75c`$, the first alternating with the petals; more stand on a
 //! spiral, stamen $`i`$ of $`m`$ at radius
 //! $`c\,(0.35 + 0.6\sqrt{(i+\frac12)/m})`$ turned $`i \cdot 137.5°`$.
@@ -317,7 +318,11 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let whorled = matches!(flower.perianth, Perianth::Corolla | Perianth::Tepals);
     let tube = (whorled && flower.fused > 0.0).then(|| Tube {
         height: seat,
-        length: flower.fused * length,
+        length: if flower.tube_reach > 0.0 {
+            flower.tube_reach * r
+        } else {
+            flower.fused * length
+        },
         foot: s.max(r * 0.04),
         mouth: flower.throat * length,
         belly: flower.belly * length,

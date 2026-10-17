@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Nicotiana",
+  "traits": {
+    "sympodium": "none",
+    "inflorescence": "panicle",
+    "fruit_type": "capsule",
+    "leaf_division": "simple"
+  },
+  "evidence": {
+    "traits.sympodium": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): the flowers in panicles at the ends of the stems and branches, the stem branched only toward its top."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): flowers in terminal panicles; Bailey (vol. 4, p. 2143) for the genus: flowers in bracted panicles or racemes."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Nicotiana (genus account), p. 245 (read on the Internet Archive, 2026-10-17): capsule 2-celled, 2-valved to the middle."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1914-17), Nicotiana (genus account), p. 2143 (read on the Internet Archive, 2026-10-17): leaves alternate, never compound, entire or wavy, mostly sessile or nearly so."
+    }
+  }
+}

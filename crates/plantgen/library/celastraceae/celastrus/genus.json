@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Celastrus",
+  "traits": {
+    "fruit_type": "capsule",
+    "sexual_system": "polygamous"
+  },
+  "evidence": {
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus (genus account), p. 493 (read on the Internet Archive, 2026-10-17): capsule 2-4-celled, opening loculicidally into as many valves, the seeds in a scarlet aril."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "gray-1908",
+      "note": "Gray's New Manual, 7th ed. (1908), Celastrus, p. 557 (read on the Internet Archive, 2026-10-17): polygamo-dioecious; Britton and Brown (vol. 2 p. 493): dioecious or polygamous; Bailey (vol. 2 p. 700): polygamous."
+    }
+  }
+}

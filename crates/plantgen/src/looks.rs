@@ -1370,6 +1370,12 @@ pub struct Flower {
     /// How much the tube swells in its middle, over a petal's length.
     #[serde(skip_serializing_if = "is_zero")]
     pub belly: f64,
+    /// The corolla tube's length over the flower's radius, where a flora
+    /// measures it longer than `fused` of a petal reaches (a jimsonweed's,
+    /// a tobacco's or an angel's trumpet's): 0 leaves it `fused` of a
+    /// petal's length.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub tube_reach: f64,
     /// A spur's length over the flower's radius: every petal's on a regular
     /// corolla, a bilabiate lower lip's middle petal's, a lip's.
     #[serde(skip_serializing_if = "is_zero")]
@@ -1440,6 +1446,7 @@ impl Default for Flower {
             fused: 0.0,
             throat: THROAT,
             belly: 0.0,
+            tube_reach: 0.0,
             spur: 0.0,
             tube: 0.0,
             stamens: 0,
@@ -2526,6 +2533,7 @@ impl Shape {
                 check("fused", s.fused, 0.0, 0.95)?;
                 check("throat", s.throat, 0.05, 1.0)?;
                 check("belly", s.belly, 0.0, 0.5)?;
+                check("tube_reach", s.tube_reach, 0.0, 12.0)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
                 count("stamens", s.stamens, 0, 200)?;

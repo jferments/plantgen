@@ -1,0 +1,18 @@
+# The herbs of Solanaceae, on the herb base (growth plan G2.3a). A
+# nightshade's stem is a sympodium (herb revision 10): each unit ends in
+# an inflorescence that the next unit, from the axil of the leaf below,
+# pushes aside, so its flowers stand across from a leaf (tomatoes, the
+# true nightshades) or, where two units grow on, in the forks of its
+# branches (peppers, jimsonweed, belladonna). It gives the sympodium's
+# values its species leave unset, and keeps the leaves large up the
+# sympodium, as photographs of tomato, belladonna and pepper show.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem solanaceae 1 extends herb;
+
+param first_leaves = 8;          # leaves on the main stem below its first inflorescence
+param units = 5;                 # sympodial units a shoot grows past its first inflorescence
+param unit_leaves = 2;           # leaves on each sympodial unit
+param cyme_angle = 55;           # angle of an inflorescence's peduncle to its shoot
+param leaf_top = 0.75;           # the top leaf's length as a share of the longest

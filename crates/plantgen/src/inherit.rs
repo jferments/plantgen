@@ -1145,6 +1145,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("fused", Number),
                 ("throat", Number),
                 ("belly", Number),
+                ("tube_reach", Number),
                 ("spur", Number),
                 ("tube", Number),
                 ("stamens", Count),
