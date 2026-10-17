@@ -578,4 +578,8 @@ pub mod venation;
 /// bands, spots or mottles, a different share on every leaf; the royal
 /// palm's pinnae are paler below and the rattlesnake plantain's leaves
 /// carry their pale midvein band (90 is leaf hairs, #166).
-pub const GENERATOR_REVISION: u32 = 91;
+/// 92: stem hairs (`stem_hairs`, `crate::hairs::Tube`): the hairs on
+/// young stems and leaf stalks, in a blade's words and `crisped`, cast
+/// the first year's wood toward their colour, wear off in its second and
+/// up close stand from it as strands (91 is leaves with two faces, #164).
+pub const GENERATOR_REVISION: u32 = 92;

@@ -122,6 +122,7 @@
       "rounded": "often"
     },
     "leaf_hairs_beneath": "tomentose",
+    "stem_hairs": "tomentose",
     "leaf_habit": "deciduous",
     "inflorescence": "solitary",
     "flowering_position": "lateral",
@@ -223,6 +224,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): blade apex obtuse to rounded."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): young stem ribbed, tomentose. The petiole's hairs are not described; it is drawn with the young stem's (inferred)."
     },
     "traits.leaf_hairs_beneath": {
       "evidence": "SourceInferred",
