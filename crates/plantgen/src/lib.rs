@@ -648,10 +648,17 @@ pub mod venation;
 /// under the `indusium` stated; most pinnae of a fern whose fronds are
 /// alike, and only the fertile pinnae of a dimorphic one (101 is fern
 /// fiddleheads, #181).
+/// 103: 23 species state facts the species-facts records give that the
+/// checks now judge as floras measure them (#189): basal leaf sizes of
+/// foxglove, columbine, foamflower, bull thistle, lupine and mule's ears,
+/// grasses' and sedges' deciduous blades, and fruit, flower, cluster,
+/// shape and height facts held back from 96; broom's stated obovate
+/// leaflets draw where a hand-drawn profile stood (102 is fern sori,
+/// #182).
 /// 104: a fern's frond is green while it unrolls and turns to its stipe's
 /// colour after (the L-system's `young` and the appearance's `young_axis`,
 /// fern program revision 12), a crozier is scaly only where its stipe is
 /// scaly all along, its pinnae lie along its coil, and a ternate frond
 /// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (103
-/// is branched flowering herbs, #188).
+/// is species facts, #192).
 pub const GENERATOR_REVISION: u32 = 104;
