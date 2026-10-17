@@ -23,6 +23,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "ambrosia-dumosa",
+        "fruit_size_m",
+        "bursage first flowers with the family programs' blooms (revision 108): its bur, 4 to 6 mm with its hooked spines, is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
+    ),
+    (
+        "ambrosia-dumosa",
+        "involucre_diameter_m",
+        "bursage first flowers with the family programs' blooms (revision 108): its small staminate heads are drawn with the capitulum's default involucre, wider than the 3 to 5 mm the records give",
+    ),
+    (
+        "ambrosia-dumosa",
         "leaf_shape",
         "its dissected blade is drawn on a compound card of three pairs of lobed segments (spec rework E1), whose outline reads obovate or orbicular against the deltate, oblong or ovate outline Abrams and Ferris give the whole blade",
     ),
@@ -217,6 +227,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a climbing shoot adds one or two nodes a season, each with one leaf, so it bears 1 to 2 leaves a year against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "populus-tremuloides",
+        "juvenile_period_years",
+        "aspen first flowers with the family programs' blooms (revision 108): its stated 2 to 3 years is adult_age, but broadleaf bears blooms only on short shoots, which a young aspen whose buds all grow out as long shoots first makes in its fourth year",
+    ),
+    (
         "stachys-byzantina",
         "leaf_arrangement",
         "the herb program turns a stem's basal leaves one at a time by the divergence, not in pairs, so lamb's ear's rosette reads as alternate though its stem leaves stand in opposite pairs",
@@ -295,6 +310,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
+    ),
+    (
+        "vachellia-tortilis",
+        "inflorescence_length_m",
+        "umbrella thorn first flowers with the family programs' blooms (revision 108): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
     ),
 ];
 

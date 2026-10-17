@@ -681,4 +681,12 @@ pub mod venation;
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
 /// white clover's are (106 is evergreen herbs, #200).
-pub const GENERATOR_REVISION: u32 = 107;
+/// 108: the family programs built on broadleaf (asterales, fabales,
+/// malvaceae, moraceae, salicaceae, simmondsiaceae, each revision 2) bear
+/// one bloom on each short shoot in the light once adult where a species
+/// leaves `blooms` unset, as broadleaf's forms do; until now nine species
+/// on them (bursage, umbrella thorn, baobab, Florida strangler fig,
+/// aspen, black cottonwood, two willows, jojoba) never flowered or fruited,
+/// whatever months they stated. A regular flower is not judged by the
+/// kind of zygomorphy its family states (107 is variegation edges, #191).
+pub const GENERATOR_REVISION: u32 = 108;
