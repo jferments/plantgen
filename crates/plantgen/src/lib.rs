@@ -612,4 +612,7 @@ pub mod venation;
 /// 103: a flowering herb's top leaf nodes may each bear a side branch
 /// ending in a raceme (`flowering_branches`; herb program revision 10)
 /// (98 to 102 are held for #175, #174, #178, #181 and #182).
-pub const GENERATOR_REVISION: u32 = 103;
+/// 104: a flowering herb's side branches bear leaves, as large as the leaf
+/// in whose axil they stand, and branch again where the taxon states two
+/// orders (`flowering_branch_orders`; herb program revision 11).
+pub const GENERATOR_REVISION: u32 = 104;
