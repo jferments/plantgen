@@ -236,6 +236,13 @@ pub struct SpineSet {
     /// How far its tip turns back as a hook: a fishhook's 120 to 180,
     /// curled over the last eighth or so of its length.
     pub hook: f64,
+    /// How far the set keeps to the upper areoles of its segment, 0 to 1:
+    /// at 0 every areole carries the whole set; a pad's or joint's lower
+    /// areoles carry a share `1 - 2 distal (1 - along)` of it, so at 0.5
+    /// the lowest have none and at 1 the lower half none (see
+    /// [`crate::spines::thinning`]).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub distal: f64,
     /// Width at the base, metres, and thickness over width: below 1 a
     /// flattened spine.
     pub width: f64,
@@ -288,12 +295,18 @@ impl Default for SpineSet {
             length_spread: 0.2,
             curve: 0.0,
             hook: 0.0,
+            distal: 0.0,
             width: 0.0006,
             flat: 1.0,
             colour: [0.75, 0.7, 0.6],
             tip: None,
         }
     }
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f64) -> bool {
+    *value == 0.0
 }
 
 /// Spines bleach or grey as they age.
@@ -450,6 +463,7 @@ impl BodyLook {
             within("spines length_spread", set.length_spread, 0.0, 0.9)?;
             within("spines curve", set.curve, -180.0, 180.0)?;
             within("spines hook", set.hook, 0.0, 270.0)?;
+            within("spines distal", set.distal, 0.0, 1.0)?;
             within("spines width", set.width, 0.000_05, 0.01)?;
             within("spines flat", set.flat, 0.05, 1.0)?;
             colour_ok("spines colour", set.colour)?;
@@ -2126,6 +2140,7 @@ impl Body<'_> {
                 body,
                 born: station.born as f32,
                 shed: station.shed.map_or(f32::INFINITY, |shed| shed as f32),
+                along: (site.s / line.length.max(1e-9)).clamp(0.0, 1.0) as f32,
             };
             // A tuft is pushed only with its two cards, so on a level that
             // draws both the last cards are each tuft's star and fan in
@@ -2140,6 +2155,9 @@ impl Body<'_> {
                 Some(greying) => mix(colour, greying.colour, grey),
                 None => colour,
             };
+            // A lower areole whose spines keep to the upper ones draws
+            // a smaller card, by the share of spine it keeps.
+            let scale = scale * spines::kept(look, tuft.along).sqrt().max(0.3);
             let across = f64::from(reach.across) * scale;
             let side = normal.cross(up);
             #[allow(clippy::cast_possible_truncation)]

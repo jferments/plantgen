@@ -5,10 +5,12 @@
   "parent": "subfamily/cactoideae",
   "traits": {
     "corolla_shape": "funnelform",
+    "flower_zone": "upper_half",
     "stem_form": "columnar",
     "tubercles": false
   },
   "evidence": {
+    "traits.flower_zone": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001), Echinocereus: flowers lateral, from areoles below the stem apex, or bursting through the epidermis above them; E. engelmannii (pp. 235 to 236): flowers on the upper half of the stem."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 231, Echinocereus: flowers funnelform, with a green stigma, on a spiny pericarpel."},
     "traits": {
       "evidence": "SourceInferred",

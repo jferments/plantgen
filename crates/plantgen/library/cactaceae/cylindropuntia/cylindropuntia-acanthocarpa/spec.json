@@ -142,6 +142,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "lower_areole_spines": "fewer",
     "tubercle_relief": "prominent",
     "spine_colour": [175, 130, 75],
     "spine_colour_aged": [140, 138, 132],
@@ -167,6 +168,7 @@
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 204 to 205, Cylindropuntia acanthocarpa: flowers bright yellow to bronze to brick red (bronze here, the middle of the words); fruit dry, tan at maturity. Anderson gives the flower's length (2 to 3 cm) but not its width and no fruit size, so their sizes stay set by hand."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 204 to 205, Cylindropuntia acanthocarpa: flowers bright yellow to bronze to brick red (bronze here, the middle of the words); fruit dry, tan at maturity. Anderson gives the flower's length (2 to 3 cm) but not its width and no fruit size, so their sizes stay set by hand."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cylindropuntia acanthocarpa (gwddagg_v2.2_species.csv, read): specific gravity 0.64 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.64, branches 0.58. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
+    "traits.lower_areole_spines": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: spines 6 to 20, up to 30, mostly on the distal areoles."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",

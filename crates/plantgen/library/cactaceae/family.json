@@ -61,6 +61,22 @@
       "map": {"tubercle_shape": {"rounded": 0.9, "conical": 1.6, "cylindrical": 1.3, "elongate": 0.9, "broad": 0.8}},
       "why": "A conical tubercle comes to a point, a cylindrical one stands steep-sided, and rounded, elongate and broad ones are low mounds."
     },
+    "appearance.bodies.stem.spines.radial.distal": {
+      "map": {"lower_areole_spines": {"as_upper": 0.0, "fewer": 0.4, "sometimes_none": 0.5, "none": 1.0}},
+      "why": "A joint's lower areoles carry fewer spines, or none, where its flora puts them mostly or only on the upper areoles: the share rises toward the tip, and where the lower areoles have none, the lower half of the joint is bare of spines."
+    },
+    "appearance.bodies.stem.spines.central.distal": {
+      "map": {"lower_areole_spines": {"as_upper": 0.0, "fewer": 0.4, "sometimes_none": 0.5, "none": 1.0}},
+      "why": "The central spines keep to the upper areoles as the radials do."
+    },
+    "appearance.bodies.stem.spines.main.distal": {
+      "map": {"lower_areole_spines": {"as_upper": 0.0, "fewer": 0.4, "sometimes_none": 0.5, "none": 1.0}},
+      "why": "The main central keeps to the upper areoles as the other centrals do."
+    },
+    "generator.params.flank": {
+      "map": {"flower_zone": {"crown": 0, "crown_and_flanks": 6, "upper_half": 15}},
+      "why": "A column's flowers open in a ring round its apex, or also down its flank: near the tip and along the upper sides, on the last six years' growth, or from the upper half of a short, slow stem, on its last fifteen years'."
+    },
     "appearance.bodies.stem.colour": {
       "colour": "stem_colour",
       "why": "A cactus's skin is drawn in the colour its flora gives the stem or joints; its ribs' valleys darken it."

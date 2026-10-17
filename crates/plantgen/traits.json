@@ -529,6 +529,14 @@
       "when": {"spines": ["areoles"]},
       "why": "how far a cactus's tubercles stand from its stem: barely (ribs with at most a swelling under each areole), low, distinct knobs, or prominent ones"
     },
+    "lower_areole_spines": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["as_upper", "fewer", "sometimes_none", "none"],
+      "when": {"spines": ["areoles"]},
+      "why": "how a pad's or joint's lower areoles carry spines against its upper ones: as many, fewer (spines mostly on the distal areoles), sometimes none, or none (spines only on the upper areoles); the glochids are on every areole"
+    },
     "tubercle_shape": {
       "group": "stem_and_bark",
       "organ": "stem",
@@ -1831,6 +1839,14 @@
       "type": "enum",
       "values": ["terminal", "lateral", "both"],
       "why": "whether flowers end a shoot or sit beside its leaves"
+    },
+    "flower_zone": {
+      "group": "architecture",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["crown", "crown_and_flanks", "upper_half"],
+      "when": {"spines": ["areoles"]},
+      "why": "where a cactus column's flowers open: in a ring round its apex, near the apex and down the upper flanks, or along the upper half of the stem, below the apex"
     },
     "short_shoots": {
       "group": "architecture",

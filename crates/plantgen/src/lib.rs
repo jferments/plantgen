@@ -609,4 +609,15 @@ pub mod venation;
 /// thrice-divided leaf whose divisions roll round their rachis sets its
 /// segments round each pinnule's too; a leaflet may be as narrow as a
 /// hundredth of its length (96 is the species-facts records, #171).
-pub const GENERATOR_REVISION: u32 = 97;
+/// 103: a spine set can keep to the upper areoles of a pad or joint
+/// (`SpineSet::distal`, from `lower_areole_spines`): its lower areoles
+/// carry fewer spines or none and draw smaller far cards, and a tuft
+/// stores where it sits along its segment (98 to 102 are
+/// queued at the merge desk).
+/// 104: a cactus column's flowers may open down its flank as well as round
+/// its crown (`column` revision 3, `flank`: the pieces of its last flank
+/// years open a few on their sides; `cactaceae` revision 9), from the new
+/// `flower_zone`: a hedgehog's along the upper half of its stems, an organ
+/// pipe's near the tips and down their sides (103 is spines on the
+/// upper areoles).
+pub const GENERATOR_REVISION: u32 = 104;

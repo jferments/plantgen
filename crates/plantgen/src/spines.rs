@@ -3,7 +3,7 @@
 //! The body mesher (see [`crate::body`]) leaves one [`Tuft`] per areole:
 //! where it sits, which way it faces, and a seed. A tuft becomes its spines
 //! only when it is drawn, from its body's [`SpineSet`]s ([`expand`]), so a
-//! package stores 57 bytes per areole rather than the spines' triangles, and
+//! package stores 61 bytes per areole rather than the spines' triangles, and
 //! a renderer can expand the few thousand tufts nearest the camera on the
 //! GPU with the same arithmetic. Every draw is a hash of the tuft's seed and
 //! the spine's number ([`draw`]), in single precision as a shader computes
@@ -74,6 +74,10 @@ pub struct Tuft {
     /// infinity when it is never shed.
     pub born: f32,
     pub shed: f32,
+    /// Where the areole sits along its body segment, from its base (0)
+    /// to its tip (1): a pad's lower areoles carry fewer of a set that
+    /// keeps to the upper ones ([`thinning`]).
+    pub along: f32,
 }
 
 /// One spine, ready to draw.
@@ -126,6 +130,57 @@ pub fn count(set: &SpineSet, index: u32, seed: u32) -> u32 {
     )]
     let extra = (draw(seed, index, SET, 15) * (high - low + 1) as f32) as u32;
     low + extra.min(high - low)
+}
+
+/// Share of a set's spines an areole `along` its segment keeps when the
+/// set keeps to the upper areoles by `distal` (see
+/// [`crate::body::SpineSet::distal`]).
+#[must_use]
+pub fn thinning(distal: f32, along: f32) -> f32 {
+    (1.0 - 2.0 * distal * (1.0 - along)).clamp(0.0, 1.0)
+}
+
+/// How many of set `set`'s `n` spines the areole with `seed` `along` its
+/// segment keeps: the share [`thinning`] gives, rounded up or down by a
+/// draw, so the lowest areoles of a set kept above have none and the ones
+/// between have some.
+#[must_use]
+pub fn kept_count(set: &SpineSet, index: u32, seed: u32, along: f32, n: u32) -> u32 {
+    let share = thinning(single(set.distal), along);
+    if share >= 1.0 {
+        return n;
+    }
+    // A share of a small whole number, rounded by a draw.
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    let kept = (n as f32 * share + draw(seed, index, SET, 13)) as u32;
+    kept.min(n)
+}
+
+/// Share of an areole's spine, by count and length, that an areole
+/// `along` its segment keeps: 1 when no set keeps to the upper areoles.
+#[must_use]
+pub fn kept(look: &BodyLook, along: f32) -> f64 {
+    let (mut all, mut kept) = (0.0, 0.0);
+    for set in &look.spines {
+        let amount = f64::from(set.count[0] + set.count[1].max(set.count[0])) * set.length;
+        all += amount;
+        kept += amount * f64::from(thinning(single(set.distal), along));
+    }
+    if all > 0.0 { kept / all } else { 1.0 }
+}
+
+/// Mean share of a set's spines its areoles keep over a segment, for a
+/// set that keeps to the upper areoles by `distal`.
+fn mean_thinning(distal: f64) -> f64 {
+    if distal <= 0.5 {
+        1.0 - distal
+    } else {
+        0.25 / distal
+    }
 }
 
 fn v(a: [f32; 3]) -> [f32; 3] {
@@ -244,7 +299,14 @@ pub fn expand(tuft: &Tuft, look: &BodyLook, out: &mut Vec<Spine>) {
         // At most eight sets.
         #[allow(clippy::cast_possible_truncation)]
         let index = index as u32;
-        let n = count(set, index, tuft.seed).min(MAX_TUFT_SPINES - total);
+        let n = kept_count(
+            set,
+            index,
+            tuft.seed,
+            tuft.along,
+            count(set, index, tuft.seed),
+        )
+        .min(MAX_TUFT_SPINES - total);
         total += n;
         let all_round = set.arc >= 359.9;
         let rotation = draw(tuft.seed, index, SET, 14);
@@ -548,6 +610,7 @@ pub fn sample_tuft(seed: u32) -> Tuft {
         body: 0,
         born: 0.0,
         shed: f32::INFINITY,
+        along: 1.0,
     }
 }
 
@@ -785,7 +848,9 @@ pub fn cover(look: &BodyLook, area: f64) -> f64 {
     let felt = look.areoles.felt_radius;
     let mut hidden = std::f64::consts::PI * felt * felt;
     for set in &look.spines {
-        let count = f64::from(set.count[0] + set.count[1].max(set.count[0])) * 0.5;
+        let count = f64::from(set.count[0] + set.count[1].max(set.count[0]))
+            * 0.5
+            * mean_thinning(set.distal);
         let lying = crate::math::cos(crate::math::radians(set.angle)).max(0.2);
         // Thin spines hide less than their outline: 0.35 keeps the far
         // levels' mean colour with the nearest level's across the cacti.
@@ -872,6 +937,31 @@ mod tests {
             widest = widest.max(pair[1] - pair[0]);
         }
         assert!(widest < TAU / 4.0, "gap {widest}");
+    }
+
+    #[test]
+    fn a_set_kept_above_thins_toward_the_base() {
+        let mut look = look(vec![SpineSet {
+            count: [6, 6],
+            distal: 1.0,
+            ..SpineSet::default()
+        }]);
+        let at = |look: &BodyLook, along: f32| {
+            let mut spines = Vec::new();
+            let tuft = Tuft {
+                along,
+                ..sample_tuft(4)
+            };
+            expand(&tuft, look, &mut spines);
+            spines.len()
+        };
+        assert_eq!(at(&look, 1.0), 6, "the tip keeps the whole set");
+        assert_eq!(at(&look, 0.3), 0, "the lower half has none");
+        let middle = at(&look, 0.8);
+        assert!((3..=5).contains(&middle), "{middle}");
+        look.spines[0].distal = 0.0;
+        assert_eq!(at(&look, 0.0), 6, "an even set is whole at the base");
+        assert!((kept(&look, 0.0) - 1.0).abs() < 1e-9);
     }
 
     #[test]
