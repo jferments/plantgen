@@ -127,7 +127,8 @@
     "clonal": false,
     "inflorescence_posture": {"nodding": "usually", "erect": "sometimes"},
     "leaf_length_m": {"min": 0.1, "max": 0.6},
-    "flowering_months": [7, 8, 9]
+    "flowering_months": [7, 8, 9],
+    "fruiting_months": [8, 9]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -229,6 +230,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Aira caespitosa, no. 5): flowers July-September in bogs and wet places of the Pacific States."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (USDA Forest Service 1937, tufted hairgrass account, read 2026-10-16): flowering July to September and \"a large amount of good seed is produced and disseminated during August and September\"; read as August and September. Sampson (1917) says the crop is \"well ripened\" by mid-September in the Blue Mountains; FEIS (Walsh 1995) gives only \"7 to 8 weeks after initiation of leaf growth\" in alpine regions."
     }
   },
   "provenance": {

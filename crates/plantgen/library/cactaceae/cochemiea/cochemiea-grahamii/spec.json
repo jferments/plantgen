@@ -34,14 +34,12 @@
       "flowers": 10,
       "ring_angle": 55,
       "flower_angle": 40,
-      "flower_size": 0.025,
       "bud_share": 0.2,
       "fruit_share": 0.3,
       "bud_size": 0.01,
-      "fruit_size": 0.02,
-      "flower_area": 0.215,
+      "flower_area": 0.363,
       "bud_area": 0.636,
-      "fruit_area": 0.51
+      "fruit_area": 1.143
     }
   },
   "growth": {
@@ -62,14 +60,11 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 12,
           "stamens": 200,
-          "petal_width": 0.7,
           "point": 0.3,
           "notch": 0.0,
           "centre": 0.2
         },
-        "colour": [0.75, 0.3, 0.5],
         "accent": [0.6, 0.5, 0.2]
       },
       "bud": {
@@ -82,15 +77,12 @@
       "fruit": {
         "shape": {
           "template": "fruit",
-          "aspect": 0.4
-        },
-        "colour": [0.6, 0.08, 0.06]
+          "aspect": 0.9
+        }
       }
     },
     "bodies": {
       "stem": {
-        "colour": [0.1, 0.16, 0.07],
-        "valley": [0.05, 0.08, 0.035],
         "dome": 1.0,
         "tubercles": {
           "height": 0.25,
@@ -107,7 +99,6 @@
             "role": "radial",
             "angle": 8,
             "width": 0.00015,
-            "colour": [0.8, 0.78, 0.72],
             "angle_spread": 5,
             "length_spread": 0.25
           },
@@ -116,7 +107,6 @@
             "count": [0, 2],
             "angle": 50,
             "width": 0.0004,
-            "colour": [0.35, 0.25, 0.2],
             "angle_spread": 15,
             "arc": 200,
             "length_spread": 0.3
@@ -126,7 +116,6 @@
             "count": [1, 1],
             "angle": 60,
             "width": 0.0005,
-            "colour": [0.3, 0.18, 0.12],
             "angle_spread": 10,
             "arc": 0,
             "length_spread": 0.2,
@@ -157,6 +146,14 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [120, 160, 85],
+    "spine_colour": [200, 175, 150],
+    "central_spine_colour": [120, 85, 50],
+    "corolla_shape": {"campanulate": "usually", "funnelform": "often"},
+    "flower_colour": [200, 90, 150],
+    "flower_size_m": {"min": 0.02, "max": 0.045},
+    "fruit_colour_ripe": [175, 30, 35],
+    "fruit_size_m": {"min": 0.012, "max": 0.025},
     "carpels": {"min": 7, "max": 8},
     "radial_spines": {"min": 15, "max": 30},
     "radial_spine_length_m": {"min": 0.006, "max": 0.012},
@@ -165,6 +162,15 @@
     "central_spine_form": "hooked"
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: stems light green."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: radial spines white to light brown to reddish; light brown here, the middle of the words."},
+    "traits.central_spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: central spines yellowish brown to dark brown."},
+    "appearance.organs.fruit.shape.aspect": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: fruit subglobose, 12 to 25 mm long; nine tenths as wide as long by hand for 'subglobose', as no width is given."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
     "traits.radial_spines": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
