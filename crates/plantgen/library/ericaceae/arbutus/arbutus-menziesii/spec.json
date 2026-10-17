@@ -77,8 +77,7 @@
           "widest": 0.45,
           "tip": 0.3,
           "base": 0.6,
-          "teeth": 0,
-          "petiole": 0.1
+          "teeth": 0
         },
         "families": {
           "plasticity": 0.3,
@@ -148,6 +147,7 @@
       "min": 0.05,
       "max": 0.12
     },
+    "petiole_length_m": {"min": 0.013, "max": 0.025},
     "wood_density_basic_kg_m3": 570,
     "flowering_position": "terminal",
     "fruit_type": "berry",
@@ -183,6 +183,7 @@
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951), as Arbutus Menziesii: leaves 5 cm to 12 cm long."
     },
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent (1922), Arbutus Menziesii: petioles stout, grooved, about half an inch to an inch in length (the scan garbles the fractions; read as \u00bd to 1 inch, which the oak's, an inch at most, matches against Abrams' 15-25 mm), often slightly wing-margined toward the apex."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Arbutus menziesii (gwddagg_v2.2_species.csv, read): specific gravity 0.57 (wsg_est, the database's hierarchical-model species mean, from 6 records in 5 sources); trunks 0.57, branches 0.54. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

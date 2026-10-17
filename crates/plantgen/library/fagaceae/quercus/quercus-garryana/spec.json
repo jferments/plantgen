@@ -78,8 +78,7 @@
           "base": 0.35,
           "teeth": 4,
           "tooth_depth": 0.2,
-          "round": 0.8,
-          "petiole": 0.05
+          "round": 0.8
         },
         "families": {
           "plasticity": 0.8
@@ -143,6 +142,7 @@
       "min": 0.1,
       "max": 0.15
     },
+    "petiole_length_m": {"min": 0.015, "max": 0.025},
     "wood_density_basic_kg_m3": 650,
     "juvenile_period_years": 20,
     "flowering_months": [4, 5, 6],
@@ -173,6 +173,7 @@
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923), as Quercus garryana: leaves 10 cm to 15 cm long."
     },
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "Abrams vol. 1 (1923), as Quercus garryana: petioles pubescent, 15-25 mm long."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Quercus garryana (gwddagg_v2.2_species.csv, read): specific gravity 0.65 (wsg_est, the database's hierarchical-model species mean, from 5 records in 4 sources); trunks 0.65, branches 0.65. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
