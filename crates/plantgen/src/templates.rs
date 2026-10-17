@@ -57,6 +57,10 @@ pub struct Texel {
     /// the texels ranked below its share of patches in their colour
     /// ([`crate::looks::Variegation::weight`]). 1 for a look without one.
     pub pattern: f32,
+    /// Its sorus on the lower face, 0 for none ([`sorus_values`]): up to
+    /// 0.5, bare sporangia covering twice as much of it; above 0.5, a
+    /// whole sorus, its indusium covering twice the excess.
+    pub sorus: f32,
 }
 
 impl Texel {
@@ -71,6 +75,7 @@ impl Texel {
             hair: 0.0,
             fringe: false,
             pattern: 1.0,
+            sorus: 0.0,
         }
     }
 }
@@ -182,6 +187,8 @@ pub struct Template {
     pub underside: Option<[f32; 3]>,
     /// The look's variegation, whose ranks `pattern` holds.
     pub variegation: Option<crate::looks::Variegation>,
+    /// The look's sori, which `sorus` holds.
+    pub sori: Option<crate::looks::Sori>,
     /// How cards of this template bend on the levels that keep a card per
     /// organ (`crate::bend`).
     pub bend: crate::bend::Bend,
@@ -196,6 +203,8 @@ pub struct Template {
     /// Each texel's rank in the variegation pattern ([`Texel::pattern`]);
     /// empty without variegation.
     pub pattern: Vec<f32>,
+    /// Each texel's sorus ([`Texel::sorus`]); empty without sori.
+    pub sorus: Vec<f32>,
 }
 
 impl Template {
@@ -363,6 +372,7 @@ impl Templates {
                     accent_colour: body.areoles.felt,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     bend: crate::bend::Bend::FLAT,
                     coverage: drawn.coverage,
                     brightness: drawn.brightness,
@@ -370,6 +380,7 @@ impl Templates {
                     fringe: Vec::new(),
                     hairs: None,
                     pattern: Vec::new(),
+                    sorus: Vec::new(),
                 });
             }
         }
@@ -437,6 +448,10 @@ impl Templates {
                         variegation_ranks(&variegation, &look.organ, &coverage, aspect)
                     })
                     .unwrap_or_default();
+                let sorus = look
+                    .sori
+                    .map(|sori| sorus_values(&sori, &coverage, aspect))
+                    .unwrap_or_default();
                 let painted = look.hairs.as_ref().map(|hairs| {
                     crate::hairs::paint(
                         TEMPLATE_SIZE,
@@ -458,6 +473,7 @@ impl Templates {
                     accent_colour: look.accent,
                     underside: look.underside,
                     variegation: look.variegation,
+                    sori: look.sori,
                     bend: look.bend,
                     coverage,
                     brightness,
@@ -465,6 +481,7 @@ impl Templates {
                     fringe,
                     hairs: look.hairs.clone(),
                     pattern,
+                    sorus,
                 }
             })
             .collect();
@@ -502,6 +519,7 @@ impl Templates {
             hair: template.hair(),
             fringe: template.fringe.get(at).is_some_and(|&added| added > 0.0),
             pattern: template.pattern.get(at).copied().unwrap_or(1.0),
+            sorus: template.sorus.get(at).copied().unwrap_or(0.0),
         }
     }
 
@@ -522,8 +540,9 @@ impl Templates {
     /// colour is darker than the look's; blended toward the look's
     /// variegated colour, darkened alike, by the texel's variegation
     /// weight for the card's seed ([`crate::looks::Variegation::weight`]),
-    /// then toward its accent colour, darkened alike, by its accent
-    /// weight; times its brightness.
+    /// or on the lower face of a card that bears sori, toward its sorus
+    /// ([`sorus_colour`]); then toward its accent colour, darkened alike,
+    /// by its accent weight; times its brightness.
     #[must_use]
     pub fn paint(&self, template: usize, colour: [f64; 3], texel: Texel, face: Face) -> [f64; 3] {
         let brightness = f64::from(texel.brightness);
@@ -546,6 +565,16 @@ impl Templates {
                 *value += (painted - *value) * patch;
             }
         }
+        if face.lower
+            && texel.sorus > 0.0
+            && let Some(sori) = &template.sori
+            && sori.borne(f64::from(face.seed))
+        {
+            let (sorus, weight) = sorus_colour(sori, f64::from(texel.sorus));
+            for (channel, value) in base.iter_mut().enumerate() {
+                *value += (sorus[channel] * darkening - *value) * weight;
+            }
+        }
         let hair = f64::from(texel.hair);
         let hairs = template
             .hairs
@@ -560,9 +589,11 @@ impl Templates {
 
     /// The templates side by side as an RGBA8 image, the package's organ
     /// atlas: brightness / 2 in red, the accent weight in green, the
-    /// variegation rank in blue (255 for a look without variegation),
-    /// coverage in alpha. A template's hairs (`crate::hairs`) are the same
-    /// over its whole face, so they go with its layer, not its texels.
+    /// variegation rank in blue (255 for a look without variegation), or
+    /// for a look with sori its sorus value ([`Texel::sorus`]; a look with
+    /// sori has no variegation), coverage in alpha. A template's hairs
+    /// (`crate::hairs`) are the same over its whole face, so they go with
+    /// its layer, not its texels.
     /// Row 0 is the cards' base (`v` = 0).
     #[must_use]
     pub fn atlas_rgba(&self) -> (usize, usize, Vec<u8>) {
@@ -571,7 +602,11 @@ impl Templates {
             [
                 crate::raster::to_u8(template.brightness[at] * 0.5),
                 crate::raster::to_u8(template.accent[at]),
-                crate::raster::to_u8(template.pattern.get(at).copied().unwrap_or(1.0)),
+                crate::raster::to_u8(if template.sori.is_some() {
+                    template.sorus.get(at).copied().unwrap_or(0.0)
+                } else {
+                    template.pattern.get(at).copied().unwrap_or(1.0)
+                }),
                 crate::raster::to_u8(template.coverage[at]),
             ]
         })
@@ -580,16 +615,27 @@ impl Templates {
     /// The templates side by side in their looks' colours over
     /// `background` (linear RGB), as sRGB RGBA8, for people to look at:
     /// each card at its own width over length, `scale` pixels per texel
-    /// along its length, tips up.
+    /// along its length, tips up; a card whose lower face differs (an
+    /// underside colour, sori) then again, mirrored, as its lower face
+    /// shows on a card that bears its sori.
     #[must_use]
     pub fn swatches_rgba(&self, background: [f32; 3], scale: usize) -> (usize, usize, Vec<u8>) {
         let scale = scale.max(1);
         let gap = 8 * scale;
         let height = self.size * scale + 2 * gap;
-        let widths: Vec<usize> = self
+        let cells: Vec<(usize, bool)> = self
             .templates
             .iter()
-            .map(|template| {
+            .enumerate()
+            .flat_map(|(index, template)| {
+                let lower = template.underside.is_some() || template.sori.is_some();
+                std::iter::once((index, false)).chain(lower.then_some((index, true)))
+            })
+            .collect();
+        let widths: Vec<usize> = cells
+            .iter()
+            .map(|&(index, _)| {
+                let template = &self.templates[index];
                 // Card widths are small positive multiples of a texel.
                 #[allow(
                     clippy::cast_possible_truncation,
@@ -607,13 +653,24 @@ impl Templates {
             pixels.extend_from_slice(&[back[0], back[1], back[2], 255]);
         }
         let mut left = gap;
-        for (index, template) in self.templates.iter().enumerate() {
-            let cell = widths[index];
+        for (&(index, lower), &cell) in cells.iter().zip(&widths) {
+            let template = &self.templates[index];
+            // The lower face of a card that bears sori, where one does.
+            let face = if lower {
+                let seed = (0..20_u8)
+                    .map(|k| f32::from(k) / 20.0)
+                    .find(|&seed| template.sori.is_some_and(|s| s.borne(f64::from(seed))))
+                    .unwrap_or(0.5);
+                Face { lower, seed }
+            } else {
+                Face::UPPER
+            };
             for row in 0..self.size * scale {
                 // Tips up: the image's top row is the card's tip.
                 let v = (self.size * scale - 1 - row) / scale;
                 for column in 0..cell {
                     let u = (column * self.size / cell).min(self.size - 1);
+                    let u = if lower { self.size - 1 - u } else { u };
                     let at = v * self.size + u;
                     let texel = Texel {
                         coverage: template.coverage[at],
@@ -622,8 +679,9 @@ impl Templates {
                         hair: template.hair(),
                         fringe: false,
                         pattern: template.pattern.get(at).copied().unwrap_or(1.0),
+                        sorus: template.sorus.get(at).copied().unwrap_or(0.0),
                     };
-                    let colour = self.albedo(index, template.colour.map(f64::from), texel);
+                    let colour = self.paint(index, template.colour.map(f64::from), texel, face);
                     let cover = texel.coverage.clamp(0.0, 1.0);
                     let target = ((gap + row) * width + left + column) * 4;
                     for channel in 0..3 {
@@ -3470,6 +3528,290 @@ fn variegation_ranks(
     ranks
 }
 
+/// Each texel's sorus ([`Texel::sorus`]) for a look's `sori`. A card's
+/// segments (a pinna, or each pinnule of a divided one) are found from its
+/// outline alone: a texel's distance to the edge, and to the nearest ridge
+/// of that distance (the segment's midrib), give how far across the
+/// segment it lies, 0 at the midrib and 1 at the edge, and the segment's
+/// half-width there. Round and oblong sori stand in rows at their
+/// position, spaced by their size; lines and marginal bands run on.
+#[allow(clippy::too_many_lines)]
+fn sorus_values(sori: &crate::looks::Sori, coverage: &[f32], aspect: f64) -> Vec<f32> {
+    // A sorus's middle, radius, and the way out from its midrib.
+    type Centre = ((f64, f64), f64, (f64, f64));
+    use crate::looks::SorusShape as S;
+    let size = TEMPLATE_SIZE;
+    let mut values = vec![0.0_f32; size * size];
+    let covered = |x: isize, y: isize| {
+        let inside = (0..size.cast_signed()).contains(&x) && (0..size.cast_signed()).contains(&y);
+        inside && coverage[y.cast_unsigned() * size + x.cast_unsigned()] >= 0.5
+    };
+    // A texel's centre in card units, and the texels' spacing.
+    let at = |x: usize, y: usize| {
+        (
+            ((to_f64(x) + 0.5) / to_f64(size) - 0.5) * aspect,
+            (to_f64(y) + 0.5) / to_f64(size),
+        )
+    };
+    let (wide, tall) = (aspect / to_f64(size), 1.0 / to_f64(size));
+    let step = wide.min(tall);
+    let mut rim = Vec::new();
+    for y in 0..size {
+        for x in 0..size {
+            let (xi, yi) = (x.cast_signed(), y.cast_signed());
+            if covered(xi, yi)
+                && [(1, 0), (-1, 0), (0, 1), (0, -1)]
+                    .iter()
+                    .any(|&(dx, dy)| !covered(xi + dx, yi + dy))
+            {
+                rim.push(at(x, y));
+            }
+        }
+    }
+    let nearest = |points: &[(f64, f64)], p: (f64, f64)| {
+        points
+            .iter()
+            .enumerate()
+            .map(|(i, &q)| ((q.0 - p.0).powi(2) + (q.1 - p.1).powi(2), q, i))
+            .min_by(|a, b| a.0.total_cmp(&b.0))
+            .map(|(squared, q, i)| (squared.sqrt(), q, i))
+    };
+    // Each covered texel's distance to the edge, half a texel past the rim.
+    let mut edge = vec![0.0_f64; size * size];
+    for y in 0..size {
+        for x in 0..size {
+            if covered(x.cast_signed(), y.cast_signed())
+                && let Some((distance, _, _)) = nearest(&rim, at(x, y))
+            {
+                edge[y * size + x] = distance + 0.5 * step;
+            }
+        }
+    }
+    let depth = |x: isize, y: isize| {
+        if covered(x, y) {
+            edge[y.cast_unsigned() * size + x.cast_unsigned()]
+        } else {
+            0.0
+        }
+    };
+    // The midribs: texels whose distance peaks across them in some
+    // direction (on one texel, or two of a ridge an even number wide),
+    // falling steeply enough on a side that a blunt tooth of the edge
+    // does not grow one.
+    let (mut ridge, mut ridge_depth) = (Vec::new(), Vec::new());
+    for y in 0..size {
+        for x in 0..size {
+            let (xi, yi) = (x.cast_signed(), y.cast_signed());
+            let deep = edge[y * size + x];
+            if !covered(xi, yi) || deep < 1.5 * step {
+                continue;
+            }
+            let peak = [
+                (1, 0, wide),
+                (0, 1, tall),
+                (1, 1, wide.hypot(tall)),
+                (1, -1, wide.hypot(tall)),
+            ]
+            .iter()
+            .any(|&(dx, dy, apart)| {
+                let (a, b) = (depth(xi + dx, yi + dy), depth(xi - dx, yi - dy));
+                deep >= a && deep >= b && deep - a.min(b) >= 0.45 * apart
+            });
+            if peak {
+                ridge.push(at(x, y));
+                ridge_depth.push(deep);
+            }
+        }
+    }
+    if ridge.is_empty() {
+        return values;
+    }
+    // For each covered texel: how far across its segment it lies, the
+    // segment's half-width there, and the way out from its midrib. Past a
+    // midrib's end, toward a segment's tip or base, its texels lie further
+    // from that end and the edge together than the segment is deep there,
+    // and bear no sori.
+    let mut across = vec![None; size * size];
+    for y in 0..size {
+        for x in 0..size {
+            let p = at(x, y);
+            if let Some((from, q, i)) = nearest(&ridge, p)
+                && covered(x.cast_signed(), y.cast_signed())
+                && from + edge[y * size + x] <= 1.15 * ridge_depth[i] + step
+            {
+                let half = from + edge[y * size + x];
+                let out = if from > 1e-9 {
+                    ((p.0 - q.0) / from, (p.1 - q.1) / from)
+                } else {
+                    (0.0, 0.0)
+                };
+                across[y * size + x] = Some((from / half, half, out));
+            }
+        }
+    }
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let rows = sori.rows.round().clamp(1.0, 4.0) as usize;
+    let centre = sori.position.across();
+    let targets: Vec<f64> = (0..rows)
+        .map(|row| {
+            if rows == 1 {
+                centre
+            } else {
+                (centre + (to_f64(row) / to_f64(rows - 1) - 0.5) * 0.45).clamp(0.15, 0.85)
+            }
+        })
+        .collect();
+    let mut put = |index: usize, cover: f64, veiled: bool| {
+        let value = if veiled {
+            0.5 + 0.5 * cover
+        } else {
+            0.5 * cover
+        };
+        #[allow(clippy::cast_possible_truncation)]
+        let value = value.clamp(0.0, 1.0) as f32;
+        values[index] = values[index].max(value);
+    };
+    match sori.shape {
+        S::Linear | S::Marginal => {
+            for (index, spot) in across.iter().enumerate() {
+                let Some((share, half, _)) = *spot else {
+                    continue;
+                };
+                // How far inside the line or band, in its half-widths,
+                // and whether on its outer side.
+                let (inside, outer) = if sori.shape == S::Marginal {
+                    let inner = 1.0 - 2.0 * sori.size;
+                    (
+                        (share - inner) / sori.size.max(1e-6),
+                        share > 1.0 - sori.size,
+                    )
+                } else {
+                    let (offset, target) = targets
+                        .iter()
+                        .map(|&target| ((share - target).abs(), target))
+                        .min_by(|a, b| a.0.total_cmp(&b.0))
+                        .unwrap_or((1.0, centre));
+                    (1.0 - offset / sori.size.max(1e-6), share > target)
+                };
+                let cover = (inside * sori.size * half / step + 0.5).clamp(0.0, 1.0);
+                if cover > 0.0 {
+                    put(
+                        index,
+                        cover,
+                        sori.indusium.veils(1.0 - inside, outer, false),
+                    );
+                }
+            }
+        }
+        S::Round | S::Oblong => {
+            let mut candidates: Vec<(f64, usize)> = across
+                .iter()
+                .enumerate()
+                .filter_map(|(index, spot)| {
+                    let (share, half, _) = (*spot)?;
+                    let offset = targets
+                        .iter()
+                        .map(|&target| (share - target).abs())
+                        .fold(f64::INFINITY, f64::min);
+                    (offset < 0.04 && half >= 1.5 * step).then_some((offset, index))
+                })
+                .collect();
+            candidates.sort_by(|a, b| a.0.total_cmp(&b.0).then(a.1.cmp(&b.1)));
+            let mut centres: Vec<Centre> = Vec::new();
+            for &(_, index) in &candidates {
+                let Some((_, half, out)) = across[index] else {
+                    continue;
+                };
+                let p = at(index % size, index / size);
+                // A sorus smaller than a texel is drawn a texel across.
+                let radius = (sori.size * half).max(0.6 * step);
+                if centres
+                    .iter()
+                    .all(|&(c, r, _)| (p.0 - c.0).hypot(p.1 - c.1) >= 1.3 * (radius + r))
+                {
+                    centres.push((p, radius, out));
+                }
+            }
+            for &(c, radius, out) in &centres {
+                // An oblong sorus lies along its vein, slanting out from
+                // the midrib toward the segment's tip.
+                let along = if sori.shape == S::Oblong {
+                    let tip = if out.0 <= 0.0 {
+                        (-out.1, out.0)
+                    } else {
+                        (out.1, -out.0)
+                    };
+                    let (ax, ay) = (out.0 + tip.0, out.1 + tip.1);
+                    let length = ax.hypot(ay);
+                    if length > 1e-9 {
+                        (ax / length, ay / length)
+                    } else {
+                        (0.0, 1.0)
+                    }
+                } else {
+                    (0.0, 1.0)
+                };
+                let (long, short) = if sori.shape == S::Oblong {
+                    (1.6 * radius, 0.6 * radius)
+                } else {
+                    (radius, radius)
+                };
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let reach = |spacing: f64, centre: f64| {
+                    let low = ((centre - long) / spacing).floor().max(0.0) as usize;
+                    let high = (((centre + long) / spacing).ceil().max(0.0) as usize).min(size - 1);
+                    low..=high
+                };
+                let xs = reach(wide, c.0 + 0.5 * aspect);
+                for y in reach(tall, c.1) {
+                    for x in xs.clone() {
+                        let index = y * size + x;
+                        if across[index].is_none() {
+                            continue;
+                        }
+                        let p = at(x, y);
+                        let (dx, dy) = (p.0 - c.0, p.1 - c.1);
+                        let (l, w) = (dx * along.0 + dy * along.1, dy * along.0 - dx * along.1);
+                        let reach = (l / long).hypot(w / short);
+                        let cover = ((1.0 - reach) * short / step + 0.5).clamp(0.0, 1.0);
+                        if cover <= 0.0 {
+                            continue;
+                        }
+                        let outer = if sori.shape == S::Oblong {
+                            w > 0.0
+                        } else {
+                            dx * out.0 + dy * out.1 > 0.0
+                        };
+                        // A kidney's sinus faces the midrib.
+                        let toward = -(dx * out.0 + dy * out.1) / dx.hypot(dy).max(1e-12);
+                        let sinus = toward > 0.87 && reach < 0.55;
+                        put(index, cover, sori.indusium.veils(reach, outer, sinus));
+                    }
+                }
+            }
+        }
+    }
+    values
+}
+
+/// The colour a texel's sorus value ([`Texel::sorus`]) paints, and how far
+/// toward it: bare sporangia by their cover, or an indusium over them,
+/// paler as it covers more.
+fn sorus_colour(sori: &crate::looks::Sori, value: f64) -> ([f64; 3], f64) {
+    let ripe = sori.colour.map(f64::from);
+    if value <= 0.5 {
+        (ripe, (2.0 * value).clamp(0.0, 1.0))
+    } else {
+        let veil = (2.0 * (value - 0.5)).clamp(0.0, 1.0);
+        (
+            std::array::from_fn(|channel| {
+                ripe[channel] + (f64::from(sori.indusium_colour[channel]) - ripe[channel]) * veil
+            }),
+            1.0,
+        )
+    }
+}
+
 /// Smooth value noise from 0 to 1 at `(x, y)`, one lattice cell a unit
 /// wide, its corners' values drawn from `seed`.
 fn value_noise(x: f64, y: f64, seed: u64) -> f64 {
@@ -3549,6 +3891,7 @@ mod tests {
                     hairs: None,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: shape.clone(),
@@ -4008,6 +4351,102 @@ mod tests {
         };
         let plain = templates.paint(0, [0.2, 0.4, 0.1], low, sparse);
         assert!((plain[0] - 0.2).abs() < 1e-6);
+    }
+
+    #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn sori_stand_where_their_traits_put_them() {
+        use crate::looks::{Indusium, Sori, SorusPosition, SorusShape};
+        let drawn = |sori: Sori| {
+            let mut looks = looks_of(&[Shape::Simple(Simple::default())]);
+            looks[0].sori = Some(sori);
+            Templates::for_looks(&looks)
+        };
+        // How far out from the midrib, as a share of the way to the
+        // edge, the sori lie on average, across the blade's middle half.
+        let mean_reach = |templates: &Templates, bare_midrib: bool| {
+            let template = &templates.templates[0];
+            let size = TEMPLATE_SIZE;
+            let (mut sum, mut count, mut left, mut right) = (0.0, 0.0, 0_usize, 0_usize);
+            for y in size / 4..3 * size / 4 {
+                let row: Vec<usize> = (0..size)
+                    .filter(|&x| template.coverage[y * size + x] >= 0.5)
+                    .collect();
+                let (Some(&first), Some(&last)) = (row.first(), row.last()) else {
+                    continue;
+                };
+                let middle = (first + last) as f64 / 2.0;
+                let half = (last - first) as f64 / 2.0 + 0.5;
+                for &x in &row {
+                    if template.sorus[y * size + x] > 0.0 {
+                        sum += (x as f64 - middle).abs() / half;
+                        count += 1.0;
+                        if (x as f64) < middle {
+                            left += 1;
+                        } else {
+                            right += 1;
+                        }
+                    }
+                }
+                // The midrib itself is bare, but for sori beside it.
+                let midrib = template.sorus[y * size + (middle.round() as usize)];
+                assert!(!bare_midrib || midrib <= 0.0, "{y} {midrib}");
+            }
+            assert!(count > 0.0);
+            // A row on each side of the midrib.
+            assert!(left.abs_diff(right) * 4 < left + right, "{left} {right}");
+            sum / count
+        };
+        let round = drawn(Sori {
+            indusium: Indusium::Shield,
+            ..Sori::default()
+        });
+        let medial = mean_reach(&round, true);
+        assert!((0.35..0.65).contains(&medial), "{medial}");
+        let costal = mean_reach(
+            &drawn(Sori {
+                shape: SorusShape::Linear,
+                position: SorusPosition::Costal,
+                size: 0.15,
+                ..Sori::default()
+            }),
+            false,
+        );
+        assert!(costal < medial - 0.1, "{costal} {medial}");
+        let marginal = mean_reach(
+            &drawn(Sori {
+                shape: SorusShape::Marginal,
+                position: SorusPosition::Marginal,
+                indusium: Indusium::Margin,
+                ..Sori::default()
+            }),
+            true,
+        );
+        assert!(marginal > medial + 0.15, "{marginal} {medial}");
+        // A whole sorus under its indusium paints the indusium's colour on
+        // a bearing card's lower face, shaded as the card is, and nothing
+        // on its upper face or on a card that bears none.
+        let texel = Texel {
+            sorus: 1.0,
+            ..Texel::plain(0.0)
+        };
+        let lower = Face {
+            lower: true,
+            seed: 0.5,
+        };
+        let shaded = round.paint(0, [0.1, 0.2, 0.05], texel, lower);
+        let indusium = Sori::default().indusium_colour;
+        for channel in 0..3 {
+            let expected = f64::from(indusium[channel]) * 0.5;
+            assert!((shaded[channel] - expected).abs() < 1e-6);
+        }
+        let upper = round.paint(0, [0.1, 0.2, 0.05], texel, Face::UPPER);
+        assert!((upper[1] - 0.2).abs() < 1e-6);
+        let barren = drawn(Sori {
+            amount: 0.0,
+            ..Sori::default()
+        });
+        assert!((barren.paint(0, [0.1, 0.2, 0.05], texel, lower)[1] - 0.2).abs() < 1e-6);
     }
 
     #[test]

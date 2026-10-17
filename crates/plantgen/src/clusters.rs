@@ -3101,6 +3101,7 @@ mod tests {
                     hairs: None,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Fruit(Fruit {
@@ -3189,6 +3190,7 @@ mod tests {
                     hairs: None,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape,
