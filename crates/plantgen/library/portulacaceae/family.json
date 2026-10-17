@@ -50,8 +50,8 @@
       "zygomorphic": "often"
     },
     "perianth": {
-      "sepals_and_petals": "often",
-      "tepals": "often"
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
     },
     "fruit_type": "capsule",
     "stamens": {
@@ -70,6 +70,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Portulacaceae with Hectorellaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or opposite; leaves simple; margins entire; veins pinnate or single; blades linear, lanceolate, oblanceolate, ovate or obovate; stipules usually present, rarely absent; plants usually hermaphrodite, sometimes polygamous; ovary usually superior, rarely half inferior; floral cup present or absent; stems woody or herbaceous; flowers solitary or in cymes; flowers actinomorphic or zygomorphic; perianth sepals and petals or tepals; fruit capsule; stamens 3 to 50; carpels (2-) 3 (-9). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "In the APG sense the family is Portulaca alone (Wikipedia, read 2026-10-17: over 100 spp, the type genus). Flora of Taiwan Portulaca and Flora Costaricensis Portulaca (both read 2026-10-17) describe two unequal sepals plus 4-6 separate, quickly shed petals, i.e. a calyx and a corolla; the tepal reading belongs to the few-genus Hectorella-type plants folded in from DELTA."
     }
   }
 }

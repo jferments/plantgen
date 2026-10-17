@@ -30,11 +30,11 @@
     "corolla_shape": "tubular",
     "woodiness": "woody",
     "inflorescence": {
-      "cyme": "often",
+      "cyme": "usually",
       "raceme": "often",
-      "spike": "often",
       "umbel": "often",
-      "catkin": "sometimes"
+      "spike": "sometimes",
+      "catkin": "rarely"
     },
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -47,8 +47,8 @@
       "absent": "sometimes"
     },
     "fruit_type": {
-      "berry": "often",
-      "drupe": "often",
+      "berry": "usually",
+      "drupe": "sometimes",
       "nut": "rarely"
     },
     "stamens": {
@@ -83,6 +83,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Loranthaceae (read 2026-10-16): flowers regular to somewhat irregular, any irregularity being in the perianth (a tube often bent and split down one side); radial leads, with zygomorphic flowers as a minority."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "POWO Loranthaceae general information (read 2026-10-17; about 77 genera and 950 spp per the Flora Zambesiaca account): the Kew handbook account gives a one-seeded berry throughout, with the dry winged nut only in Nuytsia; the Cayman account calls the fruit berry-like and the West African account berry or drupe. Berry leads across the family."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "POWO Loranthaceae (read 2026-10-17): flowers mostly in three-flowered dichasia (small cymes), these set on axillary or terminal racemes, panicles, umbels or heads, solitary flowers rare; the Flora Zambesiaca account repeats the frequent triads. The cymose unit is what is usual; spikes are not named, so they drop to sometimes and catkin to rarely."
     }
   }
 }
