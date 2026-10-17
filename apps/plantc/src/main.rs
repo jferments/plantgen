@@ -2916,7 +2916,7 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
     let shading = spec::organ_areas(&program, &params).map_err(|error| error.to_string())?;
     out!(
         "wrote {out}: {width}x{height}, one card texture per organ, left to right,\n\
-         its lower face beside it where that differs.\n\
+         its lower face beside it where the two are unlike.\n\
          Leaf area of an organ 1 m long, as drawn and as the program shades with it:"
     );
     for ((look, template), shades) in looks.iter().zip(&templates.templates).zip(&shading) {
