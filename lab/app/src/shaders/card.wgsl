@@ -3,12 +3,13 @@
 // colour's alpha (plus one, so the standard material's alpha mask never
 // cuts a card), the card's colour its RGB, and the darkening of the template's
 // accent colour for this card (`Templates::albedo`, computed on the CPU in
-// `plantlab-scene`) the second texture coordinate's x. The texel holds
-// brightness / 2 in red, the accent weight in green and coverage in alpha. The
-// face then moves toward the template's hairs' colour, darkened alike, by
-// their weight.
-// The blend below is `Templates::albedo` exactly; nothing else about the
-// plant is computed here.
+// `plantlab-scene`) the second texture coordinate's x, and the card's
+// packed face (0.45 of its seed, plus a half when its normal points down) its
+// y. The texel holds brightness / 2 in red, the accent weight in green, the
+// variegation rank in blue and coverage in alpha. The face then moves toward
+// the template's hairs' colour, darkened alike, by their weight. The blend
+// below is `Templates::paint` exactly; nothing else about the plant is
+// computed here.
 
 #import bevy_pbr::pbr_fragment::pbr_input_from_standard_material
 
@@ -26,7 +27,16 @@ struct CardAccents {
     // Per template: its hairs' colour, linear RGB, and their weight (0 for
     // none).
     hairs: array<vec4<f32>, 64>,
+    // Its underside colour and 1, or all 0 for none.
+    undersides: array<vec4<f32>, 64>,
+    // Its variegated colour and 1, or all 0 for none.
+    patches: array<vec4<f32>, 64>,
+    // Its variegation's amount and spread.
+    shares: array<vec4<f32>, 64>,
 }
+
+// `plantgen::looks::VARIEGATION_EDGE`.
+const VARIEGATION_EDGE: f32 = 0.02;
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(100) var<uniform> card: CardAccents;
 @group(#{MATERIAL_BIND_GROUP}) @binding(101) var templates: texture_2d_array<f32>;
@@ -56,10 +66,29 @@ fn fragment(in: VertexOutput, @builtin(front_facing) is_front: bool) -> Fragment
     }
     var pbr_input = pbr_input_from_standard_material(in, is_front);
     let layer = u32(round(in.color.a)) - 1u;
-    let accent = card.accents[layer].rgb * in.uv_b.x;
-    let face = mix(in.color.rgb, accent, t.g) * (2.0 * t.r);
+    let darkening = in.uv_b.x;
+    let flipped = in.uv_b.y >= 0.475;
+    let seed = clamp((in.uv_b.y - select(0.0, 0.5, flipped)) / 0.45, 0.0, 1.0);
+    var base = in.color.rgb;
+    let under = card.undersides[layer];
+    if is_front == flipped && under.a > 0.5 {
+        base = under.rgb * darkening;
+    }
+    let patches = card.patches[layer];
+    if patches.a > 0.5 {
+        let share = clamp(card.shares[layer].x + card.shares[layer].y * (seed - 0.5), 0.0, 1.0);
+        var weight = clamp((share - t.b) / VARIEGATION_EDGE + 0.5, 0.0, 1.0);
+        if share <= 0.0 {
+            weight = 0.0;
+        } else if share >= 1.0 {
+            weight = 1.0;
+        }
+        base = mix(base, patches.rgb * darkening, weight);
+    }
+    let accent = card.accents[layer].rgb * darkening;
+    let face = mix(base, accent, t.g) * (2.0 * t.r);
     let hairs = card.hairs[layer];
-    let albedo = mix(face, hairs.rgb * in.uv_b.x, hairs.a);
+    let albedo = mix(face, hairs.rgb * darkening, hairs.a);
     pbr_input.material.base_color = vec4<f32>(albedo, 1.0);
     var out: FragmentOutput;
     out.color = apply_pbr_lighting(pbr_input);

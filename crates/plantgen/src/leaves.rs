@@ -288,16 +288,28 @@ pub fn build(
         let Some(solid) = look.solid.as_ref().filter(|solid| solid.solid_at(level)) else {
             continue;
         };
-        let leaf = Leaf {
+        let mut leaf = Leaf {
             base: organ.position,
             heading: organ.heading.normalize_or(Vec3::Y),
             left: organ.left.normalize_or(Vec3::X),
             length: organ.size,
             width: organ.size * look.shape.aspect(),
             colour: colour(look, organ),
+            underside: None,
             born: organ.born,
             shed: organ.shed,
         };
+        // Its lower face in the look's underside colour, darkened as the
+        // card's colour is darker than the look's.
+        leaf.underside = look.underside.map(|under| {
+            let luminance = |c: [f32; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+            let darkening = if luminance(look.colour) > 1e-6 {
+                (luminance(leaf.colour) / luminance(look.colour)).clamp(0.0, 2.0)
+            } else {
+                1.0
+            };
+            under.map(|channel| (channel * darkening).clamp(0.0, 1.0))
+        });
         let (stations, across) = detail_of(detail, leaf.length, leaf.width);
         let first = mesh.positions.len();
         leaf.draw(solid, stations, across, mesh);
@@ -324,6 +336,8 @@ pub(crate) struct Leaf {
     pub(crate) length: f64,
     pub(crate) width: f64,
     pub(crate) colour: [f32; 3],
+    /// Its lower face's colour, where the look gives one.
+    pub(crate) underside: Option<[f32; 3]>,
     pub(crate) born: f64,
     pub(crate) shed: Option<f64>,
 }
@@ -400,7 +414,8 @@ impl Leaf {
             }
             for j in (1..2 * across).rev() {
                 let x = -1.0 + j as f64 / across as f64;
-                mesh.push(self.vertex(ring(x, false), shade(self.colour, 0.85)));
+                let lower = self.underside.unwrap_or_else(|| shade(self.colour, 0.85));
+                mesh.push(self.vertex(ring(x, false), lower));
             }
         }
         let tip_frame = frames[stations];
@@ -574,6 +589,7 @@ mod tests {
 
     fn leaf() -> Leaf {
         Leaf {
+            underside: None,
             base: Vec3::ZERO,
             heading: Vec3::Y,
             left: Vec3::X,

@@ -319,6 +319,8 @@ mod tests {
         let shape = Shape::Needles(s.clone());
         Look {
             hairs: None,
+            underside: None,
+            variegation: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             organ: "spray".to_string(),
