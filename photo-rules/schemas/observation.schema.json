@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "observation.schema.json",
+  "title": "Answers about one image (02-observe.md)",
+  "type": "object",
+  "required": [
+    "photo_id",
+    "description",
+    "answers"
+  ],
+  "properties": {
+    "photo_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "answers": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z]+\\.[a-z_]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "family",
+                  "hex",
+                  "lighting"
+                ],
+                "properties": {
+                  "family": {
+                    "type": "string"
+                  },
+                  "hex": {
+                    "type": "string",
+                    "pattern": "^#[0-9a-fA-F]{6}$"
+                  },
+                  "lighting": {
+                    "enum": [
+                      "direct sun",
+                      "shade",
+                      "overcast",
+                      "dim",
+                      "flash",
+                      "studio",
+                      "render"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "count"
+                ],
+                "properties": {
+                  "points": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1000
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    }
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            ]
+          },
+          "confidence": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "method": {
+            "enum": [
+              "vlm",
+              "points",
+              "mask",
+              "pixels",
+              "ruler",
+              "hand"
+            ]
+          }
+        },
+        "if": {
+          "properties": {
+            "value": {
+              "enum": [
+                "cannot tell",
+                "not applicable"
+              ]
+            }
+          }
+        },
+        "else": {
+          "required": [
+            "value",
+            "confidence",
+            "evidence"
+          ]
+        }
+      }
+    },
+    "unlisted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": [
+        "source",
+        "id",
+        "licence"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "inaturalist, gbif, commons, bhl, own, render, ..."
+        },
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "licence": {
+          "type": "string"
+        },
+        "creator": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "number"
+        },
+        "lon": {
+          "type": "number"
+        },
+        "observation": {
+          "type": "string",
+          "description": "groups photos of one observation; votes are merged per observation"
+        }
+      }
+    },
+    "render": {
+      "type": "object",
+      "required": [
+        "commit",
+        "species",
+        "seed",
+        "age",
+        "day",
+        "env",
+        "view"
+      ],
+      "properties": {
+        "commit": {
+          "type": "string"
+        },
+        "generator_revision": {
+          "type": "integer"
+        },
+        "species": {
+          "type": "string"
+        },
+        "seed": {
+          "type": "integer"
+        },
+        "age": {
+          "type": "number"
+        },
+        "day": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 365
+        },
+        "env": {
+          "enum": [
+            "open",
+            "edge",
+            "interior",
+            "suppressed"
+          ]
+        },
+        "view": {
+          "type": "string"
+        },
+        "focus": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "span": {
+          "type": "number"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "quality": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string"
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "description": "filled by the runner, not the model",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "rules_version": {
+          "type": "string"
+        },
+        "settings": {
+          "type": "string"
+        },
+        "calibration": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
