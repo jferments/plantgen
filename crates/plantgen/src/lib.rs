@@ -585,12 +585,16 @@ pub mod venation;
 /// 93: a hooked spine curls into an open J at its tip: its shaft runs
 /// further and its hook turns over its last two pieces, not folded flat on
 /// the shaft over the last one (92 is stem hairs, #173).
-/// 94: species draw from the species-facts records: 189 species state the
+/// 94: slender pedicels and short-shoot tufts (`Unit::stalk_width`): a
+/// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
+/// bundle of more than five, up to 45, is a short shoot's tuft spread all
+/// round, the tufts half a needle apart (93 is hooked spines, #176).
+/// 95: species draw from the species-facts records: 189 species state the
 /// characters no source of theirs gives (heights, leaf sizes, shapes,
 /// margins and habits, inflorescence and fruit sizes, months, rosettes)
 /// as the records estimate them, and a look a species set by hand gives
 /// way wherever a rule fed by a stated fact now sets it (leaf widths,
 /// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
-/// strap leaf is never narrower than its card draws (93 is cactus
-/// tubercles and hooked spines, #176).
-pub const GENERATOR_REVISION: u32 = 94;
+/// strap leaf is never narrower than its card draws (94 is four more
+/// Pacific Northwest natives, #177).
+pub const GENERATOR_REVISION: u32 = 95;
