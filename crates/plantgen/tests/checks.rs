@@ -147,11 +147,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Rhamnaceae's flowers are in cymes or panicles (Simpson 2019), but cascara's axillary clusters are drawn as an umbel",
     ),
     (
-        "fuchsia-excorticata",
-        "petiole_length_m",
-        "Hooker (p. 75) has the blade twice the petiole, but no rule sets a broadleaf's petiole from a trait yet, so it is drawn at the library's default share",
-    ),
-    (
         "fuchsia-magellanica",
         "leaf_arrangement",
         "its leaves are in threes (Bailey, Bean), but the broadleaf program draws at most two leaves a node, so it draws them opposite",

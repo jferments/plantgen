@@ -1,2 +1,0 @@
-cargo:rerun-if-changed=/tmp/w/mainwt/crates/plantgen/library
-cargo:rerun-if-changed=/tmp/w/mainwt/crates/plantgen/programs
