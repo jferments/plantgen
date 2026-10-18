@@ -40,6 +40,41 @@ def analyzer_params(store, aid: str) -> dict:
     return next(r for r in jsonl(store.root / "analyzers.jsonl") if r["id"] == aid)["params"]
 
 
+class RulesVersion(unittest.TestCase):
+    def setUp(self):
+        from imagekit.prompts import Rules
+        self.tmp = Path(tempfile.mkdtemp())
+        shutil.copytree(Rules().path, self.tmp / "photo-rules")
+        self.path = self.tmp / "photo-rules"
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp)
+
+    def test_a_new_task_file_keeps_other_tasks_analyzers(self):
+        from imagekit.prompts import Rules
+        before = Rules(self.path)
+        (self.path / "09-new-task.md").write_text("# A task no prompt reads yet\n")
+        after = Rules(self.path)
+        self.assertNotEqual(before.version, after.version)
+        for task in ("triage", "observe", "describe"):
+            self.assertEqual(before.analyzer_version(task), after.analyzer_version(task))
+        triage, observe = after.analyzer_version("triage"), after.analyzer_version("observe")
+        with open(self.path / "01-triage.md", "a") as fh:
+            fh.write("\nOne more line.\n")
+        changed = Rules(self.path)
+        self.assertNotEqual(changed.analyzer_version("triage"), triage)
+        self.assertEqual(changed.analyzer_version("observe"), observe)
+
+    def test_rules_v2_answers_keep_their_analyzer(self):
+        from imagekit.prompts import LEGACY_VERSIONS, Rules
+        r = Rules(self.path)
+        if r.version != "b9470f22326e2d05":
+            self.skipTest("photo-rules has changed since v2")
+        for task in ("triage", "observe", "describe"):
+            self.assertIn((task, r.task_version(task)), LEGACY_VERSIONS)
+            self.assertEqual(r.analyzer_version(task), "b9470f22326e2d05")
+
+
 class Labels(unittest.TestCase):
     def test_run_together_labels(self):
         f = lambda label: regions.organ_of_label(label, regions.PHRASES)  # noqa: E731

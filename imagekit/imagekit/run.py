@@ -130,7 +130,7 @@ class Job:
                 params["temperature"] = self.backend.cfg.get("temperature", 0)
         params["served_by"] = served
         self.definition = {"task": self.task, "model": model, "model_revision": revision,
-                           "rules_version": self.rules.version, "prompt_hash": self.rules.template_hash(self.task),
+                           "rules_version": self.rules.analyzer_version(self.task), "prompt_hash": self.rules.template_hash(self.task),
                            "params": params}
         self.aid = analyzer.analyzer_id(self.definition)
         redo = ("invalid", "refused") if args.retry_invalid else ()

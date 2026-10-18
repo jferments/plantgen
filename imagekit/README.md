@@ -131,8 +131,10 @@ recorded as a second source of that image. It is not stored or analysed
 again.
 
 **Analyzers.** An analyzer is everything that decides an answer except the
-image: the task, the model and its exact revision, the `photo-rules/`
-commit, the prompt's hash and the settings. Its id is a hash of those.
+image: the task, the model and its exact revision, the rules version, the
+prompt's hash and the settings. Its id is a hash of those. The rules
+version hashes only the `photo-rules/` files the task's prompt is built
+from, so adding or changing another task's file keeps every stored answer.
 
 ```sh
 imagekit analyzer-id triage-haiku.json --register
@@ -167,8 +169,8 @@ the full reply in `raw/answers.jsonl.gz`.
 
 **Nothing twice.** Before sending, the run drops every image that already
 has an answer under the same analyzer. A second run with the same model,
-rules and settings sends nothing; a new model, a changed rule file or
-another image size is a new analyzer.
+rules and settings sends nothing; a new model, a change to a file the
+task reads or another image size is a new analyzer.
 
 **Cost.** `plan` and `run` estimate the cost from earlier answers under the
 same analyzer, else from list prices. Over $1 a run needs `--yes`, and it
