@@ -835,4 +835,16 @@ pub mod venation;
 /// a shrub's stated stem clump (`stem_clump`) sends up suckers (broadleaf
 /// revision 20) and a herb's lying stems (`stem_posture`) run along the
 /// ground before they rise (herb revision 15) (125 is the leafing year).
-pub const GENERATOR_REVISION: u32 = 126;
+/// 129: a petal's or tepal's outer face is drawn in its own colour where
+/// a flora gives one (`back_colour`, from `perianth_abaxial_colour`), and
+/// its foot outside in another (`back_base_colour`, `back_base_length`,
+/// from `perianth_abaxial_base_colour` and `perianth_abaxial_base_length`);
+/// a stripe down the middle of its inner face from its foot where a flora
+/// names one (`stripe_colour`, `stripe_length`, from
+/// `perianth_stripe_colour` and `perianth_stripe_length`), as Kellogg's
+/// lily's yellow stripe; a flower's spots are drawn one-sided, as their
+/// backs lie against the part; a lily with scattered leaves bears at least
+/// as many as its flora counts on the stem (`shoot_leaves`), so the
+/// orange lily's 50 to 75 (127 is broadleaf short shoots, #143; 128 cycad
+/// cones, #211).
+pub const GENERATOR_REVISION: u32 = 129;

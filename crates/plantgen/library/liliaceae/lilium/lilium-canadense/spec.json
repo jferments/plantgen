@@ -84,6 +84,11 @@
       180,
       60
     ],
+    "perianth_abaxial_colour": [
+      200,
+      55,
+      40
+    ],
     "perianth_spots": "many",
     "perianth_spot_colour": [
       110,
@@ -117,7 +122,11 @@
       6,
       7,
       8
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 18,
+      "max": 120
+    }
   },
   "provenance": {
     "sources": [
@@ -247,6 +256,11 @@
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): adaxial surface dirty yellow proximally The colour is our reading of the words."
     },
+    "traits.perianth_abaxial_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): adaxial surface dirty yellow proximally and giving way to red dusting on tips, red or pale red abaxially; the abaxial colour that goes with the adaxial one drawn The colour is our reading of the words."
+    },
     "traits.perianth_spots": {
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
@@ -291,6 +305,11 @@
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): flowering summer (Jun-early Aug)"
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Derived: the stem's leaves are its 6-10 whorls times 3-12 leaves in each, 18-120, from the counts quoted for leaf_whorls (Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): in 6-10 whorls. The typical value is our pick of a usual plant inside that range.) and leaves_per_whorl (Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): 3-12 leaves per whorl. The typical value is our pick of a usual plant inside that range.)."
     }
   }
 }
