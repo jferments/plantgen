@@ -152,11 +152,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
     ),
     (
-        "liriodendron-tulipifera",
-        "carpels",
-        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so tulip tree's cone of 60 to 100 carpels is drawn with 30",
-    ),
-    (
         "lonicera-involucrata",
         "fruit_size_m",
         "its berries are drawn about 1.6 cm long against the 7 to 8 mm Dendrology (2019) p. 390 gives",
@@ -175,11 +170,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
-    ),
-    (
-        "magnolia-grandiflora",
-        "carpels",
-        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so southern magnolia's cone of 55 to 81 carpels is drawn with 30",
     ),
     (
         "nymphaea-odorata",
