@@ -880,7 +880,7 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 131,
+        checked, 134,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
