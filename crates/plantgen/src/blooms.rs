@@ -40,7 +40,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::graph::{GraphOrgan, PlantGraph};
 use crate::leaves::{self, Leaf, Section, SolidLeaf};
-use crate::looks::{Look, Shape, within};
+use crate::looks::{Face, Fruit, Look, Shape, within};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
@@ -301,8 +301,11 @@ fn triangles_per_organ(look: &Look, coarse: usize) -> usize {
         (Form::Fruit(form), Shape::Fruit(fruit)) if !crate::fruit::is_single(fruit) => {
             crate::fruit::triangles(form, fruit)
         }
-        (Form::Fruit(form), Shape::Fruit(fruit)) if fruit.cone >= 0.5 => {
+        (Form::Fruit(form), Shape::Fruit(fruit)) if fruit.cone >= 0.5 && fruit.is_plain_cone() => {
             ELLIPSOID_TRIANGLES + scales(form, fruit.aspect) as usize * WEDGE_TRIANGLES
+        }
+        (Form::Fruit(form), Shape::Fruit(fruit)) if fruit.cone >= 0.5 => {
+            SPINDLE_TRIANGLES + cone_scales(form, fruit) as usize * face_triangles(fruit.face)
         }
         (Form::Fruit(_), _) => ELLIPSOID_TRIANGLES,
         (Form::Spikelet(_), Shape::Spikelet(spikelet)) => crate::spikelets::triangles(spikelet, 0),
@@ -518,17 +521,7 @@ pub(crate) fn build_coarse(
                 );
             }
             (Form::Fruit(form), Shape::Fruit(fruit)) if crate::fruit::is_single(fruit) => {
-                draw_fruit(
-                    organ,
-                    axis,
-                    side,
-                    form,
-                    fruit.aspect,
-                    fruit.cone,
-                    painted,
-                    part,
-                    mesh,
-                );
+                draw_fruit(organ, axis, side, form, fruit, painted, part, mesh);
             }
             (Form::Fruit(form), Shape::Fruit(fruit)) => {
                 // Unripe fruit, stalks and cups in the accent colour,
@@ -732,8 +725,7 @@ pub(crate) fn draw_fruit(
     axis: Vec3,
     side: Vec3,
     form: &FruitForm,
-    aspect: f64,
-    cone: f64,
+    fruit: &Fruit,
     colour: [f32; 3],
     part: Part,
     mesh: &mut Mesh,
@@ -742,10 +734,11 @@ pub(crate) fn draw_fruit(
     if length <= 0.0 {
         return;
     }
+    let aspect = fruit.aspect;
     let half_length = length * 0.5;
     let half_width = length * aspect.clamp(0.05, 2.0) * 0.5;
     let centre = organ.position + axis * half_length;
-    if cone < 0.5 {
+    if fruit.cone < 0.5 {
         ellipsoid(
             centre,
             axis,
@@ -756,6 +749,10 @@ pub(crate) fn draw_fruit(
             part,
             mesh,
         );
+        return;
+    }
+    if !fruit.is_plain_cone() {
+        draw_cone(organ, (axis, side), form, fruit, colour, part, mesh);
         return;
     }
     // A cone: a core and spiral scales over it, pointing toward the tip.
@@ -793,6 +790,453 @@ pub(crate) fn draw_fruit(
             part,
             mesh,
         );
+    }
+}
+
+/// The share of a cone's half-width its core reaches under scales of
+/// `face`: deep under wedges that stand out, near the surface under
+/// shields that lie on it.
+fn core_share(face: Face) -> f64 {
+    match face {
+        Face::Wedge | Face::Pointed => 0.6,
+        Face::Shield => 0.9,
+        Face::Facets | Face::Spine => 0.8,
+    }
+}
+
+/// Triangles one scale of `face` takes.
+pub(crate) fn face_triangles(face: Face) -> usize {
+    match face {
+        Face::Wedge | Face::Pointed => WEDGE_TRIANGLES,
+        Face::Shield | Face::Facets => 6,
+        Face::Spine => 6 + WEDGE_TRIANGLES,
+    }
+}
+
+/// A cone with a profile, a point or faces of its own (cones by sex,
+/// 2026-10-17): a core of revolution following the profile
+/// ([`Fruit::width_at`]), under its scales on a golden-angle spiral from
+/// foot to tip, spaced so each covers an equal share of the surface, and
+/// drawn as its face says: a face as wide as the card's `face_width` and
+/// [`FACE_HEIGHT`] of that high, lying flush on the core so the outline
+/// stays smooth; an open cone's scales stand apart, smaller, showing the
+/// core between them.
+#[allow(clippy::too_many_arguments)]
+fn draw_cone(
+    organ: &GraphOrgan,
+    (axis, side): (Vec3, Vec3),
+    form: &FruitForm,
+    fruit: &Fruit,
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    let length = organ.size;
+    let half_width = length * fruit.aspect.clamp(0.05, 2.0) * 0.5;
+    let foot = organ.position;
+    let core = core_share(fruit.face);
+    spindle(
+        foot,
+        (axis, side),
+        length,
+        half_width * core,
+        |t| fruit.width_at(t),
+        shade(colour, 0.75),
+        part,
+        mesh,
+    );
+    let other = axis.cross(side);
+    let open = fruit.open.clamp(0.0, 1.0);
+    for (t, angle, (wide, high)) in
+        cone_places(form, fruit, part.coarse.min(2), (half_width, length))
+    {
+        let width = fruit.width_at(t);
+        let radius = half_width * width;
+        let radial = side * math::cos(angle) + other * math::sin(angle);
+        let across = axis.cross(radial).normalize_or(side);
+        // Toward the tip along the surface.
+        let up = (axis - radial * axis.dot(radial)).normalize_or(axis);
+        let on_core = foot + axis * (t * length) + radial * (radius * core);
+        let out = radial * (radius * (1.0 - core) + open * high * 0.8);
+        match fruit.face {
+            Face::Wedge | Face::Pointed => {
+                let pointed = fruit.face == Face::Pointed;
+                let reach = if fruit.face_width > 0.0 {
+                    high * if pointed { 2.4 } else { 1.8 }
+                } else if pointed {
+                    (high * 1.8).max(half_width * (1.0 - core) * 1.8 * (0.4 + 0.6 * width))
+                } else {
+                    half_width * (1.0 - core) * 1.6 * (0.4 + 0.6 * width)
+                } * (1.0 - 0.3 * open);
+                let base = on_core + out * open;
+                let toward = if pointed {
+                    radial * 0.45 + up
+                } else {
+                    radial * 0.8 + up * 0.6
+                };
+                let tip = base + toward.normalize_or(radial) * reach;
+                let half = if fruit.face_width > 0.0 {
+                    across * wide
+                } else {
+                    across * (reach * if pointed { 0.8 } else { 0.7 })
+                };
+                wedge(
+                    base - half,
+                    base + half,
+                    tip,
+                    radial * (reach * 0.25),
+                    colour,
+                    part,
+                    mesh,
+                );
+            }
+            Face::Shield | Face::Facets | Face::Spine => {
+                let centre = on_core + out;
+                // A shield domes a little; facets meet at a raised point.
+                let raise = match fruit.face {
+                    Face::Facets => 0.6,
+                    Face::Spine => 0.3,
+                    _ => 0.15,
+                };
+                hexagon(
+                    centre,
+                    (across, up),
+                    (wide, high),
+                    (radial * (high * raise), fruit.rows >= 0.5),
+                    colour,
+                    part,
+                    mesh,
+                );
+                if fruit.face == Face::Spine {
+                    let spine = (length * fruit.spine_at(t)).max(high * 0.3);
+                    face_spine(
+                        centre,
+                        (across, up, radial),
+                        (wide, high),
+                        spine,
+                        colour,
+                        part,
+                        mesh,
+                    );
+                }
+            }
+        }
+    }
+}
+
+/// An upturned spine `spine` long from the upper edge of a face round
+/// `centre`, `wide` across and `high` up its surface (`radial` out of it).
+#[allow(clippy::too_many_arguments)]
+fn face_spine(
+    centre: Vec3,
+    (across, up, radial): (Vec3, Vec3, Vec3),
+    (wide, high): (f64, f64),
+    spine: f64,
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    let base = centre + up * (high * 0.6);
+    let half = across * (wide * 0.25);
+    let tip = base + (up * 0.75 + radial * 0.65).normalize_or(up) * spine;
+    wedge(
+        base - half,
+        base + half,
+        tip,
+        radial * (high * 0.15),
+        shade(colour, 1.1),
+        part,
+        mesh,
+    );
+}
+
+/// A scale face's height over its width: a cycad's sporophyll faces are
+/// about two thirds as high as they are wide (Whitelock 2002, p. 120-330:
+/// Zamia 1.5-2 by 2.5-3 cm, Encephalartos septentrionalis 2-2.7 by 4.5-5,
+/// Macrozamia communis 1.5-4.3 by 3-8.5).
+pub(crate) const FACE_HEIGHT: f64 = 0.65;
+
+/// A hexagon's area over the product of its half-width and half-height
+/// to its corners.
+const HEXAGON_AREA: f64 = 2.598_076;
+
+/// Most scales one cone is drawn with: a large Cycas pollen cone's
+/// hundreds of microsporophylls.
+const MOST_SCALES: f64 = 1200.0;
+
+/// A cone's surface along its length: where each share of it is reached,
+/// so scales spaced by it each cover the same area.
+struct SurfaceShares {
+    /// The surface over `TAU` times the half-width times the length.
+    total: f64,
+    /// The surface below each of [`SURFACE_STEPS`] even steps of the
+    /// length, as a share of the total.
+    below: [f64; SURFACE_STEPS + 1],
+}
+
+const SURFACE_STEPS: usize = 48;
+
+impl SurfaceShares {
+    #[allow(clippy::cast_precision_loss)]
+    fn of(fruit: &Fruit) -> Self {
+        let mut below = [0.0; SURFACE_STEPS + 1];
+        let step = 1.0 / SURFACE_STEPS as f64;
+        for k in 0..SURFACE_STEPS {
+            let middle = (k as f64 + 0.5) * step;
+            below[k + 1] = below[k] + fruit.width_at(middle) * step;
+        }
+        let total = below[SURFACE_STEPS].max(1e-9);
+        for share in &mut below {
+            *share /= total;
+        }
+        Self { total, below }
+    }
+
+    /// Where along the cone, 0 at its foot to 1 at its tip, `share` of its
+    /// surface lies below.
+    #[allow(clippy::cast_precision_loss)]
+    fn at(&self, share: f64) -> f64 {
+        let k = self
+            .below
+            .partition_point(|&below| below < share)
+            .clamp(1, SURFACE_STEPS);
+        let (low, high) = (self.below[k - 1], self.below[k]);
+        let within = if high > low {
+            (share - low) / (high - low)
+        } else {
+            0.5
+        };
+        ((k - 1) as f64 + within.clamp(0.0, 1.0)) / SURFACE_STEPS as f64
+    }
+}
+
+/// The scales on a cone with a profile or faces of its own: the form's;
+/// as many faces `face_width` across as cover its surface; or, without a
+/// face width, a count from its aspect as on a plain cone.
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+pub(crate) fn cone_scales(form: &FruitForm, fruit: &Fruit) -> u32 {
+    if form.scales > 0 || fruit.face_width <= 0.0 {
+        return scales(form, fruit.aspect);
+    }
+    let surface = std::f64::consts::TAU
+        * fruit.aspect.clamp(0.05, 2.0)
+        * 0.5
+        * SurfaceShares::of(fruit).total;
+    if let Some((rows, each)) = cone_rows(form, fruit, 0) {
+        return rows * each;
+    }
+    let face = fruit.face_width * fruit.face_width * fruit.face_height();
+    (surface / face).clamp(8.0, MOST_SCALES) as u32
+}
+
+/// A cone whose scales stand in vertical rows (`rows`, Zamia's
+/// orthostichies): how many rows go round it, an even number so each
+/// stands half a face above its neighbours all round, and how many faces
+/// each row holds. A row's faces fit together at the cone's widest when
+/// they are `face_width` across: rows three quarters of a face apart,
+/// faces `face_height` of that high. Each coarser step halves both.
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+pub(crate) fn cone_rows(form: &FruitForm, fruit: &Fruit, coarse: usize) -> Option<(u32, u32)> {
+    if form.scales > 0 {
+        return None;
+    }
+    fruit_rows(fruit, coarse)
+}
+
+/// [`cone_rows`] for a card, which has no form.
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+pub(crate) fn fruit_rows(fruit: &Fruit, coarse: usize) -> Option<(u32, u32)> {
+    if fruit.rows < 0.5 || fruit.face_width <= 0.0 {
+        return None;
+    }
+    let girth = std::f64::consts::PI * fruit.aspect.clamp(0.05, 2.0);
+    let rows = (girth / (0.75 * fruit.face_width) / 2.0)
+        .round()
+        .clamp(2.0, 30.0) as u32
+        * 2;
+    let each = (0.96 / (fruit.face_height() * fruit.face_width))
+        .round()
+        .clamp(3.0, 60.0) as u32;
+    Some((((rows >> coarse) / 2 * 2).max(4), (each >> coarse).max(2)))
+}
+
+/// Where each scale of a cone `half_width` and `length` stands, drawn at
+/// coarser step `coarse`: along it, 0 at its foot to 1 at its tip; round
+/// it, radians; and its face's half-width and half-height. On a spiral
+/// the scales are spaced so each covers an equal share of the surface,
+/// overlapping a little so no gap shows, and no wider than the cone where
+/// it narrows; in vertical rows as [`row_place`] sets them. An open cone's
+/// faces are smaller.
+fn cone_places(
+    form: &FruitForm,
+    fruit: &Fruit,
+    coarse: usize,
+    (half_width, length): (f64, f64),
+) -> Vec<(f64, f64, (f64, f64))> {
+    let golden = math::radians(137.507_764);
+    let shrink = 1.0 - 0.3 * fruit.open.clamp(0.0, 1.0);
+    let height = fruit.face_height();
+    let grid = cone_rows(form, fruit, coarse);
+    let count = grid.map_or_else(
+        || (cone_scales(form, fruit) >> coarse).max(8),
+        |(rows, each)| rows * each,
+    );
+    let along = SurfaceShares::of(fruit);
+    let area = std::f64::consts::TAU * half_width * length * along.total / f64::from(count);
+    let half_height = math::sqrt(1.15 * area * height / HEXAGON_AREA) * shrink;
+    let half_across = half_height / height;
+    (0..count)
+        .map(|i| {
+            if let Some(grid) = grid {
+                let (t, angle, (wide, high)) = row_place(i, grid, fruit, (half_width, length));
+                return (t, angle, (wide * shrink, high * shrink));
+            }
+            // Kept off the very ends, where the profile closes.
+            let t = along.at(0.02 + 0.96 * (f64::from(i) + 0.5) / f64::from(count));
+            let radius = half_width * fruit.width_at(t);
+            let fit = (radius.max(0.2 * half_width) / half_across).min(1.0);
+            (
+                t,
+                golden * f64::from(i),
+                (half_across * fit, half_height * fit),
+            )
+        })
+        .collect()
+}
+
+/// Where face `i` of a cone in vertical rows (`grid`, its rows and the
+/// faces each holds) stands: along the cone, 0 at its foot to 1 at its
+/// tip; round it, radians; and its half-width and half-height. Row
+/// `i % rows` goes round the cone, each of its faces in turn up it, every
+/// other row half a face higher; a face is as wide as its row's share of
+/// the girth where it stands, and as high as its share of the length.
+fn row_place(
+    i: u32,
+    (rows, each): (u32, u32),
+    fruit: &Fruit,
+    (half_width, length): (f64, f64),
+) -> (f64, f64, (f64, f64)) {
+    let (row, k) = (i % rows, i / rows);
+    let lift = if row % 2 == 1 { 0.5 } else { 0.0 };
+    let t = 0.02 + 0.96 * (f64::from(k) + 0.5 + lift) / (f64::from(each) + 0.5);
+    let radius = half_width * fruit.width_at(t);
+    let wide = std::f64::consts::TAU * radius / (1.5 * f64::from(rows)) * 1.04;
+    let high = length * 0.96 / (f64::from(each) + 0.5) * 0.5 * 1.04;
+    (
+        t,
+        std::f64::consts::TAU * f64::from(row) / f64::from(rows),
+        (wide, high.min(wide * 1.2)),
+    )
+}
+
+/// How far into its face a point of a cone card in vertical rows lies, 1
+/// at a face's middle to 0 at its edge: `t` along the cone, `u` across
+/// it from -1 to 1 seen from the side, the cone's `rows` and the faces
+/// `each` row holds.
+pub(crate) fn row_face(t: f64, u: f64, (rows, each): (u32, u32)) -> f64 {
+    // Round the cone from the side: where the point stands, in rows.
+    let around = math::asin(u.clamp(-1.0, 1.0)) / std::f64::consts::TAU * f64::from(rows);
+    let row = around.round();
+    let lift = if row.rem_euclid(2.0) > 0.5 { 0.5 } else { 0.0 };
+    let up = (t - 0.02) / 0.96 * (f64::from(each) + 0.5) - lift;
+    let dy = (up - up.floor() - 0.5).abs() * 2.0;
+    let dx = (around - row).abs() * 2.0 / 1.33;
+    // A flat-topped hexagon: its flat edges above and below, its sides
+    // slanting to corners at either hand.
+    (1.0 - dy.max(dx + 0.5 * dy)).clamp(0.0, 1.0)
+}
+
+/// A hexagonal face round `centre`, spanned by `across` and `up`,
+/// reaching `wide` and `high` along them to its corners, its middle raised
+/// by `raise`: six triangles. A `flat` one has its corners to the sides
+/// and flat edges `high` above and below, so faces in vertical rows, each
+/// row half a face above the next, fit together.
+fn hexagon(
+    centre: Vec3,
+    (across, up): (Vec3, Vec3),
+    (wide, high): (f64, f64),
+    (raise, flat): (Vec3, bool),
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    let leaf = part.leaf(centre, up, across, 0.0, 0.0, colour);
+    let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
+    mesh.push(leaf.vertex(centre + raise, shade(colour, 1.1)));
+    let flat_corners = [
+        (1.0, 0.0),
+        (0.5, 1.0),
+        (-0.5, 1.0),
+        (-1.0, 0.0),
+        (-0.5, -1.0),
+        (0.5, -1.0),
+    ];
+    for (k, (x, y)) in (0..6).zip(flat_corners) {
+        let corner = if flat {
+            across * (wide * x) + up * (high * y)
+        } else {
+            let angle = std::f64::consts::FRAC_PI_3 * f64::from(k) + std::f64::consts::FRAC_PI_6;
+            across * (wide * math::cos(angle)) + up * (high * math::sin(angle))
+        };
+        mesh.push(leaf.vertex(centre + corner, colour));
+    }
+    for k in 0..6 {
+        mesh.indices
+            .extend_from_slice(&[first, first + 1 + k, first + 1 + (k + 1) % 6]);
+    }
+}
+
+/// Rings a cone's core of revolution is drawn with, from foot to tip, and
+/// facets round each.
+const SPINDLE_RINGS: u32 = 9;
+const SPINDLE_AROUND: u32 = 10;
+/// Two fans at the ends and a band between each pair of inner rings.
+pub(crate) const SPINDLE_TRIANGLES: usize =
+    2 * SPINDLE_AROUND as usize * (SPINDLE_RINGS as usize - 1);
+
+/// A solid of revolution from `foot` along `axis`, `length` long, its
+/// radius at `t` (0 at the foot to 1 at the tip) `radius` times
+/// `profile(t)`.
+#[allow(clippy::too_many_arguments)]
+fn spindle(
+    foot: Vec3,
+    (axis, side): (Vec3, Vec3),
+    length: f64,
+    radius: f64,
+    profile: impl Fn(f64) -> f64,
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    let other = axis.cross(side);
+    let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
+    let leaf = part.leaf(foot, axis, side, 0.0, 0.0, colour);
+    mesh.push(leaf.vertex(foot, colour));
+    for r in 1..SPINDLE_RINGS {
+        let t = f64::from(r) / f64::from(SPINDLE_RINGS);
+        let out = profile(t) * radius;
+        for k in 0..SPINDLE_AROUND {
+            let theta = std::f64::consts::TAU * f64::from(k) / f64::from(SPINDLE_AROUND);
+            let radial = side * math::cos(theta) + other * math::sin(theta);
+            mesh.push(leaf.vertex(foot + axis * (t * length) + radial * out, colour));
+        }
+    }
+    let top = mesh.push(leaf.vertex(foot + axis * length, colour));
+    let at = |r: u32, k: u32| first + 1 + (r - 1) * SPINDLE_AROUND + k % SPINDLE_AROUND;
+    for k in 0..SPINDLE_AROUND {
+        mesh.indices
+            .extend_from_slice(&[first, at(1, k + 1), at(1, k)]);
+        mesh.indices.extend_from_slice(&[
+            top,
+            at(SPINDLE_RINGS - 1, k),
+            at(SPINDLE_RINGS - 1, k + 1),
+        ]);
+    }
+    for r in 1..SPINDLE_RINGS - 1 {
+        for k in 0..SPINDLE_AROUND {
+            let (a0, a1, b0, b1) = (at(r, k), at(r, k + 1), at(r + 1, k), at(r + 1, k + 1));
+            mesh.indices.extend_from_slice(&[a0, a1, b0, a1, b1, b0]);
+        }
     }
 }
 
@@ -1031,8 +1475,10 @@ mod tests {
             Vec3::Y,
             Vec3::X,
             &FruitForm::default(),
-            0.8,
-            0.0,
+            &Fruit {
+                aspect: 0.8,
+                ..Fruit::default()
+            },
             [0.3, 0.1, 0.4],
             part,
             &mut berry,
@@ -1053,8 +1499,11 @@ mod tests {
             Vec3::Y,
             Vec3::X,
             &FruitForm::default(),
-            0.45,
-            1.0,
+            &Fruit {
+                aspect: 0.45,
+                cone: 1.0,
+                ..Fruit::default()
+            },
             [0.4, 0.25, 0.1],
             part,
             &mut cone,
@@ -1088,6 +1537,7 @@ mod tests {
                     shape: Shape::Blade(crate::looks::Blade {
                         taper: 1.0,
                         aspect: 0.12,
+                        foot: 0.0,
                     }),
                     colour: None,
                     shade: None,

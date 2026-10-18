@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Encephalartos",
+  "forms": {
+    "palm": {
+      "generator": {
+        "defaults": {
+          "cone_offset": 0.6,
+          "cone_seeds": 40
+        }
+      },
+      "appearance": {
+        "organs": {
+          "cone": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "facets"
+            }
+          },
+          "cone_open": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "facets"
+            }
+          },
+          "cone_male": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "facets"
+            }
+          }
+        }
+      },
+      "evidence": {
+        "generator.defaults.cone_offset": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "An Encephalartos bears its cones, often several, among the leaf bases round its crown (Whitelock 2002, p. 175-176): six tenths of the trunk's radius out."
+        },
+        "generator.defaults.cone_seeds": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "An Encephalartos's female cone is large, 23 to 50 cm in these species (Whitelock 2002, p. 233, 240): forty seeds show as it breaks up (estimated, as the research note records)."
+        },
+        "appearance": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "An Encephalartos's sporophyll face is raised and cut into flat facets meeting at a point, female and male (Whitelock 2002, p. 18-19, 175, 233, 240)."
+        }
+      }
+    }
+  }
+}

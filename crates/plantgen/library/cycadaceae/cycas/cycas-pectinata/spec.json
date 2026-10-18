@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "id": "cycas-pectinata",
+  "taxon": {
+    "scientific_name": "Cycas pectinata",
+    "common_name": "Cycas pectinata",
+    "family": "Cycadaceae",
+    "genus": "Cycas",
+    "plant_name_id": 383413
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.085,
+      "trunk_rate": 0.06,
+      "stemless_years": 8,
+      "fronds_per_year": 12,
+      "frond_length": 1.95,
+      "petiole": 0.28,
+      "leaflet_length": 0.13,
+      "leaflet_angle": 52,
+      "adult_age": 10
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [10, 30, 60]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "organs": {
+      "leaflet": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.4,
+          "aspect": 0.036
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 5.5,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "pollen_cone_length_m": {
+      "min": 0.3,
+      "max": 0.55
+    },
+    "pollen_cone_width_m": {
+      "min": 0.16,
+      "max": 0.22
+    },
+    "pollen_cone_face_width_m": {
+      "min": 0.019,
+      "max": 0.024
+    },
+    "pollen_cone_shape": "ovoid",
+    "pollen_cone_colour": [215, 150, 50],
+    "microsporophyll_spine_m": {
+      "min": 0.017,
+      "max": 0.032
+    },
+    "megasporophyll_length_m": {
+      "min": 0.22,
+      "max": 0.3
+    },
+    "megasporophyll_crown": "closed",
+    "megasporophyll_margin": "pectinate",
+    "megasporophyll_colour": [135, 110, 85],
+    "ovules_per_megasporophyll": {
+      "min": 2,
+      "max": 4
+    },
+    "seed_length_m": {
+      "min": 0.034,
+      "max": 0.042
+    },
+    "seed_width_m": {
+      "min": 0.023,
+      "max": 0.033
+    },
+    "seed_colour_ripe": [220, 180, 40],
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: stems 2 to 12 m tall, 14 to 20 cm across; leaves 30 to 40 in a crown, 1.5 to 2.4 m long, the petiole 30 to 80 cm; median leaflets 18 to 31.5 cm by 7.5 to 10.5 mm, set forward at 45 to 60 degrees. Drawn as a trunk 0.085 m in radius, rising 0.06 m a year; fronds 1.95 m long, the petiole 0.28 of them, the longest leaflet 0.13 of the frond; 12 fronds a year, as the crown's count over the three years a frond lives (estimated); first cones at 10 years (estimated, as the research note's timing table records)."
+    },
+    "appearance": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: its leaflets drawn as wide, for their length, as the median leaflets it gives; the rest of its look from its order and family."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: stems 2 to 12 m tall, 14 to 20 cm across; leaves 30 to 40 in a crown, 1.5 to 2.4 m long, the petiole 30 to 80 cm; median leaflets 18 to 31.5 cm by 7.5 to 10.5 mm, set forward at 45 to 60 degrees. The whole plant's height at 60 years estimated from these, its stem (or none, where it stays underground) under a crown of young leaves standing about 0.85 of a leaf above it: about 5.5 m. Whitelock gives no ages, so the tolerance is wide."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them (the scientific name where no common name is in wide use), and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a cycad's crown of pinnate leaves on a pachycaul stem, drawn on the palm program."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact: four seeds, so male and female plants both show."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: male cone ovoid, 30 to 55 cm long."
+    },
+    "traits.pollen_cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: male cone 16 to 22 cm across."
+    },
+    "traits.pollen_cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: microsporophylls 4.3 to 6 cm long, the face triangular, 1.9 to 2.4 cm wide."
+    },
+    "traits.pollen_cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: male cone ovoid."
+    },
+    "traits.pollen_cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: male cone yellow to yellow-orange felted; the colour by eye."
+    },
+    "traits.microsporophyll_spine_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: microsporophylls 4.3 to 6 cm, the face triangular, 1.9 to 2.4 cm wide, ending in an erect apical spine 1.7 to 3.2 cm long."
+    },
+    "traits.megasporophyll_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: megasporophylls 22 to 30 cm long."
+    },
+    "traits.megasporophyll_crown": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: megasporophylls in a closed crown about 45 cm across."
+    },
+    "traits.megasporophyll_margin": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: lamina nearly circular, 11 to 18 cm by 10 to 13 cm, deeply pectinate with 40 to 50 soft lateral spines 2.6 to 7.5 cm long and an apical spine 3.5 to 7.5 cm."
+    },
+    "traits.megasporophyll_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: megasporophylls felted grey to brown; the colour by eye."
+    },
+    "traits.ovules_per_megasporophyll": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: 2 to 4 ovules, just below the lamina."
+    },
+    "traits.seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: seeds irregularly ovoid, 3.4 to 4.2 cm long, flattened where crowded."
+    },
+    "traits.seed_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: seeds 2.3 to 3.3 cm across."
+    },
+    "traits.seed_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: sarcotesta yellow when ripe; the colour by eye."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 134), Cycas pectinata: male and female cones on separate plants, as in every cycad (p. 19)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Whitelock, L. M. (2002). The Cycads. Timber Press.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy: cones, sporophylls and seeds by sex from Whitelock (2002); stem and leaves from the same descriptions."
+  }
+}

@@ -130,6 +130,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intolerant",
     "wood_density_basic_kg_m3": 490,
     "flowering_months": [4, 5, 6],
     "fruiting_months": [7, 8, 9],
@@ -144,6 +145,7 @@
     "fruit_size_m": {"min": 0.008, "max": 0.012}
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's bitter cherry review (Prunus emarginata, read 2026-10-16): \"a generally shade intolerant species of sparse woods\"."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

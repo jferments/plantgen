@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Stangeria",
+  "forms": {
+    "palm": {
+      "appearance": {
+        "organs": {
+          "cone": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "shield"
+            }
+          },
+          "cone_open": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "shield"
+            }
+          },
+          "cone_male": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "shield"
+            }
+          }
+        }
+      },
+      "evidence": {
+        "appearance": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Stangeria's sporophyll faces are rounded, smooth and convex, overlapping in up to six vertical rows, short-felted (Whitelock 2002, p. 18-19, 286): drawn as shields."
+        }
+      }
+    }
+  }
+}

@@ -25,9 +25,7 @@
       "apical_young": 0.62,
       "apical": 0.5,
       "apical_years": 20,
-      "leaf_size": 0.34,
-      "spur_leaf": 0.3,
-      "spur_pairs": 2,
+      "spur_pairs": 3,
       "leaf_angle": 55,
       "lean": 6,
       "wiggle": 9,
@@ -37,13 +35,11 @@
       "droop": 0.02,
       "extinction": 0.4,
       "pipe_rings": 3.47e-06,
-      "leaf_area": 0.303,
       "bloom_area": 0.72,
       "blooms": 1,
       "bloom_size": 0.045,
       "bloom_angle": 60,
-      "path_half": 15.2,
-      "spur_light": 0.25
+      "path_half": 15.2
     }
   },
   "growth": {
@@ -57,6 +53,7 @@
   },
   "appearance": {
     "bark": [0.33, 0.32, 0.3],
+    "twig": [0.3,  0.13,  0.06],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.035,
@@ -74,16 +71,12 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 50,
-          "stalk": 0.1,
+          "template": "simple",
           "widest": 0.6,
           "tip": 0.15,
           "base": 0.35,
           "tooth_depth": 0.2,
-          "round": 0.8,
-          "petiole": 0.05
+          "round": 0.8
         },
         "families": {
           "plasticity": 0.8
@@ -149,6 +142,7 @@
       "min": 0.1,
       "max": 0.15
     },
+    "petiole_length_m": {"min": 0.015, "max": 0.025},
     "wood_density_basic_kg_m3": 650,
     "juvenile_period_years": 20,
     "flowering_months": [4, 5, 6],
@@ -167,9 +161,10 @@
   "evidence": {
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"The leaves are deciduous\"."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"Its fall color is unspectacular, with many trees turning plain brown\". Colour ours."},
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Quercus Garryana: \"stout branchlets coated at first with thick pale rufous pubescence, pubescent or tomentose and light or dark orange color during their first winter, becoming glabrous and rather bright reddish brown in their second year and ultimately gray\". Colour chosen by eye between the pubescent orange and the reddish brown."},
+    "generator.params.spur_pairs": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "An oak's leaves crowd at its twig tips, where the internodes are short (University of Washington botany notes), and a short growth unit bears about 5 to 8 leaves (Hallé, Oldeman and Tomlinson 1978, the general figure for preformed short shoots); three pairs is six. With single leaves at their flora length (woody forms, 2026-10-17), two pairs left the open-grown crown at 2.0 m² of leaf per m² of crown, the bottom of the Urban Tree Database's valley oaks, where Karlik and McKay (2002) measured 4.4 under a blue oak's crown."},
     "generator.params.crown_base": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The crown starts about 4 m up and the stem forks into its big limbs about 5 m up (fork_height), read by eye against the trunk in iNaturalist photographs of open-grown trees (observations 28744863, 83148498)."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Open-grown trees in iNaturalist research-grade photographs (observations 28744863, 28832264, 83148498) spread wider than tall on a few big limbs that rise from a short trunk and arch outward."},
-    "generator.params.spur_light": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (woody forms, broadleaf revision 16): a short shoot leafs out in at least a quarter of the open sky's light, so the inner crown thins and its limbs show between the leaf clumps, as in iNaturalist photographs of open-grown trees (observations 28744863, 28832264); with fewer attraction points (space_density 4, was 8) the crown grows fewer, bigger limbs. spur_light was 0.14 (leaf life, generator revision 44, fitted to the Urban Tree Database's leaf per crown area)."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -190,6 +185,7 @@
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923), as Quercus garryana: leaves 10 cm to 15 cm long."
     },
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "Abrams vol. 1 (1923), as Quercus garryana: petioles pubescent, 15-25 mm long."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Quercus garryana (gwddagg_v2.2_species.csv, read): specific gravity 0.65 (wsg_est, the database's hierarchical-model species mean, from 5 records in 4 sources); trunks 0.65, branches 0.65. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
@@ -214,7 +210,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark, glossy green leaves; pale grey, furrowed bark carrying moss and lichen. Fruit (plant roadmap P4), as in mid-July: green acorns about 2.5 cm long in shallow, scaly cups, singly or in pairs. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; acorns green in summer, ripe and falling in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): light grey bark, furrowed and checkered into scaly ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves of the outer crown small, narrow and deeply lobed, shade leaves inside it larger, broader and shallower, as in other oaks; set from general knowledge of sun and shade leaves and juvenile foliage, not measured. Leaf (plant roadmap P4): the sprig's lobes rounded (`round` 0.8), as Oregon white oak's are, and `leaf_area` set to the 0.303 m² it then draws on a leaf 1 m long."
+      "note": "Colours chosen by eye: dark, glossy green leaves; pale grey, furrowed bark carrying moss and lichen. Fruit (plant roadmap P4), as in mid-July: green acorns about 2.5 cm long in shallow, scaly cups, singly or in pairs. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; acorns green in summer, ripe and falling in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): light grey bark, furrowed and checkered into scaly ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves of the outer crown small, narrow and deeply lobed, shade leaves inside it larger, broader and shallower, as in other oaks; set from general knowledge of sun and shade leaves and juvenile foliage, not measured. Leaf (plant roadmap P4): the lobes rounded (`round` 0.8), as Oregon white oak's are. Single leaves at their flora length since woody forms (2026-10-17), not sprigs, so `leaf_area` is the area the leaf draws."
     },
     "taxon": {
       "evidence": "Authored",

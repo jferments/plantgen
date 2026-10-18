@@ -158,10 +158,43 @@
 # drawn young (`young`) until it has unrolled, fading over as long again,
 # so a form whose appearance gives a young_axis colour draws its croziers
 # in it. coil_turns 0 draws as revision 10 did.
+# Revision 12 (cones by sex; Whitelock 2002, p. 18-21): a dioecious
+# species' plants (dioecious 1, from the sexual system its taxa state) are
+# male, their own draw `sex` below a half, or female. In a coning year, a
+# flush year from adult_age on, every cone_interval years (those ending on
+# a multiple of it, so a keyframe at one shows its cones), a crown bears:
+#
+# - on a male plant, male_cones pollen cones (`cone_male`, shading with
+#   male_cone_area), male_cone long, each on a stalk male_peduncle long,
+#   leaning male_lean degrees from the vertical, living male_cone_life
+#   years;
+# - on a female plant, or one bearing both sexes, a crown of
+#   `sporophylls` megasporophylls round the stem's tip, as a female Cycas
+#   bears in place of a cone (`sporophyll`, sporophyll_length long, with
+#   `ovules` seeds along its stalk, hanging from it), or else `cones` seed
+#   cones (`cone`, and `cone_open` as it breaks up, shading with
+#   open_cone_area), crown_cone long, on stalks `peduncle` long; both live
+#   cone_life years.
+#
+# Several cones stand in a ring cone_offset of the trunk's radius out
+# from the crown's centre (at least four tenths, so they stand apart),
+# among the leaf bases, and lean outward; a
+# crown holds up to 64 seed or pollen cones and 128 sporophylls. A
+# keyframe draws a crown of sporophylls as it is at the end of that year
+# of its life, the share of its life q = clamp((age + dt) / cone_life, 0,
+# 1) behind it: a sporophyll turns from sporophyll_angle toward
+# sporophyll_ripe (a C. thouarsii's hang when their seed is ripe), its
+# seeds swelling to seed_length. A seed cone is drawn as it is at the
+# keyframe's season, q = clamp((age + season) / cone_life, 0, 1): it
+# leans from cone_lean toward ripe_lean, and stays closed over its seeds
+# until, in the last tenth of its life, it breaks up, showing cone_seeds
+# seeds round its surface, cone_width across. The stem grows on
+# through a crown of sporophylls, as a female Cycas's does. With
+# crown_cone, male_cone and sporophylls 0 a palm bears none, as before.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 11;
+lsystem palm 12;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -252,10 +285,38 @@ param boot_life;              # years a boot stays
 param boot_length;            # a boot, metres
 param boot_angle;             # degrees a boot stands from the trunk
 param boot_area;
-# A cone and suckers.
-param crown_cone;             # length of a cone at the crown's centre; 0 none
-param adult_age;              # the first year the plant is adult and bears one
+# Cones by sex.
+param dioecious;              # 1: each plant is male or female; 0: every plant bears both
+param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
+param adult_age;              # the first year the plant is adult and bears cones
+param cone_interval;          # years from one coning to the next
+param crown_cone;             # a seed cone's length; 0 none
+param cones;                  # seed cones a coning crown bears
+param cone_life;              # years a seed cone, or a crown of sporophylls, stands
+param cone_width;             # a seed cone across, where its seeds show as it breaks up
+param peduncle;               # a seed cone's stalk, metres
+param peduncle_radius;        # a cone's stalk's radius
+param cone_offset;            # how far out from the crown's centre cones stand, a share of the trunk's radius
+param cone_lean;              # degrees a young seed cone leans from the vertical
+param ripe_lean;              # degrees a ripe one does
+param cone_seeds;             # seeds a seed cone breaking up shows; 0 none
+param seed_length;            # a ripe seed
+param male_cone;              # a pollen cone's length; 0 none
+param male_cones;             # pollen cones a coning male crown bears
+param male_cone_life;         # years a pollen cone stands
+param male_peduncle;          # a pollen cone's stalk, metres
+param male_lean;              # degrees a pollen cone leans from the vertical
+param sporophylls;            # megasporophylls a female crown bears in place of a cone; 0 a cone
+param sporophyll_length;
+param sporophyll_angle;       # degrees a young sporophyll stands from the vertical
+param sporophyll_ripe;        # degrees a ripe one does: over 90 hangs
+param ovules;                 # seeds along each sporophyll
 param cone_area;
+param male_cone_area;
+param open_cone_area;
+param sporophyll_area;
+param seed_area;
+# Suckers.
 param suckers;
 param sucker_age;
 param sucker_rate;
@@ -279,7 +340,13 @@ module Ry(j, m, s, e);        # rays j to j + m - 1 of a fan
 module Dh(s);                 # a dead frond hanging
 module Bs(r);                 # where a frond's boot will stand, on a trunk r in radius
 module Bt(r);                 # a boot, on a trunk r in radius
-module Cc(z);                 # the crown's cone, z long
+module Cn(k, r);              # this year's cones, k 1 in a coning year, round a crown r in radius
+module Cf(z);                 # a seed cone z long, on its stalk
+module Cm(z);                 # a pollen cone z long, on its stalk
+module Sp(z);                 # a megasporophyll z long
+module Ov(i, m, z, q);        # ovules i to i + m - 1 along a sporophyll z long, q of its life behind it
+module Ck(z, q);              # a seed cone z long, q of its life behind it
+module Sd(i, m, z);           # seeds i to i + m - 1 showing on a cone z long breaking up
 module Sb(n);                 # the plant's foot: suckers sent out so far
 module Sk(n);                 # a sucker on its runner, the n-th
 module Sh(z, r);              # a sheath card of the crownshaft, z long, round a core r in radius
@@ -293,6 +360,10 @@ organ cone cone area cone_area;
 organ sheath leaf as piece area sheath_area;
 organ cataphyll leaf as scale_leaf area cataphyll_area;
 organ spine leaf as spine area spine_area;
+organ sporophyll leaf as megasporophyll area sporophyll_area;
+organ seed fruit as seed area seed_area;
+organ cone_male cone area male_cone_area;
+organ cone_open cone area open_cone_area;
 
 structure frond leaf;         # one frond: its sheath, petiole, rachis, leaflets or rays, then its dead frond and boot
 
@@ -310,7 +381,7 @@ rule Y(v, n) : crownshaft > 0 ->
                              ? max(1, round(fronds_per_year * v)) : 0, age * v, trunk_radius
           * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
              + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
-      [ Cc(age >= adult_age ? crown_cone : 0) ] ] Y(v, n);
+      Cn(age >= adult_age && mod(floor(age + 1.5), max(1, round(cone_interval))) == 0 ? 1 : 0, trunk_radius * 0.97) ] Y(v, n);
 rule Y(v, n) : mod(floor(age + 0.5), max(1, round(flush_interval))) == 0 ->
     T(0, 1, 0, upturn * trunk_rate * v)
     Tk(trunk_rate * v * smoothstep(0, stemless_years, age), trunk_radius
@@ -320,7 +391,9 @@ rule Y(v, n) : mod(floor(age + 0.5), max(1, round(flush_interval))) == 0 ->
     Fc(0, max(1, round(fronds_per_year * v)), age * v, trunk_radius
           * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
              + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
-    [ Cc(age >= adult_age ? crown_cone : 0) ] Y(v, n);
+    Cn(age >= adult_age && mod(floor(age + 1.5), max(1, round(cone_interval))) == 0 ? 1 : 0, trunk_radius
+       * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
+          + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0))) Y(v, n);
 rule Y(v, n) ->
     T(0, 1, 0, upturn * trunk_rate * v)
     Tk(trunk_rate * v * smoothstep(0, stemless_years, age), trunk_radius
@@ -525,11 +598,72 @@ interpret Ry(j, m, s, e) ->
         * ((j + 0.5) / max(1, round(rays)) - 0.5))
       ^(fan_cup - fan_arch * 2 * abs((j + 0.5) / max(1, round(rays)) - 0.5)) ray(s * fan_length * (0.7 + 0.3 * sin(pi * (j + 0.5) / max(1, round(rays))))) ];
 
-# The crown's cone, at its centre among the young fronds; a crown bears
-# the newest only.
-decompose Cc(z) : z <= 0 -> ;
-rule Cc(z) : age + dt >= 1 -> ;
-interpret Cc(z) -> cone(z);
+# A coning year's cones, at the crown's centre among the young fronds or
+# in a ring among the leaf bases: a male plant's pollen cones, a female's
+# crown of sporophylls round the stem's tip (in two rings, half and three
+# tenths of the trunk's radius out), or its seed cones. A plant bearing
+# both sexes bears the female's.
+decompose Cn(k, r) : k <= 0 -> ;
+decompose Cn(k, r) : dioecious >= 0.5 && sex < 0.5 && male_cone > 0 ->
+    ring(max(1, round(male_cones))) [ &(90) f(r * (male_cones > 1.5 ? max(cone_offset, 0.4) : cone_offset)) ^(90) Cm(male_cone * uniform(0.92, 1.08)) ];
+decompose Cn(k, r) : dioecious >= 0.5 && sex < 0.5 -> ;
+decompose Cn(k, r) : sporophylls > 0 ->
+    ring(ceil(sporophylls / 2)) [ &(90) f(r * 0.5) ^(90) Sp(sporophyll_length * uniform(0.9, 1.1)) ]
+    [ /(180 / ceil(sporophylls / 2)) ring(floor(sporophylls / 2))
+      [ &(90) f(r * 0.3) ^(90) Sp(sporophyll_length * uniform(0.85, 1)) ] ];
+decompose Cn(k, r) : crown_cone > 0 ->
+    ring(max(1, round(cones))) [ &(90) f(r * (cones > 1.5 ? max(cone_offset, 0.4) : cone_offset)) ^(90) Cf(crown_cone * uniform(0.92, 1.08)) ];
+decompose Cn(k, r) -> ;
+rule Cm(z) : age + dt >= male_cone_life -> ;
+rule Cf(z) : age + dt >= cone_life -> ;
+rule Sp(z) : age + dt >= cone_life -> ;
+
+# A cone on its stalk, which bends in three equal turns to its lean and
+# rests on the ground it reaches; a seed cone leans further as it ripens.
+interpret Cm(z) : male_peduncle > 0 ->
+    rest(rest_gap) !(peduncle_radius)
+    &(male_lean / 3) F(male_peduncle / 3) &(male_lean / 3) F(male_peduncle / 3)
+    &(male_lean / 3) F(male_peduncle / 3) cone_male(z);
+interpret Cm(z) -> &(male_lean) cone_male(z);
+interpret Cf(z) : peduncle > 0 ->
+    rest(rest_gap) !(peduncle_radius)
+    &(lerp(cone_lean, ripe_lean, clamp((age + season) / max(cone_life, dt), 0, 1)) / 3) F(peduncle / 3)
+    &(lerp(cone_lean, ripe_lean, clamp((age + season) / max(cone_life, dt), 0, 1)) / 3) F(peduncle / 3)
+    &(lerp(cone_lean, ripe_lean, clamp((age + season) / max(cone_life, dt), 0, 1)) / 3) F(peduncle / 3)
+    Ck(z, clamp((age + season) / max(cone_life, dt), 0, 1));
+interpret Cf(z) ->
+    &(lerp(cone_lean, ripe_lean, clamp((age + season) / max(cone_life, dt), 0, 1)))
+    Ck(z, clamp((age + season) / max(cone_life, dt), 0, 1));
+
+# A seed cone stays closed over its seeds until, in the last tenth of its
+# life, they swell and force its scales apart and it breaks up
+# (`cone_open`), showing them.
+interpret Ck(z, q) : q > 0.9 -> cone_open(z) Sd(0, max(0, round(cone_seeds)), z);
+interpret Ck(z, q) -> cone(z);
+
+# A breaking cone's seeds, scattered over its middle (their heights by
+# the plastic number's sequence, so with the golden angle round the cone
+# they spread over it rather than following one helix), each from just
+# under its scales and pointing out and up.
+interpret Sd(i, m, z) : m > 1 ->
+    Sd(i, floor(m / 2), z) Sd(i + floor(m / 2), m - floor(m / 2), z);
+interpret Sd(i, m, z) : m == 1 ->
+    [ f(z * (0.2 + 0.6 * frac((i + 0.5) * 0.7549))) /(137.5 * i) &(90) f(cone_width * 0.4) ^(50)
+      seed(seed_length) ];
+interpret Sd(i, m, z) -> ;
+
+# A sporophyll stands out from the stem's tip, turning toward its ripe
+# angle as it ages, its seeds along the upper part of its stalk, each side
+# in turn, swelling as they ripen.
+interpret Sp(z) ->
+    &(lerp(sporophyll_angle, sporophyll_ripe, clamp((age + dt) / max(cone_life, dt), 0, 1)))
+    [ sporophyll(z) ] Ov(0, max(0, round(ovules)), z, clamp((age + dt) / max(cone_life, dt), 0, 1));
+interpret Ov(i, m, z, q) : m > 1 ->
+    Ov(i, floor(m / 2), z, q) Ov(i + floor(m / 2), m - floor(m / 2), z, q);
+interpret Ov(i, m, z, q) : m == 1 ->
+    [ f(z * (0.3 + 0.3 * (floor(i / 2) + 0.5) / max(1, ceil(ovules / 2)))) +(mod(i, 2) < 1 ? 30 : -30) steer(0, -1, 0, 0.6)
+      seed(seed_length * lerp(0.4, 1, q)) ];
+interpret Ov(i, m, z, q) -> ;
 
 # A sheath card of the crownshaft: out to the core's surface, then down it
 # from the frond's foot, lying against it and leaning out 1.2 degrees, so

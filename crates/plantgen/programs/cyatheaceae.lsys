@@ -18,10 +18,12 @@
 # unless a taxon's vernation sets it (the fern subclass's rule:
 # circinate 2.5); a coiled piece's size, tightness, leaflet size and
 # roll as the fern program's (`polypodiidae`).
+# Revision 6: gives palm revision 12's cones by sex no cones, so
+# tree ferns draw as before.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cyatheaceae 5 extends palm;
+lsystem cyatheaceae 6 extends palm;
 
 param vigour_spread = 0.1;   # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;            # how strongly a leaning trunk turns back up, radians a metre
@@ -40,6 +42,29 @@ param boot_life = 10;        # years a boot stays
 param boot_length = 0.25;    # a boot, metres
 param boot_area = 0.2;
 param crown_cone = 0;        # length of a cone at the crown's centre; 0 none
+# Palm revision 12's cones by sex: none, as crown_cone, male_cone and
+# sporophylls are 0.
+param cone_interval = 1;
+param cones = 1;
+param cone_life = 1;
+param cone_width = 0.1;
+param peduncle = 0;
+param peduncle_radius = 0.01;
+param cone_offset = 0;
+param cone_lean = 0;
+param ripe_lean = 0;
+param cone_seeds = 0;
+param seed_length = 0.02;
+param male_cone = 0;
+param male_cones = 1;
+param male_cone_life = 1;
+param male_peduncle = 0;
+param male_lean = 0;
+param sporophylls = 0;
+param sporophyll_length = 0.2;
+param sporophyll_angle = 30;
+param sporophyll_ripe = 30;
+param ovules = 0;
 param adult_age = 10;        # the first year the plant is adult and bears one
 param cone_area = 0.6;
 param suckers = 0;
