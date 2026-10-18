@@ -203,6 +203,8 @@ impl ClusterKind {
 pub struct Cluster {
     pub kind: ClusterKind,
     pub flowers: u32,
+    /// Units of the whole cluster that set fruit; every unit if `None`.
+    pub fruits: Option<u32>,
     pub branches: u32,
     /// How each branch is laid out: `Some` exactly when `branches` is
     /// above 0.
@@ -289,6 +291,7 @@ impl Cluster {
         Self {
             kind,
             flowers,
+            fruits: if level == 1 { spec.fruits } else { None },
             branches,
             branch,
             per_node,
@@ -413,6 +416,7 @@ impl Cluster {
         let kind = spec.kind.unwrap_or(kind);
         let counts = [
             ("flowers", spec.flowers, 1.0, 200.0),
+            ("fruits", spec.fruits, 1.0, 200.0),
             ("branches", spec.branches, 0.0, 60.0),
             ("per_node", spec.per_node, 1.0, 8.0),
         ];
@@ -447,6 +451,9 @@ impl Cluster {
         }
         if level > 1 && spec.spathe.is_some_and(|spathe| spathe > 0.0) {
             return Err("only an inflorescence's own axis bears a spathe".to_string());
+        }
+        if level > 1 && spec.fruits.is_some() {
+            return Err("only an inflorescence's own axis counts the fruit it sets".to_string());
         }
         let branches = spec.branches.unwrap_or_else(|| kind.default_branches());
         if branches > 0 && !kind.bears_branches() {
@@ -616,7 +623,12 @@ impl ClusterLook {
     /// unripe fruit chosen by `seed`.
     #[must_use]
     pub fn layout(&self, turn: f64, seed: u64) -> Layout {
-        layout(&self.cluster, self.unit, turn, seed)
+        let mut laid = layout(&self.cluster, self.unit, turn, seed);
+        // Drawn all in fruit: only the units that set it.
+        if self.opening.is_none() && matches!(self.unit, Unit::Fruit { .. }) {
+            laid.units.retain(|p| p.sets);
+        }
+        laid
     }
 
     /// The cluster laid out as it is drawn on `organ`: turned, and its
@@ -672,6 +684,7 @@ impl Opening {
             Stage::Gone => return None,
             Stage::Bud => (0, false),
             Stage::Flower => (1, false),
+            Stage::Fruit { .. } if !p.sets => return None,
             Stage::Fruit { unripe } => (2, p.chance < unripe),
         };
         self.looks[look].is_some().then_some((look, unripe))
@@ -880,6 +893,9 @@ pub struct Placed {
     /// Its draw from 0 to 1: it is unripe while the share unripe is above
     /// it.
     pub chance: f64,
+    /// Whether it sets fruit: one of the cluster's `fruits`, or every unit
+    /// where they are not counted.
+    pub sets: bool,
     /// The smallest branch it is on: 0 for the cluster's own axis.
     pub group: u32,
     /// The branch of the cluster's own axis it is on: 0 for that axis.
@@ -1185,6 +1201,27 @@ fn share(k: u32, n: u32) -> f64 {
     }
 }
 
+/// Mark the `fruits` of `layout`'s units that set fruit, chosen by
+/// `seed`; every unit where they are not counted, or are as many.
+fn set_fruit(layout: &mut Layout, fruits: Option<u32>, seed: u64) {
+    let Some(fruits) = fruits else {
+        return;
+    };
+    let keep = usize::try_from(fruits).unwrap_or(usize::MAX);
+    if keep >= layout.units.len() {
+        return;
+    }
+    let draw = |index: usize| {
+        let index = u64::try_from(index).unwrap_or(u64::MAX);
+        mix64(seed ^ 0x5E7F_0A11 ^ (index + 1).wrapping_mul(0xD1B5_4A32_D192_ED03))
+    };
+    let mut order: Vec<usize> = (0..layout.units.len()).collect();
+    order.sort_by_key(|&index| draw(index));
+    for &index in &order[keep..] {
+        layout.units[index].sets = false;
+    }
+}
+
 /// What [`layout`] has laid so far.
 struct Laid {
     layout: Layout,
@@ -1217,6 +1254,7 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
     // A spathe: its foot round the axis a little below the lowest unit,
     // its blade behind the units.
     let mut layout = laid.layout;
+    set_fruit(&mut layout, cluster.fruits, seed);
     if cluster.spathe > 0.0 {
         let length = cluster.spathe;
         let lowest = layout
@@ -1354,6 +1392,7 @@ fn lay(
                 unripe: chance < laid.unripe,
                 rank: (above + slot.rank) / to_f64(level),
                 chance,
+                sets: true,
                 group,
                 top,
                 stalk: cluster.stalk,
@@ -1979,6 +2018,7 @@ fn draw_laid(
                         tube: flower
                             .tube_colour
                             .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),
+                        stigma: flower.stigma.or(flower.filament).unwrap_or(shown.accent),
                     },
                     part,
                     mesh,
@@ -2552,6 +2592,7 @@ mod tests {
                     unripe: false,
                     rank: 0.0,
                     chance: 0.0,
+                    sets: true,
                     group: 0,
                     top: 0,
                     stalk: STALK,
@@ -2563,6 +2604,43 @@ mod tests {
 
     fn close(a: Vec3, b: Vec3) -> bool {
         (a - b).length() < 1e-9
+    }
+
+    #[test]
+    fn a_cluster_ripens_only_the_fruit_it_sets() {
+        let spec = |fruits: Option<u32>| Inflorescence {
+            kind: Some(ClusterKind::Umbel),
+            flowers: Some(8),
+            fruits,
+            ..Inflorescence::default()
+        };
+        let every = layout(&Cluster::of(&spec(None)), berries(), 0.0, 7);
+        assert_eq!(every.units.len(), 8);
+        assert!(every.units.iter().all(|p| p.sets));
+        for seed in 0..20 {
+            let laid = layout(&Cluster::of(&spec(Some(2))), berries(), 0.0, seed);
+            assert_eq!(laid.units.len(), 8, "every flower is laid out");
+            assert_eq!(laid.units.iter().filter(|p| p.sets).count(), 2);
+        }
+        // Drawn all in fruit, only the two that set are left.
+        let shape = Shape::Fruit(Fruit::default());
+        let look = ClusterLook::new(Cluster::of(&spec(Some(2))), &shape, &[]).unwrap();
+        assert_eq!(look.layout(0.0, 3).units.len(), 2);
+        // More than it bears sets every one.
+        let more = layout(&Cluster::of(&spec(Some(20))), berries(), 0.0, 1);
+        assert!(more.units.iter().all(|p| p.sets));
+        assert!(Cluster::check(&spec(Some(0))).is_err());
+        let nested = Inflorescence {
+            kind: Some(ClusterKind::Panicle),
+            branches: Some(3),
+            branch: Some(Box::new(Inflorescence {
+                fruits: Some(1),
+                ..Inflorescence::default()
+            })),
+            ..Inflorescence::default()
+        };
+        let error = Cluster::check(&nested).unwrap_err();
+        assert!(error.contains("fruit it sets"), "{error}");
     }
 
     #[test]
@@ -3111,8 +3189,10 @@ mod tests {
                 "bloom".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Fruit(Fruit {
@@ -3199,8 +3279,10 @@ mod tests {
                 "bloom".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape,

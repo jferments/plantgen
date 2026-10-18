@@ -87,6 +87,8 @@ struct CardAccents {
     undersides: [Vec4; MAX_TEMPLATES],
     patches: [Vec4; MAX_TEMPLATES],
     shares: [Vec4; MAX_TEMPLATES],
+    sporangia: [Vec4; MAX_TEMPLATES],
+    indusia: [Vec4; MAX_TEMPLATES],
 }
 
 impl MaterialExtension for CardExtension {
@@ -180,10 +182,14 @@ fn card_material(
     let mut undersides = [Vec4::ZERO; MAX_TEMPLATES];
     let mut patches = [Vec4::ZERO; MAX_TEMPLATES];
     let mut shares = [Vec4::ZERO; MAX_TEMPLATES];
+    let mut sporangia = [Vec4::ZERO; MAX_TEMPLATES];
+    let mut indusia = [Vec4::ZERO; MAX_TEMPLATES];
     for (k, paint) in scene.template_paints.iter().take(MAX_TEMPLATES).enumerate() {
         undersides[k] = Vec4::from_array(paint.underside);
         patches[k] = Vec4::from_array(paint.patches);
         shares[k] = Vec4::from_array(paint.share);
+        sporangia[k] = Vec4::from_array(paint.sporangia);
+        indusia[k] = Vec4::from_array(paint.indusium);
     }
     cards.add(ExtendedMaterial {
         base: StandardMaterial {
@@ -203,6 +209,8 @@ fn card_material(
                 undersides,
                 patches,
                 shares,
+                sporangia,
+                indusia,
             },
             templates: images.add(templates_image(scene)),
         },

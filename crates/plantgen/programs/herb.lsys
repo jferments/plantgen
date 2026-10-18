@@ -76,7 +76,14 @@
 # herbs' draws. With flower_branches 0, as every program gives it unless
 # it says otherwise, a herb grows as before.
 #
-# Revision 11: a side branch bears branch_nodes leaf nodes below its
+# Revision 11: a leaf may outlive its year. A flowering stem dies back
+# after it fruits, but its basal leaves, and a stem that bears leaves
+# only, stay leaf_years (wild ginger's evergreen leaves, a rattlesnake
+# plantain's rosette, beargrass's tufts), so an evergreen herb carries
+# last year's leaves beside this year's. With leaf_years 1, as every
+# program gives it unless a rule says otherwise, a herb grows as before.
+#
+# Revision 12: a side branch bears branch_nodes leaf nodes below its
 # raceme, each with a leaf branch_leaf times the leaf in whose axil the
 # branch stands. With branch_orders 2 or more, each of those nodes bears
 # a branch of its own, half as long, ending in its own raceme (fennel's
@@ -84,7 +91,7 @@
 # through the stem's own leaf rule, so the branch still adds no random
 # call site.
 #
-# Revision 12: a stem may be a sympodium (units above 0). The main stem
+# Revision 13: a stem may be a sympodium (units above 0). The main stem
 # bears first_leaves leaves over first_share of the height and ends in a
 # flowering organ; the bud in the axil of its last leaf grows on past it,
 # bears unit_leaves leaves and ends in the next, units of them, each
@@ -102,7 +109,7 @@
 # nodding bell, a jimsonweed's upright trumpet). With units 0, as
 # every program gives it unless it says otherwise, a herb grows as before.
 #
-# Revision 13: a raceme's open flowers and buds face as their posture
+# Revision 14: a raceme's open flowers and buds face as their posture
 # says (flower_tilt, degrees from straight up: 90 level, 180 hanging), as
 # a sympodium's flowers have since revision 12. The stalk rises at
 # flower_angle as before and arches over along its outer half toward the
@@ -121,6 +128,7 @@ param stem_rate;              # cohort size: stems * (1 - exp(-stem_rate * age))
 param clump_radius;           # radius a mature clump's stems spread over
 param stem_lean;              # how far the outermost stems lean out
 param maturity;               # years over which stems reach full size
+param leaf_years = 1;         # years a basal leaf, or a stem bearing leaves only, stays on: more than 1 for evergreens
 param adult_age;              # the first year the plant is adult and flowers
 # A stem.
 param stem_height;            # stem height at maturity, raceme included
@@ -177,7 +185,7 @@ param branch_length = 0.3;    # the lowest side branch's length, as a share of t
 param branch_nodes = 2;       # leaf nodes along a side branch below its raceme
 param branch_leaf = 1;        # a side branch's leaves, as a share of the leaf in whose axil it stands
 param branch_orders = 1;      # times a flowering stem branches: 1, side branches; 2, they branch again
-# The sympodium (revision 12).
+# The sympodium (revision 13).
 param first_leaves = 8;          # leaves on the main stem below its first inflorescence
 param first_share = 0.4;         # share of the stem's height below the first inflorescence
 param unit_leaves = 2;           # leaves on each sympodial unit
@@ -202,10 +210,12 @@ param light_cell;             # light voxel edge
 module Y;                     # the crown: sends up a cohort each year
 module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
 module Sm;                    # the base of a stem
+module Sw(r);                 # where a stem leaves its basal leaves: r of it a raceme
 module Bs(j);                 # j basal leaves still to place
 module Bl(len, a);            # a basal leaf len long bending a at each joint
 module Pc(k, s, a);           # piece k of a basal leaf, s long
 module St(h, r);              # a stem h tall with a raceme r long
+module Sv(h, r);              # the same stem, past where it leaves its basal leaves
 module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
 module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
 module Lf(s);                 # the leaves at one node
@@ -282,7 +292,16 @@ decompose St(h, r) : units > 0 ->
 
 # A stem h tall: a bare foot, the leafy part, then the raceme, r of the
 # height. Nodes split in halves so a long stem stays within the
-# decomposition depth.
+# decomposition depth. Where leaves outlive their year, the stem starts
+# where it leaves its basal leaves (Sw); with leaf_years 1 it needs no
+# mark, so every draw stays where it was.
+decompose St(h, r) : leaf_years > 1 -> Sw(r) Sv(h, r);
+decompose Sv(h, r) : arch > 0 ->
+    T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+decompose Sv(h, r) ->
+    !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
 decompose St(h, r) : arch > 0 ->
     T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
     Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
@@ -371,10 +390,12 @@ decompose Pd(len) : flower_tilt > 0 ->
     F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1);
 decompose Pd(len) -> F(len);
 
-# Last year's stems are gone.
-rule Sm -> %;
+# Last year's flowering stems are gone; their basal leaves, and stems
+# bearing leaves only, stay leaf_years.
+rule Sw(r) : r > 0 -> %;
+rule Sm : age + dt >= leaf_years -> %;
 
-# The sympodium (revision 10). Its rules come last so the draws of the
+# The sympodium (revision 13). Its rules come last so the draws of the
 # rules above keep their numbers.
 decompose Mn(i, m, len, h) : m > 1 ->
     Mn(i, floor(m / 2), len, h) Mn(i + floor(m / 2), m - floor(m / 2), len, h);

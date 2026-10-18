@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Zanthoxylum",
+  "traits": {
+    "fruit_type": "follicle"
+  },
+  "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Zanthoxylum (read 2026-10-17): fruit of up to four one-seeded follicles joined at the base; ~250 species. Follicle replaces the family's berry/drupe tie."}
+  }
+}

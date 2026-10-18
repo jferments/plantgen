@@ -107,7 +107,7 @@
       "min": 0.006,
       "max": 0.015
     },
-    "stamen_colour": [
+    "filament_colour": [
       110,
       50,
       110
@@ -316,7 +316,7 @@
       "source": "wikipedia",
       "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): filaments purple to pale cream, 6-15 mm and 5-10 mm; Cheeseman (p. 618): very variable, the flowers trimorphic."
     },
-    "traits.stamen_colour": {
+    "traits.filament_colour": {
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): filaments purple to pale cream, anthers purple; Kirk (p. 54): the pollen a beautiful mazarin blue. The colour is our reading of the words."

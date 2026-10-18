@@ -13,8 +13,8 @@
       "opposite": "rarely"
     },
     "leaf_division": {
-      "simple": "often",
-      "compound": "often"
+      "simple": "usually",
+      "compound": "sometimes"
     },
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -24,8 +24,8 @@
     "flower_merosity": 4,
     "ovary_position": "superior",
     "fruit_type": {
-      "berry": "often",
-      "capsule": "often"
+      "berry": "usually",
+      "capsule": "sometimes"
     },
     "stamens": {
       "min": 6,
@@ -62,6 +62,16 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia Capparis (read 2026-10-17): leaves simple, entire. Weighted by Capparis and allies (Morisonia, Maerua, Boscia)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Capparis (read 2026-10-17): 146 spp (POWO 2026), the largest genus, fruit a globose or ellipsoid berry. Morisonia (86 spp) and Maerua (70) pages give counts only, no fruit; the family total (~430, first pass's Wikipedia reading) means Capparis alone is about a third. Berry leads on the one genus counted; capsules kept as sometimes for the dry-fruited minority."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Capparis (read 2026-10-17): 146 spp, leaves simple and entire. Morisonia (86) and Maerua (70) pages give counts but no leaf form. Simple leads on the largest genus, about a third of ~430 spp; compound kept as sometimes for the foliolate genera such as Crateva (not read)."
     }
   }
 }

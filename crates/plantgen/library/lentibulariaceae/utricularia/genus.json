@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Utricularia",
+  "traits": {
+    "inflorescence": {"raceme": "usually", "solitary": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Utricularia genus account (read 2026-10-17): inflorescence racemose on a mostly simple scape, flowers one to several."}
+  }
+}

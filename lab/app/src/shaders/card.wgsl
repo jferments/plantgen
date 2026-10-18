@@ -6,7 +6,8 @@
 // `plantlab-scene`) the second texture coordinate's x, and the card's
 // packed face (0.45 of its seed, plus a half when its normal points down) its
 // y. The texel holds brightness / 2 in red, the accent weight in green, the
-// variegation rank in blue and coverage in alpha. The face then moves toward
+// variegation rank in blue (or a template with sori, its sorus value) and
+// coverage in alpha. The face then moves toward
 // the template's hairs' colour, darkened alike, by their weight. The blend
 // below is `Templates::paint` exactly; nothing else about the plant is
 // computed here.
@@ -31,8 +32,13 @@ struct CardAccents {
     undersides: array<vec4<f32>, 64>,
     // Its variegated colour and 1, or all 0 for none.
     patches: array<vec4<f32>, 64>,
-    // Its variegation's amount and spread.
+    // Its variegation's amount and spread, then 1 when only the upper face
+    // is variegated.
     shares: array<vec4<f32>, 64>,
+    // Its sporangia's colour and the share of cards that bear them.
+    sporangia: array<vec4<f32>, 64>,
+    // Its indusium's colour and 1, or all 0 for a template without sori.
+    indusia: array<vec4<f32>, 64>,
 }
 
 // `plantgen::looks::VARIEGATION_EDGE`.
@@ -75,7 +81,8 @@ fn fragment(in: VertexOutput, @builtin(front_facing) is_front: bool) -> Fragment
         base = under.rgb * darkening;
     }
     let patches = card.patches[layer];
-    if patches.a > 0.5 {
+    let lower = is_front == flipped;
+    if patches.a > 0.5 && !(lower && card.shares[layer].z > 0.5) {
         let share = clamp(card.shares[layer].x + card.shares[layer].y * (seed - 0.5), 0.0, 1.0);
         var weight = clamp((share - t.b) / VARIEGATION_EDGE + 0.5, 0.0, 1.0);
         if share <= 0.0 {
@@ -84,6 +91,17 @@ fn fragment(in: VertexOutput, @builtin(front_facing) is_front: bool) -> Fragment
             weight = 1.0;
         }
         base = mix(base, patches.rgb * darkening, weight);
+    }
+    let indusium = card.indusia[layer];
+    let ripe = card.sporangia[layer];
+    if is_front == flipped && indusium.a > 0.5 && t.b > 0.0 && fract(seed * 7.31 + 0.37) < ripe.a {
+        var sorus = ripe.rgb;
+        var weight = min(2.0 * t.b, 1.0);
+        if t.b > 0.5 {
+            sorus = mix(ripe.rgb, indusium.rgb, min(2.0 * (t.b - 0.5), 1.0));
+            weight = 1.0;
+        }
+        base = mix(base, sorus * darkening, weight);
     }
     let accent = card.accents[layer].rgb * darkening;
     let face = mix(base, accent, t.g) * (2.0 * t.r);

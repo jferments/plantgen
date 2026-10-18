@@ -94,15 +94,6 @@
       "colour": "nectary_colour",
       "why": "Nectaries a flora says show at the foot of each petal or tepal are drawn there in their colour, together a star at the flower's heart."
     },
-    "appearance.organs.flower.accent": {
-      "colour": "perianth_spot_colour",
-      "why": "A spotted flower's spots are drawn in their stated colour, the look's accent."
-    },
-    "appearance.organs.*.shape.stamen_length": {
-      "template": "flower",
-      "map": {"stamen_exsertion": {"included": 0.5, "barely_exserted": 0.7, "exserted": 0.85, "strongly_exserted": 1.0}},
-      "why": "Stamens reach as far, for a petal's length, as their flora says: within the perianth, just to its mouth, well out of it, or past its tips."
-    },
     "generator.params.bloom_stalk": {
       "map": {"inflorescence": {"solitary": {"rule": "pedicel_length_m"}}},
       "why": "A tree's or shrub's solitary flower hangs or stands on its own stalk, as long as its flora measures it; a cluster's flowers keep their stalks in the cluster."
@@ -129,9 +120,43 @@
       "rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)",
       "why": "A fruit is as wide for its length as its flora measures it."
     },
+    "appearance.organs.*.shape.flare": {
+      "template": "fruit",
+      "map": {"fruit_shape": {"globose": 0, "ellipsoid": 0, "ovoid": -0.25, "obovoid": 0.3, "obconic": 0.55, "club_shaped": 0.45}},
+      "why": "A fruit is as much wider toward its tip than its base as its outline is stated: even where round or ellipsoid, widest below its middle where ovoid, above it where obovoid, and drawn to a narrow base where obconic or club-shaped."
+    },
+    "appearance.organs.*.shape.stigma": {
+      "template": "flower",
+      "colour": "stigma_colour",
+      "why": "A flower's stigma lobes are drawn in the colour they are stated in, where it differs from the style's."
+    },
     "appearance.organs.fruit.accent": {
       "colour": "leaf_colour",
       "why": "A fruit's unripe share, and its stalk, are drawn in the green of the plant's leaves until a colour of its own is stated."
+    },
+    "appearance.organs.fruit.shape.seeds": {
+      "template": "fruit",
+      "colour": "fruit_seed_colour",
+      "why": "A ripe fruit that opens on its seeds shows them in the colour they ripen to: a magnolia's red seeds hang from its split follicles."
+    },
+    "appearance.organs.fruit.shape.ripening": {
+      "template": "fruit",
+      "colour": "fruit_colour_ripening",
+      "why": "A fruit that passes through a colour of its own as it ripens is drawn in it while most of its fruit are still unripe, then turns to its ripe colour."
+    },
+    "appearance.organs.fruit.shape.threads": {
+      "template": "fruit",
+      "rule": "clamp(fruit_seed_thread_m / fruit_size_m, 0, 1)",
+      "why": "A ripe seed hangs below its split follicle on a thread as long, for the fruit's length, as floras measure it."
+    },
+    "appearance.organs.fruit.shape.cup": {
+      "template": "fruit",
+      "colour": "fruit_cup_colour",
+      "why": "A fruit that stands in a cup on a swollen stalk is drawn in one, in the colour the cup ripens to."
+    },
+    "appearance.organs.fruit.inflorescence.fruits": {
+      "rule": "clamp(round(fruits_per_inflorescence), 1, 200)",
+      "why": "A cluster ripens as many fruit as floras count on one infructescence; its other flowers fall and leave their pedicels bare."
     },
     "appearance.organs.fruit.inflorescence.size": {
       "rule": "clamp(fruit_size_m / inflorescence_length_m, 0.005, 1)",
@@ -233,8 +258,8 @@
     "appearance.organs.*.shape.notch": {"template": "flower", "map": {"petal_apex": {"emarginate": 0.15, "bilobed": 0.45}}, "between": true, "why": "An emarginate petal's tip is notched; a bilobed one is cleft into two lobes."},
     "appearance.organs.*.shape.petals": {
       "template": "flower",
-      "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 3, 12)"}, "tepals": {"rule": "clamp(2 * round(flower_merosity), 4, 12)"}, "spiral": {"rule": "clamp(round(perianth_parts), 3, 60)"}}},
-      "why": "A flower draws its merosity's petals, twice it in tepals, or a spiral's tepals in all, up to 60."
+      "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 3, 12) * clamp(round(first(petal_whorls, 1)), 1, 2)"}, "tepals": {"rule": "first(perianth_parts, 0) > 0 ? clamp(max(round(perianth_parts / clamp(round(flower_merosity), 2, 6)), 2), 2, 6) * clamp(round(flower_merosity), 2, 6) : clamp(2 * round(flower_merosity), 4, 12)"}, "spiral": {"rule": "clamp(round(perianth_parts), 3, 60)"}}},
+      "why": "A flower draws its merosity's petals in each whorl its corolla is stated to stand in; twice it in tepals, or the stated tepals rounded to whole whorls of its merosity (a magnolia's 12 as four whorls of three); or a spiral's tepals in all, up to 60."
     },
     "appearance.organs.*.shape.sepals": {
       "template": "flower",
@@ -297,18 +322,14 @@
     },
     "appearance.organs.*.shape.stamen_length": {
       "template": "flower",
-      "rule": "clamp(stamen_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0.05, 12)",
-      "why": "A stamen a flora measures is drawn that long, over the radius the petals reach, so long-exserted stamens hang out past them."
+      "map": {"stamen_exsertion": {"included": 0.5, "barely_exserted": 0.7, "exserted": 0.85, "strongly_exserted": 1.0}},
+      "else": {"rule": "clamp(stamen_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0.05, 12)"},
+      "why": "Stamens reach as far, for a petal's length, as their flora says: within the perianth, just to its mouth, well out of it, or past its tips. Where it gives no such words, a stamen it measures is drawn that long, over the radius the petals reach, so long-exserted stamens hang out past them, and a magnolia's 2 to 3 cm in a flower 20 cm across reaches a fifth of the way out."
     },
     "appearance.organs.*.shape.style_length": {
       "template": "flower",
       "rule": "clamp(style_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0.05, 12)",
       "why": "A style a flora measures apart from the stamens is drawn that long, over the radius the petals reach."
-    },
-    "appearance.organs.*.shape.filament": {
-      "template": "flower",
-      "colour": "stamen_colour",
-      "why": "Filaments, and the style, are drawn in their stated colour; the anthers keep the accent."
     },
     "appearance.organs.*.shape.stamen_lean": {
       "template": "flower",
@@ -337,8 +358,8 @@
     },
     "appearance.organs.*.shape.anther_tilt": {"template": "flower", "map": {"anther_attachment": {"basifixed": 0, "dorsifixed": 45, "versatile": 80}}, "why": "An anther stands along its filament where the filament joins its base, leans where it joins its back, and lies nearly across the filament's tip where it swings free (versatile), as Simpson defines the three."}, "appearance.organs.*.shape.stamens": {
       "template": "flower",
-      "rule": "clamp(round(stamens), 0, 200)",
-      "why": "A flower draws its stamens, up to 200."
+      "rule": "clamp(round(stamens), 0, 400)",
+      "why": "A flower draws its stamens, up to 400."
     },
     "appearance.organs.*.shape.staminodes": {
       "template": "flower",
@@ -347,9 +368,20 @@
     },
     "appearance.organs.*.shape.carpels": {
       "template": "flower",
-      "rule": "clamp(round(carpels), 0, 30)",
-      "why": "A flower draws one pistil of up to five carpels, or of any number in an inferior ovary; above five in a superior one, as many free pistils, up to 30."
+      "rule": "clamp(round(carpels), 0, 100)",
+      "why": "A flower draws one pistil of up to five carpels, or of any number in an inferior ovary; above five in a superior one, as many free pistils, up to 100."
     },
+    "appearance.organs.*.shape.petal_whorls": {"template": "flower", "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(first(petal_whorls, 1)), 1, 2)"}}}, "why": "A corolla stands in the whorls it is stated in."},
+    "appearance.organs.*.shape.whorl": {"template": "flower", "map": {"perianth": {"tepals": {"rule": "first(perianth_parts, 0) > 0 ? clamp(round(flower_merosity), 2, 6) : 0"}}}, "why": "Tepals whose number is stated stand in whorls of the flower's merosity (a magnolia's three, four or five whorls of three); otherwise in two whorls of half each."},
+    "appearance.organs.*.shape.stamen_width": {"template": "flower", "map": {"stamen_form": {"filamentous": 0.03, "laminar": 0.16}}, "why": "A filament is a slender thread; a laminar stamen is a flat strap about a sixth as wide as it is long."},
+    "appearance.organs.*.shape.anther": {"template": "flower", "map": {"stamen_form": {"laminar": 0.6}}, "why": "A laminar stamen bears its pollen sacs along most of its length, over a short foot."},
+    "appearance.organs.*.shape.filament": {"template": "flower", "colour": "filament_colour", "why": "A flower's filaments and styles are drawn in the colour its filaments are stated in; its anthers keep the accent."},
+    "appearance.organs.*.shape.pistil": {"template": "flower", "colour": "pistil_colour", "why": "A flower's ovaries and its free carpels are drawn in the colour its carpels are stated in at flowering."},
+    "appearance.organs.*.shape.torus": {"template": "flower", "map": {"floral_receptacle": {"flat": 0, "convex": 0, "elongate": {"rule": "first(gynoecium_length_m, 0) > 0 ? clamp(gynoecium_length_m / (flower_size_m / 2), 0.1, 1.5) : 0.35"}}}, "why": "Free carpels on an elongate receptacle stand on a spiral up a cone as long, over the flower's radius, as the gynoecium is stated (a third of the radius where it is not), the stamens crowded round its foot; on a flat or convex one, round a low dome."},
+    "appearance.organs.flower.accent": {"colour": ["perianth_spot_colour", "anther_colour"], "why": "A spotted flower's spots are drawn in their stated colour, the look's accent (its anthers then in their own, `anther_colour`); an unspotted flower's anthers, and its centre where it draws no stamens, in the colour its anthers are stated in."},
+    "appearance.organs.bloom.accent": {"colour": "anther_colour", "why": "A tree's or shrub's blooms draw their anthers, and their centre where they draw no stamens, in the colour its anthers are stated in."},
+    "appearance.organs.*.shape.bud": {"template": "flower", "colour": "bud_colour", "why": "A lone flower's closed bud shows the colour its bud is stated in: its sepals', or the bracts' that wrap it."},
+    "appearance.organs.*.shape.rise": {"template": "flower", "map": {"corolla_shape": {"rotate": 10, "cupped": 55}}, "why": "A rotate corolla's petals spread nearly flat, 10 degrees above the plane square to the axis; a cupped one's rise 55 degrees into a bowl; other forms keep the drawn default of 30."},
     "generator.params.fruit_length": {
       "rule": "fruit_size_m",
       "why": "A herb's fruit is as long as floras measure it at its longest."
@@ -376,13 +408,13 @@
     },
     "appearance.organs.*.shape.armed": {
       "template": "fruit",
-      "map": {"fruit_surface": {"smooth": "none", "prickly": "prickles", "bristly": "bristles"}},
+      "map": {"fruit_armature": {"smooth": "none", "prickly": "prickles", "bristly": "bristles"}},
       "why": "A prickly fruit is drawn with stout prickles all over, a bristly one with fine bristles."
     },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
-      "map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}},
-      "why": "A berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
+      "map": {"fruitlets": {"drupelets": "drupelets", "follicles": "follicles", "samaras": "samaras", "berries": "berries", "hip": "hip"}}, "else": {"map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}}},
+      "why": "A fruit whose flora says what its free pistils make is drawn as that: drupelets, follicles on a cone-like axis, samaras up a spindle, separate berries from one stalk, or achenes in a hip. Otherwise a berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
     },
     "appearance.organs.*.inflorescence.peduncle": {
       "rule": "clamp(peduncle_length_m / (peduncle_length_m + inflorescence_length_m), 0, 0.9)",
@@ -467,9 +499,7 @@
     "rules.appearance.organs.*.shape.calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours sepals and a floral tube (nightshades round 2, 2026-10-17): the stated calyx colour, else leaf green as before."},
     "rules.appearance.organs.*.shape.sepal_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes sepals against petals (nightshades round 2, 2026-10-17): the stated lengths' ratio."},
     "rules.appearance.organs.*.shape.floral_tube": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fuchsia's floral tube (nightshades round 2, 2026-10-17): its stated length over the radius the petals reach, the flower's width over its sepals' outreach."},
-    "rules.appearance.organs.*.shape.stamen_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws measured stamens (nightshades round 2, 2026-10-17): their stated length over the radius the petals reach."},
     "rules.appearance.organs.*.shape.style_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a measured style (nightshades round 2, 2026-10-17): its stated length over the radius the petals reach."},
-    "rules.appearance.organs.*.shape.filament": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours filaments and style (nightshades round 2, 2026-10-17): the stated stamen colour."},
     "rules.appearance.organs.*.shape.stamen_lean": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen leans connivent anthers (nightshades round 2, 2026-10-17), a choice of the model's: a tangent of -0.1, together over the style; free ones at the usual 0.35."},
     "rules.generator.params.bloom_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
@@ -478,6 +508,11 @@
     "rules.appearance.organs.fruit.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect."},
     "rules.appearance.organs.*.season": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a plant's year from the months floras give, a choice of the model's (seasonal looks, 2026-10-16): its flowers show in the months it flowers in and its fruit in the months it is ripe in, as the season rules set their days, where they had shown all year and never fruited."},
     "rules.appearance.organs.fruit.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours unripe fruit, a choice of the model's (seasonal looks, 2026-10-16): green as the leaves are, since floras state the ripe colour and seldom the unripe one."},
+    "rules.appearance.organs.fruit.shape.seeds": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws the seeds of an open aggregate, a choice of the model's (magnoliid fruit, 2026-10-17): two follicles in three split, each showing its seed."},
+    "rules.appearance.organs.fruit.shape.ripening": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws ripening fruit, a choice of the model's (magnolia, 2026-10-18): each fruit is ripe or not by a fixed draw against the share still unripe; the ripe ones are in the ripening colour while 60% or more are unripe, and blend smoothly to the ripe colour as the rest ripen."},
+    "rules.appearance.organs.fruit.shape.threads": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws seeds on their threads, a choice of the model's (magnolia, 2026-10-18): a split follicle's seed hangs straight down from the split on a thin pale thread as long as stated, for the fruit's length; at a few millimetres it sits in the split."},
+    "rules.appearance.organs.fruit.shape.cup": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cupule, a choice of the model's (magnoliid fruit, 2026-10-17): a shallow cup over the fruit's lowest sixth on a stalk swelling toward it, green until ripe."},
+    "rules.appearance.organs.fruit.inflorescence.fruits": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster in fruit, a choice of the model's (magnoliid fruit, 2026-10-17): the units that set fruit are a fixed draw of the cluster's, and the rest are gone in fruit with their pedicels."},
     "rules.appearance.organs.fruit.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster in fruit, a choice of the model's (seasonal looks, 2026-10-16): each fruit as long, for the cluster's length, as floras measure the fruit, as its flowers are drawn as wide as they measure the flower."},
     "rules.appearance.organs.*.season.flower_look.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a flower against its fruit, a choice of the model's (seasonal looks, 2026-10-16): a stage's look is sized as a share of the organ in fruit, so a flower is the ratio of the stated flower and fruit sizes (flower_size_m, fruit_size_m), whether it is a cluster's unit or a lone flower."},
     "rules.appearance.organs.*.season.opening": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster that flowers and fruits at once, a choice of the model's (seasonal looks, 2026-10-16): where the stated fruiting months (fruiting_months) begin before the flowering months (flowering_months) end, a cluster's units open one after another from the first ripe month to the end of flowering, so the plant shows flowers and ripe fruit together as the floras describe."},
@@ -553,6 +588,7 @@
       "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
     },
     "rules.appearance.organs.*.shape.petal_ratio": {"evidence": "SourceInferred", "source": "systematics-association-1962-shapes", "note": "The chart of plane shapes sets each outline word by its length-to-width ratio and where it is widest; a petal or tepal takes the same words. Its width over length (0.15 linear to 0.95 orbicular) is read off the chart's classes, the model's choice within them."},
+    "rules.appearance.organs.*.shape.flare": {"evidence": "Authored", "source": "plantgen-authors", "note": "The usual botanical sense of the solid-shape words floras use for fruit: ovoid widest below the middle, obovoid above it, obconic a cone with its point at the base, club-shaped swelling from a long narrow base, globose and ellipsoid symmetric. How far each widens is the model's choice."},
     "rules.appearance.organs.*.shape.taper": {"evidence": "SourceInferred", "source": "systematics-association-1962-shapes", "note": "The chart of plane shapes: ovate and lanceolate outlines are widest below the middle and narrow to the tip, obovate and spatulate ones widest above it and full to the tip, elliptic and oblong ones symmetric. Drawn as the flower card's taper powers (0.45 round to 1.3 straight to a point), the model's choice."},
     "rules.appearance.organs.*.shape.point": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson (Plant Systematics, pp. 526-527 of the PDF) classes apices of any flat part by the angle where the margins meet: acuminate under 45 degrees with hollow sides, acute 45 to 90, obtuse over 90, rounded curved. Drawn on the flower card's point, 1 to 0, the model's choice."},
     "rules.appearance.organs.*.shape.notch": {"evidence": "SourceInferred", "source": "kaplan-2022", "note": "Kaplan's Principles of Plant Morphology describes petal tips as entire, emarginate (notched) or bilobed. How deep the card draws the notch (0.15 and 0.45 of its notch range) is the model's choice."},
@@ -612,6 +648,66 @@
       "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
     },
     "rules.appearance.organs.*.shape.carpels": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.petal_whorls": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.whorl": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.stamen_length": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.stamen_width": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.anther": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.filament": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.pistil": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.torus": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.rise": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.flower.accent": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.bloom.accent": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.bud": {
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
@@ -704,7 +800,7 @@
       "growth": {"years": 6, "step": 1, "keyframes": [2, 4, 6]},
       "variants": {"environments": ["open"], "seeds": [1]},
       "appearance": {"bark": [0.38, 0.33, 0.28], "foliage": [0.07, 0.15, 0.05], "foliage_shade": [0.025, 0.05, 0.017], "variation": 0.2},
-      "rules": {"generator.defaults.leaf_length": {"rule": "leaf_length_m", "why": "A stem's longest leaf is as long as floras measure the leaves."}, "generator.defaults.basal_leaves": {"map": {"rosette": {"basal": 5, "none": 0, "terminal": 0}}, "else": 0, "why": "A herb with a basal rosette has leaves at the foot of its stems, as many as the built-in rosette forbs mostly have (their median); one without, or whose taxa name no usual habit, has none."}, "generator.defaults.stems": {"map": {"perennation": {"bulb": 1, "corm": 1, "rhizome": 6, "tuber": 6, "pseudobulb": 6}}, "else": 6, "why": "A bulb or a corm is one shortened shoot, so it sends up one flowering stem (a bulb that has split into several is several plants); a rhizome or a cluster of tubers sends up a clump of them, as many as the herb defaults give, and so does a herb whose taxa name no usual mode of perennation."}, "generator.defaults.adult_age": {"map": {"life_span": {"annual": 1, "biennial": 2, "perennial": 2}}, "else": 2, "why": "An annual flowers in its first year and a biennial in its second; a perennial, or a herb whose taxa name no usual life span, from the year the lineage programs on herb mostly give."}, "generator.defaults.maturity": {"map": {"life_span": {"annual": 0.3, "biennial": 1.2, "perennial": 1.2}}, "else": 1.2, "why": "An annual's stems reach full size within its one season; a perennial's over the years the built-in forbs' median gives."}},
+      "rules": {"generator.defaults.leaf_length": {"rule": "leaf_length_m", "why": "A stem's longest leaf is as long as floras measure the leaves."}, "generator.defaults.basal_leaves": {"map": {"rosette": {"basal": 5, "none": 0, "terminal": 0}}, "else": 0, "why": "A herb with a basal rosette has leaves at the foot of its stems, as many as the built-in rosette forbs mostly have (their median); one without, or whose taxa name no usual habit, has none."}, "generator.defaults.stems": {"map": {"perennation": {"bulb": 1, "corm": 1, "rhizome": 6, "tuber": 6, "pseudobulb": 6}}, "else": 6, "why": "A bulb or a corm is one shortened shoot, so it sends up one flowering stem (a bulb that has split into several is several plants); a rhizome or a cluster of tubers sends up a clump of them, as many as the herb defaults give, and so does a herb whose taxa name no usual mode of perennation."}, "generator.defaults.adult_age": {"map": {"life_span": {"annual": 1, "biennial": 2, "perennial": 2}}, "else": 2, "why": "An annual flowers in its first year and a biennial in its second; a perennial, or a herb whose taxa name no usual life span, from the year the lineage programs on herb mostly give."}, "generator.defaults.maturity": {"map": {"life_span": {"annual": 0.3, "biennial": 1.2, "perennial": 1.2}}, "else": 1.2, "why": "An annual's stems reach full size within its one season; a perennial's over the years the built-in forbs' median gives."}, "generator.params.leaf_years": {"map": {"leaf_habit": {"evergreen": 2, "semi": 1, "deciduous": 1, "drought_deciduous": 1}}, "why": "An evergreen herb keeps its leaves through winter into a second year, as wild ginger, rattlesnake plantain and beargrass do; its flowering stems still die back. A deciduous one loses them in its first autumn."}},
       "evidence": {"generator.program": {"evidence": "Authored", "source": "plantgen-authors", "note": "A flowering plant of this form grows by the herb program; a lineage's own program, named nearer, takes its place."}, "generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Defaults for the form where its lineage program leaves a parameter valueless: the values most of the 23 lineage programs on herb share, and where they share none the medians of the 33 built-in forbs (2026-10-14). They yield to a lineage program's values and to any file's."}, "growth": {"evidence": "Authored", "source": "plantgen-authors", "note": "A forb is grown to the age the built-in forbs mostly are."}, "variants": {"evidence": "Authored", "source": "plantgen-authors", "note": "One seed in the open, as the built-in species."}, "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Neutral stem and leaf greens, until a family or species states its own colours."}, "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "Sizes a forb takes from its own facts, and how many stems it sends up from what it perennates in (a bulb or a corm is one shortened shoot), as defaults that yield to a lineage program's values and any file's."}}
     },
     "graminoid": {
@@ -712,7 +808,7 @@
       "growth": {"years": 6, "step": 1, "keyframes": [1, 2, 4]},
       "variants": {"environments": ["open"], "seeds": [1]},
       "appearance": {"bark": [0.38, 0.33, 0.28], "foliage": [0.07, 0.15, 0.05], "foliage_shade": [0.025, 0.05, 0.017], "variation": 0.2},
-      "rules": {"generator.defaults.leaf_length": {"rule": "leaf_length_m", "why": "A blade is as long on average as floras measure the leaves."}, "generator.defaults.culm_height": {"rule": "height_typical_m", "why": "A flowering culm stands about as tall as the plant usually grows."}, "generator.defaults.adult_age": {"map": {"life_span": {"annual": 1, "biennial": 2, "perennial": 2}}, "else": 2, "why": "An annual flowers in its first year and a biennial in its second; a perennial, or one whose taxa name no usual life span, from the year the lineage programs on grass give."}},
+      "rules": {"generator.defaults.leaf_length": {"rule": "leaf_length_m", "why": "A blade is as long on average as floras measure the leaves."}, "generator.defaults.culm_height": {"rule": "height_typical_m", "why": "A flowering culm stands about as tall as the plant usually grows."}, "generator.defaults.adult_age": {"map": {"life_span": {"annual": 1, "biennial": 2, "perennial": 2}}, "else": 2, "why": "An annual flowers in its first year and a biennial in its second; a perennial, or one whose taxa name no usual life span, from the year the lineage programs on grass give."}, "generator.params.leaf_years": {"map": {"leaf_habit": {"evergreen": 2, "semi": 1, "deciduous": 1, "drought_deciduous": 1}}, "why": "A wintergreen grass, rush or sedge keeps last year's blades green through winter beside the new ones, and they die the next year; a deciduous one's blades turn to thatch in their first autumn."}},
       "evidence": {"generator.program": {"evidence": "Authored", "source": "plantgen-authors", "note": "A flowering plant of this form grows by the grass program; a lineage's own program, named nearer, takes its place."}, "generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Defaults for the form where its lineage program leaves a parameter valueless: the values most of the 4 lineage programs on grass share, and where they share none the medians of the 17 built-in graminoids (2026-10-14). They yield to a lineage program's values and to any file's."}, "growth": {"evidence": "Authored", "source": "plantgen-authors", "note": "A graminoid is grown to the age the built-in graminoids mostly are."}, "variants": {"evidence": "Authored", "source": "plantgen-authors", "note": "One seed in the open, as the built-in species."}, "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Neutral stem and leaf greens, until a family or species states its own colours."}, "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "Sizes a graminoid takes from its own facts, as defaults that yield to a lineage program's values and any file's."}}
     },
     "vine": {
@@ -725,7 +821,7 @@
       "evidence": {"generator.program": {"evidence": "Authored", "source": "plantgen-authors", "note": "A flowering plant of this form grows by the climber program; a lineage's own program, named nearer, takes its place."}, "generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Defaults for the form where its lineage program leaves a parameter valueless: the values most of the 2 lineage programs on climber share, and where they share none the medians of the 2 built-in vines (2026-10-14). They yield to a lineage program's values and to any file's. Leaves last a year, as most vines' do, where the taxa state no leaf habit."}, "growth": {"evidence": "Authored", "source": "plantgen-authors", "note": "A vine is grown to the age, and in the quarter-year steps, the built-in vines are."}, "host": {"evidence": "Authored", "source": "plantgen-authors", "note": "A vine with no host of its own climbs the built-in ivy's: a 30-year bigleaf maple. A climber with nothing to climb drapes for its free years and dies back, so a vine needs one."}, "variants": {"evidence": "Authored", "source": "plantgen-authors", "note": "One seed in the open, as the built-in species."}, "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Neutral stem and leaf greens, until a family or species states its own colours."}, "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "Sizes a vine takes from its own facts, as defaults that yield to a lineage program's values and any file's."}}
     },
     "stem_succulent": {
-      "generator": {"program": "column", "defaults": {"arm_age": 60, "arm_angle": 80, "arm_growth": 0.02, "arm_height": 2.5, "arm_high": 0.75, "arm_length": 5, "arm_low": 0.3, "arm_neck": 0.65, "arm_neck_length": 0.12, "arm_out": 0.6, "arm_radius": 0.8, "arm_rate": 0, "arm_shape": 1.2, "arm_spread": 0.6, "bend": 0.475, "bloom_age": 25, "branch_angle": 35, "bud_area": 0.636, "bud_rate": 1, "bud_share": 0.2, "bud_size": 0.025, "chain_max": 7, "chains": 0, "clump_radius": 0.03, "crown": 0.5, "crown_rings": 1, "daughters_high": 2.6, "daughters_low": 0.6, "dome": 0.85, "droop": 0, "droop_length": 1, "elbow": 4, "elbow_spread": 0.35, "fill": 0.95, "fill_years": 20, "flower_angle": 35, "flower_area": 0.2005, "flowers": 11, "fruit_area": 0.89, "fruit_share": 0.3, "fruit_size": 0.04, "generations": 8, "height_max": 2.15, "height_rate": 0.02, "height_shape": 1.8, "joint_flowers": 0, "joint_length": 0.12, "joint_life": 0, "joint_radius": 0.02, "joint_spread": 0.25, "joints": 0, "leader_lean": 6, "lean": 3, "margin": 55, "pad": 0, "pinch": 0.02, "pinch_depth": 0.08, "radius_height": 0.5, "radius_min": 0.009, "resprout": 0, "rest_gap": 0.02, "ring_angle": 40, "ring_step": 15, "sag": 0.3, "seedling": 0.0125, "sink": 0, "stem_lean": 7.5, "stem_rate": 0.05, "stems": 2, "sun_tilt": 0, "swell": 0, "swell_side": 0.5, "swell_years": 15, "trunk_joints": 0, "twist": 35, "vigour_spread": 0.12, "wiggle": 0.7}},
+      "generator": {"program": "column", "defaults": {"arm_age": 60, "arm_angle": 80, "arm_growth": 0.02, "arm_height": 2.5, "arm_high": 0.75, "arm_length": 5, "arm_low": 0.3, "arm_neck": 0.65, "arm_neck_length": 0.12, "arm_out": 0.6, "arm_radius": 0.8, "arm_rate": 0, "arm_shape": 1.2, "arm_spread": 0.6, "bend": 0.475, "bloom_age": 25, "branch_angle": 35, "bud_area": 0.636, "bud_rate": 1, "bud_share": 0.2, "bud_size": 0.025, "chain_max": 7, "chains": 0, "clump_radius": 0.03, "crown": 0.5, "crown_rings": 1, "daughters_high": 2.6, "daughters_low": 0.6, "dome": 0.85, "droop": 0, "flank": 0, "droop_length": 1, "elbow": 4, "elbow_spread": 0.35, "fill": 0.95, "fill_years": 20, "flower_angle": 35, "flower_area": 0.2005, "flowers": 11, "fruit_area": 0.89, "fruit_share": 0.3, "fruit_size": 0.04, "generations": 8, "height_max": 2.15, "height_rate": 0.02, "height_shape": 1.8, "joint_flowers": 0, "joint_length": 0.12, "joint_life": 0, "joint_radius": 0.02, "joint_spread": 0.25, "joints": 0, "leader_lean": 6, "lean": 3, "margin": 55, "pad": 0, "pinch": 0.02, "pinch_depth": 0.08, "radius_height": 0.5, "radius_min": 0.009, "resprout": 0, "rest_gap": 0.02, "ring_angle": 40, "ring_step": 15, "sag": 0.3, "seedling": 0.0125, "sink": 0, "stem_lean": 7.5, "stem_rate": 0.05, "stems": 2, "sun_tilt": 0, "swell": 0, "swell_side": 0.5, "swell_years": 15, "trunk_joints": 0, "twist": 35, "vigour_spread": 0.12, "wiggle": 0.7}},
       "growth": {"years": 30, "step": 1, "keyframes": [3, 8, 15, 30]},
       "variants": {"environments": ["open"], "seeds": [1]},
       "appearance": {"bark": [0.2, 0.17, 0.13], "foliage": [0.1, 0.17, 0.06], "foliage_shade": [0.045, 0.077, 0.027], "variation": 0.1},

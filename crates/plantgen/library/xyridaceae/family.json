@@ -12,24 +12,15 @@
     "sexual_system": "hermaphrodite",
     "ovary_position": "superior",
     "woodiness": "herbaceous",
-    "inflorescence": {
-      "spike": "often",
-      "head": "often"
-    },
-    "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
-    },
+    "inflorescence": {"spike": "usually", "head": "sometimes"},
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
     "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "fruit_type": "capsule",
     "flower_merosity": 3,
     "stamens": 3,
     "carpels": 3,
-    "phyllotaxis_pattern": {
-      "distichous": "often",
-      "spiral": "often"
-    },
+    "phyllotaxis_pattern": {"distichous": "usually", "spiral": "sometimes"},
     "bract_form": "scale",
     "flowering_position": "terminal",
     "life_span": {
@@ -39,6 +30,8 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Xyris (read 2026-10-17): three equal, clawed petals over unequal sepals, so the showy corolla is radial in Xyris (>250 spp, most of the family). Zygomorphic flowers belong to the small genera, and the uneven sepals keep it at sometimes."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Xyris (read 2026-10-17): flowers single in the axils of tight bracts on a terminal spike atop a scape. Xyris (>250 spp) dominates the family; the short cone-like spike is sometimes called a head, so head stays as sometimes."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
@@ -49,11 +42,7 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Xyridaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     },
-    "traits.phyllotaxis_pattern": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 269, family Xyridaceae: phyllotaxis pattern distichous or spiral; read as {\"distichous\": \"often\", \"spiral\": \"often\"}."
-    },
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Xyris (read 2026-10-17): over 250 spp, leaves two-ranked and equitant (folded astride one another). Xyris holds the large majority of the family's species; spirally leaved members are in the small South American genera (Abolboda and allies). Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.bract_form": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Delphinium",
+  "traits": {
+    "leaf_incision": {"parted": "usually", "dissected": "often"},
+    "inflorescence": {"raceme": "usually", "panicle": "sometimes"}
+  },
+  "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Delphinium (read 2026-10-17, ca. 300 spp): blade cut deeply and palmately, with segments narrower on stem leaves than basal ones."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Delphinium (read 2026-10-17): terminal racemes of a few to a hundred flowers, now and then branched into panicles."}
+  }
+}

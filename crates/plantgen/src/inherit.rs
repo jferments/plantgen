@@ -686,7 +686,8 @@ pub enum Field {
     Word,
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
-    /// Three channels, 0 to 1: a flower's calyx colour, an anther's.
+    /// A colour, red, green and blue from 0 to 1: a fruit's seeds, a
+    /// flower's calyx or stigma lobes.
     Colour,
 }
 
@@ -716,11 +717,12 @@ fn rivals(field: &str) -> Vec<&'static str> {
 /// (`crate::looks::Inflorescence`): every key but its `branch` and its
 /// `stalk` and `spathe_colour` colours. The looks module's tests hold this
 /// to the key.
-pub const INFLORESCENCE: [(&str, Field); 15] = {
+pub const INFLORESCENCE: [(&str, Field); 16] = {
     use Field::{Count, Number, Word};
     [
         ("kind", Word),
         ("flowers", Count),
+        ("fruits", Count),
         ("branches", Count),
         ("per_node", Count),
         ("divergence", Number),
@@ -1160,20 +1162,29 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("petal_rise", Number),
                 ("calyx", Colour),
                 ("tube_colour", Colour),
-                ("filament", Colour),
                 ("stamens", Count),
                 ("stamen_length", Number),
                 ("style_length", Number),
                 ("stamen_lean", Number),
+                ("stamen_width", Number),
                 ("odd_rise", Number),
                 ("anther", Number),
                 ("anther_tilt", Number),
                 ("staminodes", Count),
                 ("carpels", Count),
                 ("ovary", Word),
+                ("stigma", Colour),
+                ("pericarpel", Word),
+                ("torus", Number),
                 ("column", Number),
                 ("turn", Number),
                 ("open", Number),
+                ("rise", Number),
+                ("petal_whorls", Count),
+                ("whorl", Count),
+                ("filament", Colour),
+                ("pistil", Colour),
+                ("bud", Colour),
             ],
         ),
         (
@@ -1244,6 +1255,11 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("kept_lobes", Count),
                 ("armed", Word),
                 ("hang", Number),
+                ("flare", Number),
+                ("seeds", Colour),
+                ("cup", Colour),
+                ("ripening", Colour),
+                ("threads", Number),
             ],
         ),
     ]
@@ -3124,6 +3140,15 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
         Some(Field::Count) => (value.is_u64(), "a whole number, 0 or more"),
         Some(Field::Number) => (value.is_number(), "a number"),
         Some(Field::Word) => (value.is_string(), "a word"),
+        Some(Field::Colour) => (
+            value.as_array().is_some_and(|rgb| {
+                rgb.len() == 3
+                    && rgb
+                        .iter()
+                        .all(|c| c.as_f64().is_some_and(|c| (0.0..=1.0).contains(&c)))
+            }),
+            "a colour, `[r, g, b]` from 0 to 1",
+        ),
         Some(Field::Outline) => (
             value.as_array().is_some_and(|points| {
                 points.iter().all(|point| {
@@ -3133,15 +3158,6 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
                 })
             }),
             "`[u, w]` points",
-        ),
-        Some(Field::Colour) => (
-            value.as_array().is_some_and(|channels| {
-                channels.len() == 3
-                    && channels
-                        .iter()
-                        .all(|c| c.as_f64().is_some_and(|c| (0.0..=1.0).contains(&c)))
-            }),
-            "three channels 0 to 1",
         ),
     };
     if fits {

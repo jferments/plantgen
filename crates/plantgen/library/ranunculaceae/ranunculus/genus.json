@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Ranunculus",
+  "traits": {
+    "inflorescence": {"cyme": "often", "solitary": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Ranunculus (read 2026-10-17): flowers in cymes of two to fifty, or single; cymes named first. Wikipedia Ranunculus (read 2026-10-17) likewise gives single flowers or a cyme without ranking them."}
+  }
+}
