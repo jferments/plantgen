@@ -17,10 +17,13 @@
 # is not drawn coiled (coil_turns 0) until a taxon's vernation says how;
 # a coiled piece's size, tightness, leaflet size and roll as the fern
 # program's (`polypodiidae`).
+# Revision 6: palm revision 12's cones by sex come from the Cycadales and
+# family rank files (Whitelock 2002): a male bears a pollen cone, a female
+# a crown of sporophylls with seeds along them, not a cone.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cycadaceae 5 extends palm;
+lsystem cycadaceae 6 extends palm;
 
 param vigour_spread = 0.1; # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;          # how strongly a leaning trunk turns back up, radians a metre

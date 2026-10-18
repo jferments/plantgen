@@ -11,7 +11,8 @@
     "leaf_arrangement": "alternate",
     "leaf_habit": "evergreen",
     "rosette": "terminal",
-    "sexual_system": "dioecious"
+    "sexual_system": "dioecious",
+    "reproduction": "cones"
   },
   "forms": {
     "palm": {
@@ -69,7 +70,28 @@
           "cataphyll_area": 0.035,
           "leaflet_young": 1,
           "leaflet_fold": 0.85,
-          "boot_angle": 80
+          "boot_angle": 80,
+          "cone_interval": 1,
+          "cones": 1,
+          "cone_life": 1,
+          "cone_width": 0.12,
+          "peduncle": 0.03,
+          "peduncle_radius": 0.012,
+          "cone_offset": 0,
+          "cone_lean": 0,
+          "ripe_lean": 0,
+          "cone_seeds": 0,
+          "seed_length": 0.03,
+          "male_cone": 0.3,
+          "male_cones": 1,
+          "male_cone_life": 0.1,
+          "male_peduncle": 0.03,
+          "male_lean": 0,
+          "sporophylls": 0,
+          "sporophyll_length": 0.25,
+          "sporophyll_angle": 30,
+          "sporophyll_ripe": 30,
+          "ovules": 2
         }
       },
       "growth": {
@@ -118,6 +140,31 @@
               "aspect": 0.35
             },
             "colour": [0.179, 0.095, 0.033]
+          },
+          "cone_male": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.25,
+              "cone": 1,
+              "open": 0.25
+            },
+            "colour": [0.477, 0.263, 0.073]
+          },
+          "seed": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.75
+            },
+            "colour": [0.6, 0.18, 0.03]
+          },
+          "cone_open": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.32,
+              "cone": 1,
+              "open": 0.6
+            },
+            "colour": [0.477, 0.263, 0.073]
           }
         }
       },
@@ -217,12 +264,36 @@
           "source": "whitelock-2002",
           "note": "A cataphyll is a short, stiff, triangular scale leaf, often densely felted with brown hair (Whitelock 2002, p. 17-18; Cycas revoluta's are 4 to 5 cm by 1.5 to 2.3 cm, brown-felted, after Flora of China): a tapering card about a third as wide as long, felt brown."
         },
+        "generator.defaults.cone_interval": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cycad cones in place of or with a leaf flush, and cone and leaf years may alternate (Whitelock 2002, p. 19): a cone every flush year unless a genus says otherwise."},
+        "generator.defaults.cones": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A female cycad's cones: Cycas makes no cone but a crown of sporophylls, and the zamiads' female cones are mostly one to a crown (Whitelock 2002, p. 18-20); genera with several set more."},
+        "generator.defaults.cone_life": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A female cone takes six to fourteen months to ripen in Zamia, about nine on average, and as little as eight months to about two years in Dioon (Whitelock 2002, p. 160, 289): a year, drawn ripe."},
+        "generator.defaults.cone_width": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A female cone's width where no species states one: 12 cm, about a mid-sized zamiad's (Whitelock 2002, p. 18; the species in the research note run 4 to 24 cm)."},
+        "generator.defaults.peduncle": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cycad's cone stands on a short stalk, often hidden among the cataphylls and leaf bases (Whitelock 2002, p. 18-20; Cycas revoluta's are 2.5 to 3.5 cm, p. 139): 3 cm unless stated."},
+        "generator.defaults.peduncle_radius": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cone's stalk is stout for its cone: 1.2 cm across the radius where no species says (Whitelock 2002, p. 18-20, gives stalks 0.5 to 3 cm thick)."},
+        "generator.defaults.cone_offset": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cycad's single cone ends its trunk, at the centre of its crown (Whitelock 2002, p. 18-20); genera that set cones among the leaf bases move them out."},
+        "generator.defaults.cone_lean": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cycad's cone stands erect while it grows (Whitelock 2002, p. 18-20); genera whose cones lean or hang set it."},
+        "generator.defaults.ripe_lean": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A ripe cone stays erect unless its genus droops it (Macrozamia, Dioon, Whitelock 2002, p. 160, 250)."},
+        "generator.defaults.cone_seeds": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A whole cone hides its seeds until it breaks up (Whitelock 2002, p. 20, 289); the zamiads' family rank file sets how many show."},
+        "generator.defaults.seed_length": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cycad's seed, its fleshy coat and all, is 1.2 to 6 cm long (Whitelock 2002, p. 21; the research note's table): 3 cm unless stated."},
+        "generator.defaults.male_cone": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A male cycad's pollen cone, where no species states it: 30 cm, between a Zamia's (6 to 14 cm) and a Cycas's (30 to 60 cm) (Whitelock 2002, p. 20, 139, 316)."},
+        "generator.defaults.male_cones": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A male cycad bears one pollen cone at a time unless its genus bears several (Whitelock 2002, p. 20, 175, 289)."},
+        "generator.defaults.male_cone_life": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A pollen cone sheds and withers within weeks: in Zamia only about a week once it elongates (Whitelock 2002, p. 20, 289). A tenth of a year, so a male plant shows its cone only in the year it bears it."},
+        "generator.defaults.male_peduncle": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A pollen cone stands on a short stalk like the female's (Whitelock 2002, p. 18-20): 3 cm unless stated."},
+        "generator.defaults.male_lean": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A pollen cone stands erect until it sheds (Whitelock 2002, p. 20, 316, 330)."},
+        "generator.defaults.sporophylls": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "Only female Cycas bears loose megasporophylls instead of a cone (Whitelock 2002, p. 18-20); its family rank file sets them."},
+        "generator.defaults.sporophyll_length": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A Cycas megasporophyll is 6.5 to 50 cm long (Whitelock 2002, p. 109-154): 25 cm unless stated."},
+        "generator.defaults.sporophyll_angle": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "Megasporophylls rise from the crown at about 30 degrees unless the crown type says otherwise (Whitelock 2002, p. 18-20, 81)."},
+        "generator.defaults.sporophyll_ripe": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "Megasporophylls keep their angle as the seed ripens unless a species' hang when ripe (Whitelock 2002, p. 153-154)."},
+        "generator.defaults.ovules": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A zamiad's sporophyll carries two ovules, and Cycas alone more, up to eight to ten (Whitelock 2002, p. 18)."},
+        "appearance.organs.cone_male": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A male cycad's pollen cone is narrower than the female's, cylindrical to long-conical, of many small sporophylls, often felted; as it sheds, its axis lengthens and gaps open between its sporophylls (Whitelock 2002, p. 20): a tan cone a quarter as wide as long, its scales a quarter apart, which species refine."},
+        "appearance.organs.cone_open": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A zamiad's female cone breaks up as its swelling seeds force its sporophylls apart, showing them (Whitelock 2002, p. 20, 289): drawn as the cone it was, its scales well apart."},
+        "appearance.organs.seed": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cycad's seed is wrapped in a fleshy coat (sarcotesta), ripening red, orange or yellow; Cycas seeds flattened, others round in section (Whitelock 2002, p. 21): an orange-red ovoid three quarters as wide as long, which species refine."},
         "appearance.leaf_axis": {"evidence": "SourceInferred", "source": "whitelock-2002", "note": "A cycad's petiole and rachis are coloured with its leaf, not its trunk: Whitelock (2002) gives Encephalartos lanatus a yellowish rachis and E. laurentianus a golden-green one; a yellow green, which species refine."}
       },
       "rules": {
         "generator.params.frond_length": {
-          "rule": "leaf_length_m",
-          "why": "A cycad's leaf is its frond, drawn as long as its flora gives it."
+          "rule": "first(leaf_length_m + petiole_length_m, leaf_length_m)",
+          "why": "A cycad's leaf is its frond, petiole and all: its blade (`leaf_length_m`, the rachis with its leaflets) and its petiole as long as its flora gives them, or its blade alone where no petiole is stated."
         },
         "generator.params.trunk_radius": {
           "rule": "clamp(0.05 + 0.04 * height_max_m, 0.06, 0.25)",
@@ -231,6 +302,140 @@
         "generator.params.trunk_rate": {
           "rule": "max(0, height_typical_m - 0.4 * leaf_length_m) / 50",
           "why": "A cycad's crown stands about four tenths of a frond's length above its trunk, so its trunk rises to the rest of its usual height over the fifty years after its stemless ones; a cycad whose stem stays underground, its height all frond, grows none."
+        },
+        "generator.params.petiole": {
+          "rule": "clamp(petiole_length_m / (leaf_length_m + petiole_length_m), 0.02, 0.8)",
+          "why": "A cycad's leaf has a bare petiole below its leaflets, as long, for the whole leaf with its blade, as it is stated."
+        },
+        "generator.params.pieces": {
+          "rule": "max(2, round(leaflets / 4))",
+          "why": "The palm program sets two pairs of leaflets on each piece of the rachis, so a leaf has a quarter as many pieces as its stated leaflets (a flora's pairs of leaflets, halved)."
+        },
+        "generator.params.leaflet_length": {
+          "rule": "clamp(leaflet_length_m / first(leaf_length_m + petiole_length_m, leaf_length_m), 0.02, 0.6)",
+          "why": "A cycad's longest leaflets, the median ones floras measure, are as long, for the whole leaf with its petiole, as they are stated."
+        },
+        "appearance.organs.leaflet.shape.aspect": {
+          "rule": "clamp(leaflet_width_m / leaflet_length_m, 0.01, 1)",
+          "template": "blade",
+          "why": "A cycad's leaflet is drawn as wide, for its length, as its median leaflets are stated."
+        },
+        "generator.params.old_angle": {
+          "map": {"leaf_posture": {"erect": 35, "ascending": 45, "arching": 55, "spreading": 70, "pendent": 100}},
+          "between": true,
+          "why": "A grown cycad leaf opens to this angle from the vertical: an erect one stands about a third of a right angle out, a spreading one nearly level, a pendent one hangs; one stated erect to spreading opens between (Whitelock 2002, p. 16)."
+        },
+        "generator.params.crown_cone": {
+          "rule": "cone_length_m",
+          "why": "A female cone is drawn as long as it is stated, ripe."
+        },
+        "generator.params.cone_width": {
+          "rule": "cone_width_m",
+          "why": "A female cone is as wide as it is stated, so the seeds it shows as it breaks up stand at its surface."
+        },
+        "appearance.organs.cone.shape.aspect": {
+          "rule": "clamp(cone_width_m / cone_length_m, 0.1, 1.5)",
+          "template": "fruit",
+          "why": "A female cone is drawn as wide, for its length, as it is stated."
+        },
+        "appearance.organs.cone.shape.profile": {
+          "map": {"cone_shape": {"ellipsoid": "ellipsoid", "ovoid": "ovoid", "conical": "conical", "cylindrical": "cylindrical", "barrel": "barrel", "fusiform": "fusiform"}},
+          "template": "fruit",
+          "why": "A female cone's outline from the side, in the words floras use."
+        },
+        "appearance.organs.cone.shape.apiculum": {
+          "map": {"cone_apex": {"blunt": 0, "apiculate": 0.1}},
+          "template": "fruit",
+          "why": "An apiculate cone's tip is drawn out into a short point, a tenth of its length, of small sterile sporophylls (Whitelock 2002, p. 316, 330)."
+        },
+        "appearance.organs.cone.colour": {
+          "colour": "cone_colour",
+          "why": "A female cone is drawn in its stated colour, its felt's where it is felted."
+        },
+        "appearance.organs.cone.shape.face_width": {
+          "rule": "clamp(cone_face_width_m / cone_length_m, 0.01, 0.5)",
+          "template": "fruit",
+          "why": "A female cone is covered by as many scales as faces of its stated width cover: a few dozen large faces on an Encephalartos, more and smaller on a Zamia (Whitelock 2002, p. 18-19)."
+        },
+        "appearance.organs.cone.shape.face_height": {
+          "rule": "clamp(cone_face_height_m / cone_face_width_m, 0.2, 1.5)",
+          "template": "fruit",
+          "why": "A female cone's sporophyll faces are as high, for their width, as they are stated: a flattened Zamia face about half as high as wide (Whitelock 2002, p. 18-19, 330)."
+        },
+        "appearance.organs.cone_open.shape.aspect": {
+          "rule": "clamp(cone_width_m / cone_length_m, 0.1, 1.5)",
+          "template": "fruit",
+          "why": "A breaking cone is drawn as wide, for its length, as the cone it was."
+        },
+        "appearance.organs.cone_open.shape.profile": {
+          "map": {"cone_shape": {"ellipsoid": "ellipsoid", "ovoid": "ovoid", "conical": "conical", "cylindrical": "cylindrical", "barrel": "barrel", "fusiform": "fusiform"}},
+          "template": "fruit",
+          "why": "A breaking cone keeps the outline the cone had."
+        },
+        "appearance.organs.cone_open.shape.apiculum": {
+          "map": {"cone_apex": {"blunt": 0, "apiculate": 0.1}},
+          "template": "fruit",
+          "why": "A breaking cone keeps the cone's tip."
+        },
+        "appearance.organs.cone_open.shape.face_width": {
+          "rule": "clamp(cone_face_width_m / cone_length_m, 0.01, 0.5)",
+          "template": "fruit",
+          "why": "A breaking cone's scales are the cone's, as many and as wide."
+        },
+        "appearance.organs.cone_open.shape.face_height": {
+          "rule": "clamp(cone_face_height_m / cone_face_width_m, 0.2, 1.5)",
+          "template": "fruit",
+          "why": "A breaking cone's faces are the cone's, as high for their width."
+        },
+        "appearance.organs.cone_open.colour": {
+          "colour": "cone_colour",
+          "why": "A breaking cone is drawn in the cone's stated colour."
+        },
+        "generator.params.male_cone": {
+          "rule": "pollen_cone_length_m",
+          "why": "A male plant's cone is drawn as long as its pollen cone is stated, shedding."
+        },
+        "appearance.organs.cone_male.shape.aspect": {
+          "rule": "clamp(pollen_cone_width_m / pollen_cone_length_m, 0.1, 1.5)",
+          "template": "fruit",
+          "why": "A pollen cone is drawn as wide, for its length, as it is stated."
+        },
+        "appearance.organs.cone_male.shape.profile": {
+          "map": {"pollen_cone_shape": {"ellipsoid": "ellipsoid", "ovoid": "ovoid", "conical": "conical", "cylindrical": "cylindrical", "barrel": "barrel", "fusiform": "fusiform"}},
+          "template": "fruit",
+          "why": "A pollen cone's outline from the side, in the words floras use."
+        },
+        "appearance.organs.cone_male.shape.apiculum": {
+          "map": {"pollen_cone_apex": {"blunt": 0, "apiculate": 0.1}},
+          "template": "fruit",
+          "why": "An apiculate pollen cone's tip is drawn out into a short point, a tenth of its length."
+        },
+        "appearance.organs.cone_male.colour": {
+          "colour": "pollen_cone_colour",
+          "why": "A pollen cone is drawn in its stated colour, its felt's where it is felted."
+        },
+        "appearance.organs.cone_male.shape.face_width": {
+          "rule": "clamp(pollen_cone_face_width_m / pollen_cone_length_m, 0.005, 0.5)",
+          "template": "fruit",
+          "why": "A pollen cone is covered by as many scales as faces of its stated width cover: a large Cycas's hundreds of microsporophylls (Whitelock 2002, p. 20, 134-154)."
+        },
+        "appearance.organs.cone_male.shape.face_height": {
+          "rule": "clamp(pollen_cone_face_height_m / pollen_cone_face_width_m, 0.2, 1.5)",
+          "template": "fruit",
+          "why": "A pollen cone's sporophyll faces are as high, for their width, as they are stated: a Zamia's often only a third as high as wide, so many stand along the cone (Whitelock 2002, p. 308, 316, 330)."
+        },
+        "generator.params.seed_length": {
+          "rule": "seed_length_m",
+          "why": "A ripe seed is drawn as long as it is stated, its fleshy coat (sarcotesta) and all."
+        },
+        "appearance.organs.seed.shape.aspect": {
+          "rule": "clamp(seed_width_m / seed_length_m, 0.2, 1.5)",
+          "template": "fruit",
+          "why": "A seed is as wide, for its length, as it is stated."
+        },
+        "appearance.organs.seed.colour": {
+          "colour": "seed_colour_ripe",
+          "why": "A seed is drawn in the colour of its ripe fleshy coat (sarcotesta)."
         }
       }
     }

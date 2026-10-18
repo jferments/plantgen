@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Dioon",
+  "forms": {
+    "palm": {
+      "generator": {
+        "defaults": {
+          "cone_interval": 3,
+          "cone_life": 1.5,
+          "ripe_lean": 30,
+          "cone_seeds": 30
+        }
+      },
+      "appearance": {
+        "organs": {
+          "cone": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "pointed"
+            }
+          },
+          "cone_open": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "pointed"
+            }
+          },
+          "cone_male": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "pointed"
+            }
+          }
+        }
+      },
+      "evidence": {
+        "generator.defaults.cone_interval": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Dioon bears one cone a cycle, usually every three or four years (Whitelock 2002, p. 160): every third year."
+        },
+        "generator.defaults.cone_life": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Dioon's female cone breaks up eight months to about two years after pollination, so last year's is sometimes still there beside this year's (Whitelock 2002, p. 160, 163-164): a year and a half, so it stands closed through its first year and breaks up in its second."
+        },
+        "generator.defaults.ripe_lean": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Dioon edule's female cone stands erect, then leans as it ripens (Whitelock 2002, p. 163-164): thirty degrees."
+        },
+        "generator.defaults.cone_seeds": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Dioon edule's heavy female cone, 25 to 29 cm by 19 to 24 cm (Whitelock 2002, p. 163), shows thirty seeds as it breaks up (estimated)."
+        },
+        "appearance": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Dioon's sporophylls are flattened, woolly scales drawn out to a point, female and male (Whitelock 2002, p. 18-19, 160, 163-164)."
+        }
+      }
+    }
+  }
+}

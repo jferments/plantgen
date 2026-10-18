@@ -1298,6 +1298,7 @@ fn shape_seed(shape: &Shape) -> u64 {
         "scatter",
         "roll",
         "inner_roll",
+        "stalk_width",
     ] {
         text = text.replace(&format!(", {field}: None"), "");
     }
@@ -2146,7 +2147,7 @@ fn compound(
             continue;
         }
         let half = match axis.order {
-            0 => fine,
+            0 => fine.max(s.stalk_width.unwrap_or(0.0) * 0.5 * (1.0 - 0.5 * y.clamp(0.0, 1.0))),
             1 => 0.75 * fine,
             _ => 0.5 * fine,
         };
@@ -2221,6 +2222,10 @@ fn sprig(
     // (base, unit direction, length, brightness) of each leaf, lowest
     // first, so that a higher leaf covers the one below it.
     let mut leaves = Vec::with_capacity(usize::try_from(s.leaves).unwrap_or(0));
+    if s.sized() {
+        sized_sprig(s, p, half, fine, &mut best, &mut leaves);
+    }
+    let side = if s.sized() { 0 } else { side };
     for j in 0..side {
         let n = u64::from(j);
         let at = (f64::from(j) + 0.5) / f64::from(side);
@@ -2234,7 +2239,9 @@ fn sprig(
         let length = length * fit(base, offset, half, fine * 1.2);
         leaves.push((base, direction, length, 0.86 + 0.12 * hash(n, 1, 22)));
     }
-    leaves.push(((0.0, top), (0.0, 1.0), longest * 0.97, 0.92));
+    if !s.sized() {
+        leaves.push(((0.0, top), (0.0, 1.0), longest * 0.97, 0.92));
+    }
     for (start, direction, length, bright) in leaves {
         let (along, across) = local(p, start, direction);
         if along < 0.0 || along > length {
@@ -2269,12 +2276,101 @@ fn sprig(
     best
 }
 
+/// How far apart, in leaf lengths, a sized sprig's leaves stand along a
+/// twig.
+const SPRIG_GAP: f64 = 0.3;
+
+/// A leaf in a sprig's painting: its base, unit direction, length and
+/// brightness.
+type SprigLeaf = ((f64, f64), (f64, f64), f64, f64);
+
+/// The twigs and leaves of a sprig whose leaves stand at their own size
+/// ([`Sprig::sized`]): the main twig with its side twigs alternating up
+/// it, each set with leaves half a leaf apart, alternating, each at
+/// `angle` to its twig and one at its tip. Paints the twigs at `p` into
+/// `best` and adds the leaves, lowest first, to `leaves`.
+fn sized_sprig(
+    s: &Sprig,
+    p: (f64, f64),
+    half: f64,
+    fine: f64,
+    best: &mut Paint,
+    leaves: &mut Vec<SprigLeaf>,
+) {
+    let longest = s.leaf_length();
+    let top = 1.0 - longest;
+    let reach = s.twig_length();
+    let angle = math::radians(s.angle);
+    // (start, unit direction, length, its thickness in finest widths).
+    let mut twigs = vec![((0.0, s.stalk), (0.0, 1.0), top - s.stalk, 1.2)];
+    let count = s.twigs;
+    for j in 0..count {
+        let n = u64::from(j);
+        let at = (f64::from(j) + 0.5) / f64::from(count);
+        let start = (0.0, s.stalk + (top - s.stalk) * 0.8 * at);
+        let turn = if j % 2 == 0 { 1.0 } else { -1.0 };
+        let tilt = math::radians(crate::looks::SPRIG_TWIG_ANGLE + 10.0 * (hash(n, 3, 23) - 0.5));
+        let direction = (turn * math::sin(tilt), math::cos(tilt));
+        let length = reach * (1.0 - 0.35 * at);
+        let offset = (direction.0 * length, direction.1 * length);
+        let length = length * fit(start, offset, half - longest * math::sin(angle), fine);
+        twigs.push((start, direction, length, 0.8));
+    }
+    for (k, &(start, direction, length, thick)) in (0_u64..).zip(&twigs) {
+        let (along, across) = local(p, start, direction);
+        if (0.0..=length + 0.01).contains(&along) && across.abs() < fine * thick {
+            *best = Paint::solid(0.8, 1.0);
+        }
+        // Leaves a third of a leaf apart along it, alternating sides, as
+        // a shoot's nodes stand about a third of its leaves' length apart.
+        let gap = SPRIG_GAP * longest;
+        let places = (length / gap).floor().max(0.0);
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let places = places as u32;
+        for i in 0..places {
+            let n = u64::from(i);
+            let up = (f64::from(i) + 0.5) * length / f64::from(places);
+            let base = (start.0 + direction.0 * up, start.1 + direction.1 * up);
+            let turn = if (i + u32::try_from(k).unwrap_or(0)) % 2 == 0 {
+                1.0
+            } else {
+                -1.0
+            };
+            let lean = angle + math::radians(12.0 * (hash(n, k, 24) - 0.5));
+            let (c, sn) = (math::cos(turn * lean), math::sin(turn * lean));
+            // The twig's direction turned by the leaf's angle.
+            let leaf = (
+                direction.0 * c + direction.1 * sn,
+                direction.1 * c - direction.0 * sn,
+            );
+            let size = longest * (0.8 + 0.2 * hash(n, k, 25));
+            let offset = (leaf.0 * size, leaf.1 * size);
+            let size = size * fit(base, offset, half, fine * 1.2);
+            leaves.push((base, leaf, size, 0.86 + 0.12 * hash(n, k, 26)));
+        }
+        let end = (
+            start.0 + direction.0 * length,
+            start.1 + direction.1 * length,
+        );
+        let size = longest * 0.95;
+        let offset = (direction.0 * size, direction.1 * size);
+        let size = size * fit(end, offset, half, fine * 1.2);
+        leaves.push((end, direction, size, 0.92));
+    }
+}
+
 /// A grass or sedge blade card's half-width at `y` along it, from its foot
 /// (0) to its end (1).
 pub(crate) fn blade_half_width(s: &Blade, y: f64) -> f64 {
     let mut width = s.aspect * 0.5 * (1.0 - 0.12 * y);
     if s.taper > 0.0 && y > 1.0 - s.taper {
         width *= math::pow(((1.0 - y) / s.taper).max(0.0), 0.85);
+    }
+    if s.foot > 0.0 && y < s.foot {
+        // Narrowing to a third of its width at its foot, a rounded
+        // shoulder above.
+        let u = y / s.foot;
+        width *= 1.0 / 3.0 + 2.0 / 3.0 * math::sqrt(u * (2.0 - u));
     }
     width
 }
@@ -2747,6 +2843,27 @@ fn fruit(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
         };
     }
     let across = s.aspect * 0.5 * 0.94;
+    if s.cone > 0.0 && !s.is_plain_cone() {
+        // A cone with a profile of its own: its outline from foot to tip,
+        // scales in crossing spiral rows as below.
+        let t = (y - 0.08) / 0.9;
+        let width = s.width_at(t);
+        if !(0.0..=1.0).contains(&t) || width <= 0.0 {
+            return Paint::EMPTY;
+        }
+        let u = x / (across * width);
+        if u.abs() >= 1.0 {
+            return Paint::EMPTY;
+        }
+        let rows = s.scale_rows();
+        let tip = crate::blooms::fruit_rows(s, 0).map_or_else(
+            || frac(t * rows + u * 2.0).min(frac(t * rows - u * 2.0)),
+            |grid| crate::blooms::row_face(t, u, grid),
+        );
+        let body = 0.7 + 0.4 * math::sqrt(1.0 - u * u);
+        let scales = 0.55 + 0.75 * tip;
+        return Paint::solid(body * (1.0 - s.cone) + scales * body * s.cone, 0.0);
+    }
     let (dx, dy) = (x / across, (y - 0.53) / 0.45);
     let mut d = dx * dx + dy * dy;
     if s.cone > 0.0 {
@@ -3399,6 +3516,21 @@ fn one_fruit(
         let highlight = math::exp(-((v + 0.35).powi(2) + (dt - 0.4).powi(2)) * 9.0);
         0.68 + 0.4 * math::sqrt((1.0 - d).max(0.0)) + 0.5 * highlight
     };
+    if s.cone >= 0.5 && !s.is_plain_cone() {
+        let width = s.width_at(t);
+        if width <= 0.0 || v.abs() >= width {
+            return Paint::EMPTY;
+        }
+        let d = (v / width).powi(2);
+        let rows = s.scale_rows();
+        let tip = crate::blooms::fruit_rows(s, 0).map_or_else(
+            || frac(t * rows + v).min(frac(t * rows - v)),
+            |grid| crate::blooms::row_face(t, v / width, grid),
+        );
+        let highlight = math::exp(-((v + 0.35).powi(2) + (t - 0.9).powi(2)) * 9.0);
+        let ball = 0.68 + 0.4 * math::sqrt((1.0 - d).max(0.0)) + 0.5 * highlight;
+        return Paint::solid(ball * (0.55 + 0.75 * tip) * 0.85, 0.0);
+    }
     if s.cone >= 0.5 {
         let d = ellipse(0.5, 0.5, 1.0);
         if d >= 1.0 {

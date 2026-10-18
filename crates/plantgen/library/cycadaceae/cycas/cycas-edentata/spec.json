@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "id": "cycas-edentata",
+  "taxon": {
+    "scientific_name": "Cycas edentata",
+    "common_name": "Cycas edentata",
+    "family": "Cycadaceae",
+    "genus": "Cycas",
+    "plant_name_id": 383346
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.075,
+      "trunk_rate": 0.06,
+      "stemless_years": 6,
+      "fronds_per_year": 12,
+      "frond_length": 2.0,
+      "petiole": 0.35,
+      "leaflet_length": 0.15,
+      "leaflet_angle": 78,
+      "adult_age": 8
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [10, 30, 60]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "organs": {
+      "leaflet": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.4,
+          "aspect": 0.054
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 5.5,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "pollen_cone_length_m": {
+      "min": 0.16,
+      "max": 0.4
+    },
+    "pollen_cone_width_m": {
+      "min": 0.09,
+      "max": 0.12
+    },
+    "pollen_cone_face_width_m": {
+      "min": 0.018,
+      "max": 0.022
+    },
+    "pollen_cone_shape": "ovoid",
+    "pollen_cone_colour": [210, 120, 40],
+    "microsporophyll_spine_m": {
+      "min": 0.009,
+      "max": 0.017
+    },
+    "megasporophyll_length_m": {
+      "min": 0.3,
+      "max": 0.5
+    },
+    "megasporophyll_crown": "open",
+    "megasporophyll_margin": "entire",
+    "megasporophyll_colour": [225, 210, 160],
+    "ovules_per_megasporophyll": {
+      "min": 4,
+      "max": 8
+    },
+    "seed_length_m": {
+      "min": 0.045,
+      "max": 0.052
+    },
+    "seed_width_m": {
+      "min": 0.03,
+      "max": 0.043
+    },
+    "seed_colour_ripe": [190, 100, 40],
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: stems 3 to 10 m tall, 11 to 20 cm across; leaves 1.5 to 2.5 m long, the petiole 50 to 90 cm; leaflets 26 to 35 cm by 14 to 19 mm, at 70 to 85 degrees. Drawn as a trunk 0.075 m in radius, rising 0.06 m a year; fronds 2 m long, the petiole 0.35 of them, the longest leaflet 0.15 of the frond; 12 fronds a year, as the crown's count over the three years a frond lives (estimated); first cones at 8 years (estimated, as the research note's timing table records)."
+    },
+    "appearance": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: its leaflets drawn as wide, for their length, as the median leaflets it gives; the rest of its look from its order and family."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: stems 3 to 10 m tall, 11 to 20 cm across; leaves 1.5 to 2.5 m long, the petiole 50 to 90 cm; leaflets 26 to 35 cm by 14 to 19 mm, at 70 to 85 degrees. The whole plant's height at 60 years estimated from these, its stem (or none, where it stays underground) under a crown of young leaves standing about 0.85 of a leaf above it: about 5.5 m. Whitelock gives no ages, so the tolerance is wide."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them (the scientific name where no common name is in wide use), and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a cycad's crown of pinnate leaves on a pachycaul stem, drawn on the palm program."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact: four seeds, so male and female plants both show."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: male cone ovoid, 16 to 40 cm long."
+    },
+    "traits.pollen_cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: male cone 9 to 12 cm across."
+    },
+    "traits.pollen_cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120), Cycas edentata (as C. litoralis): microsporophylls 3.5 to 4 cm long, the face 1.8 to 2.2 cm wide."
+    },
+    "traits.pollen_cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: male cone ovoid."
+    },
+    "traits.pollen_cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: male cone orange felted; the colour by eye."
+    },
+    "traits.microsporophyll_spine_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: microsporophylls 3.5 to 4 cm, the face 1.8 to 2.2 cm wide, with a prominent, sharply upturned spine 0.9 to 1.7 cm long."
+    },
+    "traits.megasporophyll_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: megasporophylls 30 to 50 cm long, loose and open."
+    },
+    "traits.megasporophyll_crown": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: megasporophylls loose and open."
+    },
+    "traits.megasporophyll_margin": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: lamina lanceolate, 9 to 12 cm by 2.5 to 3.5 cm, obscurely toothed with 6 to 14 soft spines under 1 mm, and an apical spine 2.5 to 4 cm; read as entire."
+    },
+    "traits.megasporophyll_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: megasporophylls felted white or yellow; the colour by eye."
+    },
+    "traits.ovules_per_megasporophyll": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: 4 to 8 ovules."
+    },
+    "traits.seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: seeds flattened ovoid with an apical crest, 4.5 to 5.2 cm long, floating."
+    },
+    "traits.seed_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: seeds 3 to 4.3 cm across."
+    },
+    "traits.seed_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: sarcotesta orange-brown when ripe; the colour by eye."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 120, under its synonym C. litoralis), Cycas edentata: male and female cones on separate plants, as in every cycad (p. 19)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Whitelock, L. M. (2002). The Cycads. Timber Press.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy: cones, sporophylls and seeds by sex from Whitelock (2002); stem and leaves from the same descriptions."
+  }
+}

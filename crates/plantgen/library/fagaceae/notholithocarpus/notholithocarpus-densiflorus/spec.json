@@ -25,8 +25,6 @@
       "apical_young": 0.62,
       "apical": 0.5,
       "apical_years": 20,
-      "leaf_size": 0.28,
-      "spur_leaf": 0.3,
       "spur_pairs": 2,
       "leaf_angle": 55,
       "lean": 6,
@@ -94,10 +92,7 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 50,
-          "stalk": 0.1,
+          "template": "simple",
           "widest": 0.5,
           "tip": 0.25,
           "base": 0.4,

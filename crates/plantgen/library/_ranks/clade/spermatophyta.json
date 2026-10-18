@@ -60,19 +60,22 @@
       "map": {
         "self_pruning": {"true": 0.05, "false": 0}
       },
-      "why": "A plant that sheds its own shaded limbs drops a limb whose leaves gather less light than its wood costs: under a twentieth of a fully lit leaf per segment it carries."
+      "else": {"map": {"shade_tolerance": {"intolerant": 0.05, "intermediate": 0, "tolerant": 0}}},
+      "why": "A plant that sheds its own shaded limbs drops a limb whose leaves gather less light than its wood costs: under a twentieth of a fully lit leaf per segment it carries. Where no source says whether it self-prunes, a shade-intolerant tree is taken to: its shaded limbs die, as black cottonwood's do, which stands on a trunk clear of branches for more than half its length (FEIS)."
     },
     "generator.params.space_renew": {
       "map": {
         "self_pruning": {"true": 1, "false": 0}
       },
+      "else": {"map": {"shade_tolerance": {"intolerant": 1, "intermediate": 0, "tolerant": 0}}},
       "why": "Where a shed limb leaves a gap, the crown can grow back into it."
     },
     "generator.params.bole_clear": {
       "map": {
         "self_pruning": {"true": 1, "false": 0}
       },
-      "why": "A tree that sheds its own shaded limbs stands on a clear trunk below its crown."
+      "else": {"map": {"shade_tolerance": {"intolerant": 1, "intermediate": 0, "tolerant": 0}}},
+      "why": "A tree that sheds its own shaded limbs stands on a clear trunk below its crown, and so, where no source says, does a shade-intolerant one."
     },
     "generator.params.limb_arch": {
       "map": {

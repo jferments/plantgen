@@ -32,6 +32,8 @@
 //! flowers, heads, spikelets and inflorescences open, fruit and cones
 //! ripe, and every organ without a season on the default day. An organ is
 //! measured once per character, on the first of those days it qualifies.
+//! A male plant's cone (`<organ>_male`) is measured as its pollen cone,
+//! and a seed borne outside a fruit (a cycad's) as a seed.
 //!
 //! **What passes.** With the values sorted and $`q_{10}`$, $`q_{90}`$ their
 //! 10th and 90th percentiles (nearest rank), and a range's `min` and
@@ -157,7 +159,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 39] = [
+pub const SIZES: [(&str, Judged); 43] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -190,6 +192,10 @@ pub const SIZES: [(&str, Judged); 39] = [
     ("fruit_size_m", Judged::Organs),
     ("cone_length_m", Judged::Organs),
     ("cone_width_m", Judged::Organs),
+    ("pollen_cone_length_m", Judged::Organs),
+    ("pollen_cone_width_m", Judged::Organs),
+    ("seed_length_m", Judged::Organs),
+    ("seed_width_m", Judged::Organs),
     ("divergence_deg", Judged::Typical),
     ("juvenile_period_years", Judged::Typical),
     ("leaf_life_years", Judged::Organs),
@@ -729,6 +735,15 @@ impl Grown<'_> {
             .get(usize::from(organ.organ))
             .copied()
             .unwrap_or(organs::PIECE)
+    }
+
+    /// Whether the organ is a male plant's own (`<organ>_male`): a
+    /// cycad's pollen cone.
+    fn male(&self, organ: &GraphOrgan) -> bool {
+        self.growth
+            .organ_types
+            .get(usize::from(organ.organ))
+            .is_some_and(|kind| kind.name.ends_with(crate::spec::MALE))
     }
 
     fn later(&self, organ: &GraphOrgan) -> bool {
@@ -2335,7 +2350,10 @@ fn reproductive(
     phase: Option<Phase>,
     tally: &mut Tally,
 ) {
-    let term = grown.term(organ);
+    let term = match grown.term(organ) {
+        "cone" if grown.male(organ) => POLLEN_CONE,
+        term => term,
+    };
     if let Some(cluster) = &look.inflorescence {
         let layout = cluster.laid_on(organ);
         cluster_kinds(cluster, &layout, look, phase, tally);
@@ -2520,6 +2538,10 @@ fn cluster_kinds(
 
 /// One flower, head, spikelet, fruit or cone drawn with `shape`, `length`
 /// long (a flower's or head's width).
+/// The term a male plant's cone is measured under: its pollen cone, which
+/// floras give apart from the seed cone.
+const POLLEN_CONE: &str = "pollen_cone";
+
 fn unit_sizes(
     shape: &Shape,
     length: f64,
@@ -2603,7 +2625,26 @@ fn unit_sizes(
         // a fruit.
         Shape::Fruit(_) if term == "bulbil" => {}
         Shape::Fruit(fruit) if in_stage(phase, Stage::Ripe) => {
-            if term == "cone" {
+            if term == POLLEN_CONE {
+                // A male plant's cone (a cycad's) is its pollen cone.
+                tally.add("pollen_cone_length_m", organ, part, length);
+                tally.add(
+                    "pollen_cone_width_m",
+                    organ,
+                    part,
+                    length * fruit.aspect.clamp(0.05, 2.0),
+                );
+            } else if term == "seed" {
+                // A seed borne outside a fruit (a cycad's), its fleshy
+                // coat and all.
+                tally.add("seed_length_m", organ, part, length);
+                tally.add(
+                    "seed_width_m",
+                    organ,
+                    part,
+                    length * fruit.aspect.clamp(0.05, 2.0),
+                );
+            } else if term == "cone" {
                 tally.add("cone_length_m", organ, part, length);
                 tally.add(
                     "cone_width_m",
@@ -3889,11 +3930,13 @@ mod tests {
         let strip = Blade {
             taper: 0.0,
             aspect: 0.1,
+            foot: 0.0,
         };
         assert_eq!(read(Shape::Blade(strip)), "linear");
         let tip = Blade {
             taper: 1.0,
             aspect: 0.05,
+            foot: 0.0,
         };
         assert_eq!(read(Shape::Blade(tip)), "deltate|lanceolate|linear");
         // A frond card's blade is widest below its middle, a third as
