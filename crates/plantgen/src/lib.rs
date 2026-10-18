@@ -655,4 +655,8 @@ pub mod venation;
 /// shape and height facts held back from 96; broom's stated obovate
 /// leaflets draw where a hand-drawn profile stood (102 is fern sori,
 /// #182).
-pub const GENERATOR_REVISION: u32 = 103;
+/// 104: evergreen herbs keep their basal leaves, and stems bearing leaves
+/// only, into a second year, and wintergreen grasses, rushes and sedges
+/// keep last year's blades green, from the leaf habit their taxa state
+/// (`leaf_years` in the herb and grass programs).
+pub const GENERATOR_REVISION: u32 = 104;
