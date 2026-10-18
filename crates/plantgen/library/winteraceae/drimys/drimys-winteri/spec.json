@@ -128,7 +128,10 @@
       1,
       2,
       3
-    ]
+    ],
+    "height_typical_m": {"min": 8, "max": 20},
+    "life_span": "perennial",
+    "rosette": "none"
   },
   "evidence": {
     "taxon": {
@@ -245,7 +248,10 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after Reiche (1896) and Simpson: pale grey bark and red young twigs; glossy leaves, whitish below."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2777998), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2777998), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2777998), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -686,6 +686,9 @@ pub enum Field {
     Word,
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
+    /// A colour, red, green and blue from 0 to 1: a fruit's seeds, a
+    /// flower's calyx or stigma lobes.
+    Colour,
 }
 
 /// The fields of a card that replace others where set, and those they
@@ -714,11 +717,12 @@ fn rivals(field: &str) -> Vec<&'static str> {
 /// (`crate::looks::Inflorescence`): every key but its `branch` and its
 /// `stalk` and `spathe_colour` colours. The looks module's tests hold this
 /// to the key.
-pub const INFLORESCENCE: [(&str, Field); 15] = {
+pub const INFLORESCENCE: [(&str, Field); 18] = {
     use Field::{Count, Number, Word};
     [
         ("kind", Word),
         ("flowers", Count),
+        ("fruits", Count),
         ("branches", Count),
         ("per_node", Count),
         ("divergence", Number),
@@ -728,6 +732,8 @@ pub const INFLORESCENCE: [(&str, Field); 15] = {
         ("size", Number),
         ("taper", Number),
         ("droop", Number),
+        ("unit", Number),
+        ("dome", Number),
         ("spathe", Number),
         ("spathe_width", Number),
         ("spathe_hood", Number),
@@ -885,8 +891,17 @@ fn season_read(spec: &Map<String, Value>, at: &str, key: &str) -> Option<Value> 
     )
 }
 
-/// What the inflorescence's `key` takes.
+/// What the inflorescence's `key` takes: one of [`INFLORESCENCE`], on its
+/// own axis or, after `branch.`, on its branches (and theirs).
 fn inflorescence_takes(key: &str) -> Result<Field, String> {
+    let mut key = key;
+    // A cluster nests three levels deep (`crate::clusters::LEVELS`).
+    for _ in 1..3 {
+        match key.strip_prefix("branch.") {
+            Some(rest) => key = rest,
+            None => break,
+        }
+    }
     INFLORESCENCE
         .iter()
         .find(|(name, _)| *name == key)
@@ -1002,7 +1017,7 @@ fn every_look(
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
 pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
-    use Field::{Count, Number, Outline, Word};
+    use Field::{Colour, Count, Number, Outline, Word};
     [
         (
             "needles",
@@ -1075,6 +1090,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("leaflet_width", Number),
                 ("teeth", Count),
                 ("petiole", Number),
+                ("lobes", Count),
+                ("lobe_depth", Number),
                 ("pattern", Word),
                 ("pinnules", Count),
                 ("segments", Count),
@@ -1098,6 +1115,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("scatter", Number),
                 ("roll", Number),
                 ("inner_roll", Number),
+                ("stalk_width", Number),
             ],
         ),
         (
@@ -1115,9 +1133,14 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("tooth_depth", Number),
                 ("round", Number),
                 ("petiole", Number),
+                ("leaf", Number),
+                ("twigs", Count),
             ],
         ),
-        ("blade", &[("taper", Number), ("aspect", Number)]),
+        (
+            "blade",
+            &[("taper", Number), ("aspect", Number), ("foot", Number)],
+        ),
         (
             "frond",
             &[
@@ -1147,19 +1170,42 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("fused", Number),
                 ("throat", Number),
                 ("belly", Number),
+                ("tube_reach", Number),
+                ("spots", Count),
+                ("anther_colour", Colour),
+                ("base_colour", Colour),
+                ("base_length", Number),
+                ("star_colour", Colour),
                 ("spur", Number),
                 ("tube", Number),
+                ("floral_tube", Number),
+                ("sepal_rise", Number),
+                ("petal_rise", Number),
+                ("calyx", Colour),
+                ("tube_colour", Colour),
                 ("stamens", Count),
                 ("stamen_length", Number),
+                ("style_length", Number),
+                ("stamen_lean", Number),
+                ("stamen_width", Number),
                 ("odd_rise", Number),
                 ("anther", Number),
                 ("anther_tilt", Number),
                 ("staminodes", Count),
                 ("carpels", Count),
                 ("ovary", Word),
+                ("stigma", Colour),
+                ("pericarpel", Word),
+                ("torus", Number),
                 ("column", Number),
                 ("turn", Number),
                 ("open", Number),
+                ("rise", Number),
+                ("petal_whorls", Count),
+                ("whorl", Count),
+                ("filament", Colour),
+                ("pistil", Colour),
+                ("bud", Colour),
             ],
         ),
         (
@@ -1226,6 +1272,24 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("profile", Word),
+                ("apiculum", Number),
+                ("face", Word),
+                ("spine", Number),
+                ("spine_base", Number),
+                ("open", Number),
+                ("face_width", Number),
+                ("face_height", Number),
+                ("rows", Number),
+                ("kept_calyx", Number),
+                ("kept_lobes", Count),
+                ("armed", Word),
+                ("hang", Number),
+                ("flare", Number),
+                ("seeds", Colour),
+                ("cup", Colour),
+                ("ripening", Colour),
+                ("threads", Number),
             ],
         ),
     ]
@@ -2435,7 +2499,7 @@ fn seasonal_looks(
             outcomes.insert(path, (file, None));
         }
         if organ == "flower" {
-            stage_seasons(spec, origins, &at);
+            stage_seasons(spec, origins, &at, kept(traits));
         }
     }
     let why = (!set_any).then(|| why.unwrap_or_else(|| "it draws no flowering look".to_string()));
@@ -2453,13 +2517,35 @@ fn by_hand<'a>(
         .find(|(path, (label, depth))| within(path, at) && *depth > 0 && !label.contains(": rule"))
 }
 
+/// Whether the species' fruit stays on the plant for years after it
+/// ripens (`fruit_persistence` persistent, and nothing else stated).
+fn kept(traits: &BTreeMap<String, (Value, usize)>) -> bool {
+    traits
+        .get("fruit_persistence")
+        .is_some_and(|(value, _)| match value {
+            Value::String(state) => state == "persistent",
+            Value::Object(states) => {
+                !states.is_empty() && states.keys().all(|state| state == "persistent")
+            }
+            _ => false,
+        })
+}
+
 /// Give the program's `bud` and `fruit` organs, which stand for a
 /// herb's `flower` (at `at`) before it opens and once it has set fruit,
 /// its season, each showing only in its own stage: the bud, its flower's
 /// look closed ([`closed_flower`]), from the flower's bud day to its fruit
 /// day; the fruit from its fruit day to its fall. A look a file set by
-/// hand keeps its own year.
-fn stage_seasons(spec: &mut Map<String, Value>, origins: &mut BTreeMap<String, Origin>, at: &str) {
+/// hand keeps its own year. Where the fruit is `kept` for years (a
+/// chain-fruit cholla's, whose chains hang and flower again), the fruit
+/// organ, the fruit of earlier years, keeps no season: it is on the plant
+/// all year, as this year's flowers bud, open and fruit beside it.
+fn stage_seasons(
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    at: &str,
+    kept: bool,
+) {
     let day = |spec: &Map<String, Value>, name: &str| {
         find(spec, &format!("{at}.season.{name}")).and_then(Value::as_f64)
     };
@@ -2485,6 +2571,9 @@ fn stage_seasons(spec: &mut Map<String, Value>, origins: &mut BTreeMap<String, O
             ],
         ),
     ] {
+        if kept && organ == "fruit" {
+            continue;
+        }
         let look = format!("appearance.organs.{organ}");
         let fits = find(spec, &look)
             .and_then(Value::as_object)
@@ -2916,6 +3005,12 @@ impl Ruled<'_> {
         if self.at.starts_with(BODIES) {
             return None;
         }
+        // A cluster's unit is a share of its organ, whose length varies
+        // part by part with the range the share divides by, so the unit
+        // keeps the flower's or fruit's stated size as one share.
+        if self.at.ends_with(".inflorescence.unit") {
+            return None;
+        }
         let varying: Vec<(&String, [f64; 5])> = inputs
             .keys()
             .filter_map(|name| {
@@ -3106,6 +3201,15 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
         Some(Field::Count) => (value.is_u64(), "a whole number, 0 or more"),
         Some(Field::Number) => (value.is_number(), "a number"),
         Some(Field::Word) => (value.is_string(), "a word"),
+        Some(Field::Colour) => (
+            value.as_array().is_some_and(|rgb| {
+                rgb.len() == 3
+                    && rgb
+                        .iter()
+                        .all(|c| c.as_f64().is_some_and(|c| (0.0..=1.0).contains(&c)))
+            }),
+            "a colour, `[r, g, b]` from 0 to 1",
+        ),
         Some(Field::Outline) => (
             value.as_array().is_some_and(|points| {
                 points.iter().all(|point| {

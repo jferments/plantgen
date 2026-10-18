@@ -1,0 +1,291 @@
+{
+  "schema": 1,
+  "id": "sedum-spathulifolium",
+  "taxon": {
+    "scientific_name": "Sedum spathulifolium",
+    "common_name": "Pacific stonecrop",
+    "family": "Crassulaceae",
+    "genus": "Sedum",
+    "plant_name_id": 2489058
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.06,
+      "stem_lean": 25,
+      "stem_height": 0.07,
+      "stem_radius": 0.0012,
+      "nodes": 5,
+      "basal_leaves": 18,
+      "basal_angle": 75,
+      "bare": 0.1,
+      "leaf_peak": 0.0,
+      "leaf_angle": 40,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.6,
+      0.42,
+      0.38
+    ],
+    "foliage": [
+      0.42,
+      0.52,
+      0.45
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.0
+        }
+      },
+      "basal": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.13,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "life_span": "perennial",
+    "perennation": "rhizome",
+    "rhizome_habit": "short_creeping",
+    "clonal": true,
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "leaf_shape": "spatulate",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "cyme",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.08
+    },
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 30
+    },
+    "flower_merosity": 5,
+    "corolla_shape": "rotate",
+    "petal_length_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "petal_shape": "lanceolate",
+    "flower_size_m": {
+      "min": 0.016,
+      "max": 0.02
+    },
+    "flower_colour": [
+      250,
+      215,
+      40
+    ],
+    "flowering_months": [
+      5,
+      6,
+      7
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: flowering stems ascending, simple or branched, 5 cm to 15 cm high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: a perennial."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: with slender rootstocks."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: slender rootstocks, propagating by lateral offshoots."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: propagating by lateral offshoots."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: basal leaves; the photos show them in flat rosettes."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: basal leaves 10 mm to 25 mm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: basal leaves broadly spatulate, flat."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Entire leaf edges, set by hand from iNaturalist photos of flowering plants (observations 115013259, 163421646, 79722863, 6493703, 663774, 224025715, 359570559, 3184349): the flora gives no count or measure."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: leaves more or less glaucous; no hairs named."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: cyme with several forks."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: cyme 5 cm to 8 cm broad."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "10 to 30 flowers and buds in a cyme, set by hand from iNaturalist photos of flowering plants (observations 115013259, 163421646, 79722863, 6493703, 663774, 224025715, 359570559, 3184349): the flora gives no count or measure."
+    },
+    "traits.flower_merosity": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five petals to a flower, set by hand from iNaturalist photos of flowering plants (observations 115013259, 163421646, 79722863, 6493703, 663774, 224025715, 359570559, 3184349): the flora gives no count or measure."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: petals spreading: a flat star."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: petals 8 mm to 10 mm long."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: petals narrowly lanceolate."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: petals 8 mm to 10 mm long, spreading, so the flower about twice that across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: petals yellow; sRGB by eye from the photos."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 346, Sedum spathulifolium: flowering May to July."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: pale, often reddish flowering stems; flat rosettes of fleshy, spoon-shaped, glaucous blue-green leaves, often flushed red; flat clusters of yellow star flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Pacific stonecrop from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.13 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 2 (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

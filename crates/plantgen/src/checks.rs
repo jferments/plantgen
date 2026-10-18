@@ -19,7 +19,11 @@
 //! frond) has its stipe, the axis below the lowest leaflet, its blade, the
 //! axis above, its width, twice the farthest a leaflet reaches out from
 //! the axis, and its leaflets (its pinnae, where they are drawn divided
-//! again), counted. Heads,
+//! again), counted. A plant with leaves at its foot (a rosette's, a
+//! tiller's) names its stem leaves `reduced`, `like_basal` or `none` by
+//! their median length (`cauline_leaves`); where they are reduced, its
+//! leaf sizes are measured on the leaves at its foot, as floras measure a
+//! herb's basal leaves and call the stem's reduced. Heads,
 //! spikelets, divided leaves and clusters measure their parts from their
 //! own layouts ([`crate::capitula::dimensions`],
 //! [`crate::spikelets::dimensions`], [`crate::divided::dimensions`],
@@ -28,6 +32,8 @@
 //! flowers, heads, spikelets and inflorescences open, fruit and cones
 //! ripe, and every organ without a season on the default day. An organ is
 //! measured once per character, on the first of those days it qualifies.
+//! A male plant's cone (`<organ>_male`) is measured as its pollen cone,
+//! and a seed borne outside a fruit (a cycad's) as a seed.
 //!
 //! **What passes.** With the values sorted and $`q_{10}`$, $`q_{90}`$ their
 //! 10th and 90th percentiles (nearest rank), and a range's `min` and
@@ -109,7 +115,8 @@
 //! as an organ's size is; a leaf drawn in pieces, a fern's frond, as its
 //! structure); one that fell with its limb, or still stands at the end,
 //! is not counted. A plant is evergreen (`leaf_habit`) where a leaf stands
-//! on it into its second year, else deciduous. A cone takes to ripen
+//! on it into its second year, else deciduous; a grass blade turned to
+//! thatch is a dead leaf, not one kept. A cone takes to ripen
 //! (`cone_maturation_years`) the seasons the youngest cone drawn ripe has
 //! stood, its first counted, one value for the plant, and stays once ripe
 //! (`cone_retention_years`) its life less those.
@@ -152,7 +159,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 37] = [
+pub const SIZES: [(&str, Judged); 43] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -166,6 +173,8 @@ pub const SIZES: [(&str, Judged); 37] = [
     ("leaf_length_m", Judged::Organs),
     ("leaf_width_m", Judged::Organs),
     ("petiole_length_m", Judged::Organs),
+    ("fertile_leaf_length_m", Judged::Organs),
+    ("fertile_petiole_length_m", Judged::Organs),
     ("inflorescence_length_m", Judged::Organs),
     ("peduncle_length_m", Judged::Organs),
     ("bract_length_m", Judged::Organs),
@@ -183,6 +192,10 @@ pub const SIZES: [(&str, Judged); 37] = [
     ("fruit_size_m", Judged::Organs),
     ("cone_length_m", Judged::Organs),
     ("cone_width_m", Judged::Organs),
+    ("pollen_cone_length_m", Judged::Organs),
+    ("pollen_cone_width_m", Judged::Organs),
+    ("seed_length_m", Judged::Organs),
+    ("seed_width_m", Judged::Organs),
     ("divergence_deg", Judged::Typical),
     ("juvenile_period_years", Judged::Typical),
     ("leaf_life_years", Judged::Organs),
@@ -225,10 +238,11 @@ pub const COUNTS: [&str; 25] = [
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 32] = [
+pub const KINDS: [&str; 34] = [
     "inflorescence",
     "inflorescence_unit",
     "inflorescence_posture",
+    "inflorescence_outline",
     "bract_form",
     "capitulum_kind",
     "awns",
@@ -258,6 +272,7 @@ pub const KINDS: [&str; 32] = [
     "glochids",
     "foliage_ranks",
     "leaf_habit",
+    "cauline_leaves",
 ];
 
 /// The months characters read from a grown plant's year (development,
@@ -627,6 +642,18 @@ impl Tally {
             .insert(state.to_owned());
     }
 
+    /// Another tally's values and kinds, but for the characters `skip`.
+    fn absorb(&mut self, other: Tally, skip: &[&str]) {
+        for (key, value) in other.seen {
+            if !skip.contains(&key.0) {
+                self.seen.entry(key).or_insert(value);
+            }
+        }
+        for (character, states) in other.kinds {
+            self.kinds.entry(character).or_default().extend(states);
+        }
+    }
+
     fn measures(self) -> (Measures, Kinds) {
         let mut measures = Measures::new();
         for ((character, _, _), value) in self.seen {
@@ -708,6 +735,15 @@ impl Grown<'_> {
             .get(usize::from(organ.organ))
             .copied()
             .unwrap_or(organs::PIECE)
+    }
+
+    /// Whether the organ is a male plant's own (`<organ>_male`): a
+    /// cycad's pollen cone.
+    fn male(&self, organ: &GraphOrgan) -> bool {
+        self.growth
+            .organ_types
+            .get(usize::from(organ.organ))
+            .is_some_and(|kind| kind.name.ends_with(crate::spec::MALE))
     }
 
     fn later(&self, organ: &GraphOrgan) -> bool {
@@ -924,7 +960,8 @@ fn lives(grown: &Grown<'_>, ripening: Option<f64>, tally: &mut Tally) {
 
 /// Whether the plant keeps leaves through the winter (`leaf_habit`): an
 /// evergreen's stand on it into their second year or later, a deciduous
-/// plant's live out one season.
+/// plant's live out one season. A leaf drawn in pieces is alive while any
+/// of its pieces is not yet a later phase (a blade's thatch).
 fn leaf_habit(grown: &Grown<'_>, tally: &mut Tally) {
     let graph = grown.graph;
     let lone = graph
@@ -934,17 +971,25 @@ fn leaf_habit(grown: &Grown<'_>, tally: &mut Tally) {
             organ.within.is_none() && !grown.later(organ) && grown.term(organ) == "leaf"
         })
         .map(|organ| organ.born);
-    let fronds = graph
-        .structures
+    // A leaf structure lives while it holds a living piece: a grass blade
+    // turned to thatch is last year's dead leaf, not a leaf kept.
+    let living: BTreeSet<u32> = graph
+        .organs
         .iter()
-        .filter(|at| {
-            grown
-                .growth
-                .structure_types
-                .get(usize::from(at.structure))
-                .is_some_and(|kind| kind.term == "leaf")
+        .filter(|organ| !grown.later(organ))
+        .filter_map(|organ| organ.within)
+        .collect();
+    let fronds = (0_u32..)
+        .zip(&graph.structures)
+        .filter(|(index, at)| {
+            living.contains(index)
+                && grown
+                    .growth
+                    .structure_types
+                    .get(usize::from(at.structure))
+                    .is_some_and(|kind| kind.term == "leaf")
         })
-        .map(|at| at.born);
+        .map(|(_, at)| at.born);
     let mut oldest: Option<f64> = None;
     for born in lone.chain(fronds) {
         let age = graph.age - born;
@@ -1421,7 +1466,11 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
     // born there later are a short shoot's, from a bud at the node, which
     // crowds each year's leaves at one place (with last year's until they
     // fall); floras state the arrangement of the long shoots' leaves, so
-    // where a plant's stems bear leaves of their own, only those count.
+    // only those count: where a plant's stems bear leaves of their own,
+    // only those, and not its rosette's at the ground. A plant whose stems
+    // keep none (every tip stopped for some years, its leaves all on short
+    // shoots) leaves them unmeasured: two short shoots at a pair of buds
+    // crowd their leaves at one place, which would read as a whorl.
     let own = |segment: Option<usize>, organ: &GraphOrgan| {
         segment
             .and_then(|index| segments.get(index))
@@ -1431,6 +1480,8 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
         .iter()
         .any(|(segment, _, _, organ, _)| segment.is_some() && own(*segment, organ))
     {
+        holders.retain(|(segment, _, _, organ, _)| segment.is_some() && own(*segment, organ));
+    } else {
         holders.retain(|(segment, _, _, organ, _)| own(*segment, organ));
     }
     // A step is a year, so an axis's segments born in one step are a
@@ -1505,7 +1556,9 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
         }
     }
     nodes.retain(|_, node| !node.around.is_empty());
-    // The plant's usual leaves at a node, and each whorl's count.
+    // The plant's usual leaves at a node, the count most of its leaves
+    // stand in (a lily's whorls, not the few leaves scattered between
+    // them), and each whorl's count.
     let mut per_node: BTreeMap<usize, usize> = BTreeMap::new();
     for (index, node) in nodes.values().enumerate() {
         let leaves = node.around.len();
@@ -1521,7 +1574,7 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
     }
     let Some(usual) = per_node
         .iter()
-        .max_by_key(|(leaves, nodes)| (**nodes, std::cmp::Reverse(**leaves)))
+        .max_by_key(|(leaves, nodes)| (**nodes * **leaves, std::cmp::Reverse(**leaves)))
         .map(|(leaves, _)| *leaves)
     else {
         return;
@@ -1587,8 +1640,14 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
 }
 
 /// Every grown leaf: a leaf organ standing alone, or a structure termed
-/// `leaf` drawn in pieces.
+/// `leaf` drawn in pieces. A plant with leaves at its foot names its stem
+/// leaves (`cauline_leaves`) by their median length: reduced under
+/// [`REDUCED`] of the basal leaves', else like them, and none where it has
+/// none. Where they are reduced, its leaf sizes are those at its foot:
+/// floras measure a herb's basal leaves and call the stem's reduced.
+#[allow(clippy::too_many_lines)]
 fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tally) {
+    let (mut ground, mut stem) = (Tally::default(), Tally::default());
     // Pieces of each leaf structure: its index and the organs within it.
     let mut pieces: BTreeMap<u32, Vec<&GraphOrgan>> = BTreeMap::new();
     // Leaflets each leaf structure holds: a fern's pinnae on its rachis.
@@ -1607,7 +1666,12 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
             }
             None if term == "leaf" => {
                 if let Some((look, size)) = leaf_look(organ, looks) {
-                    leaf_sizes(&look.shape, size, organ.id, tally);
+                    let into = if organ.segment.is_none() {
+                        &mut ground
+                    } else {
+                        &mut stem
+                    };
+                    leaf_sizes(&look.shape, size, organ.id, into);
                 }
             }
             _ => {}
@@ -1627,8 +1691,22 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         let leafy = kind_of(*structure)
             .and_then(|kind| grown.growth.structure_types.get(usize::from(kind)))
             .is_some_and(|kind| kind.term == "leaf");
+        // A dimorphic fern's fertile fronds bear its `fertile_` leaflets
+        // and are measured against its fertile leaves' characters.
+        let fertile = members.iter().any(|organ| {
+            grown
+                .growth
+                .organ_types
+                .get(usize::from(organ.organ))
+                .is_some_and(|kind| kind.name.starts_with("fertile_"))
+        });
         if leafy {
-            frond_sizes(*structure, members, drawn, looks, tally);
+            let into = if at_ground(*structure, members, drawn) {
+                &mut ground
+            } else {
+                &mut stem
+            };
+            frond_sizes(*structure, members, fertile, drawn, looks, into);
         }
     }
     for (structure, members) in pieces {
@@ -1638,6 +1716,11 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         if !leafy || kind_of(structure).is_some_and(|kind| feathered.contains(&kind)) {
             continue;
         }
+        let tally = if at_ground(structure, &members, drawn) {
+            &mut ground
+        } else {
+            &mut stem
+        };
         let id = drawn.structures[structure as usize].id;
         if let [one] = members.as_slice() {
             if let Some((look, size)) = leaf_look(one, looks) {
@@ -1677,24 +1760,76 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         tally.add("leaf_length_m", id, 0, length);
         tally.add("leaf_width_m", id, 0, width);
     }
+    let sizes = ["leaf_length_m", "leaf_width_m", "petiole_length_m"];
+    let lengths = |of: &Tally| {
+        let mut lengths: Vec<f64> = of
+            .seen
+            .iter()
+            .filter(|((character, _, _), _)| *character == "leaf_length_m")
+            .map(|(_, length)| *length)
+            .collect();
+        lengths.sort_by(f64::total_cmp);
+        lengths
+    };
+    let (at_foot, up_stems) = (lengths(&ground), lengths(&stem));
+    let reduced = !at_foot.is_empty()
+        && !up_stems.is_empty()
+        && rank(&up_stems, 0.5) < REDUCED * rank(&at_foot, 0.5);
+    if !at_foot.is_empty() {
+        tally.kind(
+            "cauline_leaves",
+            if up_stems.is_empty() {
+                "none"
+            } else if reduced {
+                "reduced"
+            } else {
+                "like_basal"
+            },
+        );
+    }
+    tally.absorb(ground, &[]);
+    tally.absorb(stem, if reduced { &sizes } else { &[] });
 }
 
-/// Degrees past which a frond's rachis turns at one joint, more than an
-/// unrolled frond bends along its arch (a few degrees a joint); with
-/// pieces of its blade under half as long as its longest, the frond is
-/// still coiled in its crozier. (A frond lying on the ground bends as
-/// sharply where it meets it, but its pieces are whole.)
-const COILED: f64 = 20.0;
+/// Of the basal leaves' median length, the stem leaves' under which they
+/// are reduced.
+const REDUCED: f64 = 0.75;
+
+/// Whether a leaf structure stands on the ground (a rosette's or a
+/// tiller's leaf), not on a stem: the axis its first organ's segments,
+/// followed out of the structure, stand on.
+fn at_ground(structure: u32, members: &[&GraphOrgan], drawn: &PlantGraph) -> bool {
+    let Some(first) = members.first() else {
+        return false;
+    };
+    let mut segment = first.segment.map(|s| s as usize);
+    while let Some(index) = segment
+        && drawn.segments[index].within == Some(structure)
+    {
+        segment = drawn.segments[index].parent.map(|p| p as usize);
+    }
+    segment.is_none()
+}
+
+/// The share of its longest piece of blade a frond's shortest reaches once
+/// it has unrolled: an unrolled frond's pieces are all alike, while one
+/// still in its crozier, or still unrolling its tip, draws the pieces
+/// beyond the share unrolled shorter, with smaller pinnae. (A frond lying
+/// on the ground bends sharply where it meets it, but its pieces are
+/// whole.)
+const UNROLLED: f64 = 0.9;
 
 /// A leaf drawn as a structure whose axis is its own segments and whose
 /// leaflets stand on them (a fern's frond: its stipe and rachis, and its
 /// pinnae): the stipe is the axis below the lowest leaflet, the blade the
 /// rest, and the blade's width twice the farthest a leaflet reaches out
-/// from the axis. A frond still in its crozier (see [`COILED`]) has no
-/// outline yet.
+/// from the axis. A frond not yet unrolled (see [`UNROLLED`]) has no
+/// outline or size yet. A frond whose stipe forks into arms (a pedate
+/// blade) is measured as a fan ([`fan_sizes`]).
 fn frond_sizes(
     structure: u32,
     leaflets: &[&GraphOrgan],
+    fertile: bool,
     drawn: &PlantGraph,
     looks: &[Look],
     tally: &mut Tally,
@@ -1704,24 +1839,13 @@ fn frond_sizes(
     let mut first = true;
     // How far up the rachis each of its segments starts.
     let mut starts: BTreeMap<u32, f64> = BTreeMap::new();
-    // The most the rachis turns from one segment to the next, degrees, and
-    // its blade's shortest and longest segments.
-    let mut turned: f64 = 0.0;
+    // Its blade's shortest and longest segments.
     let (mut shortest, mut longest) = (f64::INFINITY, 0.0_f64);
-    let mut heading = None;
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
         if segment.within != Some(structure) {
             continue;
         }
         let length = (segment.end - segment.start).length();
-        let along = (segment.end - segment.start)
-            .normalize_or(heading.unwrap_or(segment.end - segment.start));
-        if let Some(before) = heading
-            && along != before
-        {
-            turned = turned.max(along.dot(before).clamp(-1.0, 1.0).acos().to_degrees());
-        }
-        heading = Some(along);
         starts.insert(index, stipe + blade);
         // The rachis is drawn base first: bare pieces up to the first
         // that bears a leaflet are the stipe.
@@ -1756,16 +1880,37 @@ fn frond_sizes(
             outline.push((up / blade, reach));
         }
     }
-    if blade > 0.0
-        && (turned <= COILED || shortest >= 0.5 * longest)
-        && let Some(words) = outline_shape(&outline, width / blade)
-    {
-        tally.kind("leaf_shape", &words);
+    // Floras measure grown fronds: one still unrolling is neither its
+    // outline nor its size yet.
+    let unrolled = shortest >= UNROLLED * longest;
+    let fan =
+        forked(structure, &bearing, drawn).and_then(|fork| fan_sizes(fork, leaflets, drawn, looks));
+    if let Some((length, across, _)) = fan {
+        (blade, width) = (length, across);
     }
     let id = drawn.structures[structure as usize].id;
-    tally.add("leaf_length_m", id, 0, blade);
-    tally.add("leaf_width_m", id, 0, width);
-    tally.add("petiole_length_m", id, 0, stipe);
+    if fertile {
+        // A fertile frond's own sizes; its shape and counts are the
+        // sterile fronds' to give.
+        if unrolled {
+            tally.add("fertile_leaf_length_m", id, 0, blade);
+            tally.add("fertile_petiole_length_m", id, 0, stipe);
+        }
+        return;
+    }
+    let words = match &fan {
+        Some((_, _, words)) => words.clone(),
+        None if blade > 0.0 => outline_shape(&outline, width / blade),
+        None => None,
+    };
+    if unrolled && let Some(words) = words {
+        tally.kind("leaf_shape", &words);
+    }
+    if unrolled && blade > 0.0 {
+        tally.add("leaf_length_m", id, 0, blade);
+        tally.add("leaf_width_m", id, 0, width);
+        tally.add("petiole_length_m", id, 0, stipe);
+    }
     // Leaflets drawn as frond cards are the frond's pinnae, each divided
     // again; drawn whole, they are its leaflets.
     let again = leaflets
@@ -1775,9 +1920,103 @@ fn frond_sizes(
     let count = u32::try_from(leaflets.len()).unwrap_or(u32::MAX);
     tally.count(if again > 0 { "pinnae" } else { "leaflets" }, id, 0, count);
     tally.count("division_order", id, 0, 1 + again);
-    tally.kind("division_pattern", "pinnate");
+    tally.kind(
+        "division_pattern",
+        if fan.is_some() { "palmate" } else { "pinnate" },
+    );
     tally.kind("leaf_division", "compound");
     tally.kind("leaf_form", "blade");
+}
+
+/// The top of a frond's bare stipe where its rachis forks into two or
+/// more arms that bear its leaflets (a pedate blade, as a maidenhair's
+/// "2 equal branches surmounting the stipe"), if it does.
+fn forked(structure: u32, bearing: &BTreeSet<u32>, drawn: &PlantGraph) -> Option<u32> {
+    let mut arms: BTreeMap<u32, u32> = BTreeMap::new();
+    for (index, segment) in (0_u32..).zip(&drawn.segments) {
+        if segment.within == Some(structure)
+            && bearing.contains(&index)
+            && let Some(parent) = segment.parent
+            && !bearing.contains(&parent)
+            && drawn
+                .segments
+                .get(parent as usize)
+                .is_some_and(|p| p.within == Some(structure))
+        {
+            *arms.entry(parent).or_default() += 1;
+        }
+    }
+    arms.into_iter()
+        .find(|&(_, n)| n >= 2)
+        .map(|(fork, _)| fork)
+}
+
+/// A forked frond's blade, a fan of leaflets round the top of its stipe:
+/// its length from there to its farthest leaflet tip (a flora's blade
+/// from its foot to the tip of its longest pinna), its width across, and the shape words its outline reads as,
+/// with cordate (and reniform, broader than long) where its leaflets
+/// reach back past the stipe, as a reniform blade's lobes do.
+fn fan_sizes(
+    fork: u32,
+    leaflets: &[&GraphOrgan],
+    drawn: &PlantGraph,
+    looks: &[Look],
+) -> Option<(f64, f64, Option<String>)> {
+    let top = drawn.segments.get(fork as usize)?.end;
+    let tips: Vec<Vec3> = leaflets
+        .iter()
+        .filter_map(|organ| {
+            leaf_look(organ, looks).map(|(_, size)| organ.position + organ.heading * size)
+        })
+        .collect();
+    if tips.is_empty() {
+        return None;
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let middle = tips.iter().fold(Vec3::ZERO, |sum, &tip| sum + (tip - top)) / tips.len() as f64;
+    let forward = middle.normalize_or(Vec3::ZERO);
+    // Across the fan: in its plane, square to its middle.
+    let arm = drawn
+        .segments
+        .iter()
+        .find(|segment| segment.parent == Some(fork))
+        .map(|segment| segment.end - segment.start)?;
+    let side = forward.cross(arm).cross(forward).normalize_or(Vec3::ZERO);
+    if forward == Vec3::ZERO || side == Vec3::ZERO {
+        return None;
+    }
+    let (mut length, mut low, mut high) = (0.0_f64, 0.0_f64, 0.0_f64);
+    let mut back = false;
+    for &tip in &tips {
+        let (out, across) = ((tip - top).dot(forward), (tip - top).dot(side));
+        length = length.max((tip - top).length());
+        (low, high) = (low.min(across), high.max(across));
+        back |= out < 0.0;
+    }
+    let width = high - low;
+    if length <= 0.0 {
+        return None;
+    }
+    let outline: Vec<(f64, f64)> = tips
+        .iter()
+        .map(|&tip| {
+            (
+                (tip - top).dot(forward).max(0.0) / length,
+                (tip - top).dot(side).abs(),
+            )
+        })
+        .collect();
+    let words = outline_shape(&outline, width / length).map(|words| {
+        let mut all: BTreeSet<&str> = words.split('|').collect();
+        if back {
+            all.insert("cordate");
+            if width > length {
+                all.insert("reniform");
+            }
+        }
+        all.into_iter().collect::<Vec<_>>().join("|")
+    });
+    Some((length, width, words))
 }
 
 /// What a leaf drawn as `shape` is made as (`leaf_form`: a needle, a
@@ -2111,7 +2350,10 @@ fn reproductive(
     phase: Option<Phase>,
     tally: &mut Tally,
 ) {
-    let term = grown.term(organ);
+    let term = match grown.term(organ) {
+        "cone" if grown.male(organ) => POLLEN_CONE,
+        term => term,
+    };
     if let Some(cluster) = &look.inflorescence {
         let layout = cluster.laid_on(organ);
         cluster_kinds(cluster, &layout, look, phase, tally);
@@ -2170,7 +2412,7 @@ fn reproductive(
             };
             if let Some((Shape::Flower(flower), size)) = shown {
                 let width = organ.size * unit.length * size;
-                flower_parts(flower, width, (organ.id, part), tally);
+                flower_parts(flower, flower_cup(look), width, (organ.id, part), tally);
             }
             unit_sizes(
                 &look.shape,
@@ -2193,7 +2435,7 @@ fn reproductive(
         // A flower, head or spikelet borne alone.
         let unit = match &look.shape {
             Shape::Flower(flower) => {
-                flower_parts(flower, organ.size, (organ.id, 0), tally);
+                flower_parts(flower, flower_cup(look), organ.size, (organ.id, 0), tally);
                 "flower"
             }
             Shape::Head(_) => "capitulum",
@@ -2277,10 +2519,29 @@ fn cluster_kinds(
             "pendent"
         },
     );
+    // A corymb's units level is flat-topped; on a dome, rounded; on most
+    // of a sphere, a ball.
+    if cluster.cluster.kind == ClusterKind::Corymb {
+        let dome = cluster.cluster.dome;
+        tally.kind(
+            "inflorescence_outline",
+            if dome < 30.0 {
+                "flat_topped"
+            } else if dome < 135.0 {
+                "rounded"
+            } else {
+                "globose"
+            },
+        );
+    }
 }
 
 /// One flower, head, spikelet, fruit or cone drawn with `shape`, `length`
 /// long (a flower's or head's width).
+/// The term a male plant's cone is measured under: its pollen cone, which
+/// floras give apart from the seed cone.
+const POLLEN_CONE: &str = "pollen_cone";
+
 fn unit_sizes(
     shape: &Shape,
     length: f64,
@@ -2290,8 +2551,14 @@ fn unit_sizes(
     tally: &mut Tally,
 ) {
     match shape {
-        Shape::Flower(_) if in_stage(phase, Stage::Open) => {
-            tally.add("flower_size_m", organ, part, length);
+        Shape::Flower(flower) if in_stage(phase, Stage::Open) => {
+            // Across its sepals where they outreach its petals.
+            let reach = if flower.sepals > 0 {
+                flower.sepal_length.max(1.0)
+            } else {
+                1.0
+            };
+            tally.add("flower_size_m", organ, part, length * reach);
         }
         Shape::Head(head) => {
             let d = crate::capitula::dimensions(head);
@@ -2354,8 +2621,30 @@ fn unit_sizes(
         // A flower drawn as a fruit with no season is its bud (a herb's
         // `bud`), never a fruit.
         Shape::Fruit(_) if term == "flower" && phase.is_none() => {}
+        // A bulbil drawn as a fruit is a small bulb in a leaf's axil, never
+        // a fruit.
+        Shape::Fruit(_) if term == "bulbil" => {}
         Shape::Fruit(fruit) if in_stage(phase, Stage::Ripe) => {
-            if term == "cone" {
+            if term == POLLEN_CONE {
+                // A male plant's cone (a cycad's) is its pollen cone.
+                tally.add("pollen_cone_length_m", organ, part, length);
+                tally.add(
+                    "pollen_cone_width_m",
+                    organ,
+                    part,
+                    length * fruit.aspect.clamp(0.05, 2.0),
+                );
+            } else if term == "seed" {
+                // A seed borne outside a fruit (a cycad's), its fleshy
+                // coat and all.
+                tally.add("seed_length_m", organ, part, length);
+                tally.add(
+                    "seed_width_m",
+                    organ,
+                    part,
+                    length * fruit.aspect.clamp(0.05, 2.0),
+                );
+            } else if term == "cone" {
                 tally.add("cone_length_m", organ, part, length);
                 tally.add(
                     "cone_width_m",
@@ -2384,7 +2673,8 @@ fn unit_sizes(
 /// multiple fruit; a rose hip the achenes in its cup, an aggregate; a
 /// wing a samara, or the pair of them a maple's schizocarp splits into;
 /// a nut in a cup or a husk a nut; a pod a legume or another pod; a
-/// ribbed fruit a capsule, a follicle or a schizocarp of ribbed mericarps.
+/// ribbed fruit a capsule, a follicle or a schizocarp of ribbed mericarps;
+/// a cactus fruit with scales or areoles on its skin a berry.
 fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
     use crate::looks::FruitKind;
     match kind {
@@ -2397,6 +2687,9 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
         FruitKind::Acorn | FruitKind::Husked => "nut",
         FruitKind::Pod => "legume|pod",
         FruitKind::Capsule => "capsule|follicle|schizocarp",
+        FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => "berry",
+        FruitKind::Follicles | FruitKind::Samaras => "aggregate",
+        FruitKind::Berries => "berry|aggregate",
     }
 }
 
@@ -2409,6 +2702,7 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
 /// floral cup bears its whorls and whether it is turned half round.
 fn flower_parts(
     flower: &crate::looks::Flower,
+    cup: f64,
     width: f64,
     (organ, part): (u64, u32),
     tally: &mut Tally,
@@ -2439,6 +2733,13 @@ fn flower_parts(
             );
             "sepals_and_petals"
         }
+        // Tepals stated by count stand in whorls of the merosity; else
+        // in two whorls.
+        Perianth::Tepals if flower.whorl > 0 => {
+            tally.count("flower_merosity", organ, part, flower.whorl);
+            tally.count("perianth_parts", organ, part, flower.petals);
+            "tepals"
+        }
         Perianth::Tepals => {
             tally.add(
                 "flower_merosity",
@@ -2463,15 +2764,20 @@ fn flower_parts(
             Ovary::Inferior => "inferior",
         },
     );
-    tally.kind(
-        "zygomorphy",
-        match flower.corolla {
-            Corolla::Regular | Corolla::Unequal => "other",
-            Corolla::Papilionaceous => "papilionaceous",
-            Corolla::Bilabiate => "bilabiate",
-            Corolla::Labellate => "labellate",
-        },
-    );
+    // A zygomorphic corolla's kind; a regular flower has none, so a genus
+    // whose family states a kind its own flowers lack (mimosoid Vachellia
+    // under the pea family's papilionaceous) is not judged by it.
+    if flower.is_zygomorphic() {
+        tally.kind(
+            "zygomorphy",
+            match flower.corolla {
+                Corolla::Regular | Corolla::Unequal => "other",
+                Corolla::Papilionaceous => "papilionaceous",
+                Corolla::Bilabiate => "bilabiate",
+                Corolla::Labellate => "labellate",
+            },
+        );
+    }
     tally.kind(
         "flower_symmetry",
         if flower.is_zygomorphic() {
@@ -2481,11 +2787,15 @@ fn flower_parts(
         },
     );
     if matches!(flower.perianth, Perianth::Corolla | Perianth::Tepals) {
-        tally.kind("corolla_shape", &corolla_shape(flower));
+        tally.kind("corolla_shape", &corolla_shape(flower, cup));
     }
     tally.kind(
         "hypanthium",
-        if flower.tube > 0.0 { "true" } else { "false" },
+        if flower.tube > 0.0 || flower.floral_tube > 0.0 {
+            "true"
+        } else {
+            "false"
+        },
     );
     // A resupinate flower is drawn turned half round.
     tally.kind(
@@ -2553,10 +2863,50 @@ fn nearest(table: &[(&str, f64)], value: f64) -> String {
         .join("|")
 }
 
+/// How steeply free tepals rise for each shape they make
+/// without a tube, in degrees from the flower's plane, as the Liliaceae's
+/// rule draws them (`liliaceae/family.json`): a bell, a funnel, and a
+/// tube or urn of tepals held close.
+const FREE_CUPS: [(&str, f64); 4] = [
+    ("campanulate", 60.0),
+    ("funnelform", 65.0),
+    ("tubular", 75.0),
+    ("urceolate", 75.0),
+];
+
+/// How steeply the look's flower form raises its petals, in degrees; 0
+/// where it draws no flower form.
+fn flower_cup(look: &Look) -> f64 {
+    match &look.form {
+        crate::blooms::Form::Flower(form) => form.cup,
+        _ => 0.0,
+    }
+}
+
 /// The corolla shape a flower draws: the nearest of [`COROLLA_SHAPES`] to
 /// its tube, or each of the nearest where they are drawn alike (a flat
-/// and a cupped corolla, both free petals).
-fn corolla_shape(flower: &crate::looks::Flower) -> String {
+/// and a cupped corolla, both free petals). Free tepals raised steeply (a
+/// lily's) draw a bell or a funnel with no tube: the nearest of
+/// [`FREE_CUPS`] to their rise. A corolla's free petals are judged by
+/// their tube alone, as before: a columbine's raised blades over its
+/// spurs are not its corolla's shape.
+fn corolla_shape(flower: &crate::looks::Flower, cup: f64) -> String {
+    if flower.fused <= 0.0
+        && flower.perianth == crate::looks::Perianth::Tepals
+        && cup >= crate::flowers::BELL
+    {
+        let off = |rise: f64| libm::fabs(rise - cup);
+        let nearest = FREE_CUPS
+            .iter()
+            .map(|(_, rise)| off(*rise))
+            .fold(f64::INFINITY, f64::min);
+        return FREE_CUPS
+            .iter()
+            .filter(|(_, rise)| off(*rise) <= nearest + 1e-12)
+            .map(|(name, _)| *name)
+            .collect::<Vec<_>>()
+            .join("|");
+    }
     let drawn = [flower.fused, flower.throat, flower.belly];
     let distance = |shape: &[f64; 3]| -> f64 {
         shape
@@ -2968,8 +3318,13 @@ pub fn judge_plants(
         }
         findings.push(judge(character, judged, stated, &mut values, with));
     }
+    let vocabulary = crate::traits::Vocabulary::builtin();
     let kinds = KINDS
         .iter()
+        // A state inherited for flowers of another kind, such as a
+        // family's two-lipped corolla on a species with regular flowers,
+        // does not apply to the species.
+        .filter(|&&character| vocabulary.applies(character, traits) != crate::traits::Applies::No)
         .filter_map(|&character| {
             let stated = states_of(traits.get(character)?);
             let drawn: BTreeSet<String> = plants
@@ -3011,7 +3366,6 @@ pub fn judge_plants(
             Some(Timing::judge(character, stated, drawn))
         })
         .collect();
-    let vocabulary = crate::traits::Vocabulary::builtin();
     let unmeasured = traits
         .keys()
         .filter(|key| {
@@ -3128,14 +3482,14 @@ mod tests {
             ovary: Ovary::Inferior,
             ..Flower::default()
         };
-        flower_parts(&cactus, 0.1, (1, 0), &mut tally);
+        flower_parts(&cactus, 0.0, 0.1, (1, 0), &mut tally);
         let pea = Flower {
             corolla: Corolla::Papilionaceous,
             stamens: 10,
             carpels: 1,
             ..Flower::default()
         };
-        flower_parts(&pea, 0.02, (2, 0), &mut tally);
+        flower_parts(&pea, 0.0, 0.02, (2, 0), &mut tally);
         let (measures, kinds) = tally.measures();
         assert_eq!(measures["stamens"], [200.0, 10.0]);
         assert_eq!(measures["carpels"], [12.0, 1.0]);
@@ -3143,7 +3497,8 @@ mod tests {
         let states = |key: &str| kinds[key].iter().cloned().collect::<Vec<_>>();
         assert_eq!(states("perianth"), ["sepals_and_petals", "spiral"]);
         assert_eq!(states("ovary_position"), ["inferior", "superior"]);
-        assert_eq!(states("zygomorphy"), ["other", "papilionaceous"]);
+        // The cactus's regular flower has no zygomorphy to draw.
+        assert_eq!(states("zygomorphy"), ["papilionaceous"]);
     }
 
     #[test]
@@ -3155,25 +3510,25 @@ mod tests {
             petals: 6,
             ..Flower::default()
         };
-        flower_parts(&lily, 0.1, (1, 0), &mut tally);
+        flower_parts(&lily, 0.0, 0.1, (1, 0), &mut tally);
         // A columbine spurs every petal; a pea's keel draws no spur.
         let columbine = Flower {
             spur: 1.5,
             ..Flower::default()
         };
-        flower_parts(&columbine, 0.04, (2, 0), &mut tally);
+        flower_parts(&columbine, 0.0, 0.04, (2, 0), &mut tally);
         let pea = Flower {
             corolla: Corolla::Papilionaceous,
             spur: 1.0,
             ..Flower::default()
         };
-        flower_parts(&pea, 0.02, (3, 0), &mut tally);
+        flower_parts(&pea, 0.0, 0.02, (3, 0), &mut tally);
         let water_lily = Flower {
             perianth: Perianth::Spiral,
             petals: 24,
             ..Flower::default()
         };
-        flower_parts(&water_lily, 0.1, (4, 0), &mut tally);
+        flower_parts(&water_lily, 0.0, 0.1, (4, 0), &mut tally);
         let (measures, _) = tally.measures();
         assert_eq!(measures["flower_merosity"], [3.0, 5.0, 5.0]);
         let [spur] = measures["spur_length_m"][..] else {
@@ -3208,9 +3563,9 @@ mod tests {
     #[test]
     fn a_flower_draws_its_symmetry_corolla_cup_and_turn() {
         use crate::looks::{Corolla, Flower, Perianth};
-        let kinds = |flower: &Flower| {
+        let raised = |flower: &Flower, cup: f64| {
             let mut tally = Tally::default();
-            flower_parts(flower, 0.02, (1, 0), &mut tally);
+            flower_parts(flower, cup, 0.02, (1, 0), &mut tally);
             let (_, kinds) = tally.measures();
             [
                 "flower_symmetry",
@@ -3225,6 +3580,7 @@ mod tests {
                     .unwrap_or_default()
             })
         };
+        let kinds = |flower: &Flower| raised(flower, 0.0);
         assert_eq!(
             kinds(&Flower::default()),
             ["actinomorphic", "rotate|cupped", "false", "false"]
@@ -3249,6 +3605,15 @@ mod tests {
             ..Flower::default()
         };
         assert_eq!(kinds(&harebell)[1], "campanulate");
+        // Free tepals raised steeply: a lily's bell and funnel, no tube.
+        let lily = Flower {
+            perianth: Perianth::Tepals,
+            petals: 6,
+            ..Flower::default()
+        };
+        assert_eq!(raised(&lily, 40.0)[1], "rotate|cupped");
+        assert_eq!(raised(&lily, 60.0)[1], "campanulate");
+        assert_eq!(raised(&lily, 65.0)[1], "funnelform");
         let orchid = Flower {
             perianth: Perianth::Tepals,
             petals: 6,
@@ -3565,11 +3930,13 @@ mod tests {
         let strip = Blade {
             taper: 0.0,
             aspect: 0.1,
+            foot: 0.0,
         };
         assert_eq!(read(Shape::Blade(strip)), "linear");
         let tip = Blade {
             taper: 1.0,
             aspect: 0.05,
+            foot: 0.0,
         };
         assert_eq!(read(Shape::Blade(tip)), "deltate|lanceolate|linear");
         // A frond card's blade is widest below its middle, a third as
@@ -3593,6 +3960,7 @@ mod tests {
             body: 0,
             left: Vec3::ZERO,
             within: None,
+            young: 0.0,
         };
         let cone = |heading: Vec3| GraphOrgan {
             id: 2,

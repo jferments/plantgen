@@ -43,7 +43,6 @@
       "boots": 1,
       "boot_life": 60,
       "boot_length": 0.06,
-      "crown_cone": 0.4,
       "adult_age": 15,
       "suckers": 3,
       "sucker_age": 10,
@@ -86,14 +85,6 @@
           "aspect": 0.6
         },
         "colour": [0.119, 0.073, 0.033]
-      },
-      "cone": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.32,
-          "cone": 1
-        },
-        "colour": [0.477, 0.263, 0.073]
       }
     }
   },
@@ -115,14 +106,70 @@
   "traits": {
     "wood_density_basic_kg_m3": 280,
     "vernation": "circinate",
-    "sexual_system": "dioecious"
+    "sexual_system": "dioecious",
+    "height_typical_m": {
+      "min": 1,
+      "max": 3
+    },
+    "height_max_m": 6,
+    "woodiness": "woody",
+    "rosette": "terminal",
+    "leaf_length_m": {
+      "min": 0.5,
+      "max": 1.5
+    },
+    "leaf_width_m": {
+      "min": 0.2,
+      "max": 0.3
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_margin": "entire",
+    "pollen_cone_length_m": {
+      "min": 0.4,
+      "max": 0.6
+    },
+    "pollen_cone_width_m": {
+      "min": 0.075,
+      "max": 0.1
+    },
+    "pollen_cone_face_width_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "pollen_cone_shape": "conical",
+    "pollen_cone_colour": [205, 160, 70],
+    "microsporophyll_spine_m": 0.005,
+    "megasporophyll_length_m": {
+      "min": 0.2,
+      "max": 0.25
+    },
+    "megasporophyll_crown": "closed",
+    "megasporophyll_margin": "pectinate",
+    "megasporophyll_colour": [160, 110, 55],
+    "ovules_per_megasporophyll": {
+      "min": 4,
+      "max": 6
+    },
+    "seed_length_m": {
+      "min": 0.03,
+      "max": 0.04
+    },
+    "seed_width_m": {
+      "min": 0.025,
+      "max": 0.03
+    },
+    "seed_colour_ripe": [210, 85, 20]
   },
   "evidence": {
-    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cycas revoluta (gwddagg_v2.2_species.csv, read): specific gravity 0.28 (wsg_est, the database's hierarchical-model species mean, from 3 records in 1 source); trunks 0.28, branches 0.37. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 species aggregate for Cycas revoluta (gwddagg_v2.2_species.csv, read): specific gravity 0.28 (wsg_est, the database's hierarchical-model species mean, from 3 records in 1 source); trunks 0.28, branches 0.37. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a stout, shaggy trunk up to 2 to 3 m, very slow, under a crown of stiff, glossy, dark green feather fronds about 1 to 1.5 m long, with narrow, sharp leaflets curled under at the edges; a cone 30 to 60 cm long at the centre of a mature plant; suckers at the foot. Grown in gardens; native to southern Japan. Refitted from Whitelock (2002, p. 80, 138-139) and Kaplan (2022, p. 789-791): a flush of about sixteen leaves a year (at least one flush a year in gardens, two or more in the tropics), each rising straight with its leaflets coiled, not unrolling as a fern's frond does; a petiole of 5 to 7 cm on a leaf of 0.6 to 1.5 m, armed with spines; about seventy pairs of leaflets (60 to 150 in floras) set forward at about 45 degrees on a keeled rachis, so the two rows stand in a V; leaf stubs kept on the trunk for its life. Not otherwise fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a stout, shaggy trunk up to 2 to 3 m, very slow, under a crown of stiff, glossy, dark green feather fronds about 1 to 1.5 m long, with narrow, sharp leaflets curled under at the edges; suckers at the foot. Grown in gardens; native to southern Japan. Refitted from Whitelock (2002, p. 80, 138-139) and Kaplan (2022, p. 789-791): a flush of about sixteen leaves a year (at least one flush a year in gardens, two or more in the tropics), each rising straight with its leaflets coiled, not unrolling as a fern's frond does; a petiole of 5 to 7 cm on a leaf of 0.6 to 1.5 m, armed with spines; about seventy pairs of leaflets (60 to 150 in floras) set forward at about 45 degrees on a keeled rachis, so the two rows stand in a V; leaf stubs kept on the trunk for its life. Not otherwise fitted to measurements. Its cones and sporophylls come from its traits (Whitelock 2002, p. 139)."
     },
     "allometry": {
       "evidence": "Authored",
@@ -132,7 +179,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: dark glossy green fronds, a tan cone, brown leaf bases."
+      "note": "Colours chosen by eye from photographs: dark glossy green fronds, brown leaf bases."
     },
     "taxon": {
       "evidence": "Authored",
@@ -164,8 +211,126 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "traits.vernation": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 142, 144, Cycas revoluta: vernation circinate."},
-    "traits.sexual_system": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 218, Cycas revoluta: sexual system dioecious."}
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 142, 144, Cycas revoluta: vernation circinate."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 218, Cycas revoluta: sexual system dioecious."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L383421), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L383421), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L383421), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L383421), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L383421), as no source read gives it."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L383421), as no source read gives it."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L383421), as no source read gives it."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L383421), as no source read gives it."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: male cone conical to ovoid-oblong, 40 to 60 cm long."
+    },
+    "traits.pollen_cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: male cone 7.5 to 10 cm across."
+    },
+    "traits.pollen_cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: the microsporophyll's face deltoid, 0.8 to 1 cm high by 1 to 1.5 cm wide."
+    },
+    "traits.pollen_cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: male cone conical to ovoid-oblong; read as conical."
+    },
+    "traits.pollen_cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: male cone densely felted yellow; the colour by eye."
+    },
+    "traits.microsporophyll_spine_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: microsporophylls deflexed at about 45 degrees, 3.5 to 4 cm long, each face ending in an erect apical spine about 0.5 cm long."
+    },
+    "traits.megasporophyll_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: megasporophylls 20 to 25 cm long, the stalk quadrangular, 10 to 15 cm by 1 cm."
+    },
+    "traits.megasporophyll_crown": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: megasporophylls held tight in a closed, flattened dome, yellow-tan to orange-tan."
+    },
+    "traits.megasporophyll_margin": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: lamina ovate, 8 to 10 cm by 6 to 8 cm, divided nearly to the midrib into 12 to 18 linear, curved, spine-tipped segments; read as pectinate."
+    },
+    "traits.megasporophyll_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: megasporophylls felted yellow-tan to orange-tan; the colour by eye."
+    },
+    "traits.ovules_per_megasporophyll": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: 4 to 6 ovules on each megasporophyll."
+    },
+    "traits.seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: seeds ovoid, slightly flattened, 3 to 4 cm long."
+    },
+    "traits.seed_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: seeds 2.5 to 3 cm across."
+    },
+    "traits.seed_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 139), Cycas revoluta: seeds orange to red-orange when ripe; the colour by eye."
+    }
   },
   "provenance": {
     "sources": [

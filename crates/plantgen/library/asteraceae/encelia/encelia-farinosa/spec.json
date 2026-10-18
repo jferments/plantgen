@@ -72,7 +72,6 @@
           "widest": 0.4,
           "tip": 0.6,
           "base": 0.7,
-          "teeth": 0,
           "petiole": 0.15
         }
       },
@@ -131,7 +130,12 @@
     "fruit_size_m": 0.004,
     "pappus": "absent",
     "flowering_months": [3, 4, 5, 6],
-    "fruiting_months": [5, 6, 7]
+    "fruiting_months": [5, 6, 7],
+    "height_typical_m": {"min": 0.5, "max": 1.2},
+    "leaf_habit": "drought_deciduous",
+    "rosette": "none",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
+    "leaf_apex": {"obtuse": "usually", "acute": "often"}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -289,7 +293,12 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's white brittlebush review (Brahmsteadt 2024, read 2026-10-16): for plants flowering in late winter to spring, \"seeds mature and disperse between May and July\"; read as May to July."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Encelia farinosa (read 2026-10-18): the leaf tip is obtuse or acute."}
   },
   "provenance": {
     "sources": [

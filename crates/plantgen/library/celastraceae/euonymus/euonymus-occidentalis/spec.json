@@ -1,0 +1,328 @@
+{
+  "schema": 1,
+  "id": "euonymus-occidentalis",
+  "taxon": {
+    "scientific_name": "Euonymus occidentalis",
+    "common_name": "western burning bush",
+    "family": "Celastraceae",
+    "genus": "Euonymus",
+    "plant_name_id": 2803520
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 6,
+      "branch_angle": 45
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.4,
+      0.42,
+      0.3
+    ],
+    "foliage": [
+      0.12,
+      0.25,
+      0.07
+    ],
+    "foliage_shade": [
+      0.038,
+      0.08,
+      0.022
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 3.2,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 2,
+      "max": 6
+    },
+    "height_max_m": {
+      "min": 2,
+      "max": 6
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "petiole_length_m": {
+      "min": 0.005,
+      "max": 0.015
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "acuminate",
+    "leaf_margin": "serrate",
+    "inflorescence": "cyme",
+    "flowering_position": "lateral",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 5
+    },
+    "inflorescence_length_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "peduncle_length_m": {
+      "min": 0.025,
+      "max": 0.06
+    },
+    "flower_size_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "petal_length_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "flower_merosity": 5,
+    "flower_colour": [
+      140,
+      65,
+      65
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "fruit_colour_ripe": [
+      190,
+      60,
+      70
+    ],
+    "flowering_months": [
+      4,
+      5
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: shrub, 2-6 m. high, with slender often scandent branches."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: shrub, 2-6 m. high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: a shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: a shrub with smooth, greenish, 4-angled branchlets."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: leaves thin and glabrous, deciduous."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves in opposite pairs, set by hand from iNaturalist photos (observations 170669920, 33656920, 221857237, 301748744, 12759210, 292980, 292989, 217060798): the sources read give no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: leaves 4-10 cm. long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 2 cm to 5 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: petioles 5-15 mm. long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: leaves ovate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: acuminate at the apex."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: serrulate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: peduncles slender, 1-5-flowered: small cymes."
+    },
+    "traits.flowering_position": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flowers on long stalks from the leaf axils, set by hand from iNaturalist photos (observations 170669920, 33656920, 221857237, 301748744, 12759210, 292980, 292989, 217060798): the sources read give no count or measure."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: peduncles 1-5-flowered."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: each cyme 1 cm to 2.5 cm across above its peduncle, as in the photos."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: peduncles slender, 25-60 mm. long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flowers 8 mm to 10 mm across, their rounded petals 3 mm to 4 mm long (Abrams 1951 p. 53)."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: petals 5, rounded, 3-4 mm. long."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: petals 5."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: petals brownish purple, penciled; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: capsule deeply 3-lobed, depressed, smooth."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: capsules 1 cm to 1.5 cm across."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: capsules red when ripe, opening on seeds with a red aril (Abrams 1951 p. 53, key to genera)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: flowering April and May."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: capsules ripe August to October."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: an open shrub of slender, arching green branchlets and thin, toothed leaves in pairs, the purplish-brown flowers hanging on long threadlike stalks below them."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for western burning bush from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "3.2 m tall at 12 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

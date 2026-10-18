@@ -90,24 +90,16 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.45,
-          "widest": 0.7,
-          "tip": 0.3,
-          "base": 0.6,
-          "teeth": 0,
           "petiole": 0.05
         }
       },
       "bloom": {
         "shape": {
           "template": "fruit",
-          "kind": "berry",
           "aspect": 0.95,
           "unripe": 0.6
         },
         "inflorescence": {
-          "kind": "raceme",
-          "flowers": 6,
           "size": 0.3,
           "spread": 40,
           "pedicel": 0.12
@@ -197,7 +189,14 @@
       7,
       8,
       9
-    ]
+    ],
+    "height_typical_m": {"min": 0.05, "max": 0.2},
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.004, "max": 0.01},
+    "leaf_shape": "obovate",
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.01, "max": 0.03},
+    "leaf_apex": "rounded"
   },
   "evidence": {
     "taxon": {
@@ -304,7 +303,14 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after Dendrology (pp. 78-79, \"Prostrate mats of small obovate leathery leaves with pink-mouthed urns\"): dark green leaves, white urns with pink mouths, shiny red drupes; reddish flaking bark (FEIS: bark \"exfoliates in largish flakes\")."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Arctostaphylos uva-ursi (read 2026-10-18): the leaf tips are rounded (FNA on efloras (flora_id=1, taxon 220001038) describes the blade but gives no apex)."}
   },
   "provenance": {
     "sources": [

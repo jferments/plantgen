@@ -1,0 +1,280 @@
+{
+  "schema": 1,
+  "id": "hemionitis-triangularis",
+  "taxon": {
+    "scientific_name": "Hemionitis triangularis",
+    "common_name": "goldback fern",
+    "family": "Pteridaceae",
+    "genus": "Hemionitis",
+    "plant_name_id": 3218434
+  },
+  "growth_form": "fern",
+  "generator": {
+    "params": {
+      "frond_seed": 0.2,
+      "size_years": 2,
+      "open_years": 0.5,
+      "angle_spread": 10,
+      "frond_radius": 0.0012,
+      "pinna_angle": 85,
+      "pinna_lift": 8,
+      "season": 0.5,
+      "emerge_spread": 0.3,
+      "unroll": 0.3,
+      "droop_years": 1,
+      "crown_age": 3
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      8
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.2,
+      0.33,
+      0.13
+    ],
+    "foliage_shade": [
+      0.064,
+      0.106,
+      0.042
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.25,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.4
+    },
+    "height_max_m": 0.4,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "reproduction": "spores",
+    "rosette": "basal",
+    "perennation": "rhizome",
+    "rhizome_habit": "short_creeping",
+    "leaf_posture": "ascending",
+    "leaf_length_m": {
+      "min": 0.06,
+      "max": 0.18
+    },
+    "petiole_length_m": {
+      "min": 0.08,
+      "max": 0.25
+    },
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.16
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "pinnae": {
+      "min": 8,
+      "max": 16
+    },
+    "leaf_shape": "deltate",
+    "leaf_underside_colour": [220, 180, 70],
+    "stipe_colour": [
+      60,
+      35,
+      25
+    ],
+    "stipe_scales": "sparse",
+    "stipe_scale_extent": "base",
+    "indusium": "none"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: fronds numerous, clustered, erect, 15-40 cm. long."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: fronds 15-40 cm. long."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: rhizome stoutish, short-creeping or ascending."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: a fern."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: sporangia following the short spreading branched veinlets throughout."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: fronds numerous, clustered."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: rhizome stoutish, short-creeping or ascending."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: rhizome short-creeping or ascending."
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: fronds erect; the photos show them ascending, the blades tilted out."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: blades deltoid-pentagonal, 6-18 cm. long."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: stipes stout, dark brown, polished, about twice as long as the blades: 8 cm to 25 cm of the 15-40 cm fronds."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: blades 5-16 cm. broad."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: blades pinnate, or 2-pinnate as to the large spreading basal pinnae."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: blades pinnate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: 2-pinnate as to the basal pinnae; other pinnae pinnately lobed or incised."
+    },
+    "traits.pinnae": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "4 to 8 pairs of pinnae to a blade, 8 to 16 in all, set by hand from iNaturalist photos (observations 99814168, 104121771, 70040257, 198925083, 11327760, 71102105, 250514270, 214519534): the sources read give no count or measure."
+    },
+    "traits.leaf_underside_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: segments \"essentially glabrous above, yellowish-ceraceous beneath, or the powder rarely white or lacking\"; the genus \"covered with a white to deep yellow powder beneath\". The sRGB value, a golden yellow, is the model's reading of that wax, by eye from the photos the appearance cites (gold-powdered beneath)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: blades deltoid-pentagonal, the basal pinnae largest."
+    },
+    "traits.stipe_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: stipes dark brown, polished; sRGB by eye from the photos."
+    },
+    "traits.stipe_scales": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: stipes naked above the base."
+    },
+    "traits.stipe_scale_extent": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: stipes naked above the base."
+    },
+    "traits.indusium": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma: sori non-indusiate."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a small tuft of dark polished stalks, each with a triangular, deeply cut, dark green blade, gold-powdered beneath."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for goldback fern from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.25 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

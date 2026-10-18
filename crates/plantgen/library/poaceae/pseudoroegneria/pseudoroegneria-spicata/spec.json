@@ -172,7 +172,12 @@
     "spikelet_length_m": {
       "min": 0.012,
       "max": 0.02
-    }
+    },
+    "height_typical_m": {"min": 0.4, "max": 1},
+    "height_max_m": 1.2,
+    "rosette": "basal",
+    "fruit_size_m": {"min": 0.005, "max": 0.007},
+    "leaf_habit": "deciduous"
   },
   "evidence": {
     "taxon": {
@@ -294,7 +299,12 @@
       "evidence": "SourceInferred",
       "source": "hitchcock-1935",
       "note": "Hitchcock (1935) p. 240, no. 18, Agropyron spicatum: the rachis internodes \"1 to 2 cm long, or the lowermost 2.5 cm\", the spikelets \"not as long (excluding the awns) as the internodes or slightly longer\", read as 1.2 to 2 cm; Abrams (vol. 1, 1923, Agropyron no. 12) gives lemmas 12-15 mm."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L438370), as no source read gives it."}
   },
   "provenance": {
     "sources": [

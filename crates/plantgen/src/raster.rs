@@ -86,6 +86,10 @@ pub enum Material {
     /// Hair strands (`crate::hairs::strand_mesh`): two-sided, their
     /// vertex normals their tangents, lit as fibres.
     Hair,
+    /// The round heads of glandular hairs (`crate::hairs::Strands::heads`):
+    /// drops of resin, lit as clear beads are, a bright glint where they
+    /// mirror the sun and a glow where it shines through them.
+    Gland,
 }
 
 impl Material {
@@ -558,10 +562,13 @@ impl Surface<'_> {
             let alpha = mesh.colors[corners[0]][3];
             let (template, _, _) = crate::templates::unpack_face(alpha);
             #[allow(clippy::cast_possible_truncation)]
-            let texel = self.templates.sample(template, u as f32, v as f32);
-            if texel.coverage < 0.5 {
+            let (u, v) = (u as f32, v as f32);
+            // Cut where the coverage, read between texels, is below one
+            // half, so the card's edge follows its outline.
+            if self.templates.coverage(template, u, v) < 0.5 {
                 return;
             }
+            let texel = self.templates.sample(template, u, v);
             // Up close the edge's hairs are strands of their own.
             if texel.fringe
                 && let Some(hairs) = self
@@ -581,7 +588,7 @@ impl Surface<'_> {
             }
             let face = crate::templates::card_face(alpha, normal.dot(view) >= 0.0);
             albedo = self.templates.paint(template, albedo, texel, face);
-            hair = Some(template);
+            hair = Some((template, face.lower));
         }
         target.depth[at] = depth;
         let Some(lighting) = self.lighting else {
@@ -604,6 +611,18 @@ impl Surface<'_> {
                 target.color[at] = [light[0] as f32, light[1] as f32, light[2] as f32, 1.0];
             }
             target.normal[at] = view.to_f32();
+            return;
+        }
+        if self.material == Material::Gland {
+            let lit = self
+                .shadow
+                .map_or(1.0, |map| map.visibility(world, normal, lighting.sun));
+            let light = crate::hairs::gland_light(albedo, normal, view, lit, lighting);
+            #[allow(clippy::cast_possible_truncation)]
+            {
+                target.color[at] = [light[0] as f32, light[1] as f32, light[2] as f32, 1.0];
+            }
+            target.normal[at] = normal.to_f32();
             return;
         }
         if self.material == Material::Card && normal.dot(view) < 0.0 {
@@ -629,12 +648,12 @@ impl Surface<'_> {
                 color[channel] = (albedo[channel] * light) as f32;
             }
         }
-        if let Some(template) = hair
+        if let Some((template, lower)) = hair
             && let Some(hairs) = self
                 .templates
                 .templates
                 .get(template)
-                .and_then(|drawn| drawn.hairs.as_ref())
+                .and_then(|drawn| drawn.hairs_on(lower))
         {
             let sheen = crate::hairs::sheen(hairs, normal, view, lit, lighting);
             for channel in 0..3 {

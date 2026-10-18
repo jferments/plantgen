@@ -12,8 +12,6 @@
   "growth_form": "fern",
   "generator": {
     "params": {
-      "fronds_per_year": 12,
-      "frond_life": 2.5,
       "frond_seed": 0.15,
       "size_years": 4,
       "open_years": 0.6,
@@ -24,12 +22,8 @@
       "season": 0.5,
       "emerge_spread": 0.35,
       "unroll": 0.3,
-      "curl": 38,
       "droop_years": 2.5,
-      "crowns": 2,
-      "crown_age": 4,
-      "crown_rate": 0.15,
-      "rhizome": 0.15
+      "crown_age": 4
     }
   },
   "growth": {
@@ -67,6 +61,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stipe_scale_extent": "throughout",
     "rhizome_habit": {"ascending": "usually", "erect": "often"},
     "leaf_habit": "evergreen",
     "leaf_posture": "ascending",
@@ -80,9 +75,16 @@
     "stipe_scale_colour": [100, 50, 30],
     "sorus_position": {"medial": "usually", "submarginal": "often"},
     "sori_rows": {"min": 1, "max": 1, "high": 3},
-    "indusium": "shield"
+    "indusium": "shield",
+    "height_typical_m": {"min": 0.5, "max": 1.5},
+    "height_max_m": 1.8,
+    "woodiness": "herbaceous",
+    "rosette": "basal",
+    "perennation": "rhizome",
+    "leaf_arrangement": "alternate"
   },
   "evidence": {
+    "traits.stipe_scale_extent": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Polystichum munitum: \"Petiole ... densely scaly; scales red-brown to dark brown or nearly black, gradually diminishing in size distally\"; it is told from P. imbricans by \"its persistent, wide (the largest wider than 1 mm) distal petiolar scales\". Scales to the top of the petiole; read as throughout."},
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -143,7 +145,13 @@
     "traits.stipe_scales": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Polystichum munitum: \"Petiole ... densely scaly; scales red-brown to dark brown or nearly black, gradually diminishing in size distally.\""},
     "traits.stipe_scale_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America's \"red-brown to dark brown or nearly black\" scales (see stipe_scales), read as a dark red-brown."},
     "traits.leaf_posture": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), Polystichum munitum: fronds \"rigidly ascending in a crown\"; read as ascending."},
-    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 460-461: rhizome ascending to erect. The spec stated \"ascending\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."}
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 460-461: rhizome ascending to erect. The spec stated \"ascending\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3151340), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3151340), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3151340), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3151340), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3151340), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3151340), as no source read gives it."}
   },
   "provenance": {
     "sources": [

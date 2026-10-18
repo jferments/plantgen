@@ -58,10 +58,26 @@
 # the next flowering (The Cactus Primer: one flower to an areole made the
 # year before). One ring, as before, unless a lineage asks for more.
 #
+# Revision 3 (thread "Cacti"): flowers may open down a column's flank as
+# well as round its crown (flank): each of a column's pieces from the last
+# flank years, below the newest, opens about flowers / flank flowers, buds
+# or fruit on its side, so the flank below the crown carries about another
+# ring's worth: a hedgehog's flowers burst from the upper half of its
+# stems and an organ pipe's open near the tips and along their sides.
+# None, as before, unless a lineage asks.
+#
+# Revision 4 (thread "Cacti"): a chain of fruit hangs: it turns toward the
+# ground as it leaves its joint, and each fruit hangs from near the tip of
+# the one before, a little to one side, so the fruit no longer run into
+# each other (Anderson, The Cactus Family pp. 35 and 209 to 210: long
+# pendulous chains). A chain grows while its end hangs clear of the
+# ground, and starts a year after its joint, once the joint's tip is known
+# to be clear.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem column 2;
+lsystem column 4;
 
 # The plant.
 param vigour_spread;          # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -150,6 +166,7 @@ param dioecious;              # 1: each plant is male or female; 0: every plant 
 param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param crown_rings;            # rings round a column's tip: this year's, then older rings of fruit
 param ring_step;              # degrees each older ring sits below the one above
+param flank;                  # a column's pieces of the last this many years open flowers on their sides
 
 module Y(k, v, b);                      # the crown: k stems so far, vigour, arm propensity
 module Ss(k, m, v, b);                  # stems k to k + m - 1 sprouting this year
@@ -162,6 +179,7 @@ module A(v, b, kind, dr, inside, e);
 # it has an arm, and its column's kind, droop and elbow.
 module P(len, r0, rf, v, b, kind, armed, at, dr, e) queries position;
 module Ri(k, m, r, d);                  # places k to k + m - 1 of a crown's rings
+module Fk(n, len, r);                   # n flowers on the side of a piece len long and r in radius
 module Fo;                              # one place in this year's ring: a bud, a flower or a fruit
 # A joint: its length and radius, its place (a trunk joint's number up
 # the trunk, a lateral's depth in its branch), vigour, whether it has
@@ -176,8 +194,8 @@ module Dj(k, m, n, d, v, r, s, pa, back);
 module Jo(r, a, pa);                    # a lateral's way out through its trunk's side
 module Dp(th, d, v, r);                 # a pad's daughter, th degrees round its top
 module Fl(k, m, n, l, r);               # flowers k to k + m - 1 of n on a joint
-module Cb(n);                           # where a chain of fruit starts, if n is 1
-module Ch(n);                           # the growing end of a chain of n fruit
+module Cb(n) queries position;          # where a chain of fruit starts, if n is 1
+module Ch(n) queries position;          # the growing end of a chain of n fruit
 module Cf;                              # one fruit of a chain
 
 body stem;
@@ -261,10 +279,23 @@ rule P(len, r0, rf, v, b, kind, armed, at, dr, e) :
 # A piece: turned a little at random, bent toward its column's tropism,
 # filled out by its age. A column turns toward its tilt from upright; an
 # arm turns up, or a drooping one down until it has hung droop_length.
+# A recent piece of a flowering column whose flowers open down its flank
+# also opens a few on its side.
+interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) :
+        kind == 0 && flank > 0 && flowers > 0 && age >= 1 && age < flank + 1 && t * v >= bloom_age ->
+    ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
+    T(0, cos(rad(sun_tilt)), sin(rad(sun_tilt)), bend * len)
+    !(r0 + (rf - r0) * (1 - exp(-age / fill_years))) stem(len)
+    Fk(floor(flowers / flank + rand()), len, r0 + (rf - r0) * (1 - exp(-age / fill_years)));
 interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) : kind == 0 ->
     ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
     T(0, cos(rad(sun_tilt)), sin(rad(sun_tilt)), bend * len)
     !(r0 + (rf - r0) * (1 - exp(-age / fill_years))) stem(len);
+interpret Fk(n, len, r) : n >= 1 ->
+    [ f(-len * uniform(0, 1)) /(uniform(0, 360)) &(90) f(r)
+      ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ]
+    Fk(n - 1, len, r);
+interpret Fk(n, len, r) -> ;
 interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) ->
     ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
     T(0, at < dr ? -1 : 1, 0, elbow * e * len)
@@ -386,12 +417,17 @@ interpret Fl(k, m, n, l, r) : m == 1 ->
       f(r * 0.6) Fo ];
 
 # A chain of fruit hangs from its joint and grows one more fruit at its
-# end each year, as the last one flowers again.
-decompose Cb(n) : n > 0 && (dioecious < 0.5 || sex >= 0.5) -> [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) Cf Ch(1) ];
-decompose Cb(n) -> ;
-rule Ch(n) : n < chain_max -> Cf Ch(n + 1);
+# end each year, as the last one flowers again, while its end hangs clear
+# of the ground; a joint whose tip lies on the ground starts none.
+decompose Cb(n) : n == 0 || (dioecious >= 0.5 && sex < 0.5) -> ;
+rule Cb(n) : py > fruit_size * 1.2 ->
+    [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) steer(0, -1, 0, 0.8) Cf Ch(1) ];
+rule Ch(n) : n < chain_max && py > fruit_size * 1.2 -> Cf Ch(n + 1);
+# Each fruit hangs from near the tip of the one before it, a little to one
+# side, as the flower it grew from opened from one of that fruit's areoles.
 interpret Cf ->
-    fruit(fruit_size * uniform(0.9, 1.1)) f(fruit_size * 0.85) +(gauss() * 18) &(gauss() * 10);
+    fruit(fruit_size * uniform(0.9, 1.1)) f(fruit_size * 0.95) /(137.5) &(15 + gauss() * 8)
+    steer(0, -1, 0, 0.6);
 
 # An older ring's place in a column's crown: last year's fruit, ring_step
 # degrees farther down the dome per ring and turned half a place.

@@ -20,8 +20,6 @@
       "branch_angle": 35,
       "apical_young": 0.62,
       "apical": 0.52,
-      "leaf_size": 0.34,
-      "spur_leaf": 0.3,
       "spur_pairs": 2,
       "leaf_angle": 45,
       "lean": 10,
@@ -32,8 +30,7 @@
       "droop": 0.025,
       "extinction": 0.45,
       "pipe_rings": 1.4e-05,
-      "leaf_area": 0.138,
-      "bloom_area": 0.05,
+      "bloom_area": 0.036,
       "path_half": 4.25
     }
   },
@@ -65,15 +62,10 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 35,
-          "width": 0.22,
+          "template": "simple",
           "widest": 0.35,
           "tip": 0.85,
           "base": 0.3,
-          "teeth": 18,
-          "tooth_depth": 0.005,
           "petiole": 0.08
         },
         "families": {
@@ -112,10 +104,16 @@
       "max": 0.035
     },
     "wood_density_basic_kg_m3": 410,
-    "juvenile_period_years": {"min": 5, "max": 10}
+    "juvenile_period_years": {"min": 5, "max": 10},
+    "height_typical_m": {"min": 4, "max": 10},
+    "life_span": "perennial",
+    "rosette": "none",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.1},
+    "flower_symmetry": "actinomorphic",
+    "fruit_size_m": {"min": 0.004, "max": 0.008},
+    "leaf_apex": {"caudate": "usually", "acuminate": "often"}
   },
   "evidence": {
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.639), and since 2026-10-16 its family's two carpels and its order's regular flowers (before, 0.031). Since 2026-10-16 its flowers, which have no perianth, are drawn by their stamens grown to the flower's size (before, 0.0138)."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
@@ -186,7 +184,15 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.050)."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Salix lasiandra (read 2026-10-18): the largest mid-shoot blades taper to a caudate to acuminate tip."}
   },
   "provenance": {
     "sources": [

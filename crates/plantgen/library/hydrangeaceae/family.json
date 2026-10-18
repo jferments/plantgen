@@ -11,13 +11,13 @@
     },
     "leaf_division": "simple",
     "leaf_margin": {
-      "entire": "often",
-      "serrate": "often",
-      "dentate": "often"
+      "serrate": "usually",
+      "dentate": "sometimes",
+      "entire": "sometimes"
     },
     "leaf_venation": {
       "pinnate": "often",
-      "palmate": "often"
+      "palmate": "sometimes"
     },
     "leaf_habit": {
       "evergreen": "often",
@@ -29,13 +29,13 @@
       "polygamous": "rarely"
     },
     "ovary_position": {
-      "half_inferior": "often",
       "inferior": "often",
-      "superior": "sometimes"
+      "half_inferior": "sometimes",
+      "superior": "rarely"
     },
     "hypanthium": {
-      "true": "often",
-      "false": "often"
+      "true": "usually",
+      "false": "sometimes"
     },
     "woodiness": {
       "woody": "often",
@@ -76,7 +76,15 @@
       "lobed": "rarely"
     }
   },
+  "rules": {
+    "generator.params.leaf_size": {"rule": "leaf_length_m + first(petiole_length_m, 0)", "why": "A shrub's leaf card holds one leaf and its stalk end to end: the blade its flora measures and its petiole where it has one."},
+    "appearance.organs.leaf.shape.petiole": {"template": ["simple", "compound"], "rule": "first(petiole_length_m, 0) / (leaf_length_m + first(petiole_length_m, 0))", "why": "A leaf's card is its petiole and blade end to end, so the petiole's share is its length over theirs together."},
+    "generator.params.leaf_length": {"rule": "max(leaf_length_m) + first(petiole_length_m, 0)", "why": "A herb's longest stem leaf is as long as the longest blade its flora measures, with its petiole where it has one, as a leaf card holds both; the leaves below and above it are shorter by the shares its program sets."},
+    "generator.params.leaf_top": {"rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)", "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures."},
+    "generator.params.leaf_base": {"rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)", "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures; its basal leaves are drawn apart."}
+  },
   "evidence": {
+    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How a Hydrangeaceae shrub's leaf cards are sized from a flora's leaf lengths: the card is the blade with its petiole end to end, and the petiole's share of it its length over both, so the blades and petioles drawn are the ones measured (the shrub form's default card is half again the blade, with a fixed petiole share). Its herbs take the campanulids' stem-leaf rules (spec rework E1 and E3), as the borage family's do. Homed at the family, whose built-in species came with the core-species expansion, phase C batch 3 (2026-10-18), so no other species changes."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
@@ -96,6 +104,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Hydrangeaceae (read 2026-10-17): lamina usually undivided, dissected and palmatifid in Kirengeshoma; Hydrangea quercifolia (oakleaf) is lobed."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-nepal",
+      "note": "Flora of Nepal Hydrangeaceae (RBGE, read 2026-10-17): family margins more or less serrate; genus accounts give serrate to doubly serrate Hydrangea (~30 spp as counted there), serrulate Deutzia (~60), distantly serrate Philadelphus (~80) and serrate Dichroa (12). All ~180 counted species serrate; entire and dentate kept as minorities."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-nepal",
+      "note": "Flora of Nepal Hydrangeaceae (read 2026-10-17): veins pinnate in Hydrangea (~30), Deutzia (~60) and Dichroa (12), but 3-5 veins from near the base in Philadelphus (~80). Tally pinnate ~102 vs palmate ~80 of ~182 counted, a lead of ~12%, so only often against sometimes. A wider Hydrangea (70+ spp in other treatments) would widen the lead."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-nepal",
+      "note": "Flora of Nepal Hydrangeaceae (read 2026-10-17): ovary inferior in Deutzia (~60) and Dichroa (12); inferior to slightly superior in Philadelphus (~80); inferior with a flat top to semi-superior in Hydrangea (~30). Every counted genus is inferior at least in part (~182 spp), with half-inferior only as the range's upper end; superior not reported, so lowered to rarely."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-nepal",
+      "note": "Flora of Nepal Hydrangeaceae (read 2026-10-17): in all four genera described (Hydrangea, Deutzia, Philadelphus, Dichroa; ~180 spp) the calyx forms a tube joined to the ovary, bearing the petals and stamens above it, i.e. a floral cup fused to an inferior ovary. No genus lacks it."
     }
   }
 }

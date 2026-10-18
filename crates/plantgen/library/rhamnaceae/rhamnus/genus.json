@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Rhamnus",
+  "traits": {
+    "inflorescence": {"cyme": "usually", "solitary": "sometimes", "panicle": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Rhamnus (read 2026-10-17): flowers few together in axillary cymes, or in cyme-built racemes or panicles, or borne one at a time; ~140 species."}
+  }
+}

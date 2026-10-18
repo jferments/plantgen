@@ -19,13 +19,11 @@
       "internode": 0.28,
       "max_shoot": 4,
       "pipe_rings": 3.61e-07,
-      "pipe_organ": 0.00445,
-      "pipe_tip": 0.00219,
+      "pipe_organ": 0.00298,
+      "pipe_tip": 0.00147,
       "branch_angle": 45,
       "apical_young": 0.72,
       "apical": 0.6,
-      "leaf_size": 0.32,
-      "spur_leaf": 0.28,
       "spur_pairs": 2,
       "leaf_angle": 55,
       "wiggle": 5,
@@ -35,7 +33,6 @@
       "blooms": 2,
       "bloom_size": 0.045,
       "bloom_angle": 130,
-      "leaf_area": 0.304,
       "bloom_area": 0.289,
       "path_half": 7.05
     }
@@ -51,6 +48,8 @@
   },
   "appearance": {
     "bark": [0.7, 0.68, 0.62],
+    "twig": [0.22,  0.053,  0.017],
+    "twig_radius": 0.008,
     "bark_pattern": {
       "kind": "peeling",
       "scale": 0.1,
@@ -70,16 +69,10 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 50,
-          "width": 0.7,
+          "template": "simple",
           "widest": 0.35,
           "tip": 0.5,
-          "base": 0.7,
-          "teeth": 16,
-          "tooth_depth": 0.02,
-          "petiole": 0.18
+          "base": 0.7
         },
         "families": {
           "plasticity": 0.4
@@ -128,6 +121,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [235, 200, 50],
+    "shade_tolerance": "intolerant",
     "height_max_m": {
       "min": 21,
       "max": 30,
@@ -137,6 +132,7 @@
       "min": 0.06,
       "max": 0.1
     },
+    "petiole_length_m": {"min": 0.013, "max": 0.017},
     "wood_density_basic_kg_m3": 520,
     "wood_modulus_green_mpa": 8100,
     "wood_rupture_green_mpa": 44,
@@ -145,9 +141,19 @@
     "flowering_months": [4, 5, 6],
     "fruiting_months": [8, 9, 10, 11],
     "leaf_shape": {"ovate": "usually"},
-    "leaf_venation": "pinnate"
+    "leaf_venation": "pinnate",
+    "height_typical_m": {"min": 15, "max": 25},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.03, "max": 0.07},
+    "leaf_arrangement": "alternate",
+    "leaf_apex": {"acute": "usually", "acuminate": "often"}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Betula papyrifera (read 2026-10-18): \"The fall color is a bright yellow\". Colour ours."},
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Betula papyrifera: branchlets \"dark orange color ... during the summer, becoming dull red in their first winter, gradually growing dark orange-brown, lustrous for four or five years and ultimately covered with the white papery bark\". Colour chosen by eye for dark orange-brown; `twig_radius` 8 mm, twice the default, for the four or five years before the white bark (inferred)."},
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's paper birch review (Betula papyrifera, read 2026-10-16): \"Paper birch is shade-intolerant and can regenerate under even-aged silviculture\"; it is restricted to openings in older forests."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
@@ -168,6 +174,7 @@
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923), as Betula papyrifera: leaves 6 cm to 10 cm long."
     },
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "Abrams vol. 1 (1923), as Betula papyrifera occidentalis: petioles about 15 mm long."},
     "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Birch, paper, green: modulus of elasticity 8,100 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.48)."},
     "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Birch, paper, green: modulus of rupture 44,000 kPa (clear wood in static bending)."},
     "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Birch, paper: average moisture content of green wood, heartwood 89% and sapwood 72% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given."},
@@ -233,7 +240,14 @@
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Betula papyrifera: leaf shape ovate."},
-    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Betula papyrifera: leaf venation pinnate."}
+    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Betula papyrifera: leaf venation pinnate."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Betula papyrifera (read 2026-10-18): the leaf tip is acute to shortly acuminate."}
   },
   "provenance": {
     "sources": [

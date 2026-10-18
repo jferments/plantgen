@@ -21,8 +21,8 @@
       "why": "A plant flowers, or bears cones, from the end of its juvenile period."
     },
     "generator.params.unit_nodes": {
-      "rule": "max(1, min(round(shoot_leaves / (leaves_per_node * max_shoot)), floor(4 * internode / leaf_size)))",
-      "why": "A year's shoot is a growth unit of many short internodes, not a few long ones: a vigorous shoot, as long as the program's most internodes a bud grows in a year, bears the taxon's leaves per vigorous long shoot, so each of its internodes is divided into as many nodes as that takes, but never into nodes nearer than a quarter of a leaf's length, so a large-leaved plant's shoots carry fewer."
+      "rule": "max(1, min(round(shoot_leaves / (leaves_per_node * max_shoot)), floor(4 * internode * (leaves_per_node < 2 ? 2 : 1) / leaf_size)))",
+      "why": "A year's shoot is a growth unit of many short internodes, not a few long ones: a vigorous shoot, as long as the program's most internodes a bud grows in a year, bears the taxon's leaves per vigorous long shoot, so each of its internodes is divided into as many nodes as that takes, but never into nodes nearer than a quarter of a leaf's length, so a large-leaved plant's shoots carry fewer; on a spiral, where each leaf turns from the one below it and the next on its side stands two nodes up, never nearer than an eighth."
     },
     "generator.params.long_share": {
       "map": {
@@ -60,19 +60,22 @@
       "map": {
         "self_pruning": {"true": 0.05, "false": 0}
       },
-      "why": "A plant that sheds its own shaded limbs drops a limb whose leaves gather less light than its wood costs: under a twentieth of a fully lit leaf per segment it carries."
+      "else": {"map": {"shade_tolerance": {"intolerant": 0.05, "intermediate": 0, "tolerant": 0}}},
+      "why": "A plant that sheds its own shaded limbs drops a limb whose leaves gather less light than its wood costs: under a twentieth of a fully lit leaf per segment it carries. Where no source says whether it self-prunes, a shade-intolerant tree is taken to: its shaded limbs die, as black cottonwood's do, which stands on a trunk clear of branches for more than half its length (FEIS)."
     },
     "generator.params.space_renew": {
       "map": {
         "self_pruning": {"true": 1, "false": 0}
       },
+      "else": {"map": {"shade_tolerance": {"intolerant": 1, "intermediate": 0, "tolerant": 0}}},
       "why": "Where a shed limb leaves a gap, the crown can grow back into it."
     },
     "generator.params.bole_clear": {
       "map": {
         "self_pruning": {"true": 1, "false": 0}
       },
-      "why": "A tree that sheds its own shaded limbs stands on a clear trunk below its crown."
+      "else": {"map": {"shade_tolerance": {"intolerant": 1, "intermediate": 0, "tolerant": 0}}},
+      "why": "A tree that sheds its own shaded limbs stands on a clear trunk below its crown, and so, where no source says, does a shade-intolerant one."
     },
     "generator.params.limb_arch": {
       "map": {
@@ -122,6 +125,12 @@
       },
       "why": "A shoot whose tip ends in flowers grows on from the buds below them, so an adult crown forks where it flowers: most often where flowers only end shoots."
     },
+    "generator.params.tip_bloom": {
+      "map": {
+        "flowering_position": {"terminal": 1, "both": 1, "lateral": 0}
+      },
+      "why": "Where flowers end the shoots, a shoot that has stopped growing at the crown's edge still ends each year in them, so they stand on the crown's surface, not inside it."
+    },
     "generator.params.apex_death": {
       "map": {
         "axis_growth": {"sympodial": 0.1, "monopodial": 0}
@@ -153,7 +162,7 @@
     "rules.generator.params.unit_nodes": {
       "evidence": "SourceInferred",
       "source": "critchfield-1971",
-      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart."
+      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart. That spacing is between leaves that stand over one another: a pair's over the pair below it, but a spiral's single leaf (137.5° round from the one below) over none nearer than two nodes up, so alternate leaves may stand an eighth of the card apart (shrub habit, 2026-10-18), as a sumac's 30 cm to 50 cm leaves crowd a few centimetres apart at its stout twigs' tips (FEIS, Rhus glabra: branches sparse and stout)."
     },
     "rules.generator.params.long_share": {
       "evidence": "SourceInferred",
@@ -216,6 +225,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A choice of the model's: a shoot that ends in flowers is carried on by the buds below them, so the crown forks; the chance a year, 0.35, is the maple program's, fitted to bigleaf maple, and half that where flowers may also sit beside the leaves."
+    },
+    "rules.generator.params.tip_bloom": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 17): a lineage whose flowers end its shoots bears them at the tips that have stopped at the crown's edge, as well as where a growing shoot ends in flowers (terminal_bloom)."
     },
     "rules.generator.params.apex_death": {
       "evidence": "Authored",

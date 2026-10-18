@@ -8,16 +8,12 @@
     "leaf_margin": {"entire": "usually", "crenate": "sometimes", "dentate": "rarely", "serrate": "rarely"},
     "stamens": {"min": 5, "max": 10, "low": 3},
     "carpels": {"min": 5, "max": 5, "low": 3, "high": 6},
-    "hypanthium": {"false": "often", "true": "often"},
+    "hypanthium": {"false": "usually", "true": "rarely"},
     "woodiness": {
       "herbaceous": "usually",
       "semi": "sometimes"
     },
-    "leaf_arrangement": {
-      "opposite": "often",
-      "alternate": "often",
-      "whorled": "sometimes"
-    },
+    "leaf_arrangement": {"alternate": "usually", "opposite": "often", "whorled": "sometimes"},
     "stipules": false,
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
@@ -42,12 +38,19 @@
       "hermaphrodite": "usually"
     }
   },
+  "rules": {
+    "generator.params.leaf_length": {"rule": "max(leaf_length_m) + first(petiole_length_m, 0)", "why": "A herb's longest stem leaf is as long as the longest blade its flora measures, with its petiole where it has one, as a leaf card holds both; the leaves below and above it are shorter by the shares its program sets."},
+    "appearance.organs.leaf.shape.petiole": {"template": "simple", "rule": "first(petiole_length_m, 0) / (max(leaf_length_m) + first(petiole_length_m, 0))", "why": "A stem leaf's card is its petiole and blade end to end, so the petiole's share is its length over theirs together."},
+    "generator.params.leaf_top": {"rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)", "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures."},
+    "generator.params.leaf_base": {"rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)", "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures; its basal leaves are drawn apart."}
+  },
   "evidence": {
+    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How the herb program sizes a stonecrop family herb's stem leaves from a flora's leaf lengths, as the campanulids' rules do (spec rework E1 and E3): its longest stem leaf as long as the longest blade the flora gives with its petiole, the petiole's share of the card its length over both, and its lowest and topmost leaves shorter by the shortest blade's share of the longest. Homed at the family, whose built-in species came with the core-species expansion, phase C (2026-10-17), so no other species changes."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "DELTA, Crassulaceae (read 2026-10-17): blade usually undivided, cut (pinnatifid) in some Bryophyllum and Kalanchoe. Wikipedia: margins sometimes broadly lobed or more deeply incised. Sedum, Crassula, Echeveria leaves undivided (genus weighting)."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Crassulaceae (read 2026-10-17): margin mostly smooth, otherwise crenate to broadly lobed, at times dentate. DELTA, Crassulaceae (read 2026-10-17): margins entire, crenate or serrate."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 297, 299: stamens once or twice the petal number (5 or 5+5, rarely from 3 to more than 6 per whorl)."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 299: gynoecium of 5 free carpels, rarely 3 to 6 or more."},
-    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 297, 505: flowers hypogynous or slightly perigynous, so a small floral cup in some. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "FFPA Crassulaceae (read 2026-10-17), whose description covers Sedum, Crassula, Kalanchoe/Bryophyllum, Aeonium and Cotyledon, the family's largest genera: a free floral cup absent, only rarely more or less present, with the ovary superior and sessile. That agrees with the first pass's DELTA reading (cup only in weakly perigynous flowers). The page gives one statement for all its genera, so no per-genus count was needed. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
@@ -79,6 +82,6 @@
       "note": "Simpson, Plant Systematics (2019) p. 299, 300, family Crassulaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     },
     "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add solitary (sometimes): Simpson, Plant Systematics (2019) p. 299, 300: branched cyme, or flowers solitary."},
-    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add whorled (sometimes): Simpson, Plant Systematics (2019) p. 299, 300: spiral, opposite or whorled."}
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Crassulaceae (read 2026-10-17): leaves opposite-decussate or alternate-spiral; Sedum (largest genus, c. 300-500 spp.) alternate, Echeveria (c. 150) in the alternate Sempervivoideae; Crassula (c. 200) and the Kalanchoe clade (c. 130-240) opposite. DELTA (read 2026-10-17): alternate, opposite or whorled. Alternate genera (Sedum, Echeveria, Telephiinae c. 150, Aeonium, Sempervivum) outnumber the opposite ones. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."}
   }
 }

@@ -1,0 +1,19 @@
+{
+  "photo_id": "own-whitebark-03",
+  "description": "An old conifer standing alone on an open ridge, whole tree in frame from the side. Three stems from the base; the crown is broad with a flattened, uneven top. Foliage sits in dense tufts at the ends of bare, contorted limbs. Overcast.",
+  "answers": {
+    "habit.stems_from_base": {"value": "2-3", "confidence": "high", "evidence": "three trunks meet the ground together at lower centre"},
+    "habit.crown_outline": {"value": "irregular", "confidence": "high", "evidence": "the whole crown outline; flattened, broken top"},
+    "habit.widest_at": {"value": "high", "confidence": "medium", "evidence": "crown spreads widest in its upper third"},
+    "habit.crown_profile": {"value": [0.1, 0.3, 0.55, 0.7, 0.78, 0.85, 0.88, 0.8, 0.6, 0.25], "estimated": [0], "method": "bands", "confidence": "medium", "evidence": "ticks drawn on the crop from the stems' foot to the highest tuft", "note": "three stems read as one outline; a boulder hides the left side of the lowest band"},
+    "habit.see_through": {"value": 0.4, "confidence": "medium", "evidence": "sky shows between the limb-end tufts across the crown"},
+    "arch.main_limbs": {"value": "5-10", "confidence": "medium", "evidence": "limbs traced from the stems into the crown"},
+    "arch.limb_hierarchy": {"value": "strong", "confidence": "high", "evidence": "a few thick limbs, each ending in many thin twigs"},
+    "arch.limb_course": {"value": "zigzag", "confidence": "medium", "evidence": "the thick limbs on the left change direction at each fork"},
+    "foliage.placement": {"value": "limb_end_tufts", "confidence": "high", "evidence": "dark tufts at the ends of bare limbs all round"},
+    "foliage.colour": {"value": {"family": "yellow-green", "hex": "#7d8f4a", "lighting": "overcast"}, "confidence": "medium", "evidence": "lit tufts upper right"},
+    "shoot.needle_direction": {"value": "cannot tell"}
+  },
+  "unlisted": ["Several dead grey snags stand among the living stems."],
+  "image": {"source": "own", "id": "own-whitebark-03", "licence": "owner", "observation": "own-whitebark"}
+}

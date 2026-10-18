@@ -53,7 +53,7 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.25, 0.28, 0.15],
+    "bark": [0.13, 0.2, 0.07],
     "foliage": [0.06, 0.15, 0.035],
     "foliage_shade": [0.018, 0.045, 0.01],
     "variation": 0.2,
@@ -61,12 +61,9 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.55,
           "widest": 0.3,
           "tip": 0.7,
           "base": 0.8,
-          "teeth": 10,
-          "tooth_depth": 0.05,
           "petiole": 0.2
         }
       },
@@ -110,7 +107,26 @@
       "max": 0.15
     },
     "inflorescence": "panicle",
-    "inflorescence_posture": "nodding"
+    "inflorescence_posture": "nodding",
+    "height_max_m": 2,
+    "life_span": "perennial",
+    "leaf_habit": "deciduous",
+    "perennation": "rhizome",
+    "leaf_width_m": {"min": 0.02, "max": 0.08},
+    "leaf_shape": "ovate",
+    "leaf_margin": "serrate",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.1},
+    "flower_symmetry": "actinomorphic",
+    "flowering_months": [6, 7, 8, 9],
+    "fruit_size_m": {"min": 0.001, "max": 0.0015},
+    "fruiting_months": [7, 8, 9, 10],
+    "leaf_hairs": "strigose",
+    "leaf_hairs_beneath": "hispid",
+    "stem_hairs": "hispid",
+    "stinging_hairs": "scattered",
+    "stinging_hair_length_m": 0.0014,
+    "leaf_hair_length_m": 0.0003,
+    "leaf_apex": {"acuminate": "usually", "acute": "often"}
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -123,6 +139,16 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923), as Urtica lyallii: stems 1 m to 2 m tall. The typical value is the one the plant was drawn at before, inside the source's range."
+    },
+    "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Urtica dioica (article text read 2026-10-17): the leaves and stems are very hairy with non-stinging hairs; read as the short, stiff, forward-pressed bristles (setulose hairs, Planta 260: 46, 2024) an iNaturalist macro photograph shows between the stinging hairs (observation 303801371), which Harris and Harris call strigose."},
+    "traits.leaf_hairs_beneath": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Urtica dioica subsp. dioica: leaf blades abaxially hispid, both surfaces with stinging hairs; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."},
+    "traits.stem_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Urtica dioica subsp. dioica: stems hispid, with stinging hairs; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17); Flora of China vol. 5: stems and petioles often densely covered with stinging and setulose hairs."},
+    "traits.stinging_hairs": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's Urtica dioica review (Carey 1995, read 2026-10-17): leaves, stems and flowers are sparsely to moderately covered with stinging hairs; read as scattered, between sparse and dense."},
+    "traits.stinging_hair_length_m": {"evidence": "SourceInferred", "source": "ensikat-2021", "note": "Ensikat et al. (2021) table 2: Urtica dioica's stinging hairs 1.38 mm long, among the smallest of the Urtica type (about 1-7 mm)."},
+    "traits.leaf_hair_length_m": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "About 0.3 mm: the setulose bristles between the stinging hairs (Planta 260: 46, 2024, names the type) are short, about 0.1-0.5 mm, curved and pressed forward, by eye on an iNaturalist macro photograph (observation 303801371) against the 1.4 mm stinging hairs beside them."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
@@ -142,7 +168,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark green leaves; green flower strings."
+      "note": "Colours chosen by eye: dark green leaves; green stems (they are herbaceous, green and often flushed purple: no bark); green flower strings."
     },
     "taxon": {
       "evidence": "Authored",
@@ -188,7 +214,20 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Each of its axillary clusters drawn flower by flower (spec rework L1c), its kind and its droop from its characters, by the rules at the flowering plants: a panicle about 6 cm long of 6 branches of 8 tiny green flowers, by eye (floras give no count), leaving the stem at about 60 degrees and bending over. From floras and extension pages as quoted in search results; the pages themselves were not read. Its flower laid out whorl by whorl (spec rework P5b): four green tepals in two pairs, four stamens and a one-carpelled pistil (staminate and pistillate flowers are drawn as one), from the characters of Urticaceae and Urtica by the rules at the flowering plants."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Urtica dioica (read 2026-10-18): the blade tip is acute or acuminate (Wikipedia says acuminate)."}
   },
   "provenance": {
     "sources": [

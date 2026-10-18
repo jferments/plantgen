@@ -34,9 +34,9 @@
       "spike": "often"
     },
     "fruit_type": {
+      "capsule": "usually",
       "berry": "often",
-      "capsule": "often",
-      "multiple": "often"
+      "multiple": "rarely"
     },
     "life_span": "perennial"
   },
@@ -109,8 +109,8 @@
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 257, 258, family Bromeliaceae: fruit type capsule (septicidal) or berry; a multiple fruit (sorosis) in Ananas, usually; read as {\"berry\": \"often\", \"capsule\": \"often\", \"multiple\": \"often\"}."
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Bromeliaceae (read 2026-10-17): fruit a capsule or berry, joined into a multiple fruit only where adjoining ovaries fuse (pineapple); c. 3,000 spp. Capsules in Tillandsioideae (Tillandsia, Vriesea, Guzmania) and Pitcairnia, Puya, Dyckia, Hechtia outnumber berried Bromelioideae; subfamily sizes are my knowledge, not on the page. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

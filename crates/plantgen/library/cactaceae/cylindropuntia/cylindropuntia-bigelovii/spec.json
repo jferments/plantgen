@@ -33,13 +33,7 @@
       "joint_flowers": 1,
       "flower_angle": 30,
       "flower_size": 0.04,
-      "bud_share": 0.2,
-      "fruit_share": 0.4,
-      "bud_size": 0.015,
-      "bud_rate": 0.7,
-      "flower_area": 0.368,
-      "bud_area": 0.636,
-      "fruit_area": 0.587
+      "bud_rate": 0.7
     }
   },
   "growth": {
@@ -56,30 +50,6 @@
     "foliage": [0.1, 0.17, 0.06],
     "foliage_shade": [0.045, 0.077, 0.027],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "stamens": 200,
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.3
-        },
-        "accent": [0.5, 0.45, 0.2]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.3, 0.35, 0.1]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit"
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "colour": [0.15, 0.22, 0.09],
@@ -144,6 +114,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_surface": "areolate",
     "tubercle_relief": "prominent",
     "tubercle_shape": "elongate",
     "spine_colour": [215, 180, 80],
@@ -153,9 +124,16 @@
     "fruit_colour_ripe": [150, 155, 60],
     "fruit_size_m": {"min": 0.025, "max": 0.04},
     "fruit_width_m": {"min": 0.01, "max": 0.02},
-    "joint_length_m": {"min": 0.05, "max": 0.15}
+    "joint_length_m": {"min": 0.05, "max": 0.15},
+    "height_typical_m": {"min": 0.9, "max": 1.5},
+    "height_max_m": 2.5,
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [3, 4, 5],
+    "fruiting_months": [5, 6, 7]
   },
   "evidence": {
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: fruit leathery-fleshy, spineless, the tubercles fading."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
     "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: spines yellow to golden, becoming brown."},
@@ -180,11 +158,7 @@
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about a metre within 15 years. Wide tolerances."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: joints hidden under dense, barbed, straw-yellow spines in papery sheaths that shine silver in back light, darkening to near black on the old trunk. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: joints hidden under dense, barbed, straw-yellow spines in papery sheaths that shine silver in back light, darkening to near black on the old trunk. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -219,7 +193,13 @@
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
       "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here not described for the species; the genus's are usually numerous, so drawn pale yellow like its spines. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750365), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750365), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750365), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750365), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750365), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750365), as no source read gives it."}
   },
   "provenance": {
     "sources": [

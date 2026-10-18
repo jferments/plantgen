@@ -94,8 +94,6 @@
           "widest": 0.85,
           "tip": 0.1,
           "base": 0.8,
-          "teeth": 3,
-          "tooth_depth": 0.15,
           "petiole": 0.0
         }
       },
@@ -104,7 +102,6 @@
           "template": "head"
         },
         "inflorescence": {
-          "kind": "panicle",
           "flowers": 30,
           "size": 0.6,
           "spread": 20
@@ -171,7 +168,14 @@
     "fruiting_months": [
       10,
       11
-    ]
+    ],
+    "height_typical_m": {"min": 0.5, "max": 2},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
+    "fruit_size_m": {"min": 0.001, "max": 0.002},
+    "leaf_apex": "rounded"
   },
   "evidence": {
     "taxon": {
@@ -263,7 +267,14 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: silver-grey foliage; grey shredding bark; dull yellow heads."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Artemisia tridentata (read 2026-10-18): the wedge-shaped leaf has three lobes at its tip, each rounded."}
   },
   "provenance": {
     "sources": [

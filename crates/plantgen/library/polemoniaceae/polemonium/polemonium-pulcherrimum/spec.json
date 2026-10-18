@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "id": "polemonium-pulcherrimum",
+  "taxon": {
+    "scientific_name": "Polemonium pulcherrimum",
+    "common_name": "showy Jacob's-ladder",
+    "family": "Polemoniaceae",
+    "genus": "Polemonium",
+    "plant_name_id": 2565697
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 6,
+      "clump_radius": 0.05,
+      "stem_lean": 18,
+      "nodes": 3,
+      "basal_leaves": 8,
+      "basal_angle": 50,
+      "bare": 0.15,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.4,
+      "raceme": 0.25,
+      "flowers": 10,
+      "flower_angle": 40
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.45,
+      0.3
+    ],
+    "foliage": [
+      0.2,
+      0.36,
+      0.17
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.15
+        }
+      },
+      "basal": {
+        "shape": {
+          "petiole": 0.15
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.2,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "life_span": "perennial",
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.15
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": 15,
+    "terminal_leaflet": true,
+    "leaflet_length_m": {
+      "min": 0.002,
+      "max": 0.008
+    },
+    "leaflet_width_m": {
+      "min": 0.001,
+      "max": 0.005
+    },
+    "leaf_shape": "ovate",
+    "inflorescence": "cyme",
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "campanulate",
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "flower_colour": [
+      120,
+      140,
+      225
+    ],
+    "fruit_type": "capsule",
+    "flowering_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: an erect perennial 1 dm to 3 dm high, tufted with age."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: a perennial."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A tuft of basal leaves under the flowering stems, set by hand from iNaturalist photos of flowering plants (observations 171139570, 101812673, 54017969, 125065662, 60925680, 70968981, 286980700, 282741175): the flora gives no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 5 cm to 15 cm long; set from 4 cm, as the stem leaves are shorter."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: leaves of 5 to 11 pairs of leaflets."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: leaflets in pairs along the rachis: pinnate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: the leaflets entire, so the leaf is divided once."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: 5 to 11 pairs of leaflets; drawn as 7 pairs and a terminal one."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each leaf ending in one leaflet, set by hand from iNaturalist photos of flowering plants (observations 171139570, 101812673, 54017969, 125065662, 60925680, 70968981, 286980700, 282741175): the flora gives no count or measure."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: leaflets 2 mm to 8 mm long."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: leaflets 1 mm to 5 mm broad."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: leaflets ovate to round, blunt and entire."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: the flowers in a cyme on long slender pedicels."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five equal corolla lobes: a regular flower, set by hand from iNaturalist photos of flowering plants (observations 171139570, 101812673, 54017969, 125065662, 60925680, 70968981, 286980700, 282741175): the flora gives no count or measure."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: corolla between rotate and bell-shaped."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: corolla 5 mm to 8 mm long and as broad."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: lobes blue, the tube yellowish; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A capsule, as in the family (Abrams 1951): the species account does not describe its fruit."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 398, Polemonium pulcherrimum: flowering June to August."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: green stems and leaves, the leaflets small, oval and close-set along the rachis."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for showy Jacob's-ladder from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.2 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

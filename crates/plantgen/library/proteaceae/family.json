@@ -10,8 +10,8 @@
       "whorled": "sometimes"
     },
     "leaf_division": {
-      "simple": "often",
-      "compound": "often"
+      "simple": "usually",
+      "compound": "sometimes"
     },
     "division_pattern": {
       "pinnate": "usually",
@@ -53,15 +53,15 @@
       "herbaceous": "sometimes"
     },
     "inflorescence": {
-      "solitary": "sometimes",
-      "raceme": "often",
-      "spike": "often",
+      "raceme": "usually",
       "head": "often",
-      "umbel": "often"
+      "spike": "often",
+      "umbel": "sometimes",
+      "solitary": "rarely"
     },
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "zygomorphic": "often",
+      "actinomorphic": "sometimes"
     },
     "zygomorphy": "other",
     "perianth": {
@@ -69,10 +69,10 @@
       "tepals": "usually"
     },
     "fruit_type": {
-      "follicle": "often",
-      "drupe": "often",
+      "follicle": "usually",
       "nut": "often",
-      "achene": "often"
+      "drupe": "sometimes",
+      "achene": "sometimes"
     },
     "flower_merosity": 4,
     "stamens": {
@@ -92,6 +92,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Proteaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "DELTA Proteaceae (read 2026-10-17; ~1,050 spp, ~75 genera): follicle, drupe, nutlike nucule or achene, unweighted. Wikipedia genus pages (read 2026-10-17): Grevillea (~360 spp) a thin follicle opening on one side; Banksia (~170 incl. Dryandra) woody follicles in a cone; Hakea (~150) a woody persistent fruit splitting to free two winged seeds. Some 680 follicle species, about two thirds of the family; Protea's fruit not stated on its page."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "DELTA Proteaceae (read 2026-10-17): simple or compound, compound leaves commonest in juveniles. Wikipedia (read 2026-10-17): Banksia (~170) single blades; Hakea (~150) mostly undivided; Grevillea (~360) simple or compound, unweighted. Simple leads among the counted ~680 species; compound confined to part of Grevillea and some rainforest genera."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "DELTA Proteaceae (read 2026-10-17): mostly racemes, spikes, heads or umbels, rarely solitary (Adenanthos). Wikipedia (read 2026-10-17): Grevillea (~360) paired flowers on terminal racemes; Banksia (~170) mostly spikes, Dryandra and Isostylis groups heads; Protea (83 listed) heads on a woody receptacle; Hakea (~150) loose axillary clusters (no state given, not counted). Raceme ~360 against at most ~170 each for spike and head among counted species."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "DELTA Proteaceae (read 2026-10-17): flowers regular to very irregular, unweighted. Wikipedia Grevillea (read 2026-10-17; ~360 spp, about a third of the family) zygomorphic; Hakea page (~150) gives a curved perianth tube but no symmetry word; Banksia and Protea pages silent. Only Grevillea is firmly counted, hence often over sometimes."
     }
   }
 }

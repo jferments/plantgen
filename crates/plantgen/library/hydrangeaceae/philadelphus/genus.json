@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Philadelphus",
+  "traits": {
+    "leaf_habit": {"deciduous": "usually", "evergreen": "rarely"}
+  },
+  "evidence": {
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Philadelphus (read 2026-10-17): about 60 species, most dropping their leaves each year; only a few southern species keep them."}
+  }
+}

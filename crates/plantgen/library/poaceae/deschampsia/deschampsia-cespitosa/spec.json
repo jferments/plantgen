@@ -63,7 +63,6 @@
           "size": 0.45,
           "spread": 55,
           "taper": 0.6,
-          "droop": 20,
           "peduncle": 0.05,
           "stalk": [0.42, 0.36, 0.28],
           "branch": {
@@ -128,7 +127,12 @@
     "inflorescence_posture": {"nodding": "usually", "erect": "sometimes"},
     "leaf_length_m": {"min": 0.1, "max": 0.6},
     "flowering_months": [7, 8, 9],
-    "fruiting_months": [8, 9]
+    "fruiting_months": [8, 9],
+    "height_typical_m": {"min": 0.3, "max": 1.2},
+    "height_max_m": 1.5,
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "fruit_size_m": {"min": 0.001, "max": 0.002}
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -235,7 +239,12 @@
       "evidence": "SourceInferred",
       "source": "usfs-range-plant-handbook-1937",
       "note": "Range Plant Handbook (USDA Forest Service 1937, tufted hairgrass account, read 2026-10-16): flowering July to September and \"a large amount of good seed is produced and disseminated during August and September\"; read as August and September. Sampson (1917) says the crop is \"well ripened\" by mid-September in the Blue Mountains; FEIS (Walsh 1995) gives only \"7 to 8 weeks after initiation of leaf growth\" in alpine regions."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L407579), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L407579), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L407579), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L407579), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L407579), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -67,9 +67,71 @@
 # papery bracts). With bract_length 0, as every program gives it unless
 # it says otherwise, no bract is drawn and a herb grows as before.
 #
+# Revision 10: a flowering stem may branch. Its top flower_branches leaf
+# nodes each bear, in the axil of their leaf, a side branch at
+# branch_angle to the stem, ending in a raceme like the stem's own
+# (fennel's and poison hemlock's candelabra of umbels). The lowest branch
+# is branch_length of the stem's height, the topmost half as long.
+# Nothing about a branch is drawn at random, which would move other
+# herbs' draws. With flower_branches 0, as every program gives it unless
+# it says otherwise, a herb grows as before.
+#
+# Revision 11: a leaf may outlive its year. A flowering stem dies back
+# after it fruits, but its basal leaves, and a stem that bears leaves
+# only, stay leaf_years (wild ginger's evergreen leaves, a rattlesnake
+# plantain's rosette, beargrass's tufts), so an evergreen herb carries
+# last year's leaves beside this year's. With leaf_years 1, as every
+# program gives it unless a rule says otherwise, a herb grows as before.
+#
+# Revision 12: a side branch bears branch_nodes leaf nodes below its
+# raceme, each with a leaf branch_leaf times the leaf in whose axil the
+# branch stands. With branch_orders 2 or more, each of those nodes bears
+# a branch of its own, half as long, ending in its own raceme (fennel's
+# and hemlock's branches branch again). Its leaves draw
+# through the stem's own leaf rule, so the branch still adds no random
+# call site.
+#
+# Revision 13: a stem may be a sympodium (units above 0). The main stem
+# bears first_leaves leaves over first_share of the height and ends in a
+# flowering organ; the bud in the axil of its last leaf grows on past it,
+# bears unit_leaves leaves and ends in the next, units of them, each
+# unit_shrink as long as the last. So each inflorescence stands beside the
+# stem across from the leaf below it (leaf-opposed), as in tomatoes,
+# nightshades, borages and grapes. With forks 2 two buds grow on past each
+# one, so the shoot forks again and again with a flower in each fork
+# (peppers, jimsonweed). A unit's leaves may each have a smaller leaf
+# beside them (geminate: the next unit's first leaf carried up beside it);
+# the axils of the main stem's upper leaves may send out side_shoots
+# sympodia of their own; and a heavy, weak stem bends toward the ground by
+# sprawl at each node and lies along it. Leaves are sized by their node's
+# height on the plant, as along a raceme-topped stem. An open flower at
+# a peduncle's tip faces flower_tilt from straight up (a belladonna's
+# nodding bell, a jimsonweed's upright trumpet). With units 0, as
+# every program gives it unless it says otherwise, a herb grows as before.
+#
+# Revision 14: a raceme's open flowers and buds face as their posture
+# says (flower_tilt, degrees from straight up: 90 level, 180 hanging), as
+# a sympodium's flowers have since revision 12. The stalk rises at
+# flower_angle as before and arches over along its outer half toward the
+# flower's facing, so a lily's flowers nod or hang from stalks that first
+# rise from the stem. With flower_tilt 0, as every program gives it
+# unless it says otherwise, the stalk is straight and a herb grows as
+# before.
+#
+# Revision 15 (shrub habit): a stem may lie along the ground, as a
+# trailing, prostrate or decumbent stem does: with lie above 0 every stem
+# leaves its foot nearly level, runs along the ground for the share lie
+# of its leafy nodes, turning only from side to side (three times its
+# wiggle, so it wanders over the ground), with its leaves
+# turned out to its sides in one plane, and over its other nodes turns up
+# by rise degrees in all, so its tip and raceme stand nearly upright,
+# each turn upward in the frame the stem lay in, whatever the nodes'
+# divergence has rolled it to since.
+# With lie 0, as every lineage gives it, a herb grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 9;
+lsystem herb 15;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -77,6 +139,7 @@ param stem_rate;              # cohort size: stems * (1 - exp(-stem_rate * age))
 param clump_radius;           # radius a mature clump's stems spread over
 param stem_lean;              # how far the outermost stems lean out
 param maturity;               # years over which stems reach full size
+param leaf_years = 1;         # years a basal leaf, or a stem bearing leaves only, stays on: more than 1 for evergreens
 param adult_age;              # the first year the plant is adult and flowers
 # A stem.
 param stem_height;            # stem height at maturity, raceme included
@@ -127,22 +190,62 @@ param nod;                    # degrees the bud-tipped end bends over
 param bract_length = 0;       # a floral bract's length below each stalk of the raceme; 0: none
 param bract_lean = 1.1;       # a bract's angle to the axis as a share of its stalk's
 param bract_area = 0.235;     # leaf area of a bract 1 m long, m² (the default leaf card's)
+param flower_branches = 0;    # top leaf nodes of a flowering stem that bear a flowering side branch
+param branch_angle = 40;      # angle of a side branch to the stem
+param branch_length = 0.3;    # the lowest side branch's length, as a share of the stem's height
+param branch_nodes = 2;       # leaf nodes along a side branch below its raceme
+param branch_leaf = 1;        # a side branch's leaves, as a share of the leaf in whose axil it stands
+param branch_orders = 1;      # times a flowering stem branches: 1, side branches; 2, they branch again
+# The sympodium (revision 13).
+param first_leaves = 8;          # leaves on the main stem below its first inflorescence
+param first_share = 0.4;         # share of the stem's height below the first inflorescence
+param unit_leaves = 2;           # leaves on each sympodial unit
+param units = 0;                 # sympodial units a shoot grows past its first inflorescence; 0: none, the stem ends in a raceme
+param forks = 1;                 # shoots growing on past each inflorescence: 1, or 2 a fork
+param fork_angle = 15;           # angle of a shoot growing on from the line of the one below
+param unit_shrink = 0.85;        # each unit's length as a share of the one below
+param upright = 0.08;            # how far each internode of a unit turns back toward upright
+param cyme_angle = 55;           # angle of an inflorescence's peduncle to its shoot
+param peduncle = 0.02;           # peduncle length
+param flower_tilt = 0;           # degrees from straight up an open flower faces at its peduncle's tip (90 level, 180 hanging); 0: along its peduncle
+param geminate = 0;              # a smaller leaf beside each leaf of a unit, as a share of it; 0: none
+param side_shoots = 0;           # side shoots from the axils of the main stem's upper leaves
+param side_angle = 50;           # angle of a side shoot to the main stem
+param side_units = 3;            # sympodial units of a side shoot
+param sprawl = 0;                # how strongly a stem bends toward the ground at each node
 param flower_area;
 param bud_area;
 param fruit_area;
 param light_cell;             # light voxel edge
+param lie = 0;                # share of a stem's leafy nodes lying along the ground; 0: none
+param rise = 80;              # degrees a lying stem turns up over its other nodes
 
 module Y;                     # the crown: sends up a cohort each year
 module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
 module Sm;                    # the base of a stem
+module Sw(r);                 # where a stem leaves its basal leaves: r of it a raceme
 module Bs(j);                 # j basal leaves still to place
 module Bl(len, a);            # a basal leaf len long bending a at each joint
 module Pc(k, s, a);           # piece k of a basal leaf, s long
 module St(h, r);              # a stem h tall with a raceme r long
+module Sv(h, r);              # the same stem, past where it leaves its basal leaves
 module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
 module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
 module Lf(s);                 # the leaves at one node
 module Br(a);                 # a floral bract, a degrees from the axis
+module Bx(i, h, r, s);        # the side branch, if any, at leaf node i of a stem, whose leaf is s long
+module Bh(len, o, s);         # a flowering side branch len long, o orders of branching to it, leaves s long
+module Bn(j, len, o, s);      # leaf node j of a side branch len long
+module Bk(len, o, s);         # the branch, if any, at a side branch's leaf node
+module Mn(i, m, len, h);         # main-stem nodes i to i + m - 1, each len long, of a stem h tall
+module Un(d, q, len, wd, h);    # sympodial unit of order d from the height share q, len long
+module Uk(i, m, len, q, h);      # its nodes i to i + m - 1
+module Ju(d, q, len, wd, h);    # where unit d ends: its inflorescence, and the shoots growing on
+module Ic(wd);                  # an inflorescence on its peduncle
+module Lq(q, g);                 # the leaves at a node at height share q; g > 0: a geminate leaf g above
+module Lz(s, g);                 # those leaves, the longest s long
+module Sd(i, h);                 # a side shoot from the axil of main-stem node i
+module Pd(len);                  # a flower's or bud's stalk len long, arching toward flower_tilt
 
 organ leaf leaf area leaf_area;
 organ basal leaf as piece area basal_area;
@@ -170,7 +273,7 @@ decompose Ss(k, m, n) : m > 1 ->
 decompose Ss(k, m, n) : m == 1 ->
     [ Sm /(k * 137.508 + uniform(-15, 15)) &(90)
       f(clump_radius * sqrt(n / stems) * sqrt((k + uniform(0.2, 0.8)) / n)) ^(90)
-      &(stem_lean * sqrt((k + 0.5) / n) + uniform(0, 3))
+      &((lie > 0 ? 88.5 : stem_lean * sqrt((k + 0.5) / n)) + uniform(0, 3) * (lie > 0 ? 0.5 : 1))
       Bs(basal_leaves)
       St(stem_height * (1 - exp(-t / maturity)) * uniform(1 - height_spread, 1 + height_spread)
          * (t < adult_age ? young_height
@@ -190,9 +293,28 @@ decompose Pc(k, s, a) : k < basal_pieces - 1 ->
     basal_piece(s) f(s) /(gauss() * 4) &(a) Pc(k + 1, s * 0.88, a);
 decompose Pc(k, s, a) -> basal(s);
 
+decompose St(h, r) : units > 0 && r > 0 ->
+    T(0, -1, 0, sprawl) rest(0.01) !(stem_radius)
+    Mn(0, first_leaves, h * first_share / max(1, first_leaves), h)
+    Ju(0, first_share,
+       h * (1 - first_share) * (1 - unit_shrink) / (1 - pow(unit_shrink, max(1, units)))
+         / cos(rad(forks > 1.5 ? fork_angle : 0)),
+       stem_radius * 0.7, h);
+decompose St(h, r) : units > 0 ->
+    T(0, -1, 0, sprawl) rest(0.01) !(stem_radius) Mn(0, first_leaves, h / max(1, first_leaves), h);
+
 # A stem h tall: a bare foot, the leafy part, then the raceme, r of the
 # height. Nodes split in halves so a long stem stays within the
-# decomposition depth.
+# decomposition depth. Where leaves outlive their year, the stem starts
+# where it leaves its basal leaves (Sw); with leaf_years 1 it needs no
+# mark, so every draw stays where it was.
+decompose St(h, r) : leaf_years > 1 -> Sw(r) Sv(h, r);
+decompose Sv(h, r) : arch > 0 ->
+    T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+decompose Sv(h, r) ->
+    !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
 decompose St(h, r) : arch > 0 ->
     T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
     Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
@@ -204,18 +326,52 @@ decompose Nd(i, m, h, r) : m > 1 ->
 # One node: an internode, then its leaves, sized by where the node sits
 # between the foot and the top of the leafy part.
 decompose Nd(i, m, h, r) : m == 1 ->
-    ^(gauss() * wiggle) +(gauss() * wiggle)
+    /(lie > 0 && i >= round(lie * nodes) ? -(round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
+    ^(lie > 0 && i >= round(lie * nodes) ? rise / max(1, nodes - round(lie * nodes)) : 0)
+    /(lie > 0 && i >= round(lie * nodes) ? (round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
+    ^(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 0 : 1)) +(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 3 : 1))
     !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
     F(h * (1 - r) * (1 - bare) / nodes)
+    /(lie > 0 && i < round(lie * nodes) ? 90 : 0)
     Lf(leaf_length * (1 - exp(-t / maturity))
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
-    /(divergence);
+    Bx(i, h, r,
+       leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    /(lie > 0 && i < round(lie * nodes) ? (leaves_per_node == 2 ? -90 : 90) : divergence);
 decompose Nd(i, m, h, r) -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
     ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
+
+# A flowering stem's top flower_branches nodes each bear a side branch in
+# the axil of their leaf, shorter toward the top, ending in a raceme. A
+# branch is as thick as the raceme's own axis, so the two join smoothly.
+# The branches draw nothing at random: random call sites are numbered
+# through the program and the programs built on it, so a draw here would
+# move every later draw of every herb.
+decompose Bx(i, h, r, s) : r > 0 && flower_branches > 0 && i >= nodes - flower_branches ->
+    [ &(branch_angle)
+      Bh(h * branch_length
+         * lerp(1, 0.5, (i - max(0, nodes - flower_branches)) / max(1, min(nodes, flower_branches) - 1)),
+         branch_orders, s * branch_leaf) ];
+decompose Bx(i, h, r, s) -> ;
+# A side branch: its leaf nodes evenly up the part below the raceme, then
+# the raceme. Each node bears a leaf and, while orders remain, a branch
+# of its own, half as long.
+decompose Bh(len, o, s) ->
+    !(stem_radius * 0.5) Bn(0, len, o, s)
+    F(len * (1 - raceme) / (branch_nodes + 1)) Rc(0, flowers, len, raceme);
+decompose Bn(j, len, o, s) : j < branch_nodes ->
+    F(len * (1 - raceme) / (branch_nodes + 1))
+    Lf(s) Bk(len, o, s) /(divergence) Bn(j + 1, len, o, s);
+decompose Bn(j, len, o, s) -> ;
+decompose Bk(len, o, s) : o > 1 -> [ &(branch_angle) Bh(len * 0.5, o - 1, s) ];
+decompose Bk(len, o, s) -> ;
 
 # The raceme: fruit, then open flowers, then buds, the buds' part bending
 # over toward its tip. A male plant's fruit are open flowers.
@@ -228,12 +384,12 @@ decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < fruit_below
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < buds_above ->
     !(stem_radius * 0.5) F(h * r / flowers)
-    [ &(flower_angle * uniform(0.8, 1.2)) !(stem_radius * 0.2) F(pedicel)
+    [ &(flower_angle * uniform(0.8, 1.2)) !(stem_radius * 0.2) Pd(pedicel)
       flower(flower_size * uniform(0.9, 1.1)) ] Br(flower_angle)
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 ->
     &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers * bud_spacing)
-    [ &(flower_angle * bud_lean) !(stem_radius * 0.2) F(pedicel * bud_stalk)
+    [ &(flower_angle * bud_lean) !(stem_radius * 0.2) Pd(pedicel * bud_stalk)
       bud(bud_size * lerp(1, 0.5, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above))) ]
     Br(flower_angle * bud_lean) /(flower_divergence);
 decompose Rc(i, m, h, r) -> ;
@@ -242,6 +398,78 @@ decompose Rc(i, m, h, r) -> ;
 decompose Br(a) : bract_length > 0 ->
     [ &(a * bract_lean * uniform(0.85, 1.15)) $ bract(bract_length * uniform(0.85, 1.15)) ];
 decompose Br(a) -> ;
+# A stalk: straight, or with flower_tilt set, straight for its inner
+# part and then arching over toward the flower's facing, turning a share
+# of the way after each of its seven short outer segments, so it curves
+# rather than bends (revision 13).
+decompose Pd(len) : flower_tilt > 0 ->
+    F(len * 0.3) incline(flower_tilt, 0.25)
+    F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1);
+decompose Pd(len) -> F(len);
 
-# Last year's stems are gone.
-rule Sm -> %;
+# Last year's flowering stems are gone; their basal leaves, and stems
+# bearing leaves only, stay leaf_years.
+rule Sw(r) : r > 0 -> %;
+rule Sm : age + dt >= leaf_years -> %;
+
+# The sympodium (revision 13). Its rules come last so the draws of the
+# rules above keep their numbers.
+decompose Mn(i, m, len, h) : m > 1 ->
+    Mn(i, floor(m / 2), len, h) Mn(i + floor(m / 2), m - floor(m / 2), len, h);
+decompose Mn(i, m, len, h) : m == 1 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle)
+    !(stem_radius * (1 - 0.3 * (i + 1) / max(1, first_leaves)))
+    F(len) Lq((i + 0.5) * len / h, 0) Sd(i, h) /(divergence);
+decompose Mn(i, m, len, h) -> ;
+
+# A unit: its leaves, then where it ends. Each unit turns a quarter round
+# from the one below, so a fork's forks spread every way.
+decompose Un(d, q, len, wd, h) ->
+    /(90 + uniform(-25, 25)) !(wd)
+    Uk(0, max(1, unit_leaves), len / max(1, unit_leaves), q, h)
+    Ju(d, q + len / h, len * unit_shrink, wd * (forks > 1.5 ? 0.75 : 0.9), h);
+decompose Uk(i, m, len, q, h) : m > 1 ->
+    Uk(i, floor(m / 2), len, q, h) Uk(i + floor(m / 2), m - floor(m / 2), len, q, h);
+decompose Uk(i, m, len, q, h) : m == 1 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle) steer(0, 1, 0, upright)
+    F(len * (geminate > 0 ? 0.85 : 1)) Lq(q + (i + 0.5) * len / h, geminate > 0 ? len * 0.15 : 0)
+    /(divergence);
+decompose Uk(i, m, len, q, h) -> ;
+
+# The end of a unit. Its inflorescence stands across from the last leaf
+# (the turtle has turned divergence past it); one shoot grows on leaning
+# away from the inflorescence, or two fork round it. A shoot of the last
+# order ends in its inflorescence.
+decompose Ju(d, q, len, wd, h) : d >= units ->
+    /(180 - divergence) Ic(wd);
+decompose Ju(d, q, len, wd, h) : forks > 1.5 ->
+    /(180 - divergence) Ic(wd)
+    [ /(90) &(fork_angle * uniform(0.8, 1.2)) Un(d + 1, q, len, wd, h) ]
+    /(-90) &(fork_angle * uniform(0.8, 1.2)) Un(d + 1, q, len, wd, h);
+decompose Ju(d, q, len, wd, h) ->
+    /(180 - divergence) Ic(wd) ^(fork_angle * uniform(0.6, 1.2)) Un(d + 1, q, len, wd, h);
+
+decompose Ic(wd) : t >= adult_age ->
+    [ &(cyme_angle * uniform(0.8, 1.2)) !(wd * 0.45) incline(flower_tilt, flower_tilt > 0 ? 1 : 0)
+      F(peduncle * uniform(0.8, 1.2)) flower(flower_size * uniform(0.9, 1.1)) ];
+decompose Ic(wd) -> ;
+
+# The leaves at a node, sized by the node's height on the plant as herb's
+# are along its leafy part. A geminate leaf is the next node's leaf on the
+# spiral, carried up to stand g above the larger one (concaulescence).
+decompose Lq(q, g) ->
+    Lz(leaf_length * (1 - exp(-t / maturity))
+       * (q < leaf_peak ? lerp(leaf_base, 1, q / leaf_peak)
+                        : lerp(1, leaf_top, clamp((q - leaf_peak) / (1 - leaf_peak), 0, 1))), g);
+decompose Lz(s, g) : g > 0 -> Lf(s) F(g) /(divergence + uniform(-15, 15)) Lf(s * geminate);
+decompose Lz(s, g) -> Lf(s);
+
+# Side shoots from the upper leaves' axils of the main stem, in the leaf's
+# direction, each a sympodium of side_units units.
+decompose Sd(i, h) : t >= adult_age && i >= first_leaves - side_shoots ->
+    [ &(side_angle * uniform(0.85, 1.15))
+      Un(max(0, units - side_units), (i + 1) / max(1, first_leaves) * first_share,
+         h * (1 - first_share) * (1 - unit_shrink) / (1 - pow(unit_shrink, max(1, units)))
+           * pow(unit_shrink, max(0, units - side_units)) / cos(rad(forks > 1.5 ? fork_angle : 0)),
+         stem_radius * 0.55, h) ];
+decompose Sd(i, h) -> ;

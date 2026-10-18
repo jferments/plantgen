@@ -1,0 +1,314 @@
+{
+  "schema": 1,
+  "id": "zamia-integrifolia",
+  "taxon": {
+    "scientific_name": "Zamia integrifolia",
+    "common_name": "coontie",
+    "family": "Zamiaceae",
+    "genus": "Zamia",
+    "plant_name_id": 378895
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.035,
+      "trunk_rate": 0,
+      "stemless_years": 30,
+      "fronds_per_year": 1.4,
+      "leaflet_angle": 60,
+      "adult_age": 5,
+      "peduncle": 0.075,
+      "male_peduncle": 0.06,
+      "male_cones": 3
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [5, 15, 30]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "organs": {
+      "leaflet": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.15
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 0.55,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "leaf_length_m": {
+      "min": 0.16,
+      "max": 0.69
+    },
+    "petiole_length_m": {
+      "min": 0.22,
+      "max": 0.3
+    },
+    "leaflets": {
+      "min": 20,
+      "max": 50
+    },
+    "leaflet_length_m": {
+      "min": 0.085,
+      "max": 0.12
+    },
+    "leaflet_width_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "leaf_posture": {
+      "erect": "often",
+      "spreading": "often"
+    },
+    "leaf_colour": [50, 95, 45],
+    "cone_face_height_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "pollen_cone_face_height_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "cone_length_m": {
+      "min": 0.12,
+      "max": 0.15
+    },
+    "cone_width_m": {
+      "min": 0.05,
+      "max": 0.06
+    },
+    "cone_face_width_m": {
+      "min": 0.025,
+      "max": 0.03
+    },
+    "cone_shape": "cylindrical",
+    "cone_apex": "blunt",
+    "cone_colour": [100, 45, 35],
+    "pollen_cone_length_m": {
+      "min": 0.06,
+      "max": 0.1
+    },
+    "pollen_cone_width_m": {
+      "min": 0.025,
+      "max": 0.03
+    },
+    "pollen_cone_face_width_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "pollen_cone_shape": "cylindrical",
+    "pollen_cone_apex": "apiculate",
+    "pollen_cone_colour": [120, 60, 40],
+    "seed_length_m": {
+      "min": 0.017,
+      "max": 0.021
+    },
+    "seed_width_m": {
+      "min": 0.01,
+      "max": 0.014
+    },
+    "seed_colour_ripe": [230, 90, 30],
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: stem subterranean and tuberous, 20 to 25 cm long, 6 to 8 cm across; leaves usually three to five. Drawn as a trunk 0.035 m in radius, staying underground; 1.4 fronds a year, as the crown's count over the three years a frond lives (estimated); first cones at 5 years (estimated, as the research note's timing table records). Female cone on a peduncle 5 to 10 cm, male cones usually one to four on peduncles 4 to 8 cm. The leaves' sizes, leaflets and posture come from its traits."
+    },
+    "appearance": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: its leaflets' apex blunt, so they narrow only over their last sixth; their width from its traits and the rest of their look from its genus."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: stem subterranean and tuberous, 20 to 25 cm long, 6 to 8 cm across; leaves usually three to five, 46 to 91 cm long, the petiole 22 to 30 cm; leaflets in 10 to 25 pairs, 8.5 to 12 cm by 8 to 10 mm. The whole plant's height at 30 years estimated from these, its stem (or none, where it stays underground) under a crown of young leaves standing about 0.85 of a leaf above it: about 0.55 m. Whitelock gives no ages, so the tolerance is wide."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them (the scientific name where no common name is in wide use), and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a cycad's crown of pinnate leaves on a pachycaul stem, drawn on the palm program."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact: four seeds, so male and female plants both show."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: leaves usually three to five, 46 to 91 cm long with the petiole of 22 to 30 cm, 12 to 15 cm wide, slightly to moderately keeled: the blade, without its petiole, 16 to 69 cm (the shortest leaf less the longest petiole to the longest less the shortest)."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: petiole round, 22 to 30 cm long, 5 to 6 mm across, unarmed."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: leaflets in 10 to 25 pairs, the lower ones overlapping."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: median leaflets straight, 8.5 to 12 cm long; basal and apical leaflets slightly shorter."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: median leaflets 8 to 10 mm wide, apex blunt, margin strongly revolute, entire but for a few minute teeth at the apex."
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: leaves erect to spreading; read as erect and spreading equally often, so drawn between."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: leaves glossy, medium to dark green; the colour by eye."
+    },
+    "traits.cone_face_height_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: the megasporophyll's face hexagonal, 1.5 to 2 cm high by 2.5 to 3 cm wide, its terminal facet more or less flat."
+    },
+    "traits.pollen_cone_face_height_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: the microsporophyll's face hexagonal, 3 to 5 mm high by 5 to 8 mm wide, the facets slightly obscure."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: female cones solitary, cylindrical, 12 to 15 cm long."
+    },
+    "traits.cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: female cone 5 to 6 cm across."
+    },
+    "traits.cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: the megasporophyll's face hexagonal, 1.5 to 2 by 2.5 to 3 cm, its terminal facet flat."
+    },
+    "traits.cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: female cone cylindrical."
+    },
+    "traits.cone_apex": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: female cone's apex blunt."
+    },
+    "traits.cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: female cone dark brownish red felted; the colour by eye."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: male cones cylindrical to conical, 6 to 10 cm long."
+    },
+    "traits.pollen_cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: male cone 2.5 to 3 cm across."
+    },
+    "traits.pollen_cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: microsporophylls wedge-shaped, the face hexagonal, 0.3 to 0.5 by 0.5 to 0.8 cm."
+    },
+    "traits.pollen_cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: male cones cylindrical to conical."
+    },
+    "traits.pollen_cone_apex": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: male cone's apex with a short blunt apiculum."
+    },
+    "traits.pollen_cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: male cone densely reddish brown felted; the colour by eye."
+    },
+    "traits.seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: sclerotesta ovoid to globose, 17 to 21 mm long."
+    },
+    "traits.seed_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: sclerotesta 10 to 14 mm across."
+    },
+    "traits.seed_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: sarcotesta orange to red when ripe; the colour by eye."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 308), Zamia integrifolia: male and female cones on separate plants, as in every cycad (p. 19)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Whitelock, L. M. (2002). The Cycads. Timber Press.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy: cones, sporophylls and seeds by sex from Whitelock (2002); stem and leaves from the same descriptions."
+  }
+}

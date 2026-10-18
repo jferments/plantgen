@@ -1,0 +1,258 @@
+{
+  "schema": 1,
+  "id": "nicotiana-tabacum",
+  "taxon": {
+    "scientific_name": "Nicotiana tabacum",
+    "common_name": "tobacco",
+    "family": "Solanaceae",
+    "genus": "Nicotiana",
+    "plant_name_id": 2382275
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "clump_radius": 0.01,
+      "stem_radius": 0.012,
+      "nodes": 18,
+      "leaf_peak": 0.15,
+      "leaf_top": 0.25
+    }
+  },
+  "growth": {
+    "years": 1,
+    "step": 1,
+    "keyframes": [
+      1
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 1.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "annual",
+    "height_typical_m": {
+      "min": 1.2,
+      "max": 1.8,
+      "high": 3
+    },
+    "leaf_shape": "elliptic",
+    "leaf_apex": "acuminate",
+    "leaf_margin": "entire",
+    "leaf_length_m": {
+      "min": 0.3,
+      "max": 0.6
+    },
+    "leaf_width_m": {
+      "min": 0.15,
+      "max": 0.2
+    },
+    "petiole_length_m": 0,
+    "leaf_colour": [
+      110,
+      145,
+      70
+    ],
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "corolla_shape": "funnelform",
+    "flower_size_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "corolla_tube_length_m": {
+      "min": 0.035,
+      "max": 0.045
+    },
+    "bark_colour": [
+      125,
+      150,
+      80
+    ],
+    "flower_colour": [
+      230,
+      120,
+      155
+    ],
+    "petal_apex": "acute",
+    "fruit_size_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "fruit_colour_ripe": [
+      130,
+      100,
+      55
+    ],
+    "corolla_tube_colour": [
+      235,
+      228,
+      200
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the nightshades work (2026-10-17): every character from the floras in the nightshades notes (plantgen-claude project-files/nightshades/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Nicotiana tabacum, plant_name_id 2382275 (Library 1.0 list, read 2026-10-17)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Solanaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its habit as the floras describe it, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown to the age it is drawn at: an annual's one season, a perennial's or shrub's few years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; a thick stem (Wikipedia) 24 mm at the foot; eighteen leaves, the largest low on the stem and the upper much smaller, by eye from photographs (iNaturalist 319612673)."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): stem 4-6 ft; Wikipedia 'Nicotiana tabacum': 1-3 m. Its reference height is the middle of that range, 1.5 m, at its last keyframe."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): an annual herb."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): stem 4-6 ft; Wikipedia 'Nicotiana tabacum': 1-3 m."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Nicotiana Tabacum, p. 245 (read on the Internet Archive, 2026-10-17): leaves large, oblong or elliptic; King's: ovate or lanceolate, acuminate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): acuminate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1914-17), Nicotiana (genus account), p. 2143 (read on the Internet Archive, 2026-10-17): leaves entire or wavy."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1908 (read on the Internet Archive, 2026-10-17): 1 or 2 ft long, 6 or 8 in broad; Wikipedia: can be over 50 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1908 (read on the Internet Archive, 2026-10-17): 6 or 8 in broad."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): leaves sessile, decurrent; Bailey: half-clasping, somewhat auricled."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): viscid and pale green. The colour is our reading of the words."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: panicle 10-30 cm."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): corolla funnel-shaped, widening toward the top, with a spreading limb; Flora of British India: linear-funnel-shaped."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flower 1-1.5 cm across; Wikipedia gives the tube 7-12 mm wide at its top."
+    },
+    "traits.corolla_tube_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Nicotiana tabacum' (read 2026-10-17): corolla tube 3.5-4.5 cm in all, 3-5 mm wide below and 7-12 mm above; Bailey (vol. 4 p. 2144): corolla 2-3 times the calyx."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 319612673 (CC-licensed photograph, viewed 2026-10-17): the thick stem is pale green, as are the leaves. No text read gives it."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1914-17), Nicotiana Tabacum, p. 2144 (read on the Internet Archive, 2026-10-17): limb rose-coloured or red; King's: dull red. The colour is our reading of the words."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 2, Tabacum, p. 1907 (read on the Internet Archive, 2026-10-17): 5 acute lobes; Bailey: acute or acuminate."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Nicotiana tabacum' (read 2026-10-17): capsule 1.5-2 cm long, narrowly elliptic to egg-shaped."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: ripe capsule brown."
+    },
+    "traits.corolla_tube_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1914-17), Nicotiana Tabacum, p. 2144 (read on the Internet Archive, 2026-10-17): corolla with a white or whitish tube and a rose or red limb; Wikipedia 'Nicotiana tabacum': tube greenish cream, pink or red. The colour is our reading of the words."
+    }
+  }
+}

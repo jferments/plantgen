@@ -108,7 +108,14 @@
     "cone_length_m": {"min": 0.05, "max": 0.1},
     "sexual_system": "monoecious",
     "cone_posture": "pendent",
-    "cone_width_m": {"min": 0.025, "max": 0.03}
+    "cone_width_m": {"min": 0.025, "max": 0.03},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.001, "max": 0.0015},
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "linear",
+    "leaf_margin": "entire"
   },
   "evidence": {
     "traits.height_max_m": {
@@ -197,7 +204,14 @@
     },
     "traits.sexual_system": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462, Picea sitchensis: sexual system monoecious."},
     "traits.cone_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462, Picea sitchensis: cone posture pendent."},
-    "traits.cone_width_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462: seed cones 2.5-3 cm across."}
+    "traits.cone_width_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462: seed cones 2.5-3 cm across."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L380741), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L380741), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L380741), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L380741), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L380741), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L380741), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L380741), as no source read gives it."}
   },
   "provenance": {
     "sources": [

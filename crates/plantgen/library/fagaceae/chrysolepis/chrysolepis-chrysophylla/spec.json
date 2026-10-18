@@ -25,8 +25,6 @@
       "apical_young": 0.7,
       "apical": 0.62,
       "apical_years": 20,
-      "leaf_size": 0.3,
-      "spur_leaf": 0.3,
       "spur_pairs": 2,
       "leaf_angle": 55,
       "lean": 6,
@@ -94,15 +92,8 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 50,
-          "stalk": 0.1,
+          "template": "simple",
           "width": 0.32,
-          "widest": 0.45,
-          "tip": 0.2,
-          "base": 0.35,
-          "teeth": 0,
           "petiole": 0.06
         },
         "families": {
@@ -211,7 +202,15 @@
     "fruiting_months": [
       8,
       9
-    ]
+    ],
+    "height_typical_m": {"min": 10, "max": 30},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_shape": "lanceolate",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.07},
+    "fruit_size_m": {"min": 0.02, "max": 0.04},
+    "leaf_apex": {"acute": "usually", "acuminate": "often"}
   },
   "evidence": {
     "taxon": {
@@ -303,7 +302,15 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): \"Leaves remain on trees for about 3 years\"."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L39927), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L39927), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L39927), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L39927), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L39927), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L39927), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L39927), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Chrysolepis chrysophylla (read 2026-10-18): the leaf tip is acute or acuminate."}
   },
   "provenance": {
     "sources": [

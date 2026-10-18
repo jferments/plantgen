@@ -193,6 +193,11 @@ pub struct Card {
     /// The graph segment that bears its organ (the first organ of a
     /// cluster), or [`NO_SEGMENT`]; not packaged with the mesh.
     pub segment: u32,
+    /// Its number from 0 to 1, which sets its share of variegated patches
+    /// and is packed into its vertices' alpha ([`card_color`]): its own
+    /// ([`crate::templates::card_seed`], from its base), moved toward its
+    /// plant's where its look asks ([`PlantMesh::vary_by_plant`]).
+    pub seed: f32,
 }
 
 /// Wood and organ cards of one plant at one level of detail, and on the
@@ -222,6 +227,27 @@ impl PlantMesh {
         self.wood.triangle_count()
             + self.cards.len() * 2
             + self.bent_cards() * (crate::bend::VERTICES as usize / 3 - 2)
+    }
+
+    /// Move each card's seed toward the plant's own
+    /// ([`crate::templates::plant_seed`] of the `seed` it grew from) by its
+    /// look's variegation `plants`, so a plant's leaves share their share
+    /// of patches where the look says the plant sets it. A card whose
+    /// template is not one of `looks` keeps its own.
+    pub fn vary_by_plant(&mut self, looks: &[Look], seed: u64) {
+        let plant = crate::templates::plant_seed(seed);
+        for card in &mut self.cards {
+            let plants = looks
+                .get(usize::from(card.template))
+                .and_then(|look| look.variegation)
+                .map_or(0.0, |variegation| variegation.plants);
+            if plants > 0.0 {
+                // A share from 0 to 1 fits an f32.
+                #[allow(clippy::cast_possible_truncation)]
+                let plants = plants as f32;
+                card.seed += (plant - card.seed) * plants;
+            }
+        }
     }
 
     /// The bent cards, which lead the level's cards.
@@ -286,12 +312,12 @@ impl PlantMesh {
 }
 
 /// A card's vertex colour: its colour, and in alpha its template plus its
-/// face ([`crate::templates::pack_face`]): its seed, from its base, and
-/// whether its normal points down.
+/// face ([`crate::templates::pack_face`]): its seed and whether its normal
+/// points down.
 fn card_color(card: &Card) -> [f32; 4] {
     let alpha = crate::templates::pack_face(
         card.template,
-        crate::templates::card_seed(card.base),
+        card.seed,
         crate::templates::card_flipped(card.heading, card.left),
     );
     [card.color[0], card.color[1], card.color[2], alpha]
@@ -512,25 +538,24 @@ pub(crate) fn build_shaded(
     for (solid, lace) in solid.iter_mut().zip(crate::lace::lace_types(looks, level)) {
         *solid |= lace;
     }
-    let blooms: Vec<bool> = looks
+    let blooms: Vec<Option<usize>> = looks
         .iter()
         .enumerate()
         .map(|(index, look)| {
-            look.solid.is_none()
-                && !is_part(index)
-                && look.form.solid_at(level)
-                && blooms::fits(graph, look, index)
+            (look.solid.is_none() && !is_part(index) && look.form.solid_at(level))
+                .then(|| blooms::step(graph, look, index))
+                .flatten()
         })
         .collect();
     for (solid, bloom) in solid.iter_mut().zip(&blooms) {
-        *solid |= *bloom;
+        *solid |= bloom.is_some();
     }
     let variation = appearance.variation;
     let colour =
         |look: &Look, organ: &GraphOrgan| organ_color(look, variation, organ.light, organ.id);
     leaves::build(graph, looks, level, &colour, &mut mesh.wood);
     crate::lace::build(graph, looks, level, &colour, &mut mesh.wood);
-    blooms::build(graph, looks, &blooms, &colour, &mut mesh.wood);
+    blooms::build_stepped(graph, looks, &blooms, &colour, &mut mesh.wood);
     if level <= 1 {
         let stem_hairs = appearance.stem_hairs.as_ref().filter(|hairs| hairs.drawn());
         petioles(graph, looks, stem_hairs, &mut mesh);
@@ -701,6 +726,8 @@ fn flare_rings(rings: &[Ring], flare: &Flare) -> Vec<Ring> {
 /// How a species' wood surface is shaped and coloured, for one axis.
 struct Bark<'a> {
     colour: [f32; 3],
+    /// Young twigs' colour and the radius they keep it below.
+    twig: Option<([f32; 3], f64)>,
     /// The stem's flare and the angle its buttresses start from; only on
     /// the plant's first axis.
     flare: Option<(&'a Flare, f64)>,
@@ -733,6 +760,12 @@ impl<'a> Bark<'a> {
         });
         Self {
             colour: appearance.bark,
+            twig: appearance.twig.map(|twig| {
+                (
+                    twig,
+                    appearance.twig_radius.unwrap_or(crate::spec::TWIG_RADIUS),
+                )
+            }),
             flare: flare.map(|flare| (flare, unit(mix64(id ^ 0xF1A2)) * 2.0 * math::PI)),
             bottle,
             ridges,
@@ -788,7 +821,15 @@ impl<'a> Bark<'a> {
         let contrast = self.ridges.map_or(0.0, |(ridges, _)| ridges.contrast);
         #[allow(clippy::cast_possible_truncation)]
         let dark = 1.0 - contrast * furrow as f32;
-        let mut colour = self.colour.map(|channel| channel * dark);
+        let mut colour = self.colour;
+        if let Some((twig, radius)) = self.twig {
+            #[allow(clippy::cast_possible_truncation)]
+            let barked = math::smoothstep(radius, 3.0 * radius, segment_radius) as f32;
+            for (channel, value) in colour.iter_mut().enumerate() {
+                *value = twig[channel] + (*value - twig[channel]) * barked;
+            }
+        }
+        let mut colour = colour.map(|channel| channel * dark);
         if let Some(moss) = self.moss {
             let cover = math::smoothstep(moss.min_radius, moss.min_radius * 2.0, segment_radius);
             let facing = ((normal.y + 0.25) / 0.9).clamp(0.0, 1.0);
@@ -867,6 +908,24 @@ fn shaded(colour: [f32; 4], light: f64) -> [f32; 4] {
         colour[0] * factor,
         colour[1] * factor,
         colour[2] * factor,
+        colour[3],
+    ]
+}
+
+/// `colour` (RGB and alpha) of wood drawn with youth `youth` and `age`
+/// years old, moved toward the appearance's young axis colour as far as
+/// it is young ([`crate::spec::YoungAxis`]).
+fn young_colour(appearance: &Appearance, colour: [f32; 4], youth: f32, age: f64) -> [f32; 4] {
+    let Some(young) = &appearance.young_axis else {
+        return colour;
+    };
+    // Weights are between 0 and 1.
+    #[allow(clippy::cast_possible_truncation)]
+    let weight = young.weight(youth, age) as f32;
+    [
+        colour[0] + (young.colour[0] - colour[0]) * weight,
+        colour[1] + (young.colour[1] - colour[1]) * weight,
+        colour[2] + (young.colour[2] - colour[2]) * weight,
         colour[3],
     ]
 }
@@ -1345,9 +1404,20 @@ fn wood(
                     angle,
                     furrow,
                 );
+                let surface_colour = young_colour(
+                    appearance,
+                    surface_colour,
+                    graph.segments[current.segment as usize].young,
+                    graph.age - current.born,
+                );
+                let youth = crate::hairs::youth(graph.age - current.born);
                 let [r, g, b] = crate::hairs::cast_wood(
-                    [surface_colour[0], surface_colour[1], surface_colour[2]],
-                    crate::hairs::youth(graph.age - current.born),
+                    young_wood(
+                        [surface_colour[0], surface_colour[1], surface_colour[2]],
+                        youth,
+                        appearance.young_wood,
+                    ),
+                    youth,
                     stem_hairs,
                 );
                 let colour = sky.colour([r, g, b, surface_colour[3]], light);
@@ -1379,6 +1449,18 @@ fn wood(
             first_ring = Some(base);
         }
     }
+}
+
+/// The wood's colour `colour` cast toward the plant's young wood's, by
+/// how young it is ([`crate::hairs::youth`]); unchanged where the plant
+/// states none.
+fn young_wood(colour: [f32; 3], youth: f64, young: Option<[f32; 3]>) -> [f32; 3] {
+    let Some(young) = young else {
+        return colour;
+    };
+    #[allow(clippy::cast_possible_truncation)]
+    let weight = youth as f32;
+    std::array::from_fn(|c| colour[c] + (young[c] - colour[c]) * weight)
 }
 
 /// The point `out` from `centre` on a ring of an axis, a `stem`'s cut
@@ -1414,8 +1496,9 @@ impl Placed {
     // day.
     #[allow(clippy::cast_possible_truncation)]
     fn finish(self) -> Card {
+        let base = self.base.to_f32();
         Card {
-            base: self.base.to_f32(),
+            base,
             heading: self.heading.to_f32(),
             left: self.left.to_f32(),
             length: self.length as f32,
@@ -1426,6 +1509,7 @@ impl Placed {
             shed: self.shed.map_or(f32::INFINITY, |shed| shed as f32),
             bend: self.bend,
             segment: self.segment,
+            seed: crate::templates::card_seed(base),
         }
     }
 }
@@ -1776,6 +1860,13 @@ fn stem_tubes(
             .leaf_axis
             .filter(|_| segment.within.is_some())
             .unwrap_or(appearance.bark);
+        let [r, g, b, _] = young_colour(
+            appearance,
+            [colour[0], colour[1], colour[2], 1.0],
+            segment.young,
+            graph.age - segment.born,
+        );
+        let colour = [r, g, b];
         tubes.extend(crate::hairs::Tube::new(
             segment.start,
             segment.end,
@@ -3108,6 +3199,7 @@ mod tests {
             shed: f32::INFINITY,
             bend,
             segment: NO_SEGMENT,
+            seed: crate::templates::card_seed(base),
         }
     }
 
@@ -3160,6 +3252,51 @@ mod tests {
         assert_eq!(cards[3], high);
     }
 
+    #[test]
+    fn a_plant_sets_its_leaves_share_where_its_look_says() {
+        let mut looks = looks();
+        let mut variegation: crate::looks::Variegation = serde_json::from_str(
+            r#"{"pattern": "spots", "colour": [0.5, 0.5, 0.5], "amount": 0.3}"#,
+        )
+        .expect("reads");
+        let cards: Vec<Card> = (0..5_u8)
+            .map(|k| card_at([f32::from(k) * 0.1, 0.2, 0.0], [0.0, 1.0, 0.0], Bend::FLAT))
+            .collect();
+        let mut seeds = |plants: f64, seed: u64| {
+            variegation.plants = plants;
+            looks[0].variegation = Some(variegation);
+            let mut plant = PlantMesh {
+                cards: cards.clone(),
+                ..PlantMesh::default()
+            };
+            plant.vary_by_plant(&looks, seed);
+            plant
+                .cards
+                .iter()
+                .map(|card| card.seed)
+                .collect::<Vec<f32>>()
+        };
+        // Each leaf its own, as before; or every leaf the plant's, and
+        // two plants different.
+        let own: Vec<f32> = cards
+            .iter()
+            .map(|card| crate::templates::card_seed(card.base))
+            .collect();
+        assert_eq!(seeds(0.0, 1), own);
+        let first = seeds(1.0, 1);
+        assert!(
+            first
+                .iter()
+                .all(|&seed| seed == crate::templates::plant_seed(1))
+        );
+        assert_ne!(first[0], seeds(1.0, 2)[0]);
+        // Halfway: halfway between.
+        let half = seeds(0.5, 1);
+        for (k, seed) in half.iter().enumerate() {
+            assert!((seed - 0.5 * (own[k] + first[k])).abs() < 1e-6);
+        }
+    }
+
     /// A plant without bodies at its nearest level.
     fn build_plain(
         graph: &PlantGraph,
@@ -3185,7 +3322,11 @@ mod tests {
             roots: None,
             bark_pattern: None,
             leaf_axis: None,
+            young_axis: None,
             stem_hairs: None,
+            young_wood: None,
+            twig: None,
+            twig_radius: None,
             bodies: BTreeMap::new(),
             spreads: serde_json::Map::new(),
         }
@@ -3226,6 +3367,7 @@ mod tests {
             body: 0,
             left: Vec3::ZERO,
             within: None,
+            young: 0.0,
         }
     }
 
@@ -3468,6 +3610,7 @@ mod tests {
         looks[0].shape = Shape::Blade(crate::looks::Blade {
             taper: 1.0,
             aspect: 0.04,
+            foot: 0.0,
         });
         (graph, looks)
     }
@@ -3835,6 +3978,37 @@ mod tests {
         assert!(green(false).abs() < 1e-6);
     }
 
+    #[test]
+    fn young_twigs_wear_their_own_colour_and_limbs_their_bark() {
+        let mut look = appearance();
+        look.twig = Some([1.0, 0.0, 0.0]);
+        let green = |radius: f64| -> f32 {
+            let stem = PlantGraph {
+                age: 5.0,
+                height: 1.0,
+                segments: vec![segment(
+                    None,
+                    false,
+                    Vec3::ZERO,
+                    Vec3::new(0.0, 1.0, 0.0),
+                    radius,
+                )],
+                organs: Vec::new(),
+                structures: Vec::new(),
+            };
+            let mesh = build_plain(&stem, &looks(), &look, &lod(0.0, 0.0, 0.0)).wood;
+            mesh.colors
+                .iter()
+                .map(|c| c[1] / c[0].max(1e-6))
+                .sum::<f32>()
+                / mesh.colors.len() as f32
+        };
+        // A twig is red; a limb past three times twig_radius is the bark's
+        // brown, with green two thirds of red.
+        assert!(green(0.002) < 0.01);
+        assert!((green(0.05) - 0.2 / 0.3).abs() < 0.05);
+    }
+
     fn organ(heading: Vec3, left: Vec3) -> GraphOrgan {
         GraphOrgan {
             id: 7,
@@ -3869,8 +4043,10 @@ mod tests {
     fn look(shape: Shape, face_up: f64) -> OrganLook {
         OrganLook {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
+            sori: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape,
@@ -3882,6 +4058,7 @@ mod tests {
             bend: None,
             form: None,
             season: None,
+            leafing: None,
             families: None,
             inflorescence: None,
         }

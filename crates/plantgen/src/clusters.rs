@@ -23,7 +23,16 @@
 //!   **catkin** take $`p = 0`$;
 //! - a **corymb** sets its nodes at $`y_k = y_0 + (1 - s - y_0) q_k`$, each
 //!   pedicel $`\max\big((1 - y_k)/\max(\cos\sigma, 0.2) - s\,t_k,\ 0\big)`$
-//!   long, so every unit's tip is level with the organ's;
+//!   long, so every unit's tip is level with the organ's; with a `dome`
+//!   $`\Theta`$ above 0 its units instead point out from a sphere of
+//!   radius $`R = \tfrac12 (1 - y_0)/\sin\min(\Theta, \tfrac\pi2)`$ whose
+//!   top is the organ's tip, unit $`i`$ at the polar angle
+//!   $`\theta_i = \arccos\big(1 - q_i(1 - \cos\Theta)\big)`$ (equal
+//!   areas over the cap, $`q_i = (i + \tfrac12)/n`$), turned
+//!   $`\theta + i\delta`$, its tip (a flower's or head's face) on the
+//!   sphere and its pedicel leaving
+//!   the axis at $`y_0 + (c - y_0)(1 - \theta_i/\Theta)`$, $`c`$ the
+//!   sphere's centre, so the rim's pedicels leave lowest;
 //! - an **umbel** sets its pedicels from $`y_u = y_0 (1 - s)`$, unit $`i`$
 //!   ($`q_i = (i + \tfrac12)/n`$) leaning $`\alpha_i = \sigma\sqrt{q_i}`$,
 //!   turned $`\theta + i\delta`$, on a pedicel
@@ -37,11 +46,13 @@
 //!   it, each turned $`\delta`$ on from its parent, leaning $`\sigma`$ from
 //!   the cluster's axis and $`1 - \tau`$ as long as its parent, each
 //!   ending in a unit and forking again, order by order, until $`n`$ units
-//!   are placed (those of the last order spread evenly over its places);
+//!   are placed (those of the last order spread evenly over its places),
+//!   the axis's own unit at the top of the peduncle, every unit $`s`$ long;
 //!   a **scorpioid** is a cyme forking once at each node, always to the
 //!   same side, each internode turned $`\min(\sigma, \pi/(n - 1))`$ from
 //!   the last and 0.9 as long, so its units lie on a coil. Both are scaled
-//!   so that their highest unit reaches 1.
+//!   so that their highest unit reaches 1, a cyme from its own unit and a
+//!   scorpioid from its first node.
 //!
 //! Where `branches` is above 0 the axis bears that many branches in place
 //! of units, placed as units would be, each laid out as `branch` in a frame
@@ -203,6 +214,8 @@ impl ClusterKind {
 pub struct Cluster {
     pub kind: ClusterKind,
     pub flowers: u32,
+    /// Units of the whole cluster that set fruit; every unit if `None`.
+    pub fruits: Option<u32>,
     pub branches: u32,
     /// How each branch is laid out: `Some` exactly when `branches` is
     /// above 0.
@@ -218,6 +231,8 @@ pub struct Cluster {
     pub taper: f64,
     /// Degrees.
     pub droop: f64,
+    /// Degrees of arc a corymb's units cover round its top; 0 is flat.
+    pub dome: f64,
     pub stalk: [f32; 3],
     /// The spathe's length, a share of the axis; 0 where there is none
     /// (always on a branch).
@@ -234,7 +249,34 @@ impl Cluster {
     /// The cluster `spec` describes, its defaults filled in.
     #[must_use]
     pub fn of(spec: &Inflorescence) -> Self {
-        Self::filled(spec, ClusterKind::Raceme, None, STALK, 1)
+        let mut cluster = Self::filled(spec, ClusterKind::Raceme, None, STALK, 1);
+        if let Some(unit) = spec.unit {
+            cluster.size_units(spec, unit, spec.flowers.is_some());
+        }
+        cluster
+    }
+
+    /// A unit's length over the organ, `unit`, sizes the innermost axis's
+    /// units, unless that axis sets its own: its share of each axis above
+    /// it. Where nothing counts them they are counted again from that size.
+    fn size_units(&mut self, given: &Inflorescence, unit: f64, counted: bool) {
+        let size = self.size;
+        if let Some(branch) = self.branch.as_deref_mut() {
+            let empty = Inflorescence::default();
+            let inner = given.branch.as_deref().unwrap_or(&empty);
+            branch.size_units(inner, unit / size.max(1e-6), counted);
+            return;
+        }
+        if given.size.is_some() {
+            return;
+        }
+        self.size = unit.clamp(0.005, 1.0);
+        if given.flowers.is_none() && !counted && self.kind.along_its_axis() {
+            self.flowers = Self::packed(self.size, self.peduncle, self.per_node);
+        }
+        if given.pedicel.is_none() && self.kind == ClusterKind::Raceme {
+            self.pedicel = self.size;
+        }
     }
 
     /// `spec` at nesting `level`, taking `kind`, `flowers` and `stalk`
@@ -289,6 +331,7 @@ impl Cluster {
         Self {
             kind,
             flowers,
+            fruits: if level == 1 { spec.fruits } else { None },
             branches,
             branch,
             per_node,
@@ -305,6 +348,7 @@ impl Cluster {
             size,
             taper: spec.taper.unwrap_or(0.0),
             droop: spec.droop.unwrap_or(0.0),
+            dome: spec.dome.unwrap_or(0.0),
             stalk,
             spathe: if level == 1 {
                 spec.spathe.unwrap_or(0.0)
@@ -413,6 +457,7 @@ impl Cluster {
         let kind = spec.kind.unwrap_or(kind);
         let counts = [
             ("flowers", spec.flowers, 1.0, 200.0),
+            ("fruits", spec.fruits, 1.0, 200.0),
             ("branches", spec.branches, 0.0, 60.0),
             ("per_node", spec.per_node, 1.0, 8.0),
         ];
@@ -427,8 +472,10 @@ impl Cluster {
             ("pedicel", spec.pedicel, 0.0, 1.0),
             ("peduncle", spec.peduncle, 0.0, 1.0),
             ("size", spec.size, 0.005, 1.0),
+            ("unit", spec.unit, 0.0005, 1.0),
             ("taper", spec.taper, 0.0, 1.0),
             ("droop", spec.droop, 0.0, 180.0),
+            ("dome", spec.dome, 0.0, 180.0),
             ("spathe", spec.spathe, 0.0, 3.0),
             ("spathe_width", spec.spathe_width, 0.1, 1.5),
             ("spathe_hood", spec.spathe_hood, 0.0, 120.0),
@@ -447,6 +494,9 @@ impl Cluster {
         }
         if level > 1 && spec.spathe.is_some_and(|spathe| spathe > 0.0) {
             return Err("only an inflorescence's own axis bears a spathe".to_string());
+        }
+        if level > 1 && spec.fruits.is_some() {
+            return Err("only an inflorescence's own axis counts the fruit it sets".to_string());
         }
         let branches = spec.branches.unwrap_or_else(|| kind.default_branches());
         if branches > 0 && !kind.bears_branches() {
@@ -616,7 +666,12 @@ impl ClusterLook {
     /// unripe fruit chosen by `seed`.
     #[must_use]
     pub fn layout(&self, turn: f64, seed: u64) -> Layout {
-        layout(&self.cluster, self.unit, turn, seed)
+        let mut laid = layout(&self.cluster, self.unit, turn, seed);
+        // Drawn all in fruit: only the units that set it.
+        if self.opening.is_none() && matches!(self.unit, Unit::Fruit { .. }) {
+            laid.units.retain(|p| p.sets);
+        }
+        laid
     }
 
     /// The cluster laid out as it is drawn on `organ`: turned, and its
@@ -672,6 +727,7 @@ impl Opening {
             Stage::Gone => return None,
             Stage::Bud => (0, false),
             Stage::Flower => (1, false),
+            Stage::Fruit { .. } if !p.sets => return None,
             Stage::Fruit { unripe } => (2, p.chance < unripe),
         };
         self.looks[look].is_some().then_some((look, unripe))
@@ -880,6 +936,9 @@ pub struct Placed {
     /// Its draw from 0 to 1: it is unripe while the share unripe is above
     /// it.
     pub chance: f64,
+    /// Whether it sets fruit: one of the cluster's `fruits`, or every unit
+    /// where they are not counted.
+    pub sets: bool,
     /// The smallest branch it is on: 0 for the cluster's own axis.
     pub group: u32,
     /// The branch of the cluster's own axis it is on: 0 for that axis.
@@ -950,6 +1009,7 @@ impl Sheet {
             // The face toward the units, so a forward arch bends against
             // the leaf's own.
             arch: -self.hood,
+            arch_from: 0.0,
             twist: 0.0,
             margin: None,
             teeth: None,
@@ -1184,6 +1244,27 @@ fn share(k: u32, n: u32) -> f64 {
     }
 }
 
+/// Mark the `fruits` of `layout`'s units that set fruit, chosen by
+/// `seed`; every unit where they are not counted, or are as many.
+fn set_fruit(layout: &mut Layout, fruits: Option<u32>, seed: u64) {
+    let Some(fruits) = fruits else {
+        return;
+    };
+    let keep = usize::try_from(fruits).unwrap_or(usize::MAX);
+    if keep >= layout.units.len() {
+        return;
+    }
+    let draw = |index: usize| {
+        let index = u64::try_from(index).unwrap_or(u64::MAX);
+        mix64(seed ^ 0x5E7F_0A11 ^ (index + 1).wrapping_mul(0xD1B5_4A32_D192_ED03))
+    };
+    let mut order: Vec<usize> = (0..layout.units.len()).collect();
+    order.sort_by_key(|&index| draw(index));
+    for &index in &order[keep..] {
+        layout.units[index].sets = false;
+    }
+}
+
 /// What [`layout`] has laid so far.
 struct Laid {
     layout: Layout,
@@ -1216,6 +1297,7 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
     // A spathe: its foot round the axis a little below the lowest unit,
     // its blade behind the units.
     let mut layout = laid.layout;
+    set_fruit(&mut layout, cluster.fruits, seed);
     if cluster.spathe > 0.0 {
         let length = cluster.spathe;
         let lowest = layout
@@ -1353,6 +1435,7 @@ fn lay(
                 unripe: chance < laid.unripe,
                 rank: (above + slot.rank) / to_f64(level),
                 chance,
+                sets: true,
                 group,
                 top,
                 stalk: cluster.stalk,
@@ -1480,6 +1563,42 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                 });
             }
         }
+        ClusterKind::Corymb if cluster.dome > 0.0 => {
+            // Tips on a sphere's cap as wide as the cluster is long, its
+            // top at the organ's tip; units spread over it by equal area,
+            // each on a pedicel from the axis, the outer ones lower on it.
+            let cap = math::radians(cluster.dome.min(180.0));
+            let room = 1.0 - y0;
+            let radius = 0.5 * room / math::sin(cap.min(math::PI / 2.0));
+            let centre = Vec3::Y * (1.0 - radius);
+            for i in 0..n {
+                let k = f64::from(i);
+                let q = (k + 0.5) / f64::from(n);
+                let polar = math::acos(1.0 - q * (1.0 - math::cos(cap)));
+                let around = turn + delta * k;
+                let ring = math::sin(polar);
+                let direction = Vec3::new(
+                    ring * math::cos(around),
+                    math::cos(polar),
+                    ring * math::sin(around),
+                );
+                let length = s * (1.0 - tau * q);
+                // A flower's or head's face on the sphere, a fruit's tip.
+                let depth = if unit.faces() { 0.5 * length } else { length };
+                let base = centre + direction * (radius - depth).max(0.0);
+                let attach = Vec3::Y * (y0 + (centre.y - y0).max(0.0) * (1.0 - polar / cap));
+                slots.push(Slot {
+                    anchor: attach.y,
+                    attach,
+                    base,
+                    direction,
+                    length,
+                    radial: radial(around),
+                    // From the rim inward, as a corymb opens.
+                    rank: 1.0 - share(i, n),
+                });
+            }
+        }
         ClusterKind::Corymb => {
             for i in 0..n {
                 let qk = q(i / m);
@@ -1587,13 +1706,12 @@ fn fit(units: &[(Vec3, Vec3, f64)], y0: f64) -> f64 {
 }
 
 /// A node of a cyme as first laid out, its first internode 1 long: its
-/// place, the way its branch leans, its turn, its parent and its scale.
+/// place, the way its branch leans, its turn, its parent and its order.
 struct Node {
     at: Vec3,
     direction: Vec3,
     around: f64,
     parent: usize,
-    scale: f64,
     order: u32,
 }
 
@@ -1613,7 +1731,6 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
         direction: Vec3::Y,
         around: turn,
         parent: 0,
-        scale: 1.0,
         order: 0,
     }];
     let (mut first, mut count) = (0_usize, 1_usize);
@@ -1642,20 +1759,21 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
                 direction,
                 around,
                 parent,
-                scale,
                 order,
             });
         }
         first = start;
         count = placed;
     }
+    // The axis's own unit ends the peduncle, and its branches rise from
+    // just below it, so the cyme runs from there to its highest tip.
     let units: Vec<(Vec3, Vec3, f64)> = nodes
         .iter()
-        .map(|node| (node.at, node.direction, s * node.scale))
+        .map(|node| (node.at - Vec3::Y, node.direction, s))
         .collect();
     let f = fit(&units, y0);
-    let place = |at: Vec3| Vec3::Y * y0 + at * f;
-    let anchor = y0 + f;
+    let place = |at: Vec3| Vec3::Y * y0 + (at - Vec3::Y) * f;
+    let anchor = y0;
     // Each axis's own unit before its forks': order by order.
     let orders = nodes.last().map_or(0, |node| node.order) + 1;
     let slots = nodes
@@ -1667,7 +1785,8 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
                 attach: at,
                 base: at,
                 direction: node.direction,
-                length: s * node.scale,
+                // A cyme's flowers are alike; its internodes shorten.
+                length: s,
                 radial: radial(node.around),
                 rank: share(node.order, orders),
             }
@@ -1935,7 +2054,7 @@ fn draw_laid(
                 organ,
                 shape,
                 form,
-                (base, direction, unit_length),
+                (base, fruit::hung(direction, shape.hang), unit_length),
                 shown.unripe,
                 detail,
                 shown.colour,
@@ -1966,7 +2085,19 @@ fn draw_laid(
                         ),
                         accent: shown.accent,
                         filament: flower.filament.unwrap_or(shown.accent),
+                        anther: flower.anther_colour.unwrap_or(shown.accent),
                         ovary: flower.pistil.unwrap_or(shown.accent),
+                        base: flower
+                            .base_colour
+                            .map(|base| crate::blooms::with_shading(base, look.colour, colour)),
+                        base_length: flower.base_length,
+                        star: flower
+                            .star_colour
+                            .map(|star| crate::blooms::with_shading(star, look.colour, colour)),
+                        tube: flower
+                            .tube_colour
+                            .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),
+                        stigma: flower.stigma.or(flower.filament).unwrap_or(shown.accent),
                     },
                     part,
                     mesh,
@@ -2540,6 +2671,7 @@ mod tests {
                     unripe: false,
                     rank: 0.0,
                     chance: 0.0,
+                    sets: true,
                     group: 0,
                     top: 0,
                     stalk: STALK,
@@ -2551,6 +2683,43 @@ mod tests {
 
     fn close(a: Vec3, b: Vec3) -> bool {
         (a - b).length() < 1e-9
+    }
+
+    #[test]
+    fn a_cluster_ripens_only_the_fruit_it_sets() {
+        let spec = |fruits: Option<u32>| Inflorescence {
+            kind: Some(ClusterKind::Umbel),
+            flowers: Some(8),
+            fruits,
+            ..Inflorescence::default()
+        };
+        let every = layout(&Cluster::of(&spec(None)), berries(), 0.0, 7);
+        assert_eq!(every.units.len(), 8);
+        assert!(every.units.iter().all(|p| p.sets));
+        for seed in 0..20 {
+            let laid = layout(&Cluster::of(&spec(Some(2))), berries(), 0.0, seed);
+            assert_eq!(laid.units.len(), 8, "every flower is laid out");
+            assert_eq!(laid.units.iter().filter(|p| p.sets).count(), 2);
+        }
+        // Drawn all in fruit, only the two that set are left.
+        let shape = Shape::Fruit(Fruit::default());
+        let look = ClusterLook::new(Cluster::of(&spec(Some(2))), &shape, &[]).unwrap();
+        assert_eq!(look.layout(0.0, 3).units.len(), 2);
+        // More than it bears sets every one.
+        let more = layout(&Cluster::of(&spec(Some(20))), berries(), 0.0, 1);
+        assert!(more.units.iter().all(|p| p.sets));
+        assert!(Cluster::check(&spec(Some(0))).is_err());
+        let nested = Inflorescence {
+            kind: Some(ClusterKind::Panicle),
+            branches: Some(3),
+            branch: Some(Box::new(Inflorescence {
+                fruits: Some(1),
+                ..Inflorescence::default()
+            })),
+            ..Inflorescence::default()
+        };
+        let error = Cluster::check(&nested).unwrap_err();
+        assert!(error.contains("fruit it sets"), "{error}");
     }
 
     #[test]
@@ -3099,8 +3268,10 @@ mod tests {
                 "bloom".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Fruit(Fruit {
@@ -3116,6 +3287,7 @@ mod tests {
                     bend: None,
                     form: None,
                     season: None,
+                    leafing: None,
                     families: None,
                 },
             )]),
@@ -3187,8 +3359,10 @@ mod tests {
                 "bloom".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape,
@@ -3201,6 +3375,7 @@ mod tests {
                     bend: None,
                     form: None,
                     season: season.map(|(season, _)| season),
+                    leafing: None,
                     families: None,
                 },
             )]),

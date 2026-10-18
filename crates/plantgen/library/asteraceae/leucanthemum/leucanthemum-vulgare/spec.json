@@ -113,7 +113,11 @@
     "fruit_size_m": 0.002,
     "flowering_months": [6, 7, 8, 9],
     "ray_width_m": {"min": 0.003, "max": 0.005, "low": 0.002, "high": 0.006},
-    "ray_apex": "toothed"
+    "ray_apex": "toothed",
+    "height_max_m": 1,
+    "perennation": "rhizome",
+    "leaf_width_m": {"min": 0.01, "max": 0.03},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "appearance.organs.flower.shape.template": {
@@ -265,7 +269,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, Chrysanthemum leucanthemum (p. 394): June to September."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3112766), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3112766), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3112766), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3112766), as no source read gives it."}
   },
   "provenance": {
     "sources": [

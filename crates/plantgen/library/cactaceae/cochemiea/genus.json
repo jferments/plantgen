@@ -4,12 +4,14 @@
   "name": "Cochemiea",
   "parent": "subfamily/cactoideae",
   "traits": {
+    "fruit_surface": "naked",
     "stem_form": "globose",
     "ribs": 0,
     "tubercles": true,
     "tubercle_relief": "distinct"
   },
   "evidence": {
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 167, Cochemiea: fruit globose, naked, with a large terminal scar; Mammillaria (pp. 404 to 405), where Anderson keeps C. grahamii: pericarpel naked, berry naked."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405, Cochemiea: tubercles distinct, spirally arranged, without grooves."},
     "traits": {
       "evidence": "SourceInferred",

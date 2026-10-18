@@ -34,14 +34,7 @@
       "flowers": 6,
       "ring_angle": 50,
       "flower_angle": 40,
-      "flower_size": 0.06,
-      "bud_share": 0.25,
-      "fruit_share": 0.3,
-      "bud_size": 0.025,
-      "fruit_size": 0.05,
-      "flower_area": 0.362,
-      "bud_area": 0.636,
-      "fruit_area": 1.143
+      "flower_size": 0.06
     }
   },
   "growth": {
@@ -58,31 +51,6 @@
     "foliage": [0.1, 0.17, 0.06],
     "foliage_shade": [0.045, 0.077, 0.027],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "stamens": 200,
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.3
-        },
-        "accent": [0.75, 0.65, 0.4]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.25, 0.12, 0.1]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.9
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "dome": 0.8,
@@ -138,6 +106,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "carpels": {"min": 11, "max": 12},
+    "stamens": {"min": 200, "max": 400},
+    "flower_zone": "crown_and_flanks",
     "stem_colour": [70, 100, 55],
     "spine_colour": [140, 138, 132],
     "central_spine_colour": [85, 82, 78],
@@ -152,9 +123,20 @@
     "wood_density_basic_kg_m3": 490,
     "ribs": {"min": 12, "max": 17},
     "stem_diameter_max_m": {"min": 0.15, "max": 0.2},
-    "areole_spacing_m": {"min": 0.01, "max": 0.015, "high": 0.03}
+    "areole_spacing_m": {"min": 0.01, "max": 0.015, "high": 0.03},
+    "height_typical_m": {"min": 3, "max": 7},
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [5, 6, 7],
+    "fruit_size_m": {"min": 0.04, "max": 0.075},
+    "fruiting_months": [7, 8, 9],
+    "anther_colour": [245, 240, 225],
+    "filament_colour": [245, 240, 225],
+    "fruit_shape": "globose"
   },
   "evidence": {
+    "traits.carpels": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: 11 to 12 stigma lobes on a white style slightly exserted through the stamens; the carpels are as many as the lobes."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: hundreds of white stamens, all about 2 cm long, the upper ones exserted evenly like a shaving brush."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: stems green; dark green, as Anderson's photograph shows them."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: radial spines greyish, to 1 cm."},
     "traits.central_spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: central spines greyish to blackish."},
@@ -168,6 +150,7 @@
       "note": "Britton and Rose vol. 2 (1920), as Lemaireocereus thurberi: usually trunkless, with 5 to 20 or more erect stems 3 m to 7 m tall."
     },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Stenocereus thurberi (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.49, branches 0.49. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
+    "traits.flower_zone": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) p. 22, organ pipe cactus: showy sessile flowers, each from a single areole, near the apex and along the sides of the branches."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
@@ -183,11 +166,7 @@
       "source": "plantgen-authors",
       "note": "Rough stem heights from general knowledge: a few metres by 70 years, about 5 m by 120. Wide tolerances."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: dark green stems with 12 to 19 ribs, areoles 2 cm apart with dark felt, short dark radial spines and one to three longer centrals that grey with age; creamy white to lavender flowers. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, and a style with 5 to 15 stigma lobes, from the characters of Cactaceae and Stenocereus by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: dark green stems with 12 to 19 ribs, areoles 2 cm apart with dark felt, short dark radial spines and one to three longer centrals that grey with age; creamy white to lavender flowers. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -217,7 +196,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
+    "traits.anther_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: stamens in hundreds, white, all about 2 cm long, the upper ones exserted evenly like a shaving brush."},
+    "traits.filament_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: stamens white; style white, slightly exserted through the stamen mass."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Stenocereus: fruits spheric; the Cactus Primer (pp. 23 to 25) draws the organ pipe's globose, densely spiny fruit."}
   },
   "provenance": {
     "sources": [

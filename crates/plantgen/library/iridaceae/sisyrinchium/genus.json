@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Sisyrinchium",
+  "traits": {
+    "inflorescence": "umbel"
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Sisyrinchium (read 2026-10-17): flowers on stalks in near-umbel clusters of two to many, opening in turn from a spathe that usually has two valves."}
+  }
+}

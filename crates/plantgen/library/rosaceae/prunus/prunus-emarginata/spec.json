@@ -70,12 +70,9 @@
           "template": "sprig",
           "leaves": 7,
           "angle": 45,
-          "width": 0.4,
           "widest": 0.55,
           "tip": 0.15,
           "base": 0.4,
-          "teeth": 14,
-          "tooth_depth": 0.01,
           "petiole": 0.1
         },
         "families": {
@@ -89,7 +86,7 @@
           "aspect": 0.95,
           "unripe": 0.25
         },
-        "inflorescence": { "kind": "umbel", "flowers": 6, "size": 0.25, "spread": 35 },
+        "inflorescence": { "flowers": 6, "size": 0.25, "spread": 35 },
         "colour": [0.62, 0.05, 0.06],
         "accent": [0.45, 0.5, 0.15],
         "season": {
@@ -133,11 +130,22 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intolerant",
     "wood_density_basic_kg_m3": 490,
     "flowering_months": [4, 5, 6],
-    "fruiting_months": [7, 8, 9]
+    "fruiting_months": [7, 8, 9],
+    "height_typical_m": {"min": 2, "max": 10},
+    "height_max_m": 15,
+    "woodiness": "woody",
+    "leaf_length_m": {"min": 0.02, "max": 0.06},
+    "leaf_width_m": {"min": 0.01, "max": 0.025},
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "corymb",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.06},
+    "fruit_size_m": {"min": 0.008, "max": 0.012}
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's bitter cherry review (Prunus emarginata, read 2026-10-16): \"a generally shade intolerant species of sparse woods\"."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -208,7 +216,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its flowers drawn one by one (spec rework L1b): white flowers 10 to 15 mm across with notched petals and about 20 stamens, in small flat clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five white petals between five sepals on a floral cup, about twenty stamens and one pistil, from the characters of Rosaceae and Prunus by the rules at the flowering plants."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2959716), as no source read gives it."}
   },
   "provenance": {
     "sources": [

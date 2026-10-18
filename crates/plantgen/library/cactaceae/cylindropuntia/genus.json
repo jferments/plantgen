@@ -4,12 +4,14 @@
   "name": "Cylindropuntia",
   "parent": "subfamily/opuntioideae",
   "traits": {
+    "fruit_surface": "spiny",
     "stem_form": "cylindric_joints",
     "tubercles": true,
     "tubercle_relief": "distinct",
     "spine_sheaths": true
   },
   "evidence": {
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 37 and pp. 204 to 205, Cylindropuntia: fruit often spiny, acting as burrs, fleshy or dry, with or without spines."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 204, Cylindropuntia: tubercles distinct."},
     "traits": {
       "evidence": "SourceInferred",

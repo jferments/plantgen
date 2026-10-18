@@ -22,7 +22,7 @@
       "joint_spread": 0.2,
       "daughters_low": 0.4,
       "daughters_high": 2.0,
-      "generations": 3,
+      "generations": 2,
       "margin": 60,
       "twist": 25,
       "sag": 0.2,
@@ -32,13 +32,7 @@
       "bloom_age": 2,
       "joint_flowers": 3,
       "flower_angle": 30,
-      "bud_share": 0.25,
-      "fruit_share": 0.2,
-      "bud_size": 0.02,
-      "bud_rate": 0.45,
-      "flower_area": 0.298,
-      "bud_area": 0.7,
-      "fruit_area": 0.89
+      "bud_rate": 0.45
     }
   },
   "growth": {
@@ -55,30 +49,6 @@
     "foliage": [0.18, 0.19, 0.22],
     "foliage_shade": [0.081, 0.086, 0.099],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "stamens": 200,
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.25
-        },
-        "accent": [0.85, 0.75, 0.75]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.55
-        },
-        "colour": [0.45, 0.1, 0.25]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit"
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "flatten": 0.13,
@@ -127,7 +97,16 @@
     "fruit_size_m": {"min": 0.025, "max": 0.03},
     "fruit_width_m": {"min": 0.015, "max": 0.022},
     "joint_length_m": {"min": 0.08, "max": 0.2},
-    "radial_spines": 0
+    "radial_spines": 0,
+    "height_typical_m": {"min": 0.15, "max": 0.4},
+    "height_max_m": 0.6,
+    "woodiness": "semi",
+    "rosette": "none",
+    "flowering_months": [2, 3, 4, 5, 6],
+    "fruiting_months": [5, 6, 7, 8, 9, 10, 11],
+    "anther_colour": [230, 205, 90],
+    "filament_colour": [175, 30, 85],
+    "stigma_colour": [240, 230, 205]
   },
   "evidence": {
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: stem segments blue-green, often tinged purple."},
@@ -144,18 +123,14 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a low clump under 40 cm tall of pads 5 to 20 cm long, fanning out from the base. Bright magenta flowers along the top of the pads in spring. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a low clump under 40 cm tall of pads 5 to 20 cm long, fanning out from the base. Bright magenta flowers along the top of the pads in spring. Not fitted to measurements. Pads stand two generations deep, not three, after FNA vol. 4 (eFloras, Opuntia basilaris): \"forming clumps, 1-2(-3) segments tall, to 7-40 cm\" (2026-10-18)."
     },
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: 20 to 40 cm. Wide tolerances."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: blue-grey pads, often purple-tinged, with no long spines; the sunken areoles carry dense tufts of reddish-brown glochids. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (16 by hand: no flora counts them, and USDA GRIN records 9 to 22 petals on accessions of Opuntia, as quoted in search results; the page itself was not read) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: blue-grey pads, often purple-tinged, with no long spines; the sunken areoles carry dense tufts of reddish-brown glochids. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -185,7 +160,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2393456), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia basilaris var. basilaris: flowering late winter to spring, February to June."},
+    "traits.fruiting_months": {"evidence": "SourceInferred", "source": "usa-npn", "note": "USA-NPN Nature's Notebook phenometrics (getSummarizedData, fetched 2026-10-18; the phenology method of 2026-10-14: each individual-year span of the phenophase counted day by day, keeping the months with at least a third of the busiest month's days), Opuntia basilaris (species 946): ripe-fruit spans on 9 sites (only 10 spans), from May to November, most in July; the fruit dries tan on the plant (Flora of North America). Until 2026-10-18 a model estimate of June to August."},
+    "traits.anther_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia basilaris: anthers yellowish."},
+    "traits.filament_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia basilaris: filaments red-magenta (rarely pale); style white to pink."},
+    "traits.stigma_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia basilaris: stigma lobes white to cream."}
   },
   "provenance": {
     "sources": [

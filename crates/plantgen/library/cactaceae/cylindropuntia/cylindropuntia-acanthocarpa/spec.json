@@ -30,15 +30,7 @@
       "bloom_age": 5,
       "joint_flowers": 1,
       "flower_angle": 30,
-      "flower_size": 0.05,
-      "bud_share": 0.2,
-      "fruit_share": 0.3,
-      "bud_size": 0.02,
-      "fruit_size": 0.03,
-      "bud_rate": 0.5,
-      "flower_area": 0.368,
-      "bud_area": 0.636,
-      "fruit_area": 0.89
+      "bud_rate": 0.5
     }
   },
   "growth": {
@@ -55,31 +47,6 @@
     "foliage": [0.1, 0.17, 0.06],
     "foliage_shade": [0.045, 0.077, 0.027],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "stamens": 200,
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.3
-        },
-        "accent": [0.55, 0.45, 0.2]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.45, 0.3, 0.1]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.7
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "colour": [0.13, 0.16, 0.08],
@@ -144,6 +111,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_shape": "obconic",
+    "lower_areole_spines": "fewer",
     "tubercle_relief": "prominent",
     "spine_colour": [175, 130, 75],
     "spine_colour_aged": [140, 138, 132],
@@ -152,9 +121,22 @@
     "fruit_colour_ripe": [175, 150, 100],
     "wood_density_basic_kg_m3": 640,
     "radial_spines": {"min": 8, "max": 25},
-    "radial_spine_length_m": {"min": 0.02, "max": 0.03}
+    "radial_spine_length_m": {"min": 0.02, "max": 0.03},
+    "height_typical_m": {"min": 1, "max": 2},
+    "height_max_m": 3,
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [4, 5],
+    "fruit_size_m": {"min": 0.02, "max": 0.04},
+    "fruiting_months": [4, 5, 6, 7, 8, 9, 10],
+    "fruit_width_m": {"min": 0.015, "max": 0.02},
+    "anther_colour": [230, 200, 60],
+    "filament_colour": [170, 40, 35],
+    "stigma_colour": [215, 225, 190],
+    "flower_size_m": {"min": 0.04, "max": 0.06}
   },
   "evidence": {
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: fruit dry, obconical to ellipsoidal (the first named here), tan at maturity."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: tubercles prominent."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: spines yellow to tan to deep reddish brown, greying; tan here."},
     "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: the spines grey with age."},
@@ -162,6 +144,7 @@
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 204 to 205, Cylindropuntia acanthocarpa: flowers bright yellow to bronze to brick red (bronze here, the middle of the words); fruit dry, tan at maturity. Anderson gives the flower's length (2 to 3 cm) but not its width and no fruit size, so their sizes stay set by hand."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 204 to 205, Cylindropuntia acanthocarpa: flowers bright yellow to bronze to brick red (bronze here, the middle of the words); fruit dry, tan at maturity. Anderson gives the flower's length (2 to 3 cm) but not its width and no fruit size, so their sizes stay set by hand."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cylindropuntia acanthocarpa (gwddagg_v2.2_species.csv, read): specific gravity 0.64 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.64, branches 0.58. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
+    "traits.lower_areole_spines": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: spines 6 to 20, up to 30, mostly on the distal areoles."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
@@ -177,11 +160,7 @@
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: a metre or more within 15 years. Wide tolerances."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: grey-green joints with long, raised tubercles, tan sheathed spines in spreading clusters, greying with age. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: grey-green joints with long, raised tubercles, tan sheathed spines in spreading clusters, greying with age. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -216,7 +195,19 @@
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
       "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here numerous, yellow. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "usa-npn", "note": "USA-NPN Nature's Notebook phenometrics (getSummarizedData, fetched 2026-10-18; the phenology method of 2026-10-14: each individual-year span of the phenophase counted day by day, keeping the months with at least a third of the busiest month's days), Cylindropuntia acanthocarpa (species 945): 179 open-flower spans on 8 sites, April (393 days) and May (219). The Flora of North America (vol. 4, read on eFloras 2026-10-18) gives spring: May in var. acanthocarpa, March to June in vars. coloradensis and major."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "SourceInferred", "source": "usa-npn", "note": "USA-NPN Nature's Notebook phenometrics (getSummarizedData, fetched 2026-10-18; the phenology method of 2026-10-14: each individual-year span of the phenophase counted day by day, keeping the months with at least a third of the busiest month's days), Cylindropuntia acanthocarpa (species 945): 905 ripe-fruit spans on 9 sites, most in June to August and above a third of June's days from April to October: the fruit dries tan on the plant (Flora of North America) and stays."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia acanthocarpa: fruit tan at maturity, obconic to ellipsoid, 15 to 35 by 15 to 20 mm, dry, tuberculate."},
+    "traits.anther_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia acanthocarpa: filaments red; anthers yellow."},
+    "traits.filament_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia acanthocarpa: filaments red; a dark red by hand."},
+    "traits.stigma_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia acanthocarpa: style and stigma lobes white to light green."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia acanthocarpa: inner tepals spatulate, 20 to 30 mm; the open flower taken as twice its inner tepals across, by hand, as no flora gives its width (Anderson p. 205: flowers 2 to 3 cm long)."}
   },
   "provenance": {
     "sources": [

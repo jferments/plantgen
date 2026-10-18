@@ -70,7 +70,6 @@
           "template": "compound",
           "leaflets": 7,
           "leaflet_width": 0.45,
-          "teeth": 0,
           "petiole": 0.15
         },
         "families": {
@@ -121,6 +120,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_habit": "deciduous",
+    "leaf_colour_autumn": [235, 205, 60],
+    "leaf_fall_months": [10],
     "height_max_m": {
       "min": 10,
       "max": 25
@@ -130,9 +132,19 @@
     "wood_rupture_green_mpa": 52,
     "juvenile_period_years": 30,
     "flowering_months": [4, 5],
-    "fruiting_months": [8, 9]
+    "fruiting_months": [8, 9],
+    "height_typical_m": {"min": 10, "max": 25},
+    "life_span": "perennial",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.12, "max": 0.3},
+    "sexual_system": "dioecious",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.1},
+    "fruit_size_m": {"min": 0.025, "max": 0.05}
   },
   "evidence": {
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): \"a medium-sized deciduous tree\"."},
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): the leaves \"turn bright yellow and fall off early in autumn\". Colour ours."},
+    "traits.leaf_fall_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): the leaves \"fall off early in autumn\": October, ahead of the October to November most broadleaves are given. Month ours."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
@@ -210,7 +222,14 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L369836), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L369836), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L369836), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L369836), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L369836), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L369836), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L369836), as no source read gives it."}
   },
   "provenance": {
     "sources": [

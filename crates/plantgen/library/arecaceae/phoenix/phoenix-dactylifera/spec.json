@@ -164,7 +164,16 @@
     "traits.bract_form": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: bract form spathe."},
     "traits.flowering_position": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: flowering position lateral."},
     "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: petals 7-10 mm in the male flowers, 4-5 mm in the female."},
-    "traits.peduncle_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: peduncle 50-70 cm."}
+    "traits.peduncle_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: peduncle 50-70 cm."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L152659), as no source read gives it."}
   },
   "provenance": {
     "sources": [
@@ -185,6 +194,15 @@
     "bract_form": "spathe",
     "flowering_position": "lateral",
     "petal_length_m": {"min": 0.004, "max": 0.01},
-    "peduncle_length_m": {"min": 0.5, "max": 0.7}
+    "peduncle_length_m": {"min": 0.5, "max": 0.7},
+    "height_typical_m": {"min": 10, "max": 20},
+    "height_max_m": 30,
+    "leaf_length_m": {"min": 3, "max": 5},
+    "leaf_arrangement": "alternate",
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.5, "max": 1.2},
+    "flowering_months": [2, 3, 4],
+    "fruit_size_m": {"min": 0.03, "max": 0.07},
+    "fruiting_months": [8, 9, 10]
   }
 }

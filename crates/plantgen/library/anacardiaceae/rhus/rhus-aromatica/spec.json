@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "id": "rhus-aromatica",
+  "taxon": {
+    "scientific_name": "Rhus aromatica",
+    "common_name": "fragrant sumac",
+    "family": "Anacardiaceae",
+    "genus": "Rhus",
+    "plant_name_id": 2420828
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "branch_angle": 45
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.42,
+      0.36,
+      0.3
+    ],
+    "foliage": [
+      0.14,
+      0.27,
+      0.08
+    ],
+    "foliage_shade": [
+      0.045,
+      0.086,
+      0.026
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 2
+    },
+    "height_max_m": {
+      "min": 1.5,
+      "max": 2.5
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "clonal": true,
+    "stem_clump": "thicket",
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": 3,
+    "terminal_leaflet": true,
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "leaflet_length_m": {
+      "min": 0.025,
+      "max": 0.065
+    },
+    "leaf_width_m": {
+      "min": 0.04,
+      "max": 0.09
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "leaf_shape": "ovate",
+    "leaf_margin": "crenate",
+    "leaf_hairs": "pubescent",
+    "inflorescence": "spike",
+    "flowering_position": "terminal",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 30
+    },
+    "flower_size_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "flower_colour": [
+      222,
+      214,
+      130
+    ],
+    "fruit_type": "drupe",
+    "fruit_size_m": {
+      "min": 0.005,
+      "max": 0.007
+    },
+    "fruit_colour_ripe": [
+      190,
+      50,
+      35
+    ],
+    "flowering_months": [
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a shrub 0.5 m to 2 m tall; FEIS's skunkbush review (as Rhus trilobata, the western variety): 2 to 12 feet (0.6-3.6 m), averaging 4 feet (1.2 m)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: a native woody shrub that achieves a mature height of 5 to 8.2 feet (1.5-2.5 m)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: a native woody shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: a native woody shrub."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: rhizomatous; reproduces clonally by sprouting from the roots and rhizomes, as far as 3.7 m to 4.6 m from the original stem, and by layering where stems touch the ground."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: typically has a thicket-forming growth habit as a result of prolific layering and sprouting; FEIS's skunkbush review (as Rhus trilobata) gives thickets as large as 9 m across."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: leaves deciduous and alternate with 3 leaflets."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: leaves deciduous and alternate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: leaves with 3 leaflets."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: leaves 3-foliolate, the terminal leaflet larger than the lateral ones (the western variety of R. aromatica)."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: terminal leaflet 3-lobed and coarsely toothed, not divided again."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: leaves with 3 leaflets."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: terminal leaflet 2.5-5 cm. long."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 5 cm to 10 cm long."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: terminal leaflets are 1.8 to 2.6 inches long (3-6.5 cm); Abrams (1951 p. 51, R. trilobata): terminal leaflet 2.5-5 cm. long, the lateral leaflets smaller."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 4 cm to 9 cm across their lateral leaflets."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 1 cm to 2.5 cm long, as in the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: the lateral leaflets round-ovate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: the lateral leaflets scarcely lobed, crenate; the terminal one coarsely toothed."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: leaves more or less pubescent on both surfaces."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: flowers in short spike-like clusters; FEIS: dense clusters or spikes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: flower buds are formed terminally in the summer for flowering the following spring."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: dense clusters or spikes, 0.7 to 2.5 inches (2-6 cm) long."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "10 to 30 flowers in a spike, set by hand from iNaturalist photos (observations 16537803, 349918686, 71650315, 72173245, 165381048, 42727708, 205904116, 109113316): the sources read give no count or measure."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flowers 3 mm to 5 mm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: flowers yellowish; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: the fruits are hairy drupes."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: drupes 0.2 to 0.3 inches (5-7 mm) in diameter."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus trilobata: drupe viscid-hirsute, reddish; sRGB by eye."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flowering March to May, before the leaves (Abrams 1951 p. 51, R. trilobata: flowers appearing before the leaves)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: drupes ripe June to August."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, densely and irregularly branched shrub of small three-parted leaves, with short yellowish flower spikes clustered at the bare twig tips in spring."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for fragrant sumac from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.2 m tall at 12 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

@@ -52,6 +52,7 @@
     },
     "leaf_shape": "elliptic",
     "inflorescence": "spike",
+    "flowering_position": "terminal",
     "inflorescence_length_m": {
       "min": 0.02,
       "max": 0.05
@@ -83,7 +84,9 @@
       94,
       159,
       79
-    ]
+    ],
+    "height_max_m": 0.7,
+    "rosette": "terminal"
   },
   "evidence": {
     "taxon": {
@@ -161,6 +164,11 @@
       "source": "flora-of-china-4-chloranthaceae",
       "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): blades elliptic, obovate, ovate-lanceolate, suborbicular or broadly elliptic; elliptic the first named."
     },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): spikes terminal, sometimes axillary; terminal the usual place."
+    },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "flora-of-china-4-chloranthaceae",
@@ -205,7 +213,9 @@
       "evidence": "SourceInferred",
       "source": "inaturalist-photos-2026-10",
       "note": "The two or three pairs at the stem top spread flat, close to a right angle to the stem, as a false whorl seen from above (observations 47114100, 116689180, 158677500, 215207127, 358542153, 362210553); about 80 degrees read by eye."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2719171), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2719171), as no source read gives it."}
   },
   "provenance": {
     "sources": [

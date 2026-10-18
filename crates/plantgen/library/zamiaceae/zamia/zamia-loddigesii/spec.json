@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "id": "zamia-loddigesii",
+  "taxon": {
+    "scientific_name": "Zamia loddigesii",
+    "common_name": "Zamia loddigesii",
+    "family": "Zamiaceae",
+    "genus": "Zamia",
+    "plant_name_id": 378836
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.032,
+      "trunk_rate": 0,
+      "stemless_years": 30,
+      "fronds_per_year": 1.2,
+      "leaflet_angle": 60,
+      "adult_age": 5,
+      "peduncle": 0.048,
+      "male_peduncle": 0.06,
+      "male_cones": 3
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [5, 15, 30]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "leaf_length_m": {
+      "min": 0.525,
+      "max": 0.725
+    },
+    "petiole_length_m": {
+      "min": 0.175,
+      "max": 0.225
+    },
+    "leaflets": {
+      "min": 32,
+      "max": 50
+    },
+    "leaflet_length_m": {
+      "min": 0.21,
+      "max": 0.25
+    },
+    "leaflet_width_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "leaf_colour": [65, 115, 55],
+    "cone_face_height_m": {
+      "min": 0.012,
+      "max": 0.015
+    },
+    "pollen_cone_face_height_m": {
+      "min": 0.002,
+      "max": 0.007
+    },
+    "cone_length_m": {
+      "min": 0.07,
+      "max": 0.15
+    },
+    "cone_width_m": {
+      "min": 0.04,
+      "max": 0.05
+    },
+    "cone_face_width_m": {
+      "min": 0.02,
+      "max": 0.025
+    },
+    "cone_apex": "apiculate",
+    "cone_colour": [140, 95, 60],
+    "pollen_cone_length_m": {
+      "min": 0.065,
+      "max": 0.14
+    },
+    "pollen_cone_width_m": {
+      "min": 0.02,
+      "max": 0.03
+    },
+    "pollen_cone_face_width_m": {
+      "min": 0.007,
+      "max": 0.011
+    },
+    "pollen_cone_shape": "cylindrical",
+    "pollen_cone_apex": "blunt",
+    "pollen_cone_colour": [150, 110, 70],
+    "seed_length_m": {
+      "min": 0.012,
+      "max": 0.014
+    },
+    "seed_width_m": {
+      "min": 0.008,
+      "max": 0.009
+    },
+    "seed_colour_ripe": [230, 100, 30],
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: stem subterranean and tuberlike, 25 to 30 cm long, 5 to 7.5 cm across; leaves usually two to five. Drawn as a trunk 0.032 m in radius, staying underground; 1.2 fronds a year, as the crown's count over the three years a frond lives (estimated); first cones at 5 years (estimated, as the research note's timing table records). Female cone solitary on a peduncle 4.5 to 5 cm, male cones one to several on peduncles 5 to 7 cm. The leaves' sizes and leaflets come from its traits; Whitelock gives no posture for its leaves."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: stem subterranean and tuberlike, 25 to 30 cm long, 5 to 7.5 cm across; leaves usually two to five, 75 to 90 cm long, the petiole 17.5 to 22.5 cm; leaflets in 16 to 25 pairs, 21 to 25 cm by 1 to 2 cm. The whole plant's height at 30 years estimated from these, its stem (or none, where it stays underground) under a crown of young leaves standing about 0.85 of a leaf above it: about 0.7 m. Whitelock gives no ages, so the tolerance is wide."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them (the scientific name where no common name is in wide use), and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a cycad's crown of pinnate leaves on a pachycaul stem, drawn on the palm program."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact: four seeds, so male and female plants both show."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: leaves usually two to five, 75 to 90 cm long with the petiole of 17.5 to 22.5 cm, 37.5 to 45 cm wide, flat: the blade, without its petiole, 52.5 to 72.5 cm (the shortest leaf less the longest petiole to the longest less the shortest)."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: petiole green, 17.5 to 22.5 cm long, 6 mm across, moderately to densely armed, the spines sometimes running on up the rachis."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: leaflets in 16 to 25 pairs."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: leaflets narrow to broad lanceolate, 21 to 25 cm long."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: leaflets 1 to 2 cm wide, the margin slightly revolute, with scattered small teeth over the apical half to two thirds."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: leaves medium green; the colour by eye."
+    },
+    "traits.cone_face_height_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: the megasporophyll's face 1.2 to 1.5 cm high by 2 to 2.5 cm wide, the facets somewhat indistinct."
+    },
+    "traits.pollen_cone_face_height_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: the microsporophyll's face 2 to 7 mm high by 7 to 11 mm wide."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: female cones solitary, 7 to 15 cm long."
+    },
+    "traits.cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: female cone 4 to 5 cm across."
+    },
+    "traits.cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 316), Zamia loddigesii: the megasporophyll's face hexagonal, 1.2 to 1.5 by 2 to 2.5 cm, its facets indistinct."
+    },
+    "traits.cone_apex": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: female cone's apex blunt to short apiculate."
+    },
+    "traits.cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: female cone medium brown felted; the colour by eye."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: male cones cylindrical, 6.5 to 14 cm long."
+    },
+    "traits.pollen_cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: male cone 2 to 3 cm across."
+    },
+    "traits.pollen_cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 316), Zamia loddigesii: the microsporophyll's face 0.2 to 0.7 by 0.7 to 1.1 cm."
+    },
+    "traits.pollen_cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: male cones cylindrical."
+    },
+    "traits.pollen_cone_apex": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: male cone's apex usually blunt."
+    },
+    "traits.pollen_cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: male cone densely tan to medium brown felted; the colour by eye."
+    },
+    "traits.seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: sclerotesta irregularly ovoid, somewhat three-sided, 12 to 14 mm long."
+    },
+    "traits.seed_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: sclerotesta 8 to 9 mm across."
+    },
+    "traits.seed_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: sarcotesta orange to orange-red when ripe; the colour by eye."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 315-316), Zamia loddigesii: male and female cones on separate plants, as in every cycad (p. 19)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Whitelock, L. M. (2002). The Cycads. Timber Press.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy: cones, sporophylls and seeds by sex from Whitelock (2002); stem and leaves from the same descriptions."
+  }
+}

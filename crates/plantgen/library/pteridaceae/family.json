@@ -20,7 +20,13 @@
       "margin": "usually",
       "none": "often"
     },
-    "rhizome_habit": "erect"
+    "rhizome_habit": "erect",
+    "stipe_scales": {
+      "sparse": "usually"
+    },
+    "stipe_scale_extent": {
+      "base": "usually"
+    }
   },
   "evidence": {
     "traits": {
@@ -32,6 +38,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 122, 124, family Pteridaceae: rhizome habit creeping to erect, with scales or hairs; read as \"erect\"."
+    },
+    "traits.stipe_scales": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 2), Pteridaceae: \"Petioles usually with persistent scales proximally\". Read as sparse."
+    },
+    "traits.stipe_scale_extent": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 2), Pteridaceae: \"persistent scales proximally\". Read as base."
     }
   }
 }

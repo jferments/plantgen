@@ -34,7 +34,7 @@
       "buds_above": 1,
       "nod": 0,
       "leaf_area": 0.291,
-      "basal_area": 0.212,
+      "basal_area": 0.299,
       "basal_piece_area": 0.235,
       "flower_area": 1.128,
       "bud_area": 0.89,
@@ -133,7 +133,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a giant herb with hollow stems, huge maple-like leaves of three lobed leaflets and broad, flat umbrellas of white flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a giant herb with hollow stems, huge maple-like leaves of three lobed leaflets and broad, flat umbrellas of white flowers. Not fitted to measurements. basal_area is the area its `basal` look draws on an organ 1 m long (plantc's shading-area test), 0.299 since its trifoliolate leaf sets its lateral pair at the petiole's tip (was 0.212)."
     },
     "allometry": {
       "evidence": "Authored",

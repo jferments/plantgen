@@ -19,7 +19,7 @@
       "max_shoot": 3,
       "branch_angle": 40,
       "apical_young": 0.62,
-      "apical": 0.52,
+      "apical": 0.5,
       "apical_years": 8,
       "bud_years": 40,
       "leaf_size": 0.13,
@@ -125,7 +125,16 @@
       "min": 2,
       "max": 6
     },
-    "wood_density_basic_kg_m3": 490
+    "wood_density_basic_kg_m3": 490,
+    "height_typical_m": {"min": 3, "max": 8},
+    "life_span": "perennial",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.25},
+    "flowering_months": [5, 6, 7, 8, 9],
+    "fruit_size_m": {"min": 0.1, "max": 0.3},
+    "fruiting_months": [8, 9, 10, 11]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -167,7 +176,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, open, often leaning tree 4 to 8 m tall along desert washes, with long, narrow, willow-like leaves and fragrant pink to lavender trumpet flowers through the summer. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a small, open, often leaning tree 4 to 8 m tall along desert washes, with long, narrow, willow-like leaves and fragrant pink to lavender trumpet flowers through the summer. Not fitted to measurements. Apical 0.5 (was 0.52) since broadleaf revision 17 (woody forms, 2026-10-17), when buds stopped shading like leaves and its tallest plant grew past the flora's 6 m."
     },
     "generator.params.bud_years": {
       "evidence": "SourceInferred",
@@ -223,7 +232,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L320433), as no source read gives it."}
   },
   "provenance": {
     "sources": [

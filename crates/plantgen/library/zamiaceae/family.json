@@ -19,18 +19,43 @@
     "reproduction": "cones",
     "branching": {
       "unbranched": "usually"
-    }
+    },
+    "ovule_bearing": "cone"
   },
   "forms": {
     "palm": {
       "generator": {
-        "program": "zamiaceae"
+        "program": "zamiaceae",
+        "defaults": {
+          "cone_seeds": 24
+        }
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "The zamias' own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, as Cycadaceae's program does."
+        },
+        "generator.defaults": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A ripe zamiad cone breaks up as its swelling seeds force its sporophylls apart, and only then do the seeds show and colour fully (Whitelock 2002, p. 20, 289). Whitelock gives no seed counts for these species; 24 show, about a small Zamia cone's (20 to 60 estimated; Lepidozamia has up to 360, p. 247), which genera with large cones raise."
+        },
+        "appearance": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A zamiad's female cone is a true cone of tightly packed sporophylls, closed over its seeds until it ripens and breaks up (Whitelock 2002, p. 18-20, 289): drawn closed, its faces flush."
+        }
+      },
+      "appearance": {
+        "organs": {
+          "cone": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.4,
+              "cone": 1
+            }
+          }
         }
       }
     }
@@ -80,6 +105,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: branching unbranched or irregularly branched, usually; read as {\"unbranched\": \"usually\"}."
+    },
+    "traits.ovule_bearing": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Every cycad but Cycas bears its ovules in a true cone, two on the inner side of each sporophyll's face (Whitelock 2002, p. 18-19)."
     }
   }
 }

@@ -4,6 +4,8 @@
   "name": "Ferocactus",
   "parent": "subfamily/cactoideae",
   "traits": {
+    "stem_apex": "broad",
+    "fruit_surface": "scaly",
     "corolla_shape": {"funnelform": "usually", "campanulate": "sometimes"},
     "carpels": {
       "min": 13,
@@ -12,6 +14,8 @@
     "stem_form": "globose"
   },
   "evidence": {
+    "traits.stem_apex": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 327, Ferocactus: stems depressed globose to globose to cylindrical; p. 331, F. glaucescens: the apex slightly depressed; p. 22, F. cylindraceus: a tall cylinder with a rounded apex; Gibson and Nobel, The Cactus Primer (1986) p. 57: a barrel's apex slightly depressed between its spine clusters."},
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 327 to 328, Ferocactus: pericarpel with conspicuous deltoid to rounded scales, its areoles naked; fruit globose to oblong, thick walled."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 328, Ferocactus: flowers short funnelform, funnelform or bell-shaped, with a ring of hairs inside the perianth; fruit globose to oblong."},
     "traits": {
       "evidence": "SourceInferred",

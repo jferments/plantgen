@@ -24,9 +24,9 @@
       "apical_years": 15,
       "leaves_per_node": 1,
       "bud_years": 40,
-      "leaf_size": 0.14,
       "spur_leaf": 0.26,
       "spur_pairs": 3,
+      "short_share": 0.0833,
       "leaf_angle": 50,
       "leaf_years": 2,
       "lean": 12,
@@ -134,7 +134,10 @@
     "flower_colour": [175, 130, 200],
     "fruit_size_m": {"min": 0.04, "max": 0.06},
     "flowering_months": [5, 6],
-    "fruiting_months": [6, 7]
+    "fruiting_months": [6, 7],
+    "rosette": "none",
+    "leaf_margin": "entire",
+    "flower_symmetry": "zygomorphic"
   },
   "evidence": {
     "traits.height_max_m": {
@@ -148,6 +151,7 @@
       "source": "plantgen-authors",
       "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long. Fitted so the tallest of five plants (seeds 1 to 5) stays within Jepson (1925): 4.57 m to 7.62 m tall. Once a leaf stayed one season, not two (leaf life, generator revision 44), more light reached the crown and, at 6.04, a plant reached 8.11 m."
     },
+    "generator.params.short_share": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (woody forms, 2026-10-17): a twelfth of its nodes grow short shoots, the share the flowering plants gave before every bud of a tree that does not grow long was made a short shoot. With that many short shoots this slow desert tree's long shoots fall below the vigour to grow by 25 years and it dies back, a fault of the model, not of the plant (desert ironwood bears its leaves in clusters on short shoots)."},
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -293,7 +297,10 @@
       "evidence": "SourceInferred",
       "source": "abrams-1944",
       "note": "Each bloom is a short raceme of pea flowers (Kearney and Peebles 1942, p. 466), as long as Abrams gives the racemes, 3 to 5 cm (vol. 2, 1944, p. 562), so 4 cm; its flowers are as wide as the corolla is long, 8 to 10 mm, by the cluster rules."
-    }
+    },
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2389100), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2389100), as no source read gives it."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2389100), as no source read gives it."}
   },
   "provenance": {
     "sources": [

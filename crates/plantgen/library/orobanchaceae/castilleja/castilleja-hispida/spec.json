@@ -26,18 +26,18 @@
       "leaf_top": 0.6,
       "leaf_base": 0.7,
       "leaf_angle": 45,
-      "raceme": 0.35,
-      "flowers": 16,
-      "flower_size": 0.03,
-      "pedicel": 0.003,
-      "flower_angle": 30,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_size": 0.09,
+      "pedicel": 0.0,
+      "flower_angle": 0,
       "fruit_below": 0,
-      "buds_above": 0.85,
+      "buds_above": 1,
       "bud_spacing": 0.35,
       "nod": 0,
       "bud_size": 0.02,
       "leaf_area": 0.216,
-      "basal_area": 0.235,
+      "basal_area": 0.147,
       "basal_piece_area": 0.235,
       "flower_area": 0.176,
       "bud_area": 0.05,
@@ -63,6 +63,7 @@
         "shape": { "template": "lobed", "width": 0.4, "lobes": 2, "depth": 0.5, "round": 0.0, "petiole": 0 }
       },
       "flower": {
+        "inflorescence": { "flowers": 16, "size": 0.33 },
         "shape": {
           "template": "flower",
           "petal_width": 0.8,
@@ -88,7 +89,17 @@
     "height_typical_m": {
       "min": 0.2,
       "max": 0.4
-    }
+    },
+    "height_max_m": 0.6,
+    "leaf_habit": "deciduous",
+    "leaf_length_m": {"min": 0.02, "max": 0.06},
+    "leaf_width_m": {"min": 0.005, "max": 0.02},
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.15},
+    "flowering_months": [4, 5, 6, 7],
+    "fruit_size_m": {"min": 0.01, "max": 0.015},
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -104,7 +115,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a hairy herb of a few stems topped by spikes of scarlet, lobed bracts that hide the small greenish flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a hairy herb of a few stems topped by spikes of scarlet, lobed bracts that hide the small greenish flowers. Each stem ends in one spike drawn as a cluster (flowers 1, flower_size 0.09 within the 3 cm to 15 cm the species states; its look's inflorescence 16 flowers, each a third of its length), now that Orobanchaceae's flowers are mostly in spikes; before, the stem bore 16 single flowers. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
@@ -146,7 +157,18 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The bracts and buds above the open flowers pack into a dense head at the top of the spike, about a third of the open flowers' spacing apart by eye (flowering photographs, observations 338448297, 5589350, 1585541, 217223222, 269885666, 208431319, 211316657, 397951847): a bud's internode as a share of a flower's, judged by eye."}
+    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The bracts and buds above the open flowers pack into a dense head at the top of the spike, about a third of the open flowers' spacing apart by eye (flowering photographs, observations 338448297, 5589350, 1585541, 217223222, 269885666, 208431319, 211316657, 397951847): a bud's internode as a share of a flower's, judged by eye."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2705047), as no source read gives it."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.235)."}
   },
   "provenance": {
     "sources": [

@@ -1,0 +1,252 @@
+{
+  "schema": 1,
+  "id": "collomia-grandiflora",
+  "taxon": {
+    "scientific_name": "Collomia grandiflora",
+    "common_name": "large-flowered collomia",
+    "family": "Polemoniaceae",
+    "genus": "Collomia",
+    "plant_name_id": 2731205
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "clump_radius": 0.01,
+      "stem_lean": 4,
+      "nodes": 12,
+      "basal_leaves": 0,
+      "bare": 0.1,
+      "leaf_peak": 0.4,
+      "leaf_top": 0.6,
+      "leaf_base": 0.5,
+      "leaf_angle": 40,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.4,
+      0.25
+    ],
+    "foliage": [
+      0.22,
+      0.36,
+      0.18
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.5,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 1.0
+    },
+    "life_span": "annual",
+    "rosette": "none",
+    "leaf_length_m": {
+      "min": 0.025,
+      "max": 0.1
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "entire",
+    "inflorescence": "head",
+    "inflorescence_length_m": {
+      "min": 0.025,
+      "max": 0.045
+    },
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 25
+    },
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "funnelform",
+    "flower_size_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "flower_colour": [
+      245,
+      205,
+      160
+    ],
+    "fruit_type": "capsule",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: an erect, often coarse annual 1 dm to 10 dm high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: an annual."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: leafy stems, simple or branched from the base, with no basal rosette."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: leaves 5 cm to 10 cm long; set from 2.5 cm for the smaller leaves under the head."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: leaves lanceolate, now and then elliptic, sessile."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: leaves entire."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: flowers sessile in heads at the stem's tip and sometimes in the axils."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: heads 2.5 cm to 4.5 cm across with their flowers, from the photos."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "10 to 25 flowers open in a head, set by hand from iNaturalist photos of flowering plants (observations 260363917, 3724514, 173514634, 376771344, 784805, 47813571, 13457547, 212957): the flora gives no count or measure."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five equal corolla lobes: a regular flower, set by hand from iNaturalist photos of flowering plants (observations 260363917, 3724514, 173514634, 376771344, 784805, 47813571, 13457547, 212957): the flora gives no count or measure."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: corolla narrowly funnel-shaped to nearly salver-shaped."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flowers 1 cm to 1.5 cm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: corolla salmon-yellow to cream or nearly white; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: an obovoid capsule."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 405, Collomia grandiflora: flowering May to August."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: green to reddish stems; narrow green sessile leaves, the bracts under the head broader."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for large-flowered collomia from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.5 m tall at 1 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

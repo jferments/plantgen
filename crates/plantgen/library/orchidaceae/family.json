@@ -40,12 +40,7 @@
     },
     "life_span": "perennial",
     "leaf_venation": "parallel",
-    "inflorescence": {
-      "panicle": "often",
-      "raceme": "often",
-      "solitary": "often",
-      "spike": "often"
-    },
+    "inflorescence": {"raceme": "usually", "solitary": "often", "spike": "sometimes", "panicle": "sometimes"},
     "sexual_system": {
       "hermaphrodite": "usually"
     },
@@ -113,11 +108,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: leaf venation parallel; read as \"parallel\"."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: inflorescence raceme, panicle, spike or solitary; read as {\"panicle\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Orchidaceae (read 2026-10-17): flowers single or grouped in panicles, racemes, spikes, heads or umbels, with the ultimate units always racemose. Wikipedia Bulbophyllum (read 2026-10-17): the family's largest genus (~2,170 spp) bears an unbranched raceme, with few to many (sometimes single) flowers. Other big genera (Epidendrum, Dendrobium, Stelis, Lepanthes, Habenaria) are largely racemose too, which is our tally from general knowledge rather than a page read; solitary flowers kept second (Masdevallia, some Bulbophyllum), branched panicles a minority. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.sexual_system": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

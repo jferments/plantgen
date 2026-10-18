@@ -7,6 +7,10 @@
     "reproduction": "spores"
   },
   "rules": {
+    "generator.params.coil_turns": {
+      "map": {"vernation": {"circinate": 2.5, "conduplicate": 0, "involute": 0, "flat": 0}},
+      "why": "A circinate frond (the leptosporangiate ferns', a tree fern's, a marattioid's) comes up as a crozier, its blade wound from the tip inward in a tight spiral that unrolls from its foot (Hoshizaki and Moran 2001, p. 17; Kaplan 2022, p. 358-359, 369), about two and a half turns by eye; a frond that is not circinate expands straight."
+    },
     "generator.params.frond_length": {
       "rule": "leaf_length_m + petiole_length_m",
       "why": "A fern's frond is its blade and its stipe, the leaf's stalk, end to end."
@@ -21,8 +25,8 @@
     },
     "appearance.organs.pinna.shape.outline": {"template": "simple", "map": {"division_order": {"1": [[0, 0.2], [0.02, 0.31], [0.05, 0.48], [0.1, 0.7], [0.2, 0.91], [0.3, 1], [0.4, 0.96], [0.5, 0.85], [0.6, 0.74], [0.7, 0.58], [0.8, 0.4], [0.9, 0.21], [0.95, 0.1], [0.98, 0.04], [1, 0]]}}, "else": [[0, 0.2], [0.02, 0.31], [0.05, 0.48], [0.1, 0.7], [0.2, 0.91], [0.3, 1], [0.4, 0.96], [0.5, 0.85], [0.6, 0.74], [0.7, 0.58], [0.8, 0.4], [0.9, 0.21], [0.95, 0.1], [0.98, 0.04], [1, 0]], "why": "A once-pinnate frond's pinnae are lanceolate to linear, widest near their foot and drawn out to a point."},
     "generator.params.pieces": {
-      "rule": "first(clamp(round(leaflets * (leaf_length_m + petiole_length_m) / (4 * leaf_length_m)), 4, 60), clamp(round(2.5 / pinna_length), 12, 40))",
-      "why": "The program hangs two pairs of pinnae on each piece of the rachis above the stipe, so a frond with as many pinnae as its flora counts has a quarter as many blade pieces, and the stipe's pieces besides. Where no flora counts them, as many as stand side by side, each a fifth as wide as long, along the blade (a pinna every half piece, 1 / (2 pieces) of the frond apart)."
+      "rule": "first(clamp(round(first(pinnae, leaflets) * (leaf_length_m + petiole_length_m) / (4 * leaf_length_m)), 4, 60), clamp(round(2.5 / pinna_length), 12, 40))",
+      "why": "The program hangs two pairs of pinnae on each piece of the rachis above the stipe, so a frond with as many pinnae as its flora counts (its pinnae where it is divided again, else its leaflets) has a quarter as many blade pieces, and the stipe's pieces besides. Where no flora counts them, as many as stand side by side, each a fifth as wide as long, along the blade (a pinna every half piece, 1 / (2 pieces) of the frond apart)."
     },
     "appearance.organs.*.shape.width": {
       "template": "simple",

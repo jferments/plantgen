@@ -1,0 +1,335 @@
+{
+  "schema": 1,
+  "id": "whipplea-modesta",
+  "taxon": {
+    "scientific_name": "Whipplea modesta",
+    "common_name": "yerba de selva",
+    "family": "Hydrangeaceae",
+    "genus": "Whipplea",
+    "plant_name_id": 2464936
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 12,
+      "clump_radius": 0.2,
+      "nodes": 47,
+      "basal_leaves": 0,
+      "bare": 0.05,
+      "leaf_peak": 0.3,
+      "leaf_angle": 50,
+      "raceme": 0.005,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.16,
+      0.3,
+      0.1
+    ],
+    "foliage_shade": [
+      0.051,
+      0.096,
+      0.032
+    ]
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.27,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "stem_length_m": {
+      "min": 0.3,
+      "max": 2.0
+    },
+    "life_span": "perennial",
+    "rosette": "none",
+    "stem_posture": "prostrate",
+    "leaf_arrangement": "opposite",
+    "leaf_habit": "deciduous",
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.035
+    },
+    "leaf_width_m": {
+      "min": 0.007,
+      "max": 0.02
+    },
+    "leaf_shape": "ovate",
+    "leaf_margin": "dentate",
+    "leaf_hairs": "strigose",
+    "inflorescence": "raceme",
+    "units_per_inflorescence": {
+      "min": 4,
+      "max": 9
+    },
+    "inflorescence_length_m": {
+      "min": 0.012,
+      "max": 0.025
+    },
+    "pedicel_length_m": {
+      "min": 0.002,
+      "max": 0.01
+    },
+    "peduncle_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
+    "flower_size_m": {
+      "min": 0.006,
+      "max": 0.008
+    },
+    "petal_length_m": {
+      "min": 0.003,
+      "max": 0.003
+    },
+    "flower_merosity": {
+      "min": 5,
+      "max": 6
+    },
+    "stamens": {
+      "min": 10,
+      "max": 12
+    },
+    "carpels": {
+      "min": 4,
+      "max": 5
+    },
+    "flower_colour": [
+      246,
+      246,
+      240
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.0025
+    },
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: trailing stems 10 cm to 30 cm high; Abrams (1944 p. 388) gives their length, 3 dm to 20 dm, not their height."
+    },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: the trailing stems 3 dm to 20 dm long (their length, not their height)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea: low spreading or trailing shrub with weak slender branches; drawn by the herb program, as the shrub program grows no trailing stems."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves along reclining stems, with no rosette, set by hand from iNaturalist photos (observations 163232735, 6004860, 204233638, 207436697, 343023139, 10742793, 12537421, 7398): the sources read give no count or measure."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea: low spreading or trailing shrub with weak slender branches; read as prostrate, the flowering branchlets ending in racemes rising from them."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea: leaves opposite, deciduous, shallowly toothed."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea: leaves opposite, deciduous."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea: sepals 5-6; petals 5-6."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea: stamens 10 or 12, rarely fewer."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea: ovary 4-5-celled; styles 4-5."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: leaves ovate to oval, 1-3.5 cm. long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 7 mm to 2 cm wide, about half to two thirds as wide as long as in the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: leaves ovate to oval."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: shallowly few-toothed."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: appressed-pubescent on both surfaces."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: racemes on slender peduncles terminating the branchlets."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: racemes 4-9-flowered."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: each raceme a crowded cluster 1.2 cm to 2.5 cm long, as in the photos."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: pedicels 2-10 mm. long."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: peduncles 3 cm to 8 cm long, as in the photos; Abrams calls them slender."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 6 mm to 8 mm across, twice the 3 mm petals Abrams (1944 p. 388) gives."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: petals white, oblong-ovate, 3 mm. long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: petals white; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: capsule globose."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: capsule globose, 2-2.5 mm. broad."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: flowering March to June."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: low reclining leafy stems with small toothed, hairy leaves in pairs, each ending in a slender stalk with a crowded cluster of white flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for yerba de selva from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements. Since its stems trail (shrub habit, 2026-10-18) they are drawn as long as Abrams measures them, about 1.15 m, not 20 cm, so its nodes and the bare stem below its raceme keep the lengths first set by hand for a 20 cm stem: 47 nodes about 2.3 cm apart, where there were 8, and 6 mm of bare stem (raceme 0.005, was 0.03); it no longer sets stem_lean, as a lying stem leaves its foot level."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.27 m tall at 3 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

@@ -31,16 +31,16 @@
       "woody": "sometimes"
     },
     "inflorescence": {
-      "panicle": "often",
+      "panicle": "usually",
       "head": "often",
-      "raceme": "often",
-      "spike": "rarely"
+      "raceme": "sometimes",
+      "spike": "sometimes"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
     "fruit_type": {
-      "capsule": "often",
-      "nut": "often",
+      "capsule": "usually",
+      "nut": "sometimes",
       "achene": "sometimes"
     },
     "flower_merosity": 5,
@@ -61,13 +61,13 @@
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add spike (rarely): Simpson, Plant Systematics (2019) p. 381, 382: spike."
+      "source": "wikipedia",
+      "note": "Wikipedia Limonium (read 2026-10-17): ~600 spp, flowers on branched panicles or corymbs; Limonium alone is over half the family. Wikipedia Acantholimon (read 2026-10-17): 321 spp on short simple or branched flowering stems, loose or dense (type not named, so spike only raised to sometimes). Armeria (thrift, ~100 spp, dense heads) keeps head second. Panicle leads clearly. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Watson and Dallwitz's DELTA: capsule or nut. Simpson (2019) p. 381-382 adds an achene, often; a one-seeded dry fruit that may open by a lid. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
+      "source": "wikipedia",
+      "note": "Wikipedia Limonium (read 2026-10-17): fruit a small one-seeded capsule held in the persistent calyx; Limonium (~600 spp) is over half the family. Acantholimon's page (321 spp) does not give the fruit, so it is not counted; capsule leads on Limonium alone. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."
     }
   }
 }

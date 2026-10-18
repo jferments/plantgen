@@ -149,7 +149,25 @@
       9,
       10,
       11
-    ]
+    ],
+    "height_typical_m": {"min": 15, "max": 27},
+    "life_span": "perennial",
+    "rosette": "none",
+    "leaf_margin": "entire",
+    "fruitlets": "follicles",
+    "fruit_seed_colour": [200, 35, 30],
+    "perianth_parts": {"min": 9, "max": 12, "high": 15},
+    "petal_shape": "obovate",
+    "petal_apex": "rounded",
+    "stamen_length_m": {"low": 0.0125, "min": 0.016, "max": 0.029},
+    "filament_colour": [130, 40, 105],
+    "pistil_colour": [200, 190, 140],
+    "leaf_hairs_beneath": "tomentose",
+    "hair_colour": [150, 95, 55],
+    "anther_colour": [235, 215, 150],
+    "bud_colour": [135, 110, 85],
+    "fruit_colour_ripening": [165, 60, 70],
+    "fruit_seed_thread_m": 0.004
   },
   "evidence": {
     "taxon": {
@@ -286,7 +304,25 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after FNA vol. 3: grey bark in thick plates; thick, glossy, dark green leaves, rusty felted below."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L117615), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L117615), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L117615), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L117615), as no source read gives it."},
+    "traits.fruitlets": {"evidence": "SourceInferred", "source": "usda-wpsm-2008", "note": "Woody Plant Seed Manual, Magnolia (read 2026-10-17): the fruit a cone-like aggregate of follicles, each splitting along its back on one or two seeds; FNA vol. 3 (via a SEINet mirror) 'follicetums cylindric to somewhat obovoid, follicles beaked'."},
+    "traits.fruit_seed_colour": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2, southern magnolia (read 2026-10-17): seeds 6-13 mm with a red coat emerge and hang on slender silken threads before dropping; WPSM: the sarcotesta bright red. The colour is our reading of the words."},
+    "traits.perianth_parts": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7, Magnolia grandiflora (read on eFloras, 2026-10-16): tepals 9-12, white, obovate, 6-10 x 5-7 cm, thickly fleshy; FNA vol. 3 (genus): tepals 9-15; Flora of Pakistan: perianth 9-15, concave."},
+    "traits.petal_shape": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7, Magnolia grandiflora (read on eFloras, 2026-10-16): tepals obovate, 6-10 x 5-7 cm."},
+    "traits.petal_apex": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7, Magnolia grandiflora (read on eFloras, 2026-10-16): tepals obovate, 6-10 x 5-7 cm, broadest near the tip; the tip is rounded (our reading of the outline)."},
+    "traits.stamen_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): stamens 16-29 mm; Flora of China ca. 2 cm; Flora of Pakistan 1.25-2 cm."},
+    "traits.filament_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): filaments purple; Flora of Pakistan: filaments bright purple, anthers yellow. The colour is our reading of the words."},
+    "traits.pistil_colour": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist photo 28372097 (mfeaver, obs 18545889, CC BY), a flower on its first day (read 2026-10-18): the carpel cone pale tan to yellow-green under its tomentum (Flora of China: gynoecium densely long tomentose). The colour is our reading of the photo."},
+    "traits.leaf_hairs_beneath": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7, Magnolia grandiflora (read on eFloras, 2026-10-16): twigs, vegetative buds, petioles and leaf blade abaxial surfaces densely brown to grayish brown shortly tomentose."},
+    "traits.hair_colour": {"evidence": "SourceInferred", "source": "usda-wpsm-2008", "note": "Woody Plant Seed Manual, Magnolia, table 2 (read 2026-10-18): southern magnolia's leaves evergreen, rusty brown and tomentose beneath; Flora of China: brown to grayish brown tomentose. The colour is our reading of the words."},
+    "traits.anther_colour": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7, Magnolia grandiflora (read on eFloras, 2026-10-16); Flora of Pakistan (read 2026-10-18): anthers adnate, yellow, introrse; iNaturalist photo 28372097 (CC BY): the packed stamens cream to pale yellow on the first day. The colour is our reading of the words and the photo."},
+    "traits.bud_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): spathaceous bracts 2, leathery, outer bract abaxially brown to grayish pilose, inner bract densely brown to grayish pilose; Flora of Pakistan: bracts rusty tomentose. The bud shows the bracts until it opens. The colour is our reading of the words."},
+    "traits.fruit_colour_ripening": {"evidence": "SourceInferred", "source": "vt-dendrology", "note": "Virginia Tech Dendrology, southern magnolia (read 2026-10-18): fruit an aggregate of follicles, green changing to red and later to brown; OSU Landscape Plants: rose-red aggregates. The colour is our reading of the words."},
+    "traits.fruit_seed_thread_m": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist photos fetched with imagekit, batch inat-2026-10-18-2 (24 fruiting photos, read 2026-10-18): on the tree the red seeds sit in or just out of the split follicles (photos 459384287, 88469166, 98550635), dangling at most about their own length; Silvics: they hang on slender silken threads before dropping. The length, about 4 mm, is our reading of the photos."}
   },
   "provenance": {
     "sources": [

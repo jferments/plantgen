@@ -28,7 +28,7 @@
       "solitary": "often"
     },
     "fruit_type": {
-      "capsule": "often",
+      "capsule": "usually",
       "schizocarp": "often",
       "berry": "rarely",
       "drupe": "rarely"
@@ -76,8 +76,8 @@
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 305, 306, family Zygophyllaceae: fruit type capsule or schizocarp, often lobed (rarely drupe or berry), usually; read as {\"capsule\": \"often\", \"schizocarp\": \"often\"}. The books add berry (rarely), drupe (rarely): Simpson, Plant Systematics (2019) p. 307, 308: drupe or berry."
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Zygophyllaceae (read 2026-10-17): ~235 spp in ~30 genera; fruit in most a capsule (sometimes capsule-like but not opening), splitting into 2-5 mericarps where schizocarpic. Matches the largest genus Zygophyllum s.l. (capsules) against the schizocarpic Tribulus, Fagonia and Larrea. Berry and drupe kept rare (Balanites drupe, if counted here). Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."
     }
   }
 }

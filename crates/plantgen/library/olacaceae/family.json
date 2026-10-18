@@ -8,14 +8,14 @@
     "leaf_division": "simple",
     "leaf_margin": "entire",
     "leaf_venation": {
-      "single": "often",
-      "pinnate": "often"
+      "pinnate": "usually",
+      "single": "sometimes"
     },
     "stipules": false,
     "sexual_system": {
-      "hermaphrodite": "often",
-      "monoecious": "often",
-      "dioecious": "often"
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes",
+      "monoecious": "rarely"
     },
     "ovary_position": {
       "superior": "usually",
@@ -28,11 +28,11 @@
     },
     "woodiness": "woody",
     "inflorescence": {
-      "solitary": "rarely",
-      "panicle": "often",
       "raceme": "often",
-      "head": "often",
-      "cyme": "sometimes"
+      "panicle": "sometimes",
+      "head": "sometimes",
+      "cyme": "sometimes",
+      "solitary": "rarely"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": {
@@ -40,8 +40,8 @@
       "tepals": "sometimes"
     },
     "fruit_type": {
-      "drupe": "often",
-      "nut": "often"
+      "drupe": "usually",
+      "nut": "sometimes"
     },
     "stamens": {
       "min": 3,
@@ -77,6 +77,26 @@
       "evidence": "SourceInferred",
       "source": "stevens-apweb",
       "note": "APweb, Santalales page (read 2026-10-16): Olacaceae flowers 3-6-merous; DELTA 3-5."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "parasiticplants-siu",
+      "note": "Nickrent's Parasitic Plant Connection, Olacaceae description (read 2026-10-17): fruit a drupe with a leathery or crusty stone, the calyx often enlarging round it; this covers Olax, the largest genus (52 spp per Wikipedia/POWO, read 2026-10-17), with Dulacia and Ptychopetalum. A nut-like reading fits only the dry, calyx-wrapped fruits of a few small segregate genera."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "parasiticplants-siu",
+      "note": "Nickrent's Olacaceae description (read 2026-10-17) gives pinnate primary veins with looping secondaries and a reticulate finer net, for Olax (52 spp) and its two allied genera; a lone midrib suits only small, thick leaves."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "parasiticplants-siu",
+      "note": "Nickrent's Olacaceae description (read 2026-10-17): flowers generally bisexual, unisexual only rarely in Olax (52 spp, the largest genus). The dioecious state comes from Octoknema, a small segregate folded in from DELTA's Octoknemaceae; monoecy is rarer still."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "parasiticplants-siu",
+      "note": "Nickrent's Olacaceae description (read 2026-10-17): axillary racemes with cymose units, the axis zig-zag in Olax (52 spp) and Dulacia. Panicles and heads stay as lesser states from DELTA's broader family; no page read weighted them, so raceme leads only at often."
     }
   }
 }

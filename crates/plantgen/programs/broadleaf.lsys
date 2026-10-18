@@ -151,9 +151,47 @@
 # crown_fullness. All are off, or as before, unless a lineage or species
 # sets them, so every crown grows as it did.
 #
+# Revision 17 (blooms at the shoot tips): a lineage that flowers at its
+# shoot tips (tip_bloom) ends each tip that has stopped for want of free
+# space, once adult and in the light, in its year's blooms, nearly along
+# the shoot (tip_angle) above that year's leaves, so its flowers and fruit
+# stand on the crown's edge where the short shoots' stay inside it. Off
+# unless a lineage sets it.
+#
+# Revision 18 (nightshades round 2): a bloom may hang on a stalk of its
+# own, bloom_stalk long, as a fuchsia's flowers hang on their long
+# peduncles. Off (0) unless a lineage or species sets it, so every plant
+# grows as it did.
+#
+# Revision 19 (nightshades round 3): leaves in whorls of three or more
+# (leaves_per_node 3 and up) are drawn round the node, not in pairs, and
+# a bloom's stalk is shed with its bloom. Every plant whose leaves are
+# alternate or opposite grows as it did.
+#
+# Revision 20 (shrub habit): a many-stemmed shrub or a thicket sends up
+# new stems from its base or its spreading roots and rhizomes, beside the
+# first, not one stem that forks above the ground. With suckers above 0
+# the first stem does not fork; from its first year the plant's base sends
+# up sucker_rate new stems a year until it has sent up suckers, each from
+# a point spread by the golden ratio out to sucker_spread of the crown's radius as
+# the crown grows (the ground they rise from widens with the clump), and
+# leaning out up to sucker_lean degrees. Each is a stem of its own, held
+# upright as the first is, and shed when it has no living bud. With
+# suckers 0, as every lineage gives it, a plant grows as before.
+#
+# Revision 21 (woody forms: leaf area and shrub stems): a living tip adds
+# a bud's own area, two square centimetres, to the light model's leaf area
+# (bud), where it added 100 cm2, as large as a whole leaf. Every short
+# shoot is a living tip, so a crown of small leaves shaded itself as if it
+# carried twice its leaves and stopped leafing out at half the leaf area
+# that open-grown trees of its genus carry (USDA Urban Tree Database). And
+# a stem whose fork height lies within its first node divides at the
+# ground, so a shrub whose stems rise from its root crown no longer stands
+# on a short trunk as long as its first year's shoot.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 16;
+lsystem broadleaf 21;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -251,8 +289,16 @@ param limb_arch = 0;          # degrees a limb's held angle grows per metre of l
 param limb_set_max = 95;      # the most a limb's held angle grows to, from straight up
 param flat_top = 0;           # share of the crown's height above which every shoot levels out (Troll's model); 0: none
 param bole_clear = 0;         # 1: the stem sheds every branch below the crown's base
+param tip_bloom = 0;          # 1: a shoot tip with no free space left ends each adult year in its blooms (terminal flowering)
+param tip_angle = 15;         # angle of a shoot tip's bloom to its shoot
 param crown_widest = 0.5;     # share of the region's depth at which it is widest
 param crown_fullness = 2;     # the region's profile: 2 an ellipse, more toward a flat-ended cylinder
+param bloom_stalk = 0;        # a solitary bloom's own stalk, metres; 0 for none
+# A many-stemmed shrub's or a thicket's stems (revision 20).
+param suckers = 0;            # stems the base sends up besides the first; 0: none, the first stem forks
+param sucker_rate = 2;        # new stems a year, until there are suckers
+param sucker_spread = 0.2;    # share of the crown's radius out to which they rise
+param sucker_lean = 15;       # the most a new stem leans out from upright
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -263,15 +309,22 @@ module M(n, u, l);                        # n nodes still to form this year, of 
 module Fk(n);                             # n stems still to start at a fork
 module Q(n, k);                           # n leaf pairs still to unfold on a short shoot, its k-th pair first
 module Bo(n);                             # n blooms still to place at a short shoot's tip
+module Bs;                                # a bloom's own stalk, if it has one
+module Wb(k);                             # k lateral buds still to place round a whorl's node
+module Wk(k, s);                          # k short-shoot buds (s as K's) still to place round it
+module Wl(k);                             # k leaves still to place round it
+module Bt(n);                             # n blooms still to place at a long shoot's tip
 module K(s) queries light, vigour;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
 module D queries light, space;            # a dormant bud
+module R(n);                              # the base of a many-stemmed plant: n stems still to send up
+module Rs(m);                             # m stems still to send up this year
 
 organ leaf leaf area leaf_area;
 organ bloom flower area bloom_area;
 organ thorn leaf as spine area thorn_area;
 organ bloom_male flower area bloom_area;
 
-tool light@1 { cell = light_cell, extinction = extinction, bud = 0.01 };
+tool light@1 { cell = light_cell, extinction = extinction, bud = 0.0002 };
 tool space@4 {
     base = crown_base * (1 - exp(-crown_rate * (t + 3))),
     height = room_height * crown_height * (1 - exp(-crown_rate * (t + 3))),
@@ -320,8 +373,16 @@ rule B : life > 0 && t >= life -> ;
 rule A(split) : light < shade_death -> ;
 rule B : light < shade_death || age >= bud_years -> ;
 
-# Where the stem reaches its fork height it divides into equal stems.
-rule A(split) : split > 0 && py >= split && vigour >= 1 -> Fk(fork_stems);
+# A many-stemmed plant's first stem does not fork: its base sends up the
+# others (revision 20; the rules that place them go last).
+rule A(split) : suckers > 0 && split > 0 -> R(suckers) A(0);
+
+# Where the stem reaches its fork height it divides into equal stems; a
+# fork height within the first node divides it at the ground (revision 21),
+# where it divided atop the first year's shoot. A mat's near-level stems
+# (fork_angle past 60) keep that first shoot's rise, as nothing holds them
+# above the ground.
+rule A(split) : split > 0 && (py >= split || (py <= 0 && split < internode / unit_nodes && fork_angle <= 60)) && vigour >= 1 -> Fk(fork_stems);
 
 # A long shoot in the light, old enough to flower, grows its year's nodes,
 # ends them in a flower cluster and forks into twin shoots from the buds
@@ -367,14 +428,14 @@ rule A(split) : vigour >= 1 && space > 0 ->
 # A lateral bud breaks into a long shoot when it has the vigour and free
 # space; otherwise, in enough light, it leafs out as a short shoot.
 rule B : vigour >= bud_break && space > 0 -> A(0);
-rule B : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age * spur_pairs) Bo(blooms) B;
-rule B : light >= spur_light -> Q(spur_pairs, age * spur_pairs) B;
+rule B : light >= spur_light && blooms > 0 && t >= adult_age && bloom_stalk <= 0 -> Q(spur_pairs, age * spur_pairs) Bo(blooms) B;
+rule B : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0) -> Q(spur_pairs, age * spur_pairs) B;
 
 # One internode, turned a little at random, with a pair of buds and a pair
 # of leaves; the next pair is turned by divergence (a quarter turn:
 # decussate). Alternate species grow theirs by the last rules of the
 # program.
-decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && dormant_buds <= 0
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && dormant_buds <= 0 && leaves_per_node < 3
                     && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) incline(set_point, incline_rate) S B ] [ /(180) &(branch_angle) incline(set_point, incline_rate) S B ]
@@ -433,19 +494,19 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0 && dormant_bu
 # Blooms spread round a short shoot's tip: a male plant's are male, set
 # with no random draws (they vary by their place), so every rule's draws
 # keep their sites.
-decompose Bo(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 ->
+decompose Bo(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 && bloom_stalk <= 0 ->
     [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
       bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
     Bo(n - 1);
-decompose Bo(n) : n > 0 ->
+decompose Bo(n) : n > 0 && bloom_stalk <= 0 ->
     [ /(n * 137.5 + uniform(-20, 20)) &(bloom_angle * uniform(0.8, 1.2))
       bloom(bloom_size * uniform(0.85, 1.15)) ]
     Bo(n - 1);
-decompose Bo(n) -> ;
+decompose Bo(n) : bloom_stalk <= 0 -> ;
 
 # Revision 4 (plant forms F5). A thorny species' internodes: as above, with
 # a thorn beside each bud.
-decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || dormant_buds <= 0)
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || (dormant_buds <= 0 && leaves_per_node < 3))
                     && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) incline(set_point, incline_rate) S B ] [ /(180) &(branch_angle) incline(set_point, incline_rate) S B ]
@@ -474,6 +535,13 @@ rule A(split) : apex_death > 0 && space <= 0 && t > 10 && rand() < apex_death ->
 
 # A tip with no free space left that lives on leafs out as a short shoot
 # does, in enough light (revision 11), so the crown's edge keeps its leaves.
+# A lineage that flowers at its shoot tips (tip_bloom, revision 17) ends
+# such a tip each adult year in its blooms, nearly along the shoot, above
+# that year's leaves: the crown's edge carries them, not its inside.
+rule A(split) : tip_bloom > 0 && blooms > 0 && t >= adult_age && light >= spur_light && space <= 0
+                && (life <= 0 || t < life) ->
+    Q(spur_pairs, age * spur_pairs) Bt(blooms) A(split);
+
 rule A(split) : light >= spur_light && space <= 0 -> Q(spur_pairs, age * spur_pairs) A(split);
 
 # A limb that no longer pays its way is shed, as in Pałubicki et al.
@@ -489,8 +557,8 @@ rule S : shed_ratio > 0 && age > shed_age && qsum < shed_ratio * nseg -> %;
 rule K(s) : s <= 0 -> ;
 rule K(s) : life > 0 && t >= life -> ;
 rule K(s) : light < shade_death || age >= bud_years -> ;
-rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age * spur_pairs) Bo(blooms) K(s);
-rule K(s) : light >= spur_light -> Q(spur_pairs, age * spur_pairs) K(s);
+rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age && bloom_stalk <= 0 -> Q(spur_pairs, age * spur_pairs) Bo(blooms) K(s);
+rule K(s) : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0) -> Q(spur_pairs, age * spur_pairs) K(s);
 
 # Dormant buds and reiteration: most of an old crown's leafy shoots come
 # from buds that wait on its limbs, not from the branching of its tips
@@ -505,7 +573,7 @@ rule D : light >= sprout_light && space > 0 -> incline(set_point, incline_rate) 
 # buds (K) in place of lateral buds (B), the short_share of the unit's
 # nodes next to the long ones, and latent buds on the rest. And, with
 # dormant_buds, every node keeps a dormant bud D.
-decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && dormant_buds <= 0 ->
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && dormant_buds <= 0 && leaves_per_node < 3 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
@@ -514,14 +582,14 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0 && dormant_bu
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ &(leaf_angle) $ leaf(leaf_size) ]
     /(divergence) M(n - 1, u, l);
-decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && (dormant_buds > 0 || leaves_per_node < 3)
                     && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) incline(set_point, incline_rate) S B ] [ /(180) &(branch_angle) incline(set_point, incline_rate) S B ]
     leaf(leaf_size, 0, leaf_angle, 1) leaf(leaf_size, 180, leaf_angle, 1)
     [ /(90) &(dormant_angle) D ]
     /(divergence) M(n - 1, u, l);
-decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 ->
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && (dormant_buds > 0 || leaves_per_node < 3) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     leaf(leaf_size, 0, leaf_angle, 1) leaf(leaf_size, 180, leaf_angle, 1)
@@ -538,7 +606,7 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0 ->
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] leaf(leaf_size, 0, leaf_angle, 1)
     [ /(180) &(dormant_angle) D ]
     /(divergence) M(n - 1, u, l);
-decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 ->
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || dormant_buds > 0 || leaves_per_node < 3) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
@@ -551,3 +619,84 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 ->
     [ /(70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u, l);
+
+# Blooms on stalks of their own (revision 17): as the blooms above, each
+# on a thin stalk bloom_stalk long, hanging from its short shoot as its
+# angle leans it. A plant without stalks places its blooms by the rules
+# above, as it did. These spread their blooms by the bloom's place in the
+# shoot, as the male blooms do, with no draw of their own: a draw here
+# would renumber the draws of every program that extends this one. The
+# stalk is a branch of its own (S), with no bud, so it is shed with the
+# bloom's year rather than left standing.
+decompose Bo(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      S Bs bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bo(n - 1);
+decompose Bo(n) : n > 0 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      S Bs bloom(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bo(n - 1);
+decompose Bo(n) -> ;
+decompose Bs -> !(bloom_size * 0.03) F(bloom_stalk);
+
+# A bud or short shoot whose blooms stand on stalks of their own grows a
+# sliver of wood the year it flowers, at its own depth, for the stalks to
+# stand on: a stalk drawn straight from the bud would be wood two orders
+# above the shoot that bears it, with none between.
+rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age ->
+    !(bloom_size * 0.04) F(0.002) Q(spur_pairs, age * spur_pairs) Bo(blooms) K(s);
+rule B : light >= spur_light && blooms > 0 && t >= adult_age ->
+    !(bloom_size * 0.04) F(0.002) Q(spur_pairs, age * spur_pairs) Bo(blooms) B;
+
+# Leaves in whorls of three or more (revision 18), a fuchsia's: the
+# whorl's buds and leaves spread evenly round the node, the next whorl
+# turned by divergence. Only an unarmed species with no dormant buds; the
+# rules above draw the rest in pairs. Each internode leans by its place in
+# the unit, with no draw of its own, so no program's draws renumber.
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 3
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^((frac(n * 0.618 + u * 0.382) - 0.5) * 2 * wiggle / sqrt(unit_nodes)) +((frac(n * 0.754 + u * 0.291) - 0.5) * 2 * wiggle / sqrt(unit_nodes)) F(l)
+    Wb(leaves_per_node) Wl(leaves_per_node)
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 3 ->
+    ^((frac(n * 0.618 + u * 0.382) - 0.5) * 2 * wiggle / sqrt(unit_nodes)) +((frac(n * 0.754 + u * 0.291) - 0.5) * 2 * wiggle / sqrt(unit_nodes)) F(l)
+    Wk(leaves_per_node, (short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) Wl(leaves_per_node)
+    /(divergence) M(n - 1, u, l);
+decompose Wb(k) : k > 0 ->
+    [ /(360 * k / leaves_per_node) &(branch_angle) incline(set_point, incline_rate) S B ] Wb(k - 1);
+decompose Wb(k) -> ;
+decompose Wk(k, s) : k > 0 -> [ /(360 * k / leaves_per_node) &(branch_angle) S K(s) ] Wk(k - 1, s);
+decompose Wk(k, s) -> ;
+decompose Wl(k) : k > 0 -> [ /(360 * k / leaves_per_node) &(leaf_angle) $ leaf(leaf_size) ] Wl(k - 1);
+decompose Wl(k) -> ;
+
+# Blooms at a long shoot's tip (revision 17): as at a short shoot's, at
+# tip_angle, set with no random draws (they vary by their place), so every
+# draw here and in the programs built on this one keeps its site.
+decompose Bt(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(tip_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bt(n - 1);
+decompose Bt(n) : n > 0 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(tip_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      bloom(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bt(n - 1);
+decompose Bt(n) -> ;
+
+# Revision 20 (shrub habit). These rules make no random draws, so the
+# draws of every program that extends this one keep their sites.
+
+# The base of a many-stemmed plant sends up sucker_rate new stems a year,
+# each from a point out to sucker_spread of the crown's radius as it
+# grows, leaning out a little, until it has sent up suckers: turned by
+# the golden angle stem by stem, their distances and leans spread by the
+# golden ratio's fractions.
+rule R(n) : n > 0 && (life <= 0 || t < life) ->
+    Rs(min(n, max(1, round(sucker_rate)))) R(n - min(n, max(1, round(sucker_rate))));
+rule R(n) -> ;
+decompose Rs(m) : m > 0 ->
+    [ /(137.5 * (m + 3 * t)) &(90)
+      f(sucker_spread * crown_radius * (1 - exp(-crown_rate * (t + 3))) * sqrt(0.05 + 0.95 * (0.618 * (m + 3 * t) - floor(0.618 * (m + 3 * t)))))
+      ^(90) &(sucker_lean * (0.382 * (m + 5 * t) - floor(0.382 * (m + 5 * t)))) S A(0) ]
+    Rs(m - 1);
+decompose Rs(m) -> ;

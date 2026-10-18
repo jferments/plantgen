@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "id": "claytonia-sibirica",
+  "taxon": {
+    "scientific_name": "Claytonia sibirica",
+    "common_name": "candy flower",
+    "family": "Montiaceae",
+    "genus": "Claytonia",
+    "plant_name_id": 2725259
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 5,
+      "clump_radius": 0.06,
+      "stem_lean": 20,
+      "nodes": 1,
+      "leaves_per_node": 2,
+      "basal_leaves": 6,
+      "basal_angle": 50,
+      "stem_height": 0.2,
+      "bare": 0.35,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.5,
+      0.55,
+      0.35
+    ],
+    "foliage": [
+      0.25,
+      0.42,
+      0.18
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.0
+        }
+      },
+      "basal": {
+        "shape": {
+          "petiole": 0.7
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.45
+    },
+    "life_span": "perennial",
+    "rosette": "basal",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.055
+    },
+    "petiole_length_m": {
+      "low": 0,
+      "min": 0.05,
+      "max": 0.2
+    },
+    "leaf_shape": "ovate",
+    "shoot_leaves": 2,
+    "leaf_hairs": "glabrous",
+    "inflorescence": "raceme",
+    "inflorescence_length_m": {
+      "min": 0.06,
+      "max": 0.3
+    },
+    "pedicel_length_m": {
+      "min": 0.01,
+      "max": 0.035
+    },
+    "petal_length_m": {
+      "min": 0.007,
+      "max": 0.01
+    },
+    "flower_size_m": {
+      "min": 0.014,
+      "max": 0.02
+    },
+    "petal_apex": "emarginate",
+    "flower_colour": [
+      245,
+      205,
+      225
+    ],
+    "fruit_type": "capsule",
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica (now Claytonia sibirica): stems several, 1.5 dm to 4.5 dm high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: a rather succulent perennial, rarely annual."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: several basal leaves on long petioles, the stems with one pair of leaves."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: stem leaves opposite and sessile."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: each stem with one pair of leaves."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: basal blades 1.5 cm to 5.5 cm long, on petioles making the leaf 10 cm to 25 cm; stem leaves 1.8 cm to 5 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: basal leaves 10 cm to 25 cm long, of which the blade is 1.5 cm to 5.5 cm; the stem leaves sessile, so set from 0."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: blades broadly or narrowly ovate, acute; stem leaves broadly ovate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hairless and rather succulent, as the photos show: Abrams (1944 p. 129) names no hairs."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: open, lax racemes, 1 to 4 to a stem."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: racemes 6 cm to 30 cm long, 10- to 25-flowered."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: pedicels slender, 1 cm to 3.5 cm long."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: petals 7 mm to 10 mm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: petals 7 mm to 10 mm long, spreading, so the flower about twice that across."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: petals notched at the tip."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: petals pink, or white with pink lines; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: a capsule no longer than the calyx."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 129, Montia sibirica: flowering March to September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: pale green, succulent stems; bright green ovate blades, the basal ones on long petioles and the stem pair sessile."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for candy flower from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.35 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

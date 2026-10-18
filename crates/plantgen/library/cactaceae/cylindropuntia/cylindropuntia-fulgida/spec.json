@@ -31,16 +31,9 @@
       "bloom_age": 6,
       "joint_flowers": 1,
       "flower_angle": 30,
-      "flower_size": 0.035,
-      "bud_share": 0.2,
-      "fruit_share": 0.3,
-      "bud_size": 0.015,
       "chains": 0.5,
       "chain_max": 7,
-      "bud_rate": 0.55,
-      "flower_area": 0.369,
-      "bud_area": 0.636,
-      "fruit_area": 0.954
+      "bud_rate": 0.55
     }
   },
   "growth": {
@@ -57,30 +50,6 @@
     "foliage": [0.1, 0.17, 0.06],
     "foliage_shade": [0.045, 0.077, 0.027],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "stamens": 200,
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.25
-        },
-        "accent": [0.6, 0.5, 0.3]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.3, 0.3, 0.12]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit"
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "dome": 1.0,
@@ -141,6 +110,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_shape": "obconic",
+    "fruit_surface": "areolate",
     "tubercle_shape": "broad",
     "stem_colour": [110, 130, 100],
     "spine_colour": [215, 190, 100],
@@ -154,9 +125,22 @@
     "joint_width_m": {"min": 0.03, "max": 0.05},
     "stem_diameter_max_m": {"min": 0.1, "max": 0.2},
     "radial_spines": {"min": 2, "max": 12},
-    "radial_spine_length_m": {"min": 0.025, "max": 0.035}
+    "radial_spine_length_m": {"min": 0.025, "max": 0.035},
+    "height_typical_m": {"min": 1, "max": 3},
+    "height_max_m": 4,
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [4, 5, 6, 7, 8, 9],
+    "fruiting_months": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    "fruit_persistence": "persistent",
+    "anther_colour": [240, 230, 205],
+    "filament_colour": [205, 90, 150],
+    "stigma_colour": [240, 235, 190],
+    "flower_size_m": {"min": 0.024, "max": 0.032}
   },
   "evidence": {
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: fruit obconical, fleshy, mostly spineless, its tubercles obscure."},
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: fruit obconical, fleshy, mostly spineless, the tubercles obscure."},
     "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 209, Cylindropuntia fulgida: tubercles broadly oval."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: stem segments grey-green, becoming blackish."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: spines yellow, ageing darker."},
@@ -181,11 +165,7 @@
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: one and a half to two metres within 15 to 30 years. Wide tolerances."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: green tuberculate joints, yellowish sheathed spines that grey with age, a dark trunk; green, smooth hanging fruit. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: green tuberculate joints, yellowish sheathed spines that grey with age, a dark trunk; green, smooth hanging fruit. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -220,7 +200,18 @@
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
       "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here small, whitish to light yellow. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750396), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia fulgida var. fulgida: flowering spring to fall, April to September."},
+    "traits.fruiting_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia fulgida: fruits proliferating, forming long, branching, pendent chains, at maturity grey-green and fleshy; Anderson (The Cactus Family pp. 208 to 213): the fruits persist and sprout new fruits from their areoles. As the ripe fruit of earlier years hang on the chains, ripe fruit is on the plant in every month. Until 2026-10-18 a model estimate of September to December."},
+    "traits.fruit_persistence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia fulgida: fruits proliferating, forming long, branching, pendent chains; Anderson (The Cactus Family pp. 208 to 213): the fruits persist and sprout new fruits from their areoles, the chains long and hanging."},
+    "traits.anther_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia fulgida: anthers white to cream."},
+    "traits.filament_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia fulgida: filaments pale pink to magenta; style pinkish."},
+    "traits.stigma_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia fulgida: stigma lobes whitish to pale yellow."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia fulgida: inner tepals usually reflexed, obovate to ligulate, 12 to 16 mm; the open flower taken as twice its inner tepals across, by hand, as no flora gives its width."}
   },
   "provenance": {
     "sources": [

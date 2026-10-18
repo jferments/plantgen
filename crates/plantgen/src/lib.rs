@@ -596,7 +596,279 @@ pub mod venation;
 /// divisions lifted, scattered or set all round their rachis
 /// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
 /// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
-/// 96: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
+/// 96: species draw from the species-facts records: 189 species state the
+/// characters no source of theirs gives (heights, leaf sizes, shapes,
+/// margins and habits, inflorescence and fruit sizes, months, rosettes)
+/// as the records estimate them, and a look a species set by hand gives
+/// way wherever a rule fed by a stated fact now sets it (leaf widths,
+/// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
+/// strap leaf is never narrower than its card draws (95 is lacy
+/// leaves, #180).
+/// 97: lacy leaves drawn as geometry: a segment at least ten times as long
+/// as it is wide is a round thread, bowed a little (`lace::THREAD`), and a
+/// thrice-divided leaf whose divisions roll round their rachis sets its
+/// segments round each pinnule's too; a leaflet may be as narrow as a
+/// hundredth of its length (96 is the species-facts records, #171).
+/// 98: variegation along a parallel-veined blade's veins (`veins`: a
+/// midrib stripe, then veinlet dashes, then a net round dark islands as
+/// the share grows; `slant` turns the cross veins into a pinnate blade's
+/// lateral veins), its inverse `between` (silver fields between the veins),
+/// `zone` (a band along the outline, or a V from the base), a rim the
+/// pattern never reaches, and patches on the upper face only (`faces`);
+/// a compound leaf's pattern lies on each leaflet; the rattlesnake
+/// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
+/// (97 is lacy leaves as geometry, #183).
+/// 99: a fern's stipe scales stand only on its base where its flora says
+/// so (`stipe_scale_extent`, fern program revision 9), as long as stated
+/// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
+/// stated `stipe_colour`; the fern families state whether their stipes are
+/// scaly as Flora of North America gives (scaly at the base in
+/// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
+/// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
+/// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
+/// are as long as its flora gives (98 is variegation along the
+/// veins, #175).
+/// 100: a dimorphic fern bears fertile fronds as well as sterile ones (fern
+/// program revision 10): `frond_dimorphism` dimorphic makes about three in
+/// ten fertile, standing nearer the crown's centre, as long, as stalked and
+/// as upright as their stated `fertile_*` characters give, with their own
+/// pinnae (`fertile_pinna`, as narrow as stated); the deer fern's erect
+/// fertile fronds rise from its spreading rosette as Flora of North America
+/// gives, and its reference height is theirs (99 is fern stipes scaly at
+/// their base, #174).
+/// 101: a fern's frond comes up as a crozier (fern program revision 11): a
+/// circinate frond's blade winds `coil_turns` turns (2.5 by `vernation`)
+/// into a tight inward spiral of shortening pieces, its pinnae small and
+/// folded inside, its scales on the coil if its stipe is scaly; it unrolls
+/// from its foot, and its stipe rises uncoiled as it lengthens (100 is
+/// dimorphic ferns, #178).
+/// 102: a fern's pinnae bear sori on their lower faces (`looks::Sori`):
+/// round, oblong, linear or marginal as `sorus_shape` says, where
+/// `sorus_position` puts them on each segment the card's outline gives,
+/// under the `indusium` stated; most pinnae of a fern whose fronds are
+/// alike, and only the fertile pinnae of a dimorphic one (101 is fern
+/// fiddleheads, #181).
+/// 103: 23 species state facts the species-facts records give that the
+/// checks now judge as floras measure them (#189): basal leaf sizes of
+/// foxglove, columbine, foamflower, bull thistle, lupine and mule's ears,
+/// grasses' and sedges' deciduous blades, and fruit, flower, cluster,
+/// shape and height facts held back from 96; broom's stated obovate
+/// leaflets draw where a hand-drawn profile stood (102 is fern sori,
+/// #182).
+/// 104: a flowering herb's top leaf nodes may each bear a side branch
+/// ending in a raceme (`flowering_branches`; herb program revision 10)
+/// (103 is held-back species facts, #192).
+/// 105: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
+/// and hairs gathered on its main veins (`Hairs::veins`, from
+/// `leaf_hairs_on_veins`); a face's strands stand on the face that wears
+/// them and on the drawn cells of a bent card, and a stated hair length
+/// wins over the word's; branched hairs (`hair_branching`: stellate,
+/// dendritic) and wool (simple hairs curled through more than a turn)
+/// drawn as stars, little trees and winding strands, white with air;
+/// glandular and stinging hairs among them (`glandular_hairs`,
+/// `stinging_hairs`), with round heads and glass needles on green feet;
+/// the strand budget spent on the hairs nearest the eye first (104 is
+/// flowering branches, #188).
+/// 106: evergreen herbs keep their basal leaves, and stems bearing leaves
+/// only, into a second year, and wintergreen grasses, rushes and sedges
+/// keep last year's blades green, from the leaf habit their taxa state
+/// (`leaf_years`; herb program revision 11, grass revision 8) (105 is
+/// hairs, #185).
+/// 107: a zone's edge drawn out along the lateral veins (`feather`),
+/// spots and mottle drawn out along the blade (`stretch`), and a simple
+/// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
+/// trout lily's long blotches and its veins meeting at the tip; and a
+/// variegation's share set by the plant rather than the leaf (`plants`,
+/// the card's packed seed moved toward the plant's), as Cyclamen's and
+/// white clover's are (106 is evergreen herbs, #200).
+/// 108: unripe fruit, and a fruit's stalk and cup, green as the foliage
+/// unless an accent is stated; a cluster ripens only its
+/// `fruits_per_inflorescence` (`Inflorescence::fruits`), its other units
+/// gone in fruit; an aggregate drawn as its `fruitlets` say: beaked
+/// follicles with their seeds hanging in `fruit_seed_colour`, samaras up a
+/// spindle, berries splayed from one stalk, or a hip; a fruit with a
+/// `fruit_cup_colour` stands in a cup on a swollen stalk; tepals take
+/// `perianth_parts`, standing in whorls of the merosity, each inner whorl
+/// more upright and narrower; `petal_whorls` doubles a
+/// corolla; stamens as long as `stamen_length_m`, flat straps where
+/// `stamen_form` is laminar, filaments in `filament_colour`, anthers in
+/// `anther_colour`; an elongate `floral_receptacle` raises the stamens and
+/// free carpels up a cone, the carpels in `pistil_colour`; `corolla_shape`
+/// sets how far the petals rise; a lone flower's bud as large as its
+/// flower and in `bud_colour`; up to 400 stamens and 100 carpels; reduced
+/// blunt petals keep their shoulders; ripening fruit pass through
+/// `fruit_colour_ripening`, and a follicle's seeds hang on threads
+/// `fruit_seed_thread_m` long (107 is leaf zones and veins, #191).
+/// 109: a fern's frond is green while it unrolls and turns to its stipe's
+/// colour after (the L-system's `young` and the appearance's `young_axis`,
+/// fern program revision 12), a crozier is scaly only where its stipe is
+/// scaly all along, its pinnae lie along its coil, and a ternate frond
+/// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (108
+/// is magnoliid fruit, #202).
+/// 110: each pinna in a fern's crozier is rolled as its frond is (fern
+/// program revision 13): a short green coil of its own on each side of the
+/// rachis while coiled, its card small until it unrolls (109 is green
+/// croziers and the eagle's claw, #186).
+/// 111: a tree fern's or a marattioid's frond comes up as a fern's crozier
+/// does (palm program revision 11): where a taxon's vernation is
+/// circinate (the rule now at the ferns' class), its rachis winds a tight
+/// inward spiral of shortening pieces, its leaflets small and rolled
+/// beside it, unrolling from its foot; the soft tree fern's croziers and
+/// young stipes are a hairy red-brown (110 is rolled pinnae, #197).
+/// 112: the soft tree fern puts out a year's fronds in one spring flush
+/// (`emerge_spread` 0.15, from 0.3), so its croziers stand together at
+/// the crown's top (111 is tree-fern croziers, #205).
+/// 113: a spine set can keep to the upper areoles of a pad or joint
+/// (`SpineSet::distal`, from `lower_areole_spines`): its lower areoles
+/// carry fewer spines or none and draw smaller far cards, and a tuft
+/// stores where it sits along its segment (112 is the soft tree fern's
+/// spring flush, #207).
+/// 114: a cactus column's flowers may open down its flank as well as round
+/// its crown (`column` revision 3, `flank`: the pieces of its last flank
+/// years open a few on their sides; `cactaceae` revision 9), from the new
+/// `flower_zone`: a hedgehog's along the upper half of its stems, an organ
+/// pipe's near the tips and down their sides (113 is spines on the
+/// upper areoles).
+/// 115: a cactus's fruit wears its pericarpel (`FruitKind::Scaly`,
+/// `Areolate` and `Spiny`, from the new `fruit_surface`): broad scales on
+/// a barrel's or the saguaro's, felted areoles with glochids on a prickly
+/// pear's, areoles with short spines on a hedgehog's, the organ pipe's or
+/// a spiny cholla's, each crowned by its dried perianth; and a cactus
+/// stem's tip tapers, rounds or broadens into a shoulder as the new
+/// `stem_apex` says (`BodyLook::shoulder`), and a club-shaped column
+/// stays narrower at its foot (`stem_outline`) (114 is flank flowers).
+/// 116: a cactus flower's pericarpel wears its fruit's skin
+/// (`Flower::pericarpel`, from `fruit_surface`), its bud is the flower
+/// closed (no hand bud looks; `bud_size` seven tenths of the flower's), a
+/// prickly pear's or cholla's flower sits on a pericarpel longer than its
+/// radius, a fruit narrows toward its base or tip (`Fruit::flare`, from
+/// the new `fruit_shape`), and stigma lobes take their own colour
+/// (`Flower::stigma`, from the new `stigma_colour`) (115 is fruit skins
+/// and stem tips).
+/// 117: a lineage whose flowers end its shoots (`flowering_position`
+/// terminal or both: `tip_bloom`, broadleaf revision 17) ends each shoot
+/// tip that has stopped at the crown's edge, once adult and in the light,
+/// in its year's blooms, nearly along the shoot, so its flowers and fruit
+/// stand on the crown's surface, not only on the short shoots inside it;
+/// other plants draw as before. Sarcandra and Chloranthus serratus state
+/// their terminal inflorescences. The leaf-arrangement check counts only
+/// leaves born with their internode, so short shoots crowding a node are
+/// not read as a whorl (116 is cactus
+/// pericarpels and stigmas, #184).
+/// 118: a flowering herb's side branches bear leaves, as large as the leaf
+/// in whose axil they stand, and branch again where the taxon states two
+/// orders (`flowering_branch_orders`; herb program revision 12) (117 is
+/// terminal blooms, #170).
+/// 119: a herb's stem may be a sympodium (`sympodium`; herb program
+/// revision 13, program `solanaceae`); a measured corolla tube is drawn as
+/// long as stated (`corolla_tube_length_m`, a flower's `tube_reach`); a
+/// flower's posture turns a sympodium's flowers and a woody plant's blooms
+/// (`flower_posture`); a panicle's cluster size is its branches' length; a
+/// lone bloom may hang on a stalk of its own (`pedicel_length_m`;
+/// broadleaf program revision 18); a flower's sepals, petals, floral tube,
+/// stamens and style are drawn at their stated lengths and postures and in
+/// their own colours; a fruit keeps its calyx or bears prickles or
+/// bristles (`fruit_armature`); young wood takes its twig colour; bark
+/// texture sets the bark pattern; leaves in whorls of three or more are
+/// drawn round the node (broadleaf program revision 19); a fruit hangs,
+/// spreads or stands as its posture says (`fruit_posture`, a fruit's
+/// `hang`).
+/// 120: a lily is drawn from its flora's words: a herb's flower and bud
+/// stalks arch over to the flower's posture (herb program revision 14); a
+/// flower's tepals bend back from part way along them (`curl_from`, from
+/// `perianth_reflexion` and `perianth_reflexion_from`), up to 270 degrees
+/// where they roll; spots on their inner faces (`spots`, from
+/// `perianth_spots`, in `perianth_spot_colour`); anthers in their own
+/// colour (`anther_colour`); stamens as far out as `stamen_exsertion`
+/// says; free tepals unjoined however bell-shaped (`perianth_fused`); a
+/// petal's or tepal's foot is drawn in its own colour where a flora gives
+/// one (`base_colour`, `base_length`, from `perianth_base_colour` and
+/// `perianth_base_length`), its nectaries as a star at the flower's heart
+/// (`star_colour`, from `nectary_colour`); free tepals rising as a bell
+/// are widened to overlap; a lily's whorled stem bears a few scattered
+/// leaves below and above its whorls, and bulbils in its upper leaf axils
+/// where its flora says (liliaceae program revision 2, `bulbils`,
+/// `bulbil_colour`).
+/// 121: previews and impostors cut a card where its coverage, read
+/// bilinearly between texels, is below one half, so an entire blade's edge
+/// follows its outline rather than a staircase of texels that reads as
+/// teeth up close (118 is herb branch leaves, #190).
+/// 122: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// give it, so their blades narrow to the stated tip; six of them
+/// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
+/// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
+/// their stated leaf shape where a hand-drawn profile stood (118 is
+/// flowering herbs' branch leaves, #190).
+/// 123: the family programs built on broadleaf (asterales, fabales,
+/// malvaceae, moraceae, salicaceae, simmondsiaceae, each revision 2) bear
+/// one bloom on each short shoot in the light once adult where a species
+/// leaves `blooms` unset, as broadleaf's forms do; until now nine species
+/// on them (bursage, umbrella thorn, baobab, Florida strangler fig,
+/// aspen, black cottonwood, two willows, jojoba) never flowered or fruited,
+/// whatever months they stated. A regular flower is not judged by the
+/// kind of zygomorphy its family states (109 is fern
+/// croziers green, #186).
+/// 124: a chain-fruit cholla's chains of fruit hang toward the ground
+/// (`column` revision 4, `cactaceae` revision 10), the organ pipe's
+/// flowers carry hundreds of stamens and an 11- to 12-lobed stigma, and a
+/// type of laid-out flowers too many to draw fine is drawn one step
+/// coarser instead of as cards (`blooms::step`) (116 is pericarpels, buds,
+/// fruit outlines and stigma colours).
+/// 125: a deciduous tree's, shrub's or woody vine's leaves keep a year
+/// (`appearance.organs.leaf.leafing`, set from `leaf_habit`,
+/// `leaf_out_months`, `leaf_fall_months` and `leaf_colour_autumn`): the
+/// plant stands bare in winter, puts out small pale leaves in spring that
+/// grow to full size and green, turns its autumn colour and drops them,
+/// where its leaves had stood green all year; months falling before the
+/// leaves unfold are the next year's, as a southern beech's are (109 is fern
+/// croziers green, #186).
+/// 126: clusters draw their stated length and units: a cluster's unit
+/// share (`unit`) sizes the innermost axis's flowers or fruit through the
+/// branch sizes above it, a cyme's own unit ends its peduncle and its
+/// units are alike, and a corymb stated rounded or globose
+/// (`inflorescence_outline`, `dome`) lays its units on a sphere's cap, a
+/// mophead hydrangea's a ball; a trifoliolate leaf sets its laterals at
+/// the petiole's top and its terminal on a short stalk, and lobed or
+/// cleft leaflets (`leaflet_incision`) draw their lobes; a pedate fern
+/// frond forks into a level fan and every fern's pinnae are sized where
+/// they stand, its stipe scales on the stipe (fern program revision 14);
+/// a shrub's stated stem clump (`stem_clump`) sends up suckers (broadleaf
+/// revision 20) and a herb's lying stems (`stem_posture`) run along the
+/// ground before they rise (herb revision 15) (125 is the leafing year).
+/// 127: broadleaf foliage at true size (broadleaf program revision 19): a
+/// leaf is drawn at the length its species states, a lineage with short
+/// shoots carries every leaf not on its long shoots on them, twigs take
+/// the colour and radius their taxon states, shade-intolerant crowns shed
+/// shaded limbs sooner, a living tip shades the crown as a bud, not a
+/// leaf, and a shrub whose stems rise from its root crown divides at the
+/// ground (126 is #206).
+/// 128: cycad cones by sex (palm revision 12): a male plant bears its
+/// pollen cones (`cone_male`), a female its seed cones or, in Cycas, a
+/// crown of megasporophylls (`sporophyll`) with seeds along them, each
+/// with its own length, count, stalk, lean and life, and the stem grows on
+/// through them; a seed cone stays closed over its seeds until it breaks
+/// up as it ripens (`cone_open`), showing them (`seed`). A cone is drawn
+/// with an outline (`profile`: ovoid, conical, cylindrical, barrel,
+/// fusiform), an apiculate tip (`apiculum`), scales parted (`open`), faces
+/// by genus (`face`: Zamia's shields, Encephalartos's facets, Dioon's
+/// points, a Cycas or Macrozamia spine) and as many scales as faces of
+/// their stated width cover it, flush with its core (`face_width`), each
+/// face as high for its width as stated (`face_height`), on a spiral or,
+/// in Zamia, in vertical rows of flat-topped hexagons fitting together
+/// (`rows`); a compound card's stalk may be stout (`stalk_width`: a Cycas
+/// sporophyll's, its seeds hanging from it); a blade card may narrow to
+/// its foot (`foot`: a Zamia leaflet's jointed base) (127 is broadleaf
+/// foliage, #143).
+/// 129: a fruit that stays on the plant for years
+/// (`fruit_persistence` persistent) keeps no season in a program's `fruit`
+/// organ, the fruit of earlier years: a chain-fruit cholla's chains hang
+/// all year while each year's flowers bud, open and fruit in their months
+/// (128 is cycad cones, #211).
+/// 130: a reduced flower mesh (a part mesh's coarser steps) draws what its
+/// perianth stands on, a floral cup or an inferior ovary such as a
+/// cactus's pericarpel, so the tepals no longer float above the joint; a
+/// pericarpel the tepals open straight from is globose, not a stalk.
+/// 131: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
 /// hemlocks) carries its year's needles in two sprays, one at the foot of
 /// each half of the shoot, so they follow the bend; the one spray at the
 /// shoot's foot had run on straight and left the nodding tip a bare
@@ -604,8 +876,9 @@ pub mod venation;
 /// several stems from one foot (`stems`, `stem_angle`), and a needle card
 /// may lean its needles forward (`lean`) and leave the foot of each axis
 /// bare (`bare`) so they crowd in a tuft near its end; both default to
-/// what was drawn before (95 is lacy leaves, #180).
-/// 97: old conifers (`pinidae` revision 13): a limb whose tips catch too
+/// what was drawn before (130 is cactus flowers on their
+/// pericarpels, #220).
+/// 132: old conifers (`pinidae` revision 13): a limb whose tips catch too
 /// little light for the wood it carries is shed (`limb_light`, scaled by
 /// `shade_death`), so Douglas-fir, western hemlock and Sitka spruce grow
 /// past 150 years under the module limit; a shoot shorter than
@@ -619,6 +892,6 @@ pub mod venation;
 /// limbs branch again (`side_order` 2, twigs living `twig_years` with one
 /// spray each), stop lengthening with their reach, start short below the
 /// treetop (`top_ramp`) and clear the trunk in step with height (`bole`),
-/// so fully branched crowns grow to 300 years (96 is nodding leaders,
-/// #167).
-pub const GENERATOR_REVISION: u32 = 97;
+/// so fully branched crowns grow to 300 years (131 is nodding
+/// leaders, #167).
+pub const GENERATOR_REVISION: u32 = 132;

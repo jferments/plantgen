@@ -1,0 +1,305 @@
+{
+  "schema": 1,
+  "id": "paxistima-myrsinites",
+  "taxon": {
+    "scientific_name": "Paxistima myrsinites",
+    "common_name": "Oregon boxleaf",
+    "family": "Celastraceae",
+    "genus": "Paxistima",
+    "plant_name_id": 2408491
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 12,
+      "branch_angle": 45
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.4,
+      0.33,
+      0.27
+    ],
+    "foliage": [
+      0.08,
+      0.2,
+      0.06
+    ],
+    "foliage_shade": [
+      0.026,
+      0.064,
+      0.019
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1
+    },
+    "height_max_m": {
+      "min": 0.6,
+      "max": 1
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "leaf_width_m": {
+      "min": 0.005,
+      "max": 0.012
+    },
+    "petiole_length_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "leaf_shape": "oblong",
+    "leaf_margin": "serrate",
+    "inflorescence": "cyme",
+    "flowering_position": "lateral",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 3
+    },
+    "inflorescence_length_m": {
+      "min": 0.004,
+      "max": 0.008
+    },
+    "flower_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "flower_merosity": 4,
+    "flower_colour": [
+      140,
+      40,
+      55
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.004,
+      "max": 0.005
+    },
+    "fruit_colour_ripe": [
+      130,
+      95,
+      60
+    ],
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: low, much-branched, very leafy shrub, 3-10 dm. high, or sometimes spreading and almost prostrate."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Paxistima myrsinites: low growing, reaching heights of 1 to 3 feet (0.3-1 m)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Paxistima myrsinites: a native, cool-season, evergreen shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: a low shrub."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima: leaves opposite, coriaceous, serrulate, evergreen."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima: leaves opposite."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: leaves ovate, oblong or oblanceolate, 15-30 mm. long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 5 mm to 12 mm wide, a third to two fifths as wide as long as in the photos."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: leaves subsessile; about 1 mm to 2 mm, by eye from the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: leaves ovate, oblong or oblanceolate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: leaves serrulate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima: flowers solitary or clustered in the axils; peduncles 1-3-flowered."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima: flowers solitary or clustered in the axils."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: peduncles 2-3 mm. long, 1-3-flowered."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: each axillary cluster 4 mm to 8 mm long, its peduncle 2 mm to 3 mm (Abrams 1951 p. 54)."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: flowers 3 mm to 4 mm across, their petals 1 mm long (Abrams 1951 p. 54)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 53, Pachistima: flowers 4-merous (key to genera)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: petals reddish brown; maroon in the photos; sRGB by eye."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: capsule 4-5 mm. long."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: capsule 4-5 mm. long."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: capsules brown when ripe."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 54, Pachistima Myrsinites: flowering May to July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Paxistima myrsinites: fruits July to September (Arizona, Idaho and Montana)."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, dense, much-branched shrub of small dark glossy leaves in pairs, with tiny maroon flowers in the leaf axils."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Oregon boxleaf from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.6 m tall at 12 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

@@ -33,13 +33,7 @@
       "bloom_age": 4,
       "flowers": 10,
       "ring_angle": 55,
-      "flower_angle": 40,
-      "bud_share": 0.2,
-      "fruit_share": 0.3,
-      "bud_size": 0.01,
-      "flower_area": 0.363,
-      "bud_area": 0.636,
-      "fruit_area": 1.143
+      "flower_angle": 40
     }
   },
   "growth": {
@@ -56,31 +50,6 @@
     "foliage": [0.1, 0.17, 0.06],
     "foliage_shade": [0.045, 0.077, 0.027],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "stamens": 200,
-          "point": 0.3,
-          "notch": 0.0,
-          "centre": 0.2
-        },
-        "accent": [0.6, 0.5, 0.2]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.5, 0.2, 0.3]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.9
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "dome": 1.0,
@@ -159,7 +128,16 @@
     "radial_spine_length_m": {"min": 0.006, "max": 0.012},
     "central_spines": {"min": 1, "max": 3},
     "central_spine_length_m": 0.018,
-    "central_spine_form": "hooked"
+    "central_spine_form": "hooked",
+    "height_max_m": 0.25,
+    "woodiness": "herbaceous",
+    "rosette": "none",
+    "flowering_months": [4, 5, 6, 7, 8, 9],
+    "fruiting_months": [1, 2, 3, 9, 10, 11, 12],
+    "height_typical_m": {"min": 0.05, "max": 0.15},
+    "fruit_width_m": {"min": 0.005, "max": 0.008},
+    "fruit_shape": "club_shaped",
+    "stigma_colour": [140, 170, 70]
   },
   "evidence": {
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: tubercles ovoid to cylindrical, often four-angled; standing out from the stem, so prominent here."},
@@ -167,7 +145,6 @@
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: stems light green."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: radial spines white to light brown to reddish; light brown here, the middle of the words."},
     "traits.central_spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: central spines yellowish brown to dark brown."},
-    "appearance.organs.fruit.shape.aspect": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: fruit subglobose, 12 to 25 mm long; nine tenths as wide as long by hand for 'subglobose', as no width is given."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
@@ -208,11 +185,7 @@
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: under 10 cm by 10 years. Wide tolerances."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: 20 to 35 fine white radials pressed flat to the body and one to three dark centrals, one hooked like a fishhook. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, and a style with seven or eight stigma lobes, from the characters of its own and Cactaceae's by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: 20 to 35 fine white radials pressed flat to the body and one to three dark centrals, one hooked like a fishhook. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -257,7 +230,16 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "LLIFLE's account of the species, as quoted in search results; the page itself was not read: stigma lobes 7 or 8, linear, green; the carpels are as many as the stigma lobes (Hamburg's Botany Online on the family, as quoted in search results; the page itself was not read)."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Mammillaria grahamii: flowering April to September."},
+    "traits.fruiting_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Mammillaria grahamii: fruiting September to March."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Mammillaria grahamii: fruit 12 to 29 by 5 to 8 mm, green, turning bright red, then elongating until clavate."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Mammillaria grahamii: the fruit elongates until clavate once it has turned red (Anderson p. 495 draws Mammillaria fruit club-shaped too)."},
+    "traits.stigma_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Mammillaria grahamii: stigma lobes yellow-green to green, 3 to 7 mm; a yellow-green by hand."}
   },
   "provenance": {
     "sources": [

@@ -1,0 +1,282 @@
+{
+  "schema": 1,
+  "id": "bistorta-bistortoides",
+  "taxon": {
+    "scientific_name": "Bistorta bistortoides",
+    "common_name": "American bistort",
+    "family": "Polygonaceae",
+    "genus": "Bistorta",
+    "plant_name_id": 2676772
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 3,
+      "clump_radius": 0.05,
+      "stem_lean": 6,
+      "nodes": 3,
+      "basal_leaves": 5,
+      "basal_angle": 40,
+      "bare": 0.2,
+      "leaf_peak": 0.0,
+      "leaf_base": 0.6,
+      "leaf_top": 0.3,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.45,
+      0.5,
+      0.32
+    ],
+    "foliage": [
+      0.22,
+      0.36,
+      0.2
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.0
+        }
+      },
+      "basal": {
+        "shape": {
+          "petiole": 0.5
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.45,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.25,
+      "max": 0.7
+    },
+    "life_span": "perennial",
+    "perennation": "rhizome",
+    "rhizome_habit": "short_creeping",
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.15
+    },
+    "petiole_length_m": {
+      "low": 0,
+      "min": 0.05,
+      "max": 0.12
+    },
+    "leaf_shape": "oblanceolate",
+    "leaf_hairs": "glabrous",
+    "cauline_leaves": "reduced",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.01,
+      "max": 0.06
+    },
+    "units_per_inflorescence": {
+      "min": 50,
+      "max": 120
+    },
+    "flower_colour": [
+      245,
+      238,
+      235
+    ],
+    "pedicel_length_m": {
+      "min": 0.003,
+      "max": 0.007
+    },
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "fruit_type": "achene",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides (now Bistorta bistortoides): stems erect and unbranched, 2.5 dm to 7 dm high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: a perennial."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: from a large, fleshy, horizontal rootstock."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: the rootstock large, fleshy and horizontal: a short, thick rhizome."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: basal leaves on long petioles, the stem leaves fewer and sessile."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: basal leaves 10 cm to 25 cm long on petioles about as long as the blades, so blades of 5 cm to 12.5 cm; stem leaves 3 cm to 15 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: basal petioles about as long as the blades, 5 cm to 12.5 cm; the stem leaves sessile, so set from 0."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: basal leaves oblong to oblong-lanceolate or oblanceolate, narrowed to the base."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: hairless and somewhat glaucous leaves."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: stem leaves sessile, mostly lanceolate and smaller than the basal ones."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: one dense raceme at the stem's tip, its pedicels short: drawn as a spike."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: the raceme 1 cm to 6 cm long and 10 mm to 15 mm broad."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "50 to 120 flowers in each dense head, set by hand from iNaturalist photos of flowering plants (observations 123135224, 234927799, 298308695, 174277732, 261838573, 366419831, 307143514, 234016705): the flora gives no count or measure."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: calyx lobes white to pale rose; sRGB by eye from the photos."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: pedicels 3 mm to 7 mm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: calyx lobes about 4 mm long."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: achenes three-angled, light brown and shining."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 62, Polygonum bistortoides: flowering May to August."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: slender green stems, often reddish toward the head; glaucous green leaves, the basal ones narrowed to a long petiole, the stem leaves sessile."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for American bistort from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.45 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

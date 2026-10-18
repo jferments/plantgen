@@ -179,8 +179,20 @@ fn a_herbs_male_plants_bear_flowers_in_place_of_fruit() {
 /// male plants bear no `fruit` (`organs[0]`), and some female plant does.
 /// Returns the plants, by sex, with their counts of `organs`.
 fn males_bear_no_fruit(id: &str, organs: &[&str]) -> Vec<(bool, Vec<usize>)> {
+    males_bear_no_fruit_with(id, organs, &[])
+}
+
+/// [`males_bear_no_fruit`], with `params` set in the species' program too.
+fn males_bear_no_fruit_with(
+    id: &str,
+    organs: &[&str],
+    params: &[(&str, f64)],
+) -> Vec<(bool, Vec<usize>)> {
     let mut spec = PlantSpec::builtin(id).unwrap();
     spec.generator.params.insert("dioecious".into(), 1.0);
+    for (name, value) in params {
+        spec.generator.params.insert((*name).into(), *value);
+    }
     let plants = by_sex(&spec, spec.growth.years, organs);
     for (female, counts) in &plants {
         if !female {
@@ -205,11 +217,16 @@ fn a_mistletoes_male_clumps_bear_no_berries() {
 
 /// A cactus's male plants bear open flowers in its rings where its female
 /// plants bear fruit, and hang no chains of fruit. Saguaro and jumping
-/// cholla, made dioecious here.
+/// cholla, made dioecious here; the saguaro with a share of its ring in
+/// fruit, as its stated months leave it none (every place a flower in its
+/// year).
 #[test]
 fn a_cactuss_male_plants_bear_flowers_in_place_of_fruit() {
-    for id in ["carnegiea-gigantea", "cylindropuntia-fulgida"] {
-        let plants = males_bear_no_fruit(id, &["fruit", "flower"]);
+    for (id, params) in [
+        ("carnegiea-gigantea", &[("fruit_share", 0.3)][..]),
+        ("cylindropuntia-fulgida", &[][..]),
+    ] {
+        let plants = males_bear_no_fruit_with(id, &["fruit", "flower"], params);
         // Plants differ in size by seed, so compare each sex's mean.
         #[allow(clippy::cast_precision_loss)]
         let mean = |female: bool| {
@@ -242,4 +259,49 @@ fn a_grasss_male_plants_bear_male_panicles() {
         plants.iter().any(|(female, c)| *female && c[0] > 0),
         "{plants:?}"
     );
+}
+
+/// A cycad's male plants bear pollen cones and no seeds; its female plants
+/// bear seeds and no pollen cones: a Cycas's on a crown of sporophylls in
+/// place of a cone, a zamiad's in seed cones, closed over them until they
+/// break up as they ripen (cones by sex, palm revision 11). The sago cycad
+/// and the coontie grown to their second keyframe, in a coning year; the
+/// chestnut dioon a year after one, when its cone of the year before is
+/// breaking up.
+#[test]
+fn a_cycads_male_plants_bear_pollen_cones_and_its_females_seeds() {
+    for (id, after, female_organ, seeds) in [
+        ("cycas-revoluta", 0.0, "sporophyll", true),
+        ("zamia-integrifolia", 0.0, "cone", false),
+        ("dioon-edule", 1.0, "cone_open", true),
+    ] {
+        let spec = PlantSpec::builtin(id).unwrap();
+        assert_eq!(spec.generator.params.get("dioecious"), Some(&1.0), "{id}");
+        let years = spec.growth.keyframes[1] + after;
+        let plants = by_sex(&spec, years, &["cone_male", female_organ, "seed"]);
+        for (female, counts) in &plants {
+            if *female {
+                assert_eq!(
+                    counts[0], 0,
+                    "{id}: a female bears pollen cones: {plants:?}"
+                );
+                assert!(
+                    counts[1] > 0 && (counts[2] > 0) == seeds,
+                    "{id}: a female bears no {female_organ}, or shows seeds only where it \
+                     should not: {plants:?}"
+                );
+            } else {
+                // A pollen cone lasts weeks: only a coning year shows one.
+                assert!(
+                    after > 0.0 || counts[0] > 0,
+                    "{id}: a male bears no pollen cone: {plants:?}"
+                );
+                assert_eq!(
+                    counts[1] + counts[2],
+                    0,
+                    "{id}: a male bears {female_organ} or seeds: {plants:?}"
+                );
+            }
+        }
+    }
 }

@@ -19,14 +19,12 @@
       "internode": 0.22,
       "max_shoot": 3,
       "pipe_rings": 4.33e-06,
-      "pipe_organ": 0.0049,
-      "pipe_tip": 0.0024,
+      "pipe_organ": 0.0042,
+      "pipe_tip": 0.00205,
       "branch_angle": 50,
       "apical_young": 0.65,
       "apical": 0.52,
       "leaf_years": 2,
-      "leaf_size": 0.34,
-      "spur_leaf": 0.3,
       "spur_pairs": 2,
       "leaf_angle": 50,
       "lean": 20,
@@ -38,11 +36,9 @@
       "bloom_size": 0.11,
       "bloom_angle": 140,
       "extinction": 0.45,
-      "leaf_area": 0.285,
       "bloom_area": 0.382,
       "path_half": 14.4,
-      "bole_clear": 1,
-      "spur_light": 0.25
+      "bole_clear": 1
     }
   },
   "growth": {
@@ -56,6 +52,7 @@
   },
   "appearance": {
     "bark": [0.42, 0.13, 0.06],
+    "twig": [0.4,  0.1,  0.03],
     "bark_pattern": {
       "kind": "peeling",
       "scale": 0.08,
@@ -74,26 +71,19 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 9,
-          "angle": 45,
-          "stalk": 0.08,
+          "template": "simple",
           "width": 0.5,
           "widest": 0.45,
           "tip": 0.3,
           "base": 0.6,
-          "teeth": 0,
-          "petiole": 0.1
+          "teeth": 0
         },
         "families": {
           "plasticity": 0.3,
           "juvenile": {
             "until": 8,
             "shape": {
-              "template": "sprig",
-              "leaves": 9,
-              "angle": 45,
-              "stalk": 0.08,
+              "template": "simple",
               "width": 0.5,
               "widest": 0.45,
               "tip": 0.3,
@@ -156,14 +146,23 @@
       "min": 0.05,
       "max": 0.12
     },
+    "petiole_length_m": {"min": 0.013, "max": 0.025},
     "wood_density_basic_kg_m3": 570,
     "flowering_position": "terminal",
     "fruit_type": "berry",
     "flowering_months": [4, 5],
-    "fruiting_months": [10, 11, 12]
+    "fruiting_months": [10, 11, 12],
+    "height_typical_m": {"min": 10, "max": 25},
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.04, "max": 0.07},
+    "leaf_shape": "elliptic",
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.15},
+    "leaf_apex": {"rounded": "usually", "acute": "often", "cuspidate": "rarely"}
   },
   "evidence": {
-    "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Grown stems stand bare of branches for several metres below the crown in iNaturalist photographs (observations 263721768, 1914072): the crown from 5 m (crown_base), the stem forking at 4 m (fork_height), leaning and crooked (lean 20, wiggle 12, were 15 and 8), with fewer, bigger limbs (space_density 4, was 7) and an inner crown that thins (spur_light 0.25)."},
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Arbutus Menziesii: \"slender branchlets light red, pea-green, or orange-colored and glabrous when they first appear ... becoming in their first winter bright reddish brown\". Colour chosen by eye for bright reddish brown."},
+    "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Grown stems stand bare of branches for several metres below the crown in iNaturalist photographs (observations 263721768, 1914072): the crown from 5 m (crown_base), the stem forking at 4 m (fork_height), leaning and crooked (lean 20, wiggle 12, were 15 and 8), with fewer, bigger limbs (space_density 4, was 7)."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs (observations 263721768, 1914072, 145154232): leaning, crooked red stems carry a rounded, irregular crown, clear of branches below."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
@@ -190,6 +189,7 @@
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951), as Arbutus Menziesii: leaves 5 cm to 12 cm long."
     },
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent (1922), Arbutus Menziesii: petioles stout, grooved, about half an inch to an inch in length (the scan garbles the fractions; read as \u00bd to 1 inch, which the oak's, an inch at most, matches against Abrams' 15-25 mm), often slightly wing-margined toward the apex."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Arbutus menziesii (gwddagg_v2.2_species.csv, read): specific gravity 0.57 (wsg_est, the database's hierarchical-model species mean, from 6 records in 5 sources); trunks 0.57, branches 0.54. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
@@ -260,7 +260,14 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's Arbutus menziesii review (page read): the fruit is a pea-sized berry of mealy pulp and numerous seeds, against the capsule most of the heath family bear."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Arbutus menziesii (read 2026-10-18): the leaf tip is mostly rounded or acute, rarely with a short cusp."}
   },
   "provenance": {
     "sources": [

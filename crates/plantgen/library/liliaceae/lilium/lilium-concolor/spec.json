@@ -1,0 +1,258 @@
+{
+  "schema": 1,
+  "id": "lilium-concolor",
+  "taxon": {
+    "scientific_name": "Lilium concolor",
+    "common_name": "morning star lily",
+    "plant_name_id": 279952,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "raceme": 0.04
+    }
+  },
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.5,
+      "high": 0.8
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.07,
+      "low": 0.02,
+      "high": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.003,
+      "max": 0.006,
+      "high": 0.01
+    },
+    "leaf_shape": "linear",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 5,
+      "typical": 3
+    },
+    "flower_posture": "erect",
+    "corolla_shape": "rotate",
+    "perianth_reflexion": "spreading",
+    "flower_colour": [
+      210,
+      35,
+      30
+    ],
+    "perianth_spots": "few",
+    "perianth_spot_colour": [
+      60,
+      20,
+      30
+    ],
+    "tepal_length_m": {
+      "min": 0.022,
+      "max": 0.052
+    },
+    "stamen_exsertion": "included",
+    "anther_colour": [
+      175,
+      55,
+      35
+    ],
+    "fruit_size_m": {
+      "min": 0.03,
+      "max": 0.035,
+      "low": 0.015
+    },
+    "fruit_width_m": {
+      "min": 0.02,
+      "max": 0.024
+    },
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium concolor, plant_name_id 279952."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its few flowers stand close at the stem's tip (Flora of China: 1-5 in a subumbel or raceme), drawn as a raceme a twenty-fifth of the stem long."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): stem 30-50(-80) cm; Wikipedia: usually 30-50 cm. Its reference height is the middle of that range, 0.4 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): stem 30-50(-80) cm; Wikipedia: usually 30-50 cm."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): leaves scattered, sessile."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): leaves (2-)3-7(-10) cm x 2-10 mm; Wikipedia 3.5-7 cm x 3-6 mm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium concolor' (read 2026-10-18): leaves 3-6 mm wide; Flora of China 2-10 mm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): leaves linear, apex acute; Wikipedia: linear to lance-shaped."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): flowers 1-5 in a subumbel or raceme. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): flowers erect; Wikipedia: they face upward."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): tepals stellately spreading; Wikipedia: star-shaped."
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): tepals stellately spreading."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): tepals deep red; Bailey (p. 1877): bright crimson-scarlet. The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): spotted or unspotted; Bailey: slightly, or not at all, dotted purple-black."
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium concolor, p. 1877 (read on the Internet Archive, 2026-10-18): dotted purple-black. The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): tepals oblong-lanceolate to oblanceolate, 2.2-5.2 cm x 4-14 mm."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): stamens converging; filaments 1.8-2 cm, anthers ca. 7 mm, within the spreading tepals."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium concolor, p. 1877 (read on the Internet Archive, 2026-10-18): anthers red. The colour is our reading of the words."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): capsule oblong, (1.5-)3-3.5 x ca. 2.2 cm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): capsule ca. 2.2 cm wide."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): flowering May-Jul."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium concolor (efloras.org, read 2026-10-18): fruit Aug-Sep."
+    }
+  }
+}
