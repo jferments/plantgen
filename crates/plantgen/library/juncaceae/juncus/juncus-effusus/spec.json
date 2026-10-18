@@ -32,7 +32,7 @@
       "blade_area": 0.023,
       "tip_area": 0.012,
       "thatch_area": 0.023,
-      "panicle_area": 0.158
+      "panicle_area": 0.237
     }
   },
   "growth": {
@@ -128,7 +128,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a dense clump of smooth, round, bright green stems with brown flower clusters bursting from one side near the top. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a dense clump of smooth, round, bright green stems with brown flower clusters bursting from one side near the top. Not fitted to measurements. panicle_area is the area its panicle draws (0.237 m\u00b2 on an organ 1 m long since its flowers start at the organ's foot; was 0.158)."
     },
     "allometry": {
       "evidence": "Authored",
