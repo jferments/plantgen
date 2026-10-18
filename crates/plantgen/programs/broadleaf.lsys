@@ -151,7 +151,14 @@
 # crown_fullness. All are off, or as before, unless a lineage or species
 # sets them, so every crown grows as it did.
 #
-# Revision 17 (shrub habit): a many-stemmed shrub or a thicket sends up
+# Revision 17 (blooms at the shoot tips): a lineage that flowers at its
+# shoot tips (tip_bloom) ends each tip that has stopped for want of free
+# space, once adult and in the light, in its year's blooms, nearly along
+# the shoot (tip_angle) above that year's leaves, so its flowers and fruit
+# stand on the crown's edge where the short shoots' stay inside it. Off
+# unless a lineage sets it.
+#
+# Revision 18 (shrub habit): a many-stemmed shrub or a thicket sends up
 # new stems from its base or its spreading roots and rhizomes, beside the
 # first, not one stem that forks above the ground. With suckers above 0
 # the first stem does not fork; from its first year the plant's base sends
@@ -262,9 +269,11 @@ param limb_arch = 0;          # degrees a limb's held angle grows per metre of l
 param limb_set_max = 95;      # the most a limb's held angle grows to, from straight up
 param flat_top = 0;           # share of the crown's height above which every shoot levels out (Troll's model); 0: none
 param bole_clear = 0;         # 1: the stem sheds every branch below the crown's base
+param tip_bloom = 0;          # 1: a shoot tip with no free space left ends each adult year in its blooms (terminal flowering)
+param tip_angle = 15;         # angle of a shoot tip's bloom to its shoot
 param crown_widest = 0.5;     # share of the region's depth at which it is widest
 param crown_fullness = 2;     # the region's profile: 2 an ellipse, more toward a flat-ended cylinder
-# A many-stemmed shrub's or a thicket's stems (revision 17).
+# A many-stemmed shrub's or a thicket's stems (revision 18).
 param suckers = 0;            # stems the base sends up besides the first; 0: none, the first stem forks
 param sucker_rate = 2;        # new stems a year, until there are suckers
 param sucker_spread = 0.2;    # share of the crown's radius out to which they rise
@@ -279,6 +288,7 @@ module M(n, u, l);                        # n nodes still to form this year, of 
 module Fk(n);                             # n stems still to start at a fork
 module Q(n, k);                           # n leaf pairs still to unfold on a short shoot, its k-th pair first
 module Bo(n);                             # n blooms still to place at a short shoot's tip
+module Bt(n);                             # n blooms still to place at a long shoot's tip
 module K(s) queries light, vigour;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
 module D queries light, space;            # a dormant bud
 module R(n);                              # the base of a many-stemmed plant: n stems still to send up
@@ -339,7 +349,7 @@ rule A(split) : light < shade_death -> ;
 rule B : light < shade_death || age >= bud_years -> ;
 
 # A many-stemmed plant's first stem does not fork: its base sends up the
-# others (revision 17; the rules that place them go last).
+# others (revision 18; the rules that place them go last).
 rule A(split) : suckers > 0 && split > 0 -> R(suckers) A(0);
 
 # Where the stem reaches its fork height it divides into equal stems.
@@ -496,6 +506,13 @@ rule A(split) : apex_death > 0 && space <= 0 && t > 10 && rand() < apex_death ->
 
 # A tip with no free space left that lives on leafs out as a short shoot
 # does, in enough light (revision 11), so the crown's edge keeps its leaves.
+# A lineage that flowers at its shoot tips (tip_bloom, revision 17) ends
+# such a tip each adult year in its blooms, nearly along the shoot, above
+# that year's leaves: the crown's edge carries them, not its inside.
+rule A(split) : tip_bloom > 0 && blooms > 0 && t >= adult_age && light >= spur_light && space <= 0
+                && (life <= 0 || t < life) ->
+    Q(spur_pairs, age * spur_pairs) Bt(blooms) A(split);
+
 rule A(split) : light >= spur_light && space <= 0 -> Q(spur_pairs, age * spur_pairs) A(split);
 
 # A limb that no longer pays its way is shed, as in Pałubicki et al.
@@ -574,7 +591,20 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 ->
     [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u, l);
 
-# Revision 17 (shrub habit). These rules make no random draws, so the
+# Blooms at a long shoot's tip (revision 17): as at a short shoot's, at
+# tip_angle, set with no random draws (they vary by their place), so every
+# draw here and in the programs built on this one keeps its site.
+decompose Bt(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(tip_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bt(n - 1);
+decompose Bt(n) : n > 0 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(tip_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      bloom(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bt(n - 1);
+decompose Bt(n) -> ;
+
+# Revision 18 (shrub habit). These rules make no random draws, so the
 # draws of every program that extends this one keep their sites.
 
 # The base of a many-stemmed plant sends up sucker_rate new stems a year,

@@ -39,7 +39,7 @@ use std::f64::consts::{PI, TAU};
 use crate::blooms::{self, FlowerForm, Part};
 use crate::capitula::Painted;
 use crate::leaves::{self, Section, SolidLeaf};
-use crate::looks::{Corolla, Flower, Ovary, Perianth};
+use crate::looks::{Corolla, Flower, Ovary, Perianth, Skin};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 
@@ -222,6 +222,8 @@ pub struct Floral {
     pub form_cup: f64,
     /// The petals' notch, for the card.
     pub notch: f64,
+    /// What an inferior ovary's skin bears: a cactus's pericarpel.
+    pub pericarpel: Skin,
 }
 
 /// The whorls a flower's tepals stand in: as many of its `whorl` as its
@@ -827,6 +829,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         pistil,
         form_cup: form.cup,
         notch: flower.notch,
+        pericarpel: flower.pericarpel,
     }
 }
 
@@ -901,6 +904,8 @@ pub struct Colours {
     pub filament: [f32; 3],
     /// A single pistil's ovary.
     pub ovary: [f32; 3],
+    /// Its stigma lobes.
+    pub stigma: [f32; 3],
 }
 
 impl Colours {
@@ -959,6 +964,22 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             side,
             a,
             b,
+            colours.calyx,
+            part,
+            mesh,
+        );
+        // A cactus's pericarpel, scaled, felted or spiny as its fruit
+        // will be.
+        crate::fruit::skin(
+            &crate::fruit::Surface {
+                centre: frame.foot + axis * height,
+                axis,
+                across: side,
+                long: a,
+                wide: b,
+            },
+            laid.pericarpel,
+            if fine { (21, 3) } else { (8, 0) },
             colours.calyx,
             part,
             mesh,
@@ -1109,7 +1130,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
                         width: style.length * 0.03,
                         ..*style
                     };
-                    rod_cone(tip, out, &lobe, colours.filament, part, mesh);
+                    rod_cone(tip, out, &lobe, colours.stigma, part, mesh);
                 }
             }
         }
@@ -1551,6 +1572,7 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             accent: [1.0; 3],
             filament: [1.0; 3],
             ovary: [1.0; 3],
+            stigma: [1.0; 3],
         },
         Part {
             born: 0.0,
@@ -2172,6 +2194,16 @@ mod tests {
                 f.perianth = Perianth::Spiral;
                 f.stamens = 100;
             }),
+            flower(|f| {
+                f.petals = 30;
+                f.perianth = Perianth::Spiral;
+                f.stamens = 100;
+                f.carpels = 10;
+                f.ovary = Ovary::Inferior;
+                f.tube = 1.2;
+                f.fused = 0.6;
+                f.pericarpel = Skin::Spiny;
+            }),
         ];
         for f in &showcase {
             for coarse in 0..5 {
@@ -2185,6 +2217,7 @@ mod tests {
                         accent: [0.9, 0.7, 0.1],
                         filament: [0.9, 0.7, 0.1],
                         ovary: [0.9, 0.7, 0.1],
+                        stigma: [0.9, 0.7, 0.1],
                     },
                     Part {
                         born: 1.0,
@@ -2202,6 +2235,56 @@ mod tests {
             assert!(triangles(f, &form(), 0) >= triangles(f, &form(), 1));
             assert!(triangles(f, &form(), 1) >= triangles(f, &form(), 3));
         }
+    }
+
+    /// A cactus flower's pericarpel wears its fruit's skin, spines the
+    /// most, and its stigma lobes take their own colour.
+    #[test]
+    fn a_cactus_pericarpel_wears_its_skin() {
+        let drawn = |skin: Skin| {
+            let f = flower(|f| {
+                f.petals = 20;
+                f.perianth = Perianth::Spiral;
+                f.stamens = 40;
+                f.carpels = 8;
+                f.ovary = Ovary::Inferior;
+                f.tube = 1.0;
+                f.pericarpel = skin;
+                f.stigma = Some([0.1, 0.5, 0.1]);
+            });
+            let mut mesh = Mesh::default();
+            draw(
+                &layout(&f, &form(), 0.05, 0.3),
+                Frame::new(Vec3::ZERO, Vec3::Y, Vec3::X, Vec3::Z, false),
+                Colours {
+                    petal: [0.9; 3],
+                    calyx: CALYX,
+                    accent: [0.9, 0.7, 0.1],
+                    filament: [0.9, 0.7, 0.1],
+                    ovary: [0.9, 0.7, 0.1],
+                    stigma: [0.1, 0.5, 0.1],
+                },
+                Part {
+                    born: 1.0,
+                    shed: None,
+                    coarse: 0,
+                },
+                &mut mesh,
+            );
+            mesh
+        };
+        let naked = drawn(Skin::Naked);
+        let [scaly, areolate, spiny] =
+            [Skin::Scaly, Skin::Areolate, Skin::Spiny].map(|skin| drawn(skin).triangle_count());
+        assert!(scaly > naked.triangle_count());
+        assert!(spiny > areolate && areolate > naked.triangle_count());
+        assert!(
+            naked
+                .colors
+                .iter()
+                .any(|c| (c[0] - 0.1).abs() < 1e-6 && (c[1] - 0.5).abs() < 1e-6),
+            "the stigma lobes are green"
+        );
     }
 
     #[test]
