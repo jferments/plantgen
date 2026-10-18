@@ -52,6 +52,7 @@
     },
     "leaf_shape": "elliptic",
     "inflorescence": "spike",
+    "flowering_position": "terminal",
     "inflorescence_length_m": {
       "min": 0.02,
       "max": 0.05
@@ -162,6 +163,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china-4-chloranthaceae",
       "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): blades elliptic, obovate, ovate-lanceolate, suborbicular or broadly elliptic; elliptic the first named."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): spikes terminal, sometimes axillary; terminal the usual place."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
