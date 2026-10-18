@@ -2412,6 +2412,7 @@ mod tests {
                     base,
                     base_length: 0.4,
                     star,
+                    tube: None,
                 },
                 Part {
                     born: 1.0,
