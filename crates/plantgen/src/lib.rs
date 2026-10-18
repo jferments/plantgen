@@ -883,4 +883,22 @@ pub mod venation;
 /// backs lie against the part; a lily with scattered leaves bears at least
 /// as many as its flora counts on the stem (`shoot_leaves`), so the
 /// orange lily's 50 to 75 (131 is the cluster axis, #209).
-pub const GENERATOR_REVISION: u32 = 132;
+/// 133: a raceme's, spike's, catkin's, panicle's or corymb's nodes run
+/// from its peduncle's top to where its top unit reaches the tip, not
+/// half a node in from each, so a panicle of few branches draws its
+/// stated length; a cluster whose flowers are all sterile
+/// (`sterile_flowers`, a mophead hydrangea's) draws them as its showy
+/// sepals (`sterile_sepal_shape`) with no stamens, pistil or floral cup; a
+/// flower with no carpels stands on no ovary; a petal whose outline is
+/// stated is as wide on the solid as on its card; and from the flat
+/// coarse step a flower of three to six petals is a polygon through
+/// their tips, not a hexagon. A lineage whose inflorescences end leafy
+/// shoots (`flowering_shoot_leaves`) unfolds that many leaves below each
+/// cluster, and one that flowers on new shoots (`flowering_shoots`)
+/// flowers on a short shoot or a stopped tip only in its first year
+/// (broadleaf program revision 22), so a hydrangea's heads stand at the
+/// crown's surface above their leaves, not along the old wood; and a
+/// flower may be drawn up to eight times its fruit's size, where it was
+/// four, so a mophead's sterile flowers reach their stated size (132 is
+/// lily leftovers, #218).
+pub const GENERATOR_REVISION: u32 = 133;

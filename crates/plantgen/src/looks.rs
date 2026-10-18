@@ -1138,7 +1138,7 @@ impl Season {
                     within("colours", f64::from(channel), 0.0, 1.0)?;
                 }
             }
-            within("stage size", look.size, 0.05, 4.0)?;
+            within("stage size", look.size, 0.05, 8.0)?;
             if let Some(form) = &look.form {
                 form.validate(&look.shape)?;
             }
@@ -2179,7 +2179,6 @@ impl Flower {
             && self.staminodes == 0
             && self.carpels == 0
             && self.torus == 0.0
-            && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
             && self.spots == 0
