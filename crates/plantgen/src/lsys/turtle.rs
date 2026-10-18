@@ -44,6 +44,8 @@ pub struct Segment {
     pub left: Vec3,
     /// The structure it was drawn in ([`Scene::structures`]), if any.
     pub within: Option<u32>,
+    /// How young it was drawn, 0 grown to 1 just emerged, set by `young`.
+    pub young: f32,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -168,6 +170,8 @@ struct State {
     incline_rate: f64,
     /// `rest`'s gap above the substrate, metres (0: off).
     rest: f64,
+    /// The youth set by `young` (0: grown).
+    young: f32,
 }
 
 /// Identity of the string module being drawn and its element counters.
@@ -606,6 +610,8 @@ impl<'a> Interpreter<'a> {
             }
             #[allow(clippy::cast_possible_truncation)]
             Turtle::Adult => state.adult = Some(params[0].clamp(0.0, 1.0) as f32),
+            #[allow(clippy::cast_possible_truncation)]
+            Turtle::Young => state.young = params[0].clamp(0.0, 1.0) as f32,
             Turtle::Incline => {
                 state.incline = math::radians(params[0].clamp(0.0, 180.0));
                 state.incline_rate = params[1].clamp(0.0, 1.0);
@@ -688,6 +694,7 @@ impl Interpreter<'_> {
             body,
             left: if body == 0 { Vec3::ZERO } else { frame.l },
             within: state.structure,
+            young: state.young,
         });
         owner.segments += 1;
         scene.height = scene.height.max(end.y);
@@ -783,6 +790,7 @@ const START_STATE: State = State {
     incline: 0.0,
     incline_rate: 0.0,
     rest: 0.0,
+    young: 0.0,
 };
 
 /// Strings shorter than this are drawn on one thread.
@@ -1273,6 +1281,19 @@ mod tests {
             "lsystem p 1; module A; axiom A; rule A -> F(1) [ adult(1) ] A;"
         ));
         assert!(draws("lsystem p 1; axiom adult(1) F(1);"));
+    }
+
+    #[test]
+    fn youth_is_pushed_and_popped_with_the_branch() {
+        // A fern's crozier: segments record the youth their branch set,
+        // clamped to 0 to 1, and segments drawn before any `young` are
+        // grown.
+        let s = scene(
+            "lsystem p 1;
+             axiom F(1) young(0.8) F(1) [ young(3) F(1) ] F(1) [ young(-1) F(1) ] F(1);",
+        );
+        let young: Vec<f32> = s.segments.iter().map(|segment| segment.young).collect();
+        assert_eq!(young, [0.0, 0.8, 1.0, 0.8, 0.0, 0.8]);
     }
 
     #[test]

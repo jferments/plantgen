@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cyclamen",
+  "traits": {
+    "inflorescence": "solitary"
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Cyclamen (read 2026-10-17; 25 spp): each flower on its own stalk rising from the tuber."}
+  }
+}

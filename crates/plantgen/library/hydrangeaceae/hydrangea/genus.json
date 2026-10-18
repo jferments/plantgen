@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Hydrangea",
+  "traits": {
+    "inflorescence": {"corymb": "usually", "panicle": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Hydrangea (read 2026-10-17): about 70 to 98 species; flowers in corymbs or panicles, mostly at stem tips; its lacecap and mophead forms are flat or domed corymb-like heads. Corymb ranked first on that basis, panicle as the lesser form."}
+  }
+}

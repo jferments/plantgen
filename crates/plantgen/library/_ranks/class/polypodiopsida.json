@@ -7,6 +7,10 @@
     "reproduction": "spores"
   },
   "rules": {
+    "generator.params.coil_turns": {
+      "map": {"vernation": {"circinate": 2.5, "conduplicate": 0, "involute": 0, "flat": 0}},
+      "why": "A circinate frond (the leptosporangiate ferns', a tree fern's, a marattioid's) comes up as a crozier, its blade wound from the tip inward in a tight spiral that unrolls from its foot (Hoshizaki and Moran 2001, p. 17; Kaplan 2022, p. 358-359, 369), about two and a half turns by eye; a frond that is not circinate expands straight."
+    },
     "generator.params.frond_length": {
       "rule": "leaf_length_m + petiole_length_m",
       "why": "A fern's frond is its blade and its stipe, the leaf's stalk, end to end."

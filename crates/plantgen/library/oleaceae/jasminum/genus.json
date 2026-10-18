@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Jasminum",
+  "traits": {
+    "inflorescence": {"cyme": "usually", "solitary": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Jasminum (read 2026-10-17): flowers mostly in cymose clusters of three or more, some borne singly at branchlet tips; about 200 species."}
+  }
+}

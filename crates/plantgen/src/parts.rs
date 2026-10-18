@@ -824,6 +824,7 @@ mod tests {
     fn look(shape: Shape) -> Look {
         Look {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
             sori: None,
@@ -1084,6 +1085,7 @@ mod tests {
                 shed: f32::INFINITY,
                 bend: crate::bend::Bend::FLAT,
                 segment: crate::mesh::NO_SEGMENT,
+                seed: 0.5,
             };
             plant.cards.push(crate::mesh::Card {
                 left: [0.0, 0.0, 1.0],

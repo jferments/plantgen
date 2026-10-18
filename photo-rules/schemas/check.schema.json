@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "check.schema.json",
+  "title": "Named pass on one image (02b-check-named.md)",
+  "type": "object",
+  "required": [
+    "photo_id",
+    "identity",
+    "checks"
+  ],
+  "properties": {
+    "photo_id": {
+      "type": "string"
+    },
+    "identity": {
+      "enum": [
+        "consistent",
+        "inconsistent",
+        "cannot tell"
+      ]
+    },
+    "identity_note": {
+      "type": "string"
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "character",
+          "stated",
+          "photo"
+        ],
+        "properties": {
+          "character": {
+            "type": "string"
+          },
+          "stated": {
+            "type": "string"
+          },
+          "photo": {
+            "enum": [
+              "shows",
+              "contradicts",
+              "partly",
+              "cannot tell"
+            ]
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "if": {
+          "properties": {
+            "photo": {
+              "enum": [
+                "shows",
+                "contradicts",
+                "partly"
+              ]
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "character",
+            "stated",
+            "photo",
+            "evidence"
+          ]
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "what",
+          "evidence",
+          "drawing_matters"
+        ],
+        "properties": {
+          "what": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "drawing_matters": {
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          }
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "rules_version": {
+          "type": "string"
+        },
+        "settings": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

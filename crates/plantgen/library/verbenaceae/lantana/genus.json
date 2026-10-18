@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Lantana",
+  "traits": {
+    "inflorescence": {"head": "usually", "spike": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Lantana genus account (read 2026-10-17): inflorescence terminal or axillary, mostly corymbose, at times spike-like, dense and bracteate, flowers near sessile; a dense flat cluster of sessile flowers is drawn as head (alternative reading: corymb)."}
+  }
+}

@@ -80,7 +80,7 @@
     "fruit_size_m": {"min": 0.01, "max": 0.02},
     "shoot_leaves": 2,
     "leaf_hairs": {"glabrous": "often", "strigose": "often"},
-    "leaf_hairs_beneath": "strigose",
+    "leaf_hairs_beneath": {"glabrous": "often", "strigose": "often"},
     "leaf_ciliate": true,
     "stem_hairs": {"glabrous": "often", "crisped": "often"},
     "height_typical_m": {"min": 0.1, "max": 0.25},
@@ -96,7 +96,7 @@
   },
   "evidence": {
     "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): surfaces adaxially glabrous or sparsely appressed-hirsute (strigose), neither said to be the more usual."},
-    "traits.leaf_hairs_beneath": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): surfaces abaxially sparsely appressed-hirsute, at least proximally (strigose)."},
+    "traits.leaf_hairs_beneath": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): surfaces abaxially sparsely appressed-hirsute, at least proximally (strigose); read as half way between bare and strigose, so sparse."},
     "traits.stem_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): petiole 7.5-17 cm, sparsely crisped-hirsute; read as half way between bare and crisped, so sparse. The plant has no stem above ground, so its hairs are drawn on its leaf stalks."},
     "traits.leaf_ciliate": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): marginal hairs perpendicular to margin or curved toward apex."},
     "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654279), until a flora read here gives it; drawn by the kingdom's leaf-shape rules where before the blade was shaped by eye."},

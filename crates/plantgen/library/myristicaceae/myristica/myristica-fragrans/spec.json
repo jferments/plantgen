@@ -121,8 +121,8 @@
     ],
     "fruit_type": "drupe",
     "fruit_size_m": {
-      "min": 0.035,
-      "max": 0.05
+      "min": 0.05,
+      "max": 0.09
     },
     "fruit_colour_ripe": [
       230,
@@ -132,7 +132,9 @@
     "height_typical_m": {"min": 5, "max": 15},
     "life_span": "perennial",
     "rosette": "none",
-    "flower_symmetry": "actinomorphic"
+    "flower_symmetry": "actinomorphic",
+    "fruit_width_m": {"min": 0.035, "max": 0.05},
+    "fruits_per_inflorescence": 1
   },
   "evidence": {
     "taxon": {
@@ -222,8 +224,8 @@
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
-      "source": "flora-of-china",
-      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): fruits 3.5-5 cm across."
+      "source": "wikipedia",
+      "note": "Wikipedia, Myristica fragrans (read 2026-10-17): the fruit 6-9 cm long; a morphometric study (as a search summary gives it) 4.7-6.2 cm; 5-9 cm drawn. Flora of China's 3.5-5 cm is its width."
     },
     "traits.fruit_colour_ripe": {
       "evidence": "SourceInferred",
@@ -248,7 +250,9 @@
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."},
-    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."}
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2500629), as no source read gives it."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): fruits 3.5-5 cm across."},
+    "traits.fruits_per_inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Myristica fragrans (read 2026-10-17): female flowers in groups of one to three; one fruit to a cluster is our reading."}
   },
   "provenance": {
     "sources": [
