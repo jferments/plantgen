@@ -709,4 +709,10 @@ pub mod venation;
 /// program revision 13): a short green coil of its own on each side of the
 /// rachis while coiled, its card small until it unrolls (109 is green
 /// croziers and the eagle's claw, #186).
-pub const GENERATOR_REVISION: u32 = 110;
+/// 111: a tree fern's or a marattioid's frond comes up as a fern's crozier
+/// does (palm program revision 11): where a taxon's vernation is
+/// circinate (the rule now at the ferns' class), its rachis winds a tight
+/// inward spiral of shortening pieces, its leaflets small and rolled
+/// beside it, unrolling from its foot; the soft tree fern's croziers and
+/// young stipes are a hairy red-brown (110 is rolled pinnae, #197).
+pub const GENERATOR_REVISION: u32 = 111;

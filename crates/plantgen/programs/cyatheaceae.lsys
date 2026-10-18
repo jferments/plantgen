@@ -14,9 +14,14 @@
 # mantle of roots (thicken), croziers (coil_short) and pinnae opening come
 # from the Cyatheaceae rank file (Hoshizaki and Moran 2001).
 #
+# Revision 5: gives palm revision 11's crozier values: coil_turns 0
+# unless a taxon's vernation sets it (the fern subclass's rule:
+# circinate 2.5); a coiled piece's size, tightness, leaflet size and
+# roll as the fern program's (`polypodiidae`).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cyatheaceae 4 extends palm;
+lsystem cyatheaceae 5 extends palm;
 
 param vigour_spread = 0.1;   # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;            # how strongly a leaning trunk turns back up, radians a metre
@@ -65,3 +70,8 @@ param spine_length = 0.1;
 param spine_area = 0.004;
 param leaflet_fold = 0;       # pinnae coil in the frond's plane; they do not fold
 param boot_angle = 60;
+param coil_turns = 0;         # turns of a circinate frond's rachis in its crozier; 0 coils by curl
+param coil_size = 0.22;       # a coiled piece's length at the crozier's outer turn, a share of its open length
+param coil_tight = 2;         # how fast the coiled pieces shorten toward the tip
+param coil_pinna = 0.12;      # a coiled leaflet at the outer turn, a share of its open size
+param coil_roll = 0.08;       # a rolled leaflet's thickness, a share of its rolled length
