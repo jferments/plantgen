@@ -1,0 +1,212 @@
+{
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.2,
+      0.16,
+      0.08
+    ],
+    "foliage": [
+      0.07,
+      0.17,
+      0.04
+    ],
+    "foliage_shade": [
+      0.022,
+      0.052,
+      0.012
+    ],
+    "organs": {
+      "pinna": {
+        "shape": {
+          "divided": 1,
+          "pinnae": 9,
+          "stipe": 0.08,
+          "template": "frond",
+          "width": 0.4
+        }
+      }
+    },
+    "spreads": {
+      "organs": {
+        "pinna": {
+          "shape": {
+            "divided": [
+              0,
+              0,
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.7 m tall at 4 years in the open. Replace with measured data before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: mid-green fronds.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.pinna.shape.divided": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.pinna.shape.divided": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a lacy fern with broad, triangular, finely divided fronds in a loose crown. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.crown_start": {
+      "evidence": "Authored",
+      "note": "What the program's crown_start means: a new crown's age as a share of its parent's. Floras give a fern's fronds' sizes for the plant, not for a seedling, and describe tufted and creeping ferns as clumps or colonies of crowns of like fronds (Abrams 1923, under the sword, deer and wood ferns and bracken).",
+      "source": "plantgen-authors"
+    },
+    "generator.params.frond_length": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.pinna_length": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.stipe": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The leptosporangiate ferns' own program (growth plan G2.3a): fronds that uncoil from croziers in crowns on a rhizome. Tree ferns (Cyatheaceae) grow on palm instead.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "angle_spread": 8,
+      "crown_age": 3,
+      "crown_rate": 0.2,
+      "crown_start": 1,
+      "crowns": 1,
+      "curl": 45,
+      "droop": 0.04,
+      "droop_years": 1,
+      "emerge_spread": 0.3,
+      "frond_length": 0.825,
+      "frond_life": 1,
+      "frond_radius": 0.0022,
+      "frond_seed": 0.2,
+      "fronds_per_year": 7,
+      "old_angle": 40,
+      "open_years": 0.5,
+      "pieces": 12,
+      "pinna_angle": 70,
+      "pinna_area": 0.144,
+      "pinna_base": 0.9,
+      "pinna_length": 0.151515,
+      "pinna_lift": 10,
+      "pinna_peak": 0.08,
+      "pinna_tip": 0.15,
+      "rhizome": 0.1,
+      "season": 0.5,
+      "size_years": 2,
+      "stipe": 0.363636,
+      "unroll": 0.3,
+      "young_angle": 10
+    },
+    "program": "polypodiidae"
+  },
+  "growth": {
+    "keyframes": [
+      2,
+      4,
+      6
+    ],
+    "step": 1,
+    "years": 6
+  },
+  "growth_form": "fern",
+  "id": "dryopteris-expansa",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "spreading wood fern",
+    "family": "Polypodiaceae",
+    "genus": "Dryopteris",
+    "plant_name_id": 3150220,
+    "scientific_name": "Dryopteris expansa",
+    "usda_symbol": "DREX2"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  }
+}

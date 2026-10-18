@@ -1,0 +1,374 @@
+{
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.5,
+      "tolerance": 0.65
+    },
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 1.55,
+      "tolerance": 0.65
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.2,
+      0.07,
+      0.06
+    ],
+    "foliage": [
+      0.08,
+      0.2,
+      0.04
+    ],
+    "foliage_shade": [
+      0.025,
+      0.06,
+      0.015
+    ],
+    "organs": {
+      "flower": {
+        "colour": [
+          0.24,
+          0.05,
+          0.09
+        ],
+        "inflorescence": {
+          "droop": 20,
+          "flowers": 40,
+          "kind": "raceme",
+          "pedicel": 0.033,
+          "size": 0.144,
+          "spread": 45,
+          "taper": 0.3
+        },
+        "season": {
+          "bud": 165,
+          "bud_look": {
+            "colour": [
+              0.38,
+              0.05,
+              0.2
+            ],
+            "shape": {
+              "aspect": 0.45,
+              "template": "fruit"
+            },
+            "size": 0.18
+          },
+          "fall": 290,
+          "flower": 185,
+          "flower_look": {
+            "accent": [
+              0.8,
+              0.65,
+              0.7
+            ],
+            "colour": [
+              0.62,
+              0.06,
+              0.33
+            ],
+            "shape": {
+              "calyx": [
+                0.45,
+                0.04,
+                0.24
+              ],
+              "carpels": 4,
+              "centre": 0.12,
+              "notch": 0.12,
+              "ovary": "inferior",
+              "perianth": "corolla",
+              "petal_width": 1.15,
+              "petals": 4,
+              "point": 0.0,
+              "sepal_length": 0.5,
+              "sepals": 4,
+              "stamens": 8,
+              "template": "flower",
+              "tube": 1.5
+            },
+            "size": 0.4
+          },
+          "fruit": 195,
+          "opening": 50,
+          "ripe": 225
+        },
+        "shape": {
+          "aspect": 0.1,
+          "kind": "capsule",
+          "template": "fruit"
+        }
+      },
+      "leaf": {
+        "shape": {
+          "base": 0.25,
+          "petiole": 0.03,
+          "teeth": 0,
+          "template": "simple",
+          "tip": 0.85,
+          "widest": 0.4,
+          "width": 0.15
+        }
+      }
+    },
+    "spreads": {
+      "organs": {
+        "flower": {
+          "season": {
+            "flower_look": {
+              "shape": {
+                "stamens": [
+                  4,
+                  4,
+                  8,
+                  8,
+                  8
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species. Replace with measured data before calling this species calibrated. Each plant draws its height within the 0.5 to 2.5 m Abrams gives its stems, so the tolerance spans that range.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: four broad magenta petals with a pale centre, deep pink buds, red-purple seed pods and reddish stems.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "note": "Its raceme drawn as one cluster that opens by the day (spec rework L1c), its kind from its characters, by the rule at the flowering plants, where before the herb placed flowers, buds and capsules along the stem by their place, whatever the day: 40 flowers, by eye (the Fire Effects Information System says 15 or more; long racemes bear more), on a raceme about 45 cm long, each flower about 2.6 cm across with four magenta petals (2 to 3 cm), from deep pink buds, and slender capsules 6.5 cm long after, drawn twice as thick as in life, the thinnest fruit a fruit look draws. Its tip bends over 20 degrees, set by hand over its erect posture, for the buds that nod there (Jepson: nodding in bud). From floras and extension pages as quoted in search results; the pages themselves were not read. The plant stands as tall as before: its stems end where the raceme begins.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.inflorescence.kind": {
+      "evidence": "Authored",
+      "note": "How PlantGen lays out an inflorescence, a choice of the model's (spec rework L1): the inflorescence characters set the cluster of any look a taxon draws as one (`\"inflorescence\": {}`), its kind, how many units it bears on each axis, its primary branches and how it holds itself. Sizes, stalks and spacing stay set by hand until programs size their organs from characters.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.season": {
+      "evidence": "Authored",
+      "note": "Its days by eye from the months floras give for flowering (the Fire Effects Information System: June through September), for lowland plants: buds in mid-June, each flower open about 10 days, the raceme opening from its foot over about 50 days (floras and guides say it opens from the bottom up, and give no time), its capsules split and its seeds shed by mid-October.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.season.flower_look.shape": {
+      "evidence": "SourceInferred",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): four petals, four sepals, eight stamens and a pistil of four carpels on an inferior ovary, from the characters of the Onagraceae by the rules at the flowering plants. By hand, from Minnesota Wildflowers and Minnesota Seasons (as search results quote them; the pages themselves were not read): the long, slender, purplish ovary behind the flower that looks like a short stalk, about one and a half times the flower's radius; the sepals about half as long as the petals, the same colour but darker.",
+      "source": "minnesota-wildflowers"
+    },
+    "appearance.organs.flower.season.flower_look.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.season.flower_look.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.season.flower_look.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.season.flower_look.shape.petals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.season.flower_look.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.season.flower_look.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.kind": {
+      "evidence": "Authored",
+      "note": "How PlantGen lays out an inflorescence, a choice of the model's (spec rework L1): the inflorescence characters set the cluster of any look a taxon draws as one (`\"inflorescence\": {}`), its kind, how many units it bears on each axis, its primary branches and how it holds itself. Sizes, stalks and spacing stay set by hand until programs size their organs from characters.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.flower.season.flower_look.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a spreading clone of unbranched stems 1 to 2 m tall with many narrow, willow-like leaves in a spiral, and a long terminal raceme that opens from the bottom, with seed pods below the open flowers and nodding buds at the tip. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.leaves_per_node": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.stem_height": {
+      "evidence": "Authored",
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.stem_height": {
+      "evidence": "Authored",
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Common name (and USDA symbol, where given) as the spec's authors wrote them.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.genus": {
+      "evidence": "SourceInferred",
+      "note": "The genus WCVP v16's accepted name is written in.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "taxon.scientific_name": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's accepted name for the plant the spec's authors wrote as Chamaenerion angustifolium, which WCVP treats as a synonym.",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "bare": 0.12,
+      "buds_above": 1,
+      "clump_radius": 0.35,
+      "dioecious": 0,
+      "flower_angle": 0,
+      "flower_area": 0.115,
+      "flower_size": 0.45,
+      "flowers": 1,
+      "fruit_below": 0,
+      "leaf_angle": 50,
+      "leaf_area": 0.083,
+      "leaf_base": 0.7,
+      "leaf_length": 0.17,
+      "leaf_peak": 0.3,
+      "leaf_top": 0.35,
+      "leaves_per_node": 1,
+      "maturity": 1,
+      "nod": 0,
+      "nodes": 45,
+      "pedicel": 0.0,
+      "raceme": 0.03,
+      "sex": 0.5,
+      "stem_height": 1.05,
+      "stem_lean": 5,
+      "stem_radius": 0.004,
+      "stem_rate": 0.45,
+      "stems": 14,
+      "wiggle": 1.5,
+      "young_height": 0.57
+    },
+    "program": "onagraceae",
+    "spreads": {
+      "params": {
+        "stem_height": [
+          0.5,
+          0.555,
+          1.05,
+          2.355,
+          2.5
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "step": 1,
+    "years": 8
+  },
+  "growth_form": "forb",
+  "id": "epilobium-angustifolium",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "fireweed",
+    "family": "Onagraceae",
+    "genus": "Epilobium",
+    "plant_name_id": 2790112,
+    "scientific_name": "Epilobium angustifolium"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2
+    ]
+  }
+}

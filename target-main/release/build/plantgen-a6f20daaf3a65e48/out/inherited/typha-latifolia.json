@@ -1,0 +1,187 @@
+{
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.35
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.3,
+      0.32,
+      0.18
+    ],
+    "foliage": [
+      0.08,
+      0.16,
+      0.04
+    ],
+    "foliage_shade": [
+      0.025,
+      0.05,
+      0.015
+    ],
+    "organs": {
+      "leaf": {
+        "bend": {
+          "cup": 0,
+          "droop": 25,
+          "fold": 15,
+          "twist": 12
+        },
+        "shape": {
+          "aspect": 0.035,
+          "taper": 1,
+          "template": "blade"
+        }
+      },
+      "spike": {
+        "colour": [
+          0.3,
+          0.17,
+          0.08
+        ],
+        "shade": [
+          0.1,
+          0.06,
+          0.03
+        ],
+        "shape": {
+          "aspect": 0.11,
+          "template": "fruit"
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 2 m tall at 4 years in the open. Replace with measured data before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: grey-green leaves; dark brown spikes.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall emergent spreading by rhizomes into dense stands, with long, flat, strap-shaped leaves sheathing a stout stem topped by a dense brown sausage of female flowers. Redone on the sedge program as a clonal stand (plant forms F6). Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.culm_height": {
+      "evidence": "Authored",
+      "note": "How PlantGen's grass and sedge programs draw a culm from a flora's length, a choice of the model's: each year's culms grow to culm_height at maturity, the panicle or spike included, leaning off their tiller, so culm_height is a culm's length, not the plant's height. A flora's culm length is read as the range's middle unless it names a typical length, and taken to include the inflorescence; where a flora measures only to the inflorescence's base, the culms come out short by about its length. Culms are the flowering stems of the grasses, sedges and rushes, all in this order.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.divergence": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The lineage's own program (growth plan G2.3a), on the sedge base: it gives the values the sedge program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "culm_height": 2.25,
+      "culm_lean": 2,
+      "culm_radius": 0.008,
+      "divergence": 180,
+      "flower_age": 1,
+      "flowering": 0.45,
+      "head": 0,
+      "height_spread": 0.1,
+      "leaf_angle": 10,
+      "leaf_area": 0.017,
+      "leaf_length": 1.8,
+      "leaf_spread": 0.15,
+      "leaves": 8,
+      "shoot_life": 1,
+      "shoots_per_year": 14,
+      "spike_area": 0.142,
+      "spike_length": 0.2,
+      "spread_years": 3,
+      "stand_radius": 0.8,
+      "tuft_area": 0.235
+    },
+    "program": "typha"
+  },
+  "growth": {
+    "keyframes": [
+      1,
+      2,
+      4
+    ],
+    "step": 1,
+    "years": 6
+  },
+  "growth_form": "graminoid",
+  "id": "typha-latifolia",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "broadleaf cattail",
+    "family": "Typhaceae",
+    "genus": "Typha",
+    "plant_name_id": 271005,
+    "scientific_name": "Typha latifolia",
+    "usda_symbol": "TYLA"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  }
+}

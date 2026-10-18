@@ -1,0 +1,323 @@
+{
+  "allometry": [
+    {
+      "age": 30,
+      "dbh": 0.25,
+      "environment": "interior",
+      "height": 20,
+      "tolerance": 0.35
+    },
+    {
+      "age": 60,
+      "dbh": 0.45,
+      "environment": "interior",
+      "height": 36,
+      "tolerance": 0.35
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.11,
+      0.065,
+      0.045
+    ],
+    "bark_pattern": {
+      "contrast": 0.75,
+      "depth": 0.5,
+      "elongation": 4.5,
+      "fissure": 0.3,
+      "kind": "furrowed",
+      "roughness": 0.5,
+      "scale": 0.06,
+      "smooth_below": 0.06,
+      "variation": 0.15
+    },
+    "flare": {
+      "amount": 0.35,
+      "buttresses": 0,
+      "height": 0.9,
+      "ridge": 0.3
+    },
+    "foliage": [
+      0.05,
+      0.11,
+      0.035
+    ],
+    "foliage_shade": [
+      0.018,
+      0.045,
+      0.02
+    ],
+    "organs": {
+      "cone": {
+        "colour": [
+          0.5,
+          0.35,
+          0.2
+        ],
+        "shape": {
+          "aspect": 0.45,
+          "cone": 1,
+          "template": "fruit"
+        }
+      },
+      "spray": {
+        "accent": [
+          0.2,
+          0.15,
+          0.07
+        ],
+        "shape": {
+          "aspect": 0.55,
+          "needle": 0.104167,
+          "ranks": 0,
+          "template": "needles",
+          "twigs": 3,
+          "width": 0.05
+        }
+      }
+    },
+    "ridges": {
+      "contrast": 0.45,
+      "depth": 0.06,
+      "spacing": 0.09,
+      "twist": 0
+    },
+    "spreads": {
+      "organs": {
+        "spray": {
+          "shape": {
+            "needle": [
+              0.0833333,
+              0.0854167,
+              0.104167,
+              0.122917,
+              0.125
+            ]
+          }
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights and diameters for a well-stocked western Washington stand, from general forestry knowledge. Replace with a published yield or site-index table before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye. Needles stand all round the twigs (bottlebrush), unlike the flat sprays of true firs and cedars; bark thick and furrowed with a modest flare. Needle shoots (plant roadmap P4): needles 2 to 3 cm long and 1 to 1.5 mm wide, so a needle 0.05 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth with resin blisters when young, then very thick and deeply furrowed into dark brown ridges; set from general knowledge of the species, not measured. Spec rework E6d: `needle`, `ranks` now set by the rules at Pinidae from the stated needles.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.spray.shape.needle": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.spray.shape.ranks": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.spray.shape.needle": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data. Cones (plant forms F3): 5 to 10 cm hang, with three-pointed bracts between the scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.adult_age": {
+      "evidence": "SourceInferred",
+      "note": "The juvenile period is the time from germination to the first flowers, cones or seed, which the Woody Plant Seed Manual's tables give as the minimum seed-bearing age (spec rework P6). adult_age is the first year a program measuring it by the plant's age lets the plant flower or bear cones, so it is the juvenile period itself.",
+      "source": "bonner-karrfalt-2008"
+    },
+    "generator.params.cone_length": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.cone_pitch": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.cone_years": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): the sexual system its taxa state most often decides; a species whose taxa state dioecy no more often than another system bears both sexes on every plant until it states its own.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.height_max": {
+      "evidence": "Authored",
+      "note": "What the conifer and succulent programs' height_max means: the height their Chapman-Richards curve rises toward with age and never reaches, so the tallest the plant grows, the height a flora gives as its greatest (\"trees to 40 m\"). Plants of a usual age stand below it, as the curve says. Where a flora's greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.needle_years": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.wood_density": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.wood_modulus": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The conifers' own program (growth plan G2.3a), renamed from `conifer` and homed here: a leader laying down whorls of branches each year, with sprays of foliage and cones.",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.adult_age": {
+      "evidence": "SourceInferred",
+      "note": "The juvenile period is the time from germination to the first flowers, cones or seed, which the Woody Plant Seed Manual's tables give as the minimum seed-bearing age (spec rework P6). adult_age is the first year a program measuring it by the plant's age lets the plant flower or bear cones, so it is the juvenile period itself.",
+      "source": "bonner-karrfalt-2008"
+    },
+    "generator.spreads.params.height_max": {
+      "evidence": "Authored",
+      "note": "What the conifer and succulent programs' height_max means: the height their Chapman-Richards curve rises toward with age and never reaches, so the tallest the plant grows, the height a flora gives as its greatest (\"trees to 40 m\"). Plants of a usual age stand below it, as the curve says. Where a flora's greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "adult_age": 18.5,
+      "branch_angle": 45,
+      "branch_reach": 6.0,
+      "cone_area": 0.589,
+      "cone_chance": 0.12,
+      "cone_length": 0.06,
+      "cone_pitch": 115,
+      "cone_years": 2,
+      "dioecious": 0,
+      "height_max": 65,
+      "height_rate": 0.018,
+      "height_shape": 1.5,
+      "needle_years": 8,
+      "pipe_organ": 0.0095,
+      "pipe_rings": 9.8e-6,
+      "sex": 0.5,
+      "spray_area": 0.23,
+      "spray_droop": 25,
+      "upturn": 0.006,
+      "whorl": 5,
+      "wood_density": 774.4,
+      "wood_modulus": 10800
+    },
+    "program": "pinidae",
+    "spreads": {
+      "params": {
+        "adult_age": [
+          7,
+          8.15,
+          18.5,
+          28.85,
+          30
+        ],
+        "height_max": [
+          60,
+          60.5,
+          65,
+          69.5,
+          70
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      5,
+      15,
+      30,
+      60
+    ],
+    "step": 1,
+    "years": 60
+  },
+  "growth_form": "excurrent_tree",
+  "id": "pseudotsuga-menziesii",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy for milestone P0. Calibration against yield tables and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "method citation; no data used",
+        "title": "Pałubicki et al. 2009, Self-organizing tree models for image synthesis (method only: light, vigour and shedding)"
+      },
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "Douglas-fir",
+    "family": "Pinaceae",
+    "genus": "Pseudotsuga",
+    "plant_name_id": 379633,
+    "scientific_name": "Pseudotsuga menziesii",
+    "usda_symbol": "PSME"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open",
+      "interior"
+    ],
+    "seeds": [
+      1,
+      2
+    ]
+  }
+}

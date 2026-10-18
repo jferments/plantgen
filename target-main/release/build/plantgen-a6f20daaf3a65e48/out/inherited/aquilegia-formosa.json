@@ -1,0 +1,371 @@
+{
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.3,
+      0.25,
+      0.2
+    ],
+    "foliage": [
+      0.07,
+      0.13,
+      0.08
+    ],
+    "foliage_shade": [
+      0.022,
+      0.04,
+      0.025
+    ],
+    "organs": {
+      "basal": {
+        "shape": {
+          "leaflet_width": 0.8,
+          "leaflets": 3,
+          "lowest": 0.9,
+          "pattern": "palmate",
+          "petiole": 0.4,
+          "petiolule": 0.1,
+          "pinnules": 3,
+          "spread": 160,
+          "teeth": 3,
+          "template": "compound"
+        }
+      },
+      "bud": {
+        "colour": [
+          0.7,
+          0.2,
+          0.1
+        ],
+        "shape": {
+          "aspect": 0.5,
+          "template": "fruit"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.95,
+          0.8,
+          0.2
+        ],
+        "colour": [
+          0.85,
+          0.15,
+          0.08
+        ],
+        "form": {
+          "flower": {
+            "cup": 60,
+            "curl": 5
+          }
+        },
+        "shape": {
+          "calyx": [
+            0.85,
+            0.15,
+            0.08
+          ],
+          "carpels": 5,
+          "centre": 0.35,
+          "corolla": "regular",
+          "notch": 0.0,
+          "ovary": "superior",
+          "perianth": "corolla",
+          "petal_width": 0.9,
+          "petals": 5,
+          "point": 0.6,
+          "sepal_length": 1.5,
+          "sepals": 5,
+          "spur": 0.8,
+          "stamens": 40,
+          "template": "flower"
+        }
+      },
+      "fruit": {
+        "colour": [
+          0.3,
+          0.35,
+          0.2
+        ],
+        "shape": {
+          "aspect": 0.4,
+          "kind": "capsule",
+          "template": "fruit"
+        }
+      },
+      "leaf": {
+        "shape": {
+          "leaflet_width": 0.8,
+          "leaflets": 3,
+          "lowest": 0.9,
+          "pattern": "palmate",
+          "petiole": 0.2,
+          "petiolule": 0.1,
+          "pinnules": 0,
+          "spread": 140,
+          "teeth": 3,
+          "template": "compound"
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.6 m tall at 4 years in the open. Replace with measured data before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: blue-green leaves; red and yellow flowers.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.basal.shape": {
+      "evidence": "Authored",
+      "note": "The basal leaves drawn twice ternate (spec rework P4): three divisions on long stalks, each of three leaflets, from its characters by the rules at the flowering plants; before, nine leaflets stood along a rachis. By eye: the divisions 160 degrees apart, the leaflets broad, fan-like and crenate (three teeth a side stand in for their lobes).",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.basal.shape.leaflets": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.basal.shape.pattern": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.basal.shape.pinnules": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.form": {
+      "evidence": "Authored",
+      "note": "The petal blades cupped round the stamens, the sepals spreading half as much, by eye from photographs.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape": {
+      "evidence": "SourceInferred",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): five petals, each spurred, inside five red sepals, from the characters by the rules at the flowering plants. By hand, as the Flora of North America has them (as search results quote them; the pages themselves were not read): the sepals red and longer than the petal blades; the spurs about the flower's radius (the floras give the spur but not the flower's width); 40 stamens for its many.",
+      "source": "fna-online"
+    },
+    "appearance.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.petals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.fruit.shape.kind": {
+      "evidence": "Authored",
+      "note": "How PlantGen lays out an inflorescence, a choice of the model's (spec rework L1): the inflorescence characters set the cluster of any look a taxon draws as one (`\"inflorescence\": {}`), its kind, how many units it bears on each axis, its primary branches and how it holds itself. Sizes, stalks and spacing stay set by hand until programs size their organs from characters.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "note": "The stem leaves drawn once ternate, by eye: smaller and less divided than the basal ones, three leaflets from one point (spec rework P4).",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.leaflets": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.pattern": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a graceful herb with blue-green, divided leaves and nodding red flowers with yellow centres and long spurs. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.leaves_per_node": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.stem_height": {
+      "evidence": "Authored",
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.stem_height": {
+      "evidence": "Authored",
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "bare": 0.2,
+      "basal_angle": 50,
+      "basal_area": 0.313,
+      "basal_leaves": 5,
+      "basal_length": 0.2,
+      "basal_piece_area": 0.235,
+      "bud_area": 0.636,
+      "bud_size": 0.015,
+      "buds_above": 0.85,
+      "clump_radius": 0.08,
+      "dioecious": 0,
+      "flower_angle": 130,
+      "flower_area": 0.329,
+      "flower_size": 0.04,
+      "flowers": 6,
+      "fruit_area": 0.51,
+      "fruit_below": 0.15,
+      "fruit_length": 0.025,
+      "leaf_angle": 50,
+      "leaf_area": 0.58,
+      "leaf_base": 1.0,
+      "leaf_length": 0.08,
+      "leaf_peak": 0.1,
+      "leaf_top": 0.4,
+      "leaves_per_node": 1,
+      "maturity": 1.2,
+      "nod": 10,
+      "nodes": 4,
+      "pedicel": 0.05,
+      "raceme": 0.4,
+      "sex": 0.5,
+      "stem_height": 0.75,
+      "stem_lean": 10,
+      "stem_radius": 0.002,
+      "stem_rate": 0.5,
+      "stems": 4,
+      "wiggle": 2
+    },
+    "program": "ranunculaceae",
+    "spreads": {
+      "params": {
+        "stem_height": [
+          0.5,
+          0.525,
+          0.75,
+          0.975,
+          1
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      2,
+      4,
+      6
+    ],
+    "step": 1,
+    "years": 6
+  },
+  "growth_form": "forb",
+  "id": "aquilegia-formosa",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "western columbine",
+    "family": "Ranunculaceae",
+    "genus": "Aquilegia",
+    "plant_name_id": 2644784,
+    "scientific_name": "Aquilegia formosa",
+    "usda_symbol": "AQFO"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  }
+}
