@@ -621,7 +621,8 @@ pub mod venation;
 /// treetop (`top_ramp`) and clear the trunk in step with height (`bole`),
 /// so fully branched crowns grow to 300 years; and old crowns keep their
 /// foliage from 150 to 300 years: a side shoot keeps growing at least
-/// `side_floor` once the leader stops rising, the family's dormant buds
+/// `side_floor` once the leader stops rising (coming in over `floor_ramp`
+/// metres below the top), the family's dormant buds
 /// wait on the limbs' main axes for 300 years (`epi_order`), and a limb is
 /// shed for the mean light of its tips (`limb_tip`) more than for its size,
 /// and slow shoots are laid down every few years (`seg_min`) so the fully

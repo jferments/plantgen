@@ -47,6 +47,10 @@
       "rule": "0.15",
       "why": "Once the leader stops rising, a limb's side shoots still grow a few centimetres a year and set twigs, renewing the foliage along it. Held to the leader's dwindling growth with the limb's own tip, they shrank to millimetres and set almost no twigs, and old crowns lost their foliage after 150 years (grand fir, Douglas-fir, western hemlock)."
     },
+    "generator.params.floor_ramp": {
+      "rule": "10",
+      "why": "The side shoots' floor comes in over the top 10 m of an old tree, so its top stays narrow: in full to the treetop, the short limbs of an old tree's top whorls carried side shoots longer than themselves, and the tops of 300-year Douglas-fir, Sitka spruce and subalpine fir were domes two to four times as wide as photographed ones (inaturalist-crowns-2026-10: the top tenth .06 to .12 of the height)."
+    },
     "generator.params.limb_light": {
       "rule": "0.003",
       "why": "An old limb is shed for want of light only when its tips catch little light for the wood they carry, a third as readily as the Pinidae program's 0.01: a fully branched old limb carries many segments, and at 0.01 limbs whose foliage was well lit were shed for their size, so subalpine fir and western larch lost four fifths of their foliage between 150 and 300 years."
