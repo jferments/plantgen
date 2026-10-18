@@ -66,10 +66,18 @@
 # stems and an organ pipe's open near the tips and along their sides.
 # None, as before, unless a lineage asks.
 #
+# Revision 4 (thread "Cacti"): a chain of fruit hangs: it turns toward the
+# ground as it leaves its joint, and each fruit hangs from near the tip of
+# the one before, a little to one side, so the fruit no longer run into
+# each other (Anderson, The Cactus Family pp. 35 and 209 to 210: long
+# pendulous chains). A chain grows while its end hangs clear of the
+# ground, and starts a year after its joint, once the joint's tip is known
+# to be clear.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem column 3;
+lsystem column 4;
 
 # The plant.
 param vigour_spread;          # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -186,8 +194,8 @@ module Dj(k, m, n, d, v, r, s, pa, back);
 module Jo(r, a, pa);                    # a lateral's way out through its trunk's side
 module Dp(th, d, v, r);                 # a pad's daughter, th degrees round its top
 module Fl(k, m, n, l, r);               # flowers k to k + m - 1 of n on a joint
-module Cb(n);                           # where a chain of fruit starts, if n is 1
-module Ch(n);                           # the growing end of a chain of n fruit
+module Cb(n) queries position;          # where a chain of fruit starts, if n is 1
+module Ch(n) queries position;          # the growing end of a chain of n fruit
 module Cf;                              # one fruit of a chain
 
 body stem;
@@ -409,12 +417,17 @@ interpret Fl(k, m, n, l, r) : m == 1 ->
       f(r * 0.6) Fo ];
 
 # A chain of fruit hangs from its joint and grows one more fruit at its
-# end each year, as the last one flowers again.
-decompose Cb(n) : n > 0 && (dioecious < 0.5 || sex >= 0.5) -> [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) Cf Ch(1) ];
-decompose Cb(n) -> ;
-rule Ch(n) : n < chain_max -> Cf Ch(n + 1);
+# end each year, as the last one flowers again, while its end hangs clear
+# of the ground; a joint whose tip lies on the ground starts none.
+decompose Cb(n) : n == 0 || (dioecious >= 0.5 && sex < 0.5) -> ;
+rule Cb(n) : py > fruit_size * 1.2 ->
+    [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) steer(0, -1, 0, 0.8) Cf Ch(1) ];
+rule Ch(n) : n < chain_max && py > fruit_size * 1.2 -> Cf Ch(n + 1);
+# Each fruit hangs from near the tip of the one before it, a little to one
+# side, as the flower it grew from opened from one of that fruit's areoles.
 interpret Cf ->
-    fruit(fruit_size * uniform(0.9, 1.1)) f(fruit_size * 0.85) +(gauss() * 18) &(gauss() * 10);
+    fruit(fruit_size * uniform(0.9, 1.1)) f(fruit_size * 0.95) /(137.5) &(15 + gauss() * 8)
+    steer(0, -1, 0, 0.6);
 
 # An older ring's place in a column's crown: last year's fruit, ring_step
 # degrees farther down the dome per ring and turned half a place.

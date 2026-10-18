@@ -745,4 +745,10 @@ pub mod venation;
 /// the new `fruit_shape`), and stigma lobes take their own colour
 /// (`Flower::stigma`, from the new `stigma_colour`) (115 is fruit skins
 /// and stem tips).
-pub const GENERATOR_REVISION: u32 = 116;
+/// 117: a chain-fruit cholla's chains of fruit hang toward the ground
+/// (`column` revision 4, `cactaceae` revision 10), the organ pipe's
+/// flowers carry hundreds of stamens and an 11- to 12-lobed stigma, and a
+/// type of laid-out flowers too many to draw fine is drawn one step
+/// coarser instead of as cards (`blooms::step`) (116 is pericarpels, buds,
+/// fruit outlines and stigma colours).
+pub const GENERATOR_REVISION: u32 = 117;

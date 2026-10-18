@@ -31,8 +31,10 @@
 //!   a small wedge pointing toward the cone's tip.
 //!
 //! Each organ type's solids on a level are capped at [`TYPE_TRIANGLES`]:
-//! a type with more organs than fit (a tree in full bloom) keeps its cards
-//! on that level ([`fits`]).
+//! a type of laid-out flowers with more than fit drawn fine is drawn one
+//! step coarser, as a part mesh is (an organ pipe's crown of flowers with
+//! hundreds of stamens each), and a type with more organs than fit even so
+//! (a tree in full bloom) keeps its cards on that level ([`step`]).
 
 use serde::{Deserialize, Serialize};
 
@@ -276,7 +278,7 @@ impl Form {
 }
 
 /// About how many triangles one organ of `look` takes as a solid.
-fn triangles_per_organ(look: &Look) -> usize {
+fn triangles_per_organ(look: &Look, coarse: usize) -> usize {
     if look.inflorescence.is_some() {
         return crate::clusters::triangles(look);
     }
@@ -284,7 +286,9 @@ fn triangles_per_organ(look: &Look) -> usize {
         (Form::Flower(_), Shape::Flower(flower)) if flower.is_plain() => {
             flower.petals as usize * 24 + DOME_TRIANGLES
         }
-        (Form::Flower(form), Shape::Flower(flower)) => crate::flowers::triangles(flower, form, 0),
+        (Form::Flower(form), Shape::Flower(flower)) => {
+            crate::flowers::triangles(flower, form, coarse)
+        }
         (Form::Flower(form), Shape::Head(head)) => crate::capitula::triangles(head, form, 0),
         (Form::Fruit(form), Shape::Fruit(fruit)) if !crate::fruit::is_single(fruit) => {
             crate::fruit::triangles(form, fruit)
@@ -317,16 +321,55 @@ pub(crate) fn scales(form: &FruitForm, aspect: f64) -> u32 {
     }
 }
 
-/// Whether the organs of type `index` in `graph` fit [`TYPE_TRIANGLES`]
-/// drawn as solids.
+/// The coarse step at which the organs of type `index` in `graph` fit
+/// [`TYPE_TRIANGLES`] drawn as solids: 0, or [`COARSER_FLOWERS`] for laid-out
+/// flowers (a step that keeps every whorl, with fewer facets); `None` when
+/// they do not fit.
 #[must_use]
-pub fn fits(graph: &PlantGraph, look: &Look, index: usize) -> bool {
+pub fn step(graph: &PlantGraph, look: &Look, index: usize) -> Option<usize> {
     let organs = graph
         .organs
         .iter()
         .filter(|organ| usize::from(organ.organ) == index)
         .count();
-    organs * triangles_per_organ(look) <= TYPE_TRIANGLES
+    let laid = look.inflorescence.is_none()
+        && matches!(
+            (&look.form, &look.shape),
+            (Form::Flower(_), Shape::Flower(flower)) if !flower.is_plain()
+        );
+    let steps = if laid { COARSER_FLOWERS } else { 0 };
+    (0..=steps).find(|&coarse| organs * triangles_per_organ(look, coarse) <= TYPE_TRIANGLES)
+}
+
+/// Whether the organs of type `index` in `graph` fit [`TYPE_TRIANGLES`]
+/// drawn as solids, at the step [`step`] gives.
+#[must_use]
+pub fn fits(graph: &PlantGraph, look: &Look, index: usize) -> bool {
+    step(graph, look, index).is_some()
+}
+
+/// The coarsest step a laid-out flower's solids take on a level before
+/// it keeps its cards: the first step, which draws each whorl as the fine
+/// flower does with fewer facets; from the second the flower is reduced
+/// to kites (`crate::flowers::draw_reduced`).
+pub const COARSER_FLOWERS: usize = 1;
+
+/// [`build`] with each type at its own coarse step (`steps`, by index:
+/// `None` leaves it out), as [`step`] gives.
+pub fn build_stepped(
+    graph: &PlantGraph,
+    looks: &[Look],
+    steps: &[Option<usize>],
+    colour: &dyn Fn(&Look, &GraphOrgan) -> [f32; 3],
+    mesh: &mut Mesh,
+) {
+    let most = steps.iter().flatten().copied().max().unwrap_or(0);
+    for coarse in 0..=most {
+        let solid: Vec<bool> = steps.iter().map(|step| *step == Some(coarse)).collect();
+        if solid.contains(&true) {
+            build_coarse(graph, looks, &solid, colour, coarse, mesh);
+        }
+    }
 }
 
 /// Draw every organ of `graph` whose type is in `solid` (by index) and
