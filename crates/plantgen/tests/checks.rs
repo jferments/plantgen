@@ -148,11 +148,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "fuchsia-magellanica",
-        "leaf_arrangement",
-        "its leaves are in threes (Bailey, Bean), but the broadleaf program draws at most two leaves a node, so it draws them opposite",
-    ),
-    (
-        "fuchsia-magellanica",
         "shoot_leaves",
         "a cut-back plant's shoots grow 3 to 5 ft a season (Bean) with some 15 to 25 whorls, but in the open at six years its shoots grow no more than a few vigour units, bearing about 8 leaves",
     ),
