@@ -705,8 +705,21 @@ pub mod venation;
 /// scaly all along, its pinnae lie along its coil, and a ternate frond
 /// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (108
 /// is magnoliid fruit, #202).
-/// 110: previews and impostors cut a card where its coverage, read
+/// 110: each pinna in a fern's crozier is rolled as its frond is (fern
+/// program revision 13): a short green coil of its own on each side of the
+/// rachis while coiled, its card small until it unrolls (109 is green
+/// croziers and the eagle's claw, #186).
+/// 111: a tree fern's or a marattioid's frond comes up as a fern's crozier
+/// does (palm program revision 11): where a taxon's vernation is
+/// circinate (the rule now at the ferns' class), its rachis winds a tight
+/// inward spiral of shortening pieces, its leaflets small and rolled
+/// beside it, unrolling from its foot; the soft tree fern's croziers and
+/// young stipes are a hairy red-brown (110 is rolled pinnae, #197).
+/// 112: the soft tree fern puts out a year's fronds in one spring flush
+/// (`emerge_spread` 0.15, from 0.3), so its croziers stand together at
+/// the crown's top (111 is tree-fern croziers, #205).
+/// 113: previews and impostors cut a card where its coverage, read
 /// bilinearly between texels, is below one half, so an entire blade's edge
 /// follows its outline rather than a staircase of texels that reads as
-/// teeth up close (109 is fern croziers, #186).
-pub const GENERATOR_REVISION: u32 = 110;
+/// teeth up close (112 is the soft tree fern's spring flush, #207).
+pub const GENERATOR_REVISION: u32 = 113;
