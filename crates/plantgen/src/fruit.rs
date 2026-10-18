@@ -437,34 +437,44 @@ impl One {
                 mesh,
             );
         }
-        let (count, reach, thick) = match fruit.armed {
+        // Prickles as a thorn apple's: stout cones, broad at the foot, a
+        // sixth of the fruit's width long and packed over it (the
+        // capsule "densely prickly", Britton and Brown; "very prickly",
+        // Bentham); bristles as a burr's, slender and close.
+        let (count, reach, foot) = match fruit.armed {
             Armed::None => return,
-            Armed::Prickles => (48_u32, 0.2, 0.05),
-            Armed::Bristles => (80, 0.12, 0.015),
+            Armed::Prickles => (150_u32, 0.16, 0.05),
+            Armed::Bristles => (200, 0.14, 0.008),
         };
         if self.detail.around < 8 {
             return;
         }
         let other = self.direction.cross(self.across);
-        let colour = blooms::shade(body, 0.8);
+        let colour = blooms::shade(body, 0.92);
+        let first = mesh.positions.len();
+        let first_index = mesh.indices.len();
         for k in 0..count {
             // On a Fibonacci spiral over the body, its ends left bare.
-            let along = 0.12 + 0.76 * (f64::from(k) + 0.5) / f64::from(count);
+            let along = 0.1 + 0.8 * (f64::from(k) + 0.5) / f64::from(count);
             let angle = math::radians(137.507_764 * f64::from(k));
             let radial = self.across * math::cos(angle) + other * math::sin(angle);
             let half = self.width * 0.5 * math::sqrt((1.0 - (2.0 * along - 1.0).powi(2)).max(0.0));
-            let foot = self.at(along) + radial * half;
-            let side = self.direction * (self.width * thick);
-            blooms::wedge(
-                foot - side,
-                foot + side,
-                foot + radial * (self.width * reach),
-                radial.cross(self.direction) * (self.width * thick * 0.5),
+            // Sunk a little, so no gap shows where the body's facets
+            // fall inside its true outline; leaning a little toward the
+            // fruit's tip, as they grow.
+            let base = self.at(along) + radial * (half - self.width * foot * 0.5);
+            let axis = (radial + self.direction * 0.15).normalize_or(radial);
+            spine(
+                base,
+                axis,
+                self.width * (reach + foot * 0.5),
+                self.width * foot,
                 colour,
                 part,
                 mesh,
             );
         }
+        leaves::smooth_normals(mesh, first, first_index);
     }
 
     /// `count` lobes round the fruit at `at` of its length, each `reach`
@@ -832,5 +842,35 @@ mod tests {
                 assert!(p.length() <= 0.1 * 1.3, "{kind:?}: {p:?}");
             }
         }
+    }
+}
+
+/// A prickle or bristle: a six-sided cone from `base` along `axis`,
+/// `length` long and `radius` wide at its foot.
+fn spine(
+    base: Vec3,
+    axis: Vec3,
+    length: f64,
+    radius: f64,
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    const SIDES: u32 = 6;
+    let side = any_perpendicular(axis);
+    let other = axis.cross(side);
+    let leaf = part.leaf(base, axis, side, 0.0, 0.0, colour);
+    let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
+    for k in 0..SIDES {
+        let theta = std::f64::consts::TAU * f64::from(k) / f64::from(SIDES);
+        mesh.push(leaf.vertex(
+            base + (side * math::cos(theta) + other * math::sin(theta)) * radius,
+            colour,
+        ));
+    }
+    let tip = mesh.push(leaf.vertex(base + axis * length, colour));
+    for k in 0..SIDES {
+        mesh.indices
+            .extend_from_slice(&[first + k, first + (k + 1) % SIDES, tip]);
     }
 }
