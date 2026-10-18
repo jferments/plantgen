@@ -102,9 +102,18 @@
 # nodding bell, a jimsonweed's upright trumpet). With units 0, as
 # every program gives it unless it says otherwise, a herb grows as before.
 #
+# Revision 13: a raceme's open flowers and buds face as their posture
+# says (flower_tilt, degrees from straight up: 90 level, 180 hanging), as
+# a sympodium's flowers have since revision 12. The stalk rises at
+# flower_angle as before and arches over along its outer half toward the
+# flower's facing, so a lily's flowers nod or hang from stalks that first
+# rise from the stem. With flower_tilt 0, as every program gives it
+# unless it says otherwise, the stalk is straight and a herb grows as
+# before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 12;
+lsystem herb 13;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -213,6 +222,7 @@ module Ic(wd);                  # an inflorescence on its peduncle
 module Lq(q, g);                 # the leaves at a node at height share q; g > 0: a geminate leaf g above
 module Lz(s, g);                 # those leaves, the longest s long
 module Sd(i, h);                 # a side shoot from the axil of main-stem node i
+module Pd(len);                  # a flower's or bud's stalk len long, arching toward flower_tilt
 
 organ leaf leaf area leaf_area;
 organ basal leaf as piece area basal_area;
@@ -338,12 +348,12 @@ decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < fruit_below
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < buds_above ->
     !(stem_radius * 0.5) F(h * r / flowers)
-    [ &(flower_angle * uniform(0.8, 1.2)) !(stem_radius * 0.2) F(pedicel)
+    [ &(flower_angle * uniform(0.8, 1.2)) !(stem_radius * 0.2) Pd(pedicel)
       flower(flower_size * uniform(0.9, 1.1)) ] Br(flower_angle)
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 ->
     &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers * bud_spacing)
-    [ &(flower_angle * bud_lean) !(stem_radius * 0.2) F(pedicel * bud_stalk)
+    [ &(flower_angle * bud_lean) !(stem_radius * 0.2) Pd(pedicel * bud_stalk)
       bud(bud_size * lerp(1, 0.5, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above))) ]
     Br(flower_angle * bud_lean) /(flower_divergence);
 decompose Rc(i, m, h, r) -> ;
@@ -352,6 +362,14 @@ decompose Rc(i, m, h, r) -> ;
 decompose Br(a) : bract_length > 0 ->
     [ &(a * bract_lean * uniform(0.85, 1.15)) $ bract(bract_length * uniform(0.85, 1.15)) ];
 decompose Br(a) -> ;
+# A stalk: straight, or with flower_tilt set, straight for its inner
+# part and then arching over toward the flower's facing, turning a share
+# of the way after each of its seven short outer segments, so it curves
+# rather than bends (revision 13).
+decompose Pd(len) : flower_tilt > 0 ->
+    F(len * 0.3) incline(flower_tilt, 0.25)
+    F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1);
+decompose Pd(len) -> F(len);
 
 # Last year's stems are gone.
 rule Sm -> %;

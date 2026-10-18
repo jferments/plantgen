@@ -950,6 +950,7 @@ impl Sheet {
             // The face toward the units, so a forward arch bends against
             // the leaf's own.
             arch: -self.hood,
+            arch_from: 0.0,
             twist: 0.0,
             margin: None,
             teeth: None,
@@ -1966,6 +1967,7 @@ fn draw_laid(
                         ),
                         accent: shown.accent,
                         filament: flower.filament.unwrap_or(shown.accent),
+                        anther: flower.anther_colour.unwrap_or(shown.accent),
                         ovary: flower.pistil.unwrap_or(shown.accent),
                     },
                     part,

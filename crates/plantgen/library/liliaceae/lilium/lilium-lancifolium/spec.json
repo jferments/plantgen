@@ -1,0 +1,258 @@
+{
+  "schema": 1,
+  "id": "lilium-lancifolium",
+  "taxon": {
+    "scientific_name": "Lilium lancifolium",
+    "common_name": "tiger lily",
+    "plant_name_id": 279922,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.2,
+      "high": 2.0
+    },
+    "bark_colour": [
+      95,
+      60,
+      65
+    ],
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.15,
+      "high": 0.18
+    },
+    "leaf_width_m": {
+      "min": 0.012,
+      "max": 0.018,
+      "typical": 0.015
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_posture": "spreading",
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 6,
+      "high": 25,
+      "typical": 5
+    },
+    "flower_posture": "pendent",
+    "perianth_reflexion": "reflexed",
+    "perianth_reflexion_from": {
+      "min": 0.2,
+      "max": 0.25
+    },
+    "flower_colour": [
+      240,
+      115,
+      35
+    ],
+    "perianth_spots": "many",
+    "perianth_spot_colour": [
+      70,
+      25,
+      30
+    ],
+    "tepal_length_m": {
+      "min": 0.07,
+      "max": 0.1
+    },
+    "stamen_exsertion": "strongly_exserted",
+    "anther_colour": [
+      115,
+      50,
+      75
+    ],
+    "pedicel_length_m": {
+      "min": 0.04,
+      "max": 0.1,
+      "typical": 0.07
+    },
+    "fruit_size_m": {
+      "min": 0.03,
+      "max": 0.04
+    },
+    "flowering_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium lancifolium, plant_name_id 279922."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium tigrinum, p. 1870 (read on the Internet Archive, 2026-10-18): stem stout, 2-4 ft high, var. splendens often 6-7 ft; FNA: stems to 2 m. Its reference height is the middle of that range, 0.9 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium tigrinum, p. 1870 (read on the Internet Archive, 2026-10-18): stem stout, 2-4 ft high, var. splendens often 6-7 ft; FNA: stems to 2 m."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): stems white-lanate, purplish; Bailey: deep purplish brown, covered with white or greyish cobweb-like down. The colour is our reading of the words."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): leaves scattered"
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): leaves 10-15(-18) x ca. 1.5 cm"
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): leaves ca. 1.5 cm wide, ca. 3-6(-10) times longer than wide"
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): blade lanceolate, often narrowly so"
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): leaves horizontal and drooping at tips"
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): inflorescences racemose, 3-6(-25)-flowered"
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): flowers pendent, not fragrant"
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): perianth Turk's-cap-shaped; sepals and petals reflexed ca. 1/5-1/4 along length from base"
+    },
+    "traits.perianth_reflexion_from": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): reflexed ca. 1/5-1/4 along length from base"
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): orange; Bailey (p. 1870): bright salmon-red segments The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): orange with many purple-brown spots"
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): purple-brown spots; Bailey: spotted purplish black The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): sepals and petals 7-10 x 1-2 cm"
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): stamens strongly exserted"
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): anthers purplish, ca. 2 cm; pollen rust The colour is our reading of the words."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): pedicel sometimes dichotomous, stout and relatively short, to 10 cm. The least and typical lengths are our reading of 'relatively short'"
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): capsules 3-4 cm"
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium lancifolium (efloras.org, read 2026-10-18): flowering late summer (mid Jul-early Sep); Bailey: Aug, Sept"
+    }
+  }
+}

@@ -1,0 +1,298 @@
+{
+  "schema": 1,
+  "id": "lilium-washingtonianum",
+  "taxon": {
+    "scientific_name": "Lilium washingtonianum",
+    "common_name": "Washington lily",
+    "plant_name_id": 280210,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.9,
+      "max": 1.5,
+      "high": 2.0
+    },
+    "height_max_m": 2.0,
+    "leaf_arrangement": "whorled",
+    "leaf_whorls": {
+      "min": 1,
+      "max": 8,
+      "typical": 3
+    },
+    "leaves_per_whorl": {
+      "min": 3,
+      "max": 16,
+      "typical": 8
+    },
+    "leaf_length_m": {
+      "min": 0.037,
+      "max": 0.123
+    },
+    "leaf_width_m": {
+      "min": 0.009,
+      "max": 0.047,
+      "typical": 0.022
+    },
+    "leaf_shape": "oblanceolate",
+    "leaf_posture": "spreading",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 33,
+      "typical": 8
+    },
+    "flower_posture": "spreading",
+    "corolla_shape": "funnelform",
+    "perianth_reflexion": "recurved",
+    "perianth_reflexion_from": {
+      "min": 0.67,
+      "max": 0.75
+    },
+    "petal_shape": "spatulate",
+    "petal_apex": "obtuse",
+    "flower_colour": [
+      248,
+      245,
+      238
+    ],
+    "perianth_spots": "few",
+    "perianth_spot_colour": [
+      180,
+      50,
+      120
+    ],
+    "tepal_length_m": {
+      "min": 0.061,
+      "max": 0.113
+    },
+    "stamen_exsertion": "barely_exserted",
+    "anther_colour": [
+      240,
+      230,
+      200
+    ],
+    "pedicel_length_m": {
+      "min": 0.048,
+      "max": 0.15
+    },
+    "fruit_size_m": {
+      "min": 0.027,
+      "max": 0.058
+    },
+    "fruit_width_m": {
+      "min": 0.016,
+      "max": 0.029
+    },
+    "flowering_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium washingtonianum, plant_name_id 280210."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.9-1.5 m; FNA gives only 'stems to 2 m'. Its reference height is the middle of that range, 1.2 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.9-1.5 m; FNA gives only 'stems to 2 m'."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): stems to 2 m, often glaucous"
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): leaves in 1-8 whorls or partial whorls"
+    },
+    "traits.leaf_whorls": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): in 1-8 whorls. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): 3-16 leaves per whorl. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): leaves 3.7-12.3 x 0.9-4.7 cm"
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): leaves 0.9-4.7 cm wide, 2-6.5 times longer than wide. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): blade oblanceolate, sometimes obovate, rarely elliptic"
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): horizontal and drooping at tips to ascending"
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): inflorescences racemose, 1-33-flowered. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): flowers more or less horizontal, slightly bilaterally symmetric, strongly fragrant"
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): perianth more or less funnelform"
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): sepals and petals recurved 2/3-3/4 along length from base and scarcely overlapping to form tube"
+    },
+    "traits.perianth_reflexion_from": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): recurved 2/3-3/4 along length from base"
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): petals noticeably wider than sepals, oblanceolate and often very wide distally"
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): petal apex widely acute, obtuse, or rounded"
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): white, often aging deep pink or lavender The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): often with fine magenta spots concentrated basally"
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): magenta spots The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): sepals (6.1-)6.7-11.3 cm, petals (6.1-)6.6-11.2 cm"
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): stamens barely exserted"
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): anthers off white or cream, becoming pale pink or yellow The colour is our reading of the words."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): pedicel 4.8-15 cm"
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): capsules 2.7-5.8 x 1.6-2.9 cm"
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): capsules 1.6-2.9 cm wide"
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): subsp. purpurascens flowering summer (mid Jun-mid Aug)"
+    }
+  }
+}

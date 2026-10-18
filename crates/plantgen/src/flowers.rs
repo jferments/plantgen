@@ -59,6 +59,14 @@ const SHOWN: f64 = 0.3;
 /// radius.
 const NAKED_REACH: f64 = 0.9;
 
+/// Whether any perianth part keeps its foot straight and curls from part
+/// way along, so it needs more stations.
+fn form_bends(laid: &Floral) -> bool {
+    laid.pieces
+        .iter()
+        .any(|piece| piece.curl_from > 0.0 && piece.curl != 0.0)
+}
+
 /// What a perianth part is.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Term {
@@ -97,6 +105,8 @@ pub struct Piece {
     pub width: f64,
     /// Degrees it curls back over its length.
     pub curl: f64,
+    /// Share of its length from its foot kept straight before the curl.
+    pub curl_from: f64,
     /// A keel's fold (`SolidLeaf::fold`).
     pub fold: f64,
     /// Its width at its foot over its widest: narrow for a free petal,
@@ -213,6 +223,8 @@ pub struct Floral {
     pub form_cup: f64,
     /// The petals' notch, for the card.
     pub notch: f64,
+    /// Dark spots on each petal's or tepal's inner face, toward its foot.
+    pub spots: u32,
 }
 
 /// The flower `flower` drawn with `form`, `radius` metres in radius, a
@@ -306,6 +318,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 length: tooth,
                 width: (spread(m, s, r) * 0.8).clamp(tooth * 0.08, tooth.max(1e-9)),
                 curl: curl * 0.5,
+                curl_from: form.curl_from,
                 fold: 0.0,
                 base: if fused > 0.0 { 0.9 } else { 0.35 },
                 taper: 1.3,
@@ -355,6 +368,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 length: lobe_length * long * grown,
                 width: lobe_width * wide,
                 curl,
+                curl_from: form.curl_from,
                 fold: 0.0,
                 base: lobe_base,
                 taper,
@@ -538,6 +552,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                     length: tepal_length,
                     width: (wide * (0.7 + 0.3 * t)).min(tepal_length.max(1e-9)),
                     curl,
+                    curl_from: form.curl_from,
                     fold: 0.0,
                     base: 0.35,
                     taper,
@@ -761,6 +776,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         pistil,
         form_cup: form.cup,
         notch: flower.notch,
+        spots: flower.spots,
     }
 }
 
@@ -831,8 +847,10 @@ pub struct Colours {
     pub petal: [f32; 3],
     pub calyx: [f32; 3],
     pub accent: [f32; 3],
-    /// The filaments' and the style's; the anthers stay in the accent.
+    /// The filaments' and the style's.
     pub filament: [f32; 3],
+    /// The anthers': the flower's `anther_colour`, else the accent.
+    pub anther: [f32; 3],
     /// A single pistil's ovary.
     pub ovary: [f32; 3],
 }
@@ -910,7 +928,13 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             mesh,
         );
     }
-    let (most_stations, most_across) = if fine { (6, 2) } else { (4, 1) };
+    // A petal bent back from part way along needs stations past the bend.
+    let (most_stations, most_across) = match (fine, form_bends(laid)) {
+        (true, true) => (10, 1),
+        (true, false) => (6, 2),
+        (false, true) => (6, 1),
+        (false, false) => (4, 1),
+    };
     for piece in &laid.pieces {
         if !(piece.length > 0.0 && piece.width > 0.0) {
             continue;
@@ -931,6 +955,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             taper: piece.taper,
             tip: 0.0,
             arch: piece.curl,
+            arch_from: piece.curl_from,
             twist: 0.0,
             margin: None,
             teeth: None,
@@ -959,6 +984,9 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             across.min(most_across),
             mesh,
         );
+        if fine && laid.spots > 0 && piece.term != Term::Sepal {
+            spots(&leaf, &solid, laid.spots, colours.accent, mesh);
+        }
     }
     for spur in &laid.spurs {
         let (foot, direction) = frame.rod(spur);
@@ -987,7 +1015,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
                 foot + direction * stamen.rod.length,
                 along,
                 stamen.anther,
-                colours.accent,
+                colours.anther,
                 part,
                 mesh,
             );
@@ -1446,6 +1474,63 @@ fn anther(tip: Vec3, direction: Vec3, length: f64, colour: [f32; 3], part: Part,
     }
 }
 
+/// `count` dark spots on the inner face of a perianth part drawn as
+/// `leaf` with `solid`, scattered over its lower half and kept off its
+/// margins, each a small diamond standing just off the face. Where they
+/// fall is fixed by the part's own position, so every flower's differ.
+fn spots(leaf: &leaves::Leaf, solid: &SolidLeaf, count: u32, colour: [f32; 3], mesh: &mut Mesh) {
+    const STEPS: usize = 24;
+    let arch = math::radians(solid.arch);
+    let from = solid.arch_from;
+    // The midrib's points and tangents, as `Leaf::draw` walks it.
+    let mut point = leaf.base;
+    let mut walk = Vec::with_capacity(STEPS + 1);
+    for i in 0..=STEPS {
+        let u = i as f64 / STEPS as f64;
+        let bent = if from > 0.0 {
+            let mid = (u + 0.5 / STEPS as f64).min(1.0);
+            ((mid - from) / (1.0 - from)).clamp(0.0, 1.0)
+        } else {
+            u
+        };
+        let tangent = leaf.heading.rotate_about(leaf.left, arch * bent);
+        walk.push((point, tangent));
+        point += tangent * (leaf.length / STEPS as f64);
+    }
+    let seed =
+        (leaf.base.x * 7919.0 + leaf.base.y * 104_729.0 + leaf.base.z * 1_299_709.0).to_bits();
+    let size = (leaf.width * 0.07).max(leaf.length * 0.012);
+    for k in 0..count {
+        let a = crate::rng::unit(crate::rng::mix64(seed ^ (u64::from(k) * 0x9E37_79B9)));
+        let b = crate::rng::unit(crate::rng::mix64(seed ^ (u64::from(k) * 0x85EB_CA6B + 1)));
+        // Crowded toward the foot and thinning out by two thirds of the
+        // length, where a lily's floras say its spots stop ("concentrated
+        // in proximal 1/2-2/3").
+        let u = 0.05 + 0.6 * a.powf(1.5);
+        let station = ((u * STEPS as f64).round() as usize).min(STEPS);
+        let (centre, tangent) = walk[station];
+        let side = leaf.left;
+        let face = tangent.cross(side).normalize_or(leaf.heading);
+        let w = solid.width_at(u) * 0.5 * leaf.width * 0.75 * (2.0 * b - 1.0);
+        let lift = solid.thickness * leaf.width * 0.6 + size * 0.15;
+        let at = centre + side * w + face * lift;
+        let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
+        let long = size * (0.8 + 0.6 * b);
+        for (along, across) in [
+            (long, 0.0),
+            (0.0, size * 0.6),
+            (-long, 0.0),
+            (0.0, -size * 0.6),
+        ] {
+            mesh.push(leaf.vertex(at + tangent * along + side * across, colour));
+        }
+        mesh.indices
+            .extend_from_slice(&[first, first + 1, first + 2, first, first + 2, first + 3]);
+        mesh.indices
+            .extend_from_slice(&[first, first + 2, first + 1, first, first + 3, first + 2]);
+    }
+}
+
 /// Triangles one flower takes drawn solid `coarse` steps coarser.
 #[must_use]
 pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
@@ -1462,6 +1547,7 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             calyx: CALYX,
             accent: [1.0; 3],
             filament: [1.0; 3],
+            anther: [1.0; 3],
             ovary: [1.0; 3],
         },
         Part {
@@ -2096,6 +2182,7 @@ mod tests {
                         calyx: CALYX,
                         accent: [0.9, 0.7, 0.1],
                         filament: [0.9, 0.7, 0.1],
+                        anther: [0.9, 0.7, 0.1],
                         ovary: [0.9, 0.7, 0.1],
                     },
                     Part {

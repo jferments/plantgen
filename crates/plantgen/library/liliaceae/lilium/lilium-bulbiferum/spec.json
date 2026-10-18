@@ -1,0 +1,224 @@
+{
+  "schema": 1,
+  "id": "lilium-bulbiferum",
+  "taxon": {
+    "scientific_name": "Lilium bulbiferum",
+    "common_name": "orange lily",
+    "plant_name_id": 280683,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "raceme": 0.04
+    }
+  },
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.55,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.9,
+      "high": 1.2
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.076,
+      "max": 0.1
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_posture": "spreading",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 5,
+      "typical": 3
+    },
+    "flower_posture": "erect",
+    "corolla_shape": "cupped",
+    "perianth_reflexion": "spreading",
+    "flower_colour": [
+      240,
+      110,
+      25
+    ],
+    "perianth_spots": "many",
+    "perianth_spot_colour": [
+      90,
+      30,
+      25
+    ],
+    "tepal_length_m": {
+      "min": 0.04,
+      "max": 0.06
+    },
+    "stamen_exsertion": "included",
+    "anther_colour": [
+      180,
+      50,
+      30
+    ],
+    "flowering_months": [
+      5,
+      6,
+      7
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium bulbiferum, plant_name_id 280683."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its few upright flowers stand close at the stem's tip (Wikipedia: one to five), drawn as a raceme a twenty-fifth of the stem long."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): on average 20-90 cm, at most 120 cm; Bailey (p. 1876): stem 2-4 ft. Its reference height is the middle of that range, 0.55 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): on average 20-90 cm, at most 120 cm; Bailey (p. 1876): stem 2-4 ft."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium bulbiferum, p. 1876 (read on the Internet Archive, 2026-10-18): leaves 50-75, horizontal or semi-erect, with no whorls named: read as scattered."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium bulbiferum, p. 1876 (read on the Internet Archive, 2026-10-18): leaves 3-4 in long; Wikipedia: up to 10 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): the leaves lanceolate."
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium bulbiferum, p. 1876 (read on the Internet Archive, 2026-10-18): leaves horizontal or semi-erect."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): the inflorescence has one to five flowers; Bailey: flowers 1-4. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): hermaphroditic and scentless, have six upright tepals."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): six upright tepals, the outer slightly narrower than the inner."
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): the tepals upright, their tips spreading in the photographs on the page; neither source says they curve back."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): bright yellow-orange; Bailey: bright orange-red, tinged or blotched yellow in centre. The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): with reddish-brown dots; Bailey: spotted deep purplish black."
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): reddish-brown dots. The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): the flowers 4-6 cm long."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): the stamens erect, about half as long as the tepals."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): with red anthers; Bailey: anthers red. The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium bulbiferum' (read 2026-10-18): flowering May through July; Bailey: June, early July."
+    }
+  }
+}

@@ -773,6 +773,15 @@
       "when": {"leaf_arrangement": ["whorled"]},
       "why": "leaves at each node of a whorled shoot"
     },
+    "leaf_whorls": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [1, 40],
+      "optional": true,
+      "when": {"leaf_arrangement": ["whorled"]},
+      "why": "whorls of leaves up a flowering stem, where a flora counts them (a lily's 'leaves in 1-9 whorls'), the scattered leaves between and above them left out"
+    },
     "phyllotaxis_pattern": {
       "group": "leaves",
       "organ": "leaf",
@@ -1284,6 +1293,71 @@
       "values": ["erect", "ascending", "spreading", "nodding", "pendent"],
       "optional": true,
       "why": "how an open flower holds itself on its stalk: facing up, rising at a slant, held out level, bent over to face down and out (a belladonna's bell, a pepper's star), or hanging (an angel's trumpet)"
+    },
+    "perianth_reflexion": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["none", "spreading", "recurved", "reflexed", "revolute"],
+      "optional": true,
+      "why": "how far an open flower's petals or tepals bend back from their cup: not at all, spreading out, their tips curved back (a bellflower's, a funnel lily's), bent sharply back toward the stalk (a Turk's-cap lily's, a shooting star's), or rolled back on themselves"
+    },
+    "perianth_reflexion_from": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "share",
+      "range": [0, 0.9],
+      "optional": true,
+      "when": {"perianth_reflexion": ["recurved", "reflexed", "revolute"]},
+      "why": "where along a petal or tepal, as a share of its length from its base, it begins to bend back: a flora's 'reflexed 2/5 to 1/2 along length from base' is about 0.45, 'recurved 3/5 to 4/5' about 0.7"
+    },
+    "perianth_fused": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the petals or tepals are joined into a tube at their base (a bellflower's, a daffodil's) or free to the base, a lily's 'sepals and petals distinct' however bell- or funnel-shaped the flower they make"
+    },
+    "tepal_length_m": {
+      "group": "flowers",
+      "organ": "tepal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.5],
+      "optional": true,
+      "why": "a tepal from its base to its tip; for a perianth whose outer and inner tepals differ (a lily's 'sepals' and 'petals'), the longer"
+    },
+    "stamen_exsertion": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "enum",
+      "values": ["included", "barely_exserted", "exserted", "strongly_exserted"],
+      "optional": true,
+      "why": "how far the stamens reach past the perianth's mouth: held within it, just reaching past it, standing well out of it, or hanging far out beyond it (a Turk's-cap lily's whose tepals are bent back)"
+    },
+    "anther_colour": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "colour",
+      "optional": true,
+      "why": "the anthers' colour, before their pollen colours them"
+    },
+    "perianth_spots": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["none", "few", "many", "copious"],
+      "optional": true,
+      "why": "dark spots on the inner face of the petals or tepals, mostly toward their base: none, a few, many, or crowded (a tiger lily's, a Columbia lily's 'copious maroon spots')"
+    },
+    "perianth_spot_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "optional": true,
+      "when": {"perianth_spots": ["few", "many", "copious"]},
+      "why": "the colour of those spots: maroon, purple-black, magenta"
     },
     "zygomorphy": {
       "group": "flowers",

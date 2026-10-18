@@ -534,6 +534,7 @@ impl One {
             taper: 0.45,
             tip: 0.0,
             arch: 6.0,
+            arch_from: 0.0,
             twist: 12.0,
             margin: None,
             teeth: None,

@@ -1,0 +1,297 @@
+{
+  "schema": 1,
+  "id": "lilium-bolanderi",
+  "taxon": {
+    "scientific_name": "Lilium bolanderi",
+    "common_name": "Bolander's lily",
+    "plant_name_id": 280732,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.9,
+      "high": 1.1
+    },
+    "leaf_colour": [
+      115,
+      140,
+      115
+    ],
+    "height_max_m": 1.1,
+    "leaf_arrangement": "whorled",
+    "leaf_whorls": {
+      "min": 1,
+      "max": 5,
+      "high": 6,
+      "typical": 3
+    },
+    "leaves_per_whorl": {
+      "min": 3,
+      "max": 19,
+      "typical": 6
+    },
+    "leaf_length_m": {
+      "min": 0.018,
+      "max": 0.071
+    },
+    "leaf_width_m": {
+      "min": 0.007,
+      "max": 0.028
+    },
+    "leaf_shape": "obovate",
+    "leaf_posture": "ascending",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 9,
+      "typical": 3
+    },
+    "flower_posture": "nodding",
+    "corolla_shape": "campanulate",
+    "perianth_reflexion": "recurved",
+    "perianth_reflexion_from": {
+      "min": 0.6,
+      "max": 0.8
+    },
+    "flower_colour": [
+      190,
+      35,
+      60
+    ],
+    "perianth_spots": "many",
+    "perianth_spot_colour": [
+      110,
+      25,
+      35
+    ],
+    "tepal_length_m": {
+      "min": 0.031,
+      "max": 0.047
+    },
+    "stamen_exsertion": "included",
+    "anther_colour": [
+      175,
+      45,
+      80
+    ],
+    "pedicel_length_m": {
+      "min": 0.008,
+      "max": 0.142,
+      "typical": 0.05
+    },
+    "fruit_size_m": {
+      "min": 0.02,
+      "max": 0.041
+    },
+    "fruit_width_m": {
+      "min": 0.012,
+      "max": 0.021
+    },
+    "flowering_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium bolanderi, plant_name_id 280732."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.3-0.9 m; FNA gives only 'stems to 1.1 m'. Its reference height is the middle of that range, 0.6 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.3-0.9 m; FNA gives only 'stems to 1.1 m'."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): blade noticeably glaucous; drawn a grey-green. The colour is our reading of the words."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): stems to 1.1 m, glaucous"
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): leaves in 1-5(-6) whorls or partial whorls"
+    },
+    "traits.leaf_whorls": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): in 1-5(-6) whorls. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): 3-19 leaves per whorl. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): leaves 1.8-7.1 x 0.7-2.8 cm"
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): leaves 0.7-2.8 cm wide, 2.2-4.8 times longer than wide"
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): blade more or less obovate, oblanceolate, or occasionally elliptic"
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): leaves ascending and often cupping stem"
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): inflorescences usually umbellate in small plants, in large plants racemose or in 2 whorls, 1-9-flowered. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): flowers nodding to horizontal, not fragrant"
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): perianth more or less campanulate or funnelform"
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): sepals and petals somewhat recurved 3/5-4/5 along length from base"
+    },
+    "traits.perianth_reflexion_from": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): recurved 3/5-4/5 along length from base"
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): red or magenta, occasionally salmon pink or pale yellow The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): with maroon spots"
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): maroon spots The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): sepals 3.1-4.7 cm, petals 3-4.5 cm"
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): stamens included"
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): anthers reddish or magenta The colour is our reading of the words."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): pedicel 0.8-14.2 cm. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): capsules 2-4.1 x 1.2-2.1 cm"
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): capsules 1.2-2.1 cm wide"
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): flowering summer (mid Jun-mid Aug)"
+    }
+  }
+}

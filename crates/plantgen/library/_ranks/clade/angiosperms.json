@@ -61,6 +61,33 @@
       "map": {"flower_posture": {"erect": 20, "ascending": 45, "spreading": 80, "nodding": 120, "pendent": 150}},
       "why": "A woody plant's bloom stands from its shoot as the flower's posture says; past a right angle it hangs."
     },
+    "appearance.organs.flower.form.flower.curl": {
+      "map": {"perianth_reflexion": {"none": 0, "spreading": 30, "recurved": 90, "reflexed": 180, "revolute": 220}},
+      "why": "A flower's petals or tepals bend back from their cup as far as its flora says: not at all, a little where they spread, a quarter turn where their tips curve back (recurved), half a turn where they sweep back to the stalk (reflexed, a Turk's cap), and further where they roll (revolute)."
+    },
+    "appearance.organs.flower.form.flower.curl_from": {
+      "map": {"perianth_reflexion": {"recurved": {"rule": "first(perianth_reflexion_from, 0.6)"}, "reflexed": {"rule": "first(perianth_reflexion_from, 0.35)"}, "revolute": {"rule": "first(perianth_reflexion_from, 0.2)"}}},
+      "why": "They bend back from as far along their length as the flora says ('reflexed 2/5 along length from base'); where it gives no share, a recurved tip from three fifths, a reflexed one from about a third, a revolute one from a fifth, as the North American lilies mostly are."
+    },
+    "appearance.organs.*.shape.spots": {
+      "template": "flower",
+      "map": {"perianth_spots": {"none": 0, "few": 4, "many": 9, "copious": 12}},
+      "why": "Dark spots on the inner face of each petal or tepal, toward its base: a few, many, or crowded as its flora words them (12 is as many as a flower's part keeps at full detail)."
+    },
+    "appearance.organs.*.shape.anther_colour": {
+      "template": "flower",
+      "colour": "anther_colour",
+      "why": "Anthers are drawn in the colour their flora gives them, apart from the look's accent."
+    },
+    "appearance.organs.flower.accent": {
+      "colour": "perianth_spot_colour",
+      "why": "A spotted flower's spots are drawn in their stated colour, the look's accent."
+    },
+    "appearance.organs.*.shape.stamen_length": {
+      "template": "flower",
+      "map": {"stamen_exsertion": {"included": 0.5, "barely_exserted": 0.7, "exserted": 0.85, "strongly_exserted": 1.0}},
+      "why": "Stamens reach as far, for a petal's length, as their flora says: within the perianth, just to its mouth, well out of it, or past its tips."
+    },
     "generator.params.bloom_size": {
       "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "solitary": {"rule": "flower_size_m"}}},
       "else": {"rule": "flower_size_m"},

@@ -1,0 +1,278 @@
+{
+  "schema": 1,
+  "id": "lilium-michiganense",
+  "taxon": {
+    "scientific_name": "Lilium michiganense",
+    "common_name": "Michigan lily",
+    "plant_name_id": 280003,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 1.05,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.5,
+      "high": 1.9
+    },
+    "height_max_m": 1.9,
+    "leaf_arrangement": "whorled",
+    "leaf_whorls": {
+      "min": 4,
+      "max": 12,
+      "typical": 6
+    },
+    "leaves_per_whorl": {
+      "min": 3,
+      "max": 13,
+      "typical": 7
+    },
+    "leaf_length_m": {
+      "min": 0.046,
+      "max": 0.153
+    },
+    "leaf_width_m": {
+      "min": 0.006,
+      "max": 0.023
+    },
+    "leaf_shape": "elliptic",
+    "leaf_posture": "spreading",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 11,
+      "typical": 4
+    },
+    "flower_posture": "pendent",
+    "perianth_reflexion": "reflexed",
+    "perianth_reflexion_from": {
+      "min": 0.25,
+      "max": 0.4
+    },
+    "flower_colour": [
+      240,
+      120,
+      30
+    ],
+    "perianth_spots": "many",
+    "perianth_spot_colour": [
+      110,
+      25,
+      35
+    ],
+    "tepal_length_m": {
+      "min": 0.055,
+      "max": 0.093
+    },
+    "stamen_exsertion": "exserted",
+    "anther_colour": [
+      175,
+      45,
+      105
+    ],
+    "pedicel_length_m": {
+      "min": 0.11,
+      "max": 0.22
+    },
+    "fruit_size_m": {
+      "min": 0.028,
+      "max": 0.05
+    },
+    "fruit_width_m": {
+      "min": 0.015,
+      "max": 0.026
+    },
+    "flowering_months": [
+      6,
+      7
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium michiganense, plant_name_id 280003."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.6-1.5 m; FNA gives only 'stems to 1.9 m'. Its reference height is the middle of that range, 1.05 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.6-1.5 m; FNA gives only 'stems to 1.9 m'."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): stems to 1.9 m"
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): leaves in 4-12 whorls or partial whorls"
+    },
+    "traits.leaf_whorls": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): in 4-12 whorls. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): 3-13 leaves per whorl. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): leaves 4.6-15.3 x 0.6-2.3 cm"
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): leaves 0.6-2.3 cm wide, 3.5-13.7 times longer than wide"
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): blade narrowly elliptic, occasionally linear or slightly lanceolate"
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): more or less horizontal or ascending in sun, drooping at tips"
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): inflorescences racemose, 1-11-flowered. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): flowers more or less pendent, not fragrant"
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): perianth Turk's-cap-shaped; sepals and petals reflexed 1/4-2/5 along length from base"
+    },
+    "traits.perianth_reflexion_from": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): reflexed 1/4-2/5 along length from base"
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): yellow-orange or orange proximally, red-orange distally; drawn orange The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): with maroon, often large spots"
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): maroon spots The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): sepals 5.5-9.3 cm, petals 5.3-9.1 cm"
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): stamens moderately exserted"
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): anthers magenta or occasionally pink-magenta The colour is our reading of the words."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): pedicel 11-22 cm"
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): capsules 2.8-5 x 1.5-2.6 cm"
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): capsules 1.5-2.6 cm wide"
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): flowering summer (mid Jun-Jul)"
+    }
+  }
+}

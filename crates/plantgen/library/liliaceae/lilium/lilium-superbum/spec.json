@@ -1,0 +1,270 @@
+{
+  "schema": 1,
+  "id": "lilium-superbum",
+  "taxon": {
+    "scientific_name": "Lilium superbum",
+    "common_name": "Turk's-cap lily",
+    "plant_name_id": 280253,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1.2,
+      "max": 2.8
+    },
+    "leaf_arrangement": "whorled",
+    "leaf_whorls": {
+      "min": 6,
+      "max": 24,
+      "typical": 10
+    },
+    "leaves_per_whorl": {
+      "min": 3,
+      "max": 20,
+      "typical": 8
+    },
+    "leaf_length_m": {
+      "min": 0.071,
+      "max": 0.261,
+      "typical": 0.13
+    },
+    "leaf_width_m": {
+      "min": 0.007,
+      "max": 0.027,
+      "typical": 0.015
+    },
+    "leaf_shape": "elliptic",
+    "leaf_posture": "spreading",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 22,
+      "typical": 8
+    },
+    "flower_posture": "pendent",
+    "perianth_reflexion": "reflexed",
+    "perianth_reflexion_from": 0.15,
+    "flower_colour": [
+      235,
+      95,
+      30
+    ],
+    "perianth_spots": "many",
+    "perianth_spot_colour": [
+      140,
+      30,
+      75
+    ],
+    "tepal_length_m": {
+      "min": 0.068,
+      "max": 0.105
+    },
+    "stamen_exsertion": "strongly_exserted",
+    "anther_colour": [
+      165,
+      45,
+      105
+    ],
+    "pedicel_length_m": {
+      "min": 0.074,
+      "max": 0.191
+    },
+    "fruit_size_m": {
+      "min": 0.029,
+      "max": 0.062
+    },
+    "fruit_width_m": {
+      "min": 0.017,
+      "max": 0.025
+    },
+    "flowering_months": [
+      7,
+      8
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium superbum, plant_name_id 280253."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): stems 1.2-2.8 m Its reference height is the middle of that range, 2.0 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): stems 1.2-2.8 m"
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): leaves usually more or less evenly distributed along stem, in 6-24 whorls or partial whorls"
+    },
+    "traits.leaf_whorls": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): in 6-24 whorls. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): 3-20 leaves per whorl. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): leaves 7.1-26.1 x 0.7-2.7 cm. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): leaves 0.7-2.7 cm wide, 4-18 times longer than wide. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): blade narrowly elliptic, sometimes extremely so"
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): usually more or less horizontal and drooping at tips, distal leaves ascending in sun"
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): inflorescences racemose, 1-22-flowered. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): flowers pendent, not fragrant"
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): perianth Turk's-cap-shaped; sepals and petals reflexed less than 1/5 along length from base"
+    },
+    "traits.perianth_reflexion_from": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): reflexed less than 1/5 along length from base"
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): yellow or yellow-orange proximally, red-orange or sometimes red, red-purple, orange or yellow barely suffused with red distally; drawn red-orange The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): spotted magenta"
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): spotted magenta The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): sepals 6.8-10.5 cm, petals 7-10.2 cm"
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): stamens strongly exserted"
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): anthers magenta, occasionally purple or dull purple The colour is our reading of the words."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): pedicel 7.4-19.1 cm"
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): capsules 2.9-6.2 x 1.7-2.5 cm"
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): capsules 1.7-2.5 cm wide"
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): flowering summer (Jul-early Aug)"
+    }
+  }
+}

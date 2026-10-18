@@ -778,7 +778,7 @@ impl Season {
 
 // Serde's `skip_serializing_if` passes a reference.
 #[allow(clippy::trivially_copy_pass_by_ref)]
-fn is_zero(value: &f64) -> bool {
+pub(crate) fn is_zero(value: &f64) -> bool {
     *value == 0.0
 }
 
@@ -1338,6 +1338,13 @@ pub struct Flower {
     /// A single pistil's ovary's colour; the accent if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pistil: Option<[f32; 3]>,
+    /// The anthers' colour; the accent, as before, if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub anther_colour: Option<[f32; 3]>,
+    /// Dark spots, in the accent colour, on each petal's or tepal's inner
+    /// face toward its foot: 0 none, about 20 a lily's copious spots.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub spots: u32,
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
@@ -1438,6 +1445,8 @@ impl Default for Flower {
             calyx: None,
             filament: None,
             pistil: None,
+            anther_colour: None,
+            spots: 0,
             corolla: Corolla::Regular,
             petal_whorls: 1,
             banner: BANNER,
@@ -1493,6 +1502,7 @@ impl Flower {
             && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
+            && self.spots == 0
     }
 
     /// Whether the flower's plane of symmetry is fixed by the axis that
@@ -2534,6 +2544,7 @@ impl Shape {
                 check("throat", s.throat, 0.05, 1.0)?;
                 check("belly", s.belly, 0.0, 0.5)?;
                 check("tube_reach", s.tube_reach, 0.0, 12.0)?;
+                count("spots", s.spots, 0, 60)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
                 count("stamens", s.stamens, 0, 200)?;
@@ -4813,6 +4824,11 @@ mod tests {
                         assert!(with(field, points).is_ok(), "{at}");
                         assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
                     }
+                    Field::Colour => {
+                        let colour = serde_json::json!([0.9, 0.8, 0.2]);
+                        assert!(with(field, colour).is_ok(), "{at}");
+                        assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
+                    }
                 }
             }
             // Every field the template writes is listed.
@@ -4860,6 +4876,7 @@ mod tests {
                     assert!(error.contains("unknown variant"), "{key}: {error}");
                 }
                 Field::Outline => panic!("{key} takes no outline"),
+                Field::Colour => panic!("{key} takes no colour"),
             }
         }
     }

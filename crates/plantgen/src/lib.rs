@@ -620,4 +620,13 @@ pub mod venation;
 /// long as stated (`corolla_tube_length_m`, a flower's `tube_reach`); a
 /// flower's posture turns a sympodium's flowers and a woody plant's blooms
 /// (`flower_posture`); a panicle's cluster size is its branches' length.
-pub const GENERATOR_REVISION: u32 = 105;
+/// 120: a lily is drawn from its flora's words: a herb's flower and bud
+/// stalks arch over to the flower's posture (herb program revision 13); a
+/// flower's tepals bend back from part way along them (`curl_from`, from
+/// `perianth_reflexion` and `perianth_reflexion_from`), up to 270 degrees
+/// where they roll; spots on their inner faces (`spots`, from
+/// `perianth_spots`, in `perianth_spot_colour`); anthers in their own
+/// colour (`anther_colour`); stamens as far out as `stamen_exsertion`
+/// says; free tepals unjoined however bell-shaped (`perianth_fused`)
+/// (106 to 119 are held for other open work).
+pub const GENERATOR_REVISION: u32 = 120;

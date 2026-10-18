@@ -1,0 +1,286 @@
+{
+  "schema": 1,
+  "id": "lilium-canadense",
+  "taxon": {
+    "scientific_name": "Lilium canadense",
+    "common_name": "Canada lily",
+    "plant_name_id": 280672,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 1.05,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.5,
+      "high": 1.8
+    },
+    "height_max_m": 1.8,
+    "leaf_arrangement": "whorled",
+    "leaf_whorls": {
+      "min": 6,
+      "max": 10,
+      "typical": 7
+    },
+    "leaves_per_whorl": {
+      "min": 3,
+      "max": 12,
+      "typical": 6
+    },
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.173
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.036
+    },
+    "leaf_shape": "elliptic",
+    "leaf_posture": "spreading",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 17,
+      "typical": 5
+    },
+    "flower_posture": "pendent",
+    "corolla_shape": "campanulate",
+    "perianth_reflexion": "recurved",
+    "perianth_reflexion_from": {
+      "min": 0.5,
+      "max": 0.75
+    },
+    "flower_colour": [
+      240,
+      175,
+      45
+    ],
+    "perianth_spots": "many",
+    "perianth_spot_colour": [
+      110,
+      25,
+      35
+    ],
+    "tepal_length_m": {
+      "min": 0.054,
+      "max": 0.085
+    },
+    "stamen_exsertion": "barely_exserted",
+    "anther_colour": [
+      135,
+      50,
+      80
+    ],
+    "pedicel_length_m": {
+      "min": 0.05,
+      "max": 0.235,
+      "typical": 0.12
+    },
+    "fruit_size_m": {
+      "min": 0.03,
+      "max": 0.052
+    },
+    "fruit_width_m": {
+      "min": 0.015,
+      "max": 0.023
+    },
+    "flowering_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium canadense, plant_name_id 280672."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.6-1.5 m; FNA gives only 'stems to 1.8 m'. Its reference height is the middle of that range, 1.05 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.6-1.5 m; FNA gives only 'stems to 1.8 m'."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): stems to 1.8 m"
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): leaves in 6-10 whorls or partial whorls"
+    },
+    "traits.leaf_whorls": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): in 6-10 whorls. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): 3-12 leaves per whorl. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): leaves 4-17.3 x 1-3.6 cm"
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): leaves 1-3.6 cm wide, 2.5-10 times longer than wide"
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): blade narrowly elliptic, occasionally elliptic or slightly lanceolate"
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): more or less horizontal, occasionally slightly ascending, drooping at tips"
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): inflorescences racemose, 1-17-flowered. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): flowers pendent, not fragrant"
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): perianth more or less campanulate"
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): sepals and petals somewhat recurved 1/2-3/4 along length from base"
+    },
+    "traits.perianth_reflexion_from": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): recurved 1/2-3/4 along length from base"
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): dirty yellow proximally giving way to red dusting on tips, or orange, or both surfaces solid yellow; drawn yellow-orange The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): spotted maroon"
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): spotted maroon The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): sepals 5.4-8.5 cm, petals 5.3-8 cm"
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): stamens barely exserted"
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): anthers dull magenta or darker The colour is our reading of the words."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): pedicel 5-23.5 cm. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): capsules 3-5.2 x 1.5-2.3 cm"
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): capsules 1.5-2.3 cm wide"
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium canadense (efloras.org, read 2026-10-18): flowering summer (Jun-early Aug)"
+    }
+  }
+}

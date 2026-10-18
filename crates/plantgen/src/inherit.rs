@@ -686,6 +686,8 @@ pub enum Field {
     Word,
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
+    /// A colour, three channels 0 to 1: an anther's.
+    Colour,
 }
 
 /// The fields of a card that replace others where set, and those they
@@ -1002,7 +1004,7 @@ fn every_look(
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
 pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
-    use Field::{Count, Number, Outline, Word};
+    use Field::{Colour, Count, Number, Outline, Word};
     [
         (
             "needles",
@@ -1146,6 +1148,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("throat", Number),
                 ("belly", Number),
                 ("tube_reach", Number),
+                ("spots", Count),
+                ("anther_colour", Colour),
                 ("spur", Number),
                 ("tube", Number),
                 ("stamens", Count),
@@ -3114,6 +3118,12 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
                 })
             }),
             "`[u, w]` points",
+        ),
+        Some(Field::Colour) => (
+            value.as_array().is_some_and(|channels| {
+                channels.len() == 3 && channels.iter().all(Value::is_number)
+            }),
+            "a colour, three numbers",
         ),
     };
     if fits {

@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "id": "lilium-pumilum",
+  "taxon": {
+    "scientific_name": "Lilium pumilum",
+    "common_name": "coral lily",
+    "plant_name_id": 279815,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.38,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.6
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.035,
+      "max": 0.09
+    },
+    "leaf_width_m": {
+      "min": 0.0015,
+      "max": 0.003
+    },
+    "leaf_shape": "linear",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 15,
+      "typical": 4
+    },
+    "flower_posture": "nodding",
+    "perianth_reflexion": "revolute",
+    "flower_colour": [
+      225,
+      35,
+      25
+    ],
+    "perianth_spots": "none",
+    "tepal_length_m": {
+      "min": 0.04,
+      "max": 0.045
+    },
+    "stamen_exsertion": "included",
+    "anther_colour": [
+      230,
+      190,
+      60
+    ],
+    "fruit_size_m": {
+      "min": 0.018,
+      "max": 0.022
+    },
+    "fruit_width_m": {
+      "min": 0.012,
+      "max": 0.018
+    },
+    "flowering_months": [
+      7,
+      8
+    ],
+    "fruiting_months": [
+      9,
+      10
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium pumilum, plant_name_id 279815."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): stem 15-60 cm; Bailey (as L. tenuifolium, p. 1874): 1-2 ft high, slender. Its reference height is the middle of that range, 0.38 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): stem 15-60 cm; Bailey (as L. tenuifolium, p. 1874): 1-2 ft high, slender."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): leaves scattered near middle of stem."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): leaves linear, 3.5-9 cm long; Bailey: 1-2 in long, 40-60 of them."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): leaves linear, 1.5-3 wide; the online text prints cm, read as mm, as 'linear' and Bailey's fern-leaved lily say."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): leaves linear, midvein prominent abaxially."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium tenuifolium, p. 1874 (read on the Internet Archive, 2026-10-18): flowers 1-15; Flora of China: solitary or several in a raceme. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): flowers nodding."
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): tepals revolute; Bailey: waxy segments reflexed to the stem."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): tepals bright red; Bailey: brilliant scarlet, the brightest in colour of all. The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): usually unspotted, occasionally with a few spots near base; Bailey: rarely slightly dotted purple."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): tepals 4-4.5 cm x 8-11 mm."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): filaments 1.2-2.5 cm, anthers ca. 1 cm, short of the 4-4.5 cm tepals."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): anthers yellow, with reddish pollen; Bailey gives anthers scarlet or red. The colour is our reading of the words."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): capsule oblong, ca. 2 x 1.2-1.8 cm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): capsule 1.2-1.8 cm wide."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): flowering Jul-Aug; Bailey (in gardens): June, early July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium pumilum (efloras.org, read 2026-10-18): fruit Sep-Oct."
+    }
+  }
+}
