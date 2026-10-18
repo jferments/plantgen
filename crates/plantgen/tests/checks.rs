@@ -24,12 +24,12 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "ambrosia-dumosa",
         "fruit_size_m",
-        "bursage first flowers with the family programs' blooms (revision 108): its bur, 4 to 6 mm with its hooked spines, is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
+        "bursage first flowers with the family programs' blooms (revision 110): its bur, 4 to 6 mm with its hooked spines, is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
     ),
     (
         "ambrosia-dumosa",
         "involucre_diameter_m",
-        "bursage first flowers with the family programs' blooms (revision 108): its small staminate heads are drawn with the capitulum's default involucre, wider than the 3 to 5 mm the records give",
+        "bursage first flowers with the family programs' blooms (revision 110): its small staminate heads are drawn with the capitulum's default involucre, wider than the 3 to 5 mm the records give",
     ),
     (
         "ambrosia-dumosa",
@@ -167,11 +167,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
     ),
     (
-        "liriodendron-tulipifera",
-        "carpels",
-        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so tulip tree's cone of 60 to 100 carpels is drawn with 30",
-    ),
-    (
         "lonicera-involucrata",
         "fruit_size_m",
         "its berries are drawn about 1.6 cm long against the 7 to 8 mm Dendrology (2019) p. 390 gives",
@@ -185,11 +180,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
-    ),
-    (
-        "magnolia-grandiflora",
-        "carpels",
-        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so southern magnolia's cone of 55 to 81 carpels is drawn with 30",
     ),
     (
         "nymphaea-odorata",
@@ -229,7 +219,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "populus-tremuloides",
         "juvenile_period_years",
-        "aspen first flowers with the family programs' blooms (revision 108): its stated 2 to 3 years is adult_age, but broadleaf bears blooms only on short shoots, which a young aspen whose buds all grow out as long shoots first makes in its fourth year",
+        "aspen first flowers with the family programs' blooms (revision 110): its stated 2 to 3 years is adult_age, but broadleaf bears blooms only on short shoots, which a young aspen whose buds all grow out as long shoots first makes in its fourth year",
     ),
     (
         "stachys-byzantina",
@@ -314,7 +304,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "vachellia-tortilis",
         "inflorescence_length_m",
-        "umbrella thorn first flowers with the family programs' blooms (revision 108): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
+        "umbrella thorn first flowers with the family programs' blooms (revision 110): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
     ),
 ];
 
