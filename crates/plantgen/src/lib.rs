@@ -674,4 +674,9 @@ pub mod venation;
 /// keep last year's blades green, from the leaf habit their taxa state
 /// (`leaf_years`; herb program revision 11, grass revision 8) (105 is
 /// hairs, #185).
-pub const GENERATOR_REVISION: u32 = 106;
+/// 107: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// give it, so their blades narrow to the stated tip; six of them
+/// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
+/// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
+/// their stated leaf shape where a hand-drawn profile stood.
+pub const GENERATOR_REVISION: u32 = 107;

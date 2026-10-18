@@ -221,7 +221,8 @@
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Symphyotrichum subspicatum (read 2026-10-18): the leaf tips are acute, basal ones included."}
   },
   "provenance": {
     "sources": [
@@ -254,6 +255,7 @@
     "rosette": "none",
     "perennation": "rhizome",
     "fruit_size_m": {"min": 0.002, "max": 0.004},
-    "fruiting_months": [9, 10]
+    "fruiting_months": [9, 10],
+    "leaf_apex": "acute"
   }
 }
