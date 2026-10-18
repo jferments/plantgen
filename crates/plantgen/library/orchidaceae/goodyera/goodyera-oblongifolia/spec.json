@@ -89,6 +89,7 @@
           "aspect": 0.3
         },
         "inflorescence": {
+          "size": 0.118,
           "spread": 40,
           "taper": 0.2
         },
@@ -293,7 +294,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FNA (Kallunki, vol. 26): blade \"usually streaked with white only along midrib, sometimes with fine white lateral veins, especially near midrib\", reticulate and plain leaves in one clone; and research-grade iNaturalist photos (read 2026-10-17): dark blue-green rosette leaves, a greyish-white midrib stripe on every leaf, on some plants white veinlet dashes beside it or a full net of veins round dark areoles, a dark rim kept, plain paler undersides. Drawn as the veins variegation on the upper face only, its share varying between leaves. Small greenish-white hooded flowers (FEIS, Reeves 2006)."
+      "note": "By eye, after FNA (Kallunki, vol. 26): blade \"usually streaked with white only along midrib, sometimes with fine white lateral veins, especially near midrib\", reticulate and plain leaves in one clone; and research-grade iNaturalist photos (read 2026-10-17): dark blue-green rosette leaves, a greyish-white midrib stripe on every leaf, on some plants white veinlet dashes beside it or a full net of veins round dark areoles, a dark rim kept, plain paler undersides. Drawn as the veins variegation on the upper face only, its share varying between leaves. Small greenish-white hooded flowers (FEIS, Reeves 2006). Each flower's place on the raceme is 0.118 of its length, so its capsule is the 1 cm FEIS gives on the 8.5 cm raceme its stated length gives."
     },
     "traits.fruiting_months": {
       "evidence": "Authored",

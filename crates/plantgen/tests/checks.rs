@@ -167,6 +167,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its berries are drawn about 1.6 cm long against the 7 to 8 mm Dendrology (2019) p. 390 gives",
     ),
     (
+        "lupinus-latifolius",
+        "leaf_length_m",
+        "a rosette leaf's card holds its blade and its petiole, and no source read gives broadleaf lupine's petiole, so its card is as long as the 8 to 15 cm leaves FEIS gives and the palmate blade on it draws 6.5 to 9.6 cm, until its petiole is stated",
+    ),
+    (
         "lysichiton-americanus",
         "leaf_shape",
         "its spec draws the blade widest at 0.6 of its length and 0.45 as broad as long by hand, so it reads oblanceolate or obovate against Abrams's oblong-lanceolate",
