@@ -300,7 +300,7 @@ fn builtin_species_stand_above_the_ground() {
                         let variant = &spec.variant_list()[0];
                         let growth = grow_variant(&spec, variant, years, spec.growth.keyframes.clone());
                         for graph in &growth.keyframes {
-                            for (level, mesh) in package::keyframe_meshes(graph, &inputs).iter().enumerate() {
+                            for (level, mesh) in package::keyframe_meshes(graph, &inputs, variant.seed).iter().enumerate() {
                                 let below = plantgen::mesh::Below::drawn(graph, mesh);
                                 if below.most() > BED && !KNOWN.contains(&id) {
                                     failures.push(format!(

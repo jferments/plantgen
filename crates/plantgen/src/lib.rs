@@ -674,9 +674,17 @@ pub mod venation;
 /// keep last year's blades green, from the leaf habit their taxa state
 /// (`leaf_years`; herb program revision 11, grass revision 8) (105 is
 /// hairs, #185).
-/// 107: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// 107: a zone's edge drawn out along the lateral veins (`feather`),
+/// spots and mottle drawn out along the blade (`stretch`), and a simple
+/// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
+/// trout lily's long blotches and its veins meeting at the tip; and a
+/// variegation's share set by the plant rather than the leaf (`plants`,
+/// the card's packed seed moved toward the plant's), as Cyclamen's and
+/// white clover's are (106 is evergreen herbs, #200).
+/// 108: 39 species state their leaf apex as FNA, Flora of China or FEIS
 /// give it, so their blades narrow to the stated tip; six of them
 /// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
 /// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
-/// their stated leaf shape where a hand-drawn profile stood.
-pub const GENERATOR_REVISION: u32 = 107;
+/// their stated leaf shape where a hand-drawn profile stood (107 is
+/// toothed zones and veins, #191).
+pub const GENERATOR_REVISION: u32 = 108;
