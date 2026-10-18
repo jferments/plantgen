@@ -626,4 +626,8 @@ pub mod venation;
 /// their stated lengths and postures and in their own colours; a fruit
 /// keeps its calyx or bears prickles or bristles; young wood takes its
 /// twig colour; bark texture sets the bark pattern.
-pub const GENERATOR_REVISION: u32 = 106;
+/// 107 (provisional; the merge desk assigns it): leaves in whorls of three
+/// or more are drawn round the node (broadleaf program revision 18); a
+/// fruit hangs, spreads or stands as its posture says (`fruit_posture`, a
+/// fruit's `hang`).
+pub const GENERATOR_REVISION: u32 = 107;

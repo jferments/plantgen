@@ -1936,6 +1936,12 @@ pub struct Fruit {
     /// What arms the fruit's surface.
     #[serde(skip_serializing_if = "Armed::is_none")]
     pub armed: Armed,
+    /// How the fruit holds itself, -1 to 1: 0 along its organ, 1 hanging
+    /// straight down from where it is borne (an eggplant's), -1 standing
+    /// straight up (a jimsonweed's capsule), between them turned that
+    /// share of the way.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub hang: f64,
 }
 
 impl Default for Fruit {
@@ -1948,6 +1954,7 @@ impl Default for Fruit {
             kept_calyx: 0.0,
             kept_lobes: 0,
             armed: Armed::None,
+            hang: 0.0,
         }
     }
 }
@@ -1984,6 +1991,7 @@ struct FruitCard {
     kept_calyx: f64,
     kept_lobes: u32,
     armed: Armed,
+    hang: f64,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -2001,6 +2009,7 @@ impl Default for FruitCard {
             kept_calyx: fruit.kept_calyx,
             kept_lobes: fruit.kept_lobes,
             armed: fruit.armed,
+            hang: fruit.hang,
             count: None,
             cluster: None,
             size: None,
@@ -2033,6 +2042,7 @@ impl TryFrom<FruitCard> for Fruit {
             kept_calyx: card.kept_calyx,
             kept_lobes: card.kept_lobes,
             armed: card.armed,
+            hang: card.hang,
         })
     }
 }
@@ -2780,6 +2790,7 @@ impl Shape {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
                 check("kept_calyx", s.kept_calyx, 0.0, 2.0)?;
+                check("hang", s.hang, -1.0, 1.0)?;
                 if s.kept_lobes != 0 {
                     count("kept_lobes", s.kept_lobes, 3, 12)?;
                 }

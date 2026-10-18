@@ -1935,7 +1935,7 @@ fn draw_laid(
                 organ,
                 shape,
                 form,
-                (base, direction, unit_length),
+                (base, fruit::hung(direction, shape.hang), unit_length),
                 shown.unripe,
                 detail,
                 shown.colour,

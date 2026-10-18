@@ -115,7 +115,11 @@
       8,
       9
     ],
-    "calyx_in_fruit": "accrescent"
+    "calyx_in_fruit": "accrescent",
+    "fruiting_months": [
+      8,
+      9
+    ]
   },
   "provenance": {
     "sources": [
@@ -274,6 +278,11 @@
       "evidence": "SourceInferred",
       "source": "flora-british-india-4",
       "note": "Flora of British India vol. 4 (Clarke, 1883-85), Solanum Melongena, p. 235 (read on the Internet Archive, 2026-10-17): the calyx lobes enlarge in fruit, usually much shorter than the fruit and often prickly."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Eggplant, p. 1102 (read on the Internet Archive, 2026-10-17): sow 120 to 150 days before the fruit is wanted, set out when the weather allows, and pinch the blossoms three weeks before frost so the fruit sizes; so fruit from August until the frost. The months are our reading of the days."
     }
   }
 }

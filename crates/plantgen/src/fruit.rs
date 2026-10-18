@@ -41,13 +41,15 @@ use crate::rng::{mix64, unit};
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
 
 /// Whether `fruit` is one plain berry or cone, drawn as it was before P4
-/// (`crate::blooms`): ripe, with no calyx kept under it and nothing on it.
+/// (`crate::blooms`): ripe, with no calyx kept under it, nothing on it,
+/// and held along its organ.
 #[must_use]
 pub fn is_single(fruit: &Fruit) -> bool {
     fruit.kind == FruitKind::Berry
         && fruit.unripe <= 0.0
         && fruit.kept_calyx <= 0.0
         && fruit.armed == Armed::None
+        && fruit.hang.abs() <= 0.0
 }
 
 /// How finely one fruit is drawn: facets round and rings along.
@@ -167,7 +169,11 @@ pub(crate) fn draw(
         organ,
         fruit,
         form,
-        (to_world(Vec3::ZERO), to_direction(Vec3::Y), length),
+        (
+            to_world(Vec3::ZERO),
+            hung(to_direction(Vec3::Y), fruit.hang),
+            length,
+        ),
         unripe,
         Detail::for_count(1, part.coarse),
         colour,
@@ -175,6 +181,14 @@ pub(crate) fn draw(
         part,
         mesh,
     );
+}
+
+/// `direction` turned `hang` of the way toward straight down (or, below
+/// 0, straight up), as [`Fruit::hang`] holds a fruit.
+pub(crate) fn hung(direction: Vec3, hang: f64) -> Vec3 {
+    let toward = if hang >= 0.0 { -Vec3::Y } else { Vec3::Y };
+    let share = hang.abs().clamp(0.0, 1.0);
+    (direction * (1.0 - share) + toward * share).normalize_or(toward)
 }
 
 /// Draw one fruit of `fruit` into `mesh` from its base along its

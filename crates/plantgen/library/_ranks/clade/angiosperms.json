@@ -327,6 +327,11 @@
       "rule": "clamp(round(flower_merosity), 3, 12)",
       "why": "A kept calyx has as many lobes as the flower's merosity."
     },
+    "appearance.organs.*.shape.hang": {
+      "template": "fruit",
+      "map": {"fruit_posture": {"erect": -0.8, "spreading": 0, "deflexed": 0.5, "pendent": 1}},
+      "why": "A fruit is held as floras say it is: a pendent one hangs straight down from where it is borne, a deflexed one turns half way down, an erect one stands nearly upright, a spreading one keeps its stalk's line."
+    },
     "appearance.organs.*.shape.armed": {
       "template": "fruit",
       "map": {"fruit_surface": {"smooth": "none", "prickly": "prickles", "bristly": "bristles"}},
@@ -410,6 +415,7 @@
     "rules.generator.params.bloom_angle": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's posture (nightshades, 2026-10-17): the same words as angles from the shoot, a bloom past 90 degrees hanging, as the broadleaf program reads it."},
     "rules.generator.params.bloom_stalk": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen stalks a woody plant's solitary flower (nightshades round 2, 2026-10-17): its stated pedicel length; broadleaf revision 17."},
     "rules.appearance.organs.*.shape.tube_reach": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a measured corolla tube (nightshades, 2026-10-17): its stated length over half the flower's stated width, so a trumpet is as long as the flora says, its limb as wide."},
+    "rules.appearance.organs.*.shape.hang": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen holds a fruit (nightshades round 3, 2026-10-18), a choice of the model's: the fruit's line turned toward straight down by 1 (pendent), 0.5 (deflexed) or toward straight up by 0.8 (erect)."},
     "rules.appearance.organs.*.shape.kept_calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a calyx kept on the fruit (nightshades round 2, 2026-10-17), a choice of the model's: persistent lobes a third of the fruit's width clasping its foot, accrescent ones 0.9 of it spreading in a star."},
     "rules.appearance.organs.*.shape.kept_lobes": {"evidence": "Authored", "source": "plantgen-authors", "note": "A kept calyx's lobes are the flower's sepals (nightshades round 2, 2026-10-17)."},
     "rules.appearance.organs.*.shape.armed": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an armed fruit (nightshades round 2, 2026-10-17), a choice of the model's: 48 prickles a fifth of the fruit's width long, or 80 bristles an eighth of it."},

@@ -363,11 +363,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "solanum-melongena",
-        "inflorescence_length_m",
-        "a cyme of one flower is drawn as long as the flower is wide, about 1.6 cm, against the 3 to 6 cm the model gives a cyme of several",
-    ),
-    (
-        "solanum-melongena",
         "leaf_shape",
         "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Bailey and Wikipedia give",
     ),

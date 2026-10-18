@@ -96,7 +96,16 @@
       8,
       9
     ],
-    "calyx_in_fruit": "persistent"
+    "calyx_in_fruit": "persistent",
+    "fruiting_months": [
+      8,
+      9
+    ],
+    "leaf_colour": [
+      95,
+      140,
+      70
+    ]
   },
   "provenance": {
     "sources": [
@@ -230,6 +239,16 @@
       "evidence": "SourceInferred",
       "source": "bailey-cyclopedia-1914",
       "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum annuum, p. 659 (read on the Internet Archive, 2026-10-17): the calyx cup-shaped, usually embracing the fruit's base (var. conoides) or saucer-shaped (var. longum); Flora of British India (p. 238): campanulate, much shorter than the fruit."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fruit from August until frost: like the tomato and eggplant (Bailey vol. 6 p. 3353, vol. 2 p. 1102), a warm-season crop set out after frost; Bailey (vol. 2 p. 659) has the hottest kinds grown only in the South for want of a long enough season."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 19920820 (CC-licensed photograph, viewed 2026-10-17): bright, glossy mid green leaves (the leaf pixels of this and iNaturalist 88011298 average [127,154,107] and [141,184,109], lifted by gloss). No text read gives it."
     }
   }
 }
