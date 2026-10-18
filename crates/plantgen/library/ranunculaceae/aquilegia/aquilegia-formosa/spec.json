@@ -118,7 +118,9 @@
     "inflorescence_length_m": {"min": 0.1, "max": 0.3},
     "flowering_months": [5, 8],
     "fruit_size_m": {"min": 0.015, "max": 0.03},
-    "fruiting_months": [7, 9]
+    "fruiting_months": [7, 9],
+    "leaf_length_m": {"min": 0.1, "max": 0.3},
+    "leaf_width_m": {"min": 0.1, "max": 0.25}
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -232,7 +234,9 @@
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2644784), as no source read gives it."}
   },
   "provenance": {
     "sources": [

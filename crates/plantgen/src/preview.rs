@@ -20,6 +20,11 @@ pub enum View {
     Oblique,
     /// Straight down.
     Top,
+    /// From the south, looking up from below: a close-up 20 degrees under
+    /// its point, or the whole plant 6 degrees under its middle, to show
+    /// the lower faces of its leaves (a fern's sori). The camera stays a
+    /// little above the ground.
+    Under,
 }
 
 impl View {
@@ -30,6 +35,7 @@ impl View {
             "three-quarter" => Self::ThreeQuarter,
             "oblique" => Self::Oblique,
             "top" => Self::Top,
+            "under" => Self::Under,
             _ => return None,
         })
     }
@@ -51,6 +57,11 @@ pub struct PreviewOptions {
     /// many metres of it from the bottom of the picture to the top, and
     /// no figure.
     pub focus: Option<(Vec3, f64)>,
+}
+
+/// `eye`, raised to stand at least 3 cm above the ground.
+fn above_ground(eye: Vec3) -> Vec3 {
+    Vec3::new(eye.x, eye.y.max(0.03), eye.z)
 }
 
 pub const SKY: [f32; 3] = [0.52, 0.62, 0.74];
@@ -270,30 +281,37 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     }
     meshes.extend(items);
     let camera = match (options.view, options.focus) {
-        (View::Side | View::ThreeQuarter | View::Oblique, Some((target, span))) => {
+        (View::Side | View::ThreeQuarter | View::Oblique | View::Under, Some((target, span))) => {
             let direction = match options.view {
                 View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Under => Vec3::new(0.0, -0.36, 1.0),
                 View::Oblique => Vec3::new(0.7, 0.99, 0.7),
                 _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
+            // A close-up of a few millimetres stands back with a narrower
+            // lens, as a macro lens does, so nothing it frames comes
+            // nearer than the rasterizer's near plane.
+            let distance = (span * 0.5 / half_fov).max(MACRO_DISTANCE);
+            let fov_y = crate::math::degrees(2.0 * crate::math::atan(span * 0.5 / distance));
             Camera {
-                eye: target + direction * (span * 0.5 / half_fov),
+                eye: above_ground(target + direction * distance),
                 target,
                 up: Vec3::Y,
-                projection: Projection::Perspective { fov_y: fov },
+                projection: Projection::Perspective { fov_y },
             }
         }
-        (View::Side | View::ThreeQuarter | View::Oblique, None) => {
+        (View::Side | View::ThreeQuarter | View::Oblique | View::Under, None) => {
             let target = Vec3::new(center_x, height * 0.5, 0.0);
             let direction = match options.view {
                 View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Under => Vec3::new(0.0, -0.1, 1.0),
                 View::Oblique => Vec3::new(0.7, 0.99, 0.7),
                 _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
             Camera {
-                eye: target + direction * distance,
+                eye: above_ground(target + direction * distance),
                 target,
                 up: Vec3::Y,
                 projection: Projection::Perspective { fov_y: fov },
@@ -344,14 +362,17 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
         || templates
             .templates
             .iter()
-            .any(|template| template.hairs.is_some())
+            .any(|template| template.hairs.is_some() || template.hairs_beneath.is_some())
     {
         crate::hairs::strand_mesh(plant, templates, &pixel)
     } else {
-        Mesh::default()
+        crate::hairs::Strands::default()
     };
-    if !strands.indices.is_empty() {
-        meshes.push((&strands, Material::Hair));
+    if !strands.hairs.indices.is_empty() {
+        meshes.push((&strands.hairs, Material::Hair));
+    }
+    if !strands.heads.indices.is_empty() {
+        meshes.push((&strands.heads, Material::Gland));
     }
     let mut shaded = vec![(&figure_mesh, Material::Opaque)];
     shaded.extend(items);
@@ -397,6 +418,11 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     }
     image
 }
+
+/// The nearest a close-up's camera stands to the point it frames, metres:
+/// well beyond the rasterizer's near plane (5 cm), so a frame a few
+/// millimetres across is drawn through a narrower lens instead.
+const MACRO_DISTANCE: f64 = 0.15;
 
 /// A surface's linear value times [`EXPOSURE`], unchanged up to
 /// [`SHOULDER`] and then rolling off toward 1 with no kink.

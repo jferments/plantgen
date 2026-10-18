@@ -27,8 +27,7 @@
       "crown_age": 1,
       "season": 0.5,
       "emerge_spread": 0.3,
-      "unroll": 0.3,
-      "curl": 45
+      "unroll": 0.3
     }
   },
   "growth": {

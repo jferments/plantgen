@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Berberis",
+  "traits": {
+    "division_pattern": "pinnate"
+  },
+  "evidence": {
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Berberis (read 2026-10-17): the genus is taken broadly with Mahonia included; the compound-leaved group has odd-pinnate leaves, and the seemingly simple leaves of Berberis s.s. are really one-leaflet (unifoliolate) compound leaves; no palmate leaves are mentioned."}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Aquilegia",
+  "traits": {
+    "leaf_incision": {"lobed": "usually", "parted": "often"}
+  },
+  "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Aquilegia (read 2026-10-17, ca. 70 spp): blades one to three times ternate, the leaflets lobed or parted with crenate edges."}
+  }
+}

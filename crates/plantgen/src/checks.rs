@@ -157,7 +157,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 37] = [
+pub const SIZES: [(&str, Judged); 39] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -171,6 +171,8 @@ pub const SIZES: [(&str, Judged); 37] = [
     ("leaf_length_m", Judged::Organs),
     ("leaf_width_m", Judged::Organs),
     ("petiole_length_m", Judged::Organs),
+    ("fertile_leaf_length_m", Judged::Organs),
+    ("fertile_petiole_length_m", Judged::Organs),
     ("inflorescence_length_m", Judged::Organs),
     ("peduncle_length_m", Judged::Organs),
     ("bract_length_m", Judged::Organs),
@@ -1667,13 +1669,22 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         let leafy = kind_of(*structure)
             .and_then(|kind| grown.growth.structure_types.get(usize::from(kind)))
             .is_some_and(|kind| kind.term == "leaf");
+        // A dimorphic fern's fertile fronds bear its `fertile_` leaflets
+        // and are measured against its fertile leaves' characters.
+        let fertile = members.iter().any(|organ| {
+            grown
+                .growth
+                .organ_types
+                .get(usize::from(organ.organ))
+                .is_some_and(|kind| kind.name.starts_with("fertile_"))
+        });
         if leafy {
             let into = if at_ground(*structure, members, drawn) {
                 &mut ground
             } else {
                 &mut stem
             };
-            frond_sizes(*structure, members, drawn, looks, into);
+            frond_sizes(*structure, members, fertile, drawn, looks, into);
         }
     }
     for (structure, members) in pieces {
@@ -1777,22 +1788,25 @@ fn at_ground(structure: u32, members: &[&GraphOrgan], drawn: &PlantGraph) -> boo
     }
     segment.is_none()
 }
-/// Degrees past which a frond's rachis turns at one joint, more than an
-/// unrolled frond bends along its arch (a few degrees a joint); with
-/// pieces of its blade under half as long as its longest, the frond is
-/// still coiled in its crozier. (A frond lying on the ground bends as
-/// sharply where it meets it, but its pieces are whole.)
-const COILED: f64 = 20.0;
+
+/// The share of its longest piece of blade a frond's shortest reaches once
+/// it has unrolled: an unrolled frond's pieces are all alike, while one
+/// still in its crozier, or still unrolling its tip, draws the pieces
+/// beyond the share unrolled shorter, with smaller pinnae. (A frond lying
+/// on the ground bends sharply where it meets it, but its pieces are
+/// whole.)
+const UNROLLED: f64 = 0.9;
 
 /// A leaf drawn as a structure whose axis is its own segments and whose
 /// leaflets stand on them (a fern's frond: its stipe and rachis, and its
 /// pinnae): the stipe is the axis below the lowest leaflet, the blade the
 /// rest, and the blade's width twice the farthest a leaflet reaches out
-/// from the axis. A frond still in its crozier (see [`COILED`]) has no
+/// from the axis. A frond not yet unrolled (see [`UNROLLED`]) has no
 /// outline yet.
 fn frond_sizes(
     structure: u32,
     leaflets: &[&GraphOrgan],
+    fertile: bool,
     drawn: &PlantGraph,
     looks: &[Look],
     tally: &mut Tally,
@@ -1802,24 +1816,13 @@ fn frond_sizes(
     let mut first = true;
     // How far up the rachis each of its segments starts.
     let mut starts: BTreeMap<u32, f64> = BTreeMap::new();
-    // The most the rachis turns from one segment to the next, degrees, and
-    // its blade's shortest and longest segments.
-    let mut turned: f64 = 0.0;
+    // Its blade's shortest and longest segments.
     let (mut shortest, mut longest) = (f64::INFINITY, 0.0_f64);
-    let mut heading = None;
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
         if segment.within != Some(structure) {
             continue;
         }
         let length = (segment.end - segment.start).length();
-        let along = (segment.end - segment.start)
-            .normalize_or(heading.unwrap_or(segment.end - segment.start));
-        if let Some(before) = heading
-            && along != before
-        {
-            turned = turned.max(along.dot(before).clamp(-1.0, 1.0).acos().to_degrees());
-        }
-        heading = Some(along);
         starts.insert(index, stipe + blade);
         // The rachis is drawn base first: bare pieces up to the first
         // that bears a leaflet are the stipe.
@@ -1854,13 +1857,20 @@ fn frond_sizes(
             outline.push((up / blade, reach));
         }
     }
+    let id = drawn.structures[structure as usize].id;
+    if fertile {
+        // A fertile frond's own sizes; its shape and counts are the
+        // sterile fronds' to give.
+        tally.add("fertile_leaf_length_m", id, 0, blade);
+        tally.add("fertile_petiole_length_m", id, 0, stipe);
+        return;
+    }
     if blade > 0.0
-        && (turned <= COILED || shortest >= 0.5 * longest)
+        && shortest >= UNROLLED * longest
         && let Some(words) = outline_shape(&outline, width / blade)
     {
         tally.kind("leaf_shape", &words);
     }
-    let id = drawn.structures[structure as usize].id;
     tally.add("leaf_length_m", id, 0, blade);
     tally.add("leaf_width_m", id, 0, width);
     tally.add("petiole_length_m", id, 0, stipe);

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Daphne",
+  "traits": {
+    "leaf_arrangement": {"alternate": "usually", "opposite": "rarely"},
+    "inflorescence": {"head": "usually", "raceme": "sometimes"}
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Daphne (read 2026-10-17; 70-95 spp): leaves mostly spiral or alternate; opposite only in D. genkwa."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Daphne (read 2026-10-17): flowers in bractless clusters, either axillary near shoot tips or as terminal heads; drawn as head. Raceme kept as minor state from family value, not on page."}
+  }
+}
