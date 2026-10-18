@@ -3,8 +3,7 @@
 # bases or with stems underground, pinnate leaves in a crown, and seeds in
 # determinate cones (Mabberley 2017; Watson and Dallwitz). It gives the
 # values its species leave unset, as Cycadaceae's program does for its
-# own (a cycad's crown, croziers and boots), with a cone at the crown's
-# centre, as every zamia bears one, female or male.
+# own (a cycad's crown, croziers and boots).
 #
 # Revision 2: palm revision 9's trunk thickening, flushes, scale leaves,
 # leaflet opening and boot angle come from the Cycadales and family rank
@@ -15,10 +14,13 @@
 # is not drawn coiled (coil_turns 0) until a taxon's vernation says how;
 # a coiled piece's size, tightness, leaflet size and roll as the fern
 # program's (`polypodiidae`).
+# Revision 4: palm revision 12's cones by sex come from the Cycadales,
+# family and genus rank files (Whitelock 2002): a male bears pollen cones,
+# a female seed cones, each genus's own.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem zamiaceae 3 extends palm;
+lsystem zamiaceae 4 extends palm;
 
 param vigour_spread = 0.1;
 param upturn = 0;

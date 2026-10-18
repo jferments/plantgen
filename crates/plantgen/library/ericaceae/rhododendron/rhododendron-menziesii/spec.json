@@ -16,7 +16,7 @@
       "crown_base": 0,
       "crown_rate": 0.22,
       "space_density": 106.1,
-      "internode": 0.1,
+      "internode": 0.095,
       "max_shoot": 4,
       "bud_break": 1.2,
       "branch_angle": 45,
@@ -37,8 +37,6 @@
       "pipe_rings": 3e-06,
       "space_reach": 1.02,
       "space_kill": 0.252,
-      "leaf_size": 0.07,
-      "spur_leaf": 0.06,
       "spur_pairs": 1,
       "leaf_angle": 50,
       "blooms": 1,
@@ -85,10 +83,7 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 50,
-          "stalk": 0.05,
+          "template": "simple",
           "widest": 0.6,
           "tip": 0.4,
           "base": 0.5,
@@ -259,7 +254,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red huckleberry's values, changed by hand for rusty menziesia: an erect shrub of 1-2 m with leaves clustered toward the twig tips and nodding urn-shaped flowers in small terminal clusters (FEIS, Habeck 1992). Not fitted to measurements."
+      "note": "Red huckleberry's values, changed by hand for rusty menziesia: an erect shrub of 1-2 m with leaves clustered toward the twig tips and nodding urn-shaped flowers in small terminal clusters (FEIS, Habeck 1992). Not fitted to measurements. Internode 0.095 (was 0.1) since broadleaf revision 17 (woody forms, 2026-10-17), when buds stopped shading like leaves and its tallest plant grew past the flora's 2 m."
     },
     "allometry": {
       "evidence": "Authored",

@@ -1677,6 +1677,12 @@ pub struct Compound {
     /// one before: a bottlebrush's segments all round each pinna.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub inner_roll: Option<f64>,
+    /// The petiole's and rachis's width as a share of the leaf's length,
+    /// at the petiole's foot, narrowing to half that at the tip: a stout
+    /// stalk that reads on the card (a Cycas sporophyll's, about a
+    /// twentieth of it, Whitelock 2002, p. 139); unset for a fine line.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stalk_width: Option<f64>,
 }
 
 impl Default for Compound {
@@ -1711,6 +1717,7 @@ impl Default for Compound {
             scatter: None,
             roll: None,
             inner_roll: None,
+            stalk_width: None,
         }
     }
 }
@@ -1753,6 +1760,19 @@ pub struct Sprig {
     pub round: f64,
     /// Length of each leaf's petiole, as a fraction of the leaf's length.
     pub petiole: f64,
+    /// Each leaf's length, petiole included, as a fraction of the card's
+    /// length: the species' own leaf on a card as long as the twig it
+    /// stands for (a rule sets it from `leaf_length_m`). 0 sizes the
+    /// leaves to fit `leaves` of them along the twig, as before.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub leaf: f64,
+    /// Side twigs, alternating up the main one, each set with leaves of
+    /// that size and one at its tip, so that a twig of small leaves covers
+    /// its card as a shoot with its side shoots does. With `leaf` set,
+    /// leaves stand along every twig a third of a leaf apart and `leaves` is
+    /// not read.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub twigs: u32,
 }
 
 impl Default for Sprig {
@@ -1770,6 +1790,8 @@ impl Default for Sprig {
             tooth_depth: 0.03,
             round: 0.0,
             petiole: 0.12,
+            leaf: 0.0,
+            twigs: 0,
         }
     }
 }
@@ -1783,6 +1805,11 @@ pub struct Blade {
     pub taper: f64,
     /// Blade width over card length.
     pub aspect: f64,
+    /// Fraction of the card's length over which the blade narrows to its
+    /// foot, to a third of its width: a cycad leaflet's narrowed,
+    /// jointed base; 0 for a blade as wide at its foot as above it.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub foot: f64,
 }
 
 impl Default for Blade {
@@ -1790,6 +1817,7 @@ impl Default for Blade {
         Self {
             taper: 0.0,
             aspect: 0.12,
+            foot: 0.0,
         }
     }
 }
@@ -2540,6 +2568,45 @@ pub struct Fruit {
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
     pub unripe: f64,
+    /// A cone's outline along its length ([`Profile`]): an ellipsoid
+    /// unless set.
+    #[serde(skip_serializing_if = "Profile::is_ellipsoid")]
+    pub profile: Profile,
+    /// A cone's tip drawn out into a short narrow point (apiculate), as a
+    /// share of its length; 0 for a blunt tip.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub apiculum: f64,
+    /// What a cone's scales show outside ([`Face`]): wedges pointing to
+    /// its tip unless set.
+    #[serde(skip_serializing_if = "Face::is_wedge")]
+    pub face: Face,
+    /// A spine on each scale's face (a `spine` face), as a share of the
+    /// cone's length, at its tip.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spine: f64,
+    /// The spine at the cone's foot as a share of the one at its tip: a
+    /// Macrozamia's spines lengthen toward the apex.
+    #[serde(skip_serializing_if = "is_one")]
+    pub spine_base: f64,
+    /// How far a cone's scales stand apart, 0 (closed) to 1: a pollen cone
+    /// whose axis has lengthened to shed, or a seed cone breaking up.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub open: f64,
+    /// Each scale's face across, as a share of the cone's length: the
+    /// scales are as many as such faces cover its surface (a cycad's
+    /// sporophyll faces, Whitelock 2002, p. 18-19); 0 for a count from
+    /// the cone's aspect.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub face_width: f64,
+    /// Each scale's face's height over its width; 0 for
+    /// [`crate::blooms::FACE_HEIGHT`], about a cycad's usual two thirds.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub face_height: f64,
+    /// 1 for scales in vertical rows (orthostichies), each row's faces
+    /// half a face above its neighbours', as a Zamia's sporophylls stand
+    /// (Whitelock 2002, p. 304); 0 for a golden-angle spiral.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub rows: f64,
     /// A calyx kept under the fruit, in the accent colour: each lobe's
     /// length over the fruit's width, 0 for none; small, it clasps the
     /// fruit's foot (a tomato's), large, it spreads in a star (a
@@ -2590,6 +2657,15 @@ impl Default for Fruit {
             cone: 0.0,
             kind: FruitKind::Berry,
             unripe: 0.0,
+            profile: Profile::Ellipsoid,
+            apiculum: 0.0,
+            face: Face::Wedge,
+            spine: 0.0,
+            spine_base: 1.0,
+            open: 0.0,
+            face_width: 0.0,
+            face_height: 0.0,
+            rows: 0.0,
             kept_calyx: 0.0,
             kept_lobes: 0,
             armed: Armed::None,
@@ -2600,6 +2676,151 @@ impl Default for Fruit {
             ripening: None,
             threads: 0.0,
         }
+    }
+}
+
+impl Fruit {
+    /// Whether a cone is drawn as cones were before profiles and faces: an
+    /// ellipsoid of closed wedges with no point or spines.
+    #[must_use]
+    pub fn is_plain_cone(&self) -> bool {
+        self.profile == Profile::Ellipsoid
+            && self.apiculum <= 0.0
+            && self.face == Face::Wedge
+            && self.spine <= 0.0
+            && self.open <= 0.0
+            && self.face_width <= 0.0
+            && self.rows <= 0.0
+    }
+
+    /// Each scale's face's height over its width: the card's, or
+    /// [`crate::blooms::FACE_HEIGHT`].
+    #[must_use]
+    pub fn face_height(&self) -> f64 {
+        if self.face_height > 0.0 {
+            self.face_height
+        } else {
+            crate::blooms::FACE_HEIGHT
+        }
+    }
+
+    /// A cone's half-width at `t` along it, 0 at its foot to 1 at its tip,
+    /// as a share of its widest: its profile over the length before its
+    /// apiculum, and the apiculum a narrow point about a third of the
+    /// widest across at its base, tapering to the tip.
+    #[must_use]
+    pub fn width_at(&self, t: f64) -> f64 {
+        let point = self.apiculum.clamp(0.0, 0.3);
+        let body = if t < 1.0 - point {
+            self.profile.at(t / (1.0 - point))
+        } else {
+            0.0
+        };
+        if point <= 0.0 {
+            return body;
+        }
+        let tip = 0.35 * ((1.0 - t) / (point + 0.1)).clamp(0.0, 1.0);
+        body.max(tip)
+    }
+
+    /// Rows of scales a cone's card shows along its length: one a face's
+    /// height apart where the card sets a face width, else seven.
+    #[must_use]
+    pub fn scale_rows(&self) -> f64 {
+        if self.face_width > 0.0 {
+            (1.0 / (self.face_height() * self.face_width)).clamp(4.0, 40.0)
+        } else {
+            7.0
+        }
+    }
+
+    /// The spine on a scale at `t` along the cone, as a share of the cone's
+    /// length.
+    #[must_use]
+    pub fn spine_at(&self, t: f64) -> f64 {
+        self.spine * (self.spine_base + (1.0 - self.spine_base) * t.clamp(0.0, 1.0))
+    }
+}
+
+/// A cone's outline along its length (cones by sex, 2026-10-17): its
+/// half-width at each point from foot to tip, as floras name them.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Profile {
+    /// Widest at the middle, rounded at both ends.
+    #[default]
+    Ellipsoid,
+    /// Widest below the middle, egg-shaped.
+    Ovoid,
+    /// Widest near the foot, tapering steadily to the tip (long conical).
+    Conical,
+    /// Parallel-sided, its ends rounded.
+    Cylindrical,
+    /// Bulging a little at the middle, its ends broad and blunt.
+    Barrel,
+    /// Spindle-shaped: widest at the middle, tapering to both ends.
+    Fusiform,
+}
+
+impl Profile {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_ellipsoid(&self) -> bool {
+        *self == Self::Ellipsoid
+    }
+
+    /// The half-width at `t`, 0 at the foot to 1 at the tip, as a share of
+    /// the widest: 0 at both ends.
+    #[must_use]
+    pub fn at(self, t: f64) -> f64 {
+        use crate::math;
+        let t = t.clamp(0.0, 1.0);
+        // An ellipse over s: a stretch of t, s = t^k, moves its widest
+        // point to t = 0.5^(1/k).
+        let ellipse = |s: f64| math::sqrt((1.0 - (2.0 * s - 1.0).powi(2)).max(0.0));
+        let superellipse = |n: f64| {
+            math::pow(
+                (1.0 - math::pow((2.0 * t - 1.0).abs(), n)).max(0.0),
+                1.0 / n,
+            )
+        };
+        match self {
+            Self::Ellipsoid => ellipse(t),
+            // Widest at 0.4 of the length.
+            Self::Ovoid => ellipse(math::pow(t, 0.756)),
+            // Widest at 0.2 of the length.
+            Self::Conical => ellipse(math::pow(t, 0.431)),
+            Self::Cylindrical => superellipse(4.0),
+            Self::Barrel => superellipse(2.5),
+            Self::Fusiform => math::pow(math::sin(std::f64::consts::PI * t), 1.2),
+        }
+    }
+}
+
+/// What a cone's scales show outside: its sporophylls' faces, by which
+/// the cycad genera are told apart (Whitelock 2002, p. 18-19), or the
+/// wedges a conifer's scales are drawn as.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Face {
+    /// A wedge pointing toward the tip.
+    #[default]
+    Wedge,
+    /// A flat or gently domed hexagonal shield lying on the cone (Zamia,
+    /// Stangeria).
+    Shield,
+    /// A raised face of flat facets meeting at a point (Encephalartos).
+    Facets,
+    /// A broad scale drawn out to a point toward the tip (Dioon).
+    Pointed,
+    /// A face ending in an upturned spine (a Cycas pollen cone's
+    /// sporophylls, a Macrozamia's), [`Fruit::spine`] long.
+    Spine,
+}
+
+impl Face {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_wedge(&self) -> bool {
+        *self == Self::Wedge
     }
 }
 
@@ -2632,6 +2853,15 @@ struct FruitCard {
     cone: f64,
     kind: FruitKind,
     unripe: f64,
+    profile: Profile,
+    apiculum: f64,
+    face: Face,
+    spine: f64,
+    spine_base: f64,
+    open: f64,
+    face_width: f64,
+    face_height: f64,
+    rows: f64,
     kept_calyx: f64,
     kept_lobes: u32,
     armed: Armed,
@@ -2655,6 +2885,15 @@ impl Default for FruitCard {
             cone: fruit.cone,
             kind: fruit.kind,
             unripe: fruit.unripe,
+            profile: fruit.profile,
+            apiculum: fruit.apiculum,
+            face: fruit.face,
+            spine: fruit.spine,
+            spine_base: fruit.spine_base,
+            open: fruit.open,
+            face_width: fruit.face_width,
+            face_height: fruit.face_height,
+            rows: fruit.rows,
             kept_calyx: fruit.kept_calyx,
             kept_lobes: fruit.kept_lobes,
             armed: fruit.armed,
@@ -2693,6 +2932,15 @@ impl TryFrom<FruitCard> for Fruit {
             cone: card.cone,
             kind: card.kind,
             unripe: card.unripe,
+            profile: card.profile,
+            apiculum: card.apiculum,
+            face: card.face,
+            spine: card.spine,
+            spine_base: card.spine_base,
+            open: card.open,
+            face_width: card.face_width,
+            face_height: card.face_height,
+            rows: card.rows,
             kept_calyx: card.kept_calyx,
             kept_lobes: card.kept_lobes,
             armed: card.armed,
@@ -3281,6 +3529,10 @@ impl Shape {
             Self::Compound(s) => s.validate(),
             Self::Sprig(s) => {
                 count("leaves", s.leaves, 2, 15)?;
+                if s.leaf != 0.0 {
+                    check("leaf", s.leaf, 0.03, 0.45)?;
+                }
+                count("twigs", s.twigs, 0, 12)?;
                 check("angle", s.angle, 20.0, 80.0)?;
                 check("stalk", s.stalk, 0.0, 0.4)?;
                 check("width", s.width, 0.03, 1.5)?;
@@ -3304,7 +3556,8 @@ impl Shape {
             }
             Self::Blade(s) => {
                 check("taper", s.taper, 0.0, 1.0)?;
-                check("aspect", s.aspect, 0.01, 1.0)
+                check("aspect", s.aspect, 0.01, 1.0)?;
+                check("foot", s.foot, 0.0, 0.5)
             }
             Self::Frond(s) => {
                 count("pinnae", s.pinnae, 3, 40)?;
@@ -3558,6 +3811,13 @@ impl Shape {
                 }
                 check("threads", s.threads, 0.0, 1.0)?;
                 check("unripe", s.unripe, 0.0, 1.0)?;
+                check("apiculum", s.apiculum, 0.0, 0.3)?;
+                check("spine", s.spine, 0.0, 0.5)?;
+                check("spine_base", s.spine_base, 0.0, 1.0)?;
+                check("open", s.open, 0.0, 1.0)?;
+                check("face_width", s.face_width, 0.0, 0.5)?;
+                check("face_height", s.face_height, 0.0, 1.5)?;
+                check("rows", s.rows, 0.0, 1.0)?;
                 check("flare", s.flare, -0.8, 0.8)
             }
         }
@@ -3799,6 +4059,7 @@ impl Compound {
             ("scatter", self.scatter, 0.0, 90.0),
             ("roll", self.roll, 0.0, 360.0),
             ("inner_roll", self.inner_roll, 0.0, 360.0),
+            ("stalk_width", self.stalk_width, 0.0, 0.2),
         ] {
             if value.is_some() {
                 check(field, set(value), low, high)?;
@@ -3821,23 +4082,48 @@ impl Compound {
     }
 }
 
+/// Degrees a sprig's side twigs stand from its main twig.
+pub const SPRIG_TWIG_ANGLE: f64 = 40.0;
+
 impl Sprig {
     /// Length of the longest leaf, petiole included, as a fraction of the
     /// card's length.
     #[must_use]
     pub fn leaf_length(&self) -> f64 {
+        if self.leaf > 0.0 {
+            return self.leaf;
+        }
         let side = f64::from(self.leaves.saturating_sub(1));
         ((1.0 - self.stalk) * 2.4 / (side / 2.0 + 1.5)).min(0.45)
     }
 
-    /// Card width over card length: room for the side leaves at their
-    /// angle, with their blades' width.
+    /// Whether the leaves stand at their own size along twigs, rather
+    /// than `leaves` of them sized to fit the card.
+    #[must_use]
+    pub fn sized(&self) -> bool {
+        self.leaf > 0.0 || self.twigs > 0
+    }
+
+    /// Length of each side twig, as a fraction of the card's length: half
+    /// the leafy part of the main twig, at most a third of the card.
+    #[must_use]
+    pub fn twig_length(&self) -> f64 {
+        if self.twigs == 0 {
+            return 0.0;
+        }
+        (0.5 * (1.0 - self.leaf_length() - self.stalk)).clamp(0.05, 0.34)
+    }
+
+    /// Card width over card length: room for the side twigs and the side
+    /// leaves at their angle, with their blades' width.
     #[must_use]
     pub fn aspect(&self) -> f64 {
         let length = self.leaf_length();
         let angle = crate::math::radians(self.angle);
         let blade = length * (1.0 - self.petiole) * self.width * 0.5;
-        (2.0 * (length * crate::math::sin(angle) + blade * crate::math::cos(angle)) + 0.03).min(1.6)
+        let twig = self.twig_length() * crate::math::sin(crate::math::radians(SPRIG_TWIG_ANGLE));
+        (2.0 * (twig + length * crate::math::sin(angle) + blade * crate::math::cos(angle)) + 0.03)
+            .min(1.6)
     }
 }
 

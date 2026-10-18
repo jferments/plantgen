@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Zamia",
+  "forms": {
+    "palm": {
+      "generator": {
+        "defaults": {
+          "cone_life": 0.75,
+          "male_cone_life": 0.05,
+          "leaflet_base": 0.6,
+          "leaflet_tip": 0.5,
+          "boot_life": 1,
+          "cataphyll_life": 1,
+          "cataphyll_length": 0.04,
+          "internode": 0.0003,
+          "thicken": 0
+        }
+      },
+      "appearance": {
+        "organs": {
+          "cone": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "shield",
+              "rows": 1
+            }
+          },
+          "cone_open": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "shield",
+              "rows": 1
+            }
+          },
+          "cone_male": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "shield",
+              "rows": 1
+            }
+          },
+          "leaflet": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.25,
+              "foot": 0.12
+            }
+          }
+        }
+      },
+      "evidence": {
+        "generator.defaults.cone_life": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's female cone ripens six to fourteen months after it appears, about nine on average (Whitelock 2002, p. 289)."
+        },
+        "generator.defaults.male_cone_life": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's pollen cone sheds for only about a week once its axis lengthens (Whitelock 2002, p. 289): drawn for a few weeks."
+        },
+        "appearance": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's sporophylls end in a flat hexagonal shield, female and male (Whitelock 2002, p. 18-19, 289, 308, 316, 330)."
+        },
+        "generator.defaults.leaflet_base": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's leaf is oblong in outline, its leaflets nearly equal along most of the rachis, only the lowest and topmost a little shorter (Whitelock 2002, p. 308: Z. integrifolia's basal and apical leaflets slightly reduced; Z. pumila's leaf 30 to 50 cm wide on 0.9 to 1.5 m, p. 330), not lance-shaped as a Cycas's. The lowest leaflet drawn 0.6 and the topmost 0.5 as long as the median ones (estimated)."
+        },
+        "generator.defaults.leaflet_tip": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's leaf is oblong in outline, its leaflets nearly equal along most of the rachis, only the lowest and topmost a little shorter (Whitelock 2002, p. 308: Z. integrifolia's basal and apical leaflets slightly reduced; Z. pumila's leaf 30 to 50 cm wide on 0.9 to 1.5 m, p. 330), not lance-shaped as a Cycas's. The lowest leaflet drawn 0.6 and the topmost 0.5 as long as the median ones (estimated)."
+        },
+        "generator.defaults.boot_life": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia soon sheds its old leaf bases and cataphylls, leaving the stem a smooth skin (Whitelock 2002, p. 288, 316, 330), unlike the persistent armour of Cycas, Encephalartos or Macrozamia; so a leaf base stays a year after its leaf, and a flush's cataphylls a year."
+        },
+        "generator.defaults.cataphyll_life": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia soon sheds its old leaf bases and cataphylls, leaving the stem a smooth skin (Whitelock 2002, p. 288, 316, 330), unlike the persistent armour of Cycas, Encephalartos or Macrozamia; so a leaf base stays a year after its leaf, and a flush's cataphylls a year."
+        },
+        "generator.defaults.cataphyll_length": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's leaf cataphylls are short, broad and stipulate, triangular (Whitelock 2002, p. 288): Z. loddigesii's 4.5 to 5 cm long by 2 to 2.5 cm (p. 316), Z. pumila's long triangular (p. 330). 4 cm, a little under Z. loddigesii's (estimated)."
+        },
+        "appearance.organs.leaflet": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's leaflets are oblong to lanceolate, flat and leathery, with many parallel veins and no midrib, narrowed at the foot to the jointed base by which they fall, and blunt or shortly pointed at the tip (Whitelock 2002, p. 288-289, 308, 316, 330; Watson and Dallwitz, Zamiaceae): a blade narrowing over its lowest eighth to a third of its width and over its last quarter to its tip."
+        },
+        "appearance.organs.cone.shape.rows": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia cone's sporophylls stand in vertical rows (orthostichies), each row's hexagonal faces fitting between its neighbours': Z. furfuracea's in 10 to 12 rows of 14 to 15 (Whitelock 2002, p. 304), others in 7 to 10, about 10 or 14 rows (p. 305, 320, 326). Drawn so on seed, breaking and pollen cones; the rows are as many as faces of the stated width fit round the cone."
+        },
+        "appearance.organs.cone_open.shape.rows": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia cone's sporophylls stand in vertical rows (orthostichies), each row's hexagonal faces fitting between its neighbours': Z. furfuracea's in 10 to 12 rows of 14 to 15 (Whitelock 2002, p. 304), others in 7 to 10, about 10 or 14 rows (p. 305, 320, 326). Drawn so on seed, breaking and pollen cones; the rows are as many as faces of the stated width fit round the cone."
+        },
+        "appearance.organs.cone_male.shape.rows": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia cone's sporophylls stand in vertical rows (orthostichies), each row's hexagonal faces fitting between its neighbours': Z. furfuracea's in 10 to 12 rows of 14 to 15 (Whitelock 2002, p. 304), others in 7 to 10, about 10 or 14 rows (p. 305, 320, 326). Drawn so on seed, breaking and pollen cones; the rows are as many as faces of the stated width fit round the cone."
+        },
+        "generator.defaults.internode": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's stem is generally a subterranean tuber with little woody tissue (Whitelock 2002, p. 288), so its leaves rise from the ground: each frond stands only 0.3 mm above the one before, so thirty years of them raise the stem tip under 2 cm; a species with an aerial stem raises it by its trunk's own growth."
+        },
+        "generator.defaults.thicken": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Zamia's stem is generally a subterranean tuber without much woody tissue (Whitelock 2002, p. 288), as wide as its species states (Z. pumila 8 to 10 cm, p. 330), not the trunk whose base an old Cycas or Encephalartos thickens: it keeps its girth."
+        }
+      }
+    }
+  }
+}

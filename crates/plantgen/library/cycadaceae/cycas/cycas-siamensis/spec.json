@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "id": "cycas-siamensis",
+  "taxon": {
+    "scientific_name": "Cycas siamensis",
+    "common_name": "Cycas siamensis",
+    "family": "Cycadaceae",
+    "genus": "Cycas",
+    "plant_name_id": 383445
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.1,
+      "trunk_rate": 0.015,
+      "stemless_years": 8,
+      "fronds_per_year": 8,
+      "frond_length": 0.88,
+      "petiole": 0.21,
+      "pieces": 48,
+      "leaflet_length": 0.11,
+      "adult_age": 6
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [8, 20, 40]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "organs": {
+      "leaflet": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.4,
+          "aspect": 0.063
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 1.5,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "pollen_cone_length_m": {
+      "min": 0.08,
+      "max": 0.22
+    },
+    "pollen_cone_width_m": {
+      "min": 0.04,
+      "max": 0.085
+    },
+    "pollen_cone_face_width_m": {
+      "min": 0.01,
+      "max": 0.018
+    },
+    "pollen_cone_shape": "cylindrical",
+    "pollen_cone_colour": [190, 150, 100],
+    "microsporophyll_spine_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "megasporophyll_length_m": {
+      "min": 0.065,
+      "max": 0.125
+    },
+    "megasporophyll_crown": "closed",
+    "megasporophyll_margin": "pectinate",
+    "megasporophyll_colour": [180, 110, 60],
+    "ovules_per_megasporophyll": {
+      "min": 1,
+      "max": 2
+    },
+    "seed_length_m": {
+      "min": 0.027,
+      "max": 0.029
+    },
+    "seed_width_m": {
+      "min": 0.022,
+      "max": 0.03
+    },
+    "seed_colour_ripe": [210, 170, 60],
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: stems 1 to 1.5 m long, usually shorter, swollen below ground; leaves 78 to 97 cm long, the petiole 10 to 27 cm; leaflets in 86 to 107 pairs, 8 to 11 cm by 5 to 7 mm. Drawn as a trunk 0.1 m in radius, rising 0.015 m a year; fronds 0.88 m long, the petiole 0.21 of them, 96 pairs of leaflets, the longest leaflet 0.11 of the frond; 8 fronds a year, as the crown's count over the three years a frond lives (estimated); first cones at 6 years (estimated, as the research note's timing table records)."
+    },
+    "appearance": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: its leaflets drawn as wide, for their length, as the median leaflets it gives; the rest of its look from its order and family."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: stems 1 to 1.5 m long, usually shorter, swollen below ground; leaves 78 to 97 cm long, the petiole 10 to 27 cm; leaflets in 86 to 107 pairs, 8 to 11 cm by 5 to 7 mm. The whole plant's height at 40 years estimated from these, its stem (or none, where it stays underground) under a crown of young leaves standing about 0.85 of a leaf above it: about 1.5 m. Whitelock gives no ages, so the tolerance is wide."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them (the scientific name where no common name is in wide use), and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a cycad's crown of pinnate leaves on a pachycaul stem, drawn on the palm program."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact: four seeds, so male and female plants both show."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: male cone oblong, 8 to 22 cm long."
+    },
+    "traits.pollen_cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: male cone 4 to 8.5 cm across."
+    },
+    "traits.pollen_cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: microsporophylls 1.5 to 2 cm long, the face 1 to 1.8 cm wide."
+    },
+    "traits.pollen_cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: male cone oblong; read as cylindrical."
+    },
+    "traits.pollen_cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: male cone densely tan felted; the colour by eye."
+    },
+    "traits.microsporophyll_spine_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: microsporophylls 1.5 to 2 cm, the face 1 to 1.8 cm wide, with an upward spine 1 to 1.5 mm."
+    },
+    "traits.megasporophyll_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: megasporophylls 6.5 to 12.5 cm long."
+    },
+    "traits.megasporophyll_crown": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: megasporophylls in a closed crown."
+    },
+    "traits.megasporophyll_margin": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: lamina 3 to 8 cm by 3 to 7 cm, deeply divided into 18 to 22 pairs of lobes 0.5 to 1.5 cm long, and an apical segment 1.5 to 3 cm; read as pectinate."
+    },
+    "traits.megasporophyll_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: megasporophylls felted orange-brown; the colour by eye."
+    },
+    "traits.ovules_per_megasporophyll": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: 1 or 2 ovules."
+    },
+    "traits.seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: seeds globose to ovoid, 2.7 to 2.9 cm long."
+    },
+    "traits.seed_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: seeds 2.2 to 3 cm across."
+    },
+    "traits.seed_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: sarcotesta yellow to brownish yellow when ripe; the colour by eye."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 147), Cycas siamensis: male and female cones on separate plants, as in every cycad (p. 19)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Whitelock, L. M. (2002). The Cycads. Timber Press.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy: cones, sporophylls and seeds by sex from Whitelock (2002); stem and leaves from the same descriptions."
+  }
+}

@@ -234,9 +234,16 @@
     "seed": {
       "part_of": "stem",
       "category": "organ",
-      "when": {"reproduction": ["solitary_seeds"]},
+      "when": {"reproduction": ["solitary_seeds", "cones"]},
       "po": {"id": "PO:0009010", "name": "seed"},
-      "why": "a seed borne alone on a shoot, outside any fruit or cone, often in a fleshy cup or coat: the yew's aril, the ginkgo's outer coat"
+      "why": "a seed borne outside any fruit, often in a fleshy cup or coat: alone on a shoot (the yew's aril, the ginkgo's outer coat), or a cycad's, along a female Cycas's sporophylls or shown as a cone breaks up"
+    },
+    "megasporophyll": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"ovule_bearing": ["sporophyll_crown"]},
+      "po": {"id": "PO:0009027", "name": "megasporophyll"},
+      "why": "a leaf that bears ovules: a female Cycas's, leaf-like, in a crown round the stem's tip with its ovules along its stalk, where every other cycad's are packed into a cone"
     },
     "bulbil": {
       "part_of": "stem",
@@ -286,6 +293,15 @@
       "type": "enum",
       "values": ["flowers", "cones", "solitary_seeds", "spores"],
       "why": "how it bears seeds or spores: seeds in fruit from flowers, seeds open on the scales of cones, seeds borne singly or in pairs outside any cone (yews, ginkgo), or spores and no seeds"
+    },
+    "ovule_bearing": {
+      "group": "fruit_and_cones",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["cone", "sporophyll_crown"],
+      "when": {"reproduction": ["cones"]},
+      "optional": true,
+      "why": "how a cone-bearing plant's female bears its ovules: on sporophylls packed into a cone (conifers, and every cycad but Cycas), or on loose, leaf-like sporophylls in a crown round the stem's tip, which grows on through them (female Cycas)"
     },
     "body_plan": {
       "group": "form",
@@ -2209,6 +2225,142 @@
       "optional": true,
       "why": "a pollen (microsporangiate) cone when it sheds its pollen; cone_length_m is the seed cone's"
     },
+    "pollen_cone_width_m": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.3],
+      "optional": true,
+      "why": "a pollen cone across at its widest"
+    },
+    "cone_colour": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "colour",
+      "optional": true,
+      "why": "a ripe seed cone as it is seen: its felt where it is felted"
+    },
+    "pollen_cone_colour": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "colour",
+      "optional": true,
+      "why": "a pollen cone when it sheds its pollen, as it is seen: its felt where it is felted"
+    },
+    "cone_shape": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "enum",
+      "values": ["ellipsoid", "ovoid", "conical", "cylindrical", "barrel", "fusiform"],
+      "optional": true,
+      "why": "a seed cone's outline from the side: widest at the middle and rounded, widest below the middle (egg-shaped), widest near the foot and tapering to the tip (long conical), parallel-sided, bulging a little with broad blunt ends, or tapering to both ends (spindle-shaped)"
+    },
+    "pollen_cone_shape": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "enum",
+      "values": ["ellipsoid", "ovoid", "conical", "cylindrical", "barrel", "fusiform"],
+      "optional": true,
+      "why": "a pollen cone's outline from the side, in cone_shape's words"
+    },
+    "cone_apex": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "enum",
+      "values": ["blunt", "apiculate"],
+      "optional": true,
+      "why": "a seed cone's tip: rounded or blunt, or drawn out into a short point (of reduced sporophylls, in Zamia)"
+    },
+    "pollen_cone_apex": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "enum",
+      "values": ["blunt", "apiculate"],
+      "optional": true,
+      "why": "a pollen cone's tip, in cone_apex's words"
+    },
+    "megasporophyll_length_m": {
+      "group": "fruit_and_cones",
+      "organ": "megasporophyll",
+      "type": "number",
+      "unit": "m",
+      "range": [0.02, 0.6],
+      "why": "a female Cycas's sporophyll, its stalk and lamina"
+    },
+    "megasporophyll_crown": {
+      "group": "fruit_and_cones",
+      "organ": "megasporophyll",
+      "type": "enum",
+      "values": ["closed", "open"],
+      "why": "how a female Cycas's sporophylls stand: held tight in a closed, felted dome over the stem's tip, or loose and open, spreading or hanging"
+    },
+    "megasporophyll_margin": {
+      "group": "fruit_and_cones",
+      "organ": "megasporophyll",
+      "type": "enum",
+      "values": ["pectinate", "toothed", "entire"],
+      "why": "the edge of a sporophyll's lamina: divided like a comb into narrow soft spines, regularly toothed, or entire to obscurely toothed"
+    },
+    "megasporophyll_colour": {
+      "group": "fruit_and_cones",
+      "organ": "megasporophyll",
+      "type": "colour",
+      "optional": true,
+      "why": "a female Cycas's sporophylls as they are seen: their felt's colour"
+    },
+    "microsporophyll_spine_m": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.08],
+      "optional": true,
+      "why": "the upturned spine that ends each sporophyll of a male Cycas's pollen cone"
+    },
+    "pollen_cone_face_width_m": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "m",
+      "range": [0.002, 0.1],
+      "optional": true,
+      "why": "how wide each sporophyll's exposed face is on a cycad's pollen cone, so the cone is covered by as many as it bears"
+    },
+    "cone_face_width_m": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "m",
+      "range": [0.005, 0.15],
+      "optional": true,
+      "why": "how wide each sporophyll's exposed face is on a cycad's seed cone, so the cone is covered by as many as it bears"
+    },
+    "pollen_cone_face_height_m": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.1],
+      "optional": true,
+      "why": "how high each sporophyll's exposed face is on a cycad's pollen cone, along the cone, so its faces are as many along it as it bears"
+    },
+    "cone_face_height_m": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "m",
+      "range": [0.003, 0.15],
+      "optional": true,
+      "why": "how high each sporophyll's exposed face is on a cycad's seed cone, along the cone, so its faces are as many along it as it bears"
+    },
+    "ovules_per_megasporophyll": {
+      "group": "fruit_and_cones",
+      "organ": "megasporophyll",
+      "type": "count",
+      "range": [1, 12],
+      "why": "the ovules along each of a female Cycas's sporophylls, which ripen into its seeds"
+    },
     "cone_posture": {
       "group": "fruit_and_cones",
       "organ": "cone",
@@ -2239,6 +2391,15 @@
       "unit": "m",
       "range": [0.001, 0.1],
       "why": "a ripe seed with its aril or fleshy coat"
+    },
+    "seed_width_m": {
+      "group": "fruit_and_cones",
+      "organ": "seed",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.08],
+      "optional": true,
+      "why": "a ripe seed across at its widest, with its aril or fleshy coat"
     },
     "seed_colour_ripe": {
       "group": "fruit_and_cones",
@@ -2399,6 +2560,13 @@
       "organ": "stem",
       "type": "bool",
       "why": "whether it sheds its own shaded limbs"
+    },
+    "shade_tolerance": {
+      "group": "ecology",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["intolerant", "intermediate", "tolerant"],
+      "why": "how much shade it can grow in, as silvics classes a tree: an intolerant one needs full light and loses what grows in shade"
     },
     "architectural_model": {
       "group": "architecture",

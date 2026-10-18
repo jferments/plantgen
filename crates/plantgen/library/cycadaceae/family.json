@@ -15,7 +15,8 @@
     "division_pattern": "pinnate",
     "branching": {
       "unbranched": "usually"
-    }
+    },
+    "ovule_bearing": "sporophyll_crown"
   },
   "forms": {
     "palm": {
@@ -23,7 +24,12 @@
         "program": "cycadaceae",
         "defaults": {
           "leaflet_young": 0.15,
-          "leaflet_fold": 0.2
+          "leaflet_fold": 0.2,
+          "sporophylls": 60,
+          "sporophyll_angle": 30,
+          "sporophyll_ripe": 40,
+          "ovules": 4,
+          "male_peduncle": 0.02
         }
       },
       "evidence": {
@@ -36,6 +42,202 @@
           "evidence": "SourceInferred",
           "source": "whitelock-2002",
           "note": "Unique to Cycas among cycads, each leaflet is coiled like a watch-spring along the straight rachis and unrolls from the leaf's foot to its tip as the leaf lengthens, so an opening leaf is a straight rod fringed with small coils (Whitelock 2002, p. 80; Mabberley 2017, under Cycas: circinately involute). Drawn as leaflets 0.15 of their size, lying a little toward the rachis, until their place has opened."
+        },
+        "appearance": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A female Cycas's sporophyll is a stalk with ovules along its sides ending in a lamina, felted grey, brown or orange (Whitelock 2002, p. 18-20, 109-154): drawn as a pinnate card, a brown felt, its stalk six tenths of it and a twentieth as wide as it is long (C. revoluta's stalk 10 to 15 cm by 1 cm on a sporophyll 20 to 25 cm long, p. 139), its lamina as its margin and crown type say. A male Cycas's cone is of wedge-shaped microsporophylls each ending in an upturned apical spine (p. 20, 134-154), drawn with spines a thirtieth of its length where a species gives none."
+        },
+        "rules": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Whitelock (2002, p. 18-20, 81, 109-154): a female Cycas's sporophylls, their length, crown type, lamina and ovules, and a male's microsporophyll spines, as each rule's reason says."
+        },
+        "generator.defaults.sporophylls": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A female Cycas bears a crown of sporophylls in place of a cone (Whitelock 2002, p. 18-20); sixty where its crown type is not stated, between a closed crown's and an open one's (estimated from photographs, as the research note records)."
+        },
+        "generator.defaults.sporophyll_angle": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Thirty degrees from upright where the crown type is not stated (Whitelock 2002, p. 18-20, 81)."
+        },
+        "generator.defaults.sporophyll_ripe": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Forty degrees once ripe where the crown type is not stated (Whitelock 2002, p. 81)."
+        },
+        "generator.defaults.ovules": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Cycas is the only genus with more than two ovules a sporophyll, up to eight to ten (Whitelock 2002, p. 18): four where a species does not say."
+        },
+        "generator.defaults.male_peduncle": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Cycas pollen cone's stalk is short, so it looks sessile (Whitelock 2002, p. 120, 134, 139, 143): 2 cm."
+        }
+      },
+      "appearance": {
+        "organs": {
+          "sporophyll": {
+            "shape": {
+              "template": "compound",
+              "pattern": "pinnate",
+              "leaflets": 25,
+              "leaflet_width": 0.15,
+              "teeth": 0,
+              "petiole": 0.6,
+              "stalk_width": 0.045,
+              "angle": 55,
+              "terminal_size": 1.2,
+              "largest": 0.4,
+              "lowest": 0.5,
+              "widest": 0.4
+            },
+            "colour": [0.45, 0.28, 0.12]
+          },
+          "cone_male": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.25,
+              "cone": 1,
+              "face": "spine",
+              "spine": 0.03
+            }
+          }
+        }
+      },
+      "rules": {
+        "generator.params.sporophyll_length": {
+          "rule": "megasporophyll_length_m",
+          "why": "A sporophyll is drawn as long as it is stated, its stalk and lamina."
+        },
+        "generator.params.ovules": {
+          "rule": "ovules_per_megasporophyll",
+          "why": "Each sporophyll bears as many ovules along its stalk as are stated, which ripen into its seeds."
+        },
+        "generator.params.sporophylls": {
+          "map": {
+            "megasporophyll_crown": {
+              "closed": 80,
+              "open": 40
+            }
+          },
+          "why": "A closed crown packs its sporophylls tight into a dome, so it holds more of them than an open crown's loose ring (about 50 to 150 against 20 to 60, estimated from photographs; Whitelock 2002 gives no counts)."
+        },
+        "generator.params.sporophyll_angle": {
+          "map": {
+            "megasporophyll_crown": {
+              "closed": 65,
+              "open": 50
+            }
+          },
+          "why": "A closed crown's sporophylls spread from the stem's tip and arch up and in over it, so their stalks and seeds lie under a flattened dome of their laminae; an open crown's spread loosely (Whitelock 2002, p. 18-20, 81, 139)."
+        },
+        "generator.params.sporophyll_ripe": {
+          "map": {
+            "megasporophyll_crown": {
+              "closed": 70,
+              "open": 85
+            }
+          },
+          "why": "As the seeds swell a closed crown's sporophylls part a little, and an open crown's lax ones are pulled down by their weight to about level, a C. thouarsii's to hanging (Whitelock 2002, p. 81, 141, 153-154)."
+        },
+        "appearance.organs.sporophyll.bend.droop": {
+          "map": {
+            "megasporophyll_crown": {
+              "closed": -170,
+              "open": 35
+            }
+          },
+          "why": "A closed crown's sporophylls curve up and in over the stem's tip, their laminae meeting in a flattened dome (Whitelock 2002, p. 18-20, 139: \"a flattened dome\"); an open crown's arch outward and down under their seeds."
+        },
+        "appearance.organs.sporophyll.shape.leaflets": {
+          "template": "compound",
+          "map": {
+            "megasporophyll_margin": {
+              "pectinate": 15,
+              "toothed": 25,
+              "entire": 3
+            }
+          },
+          "why": "A pectinate lamina is cut like a comb into narrow soft spines, 12 to 50 of them (Whitelock 2002, p. 134, 139, 147), drawn as seven pairs so each is long enough to read (Cycas revoluta's 12 to 18 segments, p. 139); a toothed one is a single blade with teeth along it, drawn as segments joined into it; an entire one is a single blade, drawn as one pair of small segments joined into a long terminal one."
+        },
+        "appearance.organs.sporophyll.shape.leaflet_width": {
+          "template": "compound",
+          "map": {
+            "megasporophyll_margin": {
+              "pectinate": 0.12,
+              "toothed": 0.9,
+              "entire": 0.5
+            }
+          },
+          "why": "A pectinate lamina's segments are linear, about an eighth as wide as long, a toothed lamina's segments short and broad, so they read as teeth, and an entire lamina is lanceolate (Whitelock 2002, p. 120, 139, 141, 143, 154)."
+        },
+        "appearance.organs.sporophyll.shape.angle": {
+          "template": "compound",
+          "map": {
+            "megasporophyll_margin": {
+              "pectinate": 55,
+              "toothed": 70,
+              "entire": 20
+            }
+          },
+          "why": "A pectinate lamina's spines spread forward at about half a right angle; a toothed lamina's teeth stand out from its narrowly triangular blade, and an entire lamina's side segments lie along its lanceolate blade, so its outline stays whole (Whitelock 2002, p. 120, 134, 141, 143, 154)."
+        },
+        "appearance.organs.sporophyll.shape.confluent": {
+          "template": "compound",
+          "map": {
+            "megasporophyll_margin": {
+              "pectinate": 0.4,
+              "toothed": 1,
+              "entire": 1
+            }
+          },
+          "why": "A toothed or entire lamina's segments are joined into one blade along its midrib; a pectinate one is divided nearly to its midrib, so its segments are joined only at their bases, and its dense felt reads as a blade (Whitelock 2002, p. 134, 139)."
+        },
+        "appearance.organs.sporophyll.shape.lowest": {
+          "template": "compound",
+          "map": {
+            "megasporophyll_margin": {
+              "pectinate": 0.5,
+              "toothed": 0.2,
+              "entire": 0.2
+            }
+          },
+          "why": "A pectinate lamina's spines are longest at its middle and shorter toward its foot; a toothed or entire lamina's side segments are small against its blade."
+        },
+        "appearance.organs.sporophyll.shape.terminal_size": {
+          "template": "compound",
+          "map": {
+            "megasporophyll_margin": {
+              "pectinate": 1.4,
+              "toothed": 2,
+              "entire": 2
+            }
+          },
+          "why": "A sporophyll ends in an apical spine longer than the lateral ones on a pectinate lamina (Whitelock 2002, p. 134), and a toothed or entire lamina is mostly its own blade, its side segments small beside it."
+        },
+        "appearance.organs.sporophyll.shape.petiole": {
+          "template": "compound",
+          "map": {
+            "megasporophyll_crown": {
+              "closed": 0.5,
+              "open": 0.7
+            }
+          },
+          "why": "A closed crown's sporophylls have short stalks under broad laminae (Cycas revoluta's lamina 8 to 10 cm on a sporophyll of 20 to 25 cm); an open crown's long stalks carry small laminae, 5 to 12 cm on 18 to 50 cm (Whitelock 2002, p. 120, 139, 141, 143)."
+        },
+        "appearance.organs.sporophyll.colour": {
+          "colour": "megasporophyll_colour",
+          "why": "A sporophyll is drawn in its stated felt's colour."
+        },
+        "appearance.organs.cone_male.shape.spine": {
+          "template": "fruit",
+          "rule": "clamp(microsporophyll_spine_m / pollen_cone_length_m, 0.003, 0.15)",
+          "why": "Each microsporophyll's face ends in an upturned apical spine as long as it is stated, longest in Cycas pectinata (Whitelock 2002, p. 134), drawn on the cone's surface as a share of its length."
         }
       }
     }
@@ -90,6 +292,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 143, 144, family Cycadaceae: branching unbranched (sometimes forks dichotomously), usually; read as {\"unbranched\": \"usually\"}."
+    },
+    "traits.ovule_bearing": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Female Cycas is the only cycad without a cone: its ovules sit along the stalks of loose, leaf-like sporophylls in a crown round the stem's tip, which grows on through them, and leaves follow (Whitelock 2002, p. 18-20, 81)."
     }
   }
 }

@@ -3,6 +3,7 @@
   "rank": "genus",
   "name": "Prunus",
   "traits": {
+    "short_shoots": true,
     "wood_density_basic_kg_m3": 600,
     "ovary_position": "superior",
     "stamens": {"min": 15, "max": 30},
@@ -10,6 +11,7 @@
     "fruit_type": "drupe"
   },
   "evidence": {
+    "traits.short_shoots": {"evidence": "SourceInferred", "source": "kaplan-2022", "note": "Kaplan, pp. 314-315: in Prunus the long-shoot leaves fall and short shoots arise in their axils on older wood, bearing clusters of leaves and flowers."},
     "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Prunus (read 2026-10-17): the fruit is a fleshy drupe around one large hard-shelled seed. Stated here so the genus does not take Rosaceae's aggregate fruit."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Prunus (gwddagg_v2.2_genus.csv, read): specific gravity 0.6 (wsg_est, the hierarchical-model genus mean, from 320 records in 70 sources); trunks 0.61, branches 0.6. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
     "traits": {

@@ -60,11 +60,12 @@ usage:
       DIR/ID.json, what the picture shows.
   plantlab review SPECIES... --out DIR [OPTIONS]
       A review sheet of each species: its ages at one scale, the mature
-      plant from three sides and close up, and its year when it has
+      plant from four sides and close up, and its year when it has
       seasons: DIR/ID-review.png and DIR/ID-review.json.
   plantlab batch JOBS.jsonl --out DIR [--gpu I]
       Run many: one JSON object a line, {\"species\": ID, \"kind\": \"thumb\" or
-      \"review\"} with any of size, day, age, view, quality and look. A
+      \"review\"} with any of size, day, age, view, quality, look, focus
+      (\"X,Y,Z\") and span. A
       picture whose sidecar shows the same inputs is skipped, so a stopped
       batch resumes where it stopped.
   plantlab solari SPECIES --out DIR [--size PX] [--mode realtime|pathtrace]
@@ -80,7 +81,12 @@ usage:
 options:
   --day N              day of the year, 1 to 365 (default 196)
   --age YEARS          the plant's age (default: its oldest keyframe)
-  --view three-quarter|side|top
+  --view three-quarter|side|oblique|top
+                       oblique (or above) looks down at 45 degrees from the south-east
+  --focus X,Y,Z        a close-up round this point, metres from the plant's
+                       foot with +Y up (`thumbs` and `batch`)
+  --span METRES        how much of it the close-up shows, bottom to top
+                       (default 0.5)
   --quality draft|standard
   --look review|photo  review (default) is fixed so species compare fairly;
                        photo adds soft shadows, sky light, ambient occlusion,
@@ -165,7 +171,8 @@ fn parse(args: &[String]) -> Result<Request, String> {
                 );
             }
             "--force" => force = true,
-            flag @ ("--day" | "--age" | "--view" | "--quality" | "--look" | "--cut-cards") => {
+            flag @ ("--day" | "--age" | "--view" | "--quality" | "--look" | "--cut-cards"
+            | "--focus" | "--span") => {
                 apply(&mut shot, flag.trim_start_matches("--"), &value(flag)?)?;
             }
             flag if flag.starts_with("--") => return Err(format!("unknown flag `{flag}`")),
@@ -236,6 +243,27 @@ fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
         "look" => {
             shot.look = Look::from_name(value)
                 .ok_or_else(|| format!("unknown look `{value}`; use review or photo"))?;
+        }
+        "focus" => {
+            let point: Vec<f64> = value
+                .split(',')
+                .map(|part| part.trim().parse())
+                .collect::<Result<_, _>>()
+                .map_err(|_| "`--focus` takes X,Y,Z in metres")?;
+            let [x, y, z] = point[..] else {
+                return Err("`--focus` takes X,Y,Z in metres".into());
+            };
+            let span = shot.focus.map_or(0.5, |(_, span)| span);
+            shot.focus = Some(([x, y, z], span));
+        }
+        "span" => {
+            let span = value
+                .parse()
+                .ok()
+                .filter(|span: &f64| *span > 0.0)
+                .ok_or("`--span` takes a positive number of metres")?;
+            let point = shot.focus.map_or([0.0; 3], |(point, _)| point);
+            shot.focus = Some((point, span));
         }
         other => return Err(format!("unknown option `{other}`")),
     }
@@ -556,6 +584,18 @@ mod tests {
         assert_eq!(parsed.shot.view, View::Side);
         assert_eq!(parsed.shot.look, Look::Photo);
         assert_eq!(parsed.gpu, Some(1));
+    }
+
+    #[test]
+    fn a_close_up_reads_its_point_and_span_and_the_view_from_above() {
+        let parsed = parse(&args(
+            "acer-macrophyllum --out /tmp/x --view above --focus 1,6.5,-0.5 --span 3",
+        ))
+        .expect("parses");
+        assert_eq!(parsed.shot.view, View::Oblique);
+        assert_eq!(parsed.shot.focus, Some(([1.0, 6.5, -0.5], 3.0)));
+        assert!(parse(&args("x --out /tmp/x --focus 1,2")).is_err());
+        assert!(parse(&args("x --out /tmp/x --span 0")).is_err());
     }
 
     #[test]
