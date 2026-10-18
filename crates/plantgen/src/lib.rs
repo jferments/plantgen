@@ -799,4 +799,13 @@ pub mod venation;
 /// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
 /// their stated leaf shape where a hand-drawn profile stood (118 is
 /// flowering herbs' branch leaves, #190).
-pub const GENERATOR_REVISION: u32 = 122;
+/// 123: the family programs built on broadleaf (asterales, fabales,
+/// malvaceae, moraceae, salicaceae, simmondsiaceae, each revision 2) bear
+/// one bloom on each short shoot in the light once adult where a species
+/// leaves `blooms` unset, as broadleaf's forms do; until now nine species
+/// on them (bursage, umbrella thorn, baobab, Florida strangler fig,
+/// aspen, black cottonwood, two willows, jojoba) never flowered or fruited,
+/// whatever months they stated. A regular flower is not judged by the
+/// kind of zygomorphy its family states (109 is fern
+/// croziers green, #186).
+pub const GENERATOR_REVISION: u32 = 123;
