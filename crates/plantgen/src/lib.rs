@@ -868,4 +868,8 @@ pub mod venation;
 /// perianth stands on, a floral cup or an inferior ovary such as a
 /// cactus's pericarpel, so the tepals no longer float above the joint; a
 /// pericarpel the tepals open straight from is globose, not a stalk.
-pub const GENERATOR_REVISION: u32 = 130;
+/// 131: a cluster of flowers draws its axis as for flowers no wider than
+/// half again their pedicels, not a tenth of a flower thick, so a few
+/// large flowers no longer hang from a stalk thicker than their stem (130
+/// is joint flowers on their pericarpels, #220).
+pub const GENERATOR_REVISION: u32 = 131;
