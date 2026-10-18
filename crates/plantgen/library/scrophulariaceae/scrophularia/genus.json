@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Scrophularia",
+  "traits": {
+    "leaf_arrangement": "opposite"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Scrophularia (read 2026-10-17): leaves in opposite pairs throughout the genus (about 200 to 289 species)."}
+  }
+}

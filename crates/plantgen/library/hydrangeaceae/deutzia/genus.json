@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Deutzia",
+  "traits": {
+    "leaf_habit": {"deciduous": "usually", "evergreen": "rarely"}
+  },
+  "evidence": {
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Deutzia (read 2026-10-17): about 60 species (some 50 in China), mostly deciduous, a few subtropical ones evergreen."}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Euonymus",
+  "traits": {
+    "leaf_arrangement": {"opposite": "usually", "alternate": "rarely"}
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Euonymus genus account (read 2026-10-17): leaves mostly opposite, stalked. Alternate kept as rare state (not on the page)."}
+  }
+}

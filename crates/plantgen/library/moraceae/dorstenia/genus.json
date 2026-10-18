@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Dorstenia",
+  "traits": {
+    "sexual_system": "monoecious"
+  },
+  "evidence": {
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Dorstenia (read 2026-10-17): male and female flowers share one receptacle, males scattered among the females or set at the rim; the female flowers ripen first."}
+  }
+}

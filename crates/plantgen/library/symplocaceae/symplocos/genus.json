@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Symplocos",
+  "traits": {
+    "leaf_habit": {"evergreen": "usually", "deciduous": "sometimes"}
+  },
+  "evidence": {
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Symplocos (read 2026-10-17): about 300 to 400 species of Asia and the Americas; of the species it describes, most are evergreen trees, a few (S. coreana, S. paniculata) deciduous shrubs, and S. tinctoria either."}
+  }
+}

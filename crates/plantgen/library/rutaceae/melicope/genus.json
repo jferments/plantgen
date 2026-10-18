@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Melicope",
+  "traits": {
+    "fruit_type": "follicle"
+  },
+  "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Melicope (read 2026-10-17): fruit of up to four follicles joined at the base, each with one or two seeds; ~230-240 species."}
+  }
+}

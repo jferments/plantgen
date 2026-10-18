@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Impatiens",
+  "traits": {
+    "leaf_arrangement": {"alternate": "usually", "whorled": "sometimes", "opposite": "rarely"}
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "britannica", "note": "Britannica Impatiens (read 2026-10-17): simple leaves mostly set alternately on the stem, the upper ones often in whorls of three or more. Opposite kept as rare from the family value."}
+  }
+}
