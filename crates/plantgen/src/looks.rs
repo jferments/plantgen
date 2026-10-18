@@ -1713,6 +1713,13 @@ pub struct Flower {
     /// absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pistil: Option<[f32; 3]>,
+    /// The stigma lobes' colour; the filaments' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stigma: Option<[f32; 3]>,
+    /// What a cactus flower's pericarpel (the inferior ovary's skin) bears,
+    /// as its fruit will ([`Skin`]).
+    #[serde(skip_serializing_if = "Skin::is_naked")]
+    pub pericarpel: Skin,
     /// The colour its closed bud shows, its sepals' or the bracts' that
     /// wrap it; the petals' if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1832,6 +1839,8 @@ impl Default for Flower {
             calyx: None,
             filament: None,
             pistil: None,
+            stigma: None,
+            pericarpel: Skin::Naked,
             bud: None,
             corolla: Corolla::Regular,
             petal_whorls: 1,
@@ -2296,6 +2305,11 @@ pub struct Fruit {
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
     pub unripe: f64,
+    /// How much wider the fruit is toward its tip than toward its base,
+    /// -0.8 to 0.8: 0 an ellipsoid, above 0 obovoid to obconic or
+    /// club-shaped, below 0 ovoid ([`crate::fruit`]).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub flare: f64,
     /// The colour of the seeds a ripe fruit shows: a magnolia's red seeds
     /// hanging from its split follicles. Only follicles show them.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2323,6 +2337,7 @@ impl Default for Fruit {
             cone: 0.0,
             kind: FruitKind::Berry,
             unripe: 0.0,
+            flare: 0.0,
             seeds: None,
             cup: None,
             ripening: None,
@@ -2340,6 +2355,7 @@ struct FruitCard {
     cone: f64,
     kind: FruitKind,
     unripe: f64,
+    flare: f64,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
     ripening: Option<[f32; 3]>,
@@ -2358,6 +2374,7 @@ impl Default for FruitCard {
             cone: fruit.cone,
             kind: fruit.kind,
             unripe: fruit.unripe,
+            flare: fruit.flare,
             seeds: None,
             cup: None,
             ripening: None,
@@ -2391,6 +2408,7 @@ impl TryFrom<FruitCard> for Fruit {
             cone: card.cone,
             kind: card.kind,
             unripe: card.unripe,
+            flare: card.flare,
             seeds: card.seeds,
             cup: card.cup,
             ripening: card.ripening,
@@ -2427,6 +2445,15 @@ pub enum FruitKind {
     Pod,
     /// A capsule or follicle: ribbed lengthwise.
     Capsule,
+    /// A cactus fruit under broad scales, crowned by its dried perianth
+    /// (Ferocactus, saguaro).
+    Scaly,
+    /// A cactus fruit studded with felted areoles, crowned by its dried
+    /// perianth (prickly pears, spineless chollas).
+    Areolate,
+    /// A cactus fruit whose areoles bear short spines, crowned by its
+    /// dried perianth (hedgehogs, organ pipe, spiny chollas).
+    Spiny,
     /// An aggregate of follicles on a cone-like axis (magnolias), the
     /// ripe ones split along their backs, each showing its seeds.
     Follicles,
@@ -2442,6 +2469,41 @@ impl FruitKind {
     #[allow(clippy::trivially_copy_pass_by_ref)]
     fn is_berry(&self) -> bool {
         *self == Self::Berry
+    }
+
+    /// The skin a cactus fruit wears, if it is one.
+    #[must_use]
+    pub fn skin(self) -> Option<Skin> {
+        match self {
+            Self::Scaly => Some(Skin::Scaly),
+            Self::Areolate => Some(Skin::Areolate),
+            Self::Spiny => Some(Skin::Spiny),
+            _ => None,
+        }
+    }
+}
+
+/// What a cactus's pericarpel bears on its skin, on the flower and on the
+/// fruit it grows into (Anderson, The Cactus Family pp. 31 to 33): the
+/// states of the `fruit_surface` character.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Skin {
+    /// Nothing (pincushions).
+    #[default]
+    Naked,
+    /// Broad scales (barrels, saguaro).
+    Scaly,
+    /// Felted areoles, with glochids but no spines (prickly pears).
+    Areolate,
+    /// Areoles with spines (hedgehogs, organ pipe).
+    Spiny,
+}
+
+impl Skin {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_naked(&self) -> bool {
+        *self == Self::Naked
     }
 }
 
@@ -2981,6 +3043,9 @@ impl Shape {
                 for channel in s.pistil.into_iter().flatten() {
                     check("pistil", f64::from(channel), 0.0, 1.0)?;
                 }
+                for channel in s.stigma.into_iter().flatten() {
+                    check("stigma", f64::from(channel), 0.0, 1.0)?;
+                }
                 for channel in s.bud.into_iter().flatten() {
                     check("bud", f64::from(channel), 0.0, 1.0)?;
                 }
@@ -3163,7 +3228,8 @@ impl Shape {
                     )?;
                 }
                 check("threads", s.threads, 0.0, 1.0)?;
-                check("unripe", s.unripe, 0.0, 1.0)
+                check("unripe", s.unripe, 0.0, 1.0)?;
+                check("flare", s.flare, -0.8, 0.8)
             }
         }
     }
