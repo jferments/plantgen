@@ -32,12 +32,7 @@
       "bloom_age": 3,
       "joint_flowers": 3,
       "flower_angle": 30,
-      "bud_share": 0.2,
-      "fruit_share": 0.3,
-      "bud_rate": 0.5,
-      "flower_area": 0.314,
-      "bud_area": 0.036,
-      "fruit_area": 0.89
+      "bud_rate": 0.5
     }
   },
   "growth": {
@@ -54,22 +49,6 @@
     "foliage": [0.12, 0.2, 0.07],
     "foliage_shade": [0.054, 0.09, 0.032],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.3
-        },
-        "accent": [0.6, 0.65, 0.2]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit"
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "flatten": 0.14,
@@ -142,8 +121,11 @@
     "height_max_m": 3,
     "woodiness": "semi",
     "rosette": "none",
-    "flowering_months": [4, 5, 6],
-    "fruiting_months": [7, 8, 9]
+    "flowering_months": [4, 5, 6, 7],
+    "fruiting_months": [7, 8, 9],
+    "anther_colour": [240, 230, 200],
+    "filament_colour": [240, 230, 200],
+    "stigma_colour": [150, 185, 80]
   },
   "evidence": {
     "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},
@@ -170,11 +152,7 @@
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about a metre within 10 years. Wide tolerances."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: green to blue-green pads, areoles 2 to 4 cm apart with one to six white to yellow spines pointing down and tufts of yellow-brown glochids. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (16 by hand: no flora counts them, and USDA GRIN records 9 to 22 petals on accessions of Opuntia, as quoted in search results; the page itself was not read) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: green to blue-green pads, areoles 2 to 4 cm apart with one to six white to yellow spines pointing down and tufts of yellow-brown glochids. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -209,8 +187,11 @@
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
-    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."}
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia engelmannii var. engelmannii: flowering spring, April to July."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
+    "traits.anther_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia engelmannii: filaments, anthers and style whitish to cream."},
+    "traits.filament_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia engelmannii: filaments, anthers and style whitish to cream."},
+    "traits.stigma_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia engelmannii: stigma lobes yellow-green to green."}
   },
   "provenance": {
     "sources": [
