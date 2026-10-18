@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Gymnosporia",
+  "traits": {
+    "leaf_arrangement": "alternate"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Gymnosporia (read 2026-10-17; ~117 spp): leaves alternate or clustered in fascicles; this helps separate it from Maytenus."}
+  }
+}

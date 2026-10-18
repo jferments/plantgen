@@ -451,7 +451,7 @@ pub fn export(
     let files = if settings.budget.is_some() {
         budgeted(inputs, plant, *settings, rig, &file)?
     } else {
-        let levels = package::level_meshes(&plant.graph, inputs, true);
+        let levels = package::level_meshes(&plant.graph, inputs, plant.seed, true);
         if let Some(built) = built {
             check_built(inputs, plant, &levels, built)?;
         }
@@ -485,18 +485,21 @@ struct Drawn<'a> {
 }
 
 impl Drawn<'_> {
-    /// Level `detail` of `drawn`, a keyframe as drawn on the inputs' day,
+    /// Level `detail` of `drawn`, a keyframe of the plant grown from `seed`
+    /// as drawn on the inputs' day,
     /// never with more wood than `finer` triangles where given (see
     /// [`package::level_mesh`]).
     fn at<'a>(
         drawn: &PlantGraph,
         inputs: &'a Inputs,
+        seed: u64,
         detail: Detail,
         finer: Option<usize>,
     ) -> Drawn<'a> {
         let (mut mesh, shades) = package::level_mesh(
             drawn,
             inputs,
+            seed,
             &detail.lod,
             (detail.level, detail.along),
             finer,
@@ -606,7 +609,13 @@ impl<'a> Trials<'a> {
     }
 
     fn draw(&self, dial: f64) -> Drawn<'a> {
-        Drawn::at(self.drawn, self.inputs, self.detail(dial), None)
+        Drawn::at(
+            self.drawn,
+            self.inputs,
+            self.plant.seed,
+            self.detail(dial),
+            None,
+        )
     }
 
     /// The drawing at `dial`'s triangles, and the drawing if it was drawn
@@ -750,7 +759,13 @@ fn budgeted(
     let mut files: Vec<Level> = Vec::with_capacity(LEVELS);
     let mut finer = None;
     for (level, dial) in dials.into_iter().enumerate() {
-        let drawing = Drawn::at(trials.drawn, inputs, trials.detail(dial), finer);
+        let drawing = Drawn::at(
+            trials.drawn,
+            inputs,
+            trials.plant.seed,
+            trials.detail(dial),
+            finer,
+        );
         finer = Some(drawing.mesh.wood.triangle_count());
         let mut written = drawing.file(inputs, plant, settings, rig, level, file(level))?;
         let (drawn, bytes) = (written.summary.triangles, written.glb.len());
@@ -2297,6 +2312,7 @@ mod tests {
         use crate::bend::{self, Bend};
         let card = Card {
             segment: crate::mesh::NO_SEGMENT,
+            seed: 0.5,
             base: [0.0, 1.0, 0.0],
             heading: [0.0, 1.0, 0.0],
             left: [1.0, 0.0, 0.0],

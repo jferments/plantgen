@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Garcinia",
+  "traits": {
+    "fruit_type": "berry"
+  },
+  "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Garcinia (read 2026-10-17): about 400 to 416 species; fruit berry-like, white fleshy pulp inside a reddish to dark leathery rind; no capsules or drupes mentioned."}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Tulipa",
+  "traits": {
+    "inflorescence": {"solitary": "usually", "raceme": "rarely"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Tulipa (read 2026-10-17): stems mostly bear one terminal flower; a few multi-flowered species carry two to four; ~75 species. Raceme stands in for the few-flowered stems."}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Fritillaria",
+  "traits": {
+    "inflorescence": {"solitary": "often", "raceme": "sometimes", "umbel": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Fritillaria (read 2026-10-17): flowers commonly single and nodding, some species with umbels or many-flowered racemes; ~130-140 species."}
+  }
+}

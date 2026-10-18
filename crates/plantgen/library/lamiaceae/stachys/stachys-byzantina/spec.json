@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "id": "stachys-byzantina",
+  "taxon": {
+    "scientific_name": "Stachys byzantina",
+    "common_name": "lamb's ear",
+    "usda_symbol": "STBY",
+    "family": "Lamiaceae",
+    "genus": "Stachys",
+    "plant_name_id": 194896
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 5,
+      "stem_rate": 0.8,
+      "clump_radius": 0.22,
+      "stem_lean": 6,
+      "maturity": 1.0,
+      "stem_radius": 0.0035,
+      "wiggle": 1.5,
+      "nodes": 7,
+      "leaves_per_node": 2,
+      "bare": 0.15,
+      "leaf_length": 0.08,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.75,
+      "leaf_base": 1.0,
+      "leaf_angle": 40,
+      "basal_leaves": 12,
+      "basal_length": 0.11,
+      "basal_angle": 70,
+      "raceme": 0.04,
+      "flowers": 1,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "adult_age": 2,
+      "young_height": 0.15
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.33,
+      0.36,
+      0.3
+    ],
+    "foliage": [
+      0.16,
+      0.2,
+      0.14
+    ],
+    "foliage_shade": [
+      0.05,
+      0.065,
+      0.045
+    ],
+    "variation": 0.12,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "widest": 0.45,
+          "tip": 0.55,
+          "base": 0.6,
+          "petiole": 0.15
+        }
+      },
+      "basal": {
+        "shape": {
+          "template": "simple",
+          "widest": 0.55,
+          "tip": 0.6,
+          "base": 0.7,
+          "petiole": 0.25
+        }
+      },
+      "flower": {
+        "colour": [
+          0.62,
+          0.22,
+          0.52
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 0.55,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.4,
+      "max": 0.8,
+      "typical": 0.55
+    },
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "perennation": "rhizome",
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.035
+    },
+    "leaf_shape": "elliptic",
+    "leaf_margin": "crenate",
+    "leaf_hairs": "lanate",
+    "leaf_hairs_beneath": "lanate",
+    "leaf_hair_length_m": 0.003,
+    "stem_hairs": "lanate",
+    "hair_colour": [
+      236,
+      236,
+      230
+    ],
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.22
+    },
+    "flower_size_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "flower_colour": [
+      200,
+      80,
+      170
+    ],
+    "flower_symmetry": "zygomorphic",
+    "fruit_type": "schizocarp",
+    "fruit_size_m": {
+      "min": 0.0015,
+      "max": 0.0025
+    },
+    "flowering_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): flowering stems erect, often branched, 40-80 cm tall; Gleason and Cronquist (1991) give 4-8 dm; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): herbaceous perennials."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): herbaceous perennials."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): a mat-forming perennial; read as spreading by creeping stems at the ground, drawn as a rhizome's clump (inferred)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): its rosettes keep their leaves through the year in the gardens it is grown in (read from the article's cultivation notes; inferred for the wild plant)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): basal leaves with blades oblong-elliptic, about 10 cm long and 2.5 cm wide, below the flowering stems."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): the leaves are arranged oppositely on the stems."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): leaves 5 to 10 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): basal leaves about 10 cm long and 2.5 cm wide; the range round that width is ours."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): basal blades oblong-elliptic, the apex attenuate, gradually narrowed to a rounded point."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): leaf margins crenulate but covered with dense hairs."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): leaves densely covered on both sides with grey-silver, silky-lanate hairs; Gleason and Cronquist (1991): densely white-tomentose throughout with long matted hairs; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): densely covered on both sides with silky-lanate hairs, the undersides more silver-white than the tops."
+    },
+    "traits.leaf_hair_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 3 mm, single long wavy hairs measured by eye on iNaturalist photographs with a ring for scale (observations 171598444, 238297511): 2-5 mm. No published measurement could be reached."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): usually densely covered with grey or silver-white, silky-lanate hairs; Gleason and Cronquist (1991): white-tomentose throughout; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.hair_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): grey or silver-white hairs. The colour is our reading of the words."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): flowering spikes 10-22 cm long of crowded whorls (verticillasters) of many flowers on no pedicels."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): flowering spikes 10-22 cm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): corollas 1.2 cm long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): pink to purple flowers, the corollas veined darker purple inside. The colour is our reading of the words and of iNaturalist photographs (observation 169267090)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Stachys byzantina (article text read 2026-10-17): two-lipped corollas, as in the genus."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Four nutlets in the persistent calyx, as Lamiaceae fruit (the family file reads its fruit as a schizocarp of four mericarps); not checked for this species."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 2 mm, the size of a Stachys nutlet, hidden in the woolly calyx; our estimate, as no measurement for this species could be reached."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Summer flowering, as Wikipedia says (in summer it sends up flowering stems); June-August are our reading for the northern temperate gardens and roadsides it grows in."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set after Wikipedia's description: a low mat of rosettes of thick oblong leaves 10 cm long (basal_leaves 12 at each stem's foot, spread nearly flat, basal_angle 70) from which erect, few-leaved flowering stems 40-80 cm tall rise in summer, their leaves in opposite pairs, a little smaller up the stem (leaf_top 0.75), each stem ending in one spike of crowded whorls of small flowers on no stalks (flowers 1: the spike is the flowering organ, its size and flowers from inflorescence_length_m and flower_size_m). Stems from the second year; a first-year plant is its rosettes. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.55 m in its second summer in the open, flowering: Wikipedia's flowering stems 40-80 cm, Gleason and Cronquist's 4-8 dm. Not measured."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Wikipedia and Gleason and Cronquist: a grey-green face (the wool's white is drawn by its hairs, `leaf_hairs`), oblong-elliptic blades narrowed to a rounded tip on a short stalk, and magenta-pink flowers half hidden in the wool, as iNaturalist photographs show them (observations 238297511, 169267090, 63744082)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the hair practice (2026-10-17): characters from Wikipedia's article and a Gleason and Cronquist excerpt, hair length by eye from photographs."
+  }
+}

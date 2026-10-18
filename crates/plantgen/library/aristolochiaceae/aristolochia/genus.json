@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Aristolochia",
+  "traits": {
+    "flower_symmetry": "zygomorphic"
+  },
+  "evidence": {
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Aristolochia (read 2026-10-17): no corolla; a swollen base runs into a long perianth tube ending in one tongue-like coloured lobe, a one-sided (bilateral) limb; 500+ species. Page does not use the word zygomorphic; inferred from the single lateral lobe."}
+  }
+}

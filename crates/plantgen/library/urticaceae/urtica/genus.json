@@ -5,7 +5,8 @@
   "traits": {
     "wood_density_basic_kg_m3": 440,
     "flower_merosity": 2,
-    "stamens": 4
+    "stamens": 4,
+    "leaf_arrangement": "opposite"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {
@@ -17,6 +18,7 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "The Flora of North America's account of Urtica, as search results quote it (the page itself was not read): staminate flowers with 4 tepals, distinct and equal, and 4 stamens; pistillate flowers with 4 tepals, the inner 2 as long as the achene and the outer 2 smaller. Four tepals in two pairs are two whorls of two."
-    }
+    },
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Urtica (read 2026-10-17): most leaves and their stalks sit in opposite pairs on the stem; no alternate case mentioned."}
   }
 }

@@ -31,21 +31,21 @@
       "map": {"leaf_venation": {"palmate": 2}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a palmately veined blade's main veins fan from the top of its petiole, two a side with the midrib."
     },
-    "appearance.organs.leaf.hairs.length": {
-      "rule": "leaf_hair_length_m",
-      "why": "A blade's hairs are as long as a flora measures them."
-    },
     "appearance.organs.leaf.hairs.colour": {
       "colour": "hair_colour",
       "why": "A blade's hairs are drawn in the colour they are stated in; white where none is."
     },
-    "appearance.organs.basal.hairs.length": {
-      "rule": "leaf_hair_length_m",
-      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade's hairs are as long as a flora measures them."
-    },
     "appearance.organs.basal.hairs.colour": {
       "colour": "hair_colour",
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade's hairs are drawn in the colour they are stated in; white where none is."
+    },
+    "appearance.organs.leaf.hairs_beneath.colour": {
+      "colour": "hair_colour",
+      "why": "A blade's underside's hairs are drawn in the colour the plant's hairs are stated in; white where none is."
+    },
+    "appearance.organs.basal.hairs_beneath.colour": {
+      "colour": "hair_colour",
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade's underside's hairs are drawn in the colour the plant's hairs are stated in; white where none is."
     },
     "appearance.stem_hairs.colour": {
       "colour": "hair_colour",
@@ -84,6 +84,10 @@
         "decussate": {"map": {"leaf_arrangement": {"alternate": 137.5, "opposite": 90, "whorled": {"rule": "180 / leaves_per_node"}}}, "else": {"rule": "180 / leaves_per_node"}}
       }},
       "why": "Each node turns from the one below by the golden angle in a spiral, half a turn in two ranks, a third of a turn in three, and half the gap between its own leaves where pairs or whorls cross. Where the turn and the leaves are stated at different ranks and disagree, the leaves decide: pairs and whorls cross even under an order's spiral, and single leaves under an order's crossing pairs turn by the golden angle."
+    },
+    "generator.params.flower_branches": {
+      "rule": "flowering_branches",
+      "why": "A herb's flowering stem bears a flowering side branch in the axil of each of its top leaves, as many as the taxon states."
     },
     "generator.params.stem_height": {
       "rule": "height_typical_m",
@@ -140,6 +144,11 @@
       "source": "okabe-2019-phyllotaxis",
       "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says."
     },
+    "rules.generator.params.flower_branches": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "What the herb program's flowering side branches mean: a branched herb such as fennel or poison hemlock (Abrams 1951 pp. 231, 241: branched, much branched) carries an inflorescence at the end of each side branch from its upper leaf axils, as many as the taxon states; a herb that states none keeps one inflorescence to a stem."
+    },
     "rules.generator.params.stem_height": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -155,10 +164,10 @@
       "source": "plantgen-authors",
       "note": "What the broadleaf program's crown_height means: the top of the space the crown may fill, which rises with age at crown_rate toward it and never passes it, so the tallest the plant grows, the height a flora gives as its greatest. Where that greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it."
     },
-    "rules.appearance.organs.leaf.hairs.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn as long as the species' stated leaf_hair_length_m; that the stated length is the drawn one is the model's choice."},
     "rules.appearance.organs.leaf.hairs.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."},
-    "rules.appearance.organs.basal.hairs.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn as long as the species' stated leaf_hair_length_m; that the stated length is the drawn one is the model's choice."},
     "rules.appearance.organs.basal.hairs.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."},
+    "rules.appearance.organs.leaf.hairs_beneath.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's underside's hairs are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."},
+    "rules.appearance.organs.basal.hairs_beneath.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's underside's hairs are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."},
     "rules.appearance.stem_hairs.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The hairs on young stems and leaf stalks are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."}
   }
 }

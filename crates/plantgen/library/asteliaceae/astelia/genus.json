@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Astelia",
+  "traits": {
+    "leaf_shape": "linear",
+    "sexual_system": "dioecious",
+    "inflorescence": "panicle"
+  },
+  "evidence": {
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Astelia (read 2026-10-17): leaves in three ranks, linear to sword-shaped."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Astelia (read 2026-10-17): the genus description calls the plants dioecious; neither listed tied state (hermaphrodite, polygamous) fits."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Astelia (read 2026-10-17): a terminal panicle whose spathe-subtended branches are each an unbranched raceme."}
+  }
+}

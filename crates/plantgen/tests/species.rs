@@ -300,7 +300,7 @@ fn builtin_species_stand_above_the_ground() {
                         let variant = &spec.variant_list()[0];
                         let growth = grow_variant(&spec, variant, years, spec.growth.keyframes.clone());
                         for graph in &growth.keyframes {
-                            for (level, mesh) in package::keyframe_meshes(graph, &inputs).iter().enumerate() {
+                            for (level, mesh) in package::keyframe_meshes(graph, &inputs, variant.seed).iter().enumerate() {
                                 let below = plantgen::mesh::Below::drawn(graph, mesh);
                                 if below.most() > BED && !KNOWN.contains(&id) {
                                     failures.push(format!(
@@ -327,16 +327,28 @@ fn builtin_species_stand_above_the_ground() {
 /// Grasses and herbs renew their shoots every year: at every keyframe
 /// each stem, culm, leaf and flower grew that year, so nothing lives on
 /// from the year before but a grass's thatch, the dead blades of last
-/// year's tillers, each born with its blade.
+/// year's tillers, each born with its blade. An evergreen's leaves, and a
+/// herb's stems bearing leaves only, live leaf_years, and its thatch comes
+/// that much later.
 #[test]
 fn grasses_and_herbs_renew_their_shoots_every_year() {
     let mut checked = 0;
+    let mut evergreen = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
         if !matches!(spec.growth_form, GrowthForm::Graminoid | GrowthForm::Forb) {
             continue;
         }
         checked += 1;
+        let years = spec
+            .generator
+            .params
+            .get("leaf_years")
+            .copied()
+            .unwrap_or(1.0);
+        if years > 1.0 {
+            evergreen += 1;
+        }
         let variant = spec.variant_list()[0];
         let ages = vec![1.0, 2.0, 3.0, 4.0];
         let growth = grow_variant(&spec, &variant, 4.0, ages);
@@ -350,25 +362,45 @@ fn grasses_and_herbs_renew_their_shoots_every_year() {
                 "{id} at {}",
                 graph.age
             );
-            for segment in &graph.segments {
-                assert_eq!(
-                    segment.born.to_bits(),
-                    graph.age.to_bits(),
-                    "{id}: a stem outlived its year"
-                );
-                assert_eq!(segment.shed, (graph.age < 4.0).then_some(graph.age + 1.0));
-            }
-            for organ in &graph.organs {
-                let born = if Some(usize::from(organ.organ)) == thatch {
-                    graph.age - 1.0
-                } else {
-                    graph.age
-                };
-                assert_eq!(
-                    organ.born.to_bits(),
-                    born.to_bits(),
-                    "{id}: an organ outlived its year"
-                );
+            if years > 1.0 {
+                for segment in &graph.segments {
+                    assert!(
+                        graph.age - segment.born < years,
+                        "{id}: a stem outlived its leaves"
+                    );
+                }
+                for organ in &graph.organs {
+                    let kept = if Some(usize::from(organ.organ)) == thatch {
+                        years + 1.0
+                    } else {
+                        years
+                    };
+                    assert!(
+                        graph.age - organ.born < kept,
+                        "{id}: an organ outlived its years"
+                    );
+                }
+            } else {
+                for segment in &graph.segments {
+                    assert_eq!(
+                        segment.born.to_bits(),
+                        graph.age.to_bits(),
+                        "{id}: a stem outlived its year"
+                    );
+                    assert_eq!(segment.shed, (graph.age < 4.0).then_some(graph.age + 1.0));
+                }
+                for organ in &graph.organs {
+                    let born = if Some(usize::from(organ.organ)) == thatch {
+                        graph.age - 1.0
+                    } else {
+                        graph.age
+                    };
+                    assert_eq!(
+                        organ.born.to_bits(),
+                        born.to_bits(),
+                        "{id}: an organ outlived its year"
+                    );
+                }
             }
             if let Some(thatch) = thatch {
                 let dead = graph
@@ -376,10 +408,11 @@ fn grasses_and_herbs_renew_their_shoots_every_year() {
                     .iter()
                     .filter(|organ| usize::from(organ.organ) == thatch)
                     .count();
-                // Thatch from the second year on, when the first tillers die.
+                // Thatch once the first tillers' blades die: from the second
+                // year on, an evergreen's a year later.
                 assert_eq!(
                     dead > 0,
-                    graph.age >= 2.0,
+                    graph.age >= 1.0 + years,
                     "{id} at {}: {dead} thatch",
                     graph.age
                 );
@@ -387,6 +420,10 @@ fn grasses_and_herbs_renew_their_shoots_every_year() {
         }
     }
     assert!(checked >= 2, "only {checked} grasses and herbs");
+    assert!(
+        evergreen >= 2,
+        "only {evergreen} evergreen grasses and herbs"
+    );
 }
 
 fn by_id(graph: &PlantGraph) -> HashMap<u64, usize> {
@@ -843,7 +880,7 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 108,
+        checked, 109,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -854,9 +891,10 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
          the magnoliids, the eight the species-facts records name (step 6): bur-sage's and \
          baneberry's racemes, ragwort's and foothill palo verde's corymbs, golden bamboo's \
          panicles, and the catkins of quaking aspen and two willows, and the umbels of fennel, \
-         wild carrot and poison hemlock (lacy leaves), white clover\'s heads, and the four \
+         wild carrot and poison hemlock (lacy leaves), white clover\'s heads, the four \
          whose families now rank their clusters: aloe vera's racemes, black mangrove's cymes, \
-         harsh paintbrush's spikes and Pacific bleeding heart's racemes"
+         harsh paintbrush's spikes and Pacific bleeding heart's racemes, and lamb\'s ear\'s spike \
+         (hair practice)"
     );
 }
 

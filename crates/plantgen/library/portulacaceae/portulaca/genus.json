@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Portulaca",
+  "traits": {
+    "leaf_arrangement": {"alternate": "usually", "opposite": "sometimes"}
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Portulaca genus account (read 2026-10-17): leaves mostly spiralled to near-opposite, at times opposite, uppermost whorled beneath the flowers."}
+  }
+}

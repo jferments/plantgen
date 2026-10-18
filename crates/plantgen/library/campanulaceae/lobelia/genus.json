@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Lobelia",
+  "traits": {
+    "inflorescence": {"raceme": "usually", "spike": "sometimes", "panicle": "sometimes", "solitary": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Lobelia genus account (read 2026-10-17): inflorescence a terminal raceme, spike or panicle, flowers occasionally single; raceme named first. Wikipedia Lobelia (~444 spp) silent on arrangement."}
+  }
+}
