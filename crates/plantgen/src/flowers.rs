@@ -20,8 +20,9 @@
 //! $`\mathrm{clamp}(\texttt{petal\_width}\cdot\pi(s+R)/n,\ 0.08L,\ L)`$ wide,
 //! and rises the form's `cup`. Roles (`corolla`) change the shape by place;
 //! a fused corolla is one surface of revolution from radius $`s`$ to
-//! `throat` $`\cdot L`$ over `fused` $`\cdot L`$, its petals free lobes on
-//! its mouth. Up to $`2n`$ stamens stand in whorls at $`0.5c`$ and
+//! `throat` $`\cdot L`$ over `fused` $`\cdot L`$ (or `tube_reach`
+//! $`\cdot R`$, a trumpet longer than its petals), its petals free lobes
+//! on its mouth. Up to $`2n`$ stamens stand in whorls at $`0.5c`$ and
 //! $`0.75c`$, the first alternating with the petals; more stand on a
 //! spiral, stamen $`i`$ of $`m`$ at radius
 //! $`c\,(0.35 + 0.6\sqrt{(i+\frac12)/m})`$ turned $`i \cdot 137.5°`$.
@@ -208,6 +209,9 @@ pub struct Floral {
     /// An ovary below the perianth: its centre's height, half-length and
     /// half-width.
     pub ovary: Option<(f64, f64, f64)>,
+    /// A floral tube above an inferior ovary, in the calyx's colour, that
+    /// bears the perianth on its rim.
+    pub floral_tube: Option<Tube>,
     pub calyx_tube: Option<Tube>,
     /// Its perianth parts: sepals from the first round, then petals or
     /// tepals (an outer whorl before an inner one; a spiral from the
@@ -241,6 +245,20 @@ fn tepal_whorls(flower: &Flower) -> u32 {
 #[must_use]
 #[allow(clippy::too_many_lines)]
 pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Floral {
+    // The sepals rise half the form's cup; the petals their stated rise,
+    // where the flower states one, in place of the form's.
+    let sepal_cup = flower.sepal_rise.unwrap_or(form.cup * 0.5);
+    let ruled;
+    let form = match flower.petal_rise {
+        Some(cup) => {
+            ruled = FlowerForm {
+                cup,
+                ..form.clone()
+            };
+            &ruled
+        }
+        None => form,
+    };
     let r = radius.max(0.0);
     let c = (flower.centre * r).clamp(0.0, r * 0.9);
     let s = 0.6 * c;
@@ -287,6 +305,22 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             )),
         ),
     };
+    // A floral tube on the inferior ovary, widening a little to the rim
+    // the perianth stands on.
+    let floral_tube = (flower.ovary == Ovary::Inferior && flower.floral_tube > 0.0).then(|| {
+        let neck = s.max(0.12 * ovary_length) * 0.7;
+        Tube {
+            height: seat,
+            length: flower.floral_tube * r,
+            foot: neck,
+            mouth: (s * 1.05).max(neck * 1.3),
+            belly: 0.0,
+            lobes: flower.sepals.max(n),
+            turn: psi,
+            calyx: 1.0,
+        }
+    });
+    let seat = floral_tube.map_or(seat, |t| t.height + t.length);
 
     // Sepals, between the petals.
     let mut pieces = Vec::new();
@@ -323,7 +357,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 angle: psi + TAU * f64::from(j) / m + PI / m,
                 radius: at,
                 height,
-                cup: rise(form.cup * 0.5),
+                cup: rise(sepal_cup),
                 length: tooth,
                 width: (spread(m, s, r) * 0.8).clamp(tooth * 0.08, tooth.max(1e-9)),
                 curl: curl * 0.5,
@@ -339,7 +373,11 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let whorled = matches!(flower.perianth, Perianth::Corolla | Perianth::Tepals);
     let tube = (whorled && flower.fused > 0.0).then(|| Tube {
         height: seat,
-        length: flower.fused * length,
+        length: if flower.tube_reach > 0.0 {
+            flower.tube_reach * r
+        } else {
+            flower.fused * length
+        },
         foot: s.max(r * 0.04),
         mouth: flower.throat * length,
         belly: flower.belly * length,
@@ -638,15 +676,19 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             let length = if fertile { filament } else { filament * 0.8 };
             let (height, at, lean) = match (&tube, torus) {
                 // Adnate to the tube, halfway up.
-                (Some(t), _) => (t.height + t.length * 0.5, t.radius_at(0.5) * 0.85, 0.15),
+                (Some(t), _) => (
+                    t.height + t.length * 0.5,
+                    t.radius_at(0.5) * 0.85,
+                    flower.stamen_lean.unwrap_or(0.15),
+                ),
                 // Crowded on a spiral up the torus's foot, the lowest
                 // first, spreading.
                 (None, Some((_, core, zone))) => (
                     seat + zone * (fi + 0.5) / f64::from(total),
                     core,
-                    TORUS_LEAN,
+                    flower.stamen_lean.unwrap_or(TORUS_LEAN),
                 ),
-                (None, None) => (seat, at, LEAN),
+                (None, None) => (seat, at, flower.stamen_lean.unwrap_or(LEAN)),
             };
             stamens.push(Stamen {
                 rod: Rod {
@@ -692,7 +734,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         // cactus's style ends in a ring of stigma lobes.
         let size = (0.3 * c).max(0.04 * r);
         let superior = flower.ovary == Ovary::Superior;
-        let style = flower.stamen_length * r;
+        let style = flower.style_length.unwrap_or(flower.stamen_length) * r;
         Pistil::One {
             ovary: superior.then_some((seat + size, size)),
             style: Rod {
@@ -821,6 +863,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         centre: c,
         cup,
         ovary,
+        floral_tube,
         calyx_tube,
         pieces,
         tube,
@@ -904,6 +947,8 @@ pub struct Colours {
     pub filament: [f32; 3],
     /// A single pistil's ovary.
     pub ovary: [f32; 3],
+    /// The corolla tube's, where it differs from the petals'.
+    pub tube: Option<[f32; 3]>,
     /// Its stigma lobes.
     pub stigma: [f32; 3],
 }
@@ -912,6 +957,14 @@ impl Colours {
     /// The colour `share` of the way from the petals' to the calyx's.
     fn toward_calyx(&self, share: f32) -> [f32; 3] {
         std::array::from_fn(|c| self.petal[c] + (self.calyx[c] - self.petal[c]) * share)
+    }
+
+    /// A tube's colour: a corolla tube's own where it has one.
+    fn of_tube(&self, tube: &Tube) -> [f32; 3] {
+        match self.tube {
+            Some(colour) if tube.calyx == 0.0 => colour,
+            _ => self.toward_calyx(tube.calyx),
+        }
     }
 }
 
@@ -985,14 +1038,17 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             mesh,
         );
     }
-    for tube in [&laid.calyx_tube, &laid.tube].into_iter().flatten() {
+    for tube in [&laid.floral_tube, &laid.calyx_tube, &laid.tube]
+        .into_iter()
+        .flatten()
+    {
         let round = if fine { 4 } else { 2 };
         revolve(
             tube,
             frame,
             (tube.lobes * round).clamp(8, 96),
             if fine { 6 } else { 3 },
-            colours.toward_calyx(tube.calyx),
+            colours.of_tube(tube),
             part,
             mesh,
         );
@@ -1263,9 +1319,12 @@ pub(crate) fn draw_reduced(
         leaves::smooth_normals(mesh, first, first_index);
         return;
     }
-    for tube in [&laid.calyx_tube, &laid.tube].into_iter().flatten() {
+    for tube in [&laid.floral_tube, &laid.calyx_tube, &laid.tube]
+        .into_iter()
+        .flatten()
+    {
         let sides = tube.lobes.max(3);
-        let colour = colours.toward_calyx(tube.calyx);
+        let colour = colours.of_tube(tube);
         for k in 0..sides {
             let a0 = tube.turn + TAU * f64::from(k) / f64::from(sides);
             let a1 = tube.turn + TAU * f64::from(k + 1) / f64::from(sides);
@@ -1572,6 +1631,7 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             accent: [1.0; 3],
             filament: [1.0; 3],
             ovary: [1.0; 3],
+            tube: None,
             stigma: [1.0; 3],
         },
         Part {
@@ -2217,6 +2277,7 @@ mod tests {
                         accent: [0.9, 0.7, 0.1],
                         filament: [0.9, 0.7, 0.1],
                         ovary: [0.9, 0.7, 0.1],
+                        tube: None,
                         stigma: [0.9, 0.7, 0.1],
                     },
                     Part {
@@ -2262,6 +2323,7 @@ mod tests {
                     accent: [0.9, 0.7, 0.1],
                     filament: [0.9, 0.7, 0.1],
                     ovary: [0.9, 0.7, 0.1],
+                    tube: None,
                     stigma: [0.1, 0.5, 0.1],
                 },
                 Part {

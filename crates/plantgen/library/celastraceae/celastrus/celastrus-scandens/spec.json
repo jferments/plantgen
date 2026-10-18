@@ -1,0 +1,287 @@
+{
+  "schema": 1,
+  "id": "celastrus-scandens",
+  "taxon": {
+    "scientific_name": "Celastrus scandens",
+    "common_name": "American bittersweet",
+    "family": "Celastraceae",
+    "genus": "Celastrus",
+    "plant_name_id": 2707703
+  },
+  "growth_form": "vine",
+  "generator": {
+    "params": {
+      "shoots": 2
+    }
+  },
+  "growth": {
+    "years": 10,
+    "step": 0.25,
+    "keyframes": [
+      4,
+      10
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "height_max_m": {
+      "min": 2,
+      "max": 8,
+      "high": 9
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "ovate",
+    "leaf_apex": "acuminate",
+    "leaf_margin": "serrate",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.025,
+      "max": 0.05
+    },
+    "petiole_length_m": {
+      "min": 0.012,
+      "max": 0.02
+    },
+    "leaf_colour": [
+      120,
+      160,
+      70
+    ],
+    "bark_colour": [
+      140,
+      135,
+      120
+    ],
+    "inflorescence": "panicle",
+    "flowering_position": "terminal",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.008
+    },
+    "flower_colour": [
+      205,
+      210,
+      165
+    ],
+    "flowering_months": [
+      5,
+      6
+    ],
+    "fruit_size_m": {
+      "min": 0.008,
+      "max": 0.013
+    },
+    "fruit_colour_ripe": [
+      235,
+      125,
+      20
+    ],
+    "fruiting_months": [
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the nightshades work (2026-10-17): every character from the floras in the nightshades notes (plantgen-claude project-files/nightshades/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Celastrus scandens, plant_name_id 2707703 (Library 1.0 list, read 2026-10-17)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Celastraceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its habit as the floras describe it, drawn by the vine form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown to the age it is drawn at: an annual's one season, a perennial's or shrub's few years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawing values no character gives (nightshades, 2026-10-17): two stems from the foot, by eye from a photograph of a vine trailing over rock (iNaturalist 249361238)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): a twining woody vine."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): a twining woody vine; Small (p. 735): a climbing shrub."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "woody-plant-seed-manual-2008",
+      "note": "Woody Plant Seed Manual, Agriculture Handbook 727 (2008), Celastrus scandens, p. 363 (read on the Internet Archive, 2026-10-17): a deciduous climbing or twining shrub."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): climbing trees to 25 ft or more, or trailing on the ground; Mathews (1912, p. 254): climbing 6-25 ft; Wikipedia 'Celastrus scandens': 30 ft or more."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): leaves alternate, somewhat 2-ranked by the twisting of the stem."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): ovate, oval or obovate; Bailey (vol. 2 p. 701): ovate to ovate-lanceolate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): acuminate or acute; Small (p. 735): acuminate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "gray-1908",
+      "note": "Gray's New Manual, 7th ed. (1908), Celastrus scandens, p. 557 (read on the Internet Archive, 2026-10-17): finely serrate; Small: serrate; Britton and Brown: crenulate; Bailey: crenate-serrate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): 2-4 in long; Small: 6-10 cm; Bailey: 2-4 in."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): 1-2 in wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "small-1903",
+      "note": "Small, Flora of the Southeastern United States (1903), Celastrus scandens, p. 735 (read on the Internet Archive, 2026-10-17): petioles 8-20 mm; Britton and Brown: 6-9 lines (13-19 mm)."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): glabrous on both sides; Mathews (1912, p. 254): light green, smooth. The colour is our reading of the words."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 249361238 (CC-licensed photograph, viewed 2026-10-17): the older stems are smooth and grey; Trelease (Winter Botany, 1918, p. 199): twigs brownish, glabrous. No text read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Celastrus scandens, p. 701 (read on the Internet Archive, 2026-10-17): flowers and fruit in terminal, many-flowered panicles or racemes; Britton and Brown: terminal compound racemes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Celastrus scandens, p. 701 (read on the Internet Archive, 2026-10-17): in terminal panicles, carried above the leaves, against C. orbiculatus's axillary cymes."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): 2-4 in; Bailey: 2-4 in; Small: 4-8 cm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "small-1903",
+      "note": "Small, Flora of the Southeastern United States (1903), Celastrus scandens, p. 735 (read on the Internet Archive, 2026-10-17): corolla about 8 mm broad; Britton and Brown: about 2 lines (4 mm)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Celastrus, p. 700 (read on the Internet Archive, 2026-10-17): flowers greenish white; Small and Britton and Brown: greenish. The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "woody-plant-seed-manual-2008",
+      "note": "Woody Plant Seed Manual, Agriculture Handbook 727 (2008), Celastrus scandens, p. 363 (read on the Internet Archive, 2026-10-17): flowers May to June; Gray and Britton and Brown: June."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): capsule 5-6 lines in diameter (10-13 mm); Small: 1 cm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "small-1903",
+      "note": "Small, Flora of the Southeastern United States (1903), Celastrus scandens, p. 735 (read on the Internet Archive, 2026-10-17): capsule orange, opening by 3 valves on scarlet arils; Britton and Brown: yellow or orange; Gray: orange. The colour is the valves', our reading of the word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "woody-plant-seed-manual-2008",
+      "note": "Woody Plant Seed Manual, Agriculture Handbook 727 (2008), Celastrus scandens, p. 363 (read on the Internet Archive, 2026-10-17): fruit ripens late August to October, splits soon after and may persist through much of the winter."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Celastrus scandens, p. 493 (read on the Internet Archive, 2026-10-17): climbing trees to 25 ft or more; Mathews (1912, p. 254): 6-25 ft; Wikipedia: 30 ft or more. Drawn on a young paper birch (its 4-year keyframe), over whose crown it reaches 6 to 8 m by its tenth year."
+    },
+    "host": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The host it is grown on for rendering, a built-in tree of the same northeastern woods; not a botanical fact."
+    }
+  },
+  "host": {
+    "species": "betula-papyrifera",
+    "age": 4,
+    "environment": "open",
+    "seed": 1
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 8,
+      "tolerance": 0.3
+    }
+  ]
+}

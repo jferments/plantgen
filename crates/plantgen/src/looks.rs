@@ -1756,6 +1756,12 @@ pub struct Flower {
     /// How much the tube swells in its middle, over a petal's length.
     #[serde(skip_serializing_if = "is_zero")]
     pub belly: f64,
+    /// The corolla tube's length over the flower's radius, where a flora
+    /// measures it longer than `fused` of a petal reaches (a jimsonweed's,
+    /// a tobacco's or an angel's trumpet's): 0 leaves it `fused` of a
+    /// petal's length.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub tube_reach: f64,
     /// A spur's length over the flower's radius: every petal's on a regular
     /// corolla, a bilabiate lower lip's middle petal's, a lip's.
     #[serde(skip_serializing_if = "is_zero")]
@@ -1764,12 +1770,40 @@ pub struct Flower {
     /// the flower's radius.
     #[serde(skip_serializing_if = "is_zero")]
     pub tube: f64,
+    /// A hypanthium prolonged above an inferior ovary into a floral tube
+    /// that bears the sepals and petals on its rim (a fuchsia's), its
+    /// length over the flower's radius; 0 draws none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub floral_tube: f64,
+    /// Degrees the sepals rise from the plane square to the axis, where
+    /// their posture is stated: negative bends them back; half the
+    /// petals' cup if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sepal_rise: Option<f64>,
+    /// Degrees the petals or corolla lobes rise from the plane square to
+    /// the axis, where their posture is stated, in place of the form's
+    /// cup: negative bends them back (a nightshade's reflexed lobes).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub petal_rise: Option<f64>,
+    /// The corolla tube's colour, where it differs from the lobes' (a
+    /// tobacco's cream tube under its pink limb); the petals' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tube_colour: Option<[f32; 3]>,
     /// Stamens: in whorls up to twice the petals, on a spiral above.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub stamens: u32,
     /// Their length over the flower's radius.
     #[serde(skip_serializing_if = "is_default_stamen_length")]
     pub stamen_length: f64,
+    /// The style's length over the flower's radius, where it differs from
+    /// the stamens' (a fuchsia's, longer); the stamens' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub style_length: Option<f64>,
+    /// How far each stamen leans out from the axis, the tangent of its
+    /// angle: below 0 leans the anthers together in a cone round the style
+    /// (a tomato's); 0.35 (0.15 on a tube) if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stamen_lean: Option<f64>,
     /// A stamen's width over its length: 0.03 a slender filament, toward
     /// 0.15 a flat strap (a magnolia's or a custard apple's laminar
     /// stamens).
@@ -1850,10 +1884,17 @@ impl Default for Flower {
             fused: 0.0,
             throat: THROAT,
             belly: 0.0,
+            tube_reach: 0.0,
             spur: 0.0,
             tube: 0.0,
+            floral_tube: 0.0,
+            sepal_rise: None,
+            petal_rise: None,
+            tube_colour: None,
             stamens: 0,
             stamen_length: STAMEN_LENGTH,
+            style_length: None,
+            stamen_lean: None,
             stamen_width: STAMEN_WIDTH,
             anther: crate::flowers::ANTHER,
             anther_tilt: 0.0,
@@ -2305,6 +2346,24 @@ pub struct Fruit {
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
     pub unripe: f64,
+    /// A calyx kept under the fruit, in the accent colour: each lobe's
+    /// length over the fruit's width, 0 for none; small, it clasps the
+    /// fruit's foot (a tomato's), large, it spreads in a star (a
+    /// belladonna's).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub kept_calyx: f64,
+    /// The kept calyx's lobes; 0 for five.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub kept_lobes: u32,
+    /// What arms the fruit's surface.
+    #[serde(skip_serializing_if = "Armed::is_none")]
+    pub armed: Armed,
+    /// How the fruit holds itself, -1 to 1: 0 along its organ, 1 hanging
+    /// straight down from where it is borne (an eggplant's), -1 standing
+    /// straight up (a jimsonweed's capsule), between them turned that
+    /// share of the way.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub hang: f64,
     /// How much wider the fruit is toward its tip than toward its base,
     /// -0.8 to 0.8: 0 an ellipsoid, above 0 obovoid to obconic or
     /// club-shaped, below 0 ovoid ([`crate::fruit`]).
@@ -2337,12 +2396,36 @@ impl Default for Fruit {
             cone: 0.0,
             kind: FruitKind::Berry,
             unripe: 0.0,
+            kept_calyx: 0.0,
+            kept_lobes: 0,
+            armed: Armed::None,
+            hang: 0.0,
             flare: 0.0,
             seeds: None,
             cup: None,
             ripening: None,
             threads: 0.0,
         }
+    }
+}
+
+/// What arms a fruit's surface (`crate::fruit`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Armed {
+    /// Nothing: a smooth fruit.
+    #[default]
+    None,
+    /// Stout prickles all over (a jimsonweed's capsule).
+    Prickles,
+    /// Fine hooked bristles all over (an enchanter's nightshade's burr).
+    Bristles,
+}
+
+impl Armed {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_none(&self) -> bool {
+        *self == Self::None
     }
 }
 
@@ -2355,6 +2438,10 @@ struct FruitCard {
     cone: f64,
     kind: FruitKind,
     unripe: f64,
+    kept_calyx: f64,
+    kept_lobes: u32,
+    armed: Armed,
+    hang: f64,
     flare: f64,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
@@ -2374,6 +2461,10 @@ impl Default for FruitCard {
             cone: fruit.cone,
             kind: fruit.kind,
             unripe: fruit.unripe,
+            kept_calyx: fruit.kept_calyx,
+            kept_lobes: fruit.kept_lobes,
+            armed: fruit.armed,
+            hang: fruit.hang,
             flare: fruit.flare,
             seeds: None,
             cup: None,
@@ -2408,6 +2499,10 @@ impl TryFrom<FruitCard> for Fruit {
             cone: card.cone,
             kind: card.kind,
             unripe: card.unripe,
+            kept_calyx: card.kept_calyx,
+            kept_lobes: card.kept_lobes,
+            armed: card.armed,
+            hang: card.hang,
             flare: card.flare,
             seeds: card.seeds,
             cup: card.cup,
@@ -3034,7 +3129,7 @@ impl Shape {
                 check("notch", s.notch, 0.0, 0.8)?;
                 check("centre", s.centre, 0.0, 0.8)?;
                 count("sepals", s.sepals, 0, 12)?;
-                check("sepal_length", s.sepal_length, 0.1, 1.5)?;
+                check("sepal_length", s.sepal_length, 0.1, 3.0)?;
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
@@ -3057,11 +3152,34 @@ impl Shape {
                 check("fused", s.fused, 0.0, 0.95)?;
                 check("throat", s.throat, 0.05, 1.0)?;
                 check("belly", s.belly, 0.0, 0.5)?;
+                check("tube_reach", s.tube_reach, 0.0, 12.0)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
+                check("floral_tube", s.floral_tube, 0.0, 12.0)?;
+                if s.floral_tube > 0.0 && s.ovary != Ovary::Inferior {
+                    return Err(
+                        "flower floral_tube stands on an inferior ovary: ovary must be inferior"
+                            .into(),
+                    );
+                }
+                if let Some(rise) = s.sepal_rise {
+                    check("sepal_rise", rise, -90.0, 90.0)?;
+                }
+                if let Some(rise) = s.petal_rise {
+                    check("petal_rise", rise, -90.0, 90.0)?;
+                }
+                for channel in s.tube_colour.into_iter().flatten() {
+                    check("tube_colour", f64::from(channel), 0.0, 1.0)?;
+                }
                 count("stamens", s.stamens, 0, 400)?;
-                check("stamen_length", s.stamen_length, 0.05, 2.0)?;
+                check("stamen_length", s.stamen_length, 0.05, 12.0)?;
                 check("stamen_width", s.stamen_width, 0.01, 0.3)?;
+                if let Some(style) = s.style_length {
+                    check("style_length", style, 0.05, 12.0)?;
+                }
+                if let Some(lean) = s.stamen_lean {
+                    check("stamen_lean", lean, -0.5, 1.5)?;
+                }
                 count("staminodes", s.staminodes, 0, 50)?;
                 count("carpels", s.carpels, 0, 100)?;
                 check("torus", s.torus, 0.0, 1.5)?;
@@ -3219,6 +3337,11 @@ impl Shape {
             Self::Fruit(s) => {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
+                check("kept_calyx", s.kept_calyx, 0.0, 2.0)?;
+                check("hang", s.hang, -1.0, 1.0)?;
+                if s.kept_lobes != 0 {
+                    count("kept_lobes", s.kept_lobes, 3, 12)?;
+                }
                 for channel in s.seeds.into_iter().chain(s.cup).chain(s.ripening).flatten() {
                     check(
                         "seeds, cup or ripening colour",
@@ -5496,7 +5619,7 @@ mod tests {
                     }
                     Field::Number => assert!(with(field, 2.5.into()).is_ok(), "{at}"),
                     Field::Word => {
-                        let error = with(field, "none".into()).unwrap_err().to_string();
+                        let error = with(field, "no-such-word".into()).unwrap_err().to_string();
                         assert!(error.contains("unknown variant"), "{at}: {error}");
                     }
                     Field::Outline => {

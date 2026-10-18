@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "id": "fuchsia-excorticata",
+  "taxon": {
+    "scientific_name": "Fuchsia excorticata",
+    "common_name": "tree fuchsia",
+    "family": "Onagraceae",
+    "genus": "Fuchsia",
+    "plant_name_id": 2814892
+  },
+  "growth_form": "decurrent_tree",
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [
+      6,
+      25
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 7.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "height_typical_m": {
+      "min": 3,
+      "max": 12
+    },
+    "height_max_m": 13.7,
+    "stem_diameter_max_m": 0.46,
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "lanceolate",
+    "leaf_apex": "acuminate",
+    "leaf_margin": "entire",
+    "leaf_length_m": {
+      "min": 0.038,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "petiole_length_m": {
+      "min": 0.019,
+      "max": 0.045
+    },
+    "leaf_colour": [
+      55,
+      95,
+      45
+    ],
+    "leaf_hairs": "glabrous",
+    "bark_texture": "peeling",
+    "bark_colour": [
+      170,
+      85,
+      45
+    ],
+    "bark_inner_colour": [
+      175,
+      185,
+      135
+    ],
+    "flower_size_m": {
+      "min": 0.012,
+      "max": 0.02
+    },
+    "hypanthium_length_m": {
+      "min": 0.012,
+      "max": 0.025
+    },
+    "sepal_length_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "sepal_posture": "reflexed",
+    "calyx_colour": [
+      120,
+      140,
+      70
+    ],
+    "petal_length_m": {
+      "min": 0.0018,
+      "max": 0.005
+    },
+    "flower_colour": [
+      60,
+      20,
+      70
+    ],
+    "stamen_length_m": {
+      "min": 0.006,
+      "max": 0.015
+    },
+    "filament_colour": [
+      110,
+      50,
+      110
+    ],
+    "style_length_m": {
+      "min": 0.022,
+      "max": 0.04
+    },
+    "flowering_months": [
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "fruit_size_m": {
+      "min": 0.009,
+      "max": 0.013
+    },
+    "fruit_width_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "fruit_colour_ripe": [
+      45,
+      20,
+      45
+    ],
+    "fruiting_months": [
+      11,
+      12,
+      1,
+      2
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the nightshades work (2026-10-17): every character from the floras in the nightshades notes (plantgen-claude project-files/nightshades/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Fuchsia excorticata, plant_name_id 2814892 (Library 1.0 list, read 2026-10-17)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Onagraceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its habit as the floras describe it, drawn by the decurrent_tree form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown to the age it is drawn at: an annual's one season, a perennial's or shrub's few years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman, Manual of the New Zealand Flora, 2nd ed. (1925), Fuchsia excorticata, p. 618 (read on the Internet Archive, 2026-10-17): a shrub or small tree 10-40 ft; Hooker (p. 75): 10-30 ft. Its reference height is the middle of that range, 7.5 m, at its last keyframe."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 53 (read on the Internet Archive, 2026-10-17): a small tree, the largest of the genus."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman, Manual of the New Zealand Flora, 2nd ed. (1925), Fuchsia excorticata, p. 618 (read on the Internet Archive, 2026-10-17): a shrub or small tree 10-40 ft; Hooker (p. 75): 10-30 ft."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 55 (read on the Internet Archive, 2026-10-17): a small tree 45 ft high; Wikipedia 'Fuchsia excorticata': to 13 m."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman, Manual of the New Zealand Flora, 2nd ed. (1925), Fuchsia excorticata, p. 618 (read on the Internet Archive, 2026-10-17): trunk usually 6-18 in diam., sometimes 2-3 ft; Kirk (p. 53): short, often gnarled, 1-3 ft."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman, Manual of the New Zealand Flora, 2nd ed. (1925), Fuchsia excorticata, p. 618 (read on the Internet Archive, 2026-10-17): leaves deciduous; Wikipedia: deciduous in most of the South Island, leafless May to August."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hooker-nz-1867",
+      "note": "Hooker, Handbook of the New Zealand Flora (1864-67), Fuchsia excorticata, p. 75 (read on the Internet Archive, 2026-10-17): leaves alternate; Kirk (p. 53), Cheeseman (p. 618) and Bailey (vol. 3 p. 1303) the same."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 53 (read on the Internet Archive, 2026-10-17): lanceolate or ovate-lanceolate, usually narrowed into long straight points."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 53 (read on the Internet Archive, 2026-10-17): acuminate, narrowed into long straight points."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman, Manual of the New Zealand Flora, 2nd ed. (1925), Fuchsia excorticata, p. 618 (read on the Internet Archive, 2026-10-17): entire or obscurely and remotely toothed; Kirk (p. 55): minute distant serratures."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 53 (read on the Internet Archive, 2026-10-17): 1.5-4 in; Hooker (p. 75): 1.5-3.5 in; Wikipedia: to 10 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): 1.5-3 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hooker-nz-1867",
+      "note": "Hooker, Handbook of the New Zealand Flora (1864-67), Fuchsia excorticata, p. 75 (read on the Internet Archive, 2026-10-17): the leaves twice as long as their slender petioles: half the blade's 1.5-3.5 in."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "hooker-nz-1867",
+      "note": "Hooker, Handbook of the New Zealand Flora (1864-67), Fuchsia excorticata, p. 75 (read on the Internet Archive, 2026-10-17): green above, silvery below; Wikipedia: medium to dark green above. The colour is our reading of the words."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): glabrous."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 53 (read on the Internet Archive, 2026-10-17): thin bark of a bright reddish-brown hue, which on old specimens divides into numerous paper-like flakes; Hooker (p. 75): ragged, papery bark."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 53 (read on the Internet Archive, 2026-10-17): bright reddish-brown; Wikipedia: copper, orange to reddish-brown. The colour is our reading of the words."
+    },
+    "traits.bark_inner_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): peels to show the smooth pale-green cambial layer beneath; photograph iNaturalist 114805150. The colour is our reading of the words."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its reflexed sepals, which no source measures: two narrow sepals of about 8 mm (Wikipedia 'Fuchsia excorticata') bent back from a tube mouth a few millimetres wide; the flower is 19-32 mm long (Hooker p. 75; Cheeseman p. 618)"
+    },
+    "traits.hypanthium_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The floral tube, which no source measures alone: the flower's 19-32 mm (Cheeseman p. 618; Hooker p. 75) less its sepals; globular above the ovary, then contracted and lengthened into a funnel (Hooker p. 75)"
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): sepals 8 mm long, 3 mm wide at the base, narrow-triangular; Hooker (p. 75): lanceolate, very acuminate."
+    },
+    "traits.sepal_posture": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 55 (read on the Internet Archive, 2026-10-17): sepals reflexed or recurved; p. 53: ultimately curved backwards."
+    },
+    "traits.calyx_colour": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 53 (read on the Internet Archive, 2026-10-17): at first greenish, streaked or blotched with a dull deep purple, passing at length into a dull red; Wikipedia: lustrous green sepals. The colour is our reading of the words, its first green."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): petals dark purple, 1.8-5 mm; Kirk (p. 53): minute."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): petals dark purple; Kirk (p. 53): at first black, then bright purple. The colour is our reading of the words."
+    },
+    "traits.stamen_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): filaments purple to pale cream, 6-15 mm and 5-10 mm; Cheeseman (p. 618): very variable, the flowers trimorphic."
+    },
+    "traits.filament_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): filaments purple to pale cream, anthers purple; Kirk (p. 54): the pollen a beautiful mazarin blue. The colour is our reading of the words."
+    },
+    "traits.style_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): style green to yellow, 22-40 mm; Cheeseman (p. 618): in the long-styled form twice the calyx tube."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 55 (read on the Internet Archive, 2026-10-17): August to December; Cheeseman (p. 618) and Wikipedia the same."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): 9-13 mm long; Cheeseman (p. 618): oblong, 1/2 in long."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia excorticata' (read 2026-10-17): 5-8 mm wide."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman, Manual of the New Zealand Flora, 2nd ed. (1925), Fuchsia excorticata, p. 618 (read on the Internet Archive, 2026-10-17): purplish-black, juicy; Kirk (p. 53): blackish-brown or black. The colour is our reading of the words."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: berries ripening from November to February, after the August-December flowers."
+    }
+  }
+}

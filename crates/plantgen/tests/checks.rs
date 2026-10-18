@@ -57,9 +57,29 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
     ),
     (
+        "capsicum-annuum",
+        "leaf_length_m",
+        "the smaller leaf of each geminate pair is drawn half the larger (Kilmer's ratio for belladonna) and the sympodium's leaves shrink to three quarters upward, so the least draw about 2 cm long, against the 5 to 10 cm Bailey gives the leaves of its varieties, which are not the smaller of a pair",
+    ),
+    (
+        "capsicum-annuum",
+        "leaf_width_m",
+        "the smaller leaf of each geminate pair is drawn half the larger and the sympodium's leaves shrink to three quarters upward, so the least draw about 1.2 cm wide, against the 2 to 6.4 cm Bailey gives the leaves of its varieties",
+    ),
+    (
+        "celastrus-scandens",
+        "shoot_leaves",
+        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18, from maples' long shoots; the climber program grows few leaves on a shoot (as on aristolochia-macrophylla)",
+    ),
+    (
         "chloranthus-serratus",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
+    ),
+    (
+        "circaea-lutetiana",
+        "leaf_length_m",
+        "its stem leaves shrink upward to 0.4 of the longest (the forb's default), so the topmost blades draw about 2.3 cm against the 2.5 cm least Hooker gives",
     ),
     (
         "cirsium-vulgare",
@@ -87,6 +107,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
     ),
     (
+        "datura-stramonium",
+        "leaf_shape",
+        "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Britton and Brown give",
+    ),
+    (
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
@@ -110,6 +135,21 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "frangula-purshiana",
         "inflorescence",
         "Rhamnaceae's flowers are in cymes or panicles (Simpson 2019), but cascara's axillary clusters are drawn as an umbel",
+    ),
+    (
+        "fuchsia-excorticata",
+        "petiole_length_m",
+        "Hooker (p. 75) has the blade twice the petiole, but no rule sets a broadleaf's petiole from a trait yet, so it is drawn at the library's default share",
+    ),
+    (
+        "fuchsia-magellanica",
+        "leaf_arrangement",
+        "its leaves are in threes (Bailey, Bean), but the broadleaf program draws at most two leaves a node, so it draws them opposite",
+    ),
+    (
+        "fuchsia-magellanica",
+        "shoot_leaves",
+        "a cut-back plant's shoots grow 3 to 5 ft a season (Bean) with some 15 to 25 whorls, but in the open at six years its shoots grow no more than a few vigour units, bearing about 8 leaves",
     ),
     (
         "hedera-helix",
@@ -170,6 +210,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
+    ),
+    (
+        "nicotiana-tabacum",
+        "leaf_length_m",
+        "its stem leaves shrink upward to a quarter of the longest (King's: smaller upward), so the topmost draw about 9 cm against the 1 to 2 ft King's gives, which it measures on the main leaves",
+    ),
+    (
+        "nicotiana-tabacum",
+        "leaf_width_m",
+        "its stem leaves shrink upward to a quarter of the longest, so the topmost draw about 4 cm wide against the 6 to 8 in King's gives the main leaves",
     ),
     (
         "nymphaea-odorata",
@@ -233,6 +283,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:herb",
+        "petiole_length_m",
+        "a leaf card's petiole is the card's own share of the leaf (0.15 of a simple card's length), not read from petiole_length_m, so jimsonweed's and enchanter's nightshade's long petioles draw under a centimetre and tobacco's sessile leaves draw one",
+    ),
+    (
+        "program:herb",
         "phyllotaxis_pattern",
         "each basal leaf's roll is jittered ±30°, so a fan of two ranks (irises, blue-eyed grass) turns about 140° to 150° from one leaf to the next",
     ),
@@ -275,6 +330,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "sassafras-albidum",
         "leaf_width_m",
         "its leaves are drawn on one card, the three-lobed form with broad rounded lobes as photographs show it, 16.9 cm wide, against FNA's 5 to 10 cm, which covers its narrower unlobed and mitten leaves too (inferred: FNA gives one width for all three forms)",
+    ),
+    (
+        "solanum-melongena",
+        "leaf_shape",
+        "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Bailey and Wikipedia give",
     ),
     (
         "tillandsia-usneoides",

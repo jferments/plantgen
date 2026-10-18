@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Capsicum",
+  "traits": {
+    "inflorescence": "solitary",
+    "corolla_shape": "rotate",
+    "fruit_type": "berry",
+    "leaf_shape": "ovate",
+    "leaf_margin": "entire",
+    "leaf_apex": "acuminate"
+  },
+  "evidence": {
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum (genus account), p. 658 (read on the Internet Archive, 2026-10-17): flowers solitary, sometimes 2 or 3 together; Flora of British India (p. 238): pedicels from the leaf axils, single or 2-3."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum (genus account), p. 658 (read on the Internet Archive, 2026-10-17): corolla rotate, usually 5-lobed."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum (genus account), p. 658 (read on the Internet Archive, 2026-10-17): a juiceless berry, many-seeded."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum (genus account), p. 658 (read on the Internet Archive, 2026-10-17): leaves ovate or nearly elliptical, entire, acuminate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum (genus account), p. 658 (read on the Internet Archive, 2026-10-17): leaves entire; Flora of British India: entire or repand."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum (genus account), p. 658 (read on the Internet Archive, 2026-10-17): leaves acuminate."
+    }
+  }
+}

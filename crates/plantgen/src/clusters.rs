@@ -1974,7 +1974,7 @@ fn draw_laid(
                 organ,
                 shape,
                 form,
-                (base, direction, unit_length),
+                (base, fruit::hung(direction, shape.hang), unit_length),
                 shown.unripe,
                 detail,
                 shown.colour,
@@ -2006,6 +2006,9 @@ fn draw_laid(
                         accent: shown.accent,
                         filament: flower.filament.unwrap_or(shown.accent),
                         ovary: flower.pistil.unwrap_or(shown.accent),
+                        tube: flower
+                            .tube_colour
+                            .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),
                         stigma: flower.stigma.or(flower.filament).unwrap_or(shown.accent),
                     },
                     part,

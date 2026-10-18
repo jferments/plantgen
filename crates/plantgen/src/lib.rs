@@ -759,4 +759,18 @@ pub mod venation;
 /// in whose axil they stand, and branch again where the taxon states two
 /// orders (`flowering_branch_orders`; herb program revision 12) (117 is
 /// terminal blooms, #170).
-pub const GENERATOR_REVISION: u32 = 118;
+/// 119: a herb's stem may be a sympodium (`sympodium`; herb program
+/// revision 13, program `solanaceae`); a measured corolla tube is drawn as
+/// long as stated (`corolla_tube_length_m`, a flower's `tube_reach`); a
+/// flower's posture turns a sympodium's flowers and a woody plant's blooms
+/// (`flower_posture`); a panicle's cluster size is its branches' length; a
+/// lone bloom may hang on a stalk of its own (`pedicel_length_m`;
+/// broadleaf program revision 18); a flower's sepals, petals, floral tube,
+/// stamens and style are drawn at their stated lengths and postures and in
+/// their own colours; a fruit keeps its calyx or bears prickles or
+/// bristles (`fruit_armature`); young wood takes its twig colour; bark
+/// texture sets the bark pattern; leaves in whorls of three or more are
+/// drawn round the node (broadleaf program revision 19); a fruit hangs,
+/// spreads or stands as its posture says (`fruit_posture`, a fruit's
+/// `hang`).
+pub const GENERATOR_REVISION: u32 = 119;

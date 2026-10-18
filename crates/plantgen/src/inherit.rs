@@ -687,7 +687,7 @@ pub enum Field {
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
     /// A colour, red, green and blue from 0 to 1: a fruit's seeds, a
-    /// flower's stigma lobes.
+    /// flower's calyx or stigma lobes.
     Colour,
 }
 
@@ -1149,10 +1149,18 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("fused", Number),
                 ("throat", Number),
                 ("belly", Number),
+                ("tube_reach", Number),
                 ("spur", Number),
                 ("tube", Number),
+                ("floral_tube", Number),
+                ("sepal_rise", Number),
+                ("petal_rise", Number),
+                ("calyx", Colour),
+                ("tube_colour", Colour),
                 ("stamens", Count),
                 ("stamen_length", Number),
+                ("style_length", Number),
+                ("stamen_lean", Number),
                 ("stamen_width", Number),
                 ("odd_rise", Number),
                 ("anther", Number),
@@ -1238,6 +1246,10 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("kept_calyx", Number),
+                ("kept_lobes", Count),
+                ("armed", Word),
+                ("hang", Number),
                 ("flare", Number),
                 ("seeds", Colour),
                 ("cup", Colour),

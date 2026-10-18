@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Solanum",
+  "traits": {
+    "sympodium": "monochasial",
+    "corolla_shape": "rotate",
+    "fruit_type": "berry"
+  },
+  "evidence": {
+    "traits.sympodium": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum (genus account), p. 3180 (read on the Internet Archive, 2026-10-17): the inflorescence is mostly sympodial, so it stands above the axil or opposite the leaves. Britton and Brown (vol. 3, Lycopersicon) put the tomato's cymes opposite the leaves."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum (genus account), p. 3180 (read on the Internet Archive, 2026-10-17): corolla rotate or shallowly bell-shaped, plaited in bud."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum (genus account), p. 3180 (read on the Internet Archive, 2026-10-17): the fruit a berry."
+    }
+  }
+}
