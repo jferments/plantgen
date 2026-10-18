@@ -156,7 +156,7 @@
 # first, not one stem that forks above the ground. With suckers above 0
 # the first stem does not fork; from its first year the plant's base sends
 # up sucker_rate new stems a year until it has sent up suckers, each from
-# a point a random distance out to sucker_spread of the crown's radius as
+# a point spread by the golden ratio out to sucker_spread of the crown's radius as
 # the crown grows (the ground they rise from widens with the clump), and
 # leaning out up to sucker_lean degrees. Each is a stem of its own, held
 # upright as the first is, and shed when it has no living bud. With
@@ -574,18 +574,20 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 ->
     [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u, l);
 
-# Revision 17 (shrub habit). These rules go last so the draws of the
-# rules above keep their sites.
+# Revision 17 (shrub habit). These rules make no random draws, so the
+# draws of every program that extends this one keep their sites.
 
 # The base of a many-stemmed plant sends up sucker_rate new stems a year,
 # each from a point out to sucker_spread of the crown's radius as it
-# grows, leaning out a little, until it has sent up suckers.
+# grows, leaning out a little, until it has sent up suckers: turned by
+# the golden angle stem by stem, their distances and leans spread by the
+# golden ratio's fractions.
 rule R(n) : n > 0 && (life <= 0 || t < life) ->
     Rs(min(n, max(1, round(sucker_rate)))) R(n - min(n, max(1, round(sucker_rate))));
 rule R(n) -> ;
 decompose Rs(m) : m > 0 ->
-    [ /(uniform(0, 360)) &(90)
-      f(sucker_spread * crown_radius * (1 - exp(-crown_rate * (t + 3))) * sqrt(uniform(0.05, 1)))
-      ^(90) &(uniform(0, sucker_lean)) S A(0) ]
+    [ /(137.5 * (m + 3 * t)) &(90)
+      f(sucker_spread * crown_radius * (1 - exp(-crown_rate * (t + 3))) * sqrt(0.05 + 0.95 * (0.618 * (m + 3 * t) - floor(0.618 * (m + 3 * t)))))
+      ^(90) &(sucker_lean * (0.382 * (m + 5 * t) - floor(0.382 * (m + 5 * t)))) S A(0) ]
     Rs(m - 1);
 decompose Rs(m) -> ;
