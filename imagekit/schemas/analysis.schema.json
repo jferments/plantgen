@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jferments/plantgen/imagekit/schemas/analysis.schema.json",
+  "title": "One row of sources/image-analyses/<run>/analyses.jsonl",
+  "description": "One analysis of one image (region 0) or of one region of it, under one analyzer. (sha256, region, analyzer) is unique across the store: a run never sends an image that already has one.",
+  "type": "object",
+  "required": ["sha256", "region", "analyzer", "task", "status", "run", "at"],
+  "properties": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "region": {"type": "integer", "minimum": 0, "description": "0 is the whole image; others are numbered by the detect analysis that made them"},
+    "analyzer": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+    "task": {"type": ["string", "null"]},
+    "status": {"enum": ["ok", "failed", "refused", "invalid"]},
+    "out": {"description": "the answer: a triage or observation object (photo-rules/schemas), a description, boxes, or for embed a pointer to its vector row"},
+    "confidence": {"type": ["number", "string"]},
+    "tokens_in": {"type": "integer"},
+    "tokens_out": {"type": "integer"},
+    "usd": {"type": "number"},
+    "seconds": {"type": "number"},
+    "run": {"type": "string"},
+    "at": {"type": "string"}
+  }
+}
