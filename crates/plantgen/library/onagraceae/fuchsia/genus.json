@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Fuchsia",
+  "traits": {
+    "woodiness": "woody",
+    "inflorescence": "solitary",
+    "flower_posture": "pendent",
+    "flower_merosity": 4,
+    "stamens": 8,
+    "carpels": 4,
+    "hypanthium": true,
+    "fruit_type": "berry",
+    "calyx_in_fruit": "falling",
+    "fruit_posture": "pendent"
+  },
+  "evidence": {
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 3 (1914), Fuchsia (genus account), p. 1299 (read on the Internet Archive, 2026-10-17): shrubs and small trees; Bean (vol. 1 p. 576): shrubs, in mild places trees 10 ft or more high."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "bean-1914",
+      "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia, p. 577 (read on the Internet Archive, 2026-10-17): the flowers pendulous, produced singly on their stalks from the leaf-axils."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "bean-1914",
+      "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia, p. 577 (read on the Internet Archive, 2026-10-17): the flowers pendulous; Bailey (p. 1299): flowers usually drooping."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "hooker-nz-1867",
+      "note": "Hooker, Handbook of the New Zealand Flora (1864-67), Fuchsia (genus account), p. 75 (read on the Internet Archive, 2026-10-17): calyx tube with 4 lobes, petals 4, stamens 8, ovary 4-celled."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "hooker-nz-1867",
+      "note": "Hooker, Handbook of the New Zealand Flora (1864-67), Fuchsia (genus account), p. 75 (read on the Internet Archive, 2026-10-17): stamens 8; Bean (p. 577): 8."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "hooker-nz-1867",
+      "note": "Hooker, Handbook of the New Zealand Flora (1864-67), Fuchsia (genus account), p. 75 (read on the Internet Archive, 2026-10-17): ovary 4-celled; Bailey (p. 1299): a 4-loculed berry."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "hooker-nz-1867",
+      "note": "Hooker, Handbook of the New Zealand Flora (1864-67), Fuchsia (genus account), p. 75 (read on the Internet Archive, 2026-10-17): the calyx tube adherent to the ovary and produced beyond it, the petals inserted at its throat."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 3 (1914), Fuchsia (genus account), p. 1299 (read on the Internet Archive, 2026-10-17): the fruit a soft 4-loculed berry; Bean (p. 577): a juicy berry."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "hooker-nz-1867",
+      "note": "Hooker, Handbook of the New Zealand Flora (1864-67), Fuchsia (genus account), p. 75 (read on the Internet Archive, 2026-10-17): the calyx limb deciduous, falling above the ovary and leaving a scar on the berry."
+    },
+    "traits.fruit_posture": {
+      "evidence": "SourceInferred",
+      "source": "kirk-1889",
+      "note": "Kirk, The Forest Flora of New Zealand (1889), Fuchsia excorticata, p. 55 (read on the Internet Archive, 2026-10-17): a pendulous berry; the berries of F. magellanica hang on their stalks in photographs (iNaturalist 43195696)."
+    }
+  }
+}

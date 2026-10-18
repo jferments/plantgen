@@ -490,6 +490,21 @@
       "type": "colour",
       "why": "the bark of a grown stem"
     },
+    "bark_inner_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "when": {"bark_texture": ["peeling"]},
+      "optional": true,
+      "why": "the colour a peeling bark shows where its outer layer has come away: a tree fuchsia's pale green under its orange-brown flakes, a madrone's green"
+    },
+    "twig_colour": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the year's shoots where it differs from the older bark: a fuchsia's red young shoots, a red-osier dogwood's red twigs"
+    },
     "spines": {
       "group": "stem_and_bark",
       "organ": "plant",
@@ -1238,6 +1253,21 @@
       "optional": true,
       "why": "a sepal from its base to its tip, or a joined calyx's lobe with its tube"
     },
+    "sepal_posture": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["erect", "spreading", "reflexed"],
+      "optional": true,
+      "why": "how the sepals stand from the flower: up against the corolla, out flat, or bent back toward the stalk (a fuchsia's)"
+    },
+    "calyx_colour": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "colour",
+      "optional": true,
+      "why": "the sepals' colour where it is not leaf green, and a hypanthium's that bears them: a fuchsia's red sepals and floral tube"
+    },
     "pedicel_length_m": {
       "group": "flowers",
       "organ": "flower",
@@ -1291,6 +1321,22 @@
       "when": {"corolla_shape": ["campanulate", "funnelform", "tubular", "salverform", "urceolate"]},
       "optional": true,
       "why": "a joined corolla's tube, from its foot to where the lobes part, where a flora measures it: a jimsonweed's 6-10 cm trumpet, a tobacco's 3.5-5.5 cm tube under a limb 1-1.5 cm across"
+    },
+    "corolla_tube_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "when": {"corolla_shape": ["campanulate", "funnelform", "tubular", "salverform", "urceolate"]},
+      "optional": true,
+      "why": "a joined corolla's tube colour where it differs from its lobes': a tobacco's greenish cream tube under its pink limb, a belladonna's paler base"
+    },
+    "corolla_lobe_posture": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["erect", "spreading", "reflexed"],
+      "optional": true,
+      "why": "how the petals or corolla lobes stand: up, out flat, or bent back toward the stalk (a nightshade's reflexed star)"
     },
     "flower_posture": {
       "group": "flowers",
@@ -1417,6 +1463,15 @@
       "type": "bool",
       "why": "whether a floral cup, the bases of the sepals, petals and stamens grown together, bears them above the receptacle (roses, currants)"
     },
+    "hypanthium_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "optional": true,
+      "why": "a hypanthium prolonged above an inferior ovary into a floral tube, from the ovary's top to where the sepals part, where a flora measures it: a fuchsia's 1-1.3 cm tube"
+    },
     "ovary_position": {
       "group": "flowers",
       "organ": "flower",
@@ -1454,6 +1509,38 @@
       "values": ["basifixed", "dorsifixed", "versatile"],
       "optional": true,
       "why": "where the filament joins the anther: at its base, so the anther stands along the filament; on its back; or at one point on its back, so the anther swings free across the filament's tip"
+    },
+    "stamen_length_m": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.2],
+      "optional": true,
+      "why": "a stamen's filament with its anther, from where it leaves the flower, where a flora measures it: a fuchsia's long-exserted 2.5-3 cm stamens"
+    },
+    "stamen_colour": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "colour",
+      "optional": true,
+      "why": "the filaments' colour, and the style's, where it is not the anthers' (a fuchsia's red filaments)"
+    },
+    "anthers_connivent": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the anthers stand close together in a cone round the style (a tomato's, an eggplant's, a potato's) instead of spreading"
+    },
+    "style_length_m": {
+      "group": "flowers",
+      "organ": "carpel",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.2],
+      "optional": true,
+      "why": "a style from the ovary's top, or the floral tube's mouth above an inferior ovary, to its stigma, where a flora measures it and it differs from the stamens: a fuchsia's, longer than its stamens"
     },
     "staminodes": {
       "group": "flowers",
@@ -1746,6 +1833,22 @@
       "values": ["erect", "spreading", "deflexed", "pendent"],
       "optional": true,
       "why": "how a ripe fruit or fruit cluster holds itself on its stalk: standing up, out to the side, bent down, or hanging (a lime's or an ash's keys), as cone_posture is for a seed cone"
+    },
+    "calyx_in_fruit": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["falling", "persistent", "accrescent"],
+      "optional": true,
+      "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), or grows on into a large spreading star (a belladonna's)"
+    },
+    "fruit_surface": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["smooth", "prickly", "bristly"],
+      "optional": true,
+      "why": "a fruit's surface where it is armed: stout prickles (a jimsonweed's capsule) or fine hooked bristles (an enchanter's nightshade's burr)"
     },
     "cone_length_m": {
       "group": "fruit_and_cones",

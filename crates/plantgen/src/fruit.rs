@@ -32,7 +32,7 @@
 use crate::blooms::{self, FruitForm, Part};
 use crate::graph::GraphOrgan;
 use crate::leaves::{self, Section, SolidLeaf};
-use crate::looks::{Fruit, FruitKind};
+use crate::looks::{Armed, Fruit, FruitKind};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
@@ -41,10 +41,15 @@ use crate::rng::{mix64, unit};
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
 
 /// Whether `fruit` is one plain berry or cone, drawn as it was before P4
-/// (`crate::blooms`).
+/// (`crate::blooms`): ripe, with no calyx kept under it, nothing on it,
+/// and held along its organ.
 #[must_use]
 pub fn is_single(fruit: &Fruit) -> bool {
-    fruit.kind == FruitKind::Berry && fruit.unripe <= 0.0
+    fruit.kind == FruitKind::Berry
+        && fruit.unripe <= 0.0
+        && fruit.kept_calyx <= 0.0
+        && fruit.armed == Armed::None
+        && fruit.hang.abs() <= 0.0
 }
 
 /// How finely one fruit is drawn: facets round and rings along.
@@ -164,7 +169,11 @@ pub(crate) fn draw(
         organ,
         fruit,
         form,
-        (to_world(Vec3::ZERO), to_direction(Vec3::Y), length),
+        (
+            to_world(Vec3::ZERO),
+            hung(to_direction(Vec3::Y), fruit.hang),
+            length,
+        ),
         unripe,
         Detail::for_count(1, part.coarse),
         colour,
@@ -172,6 +181,14 @@ pub(crate) fn draw(
         part,
         mesh,
     );
+}
+
+/// `direction` turned `hang` of the way toward straight down (or, below
+/// 0, straight up), as [`Fruit::hang`] holds a fruit.
+pub(crate) fn hung(direction: Vec3, hang: f64) -> Vec3 {
+    let toward = if hang >= 0.0 { -Vec3::Y } else { Vec3::Y };
+    let share = hang.abs().clamp(0.0, 1.0);
+    (direction * (1.0 - share) + toward * share).normalize_or(toward)
 }
 
 /// Draw one fruit of `fruit` into `mesh` from its base along its
@@ -222,6 +239,7 @@ pub(crate) fn draw_unit(
         return;
     }
     one.draw(fruit.kind, body, accent, part, mesh);
+    one.dress(fruit, body, accent, part, mesh);
 }
 
 /// An ellipsoid at `centre`, half-lengths `(a, b, c)` along `axis`,
@@ -408,6 +426,67 @@ impl One {
                 capsule.rib_depth = 0.14;
                 capsule.draw(self.direction, self.across, body, part, mesh);
             }
+        }
+        leaves::smooth_normals(mesh, first, first_index);
+    }
+
+    /// What the fruit keeps or bears beyond its kind: a calyx under it, in
+    /// the accent, clasping its foot where its lobes are short and
+    /// spreading in a star where they are long; prickles or bristles over
+    /// it, drawn only at the finer steps.
+    fn dress(&self, fruit: &Fruit, body: [f32; 3], accent: [f32; 3], part: Part, mesh: &mut Mesh) {
+        if fruit.kept_calyx > 0.0 {
+            let rise = if fruit.kept_calyx < 0.6 { 0.12 } else { -0.04 };
+            self.calyx(
+                0.06,
+                if fruit.kept_lobes == 0 {
+                    5
+                } else {
+                    fruit.kept_lobes
+                },
+                fruit.kept_calyx,
+                rise,
+                accent,
+                part,
+                mesh,
+            );
+        }
+        // Prickles as a thorn apple's: stout cones, broad at the foot, a
+        // sixth of the fruit's width long and packed over it (the
+        // capsule "densely prickly", Britton and Brown; "very prickly",
+        // Bentham); bristles as a burr's, slender and close.
+        let (count, reach, foot) = match fruit.armed {
+            Armed::None => return,
+            Armed::Prickles => (150_u32, 0.16, 0.05),
+            Armed::Bristles => (200, 0.14, 0.008),
+        };
+        if self.detail.around < 8 {
+            return;
+        }
+        let other = self.direction.cross(self.across);
+        let colour = blooms::shade(body, 0.92);
+        let first = mesh.positions.len();
+        let first_index = mesh.indices.len();
+        for k in 0..count {
+            // On a Fibonacci spiral over the body, its ends left bare.
+            let along = 0.1 + 0.8 * (f64::from(k) + 0.5) / f64::from(count);
+            let angle = math::radians(137.507_764 * f64::from(k));
+            let radial = self.across * math::cos(angle) + other * math::sin(angle);
+            let half = self.width * 0.5 * math::sqrt((1.0 - (2.0 * along - 1.0).powi(2)).max(0.0));
+            // Sunk a little, so no gap shows where the body's facets
+            // fall inside its true outline; leaning a little toward the
+            // fruit's tip, as they grow.
+            let base = self.at(along) + radial * (half - self.width * foot * 0.5);
+            let axis = (radial + self.direction * 0.15).normalize_or(radial);
+            spine(
+                base,
+                axis,
+                self.width * (reach + foot * 0.5),
+                self.width * foot,
+                colour,
+                part,
+                mesh,
+            );
         }
         leaves::smooth_normals(mesh, first, first_index);
     }
@@ -694,6 +773,36 @@ impl Spheroid {
 }
 
 #[allow(clippy::float_cmp)]
+/// A prickle or bristle: a six-sided cone from `base` along `axis`,
+/// `length` long and `radius` wide at its foot.
+fn spine(
+    base: Vec3,
+    axis: Vec3,
+    length: f64,
+    radius: f64,
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    const SIDES: u32 = 6;
+    let side = any_perpendicular(axis);
+    let other = axis.cross(side);
+    let leaf = part.leaf(base, axis, side, 0.0, 0.0, colour);
+    let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
+    for k in 0..SIDES {
+        let theta = std::f64::consts::TAU * f64::from(k) / f64::from(SIDES);
+        mesh.push(leaf.vertex(
+            base + (side * math::cos(theta) + other * math::sin(theta)) * radius,
+            colour,
+        ));
+    }
+    let tip = mesh.push(leaf.vertex(base + axis * length, colour));
+    for k in 0..SIDES {
+        mesh.indices
+            .extend_from_slice(&[first + k, first + (k + 1) % SIDES, tip]);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -437,6 +437,9 @@ pub(crate) fn build_coarse(
                         star: flower
                             .star_colour
                             .map(|star| with_shading(star, look.colour, painted)),
+                        tube: flower
+                            .tube_colour
+                            .map(|tube| with_shading(tube, look.colour, painted)),
                     },
                     part,
                     mesh,

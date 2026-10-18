@@ -1936,7 +1936,7 @@ fn draw_laid(
                 organ,
                 shape,
                 form,
-                (base, direction, unit_length),
+                (base, fruit::hung(direction, shape.hang), unit_length),
                 shown.unripe,
                 detail,
                 shown.colour,
@@ -1976,6 +1976,9 @@ fn draw_laid(
                         star: flower
                             .star_colour
                             .map(|star| crate::blooms::with_shading(star, look.colour, colour)),
+                        tube: flower
+                            .tube_colour
+                            .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),
                     },
                     part,
                     mesh,

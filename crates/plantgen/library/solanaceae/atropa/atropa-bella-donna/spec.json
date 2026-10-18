@@ -110,6 +110,12 @@
       8,
       9,
       10
+    ],
+    "calyx_in_fruit": "accrescent",
+    "corolla_tube_colour": [
+      150,
+      125,
+      115
     ]
   },
   "provenance": {
@@ -289,6 +295,16 @@
       "evidence": "SourceInferred",
       "source": "kings-american-dispensatory-1898",
       "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 1, Belladonna, p. 331 (read on the Internet Archive, 2026-10-17): berries ripen in September."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 1, Belladonna, p. 331 (read on the Internet Archive, 2026-10-17): a berry sitting on the enlarged calyx; Bailey (vol. 1): calyx enlarging in fruit; Hooker (p. 288): set on the spreading calyx."
+    },
+    "traits.corolla_tube_colour": {
+      "evidence": "SourceInferred",
+      "source": "kings-american-dispensatory-1898",
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 1, Belladonna, p. 331 (read on the Internet Archive, 2026-10-17): corolla dark dull purple at the rim, paler toward the base; Hooker (p. 288): greenish purple. The colour is our reading of the words."
     }
   }
 }

@@ -686,7 +686,7 @@ pub enum Field {
     Word,
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
-    /// A colour, three channels 0 to 1: an anther's.
+    /// Three channels, 0 to 1: a flower's calyx colour, an anther's.
     Colour,
 }
 
@@ -1155,8 +1155,16 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("star_colour", Colour),
                 ("spur", Number),
                 ("tube", Number),
+                ("floral_tube", Number),
+                ("sepal_rise", Number),
+                ("petal_rise", Number),
+                ("calyx", Colour),
+                ("tube_colour", Colour),
+                ("filament", Colour),
                 ("stamens", Count),
                 ("stamen_length", Number),
+                ("style_length", Number),
+                ("stamen_lean", Number),
                 ("odd_rise", Number),
                 ("anther", Number),
                 ("anther_tilt", Number),
@@ -1232,6 +1240,10 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("kept_calyx", Number),
+                ("kept_lobes", Count),
+                ("armed", Word),
+                ("hang", Number),
             ],
         ),
     ]
@@ -3124,9 +3136,12 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
         ),
         Some(Field::Colour) => (
             value.as_array().is_some_and(|channels| {
-                channels.len() == 3 && channels.iter().all(Value::is_number)
+                channels.len() == 3
+                    && channels
+                        .iter()
+                        .all(|c| c.as_f64().is_some_and(|c| (0.0..=1.0).contains(&c)))
             }),
-            "a colour, three numbers",
+            "three channels 0 to 1",
         ),
     };
     if fits {

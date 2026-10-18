@@ -107,7 +107,9 @@
       8,
       9,
       10
-    ]
+    ],
+    "fruit_surface": "prickly",
+    "calyx_in_fruit": "persistent"
   },
   "provenance": {
     "sources": [
@@ -266,6 +268,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Capsules ripen after the flowers, through late summer and autumn (Bentham, Gray: flowering summer and autumn); months our reading."
+    },
+    "traits.fruit_surface": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): capsule ovoid, densely prickly; Gray (p. 717) and Bentham: prickly."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): the capsule held upright above the persistent calyx-base; Bentham: the calyx breaks off round its base, leaving a rim under the capsule."
     }
   }
 }

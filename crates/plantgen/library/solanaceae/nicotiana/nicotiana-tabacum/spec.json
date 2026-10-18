@@ -99,6 +99,11 @@
       130,
       100,
       55
+    ],
+    "corolla_tube_colour": [
+      235,
+      228,
+      200
     ]
   },
   "provenance": {
@@ -243,6 +248,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it: ripe capsule brown."
+    },
+    "traits.corolla_tube_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1914-17), Nicotiana Tabacum, p. 2144 (read on the Internet Archive, 2026-10-17): corolla with a white or whitish tube and a rose or red limb; Wikipedia 'Nicotiana tabacum': tube greenish cream, pink or red. The colour is our reading of the words."
     }
   }
 }
