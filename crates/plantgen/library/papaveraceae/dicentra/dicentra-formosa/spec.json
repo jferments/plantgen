@@ -25,20 +25,20 @@
       "basal_leaves": 3,
       "basal_length": 0.3,
       "basal_angle": 25,
-      "raceme": 0.35,
-      "flowers": 8,
-      "flower_size": 0.02,
-      "pedicel": 0.01,
-      "flower_angle": 120,
-      "fruit_below": 0.1,
-      "buds_above": 0.9,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_size": 0.1,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
       "bud_spacing": 0.5,
-      "nod": 10,
+      "nod": 0,
       "bud_size": 0.01,
       "leaf_area": 0.235,
       "basal_area": 0.171,
       "basal_piece_area": 0.235,
-      "flower_area": 0.533,
+      "flower_area": 0.178,
       "bud_area": 0.063,
       "fruit_area": 0.383
     }
@@ -62,6 +62,7 @@
         "shape": { "template": "frond", "pinnae": 9, "width": 0.6, "divided": 1.0, "stipe": 0.3 }
       },
       "flower": {
+        "inflorescence": { "flowers": 8, "size": 0.2, "droop": 60 },
         "shape": {
           "template": "flower",
           "petals": 4,
@@ -124,7 +125,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a delicate herb with lacy, fern-like, blue-green leaves and arching stems hung with pink, heart-shaped flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a delicate herb with lacy, fern-like, blue-green leaves and arching stems hung with pink, heart-shaped flowers. Each stalk ends in one nodding raceme drawn as a cluster (flowers 1, flower_size 0.1 within the 5 cm to 15 cm the species states; its look's inflorescence 8 flowers, each a fifth of its length, bent 60 degrees), now that Papaveraceae's flowers are mostly in racemes; before, the stalk bore 8 single flowers. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

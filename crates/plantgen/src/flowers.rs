@@ -52,6 +52,16 @@ const GOLDEN: f64 = 137.507_764;
 const CLOSED: f64 = 95.0;
 /// How far a stamen leans out from the axis: the tangent of its angle.
 const LEAN: f64 = 0.35;
+/// A torus's core's radius over its carpels' length (a magnolia's
+/// gynoecium about 3.5 cm long and 2 cm thick).
+const TORUS_CORE: f64 = 0.3;
+/// The stamens' zone round a torus's foot over its carpels' length.
+const TORUS_ZONE: f64 = 0.4;
+/// A carpel's length out from a torus's core over the carpels' length.
+const TORUS_CARPEL: f64 = 0.12;
+/// How far a stamen on a torus leans out from the axis: the tangent of
+/// its angle.
+const TORUS_LEAN: f64 = 0.35;
 /// The `open` below which a flower's stamens and pistil are hidden.
 const SHOWN: f64 = 0.3;
 /// How far a flower with no perianth reaches: its stamens' tips, over its
@@ -214,6 +224,16 @@ pub struct Floral {
     pub notch: f64,
     /// What an inferior ovary's skin bears: a cactus's pericarpel.
     pub pericarpel: Skin,
+}
+
+/// The whorls a flower's tepals stand in: as many of its `whorl` as its
+/// tepals fill, else two.
+fn tepal_whorls(flower: &Flower) -> u32 {
+    if flower.whorl > 0 && flower.petals % flower.whorl == 0 {
+        (flower.petals / flower.whorl).clamp(2, 6)
+    } else {
+        2
+    }
 }
 
 /// The flower `flower` drawn with `form`, `radius` metres in radius, a
@@ -510,14 +530,22 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             }
         }
         (Perianth::Tepals, _) => {
-            let h = f64::from((n / 2).max(1));
-            for k in 0..(n / 2).max(1) {
-                let angle = TAU * f64::from(k) / h;
-                pieces.push(piece(Term::Tepal, None, angle, form.cup * 0.85, (1.0, 1.0)));
-            }
-            for k in 0..(n / 2).max(1) {
-                let angle = TAU * f64::from(k) / h + PI / h;
-                pieces.push(piece(Term::Tepal, None, angle, form.cup, (1.0, 0.85)));
+            // Whorls of alike tepals, each turned half a tepal from the
+            // one outside it, a little narrower and more upright: two, as
+            // a lily's stand, or as many as the tepals over the merosity
+            // (a magnolia's three or four whorls of three), the inner ones
+            // a little shorter too.
+            let whorls = tepal_whorls(flower);
+            let per = (n / whorls).max(1);
+            let h = f64::from(per);
+            for j in 0..whorls {
+                let t = f64::from(j) / f64::from(whorls - 1);
+                let long = if whorls > 2 { 1.0 - 0.12 * t } else { 1.0 };
+                for k in 0..per {
+                    let angle = TAU * f64::from(k) / h + PI / h * f64::from(j);
+                    let cup = form.cup * (0.85 + 0.15 * t);
+                    pieces.push(piece(Term::Tepal, None, angle, cup, (long, 1.0 - 0.15 * t)));
+                }
             }
         }
         (Perianth::Spiral, _) => {
@@ -568,6 +596,17 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         }));
     }
 
+    // An elongate receptacle: its carpels' length, its core's radius and
+    // the stamens' zone round its foot.
+    let torus = (flower.torus > 0.0
+        && flower.carpels > 5
+        && flower.ovary == Ovary::Superior
+        && tube.is_none())
+    .then(|| {
+        let length = flower.torus * r;
+        (length, TORUS_CORE * length, TORUS_ZONE * length)
+    });
+
     // Stamens and staminodes.
     let shown = open >= SHOWN;
     let hidden = matches!(flower.corolla, Corolla::Papilionaceous | Corolla::Labellate);
@@ -576,7 +615,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         let total = flower.stamens + flower.staminodes;
         let whorl = match flower.perianth {
             Perianth::Corolla => (n / flower.petal_whorls.max(1)).max(1),
-            Perianth::Tepals => (n / 2).max(1),
+            Perianth::Tepals => (n / tepal_whorls(flower)).max(1),
             Perianth::Spiral | Perianth::Absent => n.min(6),
         };
         let wf = f64::from(whorl);
@@ -597,10 +636,17 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             };
             let fertile = i < flower.stamens;
             let length = if fertile { filament } else { filament * 0.8 };
-            let (height, at, lean) = match &tube {
+            let (height, at, lean) = match (&tube, torus) {
                 // Adnate to the tube, halfway up.
-                Some(t) => (t.height + t.length * 0.5, t.radius_at(0.5) * 0.85, 0.15),
-                None => (seat, at, LEAN),
+                (Some(t), _) => (t.height + t.length * 0.5, t.radius_at(0.5) * 0.85, 0.15),
+                // Crowded on a spiral up the torus's foot, the lowest
+                // first, spreading.
+                (None, Some((_, core, zone))) => (
+                    seat + zone * (fi + 0.5) / f64::from(total),
+                    core,
+                    TORUS_LEAN,
+                ),
+                (None, None) => (seat, at, LEAN),
             };
             stamens.push(Stamen {
                 rod: Rod {
@@ -609,7 +655,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                     height,
                     lean: math::atan(lean),
                     length,
-                    width: length * 0.03,
+                    width: length * flower.stamen_width,
                 },
                 fertile,
                 anther: flower.anther * filament,
@@ -658,6 +704,31 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 width: style * 0.04,
             },
             lobes: flower.carpels,
+        }
+    } else if let Some((length, core, zone)) = torus {
+        // The carpels on a spiral up a half ellipsoid over the stamens,
+        // each standing out square to its face.
+        let k = f64::from(flower.carpels);
+        let foot = seat + zone * 0.9;
+        let carpel = TORUS_CARPEL * length;
+        let pistils = (0..flower.carpels)
+            .map(|i| {
+                let u = 0.92 * (f64::from(i) + 0.5) / k;
+                let across = core * math::sqrt((1.0 - u * u).max(0.0));
+                let normal = (across / (core * core), u * length / (length * length));
+                Rod {
+                    angle: psi + degrees(GOLDEN) * f64::from(i),
+                    radius: across,
+                    height: foot + length * u,
+                    lean: math::atan2(normal.0, normal.1),
+                    length: carpel,
+                    width: carpel * 0.5,
+                }
+            })
+            .collect();
+        Pistil::Free {
+            dome: (foot, core, length),
+            pistils,
         }
     } else {
         let k = f64::from(flower.carpels);
@@ -1072,14 +1143,14 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
                     side,
                     radius,
                     rise,
-                    colours.accent,
+                    colours.ovary,
                     part,
                     mesh,
                 );
             }
             for pistil in pistils {
                 let (foot, direction) = frame.rod(pistil);
-                rod_cone(foot, direction, pistil, colours.accent, part, mesh);
+                rod_cone(foot, direction, pistil, colours.ovary, part, mesh);
             }
         }
         Pistil::Column(column) => {
@@ -1105,9 +1176,13 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
     }
 }
 
+/// Where a reduced blunt petal's shoulders stand, a share of its length.
+const SHOULDER: f64 = 0.85;
+
 /// A flower reduced for a cluster's unit, or a lone flower's part mesh
 /// drawn coarse (`part.coarse` counted from the reduced flower): its
-/// perianth parts as kites seen from both sides (one facet each from the
+/// perianth parts as kites seen from both sides (blunt ones shouldered
+/// toward a round tip; one facet each from the
 /// first coarse step), its tubes as `n`-sided bands, a low pyramid of a
 /// centre or a column in the accent, and stamens while the flower is a
 /// centimetre across or more and drawn fine; from the second coarse step
@@ -1213,7 +1288,25 @@ pub(crate) fn draw_reduced(
         let left = axis.cross(radial).normalize_or(frame.side) * (piece.width * 0.5);
         let foot = frame.point(piece.angle, piece.radius, piece.height);
         let colour = colours.toward_calyx(piece.calyx);
-        if part.coarse == 0 {
+        if part.coarse == 0 && piece.taper < 1.0 {
+            // A blunt petal (obovate, orbicular) keeps its full shoulders
+            // toward a rounded tip, as its solid narrows ([`SolidLeaf`]).
+            let widest = foot + heading * (piece.length * 0.55);
+            let shoulder = foot + heading * (piece.length * SHOULDER);
+            let held = math::pow((1.0 - SHOULDER) / 0.45, piece.taper.max(0.05));
+            both(
+                &[
+                    foot,
+                    widest + left,
+                    shoulder + left * held,
+                    foot + heading * piece.length,
+                    shoulder - left * held,
+                    widest - left,
+                ],
+                colour,
+                mesh,
+            );
+        } else if part.coarse == 0 {
             let widest = foot + heading * (piece.length * 0.55);
             both(
                 &[

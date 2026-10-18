@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "id": "trifolium-repens",
+  "taxon": {
+    "scientific_name": "Trifolium repens",
+    "common_name": "white clover",
+    "family": "Fabaceae",
+    "genus": "Trifolium",
+    "plant_name_id": 2439997
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 16,
+      "stem_rate": 0.5,
+      "clump_radius": 0.25,
+      "stem_lean": 6,
+      "maturity": 1.0,
+      "adult_age": 1,
+      "flowering_share": 0.5,
+      "scape": 1,
+      "stem_height": 0.14,
+      "young_height": 0.6,
+      "stem_radius": 0.0008,
+      "wiggle": 3,
+      "nodes": 0,
+      "bare": 0,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 30,
+      "basal_leaves": 3,
+      "basal_length": 0.1,
+      "basal_angle": 25,
+      "raceme": 0.08,
+      "flowers": 1,
+      "flower_size": 0.022,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [1, 2, 4]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.2, 0.28, 0.12],
+    "foliage": [0.05, 0.14, 0.04],
+    "foliage_shade": [0.016, 0.045, 0.013],
+    "variation": 0.15,
+    "organs": {
+      "basal": {
+        "shape": {
+          "template": "compound",
+          "leaflets": 3,
+          "pattern": "palmate",
+          "leaflet_width": 0.85,
+          "teeth": 8,
+          "petiole": 0.7
+        },
+        "variegation": {
+          "pattern": "zone",
+          "from": "base",
+          "at": 0.5,
+          "colour": [0.15, 0.24, 0.14],
+          "amount": 0.15,
+          "spread": 0.4,
+          "plants": 1,
+          "faces": "upper"
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.8,
+          "point": 0.2,
+          "centre": 0.1
+        },
+        "inflorescence": {
+          "kind": "head",
+          "flowers": 40,
+          "size": 0.3
+        },
+        "colour": [0.92, 0.92, 0.88],
+        "accent": [0.75, 0.72, 0.6]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 0.15,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "division_order": 1,
+    "leaflets": 3,
+    "leaflet_length_m": {
+      "min": 0.01,
+      "max": 0.015,
+      "low": 0.008,
+      "high": 0.019
+    },
+    "leaf_shape": "obovate",
+    "leaf_peltation": "latent",
+    "inflorescence": "head",
+    "flower_colour": [235, 235, 225]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a low creeping perennial herb."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name; wcvp_names.csv of the v16 zip, read 2026-10-17)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Trifolium repens: a perennial, its branches lying on the ground and creeping, 1 to 4 dm long."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Trifolium repens: three leaflets to a leaf, divided once."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Trifolium repens: three leaflets to a leaf."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Trifolium repens: leaflet blades 1 to 1.5 cm long; Jepson (1925) gives 4 to 9 lines (about 8 to 19 mm), kept as the low and high."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Trifolium repens: leaflets obovate, round-obovate or oval, rounded or notched at the tip, finely toothed (Jepson 1925: broadly obcordate)."
+    },
+    "traits.leaf_peltation": {
+      "evidence": "Authored",
+      "source": "kaplan-2022",
+      "note": "Read by us from Kaplan's account (2022, pp. 442-444) of digitate leaves whose ring of leaflets stays open toward the stem, a lateral pair beside the terminal one: a clover's three leaflets held level across the tip of an upright stalk, as in the iNaturalist photos read 2026-10-17. Not stated for this species by a flora."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson (1925), Trifolium repens: heads globose, 8 to 14 lines (about 17 to 30 mm) across, on stalks far above the leaves, the flowers turned fully back as they age."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Trifolium repens: corolla usually white, 6 to 10 mm long; pinkish with age in photos. The colour is our reading of the words."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand: a patch of creeping shoots drawn as a clump spread 25 cm round, each sending up leaves on long stalks and, on half of them, a bare flowering stalk 14 cm tall within Small's 5 to 20 cm (1913) and Jepson's 2 to 9 inches (1925), with a globose head about 2.2 cm across (Jepson 1925: 17 to 30 mm). The leaf is 10 cm, a stalk 7 cm long below three leaflets, by eye from iNaturalist photos (read 2026-10-17). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "15 cm to the top of the flower heads at 2 years, within Small's 5 to 20 cm flowering stalks (1913). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from research-grade iNaturalist photos (read 2026-10-17): mid-green leaflets, broad and rounded, finely toothed (Small 1913: denticulate), held level; white heads of small pea flowers (Small 1913: corolla usually white)."
+    },
+    "appearance.organs.basal.variegation": {
+      "evidence": "Authored",
+      "source": "inaturalist-photos-2026-10",
+      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants without flowers, read 2026-10-17; for example observation 65571123): a pale grey-green V, air space under the upper skin, across each leaflet, opening toward the leaflet's base, at about 0.4 to 0.6 of its length, the band a tenth to a fifth of it wide, absent on some plants and alike on one plant's leaves. Drawn as the zone variegation from the base at 0.5, upper face only, its share set by the plant (plants 1) and wide enough between plants (amount 0.15, spread 0.4) that some plants have none."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["PlantGen"],
+    "notes": "Procedural proxy added to show the zone variegation from the base (2026-10-17): sizes from Small (1913) and Jepson (1925), the pattern from iNaturalist photos."
+  }
+}

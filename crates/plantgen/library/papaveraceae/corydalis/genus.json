@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Corydalis",
+  "traits": {
+    "flower_symmetry": "zygomorphic"
+  },
+  "evidence": {
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Corydalis (read 2026-10-17, ca. 100 spp): flowers symmetric about one plane only, one outer petal spurred at the base."}
+  }
+}

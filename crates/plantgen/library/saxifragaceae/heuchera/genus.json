@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Heuchera",
+  "traits": {
+    "leaf_incision": "lobed",
+    "inflorescence": "panicle"
+  },
+  "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Heuchera (read 2026-10-17): about 37 to 45 species; long-stalked basal leaves, palmately lobed."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Heuchera (read 2026-10-17): flowers borne in long thyrses in spring; a thyrse (branched axis of small cymes) is drawn here as a panicle."}
+  }
+}

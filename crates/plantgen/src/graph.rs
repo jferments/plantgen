@@ -43,6 +43,16 @@ pub struct GraphSegment {
     /// The structure it was drawn in ([`PlantGraph::structures`]), if any.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub within: Option<u32>,
+    /// How young the program drew it, 0 grown to 1 just emerged (the
+    /// L-system's `young`). Package graphs do not record it; it is drawn
+    /// into the wood's colour.
+    #[serde(default, skip_serializing_if = "grown")]
+    pub young: f32,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn grown(young: &f32) -> bool {
+    *young == 0.0
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -314,6 +324,7 @@ mod tests {
             body: 0,
             left: Vec3::ZERO,
             within: None,
+            young: 0.0,
         };
         let leaf = GraphOrgan {
             id: 2,

@@ -191,14 +191,20 @@ Usage:
       neighbours' crowns as envelopes; each keyframe then says how much
       of it stands in the place's solids and crowns.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
-                [--age N] [--view side|three-quarter|oblique|top] [--lod 0-3]
+                [--age N] [--view side|three-quarter|oblique|top|under]
+                [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
                 [--focus X,Y,Z [--span METRES]] [--parts on]
                 [--conditions FILE|JSON [--from-age N]]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
-      the plant, metres from its foot with +Y up. --parts on (level 0)
+      the plant, metres from its foot with +Y up; --focus leaf:F,
+      bloom:F or stalk:F frames the middle of the leaf, of the flower,
+      fruit or cone, or of the hairy young stem or leaf stalk, F of the
+      way up the plant's (0 lowest, 1 highest),
+      SPAN 0.05 unless given; --view under looks up at it from below, at
+      the lower faces of its leaves. --parts on (level 0)
       draws every flower, fruit, cone and needle shoot as its part mesh,
       as WorldLab does near the camera. --conditions grows it in a place
       as plantc grow does (the place itself is not drawn).
@@ -235,7 +241,7 @@ Usage:
       the organ alone and solid (LOD0) as it is that day, at one scale
       per row; each day's stage printed.
   plantc lineup <species|spec.json>... --out FILE.png [--age N] [--seeds N]
-                [--view side|three-quarter|oblique|top] [--size PIXELS]
+                [--view side|three-quarter|oblique|top|under] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
   plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]
@@ -287,7 +293,8 @@ Usage:
       Exits non-zero on any error.
   plantc atlas <species|spec.json> --out FILE.png
       Draw the species' organ card textures (leaves, needles, flowers) in
-      their colours, one per organ, side by side.
+      their colours, one per organ, side by side, each lower face that
+      differs (an underside colour, sori) beside its upper.
   plantc ground --out FILE.png [--seed N] [--looks words|litter]
       Draw the nine plant-made ground looks (needles, leaves, thatch,
       twigs, moss, sphagnum, grass, tussock and cushion), seven to a row,
@@ -2207,6 +2214,63 @@ fn stand_command(args: &[String]) -> Result<(), Failure> {
 }
 
 #[allow(clippy::too_many_lines)]
+/// The point `--focus leaf:F`, `bloom:F` or `stalk:F` names on `plant`:
+/// the middle of the leaf card (of the flower, fruit or cone card, or of
+/// the piece of hairy young stem or leaf stalk,
+/// `mesh::PlantMesh::hair_tubes`) `F` of the way up the plant's, from 0
+/// the lowest to 1 the highest.
+fn named_point(plant: &mesh::PlantMesh, what: &str, at: f64) -> Result<Vec3, Failure> {
+    let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+    let mut points: Vec<Vec3> = match what {
+        "leaf" => plant.cards[..plant.bent_cards()]
+            .iter()
+            .map(|card| vector(card.base) + vector(card.heading) * (f64::from(card.length) * 0.5))
+            .collect(),
+        // The organs drawn as part meshes, or else the flat cards after
+        // the bent leaves: flowers, fruit and cones.
+        "bloom" => {
+            let middle = |card: &mesh::Card| {
+                vector(card.base) + vector(card.heading) * (f64::from(card.length) * 0.5)
+            };
+            if plant.sites.is_empty() {
+                plant.cards[plant.bent_cards()..]
+                    .iter()
+                    .map(middle)
+                    .collect()
+            } else {
+                plant
+                    .sites
+                    .iter()
+                    .filter_map(|&site| plant.cards.get(site as usize))
+                    .map(middle)
+                    .collect()
+            }
+        }
+        "stalk" => plant
+            .hair_tubes
+            .iter()
+            .map(|tube| (vector(tube.start) + vector(tube.end)) * 0.5)
+            .collect(),
+        _ => {
+            return Err(
+                format!("`--focus` names leaf:F, bloom:F or stalk:F, found `{what}`").into(),
+            );
+        }
+    };
+    if points.is_empty() {
+        return Err(format!("`--focus {what}:F`: the plant has none drawn at this level").into());
+    }
+    points.sort_by(|a, b| a.y.total_cmp(&b.y));
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    let index = (at.clamp(0.0, 1.0) * (points.len() - 1) as f64).round() as usize;
+    Ok(points[index.min(points.len() - 1)])
+}
+
+#[allow(clippy::too_many_lines)]
 fn render_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
@@ -2256,7 +2320,12 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let quality = options.quality()?;
     let lod = quality.lods.get(level).ok_or("`--lod` must be 0 to 3")?;
     let size: usize = options.number("size")?.unwrap_or(900);
-    let focus = match options.flags.get("focus") {
+    // `--focus leaf:F` or `stalk:F` names a point once the plant is built.
+    let named = options.flags.get("focus").and_then(|text| {
+        let (what, at) = text.split_once(':')?;
+        Some((what.to_owned(), at.trim().parse::<f64>().ok()?))
+    });
+    let focus = match options.flags.get("focus").filter(|_| named.is_none()) {
         Some(text) => {
             let point: Vec<f64> = text
                 .split(',')
@@ -2284,6 +2353,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let (mut looks, sizes) = looks_of(&spec, &growth, day);
     let graph = &*drawn(&growth.keyframes[0], &sizes);
     let bodies = bodies_of(&spec, &growth);
+    let mut bloom = None;
     let mut plant = if parted {
         // As a renderer that draws part meshes shows the plant near the
         // camera: each organ of a type with them drawn as one.
@@ -2298,6 +2368,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             level,
             Some(&types),
         );
+        // The organs to draw as part meshes are known only until they
+        // are placed.
+        if let Some((what, at)) = named.as_ref().filter(|(what, _)| what == "bloom") {
+            bloom = Some(named_point(&plant, what, *at)?);
+        }
         plantgen::parts::place(&mut plant, &looks, &parts);
         plant
     } else {
@@ -2310,6 +2385,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             level,
         )
     };
+    plant.vary_by_plant(&looks, seed);
     // A guest is drawn on its host (plant forms F7), unless `--alone`.
     // Neither has fleshy bodies, so the templates are the organs' alone.
     let mut on = false;
@@ -2351,6 +2427,17 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         Templates::for_plant(&looks, &[]).with_bark(host_bark)
     } else {
         templates_of(&spec, &looks, &bodies, &growth)
+    };
+    let focus = match named {
+        Some((what, at)) => {
+            let span: f64 = options.number("span")?.unwrap_or(0.05);
+            let point = match bloom {
+                Some(point) => point,
+                None => named_point(&plant, &what, at)?,
+            };
+            Some((point, span))
+        }
+        None => focus,
     };
     let image = preview::render(
         &plant,
@@ -2447,7 +2534,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                 environment.name(),
                 describe(graph, &growth.organ_types)
             );
-            let plant = mesh::build(
+            let mut plant = mesh::build(
                 graph,
                 &looks,
                 &bodies,
@@ -2455,6 +2542,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                 &quality.lods[0].for_height(graph.height),
                 0,
             );
+            plant.vary_by_plant(&looks, seed);
             images.push(preview::render(
                 &plant,
                 &templates,
@@ -2841,7 +2929,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
             .take(count)
             .collect();
         let mut grown = Vec::with_capacity(seeds.len());
-        for seed in seeds {
+        for &seed in &seeds {
             let growth = grow_variant(&spec, None, environment, seed, vec![age], age)?;
             out!(
                 "  {:<26} seed {seed:<3} {}",
@@ -2854,11 +2942,11 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
             .iter()
             .map(|growth| growth.keyframes[0].height)
             .fold(0.0, f64::max);
-        for growth in &grown {
+        for (growth, &seed) in grown.iter().zip(&seeds) {
             let (looks, sizes) = looks_of(&spec, growth, day);
             let graph = &*drawn(&growth.keyframes[0], &sizes);
             let bodies = bodies_of(&spec, growth);
-            let plant = mesh::build(
+            let mut plant = mesh::build(
                 graph,
                 &looks,
                 &bodies,
@@ -2866,6 +2954,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
                 &quality.lods[0].for_height(graph.height),
                 0,
             );
+            plant.vary_by_plant(&looks, seed);
             images.push(preview::render(
                 &plant,
                 &templates_of(&spec, &looks, &bodies, growth),
@@ -2912,7 +3001,8 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
     fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
     let shading = spec::organ_areas(&program, &params).map_err(|error| error.to_string())?;
     out!(
-        "wrote {out}: {width}x{height}, one card texture per organ, left to right.\n\
+        "wrote {out}: {width}x{height}, one card texture per organ, left to right,\n\
+         its lower face beside it where the two are unlike.\n\
          Leaf area of an organ 1 m long, as drawn and as the program shades with it:"
     );
     for ((look, template), shades) in looks.iter().zip(&templates.templates).zip(&shading) {

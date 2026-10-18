@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Wahlenbergia",
+  "traits": {
+    "inflorescence": {"solitary": "usually", "cyme": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Wahlenbergia genus account (read 2026-10-17): flowers single, terminal, regular. Account written for NZ species; cyme kept as minor state for loosely branched species elsewhere, not stated on the page."}
+  }
+}

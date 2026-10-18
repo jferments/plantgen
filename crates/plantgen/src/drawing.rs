@@ -366,6 +366,7 @@ pub fn dress(request: &Request<'_>, growth: Growth) -> Result<Drawing, String> {
             request.level,
         )
     };
+    plant.vary_by_plant(&looks, request.seed);
     // A guest is drawn on its host (plant forms F7), unless alone.
     // Neither has fleshy bodies, so the templates are the organs' alone.
     let mut on = false;

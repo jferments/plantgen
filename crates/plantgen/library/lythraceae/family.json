@@ -38,12 +38,7 @@
     "stipules": {
       "false": "usually"
     },
-    "inflorescence": {
-      "cyme": "often",
-      "panicle": "often",
-      "raceme": "often",
-      "solitary": "often"
-    },
+    "inflorescence": {"raceme": "usually", "solitary": "often", "cyme": "sometimes", "panicle": "sometimes"},
     "stem_cross_section": {"square": "often"}
   },
   "evidence": {
@@ -73,11 +68,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 343, 344, 345, family Lythraceae: stipules false (absent, vestigial or soon falling), usually; read as {\"false\": \"usually\"}."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 343, 344, 345, family Lythraceae: inflorescence raceme, panicle, fascicle, dichasium or solitary flowers, usually; read as {\"cyme\": \"often\", \"panicle\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Cuphea (read 2026-10-17): ca. 240 spp, flowers in indeterminate terminal or axillary racemes (or thyrses), one flower between the petioles at each node. Against the family size on the DELTA page read in the first pass (~580 spp), Cuphea alone is about 40% of the family and racemose; no other single genus approaches it (genus sizes and states of Diplusodon, Rotala, Lagerstroemia, Ammannia from the first pass, not re-read). Raceme usually, solitary next. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.fruit_type": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

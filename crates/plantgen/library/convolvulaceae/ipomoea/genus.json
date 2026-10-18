@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Ipomoea",
+  "traits": {
+    "inflorescence": {"cyme": "usually", "solitary": "often"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Ipomoea (read 2026-10-17): flowers in axillary groups of few to many, cymose or reduced to one flower; no heads mentioned; ~640 species."}
+  }
+}
