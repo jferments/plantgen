@@ -194,7 +194,7 @@
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 11;
+lsystem palm 12;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast

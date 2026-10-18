@@ -24,6 +24,17 @@
 //! | husked | a nut in its first third inside a husk drawn out into a beak |
 //! | pod | flat (a third as thick as wide), bulging over its seeds |
 //! | capsule | ribbed with three ribs |
+//! | scaly | the crowned berry under broad scales on a Fibonacci spiral |
+//! | areolate | the crowned berry studded with felted areoles on a spiral, each with a tuft of glochids |
+//! | spiny | the areolate berry, each areole with a star of short spines |
+//!
+//! A fruit with a `flare` is then widened toward its tip and narrowed
+//! toward its base by as much (narrowed toward its tip where the flare is
+//! below 0): each point's distance from its axis scaled by
+//! $`1 + f z`$, $`z`$ its place from $`-1`$ at the base to $`1`$ at the
+//! tip, so an obovoid saguaro fruit or an obconic cholla fruit keeps its
+//! scales and areoles on its skin. A cactus flower's pericarpel wears the
+//! same skin as its fruit ([`skin`], `crate::flowers`).
 //! | follicles | a core under up to 24 beaked follicles on a Fibonacci spiral, a ripe one's seeds hanging from its split |
 //! | samaras | a spindle under up to 24 narrow wings rising round it, overlapping |
 //! | berries | three berries splayed from the stalk, each as wide as the aspect makes it |
@@ -38,10 +49,19 @@
 use crate::blooms::{self, FruitForm, Part};
 use crate::graph::GraphOrgan;
 use crate::leaves::{self, Section, SolidLeaf};
-use crate::looks::{Fruit, FruitKind};
+use crate::looks::{Fruit, FruitKind, Skin};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
+
+/// The tan felt of a cactus fruit's areoles.
+const FELT: [f32; 3] = [0.74, 0.66, 0.52];
+
+/// The straw of a cactus fruit's spines.
+const STRAW: [f32; 3] = [0.86, 0.8, 0.62];
+
+/// The brown a cactus fruit's perianth dries to, and its glochids.
+const DRIED: [f32; 3] = [0.36, 0.26, 0.16];
 
 /// The golden angle, degrees.
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
@@ -50,7 +70,7 @@ pub const GOLDEN_DEGREES: f64 = 137.507_764;
 /// (`crate::blooms`).
 #[must_use]
 pub fn is_single(fruit: &Fruit) -> bool {
-    fruit.kind == FruitKind::Berry && fruit.unripe <= 0.0
+    fruit.kind == FruitKind::Berry && fruit.unripe <= 0.0 && fruit.flare == 0.0
 }
 
 /// How finely one fruit is drawn: facets round and rings along.
@@ -216,6 +236,7 @@ pub(crate) fn draw_unit(
         length,
         width,
         detail,
+        flare: fruit.flare,
     };
     if fruit.cone >= 0.5 {
         let cone = GraphOrgan {
@@ -312,6 +333,127 @@ pub fn triangles(form: &FruitForm, fruit: &Fruit) -> usize {
     mesh.triangle_count()
 }
 
+/// An ellipsoid's surface a cactus's pericarpel covers: its centre, its
+/// axis toward the tip, a direction across it, and its half-length and
+/// half-width.
+pub(crate) struct Surface {
+    pub centre: Vec3,
+    pub axis: Vec3,
+    pub across: Vec3,
+    pub long: f64,
+    pub wide: f64,
+}
+
+/// A cactus pericarpel's skin (Anderson, The Cactus Family pp. 31 to 33),
+/// on a fruit or on the flower it grows from: `count` broad scales lying
+/// toward its tip, or as many felted areoles, each with a star of
+/// `spines` and a third more short spines on a spiny one or a tuft of
+/// glochids on one with felted areoles alone, on a Fibonacci spiral from
+/// near its base to below its crown. Scales take `colour`, a little
+/// darker.
+pub(crate) fn skin(
+    surface: &Surface,
+    kind: Skin,
+    (count, spines): (u32, u32),
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    if kind == Skin::Naked {
+        return;
+    }
+    let Surface {
+        centre,
+        axis,
+        across,
+        long,
+        wide,
+    } = *surface;
+    let other = axis.cross(across);
+    let golden = math::radians(GOLDEN_DEGREES);
+    for i in 0..count {
+        // From near the base (z = -0.75) to below the crown (z = 0.8).
+        let z = -0.75 + 1.55 * (f64::from(i) + 0.5) / f64::from(count);
+        let ring = math::sqrt((1.0 - z * z).max(0.0));
+        let angle = golden * f64::from(i);
+        let radial = across * math::cos(angle) + other * math::sin(angle);
+        let at = centre + axis * (z * long) + radial * (ring * wide);
+        let normal = (axis * (z / long) + radial * (ring / wide)).normalize_or(radial);
+        // Up the skin toward the tip, and across it.
+        let up = (axis - normal * axis.dot(normal)).normalize_or(axis);
+        let side = normal.cross(up);
+        if kind == Skin::Scaly {
+            // Broad and rounded, pressed to the skin and reaching toward
+            // the tip, a little darker.
+            let scale = wide * 0.48;
+            Spheroid {
+                centre: at + up * (scale * 0.3) + normal * (scale * 0.05),
+                a: scale * 0.12,
+                b: scale * 0.45,
+                c: scale * 0.6,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: Detail {
+                    around: 6,
+                    rings: 2,
+                    fine: None,
+                },
+            }
+            .draw(normal, side, blooms::shade(colour, 0.82), part, mesh);
+            continue;
+        }
+        // A round cushion of felt, half sunk in the skin.
+        let felt = wide * 0.1;
+        let lifted = at + normal * (felt * 0.15);
+        Spheroid {
+            centre: lifted,
+            a: felt * 0.4,
+            b: felt,
+            c: felt,
+            ribs: 0,
+            rib_depth: 0.0,
+            waves: 0,
+            wave_depth: 0.0,
+            detail: Detail {
+                around: 5,
+                rings: 2,
+                fine: None,
+            },
+        }
+        .draw(normal, side, FELT, part, mesh);
+        // Spines on a spiny skin, as long as a little over half the
+        // shorter of its half-length and width; a tuft of short glochids
+        // on one with felted areoles alone.
+        let (reach, thin, spines, colour) = if kind == Skin::Spiny {
+            (
+                long.min(wide * 2.0) * 0.56,
+                wide * 0.024,
+                spines + spines / 3,
+                STRAW,
+            )
+        } else {
+            (long.min(wide * 2.0) * 0.12, wide * 0.012, spines, DRIED)
+        };
+        for k in 0..spines {
+            let turn = std::f64::consts::TAU * f64::from(k) / f64::from(spines) + angle;
+            let out = (side * math::cos(turn) + up * math::sin(turn)) * 0.75 + normal;
+            let out = out.normalize_or(normal);
+            let across = out.cross(normal).normalize_or(side) * thin;
+            blooms::wedge(
+                lifted - across,
+                lifted + across,
+                lifted + out * reach,
+                normal * thin,
+                colour,
+                part,
+                mesh,
+            );
+        }
+    }
+}
+
 /// One fruit, in the plant's frame.
 struct One {
     base: Vec3,
@@ -320,6 +462,8 @@ struct One {
     length: f64,
     width: f64,
     detail: Detail,
+    /// How much wider toward its tip ([`Fruit::flare`]).
+    flare: f64,
 }
 
 impl One {
@@ -439,10 +583,18 @@ impl One {
                 capsule.rib_depth = 0.14;
                 capsule.draw(self.direction, self.across, body, part, mesh);
             }
+            FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
+                self.body()
+                    .draw(self.direction, self.across, body, part, mesh);
+                self.areoles(kind.skin().unwrap_or_default(), body, part, mesh);
+                let dried = [0, 1, 2].map(|k| body[k] * 0.3 + DRIED[k] * 0.7);
+                self.calyx(0.95, 8, 0.3, 0.1, dried, part, mesh);
+            }
             FruitKind::Follicles => self.follicles(body, extras, part, mesh),
             FruitKind::Samaras => self.samaras(body, part, mesh),
             FruitKind::Berries => self.berries(body, part, mesh),
         }
+        self.taper(self.flare, first, mesh);
         leaves::smooth_normals(mesh, first, first_index);
     }
 
@@ -476,6 +628,49 @@ impl One {
                 part,
                 mesh,
             );
+        }
+    }
+
+    /// A cactus fruit's skin, the pericarpel grown on ([`skin`]): 21, 13
+    /// or 8 areoles as finely as the fruit is drawn, spines on the finer
+    /// two.
+    fn areoles(&self, skin_kind: Skin, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        let count: u32 = match self.detail.around {
+            10.. => 21,
+            8..=9 => 13,
+            _ => 8,
+        };
+        let spines: u32 = match self.detail.around {
+            14.. => 3,
+            10..=13 => 2,
+            _ => 0,
+        };
+        let surface = Surface {
+            centre: self.at(0.5),
+            axis: self.direction,
+            across: self.across,
+            long: self.length * 0.5,
+            wide: self.width * 0.5,
+        };
+        skin(&surface, skin_kind, (count, spines), colour, part, mesh);
+    }
+
+    /// Widen the solid drawn from vertex `first` toward its tip by
+    /// `taper` (narrowing it toward its base by as much): each point's
+    /// distance from the axis scaled by `1 + taper z`, `z` its place along
+    /// the fruit from -1 at its base to 1 at its tip.
+    fn taper(&self, taper: f64, first: usize, mesh: &mut Mesh) {
+        if taper == 0.0 {
+            return;
+        }
+        let centre = self.at(0.5);
+        let long = (self.length * 0.5).max(1e-9);
+        for p in &mut mesh.positions[first..] {
+            let v = Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2])) - centre;
+            let along = v.dot(self.direction);
+            let z = (along / long).clamp(-1.0, 1.0);
+            let off = v - self.direction * along;
+            *p = (centre + self.direction * along + off * (1.0 + taper * z)).to_f32();
         }
     }
 
@@ -961,6 +1156,71 @@ mod tests {
             kind: FruitKind::Samara,
             ..Fruit::default()
         }));
+        assert!(!is_single(&Fruit {
+            flare: 0.3,
+            ..Fruit::default()
+        }));
+    }
+
+    /// A flare widens a fruit toward its tip and narrows it toward its
+    /// base by as much, and a negative one the other way.
+    #[test]
+    fn a_flare_widens_the_fruit_toward_its_tip() {
+        let organ = GraphOrgan {
+            id: 3,
+            organ: 0,
+            segment: None,
+            position: Vec3::ZERO,
+            heading: Vec3::Y,
+            left: Vec3::X,
+            size: 1.0,
+            born: 0.0,
+            shed: None,
+            light: 1.0,
+            within: None,
+            adult: None,
+        };
+        let part = Part {
+            born: 0.0,
+            shed: None,
+            coarse: 0,
+        };
+        // The widest the fruit reaches from its axis below and above its
+        // middle.
+        let halves = |flare: f64| {
+            let fruit = Fruit {
+                kind: FruitKind::Areolate,
+                aspect: 0.6,
+                flare,
+                ..Fruit::default()
+            };
+            let mut mesh = Mesh::default();
+            draw(
+                &organ,
+                Vec3::Y,
+                Vec3::X,
+                &FruitForm::default(),
+                &fruit,
+                [0.6, 0.1, 0.1],
+                [0.2, 0.5, 0.1],
+                part,
+                &mut mesh,
+            );
+            let reach = |low: f32, high: f32| {
+                mesh.positions
+                    .iter()
+                    .filter(|p| p[1] > low && p[1] < high)
+                    .map(|p| p[0].hypot(p[2]))
+                    .fold(0.0_f32, f32::max)
+            };
+            (reach(0.15, 0.35), reach(0.65, 0.85))
+        };
+        let (base, tip) = halves(0.0);
+        assert!((base - tip).abs() < 0.02 * base, "{base} {tip}");
+        let (base, tip) = halves(0.5);
+        assert!(tip > base * 1.3, "obovoid: {base} {tip}");
+        let (base, tip) = halves(-0.3);
+        assert!(base > tip * 1.15, "ovoid: {base} {tip}");
     }
 
     #[test]
@@ -976,6 +1236,9 @@ mod tests {
             FruitKind::Husked,
             FruitKind::Pod,
             FruitKind::Capsule,
+            FruitKind::Scaly,
+            FruitKind::Areolate,
+            FruitKind::Spiny,
             FruitKind::Follicles,
             FruitKind::Samaras,
             FruitKind::Berries,

@@ -139,7 +139,9 @@
     },
     "inflorescence": "compound_umbel",
     "flowering_branches": 10,
+    "flowering_branch_orders": 2,
     "leaf_length_m": {
+      "low": 0.1,
       "min": 0.2,
       "max": 0.5
     },
@@ -224,10 +226,15 @@
       "source": "plantgen-authors",
       "note": "Ten flowering side branches to the stem, each ending in an umbel, set by hand from iNaturalist photos of flowering plants in Washington and Oregon (observations 167792725, 167279313, 57447894, 179916193, 239649246, 235363691, 367283258, 48833894, 120371169): Abrams (1951 p. 231) says the stems are much branched."
     },
+    "traits.flowering_branch_orders": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Two orders of flowering branches, set by hand from iNaturalist photos of flowering plants (observation 83696076): its side branches are leafy and branch again, each branch ending in an umbel."
+    },
     "traits.leaf_length_m": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high), as no source read gives it: leaves 20 cm to 50 cm long."
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 20 cm to 50 cm long. The reduced leaves of the upper stem and flowering branches go down to about 10 cm, about twice an umbel's breadth, set by hand from an iNaturalist photo of a flowering plant (observation 83696076)."
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
