@@ -33,12 +33,7 @@
       "bloom_age": 6,
       "flowers": 3,
       "ring_angle": 85,
-      "flower_angle": 55,
-      "bud_share": 0.2,
-      "fruit_share": 0.2,
-      "flower_area": 0.363,
-      "bud_area": 0.029,
-      "fruit_area": 1.016
+      "flower_angle": 55
     }
   },
   "growth": {
@@ -55,23 +50,6 @@
     "foliage": [0.1, 0.17, 0.06],
     "foliage_shade": [0.045, 0.077, 0.027],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.2
-        },
-        "accent": [0.15, 0.3, 0.08]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.8
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "ribs": {
@@ -158,8 +136,9 @@
     "height_max_m": 0.6,
     "woodiness": "semi",
     "rosette": "none",
-    "flowering_months": [3, 4, 5],
-    "fruiting_months": [5, 6, 7]
+    "flowering_months": [3, 4],
+    "fruiting_months": [5, 6, 7],
+    "anther_colour": [235, 200, 50]
   },
   "evidence": {
     "traits.stigma_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: stigma deep green; a dark leaf green by hand."},
@@ -213,11 +192,7 @@
       "source": "plantgen-authors",
       "note": "Rough stem heights from general knowledge: 15 to 20 cm by 15 years, about 30 cm by 30. Wide tolerances."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: 10 to 13 ribs hidden under dense spines, pale radials, two to six coloured centrals and a flattened lower central pointing down, all greying with age. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, and a style with a dozen stigma lobes, from the characters of its own and Cactaceae's by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: 10 to 13 ribs hidden under dense spines, pale radials, two to six coloured centrals and a flattened lower central pointing down, all greying with age. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -257,8 +232,9 @@
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
-    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."}
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Echinocereus engelmannii: flowering March to April. USA-NPN (species 855, 5 sites) has most open-flower days in April, then May and March."},
+    "traits.fruiting_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Echinocereus engelmannii: fruiting May to July."},
+    "traits.anther_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Echinocereus engelmannii: anthers yellow (Anderson's photograph, p. 235, shows yellow anthers too)."}
   },
   "provenance": {
     "sources": [

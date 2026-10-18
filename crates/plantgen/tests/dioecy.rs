@@ -179,8 +179,20 @@ fn a_herbs_male_plants_bear_flowers_in_place_of_fruit() {
 /// male plants bear no `fruit` (`organs[0]`), and some female plant does.
 /// Returns the plants, by sex, with their counts of `organs`.
 fn males_bear_no_fruit(id: &str, organs: &[&str]) -> Vec<(bool, Vec<usize>)> {
+    males_bear_no_fruit_with(id, organs, &[])
+}
+
+/// [`males_bear_no_fruit`], with `params` set in the species' program too.
+fn males_bear_no_fruit_with(
+    id: &str,
+    organs: &[&str],
+    params: &[(&str, f64)],
+) -> Vec<(bool, Vec<usize>)> {
     let mut spec = PlantSpec::builtin(id).unwrap();
     spec.generator.params.insert("dioecious".into(), 1.0);
+    for (name, value) in params {
+        spec.generator.params.insert((*name).into(), *value);
+    }
     let plants = by_sex(&spec, spec.growth.years, organs);
     for (female, counts) in &plants {
         if !female {
@@ -205,11 +217,16 @@ fn a_mistletoes_male_clumps_bear_no_berries() {
 
 /// A cactus's male plants bear open flowers in its rings where its female
 /// plants bear fruit, and hang no chains of fruit. Saguaro and jumping
-/// cholla, made dioecious here.
+/// cholla, made dioecious here; the saguaro with a share of its ring in
+/// fruit, as its stated months leave it none (every place a flower in its
+/// year).
 #[test]
 fn a_cactuss_male_plants_bear_flowers_in_place_of_fruit() {
-    for id in ["carnegiea-gigantea", "cylindropuntia-fulgida"] {
-        let plants = males_bear_no_fruit(id, &["fruit", "flower"]);
+    for (id, params) in [
+        ("carnegiea-gigantea", &[("fruit_share", 0.3)][..]),
+        ("cylindropuntia-fulgida", &[][..]),
+    ] {
+        let plants = males_bear_no_fruit_with(id, &["fruit", "flower"], params);
         // Plants differ in size by seed, so compare each sex's mean.
         #[allow(clippy::cast_precision_loss)]
         let mean = |female: bool| {

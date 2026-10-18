@@ -2166,6 +2166,14 @@
       "optional": true,
       "why": "a fruit's surface where it is armed: stout prickles (a jimsonweed's capsule) or fine hooked bristles (an enchanter's nightshade's burr)"
     },
+    "fruit_persistence": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["falling", "persistent"],
+      "optional": true,
+      "why": "whether a ripe fruit falls within the year it ripens in or stays on the plant for years after (a chain-fruit cholla's fruit, which hang in chains and flower again)"
+    },
     "cone_length_m": {
       "group": "fruit_and_cones",
       "organ": "cone",

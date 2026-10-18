@@ -63,6 +63,16 @@
       "rule": "flower_size * 0.7",
       "why": "A cactus's bud is its flower closed, its pericarpel and floral tube already near their full size and its tepals swelling to open: drawn seven tenths of the open flower's width."
     },
+    "generator.params.bud_share": {
+      "needs": ["flowering_months", "fruiting_months"],
+      "rule": "0",
+      "why": "A cactus whose months are stated flowers in them: every place in its ring of flowers is a bud before it opens, a flower in its months and fruit after them, so none is drawn as a bud all year."
+    },
+    "generator.params.fruit_share": {
+      "needs": ["flowering_months", "fruiting_months"],
+      "rule": "0",
+      "why": "Nor is any place drawn as fruit all year: this year's flowers become its fruit, and older fruit hang below them in older rings or chains where the species keeps them."
+    },
     "appearance.bodies.stem.dome": {
       "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8}},
       "why": "A cactus stem closes over as many of its tip's radii as its tip's shape says: over a length and a half where it tapers to its apex, a half sphere where it is rounded, and a short shoulder under a broad top."

@@ -2482,7 +2482,7 @@ fn seasonal_looks(
             outcomes.insert(path, (file, None));
         }
         if organ == "flower" {
-            stage_seasons(spec, origins, &at);
+            stage_seasons(spec, origins, &at, kept(traits));
         }
     }
     let why = (!set_any).then(|| why.unwrap_or_else(|| "it draws no flowering look".to_string()));
@@ -2500,13 +2500,35 @@ fn by_hand<'a>(
         .find(|(path, (label, depth))| within(path, at) && *depth > 0 && !label.contains(": rule"))
 }
 
+/// Whether the species' fruit stays on the plant for years after it
+/// ripens (`fruit_persistence` persistent, and nothing else stated).
+fn kept(traits: &BTreeMap<String, (Value, usize)>) -> bool {
+    traits
+        .get("fruit_persistence")
+        .is_some_and(|(value, _)| match value {
+            Value::String(state) => state == "persistent",
+            Value::Object(states) => {
+                !states.is_empty() && states.keys().all(|state| state == "persistent")
+            }
+            _ => false,
+        })
+}
+
 /// Give the program's `bud` and `fruit` organs, which stand for a
 /// herb's `flower` (at `at`) before it opens and once it has set fruit,
 /// its season, each showing only in its own stage: the bud, its flower's
 /// look closed ([`closed_flower`]), from the flower's bud day to its fruit
 /// day; the fruit from its fruit day to its fall. A look a file set by
-/// hand keeps its own year.
-fn stage_seasons(spec: &mut Map<String, Value>, origins: &mut BTreeMap<String, Origin>, at: &str) {
+/// hand keeps its own year. Where the fruit is `kept` for years (a
+/// chain-fruit cholla's, whose chains hang and flower again), the fruit
+/// organ, the fruit of earlier years, keeps no season: it is on the plant
+/// all year, as this year's flowers bud, open and fruit beside it.
+fn stage_seasons(
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    at: &str,
+    kept: bool,
+) {
     let day = |spec: &Map<String, Value>, name: &str| {
         find(spec, &format!("{at}.season.{name}")).and_then(Value::as_f64)
     };
@@ -2532,6 +2554,9 @@ fn stage_seasons(spec: &mut Map<String, Value>, origins: &mut BTreeMap<String, O
             ],
         ),
     ] {
+        if kept && organ == "fruit" {
+            continue;
+        }
         let look = format!("appearance.organs.{organ}");
         let fits = find(spec, &look)
             .and_then(Value::as_object)

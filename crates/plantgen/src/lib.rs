@@ -835,4 +835,9 @@ pub mod venation;
 /// a shrub's stated stem clump (`stem_clump`) sends up suckers (broadleaf
 /// revision 20) and a herb's lying stems (`stem_posture`) run along the
 /// ground before they rise (herb revision 15) (125 is the leafing year).
-pub const GENERATOR_REVISION: u32 = 126;
+/// 129: a fruit that stays on the plant for years
+/// (`fruit_persistence` persistent) keeps no season in a program's `fruit`
+/// organ, the fruit of earlier years: a chain-fruit cholla's chains hang
+/// all year while each year's flowers bud, open and fruit in their months
+/// (127 is broadleaf short shoots, #143; 128 is cycad cones, #211).
+pub const GENERATOR_REVISION: u32 = 129;
