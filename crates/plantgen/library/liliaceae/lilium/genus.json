@@ -29,6 +29,9 @@
               "filament": [0.51, 0.68, 0.3],
               "pistil": [0.45, 0.62, 0.27]
             }
+          },
+          "bulbil": {
+            "shape": {"template": "fruit", "kind": "berry", "aspect": 0.9}
           }
         }
       },
@@ -37,6 +40,11 @@
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "Drawing values no character gives, the ones the Columbia lily was drawn with by hand before (lilies, 2026-10-18): one stem from the bulb leaning a little, a lily flowering from its third year (a seedling bulb takes three to five), its stem coming up from the bulb with its leaves near full size, the lowest sixth of the stem bare, the leaves longest a little below the middle of the leafy part, and the raceme's top tenth in bud."
+        },
+        "appearance.organs.bulbil": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "How PlantGen draws a lily's bulbil, a choice of the model's (lilies, 2026-10-18): a small round body, a little longer than wide, as the floras' 'bulbils' (small bulbs of fleshy scales) look from outside; its colour from bulbil_colour."
         },
         "appearance": {
           "evidence": "SourceInferred",
@@ -65,7 +73,7 @@
     "traits.fruit_posture": {"evidence": "SourceInferred", "source": "fna-26-liliaceae", "note": "FNA vol. 26 (2002), Lilium (genus account): fruits erect, green maturing to brown."},
     "traits.leaf_colour": {"evidence": "SourceInferred", "source": "fna-26-liliaceae", "note": "FNA vol. 26 (2002), Lilium (genus account): blade green and somewhat lighter abaxially, rarely paler. The colour is our reading of the word, the mid-green the Columbia lily was drawn in by hand before."},
     "traits.bark_colour": {"evidence": "SourceInferred", "source": "fna-26-liliaceae", "note": "FNA vol. 26 (2002), Lilium (genus account): stems erect, green, sometimes purple, rarely glaucous. The colour is our reading of the word."},
-    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How the herb program draws a lily from its flora's characters, a choice of the model's (lilies, 2026-10-18): the flower from its tepals, each on its own stalk arching to the posture its flora gives (the flowering plants' flower_tilt), the stem's leaves in the whorls its flora counts, its raceme long enough to space its flowers on their stalks, and its leaves from the longest its flora measures down to the shortest, as the campanulids' herbs are drawn."}
+    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How the herb program draws a lily from its flora's characters, a choice of the model's (lilies, 2026-10-18): the flower from its tepals, each on its own stalk arching to the posture its flora gives (the flowering plants' flower_tilt), the stem's leaves in the whorls its flora counts, its raceme long enough to space its flowers on their stalks, its leaves from the longest its flora measures down to the shortest, as the campanulids' herbs are drawn, a few scattered leaves below and above a whorled stem's whorls, and bulbils where its flora says it bears them."}
   },
   "rules": {
     "generator.params.flower_size": {"rule": "2 * tepal_length_m / 0.92", "why": "A lily's tepals reach from the flower's small base (0.08 of its radius) to the rim, so the flower drawn is twice a tepal's length across, before its tepals curve back."},
@@ -79,6 +87,11 @@
     "generator.params.leaf_length": {"rule": "max(leaf_length_m)", "why": "A lily's longest leaf is as long as the longest its flora measures; the leaves below and above it are shorter, down to the shortest it measures."},
     "generator.params.leaf_top": {"rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)", "why": "A lily's topmost leaf is as short, for the longest, as the shortest leaf its flora measures (the floras' leaves reduced distally)."},
     "generator.params.leaf_base": {"rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)", "why": "A lily's lowest leaf is as short, for the longest, as the shortest leaf its flora measures."},
+    "generator.params.foot_leaves": {"map": {"leaf_arrangement": {"whorled": 3}}, "why": "A whorled lily bears a few scattered leaves below its lowest whorl, FNA's 'in whorls with some scattered at stem base and apex': three, as no flora counts them."},
+    "generator.params.top_leaves": {"map": {"leaf_arrangement": {"whorled": 3}}, "why": "And a few above its top whorl, below the raceme: three."},
+    "generator.params.axil_bulbils": {"rule": "bulbils", "why": "A stem bears as many bulbils in each upper leaf axil as its flora says (a tiger lily's 1 to 3)."},
+    "appearance.organs.bulbil.colour": {"colour": "bulbil_colour", "why": "Its bulbils are drawn in their stated colour."},
+    "appearance.organs.bulbil.accent": {"colour": "bulbil_colour", "why": "A bulbil has no unripe colour: it is drawn its own colour throughout."},
     "generator.params.bud_size": {"rule": "0.5 * tepal_length_m", "why": "A bud is drawn half a tepal long, its size while it fattens to open, as the Columbia lily was drawn by hand before."}
   }
 }

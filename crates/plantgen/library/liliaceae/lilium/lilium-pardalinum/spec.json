@@ -80,10 +80,19 @@
       "max": 0.33
     },
     "flower_colour": [
-      240,
-      110,
+      225,
+      75,
       30
     ],
+    "perianth_base_colour": [
+      245,
+      165,
+      35
+    ],
+    "perianth_base_length": {
+      "min": 0.4,
+      "max": 0.8
+    },
     "perianth_spots": "many",
     "perianth_spot_colour": [
       110,
@@ -235,7 +244,17 @@
     "traits.flower_colour": {
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
-      "note": "Flora of North America vol. 26 (2002), Lilium pardalinum (efloras.org, read 2026-10-18): yellow, yellow-orange or orange proximally, darker orange to red-orange to red on the distal 1/5-3/5; drawn orange between them The colour is our reading of the words."
+      "note": "Flora of North America vol. 26 (2002), Lilium pardalinum (efloras.org, read 2026-10-18): yellow, yellow-orange or orange proximally, darker orange to red-orange to red on the distal 1/5-3/5; drawn in the distal red-orange The colour is our reading of the words."
+    },
+    "traits.perianth_base_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium pardalinum (efloras.org, read 2026-10-18): yellow, yellow-orange, or orange proximally The colour is our reading of the words."
+    },
+    "traits.perianth_base_length": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium pardalinum (efloras.org, read 2026-10-18): darker orange to red-orange to red on the distal 1/5-3/5, so the proximal 2/5-4/5 in its base colour"
     },
     "traits.perianth_spots": {
       "evidence": "SourceInferred",

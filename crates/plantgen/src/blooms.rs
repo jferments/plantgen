@@ -430,6 +430,13 @@ pub(crate) fn build_coarse(
                         filament: flower.filament.unwrap_or(look.accent),
                         anther: flower.anther_colour.unwrap_or(look.accent),
                         ovary: flower.pistil.unwrap_or(look.accent),
+                        base: flower
+                            .base_colour
+                            .map(|base| with_shading(base, look.colour, painted)),
+                        base_length: flower.base_length,
+                        star: flower
+                            .star_colour
+                            .map(|star| with_shading(star, look.colour, painted)),
                     },
                     part,
                     mesh,

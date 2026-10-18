@@ -79,6 +79,21 @@
       "colour": "anther_colour",
       "why": "Anthers are drawn in the colour their flora gives them, apart from the look's accent."
     },
+    "appearance.organs.*.shape.base_colour": {
+      "template": "flower",
+      "colour": "perianth_base_colour",
+      "why": "Where a flora colours the petals' or tepals' base apart from their tips, their inner face is drawn in that colour from the foot, fading into the petal's colour where it stops."
+    },
+    "appearance.organs.*.shape.base_length": {
+      "template": "flower",
+      "rule": "clamp(perianth_base_length, 0.05, 1)",
+      "why": "The base colour reaches as far along each petal or tepal as its flora says ('red-orange on distal 1/5-1/4' leaves the base colour about four fifths)."
+    },
+    "appearance.organs.*.shape.star_colour": {
+      "template": "flower",
+      "colour": "nectary_colour",
+      "why": "Nectaries a flora says show at the foot of each petal or tepal are drawn there in their colour, together a star at the flower's heart."
+    },
     "appearance.organs.flower.accent": {
       "colour": "perianth_spot_colour",
       "why": "A spotted flower's spots are drawn in their stated colour, the look's accent."

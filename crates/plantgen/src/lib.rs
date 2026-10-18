@@ -627,6 +627,14 @@ pub mod venation;
 /// where they roll; spots on their inner faces (`spots`, from
 /// `perianth_spots`, in `perianth_spot_colour`); anthers in their own
 /// colour (`anther_colour`); stamens as far out as `stamen_exsertion`
-/// says; free tepals unjoined however bell-shaped (`perianth_fused`)
-/// (106 to 119 are held for other open work).
-pub const GENERATOR_REVISION: u32 = 120;
+/// says; free tepals unjoined however bell-shaped (`perianth_fused`).
+/// 121: a petal's or tepal's foot is drawn in its own colour where a
+/// flora gives one (`base_colour`, `base_length`, from
+/// `perianth_base_colour` and `perianth_base_length`), its nectaries as a
+/// star at the flower's heart (`star_colour`, from `nectary_colour`);
+/// free tepals rising as a bell are widened to overlap; a lily's whorled
+/// stem bears a few scattered leaves below and above its whorls, and
+/// bulbils in its upper leaf axils where its flora says (liliaceae
+/// program revision 2, `bulbils`, `bulbil_colour`)
+/// (106 to 120 are held for other open work).
+pub const GENERATOR_REVISION: u32 = 121;

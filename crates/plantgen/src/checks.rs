@@ -1505,7 +1505,9 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
         }
     }
     nodes.retain(|_, node| !node.around.is_empty());
-    // The plant's usual leaves at a node, and each whorl's count.
+    // The plant's usual leaves at a node, the count most of its leaves
+    // stand in (a lily's whorls, not the few leaves scattered between
+    // them), and each whorl's count.
     let mut per_node: BTreeMap<usize, usize> = BTreeMap::new();
     for (index, node) in nodes.values().enumerate() {
         let leaves = node.around.len();
@@ -1521,7 +1523,7 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
     }
     let Some(usual) = per_node
         .iter()
-        .max_by_key(|(leaves, nodes)| (**nodes, std::cmp::Reverse(**leaves)))
+        .max_by_key(|(leaves, nodes)| (**nodes * **leaves, std::cmp::Reverse(**leaves)))
         .map(|(leaves, _)| *leaves)
     else {
         return;
@@ -2354,6 +2356,9 @@ fn unit_sizes(
         // A flower drawn as a fruit with no season is its bud (a herb's
         // `bud`), never a fruit.
         Shape::Fruit(_) if term == "flower" && phase.is_none() => {}
+        // A bulbil drawn as a fruit is a small bulb in a leaf's axil, never
+        // a fruit.
+        Shape::Fruit(_) if term == "bulbil" => {}
         Shape::Fruit(fruit) if in_stage(phase, Stage::Ripe) => {
             if term == "cone" {
                 tally.add("cone_length_m", organ, part, length);
@@ -2565,9 +2570,6 @@ const FREE_CUPS: [(&str, f64); 4] = [
     ("urceolate", 75.0),
 ];
 
-/// Below this rise, free tepals draw a flat or cupped perianth.
-const FREE_BELL: f64 = 50.0;
-
 /// How steeply the look's flower form raises its petals, in degrees; 0
 /// where it draws no flower form.
 fn flower_cup(look: &Look) -> f64 {
@@ -2585,7 +2587,9 @@ fn flower_cup(look: &Look) -> f64 {
 /// their tube alone, as before: a columbine's raised blades over its
 /// spurs are not its corolla's shape.
 fn corolla_shape(flower: &crate::looks::Flower, cup: f64) -> String {
-    if flower.fused <= 0.0 && flower.perianth == crate::looks::Perianth::Tepals && cup >= FREE_BELL
+    if flower.fused <= 0.0
+        && flower.perianth == crate::looks::Perianth::Tepals
+        && cup >= crate::flowers::BELL
     {
         let off = |rise: f64| libm::fabs(rise - cup);
         let nearest = FREE_CUPS

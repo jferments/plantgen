@@ -2,9 +2,18 @@
 # the values its species leave unset (12 of herb's parameters), as the
 # herb program's defaults until then; each species sets the rest.
 #
+# Revision 2 (lilies, 2026-10-18): a lily's whorled stem bears a few
+# scattered leaves below its lowest whorl and above its top one
+# (foot_leaves, top_leaves: the Flora of North America's "in whorls with
+# some scattered at stem base and apex"), and a stem may bear bulbils in
+# its upper leaf axils (axil_bulbils each, in the top bulbil_nodes of its leaf
+# nodes: a tiger lily's). Both are 0 unless its taxa give them, so other
+# Liliaceae grow as before; the added rules draw nothing at random but
+# the scattered leaves' own jitter, numbered after herb's.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem liliaceae 1 extends herb;
+lsystem liliaceae 2 extends herb;
 
 param height_spread = 0.12;      # stems are stem_height * (1 ± height_spread)
 param young_height = 0.35;       # a stem without a raceme, as a share of stem_height
@@ -20,3 +29,66 @@ param fruit_angle = 25;
 param light_cell = 0.05;         # light voxel edge
 param flowering_share = 1;     # every adult stem ends in a raceme
 param scape = 0;               # a flowering stem keeps its leaves
+param foot_leaves = 0;           # scattered leaves below a whorled stem's lowest whorl
+param top_leaves = 0;            # scattered leaves above its top whorl
+param axil_bulbils = 0;          # bulbils in each upper leaf axil of a flowering stem
+param bulbil_size = 0.008;       # a bulbil's diameter
+param bulbil_nodes = 0.5;        # share of the leaf nodes, from the top, that bear bulbils
+param bulbil_area = 0;
+
+module Sc(k, gap, s);           # k scattered leaves, gap apart up the stem, s long
+
+organ bulbil fruit as bulbil area bulbil_area;
+
+# The top whorl stands three fifths up its internode; its scattered
+# leaves fill the rest, singly, up to the raceme, each as long as the
+# whorl's.
+decompose Nd(i, m, h, r) : m == 1 && top_leaves > 0 && i == nodes - 1 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle)
+    !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
+    F(0.6 * h * (1 - r) * (1 - bare) / nodes)
+    Lf(leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    Bx(i, h, r,
+       leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    Sc(top_leaves, 0.4 * h * (1 - r) * (1 - bare) / nodes / top_leaves,
+       leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))));
+# The lowest whorl's internode bears its scattered leaves in its lower
+# half, each as long as the lowest whorl's.
+decompose Nd(i, m, h, r) : m == 1 && foot_leaves > 0 && i == 0 && nodes > 1 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle)
+    !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + h * (1 - r) * (1 - bare) / nodes) / h)))
+    Sc(foot_leaves, 0.5 * h * (1 - r) * (1 - bare) / nodes / foot_leaves,
+       leaf_length * (1 - exp(-t / maturity))
+       * (0.5 / nodes < leaf_peak
+          ? lerp(leaf_base, 1, 0.5 / nodes / leaf_peak)
+          : lerp(1, leaf_top, (0.5 / nodes - leaf_peak) / (1 - leaf_peak))))
+    F(0.5 * h * (1 - r) * (1 - bare) / nodes)
+    Lf(leaf_length * (1 - exp(-t / maturity))
+       * (0.5 / nodes < leaf_peak
+          ? lerp(leaf_base, 1, 0.5 / nodes / leaf_peak)
+          : lerp(1, leaf_top, (0.5 / nodes - leaf_peak) / (1 - leaf_peak))))
+    Bx(0, h, r,
+       leaf_length * (1 - exp(-t / maturity))
+       * (0.5 / nodes < leaf_peak
+          ? lerp(leaf_base, 1, 0.5 / nodes / leaf_peak)
+          : lerp(1, leaf_top, (0.5 / nodes - leaf_peak) / (1 - leaf_peak))))
+    /(divergence);
+decompose Sc(k, gap, s) : k > 0 ->
+    F(gap) /(137.5) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ]
+    Sc(k - 1, gap, s);
+decompose Sc(k, gap, s) -> ;
+
+# Bulbils in the axils of a flowering stem's upper leaves, each tucked
+# between its leaf and the stem.
+decompose Bx(i, h, r, s) : axil_bulbils > 0 && r > 0 && flower_branches <= 0
+                          && i >= nodes * (1 - bulbil_nodes) ->
+    ring(round(axil_bulbils)) [ &(leaf_angle * 0.5) f(stem_radius) bulbil(bulbil_size) ];

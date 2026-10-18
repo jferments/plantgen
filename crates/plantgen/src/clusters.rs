@@ -1969,6 +1969,13 @@ fn draw_laid(
                         filament: flower.filament.unwrap_or(shown.accent),
                         anther: flower.anther_colour.unwrap_or(shown.accent),
                         ovary: flower.pistil.unwrap_or(shown.accent),
+                        base: flower
+                            .base_colour
+                            .map(|base| crate::blooms::with_shading(base, look.colour, colour)),
+                        base_length: flower.base_length,
+                        star: flower
+                            .star_colour
+                            .map(|star| crate::blooms::with_shading(star, look.colour, colour)),
                     },
                     part,
                     mesh,

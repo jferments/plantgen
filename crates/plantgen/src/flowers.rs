@@ -528,13 +528,31 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         }
         (Perianth::Tepals, _) => {
             let h = f64::from((n / 2).max(1));
+            let wide = bell_width(
+                form.cup,
+                tube.is_some(),
+                nf,
+                (lobe_radius, lobe_length, lobe_width),
+            );
             for k in 0..(n / 2).max(1) {
                 let angle = TAU * f64::from(k) / h;
-                pieces.push(piece(Term::Tepal, None, angle, form.cup * 0.85, (1.0, 1.0)));
+                pieces.push(piece(
+                    Term::Tepal,
+                    None,
+                    angle,
+                    form.cup * 0.85,
+                    (1.0, wide),
+                ));
             }
             for k in 0..(n / 2).max(1) {
                 let angle = TAU * f64::from(k) / h + PI / h;
-                pieces.push(piece(Term::Tepal, None, angle, form.cup, (1.0, 0.85)));
+                pieces.push(piece(
+                    Term::Tepal,
+                    None,
+                    angle,
+                    form.cup,
+                    (1.0, 0.85 * wide),
+                ));
             }
         }
         (Perianth::Spiral, _) => {
@@ -853,6 +871,12 @@ pub struct Colours {
     pub anther: [f32; 3],
     /// A single pistil's ovary.
     pub ovary: [f32; 3],
+    /// Each petal's foot on its inner face, fading into the petal's
+    /// colour at `base_length` of its length; none if absent.
+    pub base: Option<[f32; 3]>,
+    pub base_length: f64,
+    /// The nectaries at each petal's very foot; none if absent.
+    pub star: Option<[f32; 3]>,
 }
 
 impl Colours {
@@ -978,12 +1002,12 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
         } else {
             leaves::detail_of(0, piece.length, piece.width)
         };
-        leaf.draw(
-            &solid,
-            stations.min(most_stations),
-            across.min(most_across),
-            mesh,
-        );
+        let (stations, across) = (stations.min(most_stations), across.min(most_across));
+        let first = mesh.positions.len();
+        leaf.draw(&solid, stations, across, mesh);
+        if piece.term != Term::Sepal {
+            tint_foot(mesh, first, stations, across, &colours, leaf.colour);
+        }
         if fine && laid.spots > 0 && piece.term != Term::Sepal {
             spots(&leaf, &solid, laid.spots, colours.accent, mesh);
         }
@@ -1474,6 +1498,77 @@ fn anther(tip: Vec3, direction: Vec3, length: f64, colour: [f32; 3], part: Part,
     }
 }
 
+/// The rise, in degrees from the flower's plane, from which free tepals
+/// make a bell or a funnel rather than a flat or cupped perianth.
+pub const BELL: f64 = 50.0;
+
+/// How much wider than drawn flat each of `n` free tepals (`radius` from
+/// the axis, `length` long, `width` wide) is drawn where they rise as a
+/// bell (`cup` of [`BELL`] or more, no tube): wide enough that its two
+/// whorls, the inner 0.85 of the outer, overlap at their widest, as a
+/// bell's tepals do, but no wider than three fifths of their length; 1
+/// otherwise.
+fn bell_width(cup: f64, tubed: bool, n: f64, (radius, length, width): (f64, f64, f64)) -> f64 {
+    if tubed || cup < BELL || width <= 0.0 {
+        return 1.0;
+    }
+    let widest = radius + 0.55 * length * math::cos(math::radians(cup * 0.85));
+    let needed = 1.15 * TAU * widest / (n * 0.925);
+    (needed.min(0.6 * length) / width).max(1.0)
+}
+
+/// Share of a petal's length its foot colour takes to fade into the
+/// petal's, centred on where it reaches.
+const FOOT_FADE: f64 = 0.16;
+
+/// Share of a petal's length its nectaries' colour reaches from its foot.
+const STAR_LENGTH: f64 = 0.14;
+
+/// Paint the inner face of a petal just drawn from vertex `first` (by
+/// [`leaves::Leaf::draw`], `stations` rings of `4 * across` vertices, the
+/// inner face first in each) in its foot's colours: the flower's `base`
+/// colour fading into `petal` at `base_length` of its length, and its
+/// nectaries' `star` at its very foot.
+fn tint_foot(
+    mesh: &mut Mesh,
+    first: usize,
+    stations: usize,
+    across: usize,
+    colours: &Colours,
+    petal: [f32; 3],
+) {
+    if colours.base.is_none() && colours.star.is_none() {
+        return;
+    }
+    let ring = 4 * across;
+    let mix = |a: [f32; 3], b: [f32; 3], t: f64| -> [f32; 3] {
+        #[allow(clippy::cast_possible_truncation)]
+        let t = t as f32;
+        std::array::from_fn(|c| a[c] + (b[c] - a[c]) * t)
+    };
+    for station in 0..stations {
+        #[allow(clippy::cast_precision_loss)]
+        let u = station as f64 / stations as f64;
+        let mut colour = petal;
+        if let Some(base) = colours.base {
+            let reach = colours.base_length;
+            let t = math::smoothstep(reach - 0.5 * FOOT_FADE, reach + 0.5 * FOOT_FADE, u);
+            colour = mix(base, colour, t);
+        }
+        if let Some(star) = colours.star {
+            let t = math::smoothstep(0.5 * STAR_LENGTH, 1.5 * STAR_LENGTH, u);
+            colour = mix(star, colour, t);
+        }
+        for k in 0..=2 * across {
+            if let Some(vertex) = mesh.colors.get_mut(first + station * ring + k) {
+                vertex[0] = colour[0];
+                vertex[1] = colour[1];
+                vertex[2] = colour[2];
+            }
+        }
+    }
+}
+
 /// `count` dark spots on the inner face of a perianth part drawn as
 /// `leaf` with `solid`, scattered over its lower half and kept off its
 /// margins, each a small diamond standing just off the face. Where they
@@ -1549,6 +1644,9 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             filament: [1.0; 3],
             anther: [1.0; 3],
             ovary: [1.0; 3],
+            base: None,
+            base_length: 0.4,
+            star: None,
         },
         Part {
             born: 0.0,
@@ -2184,6 +2282,9 @@ mod tests {
                         filament: [0.9, 0.7, 0.1],
                         anther: [0.9, 0.7, 0.1],
                         ovary: [0.9, 0.7, 0.1],
+                        base: None,
+                        base_length: 0.4,
+                        star: None,
                     },
                     Part {
                         born: 1.0,
@@ -2230,5 +2331,67 @@ mod tests {
         // Down, between two petals, a sepal.
         let between = paint(&trillium, ([1.0; 3], [0.2, 0.3, 0.1]), 0.0, -0.6);
         assert!(between.cover > 0.0 && between.accent > 0.5, "{between:?}");
+    }
+
+    #[test]
+    fn a_tepal_foot_takes_its_own_colour_and_the_nectaries_a_star() {
+        let lily = Flower {
+            perianth: Perianth::Tepals,
+            petals: 6,
+            centre: 0.08,
+            ..Flower::default()
+        };
+        let draw_with = |base: Option<[f32; 3]>, star: Option<[f32; 3]>| {
+            let mut mesh = Mesh::default();
+            draw(
+                &layout(&lily, &FlowerForm::default(), 0.05, 0.0),
+                Frame::new(Vec3::ZERO, Vec3::Y, Vec3::X, Vec3::Z, false),
+                Colours {
+                    petal: [0.9, 0.2, 0.1],
+                    calyx: CALYX,
+                    accent: [0.3, 0.1, 0.1],
+                    filament: [0.5, 0.7, 0.3],
+                    anther: [0.3, 0.1, 0.1],
+                    ovary: [0.5, 0.7, 0.3],
+                    base,
+                    base_length: 0.4,
+                    star,
+                },
+                Part {
+                    born: 1.0,
+                    shed: None,
+                    coarse: 0,
+                },
+                &mut mesh,
+            );
+            mesh
+        };
+        let has = |mesh: &Mesh, colour: [f32; 3]| {
+            mesh.colors
+                .iter()
+                .any(|c| (0..3).all(|i| (c[i] - colour[i]).abs() < 1e-4))
+        };
+        let yellow = [0.9, 0.8, 0.1];
+        let green = [0.2, 0.5, 0.1];
+        let plain = draw_with(None, None);
+        assert!(!has(&plain, yellow) && !has(&plain, green));
+        let two_toned = draw_with(Some(yellow), None);
+        assert!(has(&two_toned, yellow), "the foot in its own colour");
+        assert!(has(&two_toned, [0.9, 0.2, 0.1]), "the tips in the petal's");
+        let starred = draw_with(Some(yellow), Some(green));
+        assert!(has(&starred, green), "the nectaries' star at the very foot");
+        assert_eq!(plain.positions.len(), two_toned.positions.len());
+    }
+
+    #[test]
+    fn free_tepals_in_a_bell_widen_to_overlap() {
+        assert!((bell_width(30.0, false, 6.0, (0.01, 0.05, 0.01)) - 1.0).abs() < 1e-12);
+        assert!((bell_width(60.0, true, 6.0, (0.01, 0.05, 0.01)) - 1.0).abs() < 1e-12);
+        let wide = bell_width(55.0, false, 6.0, (0.002, 0.05, 0.008));
+        assert!(wide > 1.0, "{wide}");
+        assert!(
+            wide * 0.008 <= 0.6 * 0.05 + 1e-12,
+            "no wider than 3/5 of its length"
+        );
     }
 }

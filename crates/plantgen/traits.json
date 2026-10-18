@@ -238,6 +238,12 @@
       "po": {"id": "PO:0009010", "name": "seed"},
       "why": "a seed borne alone on a shoot, outside any fruit or cone, often in a fleshy cup or coat: the yew's aril, the ginkgo's outer coat"
     },
+    "bulbil": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"reproduction": ["flowers"]},
+      "why": "a small bulb borne in a leaf's axil on the stem, which drops and grows into a new plant: a tiger lily's 'dark purple axillary bulbils'. The Plant Ontology has no term for it apart from a shoot (PO:0025029)"
+    },
     "scale_leaf": {
       "part_of": "stem",
       "category": "organ",
@@ -1358,6 +1364,44 @@
       "optional": true,
       "when": {"perianth_spots": ["few", "many", "copious"]},
       "why": "the colour of those spots: maroon, purple-black, magenta"
+    },
+    "perianth_base_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the petals' or tepals' inner face toward their base, where it differs from the rest: a western lily's 'yellow, greenish yellow, or green proximally' under red tips, a Michigan lily's 'yellow-orange proximally, red-orange distally'"
+    },
+    "perianth_base_length": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "share",
+      "range": [0.05, 0.95],
+      "optional": true,
+      "why": "how far that base colour reaches along a petal or tepal, as a share of its length from its base: 'red on distal 1/2-2/3' leaves about 0.4 to the base colour, 'red-orange on distal 1/5-1/4' about 0.78"
+    },
+    "bulbils": {
+      "group": "stem_and_bark",
+      "organ": "bulbil",
+      "type": "count",
+      "range": [0, 6],
+      "optional": true,
+      "why": "bulbils in each upper leaf axil of a flowering stem, where a flora says it bears them (a tiger lily's 'distal bearing 1(-3) dark purple axillary bulbils'); 0 none"
+    },
+    "bulbil_colour": {
+      "group": "stem_and_bark",
+      "organ": "bulbil",
+      "type": "colour",
+      "optional": true,
+      "why": "the bulbils' colour: dark purple, green"
+    },
+    "nectary_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the nectaries at the very foot of each petal or tepal where they show, together a star at the flower's heart: a Turk's-cap lily's 'nectaries exposed, forming visible green star'"
     },
     "zygomorphy": {
       "group": "flowers",
