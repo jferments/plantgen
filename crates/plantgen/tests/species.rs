@@ -265,8 +265,8 @@ fn fronds_and_pads_lie_on_the_ground() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
     assert_eq!(
-        checked, 24,
-        "five ferns, five palms, a tree fern, a cycad and twelve cacti"
+        checked, 38,
+        "five ferns, five palms, a tree fern, fifteen cycads and twelve cacti"
     );
 }
 

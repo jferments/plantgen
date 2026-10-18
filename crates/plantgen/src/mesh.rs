@@ -3542,6 +3542,7 @@ mod tests {
         looks[0].shape = Shape::Blade(crate::looks::Blade {
             taper: 1.0,
             aspect: 0.04,
+            foot: 0.0,
         });
         (graph, looks)
     }

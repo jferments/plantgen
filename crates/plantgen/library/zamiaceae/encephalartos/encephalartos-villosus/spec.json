@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "id": "encephalartos-villosus",
+  "taxon": {
+    "scientific_name": "Encephalartos villosus",
+    "common_name": "Encephalartos villosus",
+    "family": "Zamiaceae",
+    "genus": "Encephalartos",
+    "plant_name_id": 385265
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.12,
+      "trunk_rate": 0,
+      "stemless_years": 40,
+      "fronds_per_year": 2.5,
+      "frond_length": 2.2,
+      "petiole": 0.03,
+      "pieces": 24,
+      "leaflet_length": 0.1,
+      "adult_age": 10,
+      "cones": 2,
+      "peduncle": 0.1,
+      "male_cones": 3,
+      "male_peduncle": 0.11
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [10, 20, 40]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "organs": {
+      "leaflet": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.4,
+          "aspect": 0.067
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "cone_length_m": {
+      "min": 0.4,
+      "max": 0.5
+    },
+    "cone_width_m": {
+      "min": 0.16,
+      "max": 0.2
+    },
+    "cone_face_width_m": {
+      "min": 0.031,
+      "max": 0.055
+    },
+    "cone_shape": "barrel",
+    "cone_colour": [230, 175, 60],
+    "pollen_cone_length_m": {
+      "min": 0.5,
+      "max": 0.6
+    },
+    "pollen_cone_width_m": {
+      "min": 0.08,
+      "max": 0.1
+    },
+    "pollen_cone_face_width_m": {
+      "min": 0.025,
+      "max": 0.034
+    },
+    "pollen_cone_shape": "conical",
+    "pollen_cone_colour": [210, 200, 110],
+    "seed_length_m": {
+      "min": 0.028,
+      "max": 0.031
+    },
+    "seed_width_m": {
+      "min": 0.014,
+      "max": 0.017
+    },
+    "seed_colour_ripe": [220, 40, 25],
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: stem subterranean; leaves 3 to 10, 1.5 to 3 m long, with almost no petiole; leaflets 20 to 25 cm by 1 to 2 cm. Drawn as a trunk 0.12 m in radius, staying underground; fronds 2.2 m long, the petiole 0.03 of them, 48 pairs of leaflets, the longest leaflet 0.1 of the frond; 2.5 fronds a year, as the crown's count over the three years a frond lives (estimated); first cones at 10 years (estimated, as the research note's timing table records). Female cones one to four on peduncles 7.5 to 13.8 cm; male cones one to four on peduncles 6 to 16 cm."
+    },
+    "appearance": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: its leaflets drawn as wide, for their length, as the median leaflets it gives; the rest of its look from its order and family."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: stem subterranean; leaves 3 to 10, 1.5 to 3 m long, with almost no petiole; leaflets 20 to 25 cm by 1 to 2 cm. The whole plant's height at 40 years estimated from these, its stem (or none, where it stays underground) under a crown of young leaves standing about 0.85 of a leaf above it: about 1.6 m. Whitelock gives no ages, so the tolerance is wide."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them (the scientific name where no common name is in wide use), and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a cycad's crown of pinnate leaves on a pachycaul stem, drawn on the palm program."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact: four seeds, so male and female plants both show."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: female cones barrel-shaped, 40 to 50 cm long."
+    },
+    "traits.cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: female cone 16 to 20 cm across."
+    },
+    "traits.cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: the megasporophyll's face 4 to 6.3 cm high by 3.1 to 5.5 cm wide, its serrated lower edge overlapping the one below."
+    },
+    "traits.cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: female cones barrel-shaped."
+    },
+    "traits.cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: female cone bright yellow to apricot-yellow when ripe; the colour by eye."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: male cones long conical, 50 to 60 cm long, with a strong odour."
+    },
+    "traits.pollen_cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: male cone 8 to 10 cm across."
+    },
+    "traits.pollen_cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: microsporophylls 3 to 3.5 cm long, the face 1 to 1.4 by 2.5 to 3.4 cm."
+    },
+    "traits.pollen_cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: male cones long conical."
+    },
+    "traits.pollen_cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: male cone pale yellow to yellow-green; the colour by eye."
+    },
+    "traits.seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: sclerotesta flattened, long ovoid, with 9 to 12 ridges, 2.8 to 3.1 cm long."
+    },
+    "traits.seed_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: sclerotesta 1.4 to 1.7 cm across."
+    },
+    "traits.seed_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: sarcotesta scarlet when ripe; the colour by eye."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 240), Encephalartos villosus: male and female cones on separate plants, as in every cycad (p. 19)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Whitelock, L. M. (2002). The Cycads. Timber Press.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy: cones, sporophylls and seeds by sex from Whitelock (2002); stem and leaves from the same descriptions."
+  }
+}

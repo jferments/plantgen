@@ -1246,6 +1246,7 @@ fn shape_seed(shape: &Shape) -> u64 {
         "scatter",
         "roll",
         "inner_roll",
+        "stalk_width",
     ] {
         text = text.replace(&format!(", {field}: None"), "");
     }
@@ -2093,7 +2094,7 @@ fn compound(
             continue;
         }
         let half = match axis.order {
-            0 => fine,
+            0 => fine.max(s.stalk_width.unwrap_or(0.0) * 0.5 * (1.0 - 0.5 * y.clamp(0.0, 1.0))),
             1 => 0.75 * fine,
             _ => 0.5 * fine,
         };
@@ -2222,6 +2223,12 @@ pub(crate) fn blade_half_width(s: &Blade, y: f64) -> f64 {
     let mut width = s.aspect * 0.5 * (1.0 - 0.12 * y);
     if s.taper > 0.0 && y > 1.0 - s.taper {
         width *= math::pow(((1.0 - y) / s.taper).max(0.0), 0.85);
+    }
+    if s.foot > 0.0 && y < s.foot {
+        // Narrowing to a third of its width at its foot, a rounded
+        // shoulder above.
+        let u = y / s.foot;
+        width *= 1.0 / 3.0 + 2.0 / 3.0 * math::sqrt(u * (2.0 - u));
     }
     width
 }
@@ -2694,6 +2701,27 @@ fn fruit(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
         };
     }
     let across = s.aspect * 0.5 * 0.94;
+    if s.cone > 0.0 && !s.is_plain_cone() {
+        // A cone with a profile of its own: its outline from foot to tip,
+        // scales in crossing spiral rows as below.
+        let t = (y - 0.08) / 0.9;
+        let width = s.width_at(t);
+        if !(0.0..=1.0).contains(&t) || width <= 0.0 {
+            return Paint::EMPTY;
+        }
+        let u = x / (across * width);
+        if u.abs() >= 1.0 {
+            return Paint::EMPTY;
+        }
+        let rows = s.scale_rows();
+        let tip = crate::blooms::fruit_rows(s, 0).map_or_else(
+            || frac(t * rows + u * 2.0).min(frac(t * rows - u * 2.0)),
+            |grid| crate::blooms::row_face(t, u, grid),
+        );
+        let body = 0.7 + 0.4 * math::sqrt(1.0 - u * u);
+        let scales = 0.55 + 0.75 * tip;
+        return Paint::solid(body * (1.0 - s.cone) + scales * body * s.cone, 0.0);
+    }
     let (dx, dy) = (x / across, (y - 0.53) / 0.45);
     let mut d = dx * dx + dy * dy;
     if s.cone > 0.0 {
@@ -3346,6 +3374,21 @@ fn one_fruit(
         let highlight = math::exp(-((v + 0.35).powi(2) + (dt - 0.4).powi(2)) * 9.0);
         0.68 + 0.4 * math::sqrt((1.0 - d).max(0.0)) + 0.5 * highlight
     };
+    if s.cone >= 0.5 && !s.is_plain_cone() {
+        let width = s.width_at(t);
+        if width <= 0.0 || v.abs() >= width {
+            return Paint::EMPTY;
+        }
+        let d = (v / width).powi(2);
+        let rows = s.scale_rows();
+        let tip = crate::blooms::fruit_rows(s, 0).map_or_else(
+            || frac(t * rows + v).min(frac(t * rows - v)),
+            |grid| crate::blooms::row_face(t, v / width, grid),
+        );
+        let highlight = math::exp(-((v + 0.35).powi(2) + (t - 0.9).powi(2)) * 9.0);
+        let ball = 0.68 + 0.4 * math::sqrt((1.0 - d).max(0.0)) + 0.5 * highlight;
+        return Paint::solid(ball * (0.55 + 0.75 * tip) * 0.85, 0.0);
+    }
     if s.cone >= 0.5 {
         let d = ellipse(0.5, 0.5, 1.0);
         if d >= 1.0 {

@@ -1096,6 +1096,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("scatter", Number),
                 ("roll", Number),
                 ("inner_roll", Number),
+                ("stalk_width", Number),
             ],
         ),
         (
@@ -1115,7 +1116,10 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("petiole", Number),
             ],
         ),
-        ("blade", &[("taper", Number), ("aspect", Number)]),
+        (
+            "blade",
+            &[("taper", Number), ("aspect", Number), ("foot", Number)],
+        ),
         (
             "frond",
             &[
@@ -1224,6 +1228,15 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("profile", Word),
+                ("apiculum", Number),
+                ("face", Word),
+                ("spine", Number),
+                ("spine_base", Number),
+                ("open", Number),
+                ("face_width", Number),
+                ("face_height", Number),
+                ("rows", Number),
             ],
         ),
     ]

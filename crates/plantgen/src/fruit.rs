@@ -208,17 +208,7 @@ pub(crate) fn draw_unit(
             size: length,
             ..organ.clone()
         };
-        blooms::draw_fruit(
-            &cone,
-            direction,
-            one.across,
-            form,
-            fruit.aspect,
-            fruit.cone,
-            body,
-            part,
-            mesh,
-        );
+        blooms::draw_fruit(&cone, direction, one.across, form, fruit, body, part, mesh);
         return;
     }
     one.draw(fruit.kind, body, accent, part, mesh);

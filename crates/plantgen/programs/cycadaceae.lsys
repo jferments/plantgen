@@ -13,9 +13,13 @@
 # files (Whitelock 2002), not from here; leaflet groups and coil_short
 # are given as before (none).
 #
+# Revision 5: palm revision 11's cones by sex come from the Cycadales and
+# family rank files (Whitelock 2002): a male bears a pollen cone, a female
+# a crown of sporophylls with seeds along them, not a cone.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cycadaceae 4 extends palm;
+lsystem cycadaceae 5 extends palm;
 
 param vigour_spread = 0.1; # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;          # how strongly a leaning trunk turns back up, radians a metre
