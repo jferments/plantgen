@@ -3,9 +3,11 @@
   "rank": "genus",
   "name": "Populus",
   "traits": {
+    "short_shoots": true,
     "perianth": "absent"
   },
   "evidence": {
+    "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, p. 60: short shoots live a limited time and often fall cleanly at a scar, as in Populus."},
     "traits.perianth": {
       "evidence": "SourceInferred",
       "source": "floral-diagrams",

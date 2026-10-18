@@ -835,4 +835,11 @@ pub mod venation;
 /// a shrub's stated stem clump (`stem_clump`) sends up suckers (broadleaf
 /// revision 20) and a herb's lying stems (`stem_posture`) run along the
 /// ground before they rise (herb revision 15) (125 is the leafing year).
-pub const GENERATOR_REVISION: u32 = 126;
+/// 127: broadleaf foliage at true size (broadleaf program revision 19): a
+/// leaf is drawn at the length its species states, a lineage with short
+/// shoots carries every leaf not on its long shoots on them, twigs take
+/// the colour and radius their taxon states, shade-intolerant crowns shed
+/// shaded limbs sooner, a living tip shades the crown as a bud, not a
+/// leaf, and a shrub whose stems rise from its root crown divides at the
+/// ground (121 is #206).
+pub const GENERATOR_REVISION: u32 = 127;

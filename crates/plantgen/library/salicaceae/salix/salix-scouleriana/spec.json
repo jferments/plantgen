@@ -21,8 +21,6 @@
       "branch_angle": 40,
       "apical_young": 0.62,
       "apical": 0.52,
-      "leaf_size": 0.22,
-      "spur_leaf": 0.2,
       "spur_pairs": 2,
       "leaf_angle": 45,
       "lean": 10,
@@ -55,11 +53,8 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.38,
-      0.34,
-      0.28
-    ],
+    "bark": [0.1, 0.065, 0.045],
+    "twig": [0.3,  0.08,  0.02],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.03,
@@ -85,9 +80,7 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 35,
+          "template": "simple",
           "width": 0.4,
           "widest": 0.65,
           "tip": 0.35,
@@ -159,6 +152,7 @@
     "leaf_apex": {"acuminate": "usually", "obtuse": "often", "rounded": "sometimes"}
   },
   "evidence": {
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"stout branchlets marked by scattered yellow lenticels, coated when they first appear with pale early deciduous pubescence, becoming bright yellow or dark orange color, and in their second year dark red-brown\". Colour chosen by eye between dark orange and red-brown."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -252,7 +246,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FEIS (Anderson 2001): smooth to flaky grey bark; leaves obovate to oblanceolate, mostly untoothed, with paler undersides."
+      "note": "By eye, after FEIS (Anderson 2001): smooth to flaky grey bark; leaves obovate to oblanceolate, mostly untoothed, with paler undersides. The bark colour after Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"Bark thin, dark brown slightly tinged with red, and divided into broad flat ridges\"; a dark grey-brown between it and FEIS's grey, chosen by eye, where a pale grey had made its limbs the lightest thing in the crown."
     },
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},

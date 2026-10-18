@@ -179,9 +179,19 @@
 # upright as the first is, and shed when it has no living bud. With
 # suckers 0, as every lineage gives it, a plant grows as before.
 #
+# Revision 21 (woody forms: leaf area and shrub stems): a living tip adds
+# a bud's own area, two square centimetres, to the light model's leaf area
+# (bud), where it added 100 cm2, as large as a whole leaf. Every short
+# shoot is a living tip, so a crown of small leaves shaded itself as if it
+# carried twice its leaves and stopped leafing out at half the leaf area
+# that open-grown trees of its genus carry (USDA Urban Tree Database). And
+# a stem whose fork height lies within its first node divides at the
+# ground, so a shrub whose stems rise from its root crown no longer stands
+# on a short trunk as long as its first year's shoot.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 20;
+lsystem broadleaf 21;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -314,7 +324,7 @@ organ bloom flower area bloom_area;
 organ thorn leaf as spine area thorn_area;
 organ bloom_male flower area bloom_area;
 
-tool light@1 { cell = light_cell, extinction = extinction, bud = 0.01 };
+tool light@1 { cell = light_cell, extinction = extinction, bud = 0.0002 };
 tool space@4 {
     base = crown_base * (1 - exp(-crown_rate * (t + 3))),
     height = room_height * crown_height * (1 - exp(-crown_rate * (t + 3))),
@@ -367,8 +377,12 @@ rule B : light < shade_death || age >= bud_years -> ;
 # others (revision 20; the rules that place them go last).
 rule A(split) : suckers > 0 && split > 0 -> R(suckers) A(0);
 
-# Where the stem reaches its fork height it divides into equal stems.
-rule A(split) : split > 0 && py >= split && vigour >= 1 -> Fk(fork_stems);
+# Where the stem reaches its fork height it divides into equal stems; a
+# fork height within the first node divides it at the ground (revision 21),
+# where it divided atop the first year's shoot. A mat's near-level stems
+# (fork_angle past 60) keep that first shoot's rise, as nothing holds them
+# above the ground.
+rule A(split) : split > 0 && (py >= split || (py <= 0 && split < internode / unit_nodes && fork_angle <= 60)) && vigour >= 1 -> Fk(fork_stems);
 
 # A long shoot in the light, old enough to flower, grows its year's nodes,
 # ends them in a flower cluster and forks into twin shoots from the buds
