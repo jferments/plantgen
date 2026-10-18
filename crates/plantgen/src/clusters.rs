@@ -2098,6 +2098,14 @@ fn draw_laid(
                             .tube_colour
                             .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),
                         stigma: flower.stigma.or(flower.filament).unwrap_or(shown.accent),
+                        pericarpel: crate::blooms::with_shading(
+                            flower
+                                .pericarpel_colour
+                                .or(flower.calyx)
+                                .unwrap_or(crate::flowers::CALYX),
+                            look.colour,
+                            colour,
+                        ),
                     },
                     part,
                     mesh,

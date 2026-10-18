@@ -1194,6 +1194,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("ovary", Word),
                 ("stigma", Colour),
                 ("pericarpel", Word),
+                ("pericarpel_colour", Colour),
                 ("torus", Number),
                 ("column", Number),
                 ("turn", Number),

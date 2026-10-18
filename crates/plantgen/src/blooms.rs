@@ -491,6 +491,14 @@ pub(crate) fn build_coarse(
                             .tube_colour
                             .map(|tube| with_shading(tube, look.colour, painted)),
                         stigma: flower.stigma.or(flower.filament).unwrap_or(look.accent),
+                        pericarpel: with_shading(
+                            flower
+                                .pericarpel_colour
+                                .or(flower.calyx)
+                                .unwrap_or(crate::flowers::CALYX),
+                            look.colour,
+                            painted,
+                        ),
                     },
                     part,
                     mesh,

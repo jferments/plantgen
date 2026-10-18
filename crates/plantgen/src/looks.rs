@@ -1903,6 +1903,10 @@ pub struct Flower {
     /// The anthers' colour; the accent, as before, if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub anther_colour: Option<[f32; 3]>,
+    /// An inferior ovary's skin colour where it is not the calyx's: a
+    /// cactus's pericarpel, a joint of the stem, in the stem's colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pericarpel_colour: Option<[f32; 3]>,
     /// Dark spots, in the accent colour, on each petal's or tepal's inner
     /// face toward its foot: 0 none, about 20 a lily's copious spots.
     #[serde(skip_serializing_if = "is_zero_count")]
@@ -2081,6 +2085,7 @@ impl Default for Flower {
             filament: None,
             pistil: None,
             anther_colour: None,
+            pericarpel_colour: None,
             spots: 0,
             base_colour: None,
             base_length: BASE_LENGTH,
