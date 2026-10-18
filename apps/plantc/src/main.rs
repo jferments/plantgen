@@ -2385,6 +2385,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             level,
         )
     };
+    plant.vary_by_plant(&looks, seed);
     // A guest is drawn on its host (plant forms F7), unless `--alone`.
     // Neither has fleshy bodies, so the templates are the organs' alone.
     let mut on = false;
@@ -2533,7 +2534,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                 environment.name(),
                 describe(graph, &growth.organ_types)
             );
-            let plant = mesh::build(
+            let mut plant = mesh::build(
                 graph,
                 &looks,
                 &bodies,
@@ -2541,6 +2542,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                 &quality.lods[0].for_height(graph.height),
                 0,
             );
+            plant.vary_by_plant(&looks, seed);
             images.push(preview::render(
                 &plant,
                 &templates,
@@ -2927,7 +2929,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
             .take(count)
             .collect();
         let mut grown = Vec::with_capacity(seeds.len());
-        for seed in seeds {
+        for &seed in &seeds {
             let growth = grow_variant(&spec, None, environment, seed, vec![age], age)?;
             out!(
                 "  {:<26} seed {seed:<3} {}",
@@ -2940,11 +2942,11 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
             .iter()
             .map(|growth| growth.keyframes[0].height)
             .fold(0.0, f64::max);
-        for growth in &grown {
+        for (growth, &seed) in grown.iter().zip(&seeds) {
             let (looks, sizes) = looks_of(&spec, growth, day);
             let graph = &*drawn(&growth.keyframes[0], &sizes);
             let bodies = bodies_of(&spec, growth);
-            let plant = mesh::build(
+            let mut plant = mesh::build(
                 graph,
                 &looks,
                 &bodies,
@@ -2952,6 +2954,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
                 &quality.lods[0].for_height(graph.height),
                 0,
             );
+            plant.vary_by_plant(&looks, seed);
             images.push(preview::render(
                 &plant,
                 &templates_of(&spec, &looks, &bodies, growth),

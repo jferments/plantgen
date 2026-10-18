@@ -669,7 +669,19 @@ pub mod venation;
 /// `stinging_hairs`), with round heads and glass needles on green feet;
 /// the strand budget spent on the hairs nearest the eye first (104 is
 /// flowering branches, #188).
-/// 106: unripe fruit, and a fruit's stalk and cup, green as the foliage
+/// 106: evergreen herbs keep their basal leaves, and stems bearing leaves
+/// only, into a second year, and wintergreen grasses, rushes and sedges
+/// keep last year's blades green, from the leaf habit their taxa state
+/// (`leaf_years`; herb program revision 11, grass revision 8) (105 is
+/// hairs, #185).
+/// 107: a zone's edge drawn out along the lateral veins (`feather`),
+/// spots and mottle drawn out along the blade (`stretch`), and a simple
+/// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
+/// trout lily's long blotches and its veins meeting at the tip; and a
+/// variegation's share set by the plant rather than the leaf (`plants`,
+/// the card's packed seed moved toward the plant's), as Cyclamen's and
+/// white clover's are (106 is evergreen herbs, #200).
+/// 108: unripe fruit, and a fruit's stalk and cup, green as the foliage
 /// unless an accent is stated; a cluster ripens only its
 /// `fruits_per_inflorescence` (`Inflorescence::fruits`), its other units
 /// gone in fruit; an aggregate drawn as its `fruitlets` say: beaked
@@ -686,5 +698,5 @@ pub mod venation;
 /// flower and in `bud_colour`; up to 400 stamens and 100 carpels; reduced
 /// blunt petals keep their shoulders; ripening fruit pass through
 /// `fruit_colour_ripening`, and a follicle's seeds hang on threads
-/// `fruit_seed_thread_m` long (105 is hairs, #185).
-pub const GENERATOR_REVISION: u32 = 106;
+/// `fruit_seed_thread_m` long (107 is leaf zones and veins, #191).
+pub const GENERATOR_REVISION: u32 = 108;
