@@ -49,7 +49,15 @@
     "flowering_position": {
       "terminal": "usually",
       "lateral": "sometimes"
-    }
+    },
+    "perianth_parts": {
+      "min": 9,
+      "max": 15,
+      "low": 6,
+      "high": 18
+    },
+    "stamen_form": "laminar",
+    "floral_receptacle": "elongate"
   },
   "evidence": {
     "traits": {
@@ -71,6 +79,21 @@
       "evidence": "SourceInferred",
       "source": "stevens-apweb",
       "note": "APweb, Magnoliales page (read 2026-10-16): Magnoliaceae flowers terminal; axillary-looking flowers in the Michelia group (our addition, medium confidence)."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 3, Magnoliaceae (F. G. Meyer), family account via eFloras taxon 10530 (read 2026-10-18): \"tepals deciduous, 6-18, in 3 or more whorls of 3\"; the genus Magnolia \"tepals 9-15\". Read as 9 to 15, 6 to 18 at the extremes."
+    },
+    "traits.stamen_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 3, Magnoliaceae (F. G. Meyer), family account via eFloras taxon 10530 (read 2026-10-18): \"stamens numerous ... filaments very short to 1/2 length of anthers; ... connective with distal appendage\"; Flora of China, Magnolia grandiflora: \"filaments purple, flat; connective exserted and forming a mucro\". A flat stamen whose anther takes most of its length: read as laminar."
+    },
+    "traits.floral_receptacle": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 3, Magnoliaceae (F. G. Meyer), family account via eFloras taxon 10530 (read 2026-10-18): \"pistils numerous, superior, spirally arranged on elongate receptacle (torus)\"; genus Magnolia: \"stamens on elongate torus\"."
     }
   }
 }

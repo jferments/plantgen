@@ -675,6 +675,16 @@ pub mod venation;
 /// gone in fruit; an aggregate drawn as its `fruitlets` say: beaked
 /// follicles with their seeds hanging in `fruit_seed_colour`, samaras up a
 /// spindle, berries splayed from one stalk, or a hip; a fruit with a
-/// `fruit_cup_colour` stands in a cup on a swollen stalk (105 is hairs,
-/// #185).
+/// `fruit_cup_colour` stands in a cup on a swollen stalk; tepals take
+/// `perianth_parts`, standing in whorls of the merosity, each inner whorl
+/// more upright and narrower; `petal_whorls` doubles a
+/// corolla; stamens as long as `stamen_length_m`, flat straps where
+/// `stamen_form` is laminar, filaments in `filament_colour`, anthers in
+/// `anther_colour`; an elongate `floral_receptacle` raises the stamens and
+/// free carpels up a cone, the carpels in `pistil_colour`; `corolla_shape`
+/// sets how far the petals rise; a lone flower's bud as large as its
+/// flower and in `bud_colour`; up to 400 stamens and 100 carpels; reduced
+/// blunt petals keep their shoulders; ripening fruit pass through
+/// `fruit_colour_ripening`, and a follicle's seeds hang on threads
+/// `fruit_seed_thread_m` long (105 is hairs, #185).
 pub const GENERATOR_REVISION: u32 = 106;

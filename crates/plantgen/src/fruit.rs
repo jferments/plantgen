@@ -207,6 +207,7 @@ pub(crate) fn draw_unit(
             Some(fruit.seeds.unwrap_or(colour))
         },
         cup: fruit.cup.map(|cup| if unripe { accent } else { cup }),
+        threads: fruit.threads,
     };
     let one = One {
         base,
@@ -240,12 +241,17 @@ pub(crate) fn draw_unit(
     one.draw(fruit.kind, body, accent, extras, part, mesh);
 }
 
+/// The silky white of the threads a magnolia's seeds hang on.
+const THREAD: [f32; 3] = [0.88, 0.86, 0.8];
+
 /// What a fruit shows beyond its body: the colour of its seeds where it
 /// opens on them (`None` while it is shut), and of its cup, if it has one.
 #[derive(Debug, Clone, Copy)]
 struct Extras {
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
+    /// How far shown seeds hang on their threads, a share of the length.
+    threads: f64,
 }
 
 /// An ellipsoid at `centre`, half-lengths `(a, b, c)` along `axis`,
@@ -443,7 +449,7 @@ impl One {
                 capsule.rib_depth = 0.14;
                 capsule.draw(self.direction, self.across, body, part, mesh);
             }
-            FruitKind::Follicles => self.follicles(body, extras.seeds, part, mesh),
+            FruitKind::Follicles => self.follicles(body, extras, part, mesh),
             FruitKind::Samaras => self.samaras(body, part, mesh),
             FruitKind::Berries => self.berries(body, part, mesh),
         }
@@ -589,7 +595,7 @@ impl One {
     /// A core under beaked follicles on a Fibonacci spiral; where `seeds`
     /// is set, every third follicle split, a seed hanging from it on a
     /// thread.
-    fn follicles(&self, colour: [f32; 3], seeds: Option<[f32; 3]>, part: Part, mesh: &mut Mesh) {
+    fn follicles(&self, colour: [f32; 3], extras: Extras, part: Part, mesh: &mut Mesh) {
         let mut core = self.body();
         core.a *= 0.92;
         core.b *= 0.72;
@@ -633,12 +639,19 @@ impl One {
             );
             // Its seed: out of the split and hanging on its thread when
             // ripe, shut inside it until then.
-            let (seed, out) = match seeds {
-                Some(seed) if i % 3 == 1 => (seed, 1.0),
+            let (seed, out) = match extras.seeds {
+                Some(seed) if i % 3 != 0 => (seed, 1.0),
                 _ => (colour, 0.0),
             };
-            let hang = centre + radial * (size * (0.35 + 0.45 * out))
+            let mut hang = centre + radial * (size * (0.35 + 0.45 * out))
                 - self.direction * (size * 0.6 * out);
+            if out > 0.0 && extras.threads > 0.0 {
+                // Dangling straight down from the split on its thread.
+                let mouth = centre + radial * (size * 0.4);
+                let drop = extras.threads * self.length;
+                stalk_between(mouth, -Vec3::Y, drop, size * 0.03, THREAD, part, mesh);
+                hang = mouth - Vec3::Y * (drop + size * 0.3);
+            }
             Spheroid {
                 centre: hang,
                 a: size * 0.42,

@@ -2547,6 +2547,13 @@ fn flower_parts(
             );
             "sepals_and_petals"
         }
+        // Tepals stated by count stand in whorls of the merosity; else
+        // in two whorls.
+        Perianth::Tepals if flower.whorl > 0 => {
+            tally.count("flower_merosity", organ, part, flower.whorl);
+            tally.count("perianth_parts", organ, part, flower.petals);
+            "tepals"
+        }
         Perianth::Tepals => {
             tally.add(
                 "flower_merosity",
