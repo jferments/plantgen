@@ -62,7 +62,8 @@
           "tip": 0.55,
           "base": 0.1,
           "teeth": 0,
-          "petiole": 0
+          "petiole": 0,
+          "parallel": 4
         },
         "face_up": 0.3,
         "variegation": {
@@ -71,6 +72,7 @@
           "amount": 0.35,
           "spread": 0.3,
           "scale": 0.06,
+          "stretch": 2.5,
           "faces": "upper"
         }
       },
@@ -200,10 +202,15 @@
       "source": "plantgen-authors",
       "note": "By eye: grey-green, glossy leaves (Small 1913: lustrous on both faces, commonly mottled above); yellow tepals reflexed, browner at the centre where Small has them spotted within."
     },
+    "appearance.organs.basal.shape.parallel": {
+      "evidence": "Authored",
+      "source": "inaturalist-photos-2026-10",
+      "note": "By eye from the same iNaturalist leaf photos: fine veins running the blade's length beside the midrib and meeting at the tip, as in the genus; four each side drawn."
+    },
     "appearance.organs.basal.variegation": {
       "evidence": "Authored",
       "source": "inaturalist-photos-2026-10",
-      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants, without flowers, read 2026-10-17; for example observation 112742035): brownish-purple blotches, a pigment, over a fifth to a half of the grey-green upper face, soft edged and stretched along the parallel veins, some leaves plain. Drawn as the mottle variegation on the upper face, about a third of the blade on an average leaf; the stretch along the veins is not drawn (the mottle is round). Small (1913) has the blades commonly mottled above."
+      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants, without flowers, read 2026-10-17; for example observation 112742035): brownish-purple blotches, a pigment, over a fifth to a half of the grey-green upper face, soft edged and stretched along the parallel veins, some leaves plain. Drawn as the mottle variegation on the upper face, about a third of the blade on an average leaf, its blotches two and a half times as long as wide along the blade. Small (1913) has the blades commonly mottled above."
     }
   },
   "provenance": {

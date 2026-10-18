@@ -892,6 +892,13 @@
       "optional": true,
       "why": "the hairs on a blade's underside, in the words of `leaf_hairs`"
     },
+    "leaf_hairs_on_veins": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a blade's upper side's hairs gather along its main veins, as floras say ('hairy along the veins', 'at least along main veins')"
+    },
     "leaf_ciliate": {
       "group": "leaves",
       "organ": "leaf",
@@ -922,6 +929,48 @@
       "type": "colour",
       "optional": true,
       "why": "the colour of the hairs on a blade, its stalk and the young stems, where they are not white or colourless"
+    },
+    "hair_branching": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["simple", "stellate", "dendritic"],
+      "optional": true,
+      "why": "how the plant's hairs branch, on its blades and young stems alike, as floras say (Harris and Harris): unbranched (simple), a star of arms spreading from a short stalk (stellate), or a stalk with whorls of arms up its length (dendritic, the candelabra hairs of mullein)"
+    },
+    "glandular_hairs": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["sparse", "scattered", "dense"],
+      "optional": true,
+      "why": "glandular hairs among the plant's other hairs on its young stems, leaf stalks and blades, each a stalk ending in a round head of resin, as floras say ('glandular-pubescent', 'stipitate-glandular'): how thickly they stand"
+    },
+    "glandular_hair_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.00002, 0.005],
+      "optional": true,
+      "why": "a glandular hair, from its foot to the top of its head"
+    },
+    "stinging_hairs": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["sparse", "scattered", "dense"],
+      "optional": true,
+      "why": "stinging hairs on the plant's young stems, leaf stalks and blades (nettles, Urtica and Laportea; Cnidoscolus), each a stiff glassy needle on a swollen foot: how thickly they stand"
+    },
+    "stinging_hair_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.01],
+      "optional": true,
+      "why": "a stinging hair, from its foot to its tip"
     },
     "leaf_lobes": {
       "group": "leaves",
@@ -1182,6 +1231,14 @@
       "type": "count",
       "range": [1, 100000],
       "why": "the flowers, heads or spikelets in one inflorescence"
+    },
+    "flowering_branches": {
+      "group": "flowers",
+      "organ": "stem",
+      "type": "count",
+      "range": [0, 60],
+      "optional": true,
+      "why": "side branches a herb's flowering stem bears from its upper leaf axils, each ending in an inflorescence like the stem's own: a fennel's or poison hemlock's candelabra of umbels"
     },
     "inflorescence_branches": {
       "group": "flowers",

@@ -53,7 +53,7 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.25, 0.28, 0.15],
+    "bark": [0.13, 0.2, 0.07],
     "foliage": [0.06, 0.15, 0.035],
     "foliage_shade": [0.018, 0.045, 0.01],
     "variation": 0.2,
@@ -119,7 +119,13 @@
     "flower_symmetry": "actinomorphic",
     "flowering_months": [6, 7, 8, 9],
     "fruit_size_m": {"min": 0.001, "max": 0.0015},
-    "fruiting_months": [7, 8, 9, 10]
+    "fruiting_months": [7, 8, 9, 10],
+    "leaf_hairs": "strigose",
+    "leaf_hairs_beneath": "hispid",
+    "stem_hairs": "hispid",
+    "stinging_hairs": "scattered",
+    "stinging_hair_length_m": 0.0014,
+    "leaf_hair_length_m": 0.0003
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -132,6 +138,16 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923), as Urtica lyallii: stems 1 m to 2 m tall. The typical value is the one the plant was drawn at before, inside the source's range."
+    },
+    "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Urtica dioica (article text read 2026-10-17): the leaves and stems are very hairy with non-stinging hairs; read as the short, stiff, forward-pressed bristles (setulose hairs, Planta 260: 46, 2024) an iNaturalist macro photograph shows between the stinging hairs (observation 303801371), which Harris and Harris call strigose."},
+    "traits.leaf_hairs_beneath": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Urtica dioica subsp. dioica: leaf blades abaxially hispid, both surfaces with stinging hairs; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."},
+    "traits.stem_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Urtica dioica subsp. dioica: stems hispid, with stinging hairs; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17); Flora of China vol. 5: stems and petioles often densely covered with stinging and setulose hairs."},
+    "traits.stinging_hairs": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's Urtica dioica review (Carey 1995, read 2026-10-17): leaves, stems and flowers are sparsely to moderately covered with stinging hairs; read as scattered, between sparse and dense."},
+    "traits.stinging_hair_length_m": {"evidence": "SourceInferred", "source": "ensikat-2021", "note": "Ensikat et al. (2021) table 2: Urtica dioica's stinging hairs 1.38 mm long, among the smallest of the Urtica type (about 1-7 mm)."},
+    "traits.leaf_hair_length_m": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "About 0.3 mm: the setulose bristles between the stinging hairs (Planta 260: 46, 2024, names the type) are short, about 0.1-0.5 mm, curved and pressed forward, by eye on an iNaturalist macro photograph (observation 303801371) against the 1.4 mm stinging hairs beside them."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
@@ -151,7 +167,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark green leaves; green flower strings."
+      "note": "Colours chosen by eye: dark green leaves; green stems (they are herbaceous, green and often flushed purple: no bark); green flower strings."
     },
     "taxon": {
       "evidence": "Authored",

@@ -138,6 +138,7 @@
       "typical": 1.5
     },
     "inflorescence": "compound_umbel",
+    "flowering_branches": 10,
     "leaf_length_m": {
       "min": 0.2,
       "max": 0.5
@@ -217,6 +218,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: umbels 2.5 cm to 7.5 cm across on slender rays 2.5 cm to 4 cm long; the genus has many-rayed compound umbels (p. 230)."
+    },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Ten flowering side branches to the stem, each ending in an umbel, set by hand from iNaturalist photos of flowering plants in Washington and Oregon (observations 167792725, 167279313, 57447894, 179916193, 239649246, 235363691, 367283258, 48833894, 120371169): Abrams (1951 p. 231) says the stems are much branched."
     },
     "traits.leaf_length_m": {
       "evidence": "Authored",
@@ -316,7 +322,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Cow parsnip's values, changed by hand for poison hemlock: a tall stem over a few large basal leaves, its leaves on petioles sheathing at the base (Abrams 1951 p. 231), ending in a white compound umbel. Abrams's stems are much branched, each branch ending in an umbel; the herb program grows no side branches, so the stem is drawn unbranched with its one umbel. Not fitted to measurements."
+      "note": "Cow parsnip's values, changed by hand for poison hemlock: a tall stem over a few large basal leaves, its leaves on petioles sheathing at the base (Abrams 1951 p. 231), ending in a white compound umbel. Its upper leaf axils bear flowering side branches (flowering_branches), as Abrams's stems are much branched, each ending in an umbel. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

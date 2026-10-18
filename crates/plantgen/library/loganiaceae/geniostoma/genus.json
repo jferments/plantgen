@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Geniostoma",
+  "traits": {
+    "inflorescence": "cyme",
+    "fruit_type": "capsule"
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Geniostoma (read 2026-10-17): five-part flowers in somewhat crowded cymes in the leaf axils."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Geniostoma (read 2026-10-17): fruit a roughly globose capsule whose two valves part from the central axis."}
+  }
+}

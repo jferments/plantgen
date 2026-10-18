@@ -3099,6 +3099,7 @@ mod tests {
                 "bloom".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
                     sori: None,
@@ -3188,6 +3189,7 @@ mod tests {
                 "bloom".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
                     sori: None,
