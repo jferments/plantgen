@@ -83,9 +83,17 @@
 # last year's leaves beside this year's. With leaf_years 1, as every
 # program gives it unless a rule says otherwise, a herb grows as before.
 #
+# Revision 12: a side branch bears branch_nodes leaf nodes below its
+# raceme, each with a leaf branch_leaf times the leaf in whose axil the
+# branch stands. With branch_orders 2 or more, each of those nodes bears
+# a branch of its own, half as long, ending in its own raceme (fennel's
+# and hemlock's branches branch again). Its leaves draw
+# through the stem's own leaf rule, so the branch still adds no random
+# call site.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 11;
+lsystem herb 12;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -147,6 +155,9 @@ param bract_area = 0.235;     # leaf area of a bract 1 m long, m² (the default 
 param flower_branches = 0;    # top leaf nodes of a flowering stem that bear a flowering side branch
 param branch_angle = 40;      # angle of a side branch to the stem
 param branch_length = 0.3;    # the lowest side branch's length, as a share of the stem's height
+param branch_nodes = 2;       # leaf nodes along a side branch below its raceme
+param branch_leaf = 1;        # a side branch's leaves, as a share of the leaf in whose axil it stands
+param branch_orders = 1;      # times a flowering stem branches: 1, side branches; 2, they branch again
 param flower_area;
 param bud_area;
 param fruit_area;
@@ -165,8 +176,10 @@ module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
 module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
 module Lf(s);                 # the leaves at one node
 module Br(a);                 # a floral bract, a degrees from the axis
-module Bx(i, h, r);           # the side branch, if any, at leaf node i of a stem
-module Bh(len);               # a flowering side branch len long
+module Bx(i, h, r, s);        # the side branch, if any, at leaf node i of a stem, whose leaf is s long
+module Bh(len, o, s);         # a flowering side branch len long, o orders of branching to it, leaves s long
+module Bn(j, len, o, s);      # leaf node j of a side branch len long
+module Bk(len, o, s);         # the branch, if any, at a side branch's leaf node
 
 organ leaf leaf area leaf_area;
 organ basal leaf as piece area basal_area;
@@ -244,7 +257,12 @@ decompose Nd(i, m, h, r) : m == 1 ->
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
-    Bx(i, h, r) /(divergence);
+    Bx(i, h, r,
+       leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    /(divergence);
 decompose Nd(i, m, h, r) -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
@@ -256,13 +274,24 @@ decompose Lf(s) ->
 # The branches draw nothing at random: random call sites are numbered
 # through the program and the programs built on it, so a draw here would
 # move every later draw of every herb.
-decompose Bx(i, h, r) : r > 0 && flower_branches > 0 && i >= nodes - flower_branches ->
+decompose Bx(i, h, r, s) : r > 0 && flower_branches > 0 && i >= nodes - flower_branches ->
     [ &(branch_angle)
       Bh(h * branch_length
-         * lerp(1, 0.5, (i - max(0, nodes - flower_branches)) / max(1, min(nodes, flower_branches) - 1))) ];
-decompose Bx(i, h, r) -> ;
-decompose Bh(len) ->
-    !(stem_radius * 0.5) F(len * (1 - raceme)) Rc(0, flowers, len, raceme);
+         * lerp(1, 0.5, (i - max(0, nodes - flower_branches)) / max(1, min(nodes, flower_branches) - 1)),
+         branch_orders, s * branch_leaf) ];
+decompose Bx(i, h, r, s) -> ;
+# A side branch: its leaf nodes evenly up the part below the raceme, then
+# the raceme. Each node bears a leaf and, while orders remain, a branch
+# of its own, half as long.
+decompose Bh(len, o, s) ->
+    !(stem_radius * 0.5) Bn(0, len, o, s)
+    F(len * (1 - raceme) / (branch_nodes + 1)) Rc(0, flowers, len, raceme);
+decompose Bn(j, len, o, s) : j < branch_nodes ->
+    F(len * (1 - raceme) / (branch_nodes + 1))
+    Lf(s) Bk(len, o, s) /(divergence) Bn(j + 1, len, o, s);
+decompose Bn(j, len, o, s) -> ;
+decompose Bk(len, o, s) : o > 1 -> [ &(branch_angle) Bh(len * 0.5, o - 1, s) ];
+decompose Bk(len, o, s) -> ;
 
 # The raceme: fruit, then open flowers, then buds, the buds' part bending
 # over toward its tip. A male plant's fruit are open flowers.

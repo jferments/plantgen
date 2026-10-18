@@ -718,10 +718,51 @@ pub mod venation;
 /// 112: the soft tree fern puts out a year's fronds in one spring flush
 /// (`emerge_spread` 0.15, from 0.3), so its croziers stand together at
 /// the crown's top (111 is tree-fern croziers, #205).
-/// 113: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// 113: a spine set can keep to the upper areoles of a pad or joint
+/// (`SpineSet::distal`, from `lower_areole_spines`): its lower areoles
+/// carry fewer spines or none and draw smaller far cards, and a tuft
+/// stores where it sits along its segment (112 is the soft tree fern's
+/// spring flush, #207).
+/// 114: a cactus column's flowers may open down its flank as well as round
+/// its crown (`column` revision 3, `flank`: the pieces of its last flank
+/// years open a few on their sides; `cactaceae` revision 9), from the new
+/// `flower_zone`: a hedgehog's along the upper half of its stems, an organ
+/// pipe's near the tips and down their sides (113 is spines on the
+/// upper areoles).
+/// 115: a cactus's fruit wears its pericarpel (`FruitKind::Scaly`,
+/// `Areolate` and `Spiny`, from the new `fruit_surface`): broad scales on
+/// a barrel's or the saguaro's, felted areoles with glochids on a prickly
+/// pear's, areoles with short spines on a hedgehog's, the organ pipe's or
+/// a spiny cholla's, each crowned by its dried perianth; and a cactus
+/// stem's tip tapers, rounds or broadens into a shoulder as the new
+/// `stem_apex` says (`BodyLook::shoulder`), and a club-shaped column
+/// stays narrower at its foot (`stem_outline`) (114 is flank flowers).
+/// 116: a cactus flower's pericarpel wears its fruit's skin
+/// (`Flower::pericarpel`, from `fruit_surface`), its bud is the flower
+/// closed (no hand bud looks; `bud_size` seven tenths of the flower's), a
+/// prickly pear's or cholla's flower sits on a pericarpel longer than its
+/// radius, a fruit narrows toward its base or tip (`Fruit::flare`, from
+/// the new `fruit_shape`), and stigma lobes take their own colour
+/// (`Flower::stigma`, from the new `stigma_colour`) (115 is fruit skins
+/// and stem tips).
+/// 117: a lineage whose flowers end its shoots (`flowering_position`
+/// terminal or both: `tip_bloom`, broadleaf revision 17) ends each shoot
+/// tip that has stopped at the crown's edge, once adult and in the light,
+/// in its year's blooms, nearly along the shoot, so its flowers and fruit
+/// stand on the crown's surface, not only on the short shoots inside it;
+/// other plants draw as before. Sarcandra and Chloranthus serratus state
+/// their terminal inflorescences. The leaf-arrangement check counts only
+/// leaves born with their internode, so short shoots crowding a node are
+/// not read as a whorl (116 is cactus
+/// pericarpels and stigmas, #184).
+/// 118: a flowering herb's side branches bear leaves, as large as the leaf
+/// in whose axil they stand, and branch again where the taxon states two
+/// orders (`flowering_branch_orders`; herb program revision 12) (117 is
+/// terminal blooms, #170).
+/// 125: 39 species state their leaf apex as FNA, Flora of China or FEIS
 /// give it, so their blades narrow to the stated tip; six of them
 /// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
 /// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
-/// their stated leaf shape where a hand-drawn profile stood (112 is
-/// the soft tree fern's spring flush, #207).
-pub const GENERATOR_REVISION: u32 = 113;
+/// their stated leaf shape where a hand-drawn profile stood (118 is
+/// flowering herbs' branch leaves, #190).
+pub const GENERATOR_REVISION: u32 = 125;

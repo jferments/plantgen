@@ -89,6 +89,10 @@
       "rule": "flowering_branches",
       "why": "A herb's flowering stem bears a flowering side branch in the axil of each of its top leaves, as many as the taxon states."
     },
+    "generator.params.branch_orders": {
+      "rule": "flowering_branch_orders",
+      "why": "A herb's flowering side branches branch again from their own leaf axils as many times as the taxon states."
+    },
     "generator.params.stem_height": {
       "rule": "height_typical_m",
       "why": "A herb's stems grow back each year to about the plant's usual height."
@@ -143,6 +147,11 @@
       "evidence": "SourceInferred",
       "source": "okabe-2019-phyllotaxis",
       "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says."
+    },
+    "rules.generator.params.branch_orders": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "What the herb program's orders of branching mean: in a much-branched herb such as poison hemlock (Abrams 1951 p. 231) or fennel (p. 241) the side branches bear leaves and branch again from their axils, each branch ending in an inflorescence; order 1 keeps one inflorescence to a side branch."
     },
     "rules.generator.params.flower_branches": {
       "evidence": "Authored",
