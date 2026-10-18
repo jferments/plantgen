@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "id": "lewisia-rediviva",
+  "taxon": {
+    "scientific_name": "Lewisia rediviva",
+    "common_name": "bitterroot",
+    "family": "Montiaceae",
+    "genus": "Lewisia",
+    "plant_name_id": 2492674
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.03,
+      "stem_lean": 30,
+      "nodes": 1,
+      "scape": 1,
+      "basal_leaves": 14,
+      "basal_angle": 70,
+      "raceme": 0.5,
+      "flowers": 1
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.45,
+      0.4,
+      0.3
+    ],
+    "foliage": [
+      0.28,
+      0.4,
+      0.25
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.0
+        }
+      },
+      "basal": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.05,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.01,
+      "max": 0.03,
+      "high": 0.07
+    },
+    "life_span": "perennial",
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_shape": "linear",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "solitary",
+    "petal_length_m": {
+      "min": 0.02,
+      "max": 0.025
+    },
+    "flower_size_m": {
+      "min": 0.04,
+      "max": 0.05
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 12,
+    "flower_colour": [
+      240,
+      130,
+      185
+    ],
+    "stamens": {
+      "min": 35,
+      "max": 50
+    },
+    "fruit_type": "capsule",
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: stems 1 cm to 3 cm high, each with one flower; the flower, its petals 2 cm to 2.5 cm long, stands above them, so set to 7 cm at most for the plant in flower."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: a perennial from a stout branching root and a short caudex."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: leaves all basal."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: leaves 2 cm to 5 cm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: leaves broadly linear or narrowly club-shaped, blunt and very fleshy."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hairless and fleshy, as the photos show: Abrams (1944 p. 135) names no hairs."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: each stem bears one flower."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: petals 2 cm to 2.5 cm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: petals 2 cm to 2.5 cm long, spreading, so the flower about twice that across."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: 4 to 8 sepals and 12 to 18 petals."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: 12 to 18 petals; drawn as 12, the most a flower is drawn with."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: petals rose-coloured, sometimes white; sRGB by eye from the photos."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: 35 to 50 stamens."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: a capsule 5 mm to 6 mm high."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 135, Lewisia rediviva: flowering March to June."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: short reddish stalks; fleshy, club-shaped grey-green leaves."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for bitterroot from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.05 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

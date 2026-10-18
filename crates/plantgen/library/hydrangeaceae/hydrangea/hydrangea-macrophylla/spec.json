@@ -1,0 +1,322 @@
+{
+  "schema": 1,
+  "id": "hydrangea-macrophylla",
+  "taxon": {
+    "scientific_name": "Hydrangea macrophylla",
+    "common_name": "bigleaf hydrangea",
+    "family": "Hydrangeaceae",
+    "genus": "Hydrangea",
+    "plant_name_id": 2855720
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "branch_angle": 30
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.5,
+      0.42,
+      0.33
+    ],
+    "foliage": [
+      0.1,
+      0.24,
+      0.07
+    ],
+    "foliage_shade": [
+      0.032,
+      0.077,
+      0.022
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1,
+      "max": 2
+    },
+    "height_max_m": {
+      "min": 1.5,
+      "max": 3
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "stem_clump": "many",
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "leaf_width_m": {
+      "min": 0.06,
+      "max": 0.12
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.03
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "acuminate",
+    "leaf_margin": "serrate",
+    "inflorescence": "corymb",
+    "inflorescence_posture": "erect",
+    "inflorescence_outline": "globose",
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "units_per_inflorescence": {
+      "min": 80,
+      "max": 200
+    },
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "flower_merosity": 4,
+    "flower_colour": [
+      150,
+      160,
+      225
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "fruit_colour_ripe": [
+      120,
+      85,
+      55
+    ],
+    "flowering_months": [
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      9,
+      10,
+      11
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a shrub 1 m to 2 m tall."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: up to 3 m tall."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a long-lived shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a woody shrub."
+    },
+    "traits.stem_clump": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Many canes from the base, set by hand from iNaturalist photos (observations 177154494, 318011531, 388065803, 177154496, 89309857, 177447706, 328637493, 330196386): the sources read give no count or measure; the batch 3 review cites Dendrology (2019) p. 323 with the photos for its many stems from the base."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: deciduous."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves in opposite pairs, set by hand from iNaturalist photos (observations 177154494, 318011531, 388065803, 177154496, 89309857, 177447706, 328637493, 330196386): the sources read give no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 10 cm to 20 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 6 cm to 12 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 1 cm to 3 cm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves broadly ovate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves drawn out to a point, set by hand from iNaturalist photos (observations 177154494, 318011531, 388065803, 177154496, 89309857, 177447706, 328637493, 330196386): the sources read give no count or measure."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves coarsely serrate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 323, Hydrangea macrophylla: inflorescence a corymb, terminal, erect, dense."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 323, Hydrangea macrophylla: corymb terminal, erect."
+    },
+    "traits.inflorescence_outline": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 323, Hydrangea macrophylla: inflorescence 10-20 cm in diameter, globose in the Hortensia Group (mopheads), all its flowers sterile, as the photos show."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 323, Hydrangea macrophylla: inflorescence 10-20 cm in diameter; globose, all flowers sterile, in the Hortensia Group the photos show."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "40 to 100 showy sterile flowers on the side of a mophead that faces the camera, so about 80 to 200 round the whole ball, set by hand from iNaturalist photos (observations 177154494, 318011531, 388065803, 177154496, 89309857, 177447706, 328637493, 330196386): the sources read give no count or measure."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: sterile flowers 1.5-3(-4) cm in diameter."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: sterile sepals 3-5, petaloid; drawn as four, as most of the photos show."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: sterile sepals pink or light blue, blue on acid soil; drawn light lilac blue as in most of the photos; sRGB by eye."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: fruit a capsule, (2-)3-locular, ovoid, ribbed."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: capsule 5-8 mm long including styles."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: capsule brown; sRGB by eye."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: flowering June to August."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: fruiting September to November."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a rounded many-stemmed shrub of large, glossy, coarsely toothed leaves in pairs, crowned with blue to lilac mopheads."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for bigleaf hydrangea from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.6 m tall at 12 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

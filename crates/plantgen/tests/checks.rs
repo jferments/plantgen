@@ -102,6 +102,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its panicles stand on lateral branches, and the measure stops at the first lateral axis below an inflorescence, so it reads a branch, not the culm",
     ),
     (
+        "clinopodium-douglasii",
+        "leaf_habit",
+        "its trailing stems flower, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so yerba buena's evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
+    ),
+    (
         "cornus-sericea",
         "fruit_size_m",
         "its drupes are drawn about 1.6 cm across against the 6 to 8 mm Dendrology (2019) p. 196 gives (seen since the book's sizes joined the spec)",
@@ -130,11 +135,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "echinocereus-engelmannii",
         "central_spine_form",
         "its main central is drawn flattened and straight (its lower central, by eye from photographs), against the curved and twisted centrals Britton and Rose describe; a twisted spine is not drawn",
-    ),
-    (
-        "encelia-farinosa",
-        "shoot_leaves",
-        "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
         "ferocactus-acanthodes-subsp-acanthodes",
@@ -187,11 +187,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its flowers are drawn about 5.8 mm across against the 3 to 3.5 mm Dendrology (2019) p. 318 gives",
     ),
     (
-        "holodiscus-discolor",
-        "inflorescence_length_m",
-        "its panicles are drawn about 7.5 cm long against the 10 to 25 cm Dendrology (2019) p. 318 gives",
-    ),
-    (
         "houttuynia-cordata",
         "inflorescence_bracts",
         "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
@@ -210,6 +205,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "lonicera-involucrata",
         "fruit_size_m",
         "its berries are drawn about 1.6 cm long against the 7 to 8 mm Dendrology (2019) p. 390 gives",
+    ),
+    (
+        "lupinus-latifolius",
+        "leaf_length_m",
+        "a rosette leaf's card holds its blade and its petiole, and no source read gives broadleaf lupine's petiole, so its card is as long as the 8 to 15 cm leaves FEIS gives and the palmate blade on it draws 6.5 to 9.6 cm, until its petiole is stated",
     ),
     (
         "lysichiton-americanus",
@@ -272,11 +272,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "aspen first flowers with the family programs' blooms (revision 110): its stated 2 to 3 years is adult_age, but broadleaf bears blooms only on short shoots, which a young aspen whose buds all grow out as long shoots first makes in its fourth year",
     ),
     (
-        "stachys-byzantina",
-        "leaf_arrangement",
-        "the herb program turns a stem's basal leaves one at a time by the divergence, not in pairs, so lamb's ear's rosette reads as alternate though its stem leaves stand in opposite pairs",
-    ),
-    (
         "program:broadleaf",
         "crown_outline_fit",
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
@@ -285,11 +280,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:equisetaceae",
         "leaf_form",
         "horsetails' leaves are small scales joined in a sheath at each node (Simpson 2019), but their whorled branches are drawn on blade cards",
-    ),
-    (
-        "program:grass",
-        "phyllotaxis_pattern",
-        "a tiller's blades are measured round the vertical, so where a tiller leans out about as far as its blades stand off it (tufted hairgrass, coirón, Roemer's and red fescue: blades 10° to 15° off, tillers leaning up to 22°) the lean turns them all one way and the turns read as a spiral or three ranks (inferred, not traced)",
     ),
     (
         "program:grass",
@@ -347,6 +337,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are drawn on one card, the three-lobed form with broad rounded lobes as photographs show it, 16.9 cm wide, against FNA's 5 to 10 cm, which covers its narrower unlobed and mitten leaves too (inferred: FNA gives one width for all three forms)",
     ),
     (
+        "sedum-divergens",
+        "leaf_habit",
+        "its leafy stems end in cymes, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so spreading stonecrop's evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
+    ),
+    (
         "solanum-melongena",
         "leaf_shape",
         "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Bailey and Wikipedia give",
@@ -365,6 +360,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "vachellia-tortilis",
         "inflorescence_length_m",
         "umbrella thorn first flowers with the family programs' blooms (revision 110): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
+    ),
+    (
+        "whipplea-modesta",
+        "shoot_leaves",
+        "the angiosperms' default of 4 to 18 leaves a year's shoot is Critchfield's for woody shoots; a herb's trailing stem grows its 47 nodes in one year, so from #170's count of a year's growth it bears 94, until the measure or the default tells a lying herb's stem from a woody shoot",
+    ),
+    (
+        "whipplea-modesta",
+        "phyllotaxis_pattern",
+        "its trailing stems' leaf pairs are drawn turned out to the stem's two sides in one plane, as a trailing stem's leaves lie flat to the light, so the measure reads the pairs as superposed where Hydrangeaceae state decussate or spiral, until a lying stem can set its pairs crossing and twist each leaf flat",
     ),
 ];
 

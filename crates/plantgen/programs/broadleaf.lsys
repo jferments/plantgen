@@ -168,9 +168,20 @@
 # a bloom's stalk is shed with its bloom. Every plant whose leaves are
 # alternate or opposite grows as it did.
 #
+# Revision 20 (shrub habit): a many-stemmed shrub or a thicket sends up
+# new stems from its base or its spreading roots and rhizomes, beside the
+# first, not one stem that forks above the ground. With suckers above 0
+# the first stem does not fork; from its first year the plant's base sends
+# up sucker_rate new stems a year until it has sent up suckers, each from
+# a point spread by the golden ratio out to sucker_spread of the crown's radius as
+# the crown grows (the ground they rise from widens with the clump), and
+# leaning out up to sucker_lean degrees. Each is a stem of its own, held
+# upright as the first is, and shed when it has no living bud. With
+# suckers 0, as every lineage gives it, a plant grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 17;
+lsystem broadleaf 20;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -273,6 +284,11 @@ param tip_angle = 15;         # angle of a shoot tip's bloom to its shoot
 param crown_widest = 0.5;     # share of the region's depth at which it is widest
 param crown_fullness = 2;     # the region's profile: 2 an ellipse, more toward a flat-ended cylinder
 param bloom_stalk = 0;        # a solitary bloom's own stalk, metres; 0 for none
+# A many-stemmed shrub's or a thicket's stems (revision 20).
+param suckers = 0;            # stems the base sends up besides the first; 0: none, the first stem forks
+param sucker_rate = 2;        # new stems a year, until there are suckers
+param sucker_spread = 0.2;    # share of the crown's radius out to which they rise
+param sucker_lean = 15;       # the most a new stem leans out from upright
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -290,6 +306,8 @@ module Wl(k);                             # k leaves still to place round it
 module Bt(n);                             # n blooms still to place at a long shoot's tip
 module K(s) queries light, vigour;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
 module D queries light, space;            # a dormant bud
+module R(n);                              # the base of a many-stemmed plant: n stems still to send up
+module Rs(m);                             # m stems still to send up this year
 
 organ leaf leaf area leaf_area;
 organ bloom flower area bloom_area;
@@ -344,6 +362,10 @@ rule B : life > 0 && t >= life -> ;
 # Buds die in deep shade.
 rule A(split) : light < shade_death -> ;
 rule B : light < shade_death || age >= bud_years -> ;
+
+# A many-stemmed plant's first stem does not fork: its base sends up the
+# others (revision 20; the rules that place them go last).
+rule A(split) : suckers > 0 && split > 0 -> R(suckers) A(0);
 
 # Where the stem reaches its fork height it divides into equal stems.
 rule A(split) : split > 0 && py >= split && vigour >= 1 -> Fk(fork_stems);
@@ -646,3 +668,21 @@ decompose Bt(n) : n > 0 ->
       bloom(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
     Bt(n - 1);
 decompose Bt(n) -> ;
+
+# Revision 20 (shrub habit). These rules make no random draws, so the
+# draws of every program that extends this one keep their sites.
+
+# The base of a many-stemmed plant sends up sucker_rate new stems a year,
+# each from a point out to sucker_spread of the crown's radius as it
+# grows, leaning out a little, until it has sent up suckers: turned by
+# the golden angle stem by stem, their distances and leans spread by the
+# golden ratio's fractions.
+rule R(n) : n > 0 && (life <= 0 || t < life) ->
+    Rs(min(n, max(1, round(sucker_rate)))) R(n - min(n, max(1, round(sucker_rate))));
+rule R(n) -> ;
+decompose Rs(m) : m > 0 ->
+    [ /(137.5 * (m + 3 * t)) &(90)
+      f(sucker_spread * crown_radius * (1 - exp(-crown_rate * (t + 3))) * sqrt(0.05 + 0.95 * (0.618 * (m + 3 * t) - floor(0.618 * (m + 3 * t)))))
+      ^(90) &(sucker_lean * (0.382 * (m + 5 * t) - floor(0.382 * (m + 5 * t)))) S A(0) ]
+    Rs(m - 1);
+decompose Rs(m) -> ;

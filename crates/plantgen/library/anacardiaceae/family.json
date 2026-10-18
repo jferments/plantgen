@@ -40,7 +40,12 @@
     },
     "inflorescence": "panicle"
   },
+  "rules": {
+    "generator.params.leaf_size": {"rule": "leaf_length_m + first(petiole_length_m, 0)", "why": "A shrub's leaf card holds one leaf and its stalk end to end: the blade its flora measures and its petiole where it has one."},
+    "appearance.organs.leaf.shape.petiole": {"template": ["simple", "compound"], "rule": "first(petiole_length_m, 0) / (leaf_length_m + first(petiole_length_m, 0))", "why": "A leaf's card is its petiole and blade end to end, so the petiole's share is its length over theirs together."}
+  },
   "evidence": {
+    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How a Anacardiaceae shrub's leaf cards are sized from a flora's leaf lengths: the card is the blade with its petiole end to end, and the petiole's share of it its length over both, so the blades and petioles drawn are the ones measured (the shrub form's default card is half again the blade, with a fixed petiole share). Homed at the family, whose built-in species came with the core-species expansion, phase C batch 3 (2026-10-18), so no other species changes."},
     "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Anacardiaceae (read 2026-10-17): leaves most often odd-pinnate, some trifoliolate, simple or unifoliolate. DELTA (read 2026-10-17): simple or compound, ternate or odd-pinnate. Compound genera (Searsia, Rhus, Lannea, Schinus, Toxicodendron, Spondias, Pistacia) outnumber the simple ones (Mangifera, Semecarpus, Gluta, Anacardium); genus counts not on the pages read."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Anacardiaceae (read 2026-10-17): margins entire at family level; toothed Rhus/Searsia are not singled out there."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359: stamens 5 to 10, rarely 1 or many. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},

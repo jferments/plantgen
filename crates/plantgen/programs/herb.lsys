@@ -118,9 +118,20 @@
 # unless it says otherwise, the stalk is straight and a herb grows as
 # before.
 #
+# Revision 15 (shrub habit): a stem may lie along the ground, as a
+# trailing, prostrate or decumbent stem does: with lie above 0 every stem
+# leaves its foot nearly level, runs along the ground for the share lie
+# of its leafy nodes, turning only from side to side (three times its
+# wiggle, so it wanders over the ground), with its leaves
+# turned out to its sides in one plane, and over its other nodes turns up
+# by rise degrees in all, so its tip and raceme stand nearly upright,
+# each turn upward in the frame the stem lay in, whatever the nodes'
+# divergence has rolled it to since.
+# With lie 0, as every lineage gives it, a herb grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 13;
+lsystem herb 15;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -206,6 +217,8 @@ param flower_area;
 param bud_area;
 param fruit_area;
 param light_cell;             # light voxel edge
+param lie = 0;                # share of a stem's leafy nodes lying along the ground; 0: none
+param rise = 80;              # degrees a lying stem turns up over its other nodes
 
 module Y;                     # the crown: sends up a cohort each year
 module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
@@ -260,7 +273,7 @@ decompose Ss(k, m, n) : m > 1 ->
 decompose Ss(k, m, n) : m == 1 ->
     [ Sm /(k * 137.508 + uniform(-15, 15)) &(90)
       f(clump_radius * sqrt(n / stems) * sqrt((k + uniform(0.2, 0.8)) / n)) ^(90)
-      &(stem_lean * sqrt((k + 0.5) / n) + uniform(0, 3))
+      &((lie > 0 ? 88.5 : stem_lean * sqrt((k + 0.5) / n)) + uniform(0, 3) * (lie > 0 ? 0.5 : 1))
       Bs(basal_leaves)
       St(stem_height * (1 - exp(-t / maturity)) * uniform(1 - height_spread, 1 + height_spread)
          * (t < adult_age ? young_height
@@ -313,9 +326,13 @@ decompose Nd(i, m, h, r) : m > 1 ->
 # One node: an internode, then its leaves, sized by where the node sits
 # between the foot and the top of the leafy part.
 decompose Nd(i, m, h, r) : m == 1 ->
-    ^(gauss() * wiggle) +(gauss() * wiggle)
+    /(lie > 0 && i >= round(lie * nodes) ? -(round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
+    ^(lie > 0 && i >= round(lie * nodes) ? rise / max(1, nodes - round(lie * nodes)) : 0)
+    /(lie > 0 && i >= round(lie * nodes) ? (round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
+    ^(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 0 : 1)) +(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 3 : 1))
     !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
     F(h * (1 - r) * (1 - bare) / nodes)
+    /(lie > 0 && i < round(lie * nodes) ? 90 : 0)
     Lf(leaf_length * (1 - exp(-t / maturity))
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
@@ -325,7 +342,7 @@ decompose Nd(i, m, h, r) : m == 1 ->
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
-    /(divergence);
+    /(lie > 0 && i < round(lie * nodes) ? (leaves_per_node == 2 ? -90 : 90) : divergence);
 decompose Nd(i, m, h, r) -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->

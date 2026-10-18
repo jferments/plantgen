@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "id": "philadelphus-lewisii",
+  "taxon": {
+    "scientific_name": "Philadelphus lewisii",
+    "common_name": "Lewis's mock orange",
+    "family": "Hydrangeaceae",
+    "genus": "Philadelphus",
+    "plant_name_id": 2530273
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 8,
+      "branch_angle": 35
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.45,
+      0.36,
+      0.28
+    ],
+    "foliage": [
+      0.13,
+      0.25,
+      0.07
+    ],
+    "foliage_shade": [
+      0.042,
+      0.08,
+      0.022
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1,
+      "max": 2.5
+    },
+    "height_max_m": {
+      "min": 1,
+      "max": 3
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.012,
+      "max": 0.03
+    },
+    "petiole_length_m": {
+      "min": 0.002,
+      "max": 0.006
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "acute",
+    "leaf_margin": "entire",
+    "inflorescence": "raceme",
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 15
+    },
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.035
+    },
+    "petal_length_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "flower_merosity": 4,
+    "flower_colour": [
+      246,
+      244,
+      236
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 384, Philadelphus lewisii: deciduous shrub, 1-2.5 m. high."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Philadelphus lewisii: an erect to spreading shrub that grows 3 to 10 feet (1-3 m) tall."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 384, Philadelphus lewisii: a shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 384, Philadelphus lewisii: a shrub, the bark of the previous season with cross cracks, eventually exfoliating."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 384, Philadelphus lewisii: deciduous shrub."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves in opposite pairs, set by hand from iNaturalist photos (observations 145556822, 167614209, 128686264, 227021248, 165384019, 25848239, 166346362, 7747): the sources read give no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 384, Philadelphus lewisii: leaves ovate or ovate-lanceolate, 2-5 cm. long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 1.2 cm to 3 cm wide, about half as wide as long as in the photos."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 2 mm to 6 mm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 384, Philadelphus lewisii: leaves ovate or ovate-lanceolate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 384, Philadelphus lewisii: acute at apex."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 384, Philadelphus lewisii: entire or denticulate; read as entire, as most of the photos show."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 385, Philadelphus lewisii: flower clusters racemose."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Philadelphus lewisii: the showy flowers occur in clusters of three to fifteen."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: racemes 3 cm to 8 cm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 385, Philadelphus lewisii: petals elliptic to oval, 10-15 mm. long, so the open flower about 2.5 cm to 3.5 cm across."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 385, Philadelphus lewisii: petals elliptic to oval, 10-15 mm. long."
+    },
+    "traits.flower_merosity": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Four petals to a flower, set by hand from iNaturalist photos (observations 145556822, 167614209, 128686264, 227021248, 165384019, 25848239, 166346362, 7747): the sources read give no count or measure."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Petals white; sRGB by eye, set by hand from iNaturalist photos (observations 145556822, 167614209, 128686264, 227021248, 165384019, 25848239, 166346362, 7747): the sources read give no count or measure."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Philadelphus lewisii: the fruit is a four-chambered capsule."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Philadelphus lewisii: capsule about 0.24 to 0.39 inch (0.6-1 cm) long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 385, Philadelphus lewisii: flowering May to July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: capsules ripe in August and September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a many-stemmed rounded shrub of ascending branches, bright green opposite leaves, white four-petalled flowers in short clusters at the twig tips."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Lewis's mock orange from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.0 m tall at 12 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

@@ -822,4 +822,17 @@ pub mod venation;
 /// where its leaves had stood green all year; months falling before the
 /// leaves unfold are the next year's, as a southern beech's are (109 is fern
 /// croziers green, #186).
-pub const GENERATOR_REVISION: u32 = 125;
+/// 126: clusters draw their stated length and units: a cluster's unit
+/// share (`unit`) sizes the innermost axis's flowers or fruit through the
+/// branch sizes above it, a cyme's own unit ends its peduncle and its
+/// units are alike, and a corymb stated rounded or globose
+/// (`inflorescence_outline`, `dome`) lays its units on a sphere's cap, a
+/// mophead hydrangea's a ball; a trifoliolate leaf sets its laterals at
+/// the petiole's top and its terminal on a short stalk, and lobed or
+/// cleft leaflets (`leaflet_incision`) draw their lobes; a pedate fern
+/// frond forks into a level fan and every fern's pinnae are sized where
+/// they stand, its stipe scales on the stipe (fern program revision 14);
+/// a shrub's stated stem clump (`stem_clump`) sends up suckers (broadleaf
+/// revision 20) and a herb's lying stems (`stem_posture`) run along the
+/// ground before they rise (herb revision 15) (125 is the leafing year).
+pub const GENERATOR_REVISION: u32 = 126;

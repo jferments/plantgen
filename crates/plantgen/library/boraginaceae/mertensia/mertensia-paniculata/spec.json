@@ -1,0 +1,263 @@
+{
+  "schema": 1,
+  "id": "mertensia-paniculata",
+  "taxon": {
+    "scientific_name": "Mertensia paniculata",
+    "common_name": "tall bluebells",
+    "family": "Boraginaceae",
+    "genus": "Mertensia",
+    "plant_name_id": 2357681
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.08,
+      "stem_lean": 15,
+      "nodes": 7,
+      "basal_leaves": 3,
+      "basal_angle": 45,
+      "bare": 0.1,
+      "leaf_peak": 0.3,
+      "leaf_angle": 45,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.48,
+      0.3
+    ],
+    "foliage": [
+      0.22,
+      0.38,
+      0.2
+    ],
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "petiole": 0.6
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.42,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.7
+    },
+    "life_span": "perennial",
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.2
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.25
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "acuminate",
+    "leaf_hairs": "strigose",
+    "inflorescence": "scorpioid",
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
+    "units_per_inflorescence": {
+      "min": 6,
+      "max": 15
+    },
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "campanulate",
+    "flower_size_m": {
+      "min": 0.011,
+      "max": 0.016
+    },
+    "flower_colour": [
+      105,
+      140,
+      225
+    ],
+    "fruit_type": "schizocarp",
+    "flowering_months": [
+      6,
+      7
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: stems 1 to several, 1 dm to 7 dm high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: stems from a stout elongated root."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: basal leaves on petioles 10 cm to 25 cm long."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: basal leaves 5 cm to 20 cm long; stem leaves 5 cm to 18 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: basal petioles 10 cm to 25 cm long; the stem leaves' winged petioles gradually shorter upward, about 1 cm under the flowers in the photos, so set from 1 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: basal leaves elliptic-lanceolate to ovate-subcordate; stem leaves ovate to lanceolate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: stem leaves sharply acuminate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: upper surface short-strigillose or sometimes glabrate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: inflorescence a modified scorpioid cyme, elongated in age."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: each nodding cyme 3 cm to 8 cm long, from the photos."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "6 to 15 flowers and buds to a cyme, set by hand from iNaturalist photos of flowering plants (observations 222756668, 256301313, 246157453, 226430718, 59482987, 221035903, 232486918, 285850004): the flora gives no count or measure."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five equal corolla lobes: a regular flower, set by hand from iNaturalist photos of flowering plants (observations 222756668, 256301313, 246157453, 226430718, 59482987, 221035903, 232486918, 285850004): the flora gives no count or measure."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: tube 4.5 mm to 7 mm, the limb 6 mm to 9 mm, a little longer, well-expanded: bell-shaped."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: tube 4.5 mm to 7 mm and limb 6 mm to 9 mm, so the corolla 11 mm to 16 mm long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: corolla blue, rarely white, often pink when young; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Four nutlets, as in the family (Abrams 1951): the species account does not describe its fruit."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 545, Mertensia paniculata var. borealis: flowering June to July."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: green stems; ovate, pointed, slightly rough green leaves, the basal ones long-stalked; nodding clusters of blue bells, pink in bud."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for tall bluebells from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.42 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 2 (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

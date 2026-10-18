@@ -1,0 +1,270 @@
+{
+  "schema": 1,
+  "id": "stachys-chamissonis",
+  "taxon": {
+    "scientific_name": "Stachys chamissonis",
+    "common_name": "Cooley's hedge-nettle",
+    "family": "Lamiaceae",
+    "genus": "Stachys",
+    "plant_name_id": 194917
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.1,
+      "stem_lean": 8,
+      "nodes": 5,
+      "leaves_per_node": 2,
+      "basal_leaves": 0,
+      "bare": 0.08,
+      "leaf_peak": 0.2,
+      "leaf_angle": 55,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.42,
+      0.3
+    ],
+    "foliage": [
+      0.24,
+      0.4,
+      0.2
+    ],
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.95,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.0
+    },
+    "life_span": "perennial",
+    "perennation": "rhizome",
+    "rhizome_habit": "long_creeping",
+    "rosette": "none",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.07,
+      "max": 0.12
+    },
+    "petiole_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_shape": "ovate",
+    "leaf_margin": "crenate",
+    "leaf_hairs": "pubescent",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.08,
+      "max": 0.3
+    },
+    "units_per_inflorescence": {
+      "min": 24,
+      "max": 48
+    },
+    "corolla_shape": "tubular",
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.035
+    },
+    "flower_colour": [
+      200,
+      60,
+      150
+    ],
+    "fruit_type": "schizocarp",
+    "flowering_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata, which takes in S. cooleyae (now S. chamissonis var. cooleyae): stems stout, simple or few-branched, 6 dm to 10 dm high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: a perennial."
+    },
+    "traits.perennation": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "From creeping rhizomes, as the photos' spreading patches show: Abrams (1951 p. 632) does not describe the root."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Long-creeping, as the photos' spreading patches show: Abrams (1951 p. 632) does not describe the root."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: stout leafy stems."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Opposite, as in the family (Abrams 1951) and the photos: the species account does not say."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: leaves narrowly ovate, 7 cm to 12 cm long."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: petioles 2 cm to 5 cm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: leaves narrowly ovate, cordate at base, acute or short-acuminate at apex."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: crenate-serrate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: more or less appressed-pubescent above, short-villous or pubescent beneath."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: verticils 4- to 6-flowered, in interrupted spikes, the subtending leaves reduced to bracts."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: spikes 8 cm to 30 cm long."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "6 to 8 whorls of 4 to 6 flowers in a spike, set by hand from iNaturalist photos of flowering plants (observations 14207338, 141399230, 7524584, 17438216, 125847691, 186641876, 294464395, 168779399): the flora gives no count or measure."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: corolla tube 15 mm to 20 mm long, the upper lip 6 mm to 8 mm, the lower 10 mm to 15 mm: two-lipped."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: tube 15 mm to 20 mm long and lower lip 10 mm to 15 mm, so the corolla 25 mm to 35 mm long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: corolla reddish purple; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Four nutlets, as in the family (Abrams 1951): the species account does not describe its fruit."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 632, Stachys ciliata: flowering June to August."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: stout, square, hairy green stems; large, soft, heart-based green leaves with scalloped edges, in pairs; a long interrupted spike of magenta two-lipped flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Cooley's hedge-nettle from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.95 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 2 (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}
