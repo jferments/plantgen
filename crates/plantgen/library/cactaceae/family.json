@@ -64,6 +64,26 @@
       "colour": "stem_colour",
       "why": "A cactus's pericarpel is a joint of its stem round the sunk ovary, so it is drawn in the colour its flora gives the stem: a beavertail's blue-grey, a cholla's green (Anderson, The Cactus Family pp. 25 to 27)."
     },
+    "appearance.organs.*.shape.pericarpel_felt": {
+      "template": "flower",
+      "colour": "areole_wool_colour",
+      "why": "A cactus pericarpel's areoles are the stem's, felted in the wool its flora gives the stem's areoles (Anderson, The Cactus Family pp. 25 to 27)."
+    },
+    "appearance.organs.*.shape.felt": {
+      "template": "fruit",
+      "colour": "areole_wool_colour",
+      "why": "A cactus fruit is its pericarpel grown on, and its areoles are felted as the stem's are."
+    },
+    "appearance.organs.*.shape.pericarpel_bristles": {
+      "template": "flower",
+      "map": {"fruit_surface": {"spiny": {"colour": "spine_colour"}, "areolate": {"colour": "glochid_colour"}}},
+      "why": "A spiny pericarpel's spines are coloured as the stem's spines; a felted one's tufts are glochids, coloured as its flora gives the glochids (a beavertail's reddish brown)."
+    },
+    "appearance.organs.*.shape.bristles": {
+      "template": "fruit",
+      "map": {"fruit_surface": {"spiny": {"colour": "spine_colour"}, "areolate": {"colour": "glochid_colour"}}},
+      "why": "A spiny cactus fruit's spines are coloured as the stem's spines; a felted one's tufts are glochids, coloured as its flora gives the glochids."
+    },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
       "map": {"fruit_surface": {"naked": "crowned", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny"}},
@@ -146,6 +166,10 @@
     "appearance.bodies.stem.greying.colour": {
       "colour": "spine_colour_aged",
       "why": "Old spines turn to the colour the flora gives them once grey or dark."
+    },
+    "appearance.bodies.stem.spines.glochid.colour": {
+      "colour": "glochid_colour",
+      "why": "An areole's glochids are drawn in the colour its flora gives them: a beavertail's red-brown, a jumping cholla's yellow."
     },
     "appearance.bodies.stem.areoles.felt": {
       "colour": "areole_wool_colour",

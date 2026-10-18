@@ -738,6 +738,13 @@
       "when": {"spines": ["areoles"]},
       "why": "a grown spine's colour before it greys"
     },
+    "glochid_colour": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of an areole's glochids, its tuft of fine barbed bristles"
+    },
     "wood_density_basic_kg_m3": {
       "group": "stem_and_bark",
       "organ": "stem",

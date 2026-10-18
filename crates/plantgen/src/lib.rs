@@ -872,6 +872,10 @@ pub mod venation;
 /// (`pericarpel_colour`, from `stem_colour`), and a reduced flower mesh
 /// wears its skin (scales, felted areoles or spines) as the full one does;
 /// a spiny fruit whose spine clusters fall (`fruit_spine_fall` deciduous:
-/// Stenocereus, Echinocereus) ripens with its felted areoles alone (131
-/// to 135 are the train of #209, #218, #167 and #219).
+/// Stenocereus, Echinocereus) ripens with its felted areoles alone; a
+/// pericarpel's and a cactus fruit's areoles take the stem's wool colour
+/// and their glochids or spines the colours floras give them (new trait
+/// `glochid_colour`, also the stem's glochids); and a round fruit with no
+/// stated width is as wide as long (131 to 135 are the train of #209,
+/// #218, #167 and #219).
 pub const GENERATOR_REVISION: u32 = 136;

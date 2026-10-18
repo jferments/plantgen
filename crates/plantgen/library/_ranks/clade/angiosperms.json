@@ -156,8 +156,9 @@
     },
     "appearance.organs.fruit.shape.aspect": {
       "template": "fruit",
-      "rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)",
-      "why": "A fruit is as wide for its length as its flora measures it."
+      "map": {"fruit_shape": {"globose": {"rule": "clamp(first(fruit_width_m / fruit_size_m, 1), 0.05, 2)"}, "ellipsoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "ovoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "obovoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "obconic": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "club_shaped": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}}},
+      "else": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"},
+      "why": "A fruit is as wide for its length as its flora measures it, and a round one as wide as long where its flora gives no width."
     },
     "appearance.organs.*.shape.flare": {
       "template": "fruit",

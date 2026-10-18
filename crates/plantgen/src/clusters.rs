@@ -2106,6 +2106,10 @@ fn draw_laid(
                             look.colour,
                             colour,
                         ),
+                        dress: crate::fruit::Dress {
+                            felt: flower.pericarpel_felt,
+                            bristles: flower.pericarpel_bristles,
+                        },
                     },
                     part,
                     mesh,

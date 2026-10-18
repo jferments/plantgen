@@ -998,6 +998,8 @@ pub struct Colours {
     /// An inferior ovary's skin: the calyx's unless the flower states a
     /// pericarpel colour.
     pub pericarpel: [f32; 3],
+    /// A cactus pericarpel's areoles' felt and spines or glochids.
+    pub dress: crate::fruit::Dress,
 }
 
 impl Colours {
@@ -1081,6 +1083,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             laid.pericarpel,
             if fine { (21, 3) } else { (8, 0) },
             colours.pericarpel,
+            colours.dress,
             part,
             mesh,
         );
@@ -1415,6 +1418,7 @@ pub(crate) fn draw_reduced(
             laid.pericarpel,
             (8, 0),
             colours.pericarpel,
+            colours.dress,
             part,
             mesh,
         );
@@ -1867,6 +1871,7 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             tube: None,
             stigma: [1.0; 3],
             pericarpel: CALYX,
+            dress: crate::fruit::Dress::default(),
         },
         Part {
             born: 0.0,
@@ -2518,6 +2523,7 @@ mod tests {
                         tube: None,
                         stigma: [0.9, 0.7, 0.1],
                         pericarpel: CALYX,
+                        dress: crate::fruit::Dress::default(),
                     },
                     Part {
                         born: 1.0,
@@ -2569,6 +2575,7 @@ mod tests {
                     tube: None,
                     stigma: [0.1, 0.5, 0.1],
                     pericarpel: CALYX,
+                    dress: crate::fruit::Dress::default(),
                 },
                 Part {
                     born: 1.0,
@@ -2648,6 +2655,7 @@ mod tests {
                     tube: None,
                     stigma: [0.5, 0.7, 0.3],
                     pericarpel: CALYX,
+                    dress: crate::fruit::Dress::default(),
                 },
                 Part {
                     born: 1.0,
