@@ -868,4 +868,7 @@ pub mod venation;
 /// perianth stands on, a floral cup or an inferior ovary such as a
 /// cactus's pericarpel, so the tepals no longer float above the joint; a
 /// pericarpel the tepals open straight from is globose, not a stalk.
-pub const GENERATOR_REVISION: u32 = 130;
+/// 131: black cottonwood and wild fig draw single leaves at their flora's
+/// size on its petiole length, and young twigs in its colour, in place of
+/// hand-sized sprig cards; the fig's path_half is refitted to its height.
+pub const GENERATOR_REVISION: u32 = 131;
