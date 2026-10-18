@@ -688,5 +688,10 @@ pub mod venation;
 /// (`inflorescence_outline`, `dome`) lays its units on a sphere's cap, a
 /// mophead hydrangea's a ball; a trifoliolate leaf sets its laterals at
 /// the petiole's top and its terminal on a short stalk, and lobed or
-/// cleft leaflets (`leaflet_incision`) draw their lobes.
+/// cleft leaflets (`leaflet_incision`) draw their lobes; a pedate fern
+/// frond forks into a level fan and every fern's pinnae are sized where
+/// they stand, its stipe scales on the stipe (fern program revision 12);
+/// a shrub's stated stem clump (`stem_clump`) sends up suckers (broadleaf
+/// revision 17) and a herb's lying stems (`stem_posture`) run along the
+/// ground before they rise (herb revision 12).
 pub const GENERATOR_REVISION: u32 = 108;
