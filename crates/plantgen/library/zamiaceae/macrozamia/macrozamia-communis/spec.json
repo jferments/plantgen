@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "id": "macrozamia-communis",
+  "taxon": {
+    "scientific_name": "Macrozamia communis",
+    "common_name": "burrawang",
+    "family": "Zamiaceae",
+    "genus": "Macrozamia",
+    "plant_name_id": 379250
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.2,
+      "trunk_rate": 0.01,
+      "stemless_years": 20,
+      "fronds_per_year": 25,
+      "frond_length": 1.35,
+      "petiole": 0.19,
+      "pieces": 50,
+      "leaflet_length": 0.19,
+      "leaflet_angle": 60,
+      "adult_age": 10,
+      "cones": 3,
+      "peduncle": 0.19,
+      "male_cones": 5,
+      "male_peduncle": 0.125
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [10, 30, 60]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "organs": {
+      "leaflet": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.4,
+          "aspect": 0.032
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 2.5,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "cone_length_m": {
+      "min": 0.2,
+      "max": 0.45
+    },
+    "cone_width_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "cone_face_width_m": {
+      "min": 0.03,
+      "max": 0.085
+    },
+    "cone_shape": "cylindrical",
+    "cone_colour": [110, 140, 115],
+    "pollen_cone_length_m": {
+      "min": 0.2,
+      "max": 0.45
+    },
+    "pollen_cone_width_m": {
+      "min": 0.08,
+      "max": 0.12
+    },
+    "pollen_cone_face_width_m": {
+      "min": 0.02,
+      "max": 0.04
+    },
+    "pollen_cone_shape": "cylindrical",
+    "pollen_cone_colour": [115, 145, 120],
+    "seed_length_m": {
+      "min": 0.03,
+      "max": 0.035
+    },
+    "seed_width_m": {
+      "min": 0.022,
+      "max": 0.025
+    },
+    "seed_colour_ripe": [215, 45, 25],
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: stem usually subterranean, in shallow soils an aerial stem 1 to 2 m tall, 30 to 60 cm across; 50 to 100 leaves, 0.7 to 2 m long, the petiole 12 to 40 cm; leaflets in 70 to 130 pairs, 16 to 35 cm by 4 to 12 mm. Drawn as a trunk 0.2 m in radius, rising 0.01 m a year; fronds 1.35 m long, the petiole 0.19 of them, 100 pairs of leaflets, the longest leaflet 0.19 of the frond; 25 fronds a year, as the crown's count over the three years a frond lives (estimated); first cones at 10 years (estimated, as the research note's timing table records). Female cones one to six on peduncles 8 to 30 cm, male cones one to ten on peduncles 10 to 15 cm."
+    },
+    "appearance": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: its leaflets drawn as wide, for their length, as the median leaflets it gives; the rest of its look from its order and family."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: stem usually subterranean, in shallow soils an aerial stem 1 to 2 m tall, 30 to 60 cm across; 50 to 100 leaves, 0.7 to 2 m long, the petiole 12 to 40 cm; leaflets in 70 to 130 pairs, 16 to 35 cm by 4 to 12 mm. The whole plant's height at 60 years estimated from these, its stem (or none, where it stays underground) under a crown of young leaves standing about 0.85 of a leaf above it: about 2.5 m. Whitelock gives no ages, so the tolerance is wide."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them (the scientific name where no common name is in wide use), and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a cycad's crown of pinnate leaves on a pachycaul stem, drawn on the palm program."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact: four seeds, so male and female plants both show."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: female cones cylindrical, 20 to 45 cm long, erect, drooping when mature."
+    },
+    "traits.cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: female cone 10 to 20 cm across."
+    },
+    "traits.cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: the megasporophyll's face 1.5 to 4.3 by 3 to 8.5 cm, glaucous, with one flat erect spine."
+    },
+    "traits.cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: female cones cylindrical."
+    },
+    "traits.cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: female cone glaucous green; the colour by eye."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: male cones cylindrical, 20 to 45 cm long, erect, drooping after the pollen is shed."
+    },
+    "traits.pollen_cone_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: male cone 8 to 12 cm across."
+    },
+    "traits.pollen_cone_face_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: the microsporophyll's face 1.5 to 2.5 by 2 to 4 cm, with one upturned flat spine."
+    },
+    "traits.pollen_cone_shape": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: male cones cylindrical."
+    },
+    "traits.pollen_cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: male cone glaucous green; the colour by eye."
+    },
+    "traits.seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: sclerotesta ovoid to globular, 3 to 3.5 cm long."
+    },
+    "traits.seed_width_m": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: sclerotesta 2.2 to 2.5 cm across."
+    },
+    "traits.seed_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: sarcotesta vermilion red when ripe, rarely yellow; the colour by eye."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "whitelock-2002",
+      "note": "Whitelock (2002, p. 250), Macrozamia communis: male and female cones on separate plants, as in every cycad (p. 19)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Whitelock, L. M. (2002). The Cycads. Timber Press.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy: cones, sporophylls and seeds by sex from Whitelock (2002); stem and leaves from the same descriptions."
+  }
+}

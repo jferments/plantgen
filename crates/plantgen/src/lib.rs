@@ -841,5 +841,22 @@ pub mod venation;
 /// the colour and radius their taxon states, shade-intolerant crowns shed
 /// shaded limbs sooner, a living tip shades the crown as a bud, not a
 /// leaf, and a shrub whose stems rise from its root crown divides at the
-/// ground (121 is #206).
-pub const GENERATOR_REVISION: u32 = 127;
+/// ground (126 is #206).
+/// 128: cycad cones by sex (palm revision 12): a male plant bears its
+/// pollen cones (`cone_male`), a female its seed cones or, in Cycas, a
+/// crown of megasporophylls (`sporophyll`) with seeds along them, each
+/// with its own length, count, stalk, lean and life, and the stem grows on
+/// through them; a seed cone stays closed over its seeds until it breaks
+/// up as it ripens (`cone_open`), showing them (`seed`). A cone is drawn
+/// with an outline (`profile`: ovoid, conical, cylindrical, barrel,
+/// fusiform), an apiculate tip (`apiculum`), scales parted (`open`), faces
+/// by genus (`face`: Zamia's shields, Encephalartos's facets, Dioon's
+/// points, a Cycas or Macrozamia spine) and as many scales as faces of
+/// their stated width cover it, flush with its core (`face_width`), each
+/// face as high for its width as stated (`face_height`), on a spiral or,
+/// in Zamia, in vertical rows of flat-topped hexagons fitting together
+/// (`rows`); a compound card's stalk may be stout (`stalk_width`: a Cycas
+/// sporophyll's, its seeds hanging from it); a blade card may narrow to
+/// its foot (`foot`: a Zamia leaflet's jointed base) (127 is broadleaf
+/// foliage, #143).
+pub const GENERATOR_REVISION: u32 = 128;

@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Macrozamia",
+  "forms": {
+    "palm": {
+      "generator": {
+        "defaults": {
+          "cone_offset": 0.5,
+          "ripe_lean": 70,
+          "cone_seeds": 40
+        }
+      },
+      "appearance": {
+        "organs": {
+          "cone": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "spine",
+              "spine": 0.15,
+              "spine_base": 0.25
+            }
+          },
+          "cone_open": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "spine",
+              "spine": 0.15,
+              "spine_base": 0.25
+            }
+          },
+          "cone_male": {
+            "shape": {
+              "template": "fruit",
+              "cone": 1,
+              "face": "spine",
+              "spine": 0.08,
+              "spine_base": 0.1
+            }
+          }
+        }
+      },
+      "evidence": {
+        "generator.defaults.cone_offset": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Macrozamia bears several cones round its crown among the leaf bases, to a hundred in M. moorei (Whitelock 2002, p. 248, 250): half the trunk's radius out."
+        },
+        "generator.defaults.ripe_lean": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Macrozamia communis's female cones stand erect, then droop when mature (Whitelock 2002, p. 250): seventy degrees from upright."
+        },
+        "generator.defaults.cone_seeds": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Macrozamia's female cone, 20 to 45 cm in M. communis (Whitelock 2002, p. 250), shows forty seeds as it breaks up (estimated)."
+        },
+        "appearance": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "A Macrozamia's sporophyll face ends in one sharp, flat, erect spine, longest toward the cone's apex: in M. communis 1 to 2.5 cm at the female cone's foot to 4 to 8 cm at its apex, and 0.1 to 5 cm on the male's (Whitelock 2002, p. 18-19, 250); drawn as shares of a cone's length."
+        }
+      }
+    }
+  }
+}
