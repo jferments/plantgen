@@ -709,10 +709,19 @@ pub mod venation;
 /// program revision 13): a short green coil of its own on each side of the
 /// rachis while coiled, its card small until it unrolls (109 is green
 /// croziers and the eagle's claw, #186).
-/// 111: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// 111: a tree fern's or a marattioid's frond comes up as a fern's crozier
+/// does (palm program revision 11): where a taxon's vernation is
+/// circinate (the rule now at the ferns' class), its rachis winds a tight
+/// inward spiral of shortening pieces, its leaflets small and rolled
+/// beside it, unrolling from its foot; the soft tree fern's croziers and
+/// young stipes are a hairy red-brown (110 is rolled pinnae, #197).
+/// 112: the soft tree fern puts out a year's fronds in one spring flush
+/// (`emerge_spread` 0.15, from 0.3), so its croziers stand together at
+/// the crown's top (111 is tree-fern croziers, #205).
+/// 113: 39 species state their leaf apex as FNA, Flora of China or FEIS
 /// give it, so their blades narrow to the stated tip; six of them
 /// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
 /// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
-/// their stated leaf shape where a hand-drawn profile stood (110 is
-/// rolled crozier pinnae, #197).
-pub const GENERATOR_REVISION: u32 = 111;
+/// their stated leaf shape where a hand-drawn profile stood (112 is
+/// the soft tree fern's spring flush, #207).
+pub const GENERATOR_REVISION: u32 = 113;
