@@ -37,9 +37,8 @@
       "flower_size": 0.06,
       "bud_share": 0.25,
       "fruit_share": 0.3,
-      "bud_size": 0.025,
       "flower_area": 0.362,
-      "bud_area": 0.636,
+      "bud_area": 0.033,
       "fruit_area": 1.143
     }
   },
@@ -66,13 +65,6 @@
           "centre": 0.3
         },
         "accent": [0.75, 0.65, 0.4]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.25, 0.12, 0.1]
       },
       "fruit": {
         "shape": {
@@ -136,6 +128,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "flower_zone": "crown_and_flanks",
     "stem_colour": [70, 100, 55],
     "spine_colour": [140, 138, 132],
     "central_spine_colour": [85, 82, 78],
@@ -172,6 +165,7 @@
       "note": "Britton and Rose vol. 2 (1920), as Lemaireocereus thurberi: usually trunkless, with 5 to 20 or more erect stems 3 m to 7 m tall."
     },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Stenocereus thurberi (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.49, branches 0.49. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
+    "traits.flower_zone": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) p. 22, organ pipe cactus: showy sessile flowers, each from a single areole, near the apex and along the sides of the branches."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",

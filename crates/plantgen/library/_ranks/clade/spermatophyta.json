@@ -122,6 +122,12 @@
       },
       "why": "A shoot whose tip ends in flowers grows on from the buds below them, so an adult crown forks where it flowers: most often where flowers only end shoots."
     },
+    "generator.params.tip_bloom": {
+      "map": {
+        "flowering_position": {"terminal": 1, "both": 1, "lateral": 0}
+      },
+      "why": "Where flowers end the shoots, a shoot that has stopped growing at the crown's edge still ends each year in them, so they stand on the crown's surface, not inside it."
+    },
     "generator.params.apex_death": {
       "map": {
         "axis_growth": {"sympodial": 0.1, "monopodial": 0}
@@ -216,6 +222,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A choice of the model's: a shoot that ends in flowers is carried on by the buds below them, so the crown forks; the chance a year, 0.35, is the maple program's, fitted to bigleaf maple, and half that where flowers may also sit beside the leaves."
+    },
+    "rules.generator.params.tip_bloom": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 17): a lineage whose flowers end its shoots bears them at the tips that have stopped at the crown's edge, as well as where a growing shoot ends in flowers (terminal_bloom)."
     },
     "rules.generator.params.apex_death": {
       "evidence": "Authored",

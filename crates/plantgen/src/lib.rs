@@ -705,12 +705,66 @@ pub mod venation;
 /// scaly all along, its pinnae lie along its coil, and a ternate frond
 /// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (108
 /// is magnoliid fruit, #202).
-/// 110: a deciduous tree's, shrub's or woody vine's leaves keep a year
+/// 110: each pinna in a fern's crozier is rolled as its frond is (fern
+/// program revision 13): a short green coil of its own on each side of the
+/// rachis while coiled, its card small until it unrolls (109 is green
+/// croziers and the eagle's claw, #186).
+/// 111: a tree fern's or a marattioid's frond comes up as a fern's crozier
+/// does (palm program revision 11): where a taxon's vernation is
+/// circinate (the rule now at the ferns' class), its rachis winds a tight
+/// inward spiral of shortening pieces, its leaflets small and rolled
+/// beside it, unrolling from its foot; the soft tree fern's croziers and
+/// young stipes are a hairy red-brown (110 is rolled pinnae, #197).
+/// 112: the soft tree fern puts out a year's fronds in one spring flush
+/// (`emerge_spread` 0.15, from 0.3), so its croziers stand together at
+/// the crown's top (111 is tree-fern croziers, #205).
+/// 113: a spine set can keep to the upper areoles of a pad or joint
+/// (`SpineSet::distal`, from `lower_areole_spines`): its lower areoles
+/// carry fewer spines or none and draw smaller far cards, and a tuft
+/// stores where it sits along its segment (112 is the soft tree fern's
+/// spring flush, #207).
+/// 114: a cactus column's flowers may open down its flank as well as round
+/// its crown (`column` revision 3, `flank`: the pieces of its last flank
+/// years open a few on their sides; `cactaceae` revision 9), from the new
+/// `flower_zone`: a hedgehog's along the upper half of its stems, an organ
+/// pipe's near the tips and down their sides (113 is spines on the
+/// upper areoles).
+/// 115: a cactus's fruit wears its pericarpel (`FruitKind::Scaly`,
+/// `Areolate` and `Spiny`, from the new `fruit_surface`): broad scales on
+/// a barrel's or the saguaro's, felted areoles with glochids on a prickly
+/// pear's, areoles with short spines on a hedgehog's, the organ pipe's or
+/// a spiny cholla's, each crowned by its dried perianth; and a cactus
+/// stem's tip tapers, rounds or broadens into a shoulder as the new
+/// `stem_apex` says (`BodyLook::shoulder`), and a club-shaped column
+/// stays narrower at its foot (`stem_outline`) (114 is flank flowers).
+/// 116: a cactus flower's pericarpel wears its fruit's skin
+/// (`Flower::pericarpel`, from `fruit_surface`), its bud is the flower
+/// closed (no hand bud looks; `bud_size` seven tenths of the flower's), a
+/// prickly pear's or cholla's flower sits on a pericarpel longer than its
+/// radius, a fruit narrows toward its base or tip (`Fruit::flare`, from
+/// the new `fruit_shape`), and stigma lobes take their own colour
+/// (`Flower::stigma`, from the new `stigma_colour`) (115 is fruit skins
+/// and stem tips).
+/// 117: a lineage whose flowers end its shoots (`flowering_position`
+/// terminal or both: `tip_bloom`, broadleaf revision 17) ends each shoot
+/// tip that has stopped at the crown's edge, once adult and in the light,
+/// in its year's blooms, nearly along the shoot, so its flowers and fruit
+/// stand on the crown's surface, not only on the short shoots inside it;
+/// other plants draw as before. Sarcandra and Chloranthus serratus state
+/// their terminal inflorescences. The leaf-arrangement check counts only
+/// leaves born with their internode, so short shoots crowding a node are
+/// not read as a whorl (116 is cactus
+/// pericarpels and stigmas, #184).
+/// 118: a flowering herb's side branches bear leaves, as large as the leaf
+/// in whose axil they stand, and branch again where the taxon states two
+/// orders (`flowering_branch_orders`; herb program revision 12) (117 is
+/// terminal blooms, #170).
+/// 124: a deciduous tree's, shrub's or woody vine's leaves keep a year
 /// (`appearance.organs.leaf.leafing`, set from `leaf_habit`,
 /// `leaf_out_months`, `leaf_fall_months` and `leaf_colour_autumn`): the
 /// plant stands bare in winter, puts out small pale leaves in spring that
 /// grow to full size and green, turns its autumn colour and drops them,
 /// where its leaves had stood green all year; months falling before the
-/// leaves unfold are the next year's, as a southern beech's are (109 is fern
-/// croziers green, #186).
-pub const GENERATOR_REVISION: u32 = 110;
+/// leaves unfold are the next year's, as a southern beech's are (118 is
+/// herb side branches, #190).
+pub const GENERATOR_REVISION: u32 = 124;

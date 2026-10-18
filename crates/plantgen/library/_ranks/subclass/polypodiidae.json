@@ -15,10 +15,6 @@
     }
   },
   "rules": {
-    "generator.params.coil_turns": {
-      "map": {"vernation": {"circinate": 2.5, "conduplicate": 0, "involute": 0, "flat": 0}},
-      "why": "A circinate frond comes up as a crozier, its blade wound from the tip inward in a tight spiral that unrolls from its foot (Hoshizaki and Moran 2001, p. 17; Kaplan 2022, p. 358-359, 369), about two and a half turns by eye; a frond that is not circinate expands straight."
-    },
     "generator.params.basal_coils": {
       "map": {"ternate_blade": {"true": 1, "false": 0}},
       "why": "A ternate frond's lowest pinnae, nearly as large as the rest of its blade, coil on their own beside the blade's coil while it is young, so its crozier is three coils (bracken's eagle's claw); a frond that is not ternate comes up as one coil."
