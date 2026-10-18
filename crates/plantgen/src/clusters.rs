@@ -1414,11 +1414,14 @@ fn lay(
 }
 
 /// An axis's radius over its length: a tenth of the width of the units it
-/// bears, or half again its branches' at their length.
+/// bears, or half again its branches' at their length. Flowers count no
+/// wider than half again their pedicels ([`Unit::stalk_width`]): a few
+/// large flowers (a columbine's, a lily's) hang from a slender stalk, not
+/// one a tenth of a flower thick.
 fn axis_radius(cluster: &Cluster, unit: Unit) -> f64 {
     match &cluster.branch {
         Some(branch) => 1.5 * axis_radius(branch, unit) * cluster.size,
-        None => cluster.size * unit.width() * 0.1,
+        None => cluster.size * unit.width().min(1.5 * unit.stalk_width()) * 0.1,
     }
 }
 

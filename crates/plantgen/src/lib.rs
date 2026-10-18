@@ -674,4 +674,8 @@ pub mod venation;
 /// keep last year's blades green, from the leaf habit their taxa state
 /// (`leaf_years`; herb program revision 11, grass revision 8) (105 is
 /// hairs, #185).
-pub const GENERATOR_REVISION: u32 = 106;
+/// 107: a cluster of flowers draws its axis as for flowers no wider than
+/// half again their pedicels, not a tenth of a flower thick, so a few
+/// large flowers no longer hang from a stalk thicker than their stem (106
+/// is evergreen herbs, #200).
+pub const GENERATOR_REVISION: u32 = 107;

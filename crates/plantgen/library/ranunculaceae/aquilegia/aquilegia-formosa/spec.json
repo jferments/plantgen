@@ -29,19 +29,20 @@
       "basal_leaves": 5,
       "basal_length": 0.2,
       "basal_angle": 50,
-      "raceme": 0.4,
-      "flowers": 6,
-      "flower_size": 0.04,
-      "pedicel": 0.05,
-      "flower_angle": 130,
-      "fruit_below": 0.15,
-      "buds_above": 0.85,
-      "nod": 10,
+      "raceme": 0.03,
+      "stem_height": 0.4,
+      "flowers": 1,
+      "flower_size": 0.25,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
       "bud_size": 0.015,
       "leaf_area": 0.58,
       "basal_area": 0.313,
       "basal_piece_area": 0.235,
-      "flower_area": 0.329,
+      "flower_area": 0.1,
       "bud_area": 0.16,
       "fruit_area": 0.51
     }
@@ -68,6 +69,7 @@
         "shape": { "template": "compound", "leaflet_width": 0.8, "petiole": 0.4, "spread": 160, "lowest": 0.9, "petiolule": 0.1 }
       },
       "flower": {
+        "inflorescence": { "flowers": 5, "size": 0.16, "pedicel": 0.15, "droop": 70, "stalk": [0.3, 0.25, 0.2] },
         "shape": {
           "template": "flower",
           "petal_width": 0.9,
@@ -136,7 +138,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a graceful herb with blue-green, divided leaves and nodding red flowers with yellow centres and long spurs. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a graceful herb with blue-green, divided leaves and nodding red flowers with yellow centres and long spurs. Each stem ends in one nodding cyme drawn as a cluster (flowers 1, flower_size 0.25 within the 10 cm to 30 cm the species states; its look's inflorescence 5 flowers, each 16% of its length, on long pedicels, bent 70 degrees, its stalks the colour of the stem), now that Aquilegia states cymes; before, the stem bore 6 single flowers. stem_height 0.4 keeps the stem and its cyme near the 0.6 m reference size. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
