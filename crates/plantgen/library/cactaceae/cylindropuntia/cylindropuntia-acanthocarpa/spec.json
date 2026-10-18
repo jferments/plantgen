@@ -30,7 +30,6 @@
       "bloom_age": 5,
       "joint_flowers": 1,
       "flower_angle": 30,
-      "flower_size": 0.05,
       "bud_rate": 0.5
     }
   },
