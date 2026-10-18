@@ -78,12 +78,16 @@ pub enum Turtle {
     /// surface instead of into it, as the ground holds up a frond or a pad
     /// that reaches it (plants fitted to their place, PF1).
     Rest,
+    /// `young(y)`: how young the segments drawn after it in the branch
+    /// are, 0 grown to 1 just emerged, which a form's `young_axis` colours
+    /// (a fern's green crozier on a stipe that turns straw).
+    Young,
 }
 
 impl Turtle {
     /// Every built-in symbol in symbol-id order, with its text and argument
     /// count after defaults are filled in.
-    pub const ALL: [(Self, &'static str, u8); 20] = [
+    pub const ALL: [(Self, &'static str, u8); 21] = [
         (Self::Push, "[", 0),
         (Self::Pop, "]", 0),
         (Self::Cut, "%", 0),
@@ -104,6 +108,7 @@ impl Turtle {
         (Self::Incline, "incline", 2),
         (Self::Face, "face", 4),
         (Self::Rest, "rest", 1),
+        (Self::Young, "young", 1),
     ];
 
     fn is_turn(self) -> bool {
@@ -123,7 +128,7 @@ pub const MOVE: u16 = 4;
 pub const ROLL: u16 = 10;
 /// `adult`: a shoot's adultness (spec rework P6).
 pub const ADULT: u16 = 16;
-pub const FIRST_USER_SYMBOL: u16 = 20;
+pub const FIRST_USER_SYMBOL: u16 = 21;
 
 /// What an organ is, which decides how it is drawn and shaded.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -704,7 +709,7 @@ fn reserved(name: &str) -> Option<&'static str> {
     if KEYWORDS.contains(&name) {
         Some("a keyword")
     } else if BUILTIN_NAMES.contains(&name)
-        || matches!(name, "steer" | "adult" | "incline" | "face")
+        || matches!(name, "steer" | "adult" | "incline" | "face" | "young")
     {
         Some("a built-in name")
     } else if EnvField::from_name(name).is_some() {
