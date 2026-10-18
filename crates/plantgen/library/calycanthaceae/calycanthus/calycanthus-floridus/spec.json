@@ -158,7 +158,9 @@
     ],
     "height_typical_m": {"min": 1.5, "max": 3},
     "life_span": "perennial",
-    "rosette": "none"
+    "rosette": "none",
+    "fruitlets": "hip",
+    "fruit_width_m": {"min": 0.01, "max": 0.03}
   },
   "evidence": {
     "taxon": {
@@ -293,7 +295,9 @@
     },
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L382441), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L382441), as no source read gives it."},
-    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L382441), as no source read gives it."}
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L382441), as no source read gives it."},
+    "traits.fruitlets": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Calycanthaceae (via a mirror, read 2026-10-17): achenes 1-35, enclosed within the enlarged, fibrous, persistent hypanthium (a pseudocarp), cylindric, ellipsoid or pyriform, 2-6 cm."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Calycanthus key (via a search summary, 2026-10-17): hypanthium cylindric, ellipsoid, pyriform or globose at maturity, 2-6 x 1-3 cm."}
   },
   "provenance": {
     "sources": [

@@ -1709,9 +1709,14 @@ pub struct Flower {
     /// are, if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub filament: Option<[f32; 3]>,
-    /// A single pistil's ovary's colour; the accent if absent.
+    /// A single pistil's ovary's colour, and free carpels'; the accent if
+    /// absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pistil: Option<[f32; 3]>,
+    /// The colour its closed bud shows, its sepals' or the bracts' that
+    /// wrap it; the petals' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bud: Option<[f32; 3]>,
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
@@ -1758,6 +1763,11 @@ pub struct Flower {
     /// Their length over the flower's radius.
     #[serde(skip_serializing_if = "is_default_stamen_length")]
     pub stamen_length: f64,
+    /// A stamen's width over its length: 0.03 a slender filament, toward
+    /// 0.15 a flat strap (a magnolia's or a custard apple's laminar
+    /// stamens).
+    #[serde(skip_serializing_if = "is_default_stamen_width")]
+    pub stamen_width: f64,
     /// An anther's length over its stamen's.
     #[serde(skip_serializing_if = "is_default_anther")]
     pub anther: f64,
@@ -1777,6 +1787,12 @@ pub struct Flower {
     /// Where the ovary sits.
     #[serde(skip_serializing_if = "Ovary::is_superior")]
     pub ovary: Ovary,
+    /// An elongate receptacle's (a torus's) carpels' length over the
+    /// flower's radius: 0 for none, the free carpels round a low dome;
+    /// above it, a magnolia's: the carpels on a spiral up a tall cone with
+    /// the stamens crowded on a spiral round its foot.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub torus: f64,
     /// A labellate flower's column over the flower's radius.
     #[serde(skip_serializing_if = "is_default_column")]
     pub column: f64,
@@ -1787,6 +1803,16 @@ pub struct Flower {
     /// How far it has opened: 0 a closed bud, 1 open.
     #[serde(skip_serializing_if = "is_one")]
     pub open: f64,
+    /// Tepals in each whorl: 0 for two whorls of half the tepals each, as
+    /// a lily's stand; else as many whorls of this many as `petals` fill
+    /// (a magnolia's 9 to 15 in whorls of three), up to six.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub whorl: u32,
+    /// Degrees its petals or tepals rise from the plane square to its
+    /// axis, as the form's `cup` (`crate::blooms::FlowerForm`) where the
+    /// look states no form: 10 a flat star, 55 a deep bowl.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rise: Option<f64>,
 }
 
 impl Default for Flower {
@@ -1806,6 +1832,7 @@ impl Default for Flower {
             calyx: None,
             filament: None,
             pistil: None,
+            bud: None,
             corolla: Corolla::Regular,
             petal_whorls: 1,
             banner: BANNER,
@@ -1818,14 +1845,18 @@ impl Default for Flower {
             tube: 0.0,
             stamens: 0,
             stamen_length: STAMEN_LENGTH,
+            stamen_width: STAMEN_WIDTH,
             anther: crate::flowers::ANTHER,
             anther_tilt: 0.0,
             staminodes: 0,
             carpels: 0,
             ovary: Ovary::Superior,
+            torus: 0.0,
             column: COLUMN,
             turn: 0.0,
             open: 1.0,
+            whorl: 0,
+            rise: None,
         }
     }
 }
@@ -1857,6 +1888,7 @@ impl Flower {
             && self.stamens == 0
             && self.staminodes == 0
             && self.carpels == 0
+            && self.torus == 0.0
             && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
@@ -1876,6 +1908,8 @@ const ODD_RISE: f64 = 15.0;
 const LIP: f64 = 1.3;
 const THROAT: f64 = 0.3;
 const STAMEN_LENGTH: f64 = 0.35;
+/// A stamen's width over its length, where the flower does not say.
+pub const STAMEN_WIDTH: f64 = 0.03;
 const COLUMN: f64 = 0.45;
 
 #[allow(clippy::trivially_copy_pass_by_ref)]
@@ -1926,6 +1960,11 @@ fn is_default_throat(value: &f64) -> bool {
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
 fn is_default_stamen_length(value: &f64) -> bool {
     *value == STAMEN_LENGTH
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_stamen_width(value: &f64) -> bool {
+    *value == STAMEN_WIDTH
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
@@ -2257,6 +2296,24 @@ pub struct Fruit {
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
     pub unripe: f64,
+    /// The colour of the seeds a ripe fruit shows: a magnolia's red seeds
+    /// hanging from its split follicles. Only follicles show them.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub seeds: Option<[f32; 3]>,
+    /// The colour of the cup a ripe fruit stands in and the swollen stalk
+    /// under it (a sassafras's red club and cup); no cup unless set. An
+    /// unripe fruit's cup is in the accent colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cup: Option<[f32; 3]>,
+    /// The colour ripening fruit pass through on the way to their own (a
+    /// magnolia's green cone turning rose before it browns); straight to
+    /// their own unless set.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ripening: Option<[f32; 3]>,
+    /// How far a ripe follicle's seeds hang below its split on their
+    /// threads, as a share of the fruit's length; 0 for seeds held in it.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub threads: f64,
 }
 
 impl Default for Fruit {
@@ -2266,6 +2323,10 @@ impl Default for Fruit {
             cone: 0.0,
             kind: FruitKind::Berry,
             unripe: 0.0,
+            seeds: None,
+            cup: None,
+            ripening: None,
+            threads: 0.0,
         }
     }
 }
@@ -2279,6 +2340,10 @@ struct FruitCard {
     cone: f64,
     kind: FruitKind,
     unripe: f64,
+    seeds: Option<[f32; 3]>,
+    cup: Option<[f32; 3]>,
+    ripening: Option<[f32; 3]>,
+    threads: f64,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -2293,6 +2358,10 @@ impl Default for FruitCard {
             cone: fruit.cone,
             kind: fruit.kind,
             unripe: fruit.unripe,
+            seeds: None,
+            cup: None,
+            ripening: None,
+            threads: 0.0,
             count: None,
             cluster: None,
             size: None,
@@ -2322,6 +2391,10 @@ impl TryFrom<FruitCard> for Fruit {
             cone: card.cone,
             kind: card.kind,
             unripe: card.unripe,
+            seeds: card.seeds,
+            cup: card.cup,
+            ripening: card.ripening,
+            threads: card.threads,
         })
     }
 }
@@ -2354,6 +2427,15 @@ pub enum FruitKind {
     Pod,
     /// A capsule or follicle: ribbed lengthwise.
     Capsule,
+    /// An aggregate of follicles on a cone-like axis (magnolias), the
+    /// ripe ones split along their backs, each showing its seeds.
+    Follicles,
+    /// An aggregate of samaras overlapping up a spindle (the tulip tree):
+    /// a slender cone of upturned wings.
+    Samaras,
+    /// Several berries from one flower, splayed from one stalk (the
+    /// pawpaw's), each as wide as `aspect` makes it.
+    Berries,
 }
 
 impl FruitKind {
@@ -2450,6 +2532,12 @@ pub struct Inflorescence {
     /// peduncle (12 with neither set), and other kinds 12.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flowers: Option<u32>,
+    /// Units of the whole cluster that set fruit, 1 to 200: the rest fall
+    /// with their flowers and leave their pedicels bare (a laurel's umbel
+    /// of six flowers ripens one to three drupes). Every unit unless set;
+    /// only the cluster's own axis sets it.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fruits: Option<u32>,
     /// Branches the axis bears in place of units, making a compound
     /// cluster: 0 to 60; 8 in a panicle, 12 in a compound umbel, else 0.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2893,6 +2981,9 @@ impl Shape {
                 for channel in s.pistil.into_iter().flatten() {
                     check("pistil", f64::from(channel), 0.0, 1.0)?;
                 }
+                for channel in s.bud.into_iter().flatten() {
+                    check("bud", f64::from(channel), 0.0, 1.0)?;
+                }
                 for channel in s.calyx.into_iter().flatten() {
                     check("calyx", f64::from(channel), 0.0, 1.0)?;
                 }
@@ -2903,10 +2994,15 @@ impl Shape {
                 check("belly", s.belly, 0.0, 0.5)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
-                count("stamens", s.stamens, 0, 200)?;
+                count("stamens", s.stamens, 0, 400)?;
                 check("stamen_length", s.stamen_length, 0.05, 2.0)?;
+                check("stamen_width", s.stamen_width, 0.01, 0.3)?;
                 count("staminodes", s.staminodes, 0, 50)?;
-                count("carpels", s.carpels, 0, 30)?;
+                count("carpels", s.carpels, 0, 100)?;
+                check("torus", s.torus, 0.0, 1.5)?;
+                if let Some(rise) = s.rise {
+                    check("rise", rise, -20.0, 90.0)?;
+                }
                 check("column", s.column, 0.1, 1.5)?;
                 check("turn", s.turn, 0.0, 360.0)?;
                 check("open", s.open, 0.0, 1.0)?;
@@ -2925,11 +3021,23 @@ impl Shape {
                 if !(1..=2).contains(&s.petal_whorls) {
                     return Err(format!("petal_whorls is 1 or 2, found {}", s.petal_whorls));
                 }
-                if s.perianth == Perianth::Tepals && s.petals % 2 != 0 {
-                    return Err(format!(
-                        "tepals stand in two like whorls: petals must be even, found {}",
-                        s.petals
-                    ));
+                if s.perianth == Perianth::Tepals {
+                    let whorled = s.whorl > 0
+                        && s.petals % s.whorl == 0
+                        && (2..=6).contains(&(s.petals / s.whorl));
+                    if s.whorl > 0 && !whorled {
+                        return Err(format!(
+                            "tepals stand in 2 to 6 whorls of {}: petals must be a multiple \
+                             of it, found {}",
+                            s.whorl, s.petals
+                        ));
+                    }
+                    if s.whorl == 0 && s.petals % 2 != 0 {
+                        return Err(format!(
+                            "tepals stand in two like whorls: petals must be even, found {}",
+                            s.petals
+                        ));
+                    }
                 }
                 match s.corolla {
                     Corolla::Papilionaceous if s.petals != 5 || s.perianth != Perianth::Corolla => {
@@ -3046,6 +3154,15 @@ impl Shape {
             Self::Fruit(s) => {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
+                for channel in s.seeds.into_iter().chain(s.cup).chain(s.ripening).flatten() {
+                    check(
+                        "seeds, cup or ripening colour",
+                        f64::from(channel),
+                        0.0,
+                        1.0,
+                    )?;
+                }
+                check("threads", s.threads, 0.0, 1.0)?;
                 check("unripe", s.unripe, 0.0, 1.0)
             }
         }
@@ -3518,7 +3635,15 @@ pub fn resolve<'a>(
                     organ: name.to_string(),
                     colour,
                     shade,
-                    accent: look.accent.unwrap_or(colour),
+                    // Unripe fruit, and a fruit's stalk and cup, are
+                    // green as the foliage until an accent is stated.
+                    accent: look
+                        .accent
+                        .unwrap_or(if matches!(look.shape, Shape::Fruit(_)) {
+                            foliage
+                        } else {
+                            colour
+                        }),
                     underside: look.underside,
                     variegation: look.variegation,
                     sori: look.sori,
@@ -3734,7 +3859,12 @@ fn in_stage_of(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Loo
             }
             if season.bud_look.is_none() {
                 // A lone flower's bud is the flower itself, closed (spec
-                // rework P5).
+                // rework P5), at the flower's size: closing already draws
+                // its petals half as long.
+                let size = season
+                    .flower_look
+                    .as_ref()
+                    .map_or(bud.size, |flower| flower.size);
                 let flower = season
                     .flower_look
                     .as_ref()
@@ -3744,12 +3874,18 @@ fn in_stage_of(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Loo
                         open: 0.0,
                         ..shape.clone()
                     });
+                    // Its outside: the bud's own colour where it is stated.
+                    let (colour, accent) = shape
+                        .bud
+                        .map_or((flower.colour, flower.accent), |bud| (bud, bud));
                     return (
                         Look {
                             shape: closed,
+                            colour,
+                            accent,
                             ..flower
                         },
-                        bud.size,
+                        size,
                     );
                 }
             }
@@ -3768,9 +3904,7 @@ fn in_stage_of(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Loo
                 return (look, 0.0);
             }
             let mut look = opened(look, open);
-            if let Shape::Fruit(fruit) = &mut look.shape {
-                fruit.unripe = unripe;
-            }
+            ripen(&mut look, unripe);
             (look, 1.0)
         }
     }
@@ -3797,6 +3931,26 @@ fn opened(mut look: Look, open: f64) -> Look {
     look
 }
 
+/// `look`'s fruit with `unripe` of it still unripe, its ripe fruit in the
+/// fruit's `ripening` colour while most are unripe and in their own once
+/// all have ripened.
+fn ripen(look: &mut Look, unripe: f64) {
+    let Shape::Fruit(fruit) = &mut look.shape else {
+        return;
+    };
+    fruit.unripe = unripe;
+    if let Some(ripening) = fruit.ripening {
+        let ripe = crate::math::smoothstep(0.0, RIPENING, RIPENING - unripe);
+        for (own, mid) in look.colour.iter_mut().zip(ripening) {
+            *own = mid + (*own - mid) * ripe as f32;
+        }
+    }
+}
+
+/// The share still unripe above which ripe fruit are all in their
+/// ripening colour; below it they turn to their own.
+const RIPENING: f64 = 0.6;
+
 /// A cluster's `look` on `day` of `season`, `stage` its first unit's,
 /// which is not `whole`: each unit in a stage of its own (see [`Season`]),
 /// the cluster at its full size, or gone while none of its units shows.
@@ -3814,9 +3968,7 @@ fn in_units(
         // fruit as unripe as the cluster.
         match stage {
             Stage::Fruit { unripe } if own_fruit => {
-                if let Shape::Fruit(fruit) = &mut look.shape {
-                    fruit.unripe = unripe;
-                }
+                ripen(&mut look, unripe);
                 if let Some(cluster) = &mut look.inflorescence
                     && let Some(unit) = crate::clusters::Unit::of(&look.shape)
                 {
@@ -4712,6 +4864,40 @@ mod tests {
         assert!(looks[1].shade[0] < 0.6 && looks[1].shade[0] > 0.0);
     }
 
+    #[test]
+    fn unripe_fruit_is_green_as_the_foliage_unless_an_accent_is_stated() {
+        let types = [("bloom", OrganKind::Fruit)];
+        let fruit = |accent: Option<[f32; 3]>| {
+            let mut organs = BTreeMap::new();
+            organs.insert(
+                "bloom".to_string(),
+                OrganLook {
+                    hairs: None,
+                    hairs_beneath: None,
+                    underside: None,
+                    variegation: None,
+                    sori: None,
+                    roll: 0.0,
+                    insertion: crate::looks::Insertion::Marginal,
+                    shape: Shape::Fruit(Fruit::default()),
+                    colour: Some([0.1, 0.1, 0.4]),
+                    shade: None,
+                    accent,
+                    face_up: 0.0,
+                    solid: None,
+                    bend: None,
+                    form: None,
+                    season: None,
+                    families: None,
+                    inflorescence: None,
+                },
+            );
+            resolve(types, &organs, [0.1, 0.3, 0.05], [0.03, 0.1, 0.03])[0].accent
+        };
+        assert_eq!(fruit(None), [0.1, 0.3, 0.05]);
+        assert_eq!(fruit(Some([0.8, 0.7, 0.1])), [0.8, 0.7, 0.1]);
+    }
+
     fn cherry() -> Season {
         Season {
             bud: 95.0,
@@ -4810,12 +4996,12 @@ mod tests {
         }
         // Gone before its bud shows.
         assert_eq!(on(&organs, 50.0).1[1], 0.0);
-        // Its flower closed, a third of its flower's size (spec rework
-        // P5), in its flower's colours.
+        // Its flower closed at its flower's size (closing halves its
+        // petals), in its flower's colours.
         let (looks, sizes) = on(&organs, 100.0);
         assert!(matches!(&looks[1].shape, Shape::Flower(f) if f.open == 0.0));
         assert_eq!(looks[1].colour, [0.95, 0.95, 0.9]);
-        assert!((sizes[1] - 0.5 / 3.0).abs() < 1e-12);
+        assert!((sizes[1] - 0.5).abs() < 1e-12);
         // Its flower look in flower.
         let (looks, sizes) = on(&organs, 120.0);
         assert!(matches!(looks[1].shape, Shape::Flower(_)));
@@ -5126,7 +5312,7 @@ mod tests {
         let (look, size) = on(clustered(ClusterKind::Umbel, 6, whole), 100.0);
         assert!(look.inflorescence.is_none());
         assert!(matches!(&look.shape, Shape::Flower(f) if f.open == 0.0));
-        assert!((size - 0.5 / 3.0).abs() < 1e-12, "{size}");
+        assert!((size - 0.5).abs() < 1e-12, "{size}");
         // Fruit with no flower look shows nothing in flower: gone.
         let bare = Season {
             flower_look: None,
@@ -5252,6 +5438,11 @@ mod tests {
                         assert!(with(field, points).is_ok(), "{at}");
                         assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
                     }
+                    Field::Colour => {
+                        let red = serde_json::json!([0.8, 0.1, 0.1]);
+                        assert!(with(field, red).is_ok(), "{at}");
+                        assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
+                    }
                 }
             }
             // Every field the template writes is listed.
@@ -5298,7 +5489,7 @@ mod tests {
                     let error = with("none".into()).unwrap_err().to_string();
                     assert!(error.contains("unknown variant"), "{key}: {error}");
                 }
-                Field::Outline => panic!("{key} takes no outline"),
+                Field::Outline | Field::Colour => panic!("{key} takes no outline or colour"),
             }
         }
     }
