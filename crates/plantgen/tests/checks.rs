@@ -72,6 +72,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its panicles stand on lateral branches, and the measure stops at the first lateral axis below an inflorescence, so it reads a branch, not the culm",
     ),
     (
+        "clinopodium-douglasii",
+        "leaf_habit",
+        "its trailing stems flower, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so yerba buena's evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
+    ),
+    (
         "cornus-sericea",
         "fruit_size_m",
         "its drupes are drawn about 1.6 cm across against the 6 to 8 mm Dendrology (2019) p. 196 gives (seen since the book's sizes joined the spec)",
@@ -278,11 +283,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "rhus-glabra",
-        "fruit_size_m",
-        "its panicle's drupes are drawn about 0.6 mm across against the 4 mm Abrams gives: a woody plant's panicle sizes its units within the branch frame, so a large panicle draws each unit small, until the cluster layout sizes a unit by its trait",
-    ),
-    (
-        "rhus-glabra",
         "leaf_arrangement",
         "its crown keeps about 50 leaves 34 cm long on few stout shoots, as FEIS has it, so most shoots hold 2 leaves and the measure cannot tell an alternate pair from an opposite one",
     ),
@@ -307,9 +307,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are drawn on one card, the three-lobed form with broad rounded lobes as photographs show it, 16.9 cm wide, against FNA's 5 to 10 cm, which covers its narrower unlobed and mitten leaves too (inferred: FNA gives one width for all three forms)",
     ),
     (
-        "sedum-spathulifolium",
-        "inflorescence_length_m",
-        "its cyme is drawn about 4 cm across against Abrams' 5 to 8 cm broad: a herb's cluster is drawn at about three fifths of the length its traits give (so are yarrow's corymbs, the waterleaf's and the other stonecrops' cymes, and the bluebells' coils), until the cluster layout fills its organ",
+        "sedum-divergens",
+        "leaf_habit",
+        "its leafy stems end in cymes, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so spreading stonecrop's evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
     ),
     (
         "tillandsia-usneoides",
@@ -320,16 +320,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
-    ),
-    (
-        "toxicodendron-diversilobum",
-        "fruit_size_m",
-        "its panicle's drupes are drawn about 0.7 mm across against the 4 to 6 mm Abrams gives: a woody plant's panicle sizes its units within the branch frame, so each unit draws small, until the cluster layout sizes a unit by its trait",
-    ),
-    (
-        "toxicodendron-diversilobum",
-        "inflorescence_length_m",
-        "its panicle is drawn 1.5 to 2 cm long against Abrams' 3 to 8 cm: a cluster is drawn at about three fifths of the length its traits give, and less on a nodding panicle, until the cluster layout fills its organ",
     ),
 ];
 
