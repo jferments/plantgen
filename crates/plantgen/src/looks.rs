@@ -1513,6 +1513,18 @@ pub struct Simple {
     /// branching veins; 0 for a pinnate or palmate blade's.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub parallel: u32,
+    /// How deep the bites in a praemorse tip go, as a share of the
+    /// blade's length: a blade cut off square at its tip (`apex_taper`
+    /// near 0.1) whose edge is jagged, as if bitten off, in uneven teeth
+    /// (a fishtail palm's leaflets, Caryota). 0 for an even tip.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub praemorse: f64,
+    /// How strongly the midrib is drawn: 1 a midrib up the middle, 0 none,
+    /// for a blade whose several main veins fan out from its base with
+    /// no midrib among them (a fishtail palm's leaflets, with `parallel`
+    /// veins).
+    #[serde(skip_serializing_if = "is_one")]
+    pub midrib: f64,
 }
 
 impl Default for Simple {
@@ -1534,6 +1546,8 @@ impl Default for Simple {
             apex_point: 0.0,
             apex_notch: 0.0,
             parallel: 0,
+            praemorse: 0.0,
+            midrib: 1.0,
         }
     }
 }
@@ -3518,6 +3532,8 @@ impl Shape {
                 check("apex_point", s.apex_point, 0.0, 0.3)?;
                 check("apex_notch", s.apex_notch, 0.0, 0.2)?;
                 count("parallel", s.parallel, 0, 12)?;
+                check("praemorse", s.praemorse, 0.0, 0.3)?;
+                check("midrib", s.midrib, 0.0, 1.0)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Lobed(s) => {

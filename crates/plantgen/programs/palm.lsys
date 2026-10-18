@@ -192,9 +192,45 @@
 # through a crown of sporophylls, as a female Cycas's does. With
 # crown_cone, male_cone and sporophylls 0 a palm bears none, as before.
 #
+# Revision 13 (fan palms' blades, petiole teeth, skirts and fishtail
+# palms; Dransfield et al. 2008, Genera Palmarum p. 16-17, 216, 285, 297;
+# Sargent 1922, p. 101-105):
+#
+# - A fan's segments are free only over their outer split_depth of their
+#   length; inside that the blade is one piece, the palman, drawn as
+#   wedges each palman_angle degrees wide from the fan's centre to where
+#   the segments part. The free part of each segment turns down tip_droop
+#   degrees where it parts as the frond opens (Washingtonia's pendulous
+#   segments, Sabal's drooping ones), the palman staying as it was.
+# - A fan's segments may bear `filaments`, threads hanging from the blade:
+#   a segment's first in the sinus between it and the next, the rest along
+#   its free margin to its tip, each filament_length of the segment's free
+#   part; a share below one puts a thread on that share of the segments.
+# - A petiole's margins may bear teeth, tooth_length long, tooth_spacing
+#   apart on average, standing tooth_angle degrees from the petiole toward
+#   the blade (over 90, leaning back toward the stem, as curved and hooked
+#   teeth do), the last tooth_tip of the first's size and the teeth sparser
+#   toward the blade by as much; the petiole is then drawn in a piece
+#   from each pair of teeth to the next.
+# - A dead frond hangs from the trunk's surface beside its foot, no longer
+#   from inside the trunk, at dead_angle from the vertical (the world's,
+#   not the trunk's), so the dead fronds lie against the trunk, petiole
+#   up and blade down, as a thatch; it first stands out at its last
+#   living angle and falls to dead_angle over dead_fold_years, so the
+#   thatch meets the living crown.
+# - A twice-pinnate frond (pinna_pairs > 0, Caryota's) bears pinna_pairs
+#   pairs of pinnae spread evenly along its rachis in place of its
+#   leaflets, each a rachis as long as the leaflet would be, sized along
+#   the frond as the leaflets are, with pinna_leaflets leaflets
+#   (`pinnule`) a side and one at its tip, pinnule_length of the pinna
+#   long and shorter toward its tip, at pinnule_angle to it.
+#
+# split_depth 1, tip_droop, filaments, tooth_length and pinna_pairs 0 draw
+# as revision 12 did, but for the dead fronds.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 12;
+lsystem palm 13;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -261,6 +297,25 @@ param fan_cup;                # degrees the fan's segments rise into a shallow c
 param costa;                  # share of the frond's length along which the rays rise from a rib
 param fan_arch;               # degrees a fan's edge rays droop below its middle
 param ray_area;               # leaf area of a segment 1 m long, m²
+param split_depth;            # share of a segment's length, from its tip, free of its neighbours; 1 to the fan's centre
+param palman_angle;           # degrees of the fan's unsplit middle one palman card covers
+param palman_area;            # leaf area of a palman card 1 m long, m²
+param tip_droop;              # degrees a segment's free part turns down where it parts from the palman
+param filaments;              # threads a segment bears, the first in its sinus; 0 none
+param filament_length;        # a thread, as a share of its segment's free part
+param filament_area;
+# Petiole teeth.
+param tooth_length;           # the longest tooth on a petiole's margins, m; 0 none
+param tooth_spacing;          # metres from one tooth to the next, on average
+param tooth_angle;            # degrees a tooth stands from the petiole toward the blade
+param tooth_tip;              # the last tooth's size as a share of the first's
+param tooth_area;
+# Twice-pinnate fronds.
+param pinna_pairs;            # pairs of pinnae in place of the leaflets; 0 once pinnate
+param pinna_leaflets;         # leaflets each side of a pinna's rachis
+param pinnule_length;         # a pinna's longest leaflet, as a share of the pinna
+param pinnule_angle;          # angle of a pinna's leaflets to its rachis
+param pinnule_area;
 # Unrolling, sagging and dying.
 param season;                 # share of the year at the keyframe
 param emerge_spread;          # fronds emerge over this share of the year
@@ -279,6 +334,7 @@ param rest_gap;               # a frond that reaches the ground lies this far ab
 param skirt;                  # 1: dead fronds hang
 param dead_angle;             # angle of a hanging dead frond to the vertical
 param dead_life;              # years a dead frond hangs
+param dead_fold_years;        # years a dead frond takes to fall from its living angle to dead_angle
 param dead_area;              # leaf area of a dead frond 1 m long
 param boots;                  # 1: a fallen frond leaves its boot
 param boot_life;              # years a boot stays
@@ -337,7 +393,16 @@ module Tk(l, r);              # a segment of trunk l long, r in radius as it for
 module Cw(r);                 # a flush's ring of scale leaves round a trunk r in radius
 module Ct(z, r);              # a scale leaf z long on a trunk r in radius as it formed
 module Ry(j, m, s, e);        # rays j to j + m - 1 of a fan
-module Dh(s);                 # a dead frond hanging
+module Rs(j, l, u);           # ray j, l long, of a fan opened the share u
+module Fl(k, n, l, u);        # thread k of a segment's n along its free part, l long, opened u
+module Pw(i, m, s, e);        # palman wedges i to i + m - 1 of a fan
+module Pd(n, s, e);           # a frond s long's petiole, with n pairs of teeth
+module Tq(i, m, n, s);        # petiole teeth i to i + m - 1 of n, on a frond s long
+module Tt(z);                 # a pair of teeth z long, one each margin
+module Pn(z, q);              # a pinna z long, folded q toward the rachis
+module Pl(i, m, z);           # leaflet pairs i to i + m - 1 along a pinna z long
+module Ds(s, r);              # where a frond s long will hang dead, on a trunk r in radius
+module Dh(s, r);              # a dead frond hanging, on a trunk r in radius
 module Bs(r);                 # where a frond's boot will stand, on a trunk r in radius
 module Bt(r);                 # a boot, on a trunk r in radius
 module Cn(k, r);              # this year's cones, k 1 in a coning year, round a crown r in radius
@@ -364,8 +429,12 @@ organ sporophyll leaf as megasporophyll area sporophyll_area;
 organ seed fruit as seed area seed_area;
 organ cone_male cone area male_cone_area;
 organ cone_open cone area open_cone_area;
+organ palman leaf as piece area palman_area;
+organ filament leaf as piece area filament_area;
+organ tooth leaf as spine area tooth_area;
+organ pinnule leaf as leaflet area pinnule_area;
 
-structure frond leaf;         # one frond: its sheath, petiole, rachis, leaflets or rays, then its dead frond and boot
+structure frond leaf;         # one frond: its sheath, petiole, rachis, leaflets, pinnae or rays and palman, then its dead frond and boot
 
 axiom [ Sb(0) ] /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), 0);
 
@@ -427,11 +496,13 @@ decompose Fc(i, m, c, r) : m == 1 ->
          gauss() * angle_spread, uniform(0, emerge_spread), crownshaft > 0 ? trunk_radius * 0.97 : r) ];
 decompose Fc(i, m, c, r) -> ;
 
-# A frond dies after frond_life years: it hangs, or falls and leaves its
-# boot, or falls. The first piece stands for the frond; the others go.
-rule Pc(k, m, s, e) : age + dt >= frond_life && k == 0 && skirt > 0 -> Dh(s);
+# A frond dies after frond_life years: it hangs from its seat beside its
+# foot, or falls and leaves its boot, or falls.
 rule Pc(k, m, s, e) : age + dt >= frond_life -> ;
-rule Dh(s) : age + dt >= dead_life -> ;
+rule Ds(s, r) : age + dt >= frond_life && skirt > 0 -> Dh(s, r);
+rule Ds(s, r) : age + dt >= frond_life -> ;
+interpret Ds(s, r) -> ;
+rule Dh(s, r) : age + dt >= dead_life -> ;
 # The boot's seat at the frond's foot, on a trunk r in radius, turns to
 # the boot when the frond (and its dead frond) is gone.
 rule Bs(r) : age + dt >= frond_life + (skirt > 0 ? dead_life : 0) && boots > 0 -> Bt(r);
@@ -441,7 +512,18 @@ rule Bt(r) : age + dt >= boot_life -> ;
 # The frond holds its dead frond and boot until they go: a generous bound,
 # since what is gone leaves nothing within it.
 rule frond : age >= frond_life + dead_life + boot_life + 4 * dt -> ;
-interpret Dh(s) -> &(dead_angle) dead(s);
+# A dead frond hangs from the trunk's surface beside its foot, which
+# formed with the frond, a little up from the frond's way out of the
+# trunk, so a lying stem's dead fronds sit beside it, not in the ground.
+# It stands out at its last living angle and falls over dead_fold_years
+# to dead_angle from the vertical, by gravity, flat against an upright
+# trunk.
+interpret Dh(s, r) ->
+    &(90) steer(0, 1, 0, 0.25)
+    f(r * (1 + thicken * (1 - exp(-(age + frond_life) / max(thicken_years, 0.001)))))
+    steer(0, -1, 0, 1)
+    ^(180 - lerp(min(old_angle + hang, dead_angle), dead_angle,
+                 clamp(age / max(dead_fold_years, 0.001), 0, 1))) dead(s);
 # A boot starts at the trunk's surface beside the frond's foot, which
 # formed with the frond, then stands boot_angle from the trunk.
 interpret Bt(r) ->
@@ -455,22 +537,28 @@ interpret Bt(r) ->
 # rays at the end. The rays share the frond's birth, so they die with it.
 decompose Fr(s, a, e, r) : crownshaft > 0 && fan > 0 ->
     frond [ ring(max(1, round(shaft_cards))) [ Sh(crownshaft, r) ] ]
-    Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
+    Ds(s, r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e)
+    Pw(0, split_depth < 1 ? max(1, round(fan_spread / max(palman_angle, 1))) : 0, s, e);
 decompose Fr(s, a, e, r) : crownshaft > 0 ->
     frond [ ring(max(1, round(shaft_cards))) [ Sh(crownshaft, r) ] ]
-    Pc(0, max(1, round(pieces)), s, e);
+    Ds(s, r) Pc(0, max(1, round(pieces)), s, e);
 decompose Fr(s, a, e, r) : sheath_length > 0 && fan > 0 ->
     frond [ ring(max(1, round(shaft_cards))) [ Sh(sheath_length, r) ] ]
-    Bs(r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
+    Bs(r) Ds(s, r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e)
+    Pw(0, split_depth < 1 ? max(1, round(fan_spread / max(palman_angle, 1))) : 0, s, e);
 decompose Fr(s, a, e, r) : sheath_length > 0 ->
     frond [ ring(max(1, round(shaft_cards))) [ Sh(sheath_length, r) ] ]
-    Bs(r) Pc(0, max(1, round(pieces)), s, e);
+    Bs(r) Ds(s, r) Pc(0, max(1, round(pieces)), s, e);
 decompose Fr(s, a, e, r) : fan > 0 ->
-    frond Bs(r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
-decompose Fr(s, a, e, r) -> frond Bs(r) Pc(0, max(1, round(pieces)), s, e);
+    frond Bs(r) Ds(s, r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e)
+    Pw(0, split_depth < 1 ? max(1, round(fan_spread / max(palman_angle, 1))) : 0, s, e);
+decompose Fr(s, a, e, r) -> frond Bs(r) Ds(s, r) Pc(0, max(1, round(pieces)), s, e);
 decompose Ry(j, m, s, e) : m > 1 ->
     Ry(j, floor(m / 2), s, e) Ry(j + floor(m / 2), m - floor(m / 2), s, e);
 rule Ry(j, m, s, e) : age + dt >= frond_life -> ;
+decompose Pw(i, m, s, e) : m > 1 ->
+    Pw(i, floor(m / 2), s, e) Pw(i + floor(m / 2), m - floor(m / 2), s, e);
+rule Pw(i, m, s, e) : age + dt >= frond_life -> ;
 decompose Pc(k, m, s, e) : m > 1 ->
     Pc(k, floor(m / 2), s, e) Pc(k + floor(m / 2), m - floor(m / 2), s, e);
 
@@ -478,10 +566,46 @@ decompose Pc(k, m, s, e) : m > 1 ->
 interpret Pc(k, m, s, e) : k == 0 ->
     &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years))
       + hang * clamp((age + season - e) / max(frond_life, 0.001), 0, 1))
-    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years)) rest(rest_gap)
-    young(1 - smoothstep(1, 2, (age + season - e) / unroll))
-    !(petiole_radius) F(s * petiole) !(petiole_radius * 0.6) Pp(k, s, e);
+    Pd(tooth_length > 0 ? max(1, round(s * petiole / max(tooth_spacing, 0.001))) : 0, s, e)
+    !(petiole_radius * 0.6) Pp(k, s, e);
 interpret Pc(k, m, s, e) -> Pp(k, s, e);
+
+# A petiole with n pairs of teeth, drawn in n + 1 pieces that share its
+# droop, so it bends as one piece did; the rachis then droops as before.
+interpret Pd(n, s, e) ->
+    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years) / (1 + n))
+    rest(rest_gap) young(1 - smoothstep(1, 2, (age + season - e) / unroll))
+    !(petiole_radius)
+    Tq(0, n, n, s)
+    F(s * petiole * (1 - (n > 0 ? pow((n - 0.5) / max(1, n), 1.8 - 0.8 * tooth_tip) : 0)))
+    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years));
+
+# A petiole's teeth: the petiole drawn in pieces from its foot, a pair of
+# teeth at the end of each, tooth i of n the share
+# x = ((i + 0.5) / n)^(1.8 - 0.8 tooth_tip) of the way from the foot,
+# so teeth crowd toward the foot where they shrink toward the blade,
+# tooth_length lerp(1, tooth_tip, x) long on a full-size frond.
+# Eight at a time, so a petiole's many teeth nest only a few deep.
+interpret Tq(i, m, n, s) : m > 1 ->
+    Tq(i, ceil(m / 8), n, s)
+    Tq(i + 1 * ceil(m / 8), clamp(m - 1 * ceil(m / 8), 0, ceil(m / 8)), n, s)
+    Tq(i + 2 * ceil(m / 8), clamp(m - 2 * ceil(m / 8), 0, ceil(m / 8)), n, s)
+    Tq(i + 3 * ceil(m / 8), clamp(m - 3 * ceil(m / 8), 0, ceil(m / 8)), n, s)
+    Tq(i + 4 * ceil(m / 8), clamp(m - 4 * ceil(m / 8), 0, ceil(m / 8)), n, s)
+    Tq(i + 5 * ceil(m / 8), clamp(m - 5 * ceil(m / 8), 0, ceil(m / 8)), n, s)
+    Tq(i + 6 * ceil(m / 8), clamp(m - 6 * ceil(m / 8), 0, ceil(m / 8)), n, s)
+    Tq(i + 7 * ceil(m / 8), clamp(m - 7 * ceil(m / 8), 0, ceil(m / 8)), n, s);
+interpret Tq(i, m, n, s) : m == 1 ->
+    F(s * petiole * (pow((i + 0.5) / n, 1.8 - 0.8 * tooth_tip)
+                     - (i > 0 ? pow((i - 0.5) / n, 1.8 - 0.8 * tooth_tip) : 0)))
+    Tt(tooth_length * min(1, s / max(frond_length, 0.001))
+       * lerp(1, tooth_tip, pow((i + 0.5) / n, 1.8 - 0.8 * tooth_tip)));
+interpret Tq(i, m, n, s) -> ;
+# A pair of teeth, one on each margin, each tooth_angle from the way to
+# the blade (over 90, leaning back toward the stem).
+interpret Tt(z) ->
+    [ +(90) f(petiole_radius) +(tooth_angle - 90) tooth(z) ]
+    [ -(90) f(petiole_radius) -(tooth_angle - 90) tooth(z) ];
 
 # A piece of a fan frond's costa, its last piece the fan; a piece of a
 # feather frond with two pairs of leaflets. A piece beyond the unrolled
@@ -542,6 +666,13 @@ interpret Ls(z, q) ->
     [ +(leaflet_angle * (1 - q)) ^(leaflet_lift * (1 - q)) spine(z) ]
     [ -(leaflet_angle * (1 - q)) ^(leaflet_lift * (1 - q)) spine(z) ];
 
+# A twice-pinnate frond's pinnae stand at pinna_pairs of its 2 pieces
+# leaflet places, spread evenly along it from its lowest; the others bear
+# none.
+interpret Ln(k, s, e, h) : pinna_pairs > 0
+    && ceil((round(2 * (k + h)) + 1) * pinna_pairs / max(1, 2 * round(pieces)))
+       <= ceil(round(2 * (k + h)) * pinna_pairs / max(1, 2 * round(pieces))) -> ;
+
 # A circinate frond's pair of leaflets, sized along the rachis: while its
 # place on the rachis is coiled (c above 0), small and pressed to the
 # coil, with the leaflet rolled beside it (Lc).
@@ -586,17 +717,78 @@ interpret Ln(k, s, e, h) ->
           : (h > 0 ? -1 : 1),
        leaflet_fold
           * (1 - clamp(2 * clamp((age + season - e) / unroll, 0, 1) - (k + h) / pieces, 0, 1)));
+interpret Lq(z, w, q) : pinna_pairs > 0 ->
+    [ +(leaflet_angle * (1 - q)) ^((leaflet_lift + leaflet_scatter * w) * (1 - q)) Pn(z, q) ]
+    [ -(leaflet_angle * (1 - q)) ^((leaflet_lift + leaflet_scatter * w) * (1 - q)) Pn(z, q) ];
 interpret Lq(z, w, q) ->
     [ +(leaflet_angle * (1 - q)) ^((leaflet_lift + leaflet_scatter * w) * (1 - q)) leaflet(z) ]
     [ -(leaflet_angle * (1 - q)) ^((leaflet_lift + leaflet_scatter * w) * (1 - q)) leaflet(z) ];
 
+# A pinna: a rachis of its own, pinna_leaflets pairs of leaflets along it,
+# the lowest a little way up, and one at its tip; they shorten toward the
+# tip and lie folded along it while the frond opens.
+interpret Pn(z, q) ->
+    !(petiole_radius * 0.3) Pl(0, max(1, round(pinna_leaflets)), z * (1 - 0.5 * q))
+    pinnule(z * pinnule_length * 0.75);
+interpret Pl(i, m, z) : m > 1 ->
+    Pl(i, ceil(m / 8), z)
+    Pl(i + 1 * ceil(m / 8), clamp(m - 1 * ceil(m / 8), 0, ceil(m / 8)), z)
+    Pl(i + 2 * ceil(m / 8), clamp(m - 2 * ceil(m / 8), 0, ceil(m / 8)), z)
+    Pl(i + 3 * ceil(m / 8), clamp(m - 3 * ceil(m / 8), 0, ceil(m / 8)), z)
+    Pl(i + 4 * ceil(m / 8), clamp(m - 4 * ceil(m / 8), 0, ceil(m / 8)), z)
+    Pl(i + 5 * ceil(m / 8), clamp(m - 5 * ceil(m / 8), 0, ceil(m / 8)), z)
+    Pl(i + 6 * ceil(m / 8), clamp(m - 6 * ceil(m / 8), 0, ceil(m / 8)), z)
+    Pl(i + 7 * ceil(m / 8), clamp(m - 7 * ceil(m / 8), 0, ceil(m / 8)), z);
+interpret Pl(i, m, z) : m == 1 ->
+    F(z / max(1, round(pinna_leaflets)))
+    [ +(pinnule_angle) pinnule(z * pinnule_length * lerp(1, 0.75, (i + 1) / max(1, round(pinna_leaflets)))) ]
+    [ -(pinnule_angle) pinnule(z * pinnule_length * lerp(1, 0.75, (i + 1) / max(1, round(pinna_leaflets)))) ];
+interpret Pl(i, m, z) -> ;
+
 # A fan's ray j of m: each from the fan's centre at the rachis' end, spread
 # across the frond's plane and cupped up a little, longest in the middle;
 # folded together while the frond opens.
-interpret Ry(j, m, s, e) ->
+interpret Ry(j, m, s, e) : split_depth >= 1 ->
     [ +(fan_spread * clamp((age + season - e) / unroll, 0.15, 1)
         * ((j + 0.5) / max(1, round(rays)) - 0.5))
       ^(fan_cup - fan_arch * 2 * abs((j + 0.5) / max(1, round(rays)) - 0.5)) ray(s * fan_length * (0.7 + 0.3 * sin(pi * (j + 0.5) / max(1, round(rays))))) ];
+interpret Ry(j, m, s, e) ->
+    Rs(j, s * fan_length * (0.7 + 0.3 * sin(pi * (j + 0.5) / max(1, round(rays)))),
+       clamp((age + season - e) / unroll, 0, 1));
+
+# A segment that parts from the palman: out to where it parts, then its
+# free part, turned down tip_droop as the frond opens, with its threads:
+# the first in the sinus beside it (none beyond the fan's last segment),
+# the rest along its free part to its tip. A segment j bears
+# floor((j + 1) filaments) - floor(j filaments) threads.
+interpret Rs(j, l, u) ->
+    [ +(fan_spread * max(u, 0.15) * ((j + 0.5) / max(1, round(rays)) - 0.5))
+      ^(fan_cup - fan_arch * 2 * abs((j + 0.5) / max(1, round(rays)) - 0.5))
+      f(l * (1 - split_depth))
+      [ &(tip_droop * u) ray(l * split_depth)
+        Fl(1, floor((j + 1) * filaments) - floor(j * filaments), l * split_depth, u) ]
+      Fl(j < max(1, round(rays)) - 1 ? 0 : -1, floor((j + 1) * filaments) - floor(j * filaments),
+         l * split_depth, u) ];
+# Thread k of a segment's n: k 0 in its sinus, half a segment's turn
+# aside; k from 1 along its free part, the last at its tip. Each hangs
+# toward the ground.
+interpret Fl(k, n, l, u) : k == 0 && n >= 1 ->
+    [ +(0.5 * fan_spread * max(u, 0.15) / max(1, round(rays)))
+      steer(0, -1, 0, 0.85) filament(filament_length * l * u) ];
+interpret Fl(k, n, l, u) : k >= 1 && k <= n - 1 ->
+    [ f(l * 0.97 * k / max(1, n - 1)) steer(0, -1, 0, 0.85) filament(filament_length * l * u) ]
+    Fl(k + 1, n, l, u);
+interpret Fl(k, n, l, u) -> ;
+
+# The palman, the fan's unsplit middle: wedge i of m from its centre out
+# to where its segments part, as long as the segments there are.
+interpret Pw(i, m, s, e) : m == 1 ->
+    [ +(fan_spread * clamp((age + season - e) / unroll, 0.15, 1)
+        * ((i + 0.5) / max(1, round(fan_spread / max(palman_angle, 1))) - 0.5))
+      ^(fan_cup - fan_arch * 2 * abs((i + 0.5) / max(1, round(fan_spread / max(palman_angle, 1))) - 0.5))
+      palman(s * fan_length * (1 - split_depth) * 1.04
+             * (0.7 + 0.3 * sin(pi * (i + 0.5) / max(1, round(fan_spread / max(palman_angle, 1)))))) ];
+interpret Pw(i, m, s, e) -> ;
 
 # A coning year's cones, at the crown's centre among the young fronds or
 # in a ring among the leaf bases: a male plant's pollen cones, a female's
