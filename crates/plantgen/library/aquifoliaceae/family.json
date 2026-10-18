@@ -31,10 +31,10 @@
     "hypanthium": false,
     "woodiness": "woody",
     "inflorescence": {
+      "cyme": "usually",
       "solitary": "rarely",
-      "panicle": "often",
-      "cyme": "often",
-      "raceme": "sometimes"
+      "panicle": "rarely",
+      "raceme": "rarely"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": {
@@ -122,6 +122,11 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia Ilex (read 2026-10-17): the small greenish-white flower has four petals; with Ilex making up almost all of the family, a calyx-and-corolla perianth is the norm. The tepals and absent states came from the small genera DELTA merges in (Phellinaceae, Sphenostemonaceae), so they drop to rarely."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "POWO Aquifoliaceae (read 2026-10-17): the family is now the single genus Ilex (500-600 spp, Nemopanthus sunk), so the genus decides. All four accounts quoted there (Neotropikey, Kew Temperate Families handbook, Flora Zambesiaca, Flora of Tropical East Africa) give axillary cymes or fascicles of cyme origin, sometimes apparently single flowers; none names panicles or racemes, so those drop to rarely."
     }
   }
 }

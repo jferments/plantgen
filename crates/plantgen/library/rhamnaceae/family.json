@@ -30,10 +30,7 @@
       "capsule": "sometimes",
       "schizocarp": "sometimes"
     },
-    "leaf_venation": {
-      "palmate": "often",
-      "pinnate": "often"
-    },
+    "leaf_venation": {"pinnate": "usually", "palmate": "sometimes"},
     "inflorescence": {
       "cyme": "often",
       "panicle": "often",
@@ -87,11 +84,7 @@
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe. The books add schizocarp (sometimes): Simpson, Plant Systematics (2019) p. 325, 326: drupe, circumscissile capsule or schizocarp."
     },
-    "traits.leaf_venation": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 325, 326, family Rhamnaceae: leaf venation pinnate or palmate; read as {\"palmate\": \"often\", \"pinnate\": \"often\"}."
-    },
+    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "wikipedia", "note": "By genus (read 2026-10-17): Rhamnus, about 140 spp, has pinnately veined blades with the side veins curving up toward the tip; Ziziphus, 68 spp, has three strong basal veins (palmate). Phylica (~150 spp) page gives no venation and was not counted. Of the 208 counted species two thirds are pinnate; Frangula, Ceanothus in part and Pomaderris (not read) would add to pinnate. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

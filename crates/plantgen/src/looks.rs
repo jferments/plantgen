@@ -62,6 +62,11 @@ pub struct OrganLook {
     /// margins, centres, stripes, bands or spots, different on every leaf.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub variegation: Option<Variegation>,
+    /// A fern's sori on the lower face of its pinnae or segments
+    /// ([`Sori`]): round, oblong or linear clusters of sporangia, or a
+    /// band along the edge, where its flora places them. None if absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sori: Option<Sori>,
     /// How far a card that lies along its organ turns flat to face the
     /// sky, from 0 (as the program placed it) to 1 (level). Broad leaves
     /// held toward the light form the layered crowns of shade-tolerant
@@ -102,6 +107,11 @@ pub struct OrganLook {
     /// absent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hairs: Option<Hairs>,
+    /// The hairs on its lower (abaxial) face, where they differ from its
+    /// upper face's: the felted undersides of many leaves. A lower face
+    /// without them is bare.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hairs_beneath: Option<Hairs>,
 }
 
 /// The hairs on an organ's face, its indumentum (Harris and Harris, *Plant
@@ -130,6 +140,45 @@ pub struct Hairs {
     /// the face's `density`: a ciliate edge on a bare blade.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub edge: Option<f64>,
+    /// How much of the face's hairs gather along its main veins, 0 (spread
+    /// evenly) to 1 (on the veins alone): FNA's "at least along main
+    /// veins". Absent for an even spread.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub veins: Option<f64>,
+    /// How each hair branches ([`Branching`]): a plain hair unless a
+    /// flora says its hairs are stellate or dendritic (mullein's felt).
+    #[serde(skip_serializing_if = "Branching::is_simple")]
+    pub branching: Branching,
+    /// Glandular hairs standing among these, each a stalk ending in a
+    /// round head of resin (a tomato's stems, FNA's "glandular-pubescent"),
+    /// in their own density, length and lie.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub glands: Option<Box<Hairs>>,
+    /// Stinging hairs standing among these (a nettle's): a stiff glassy
+    /// needle on a swollen green foot, straight and erect, sparse among
+    /// the soft hairs, in their own density, length and lie.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stings: Option<Box<Hairs>>,
+}
+
+/// How a hair branches (Harris and Harris): a plain hair, a star of
+/// arms spreading over the face from a short stalk (stellate), or a stalk
+/// with whorls of arms up its length, a little tree (dendritic, the
+/// candelabra hairs of mullein).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Branching {
+    #[default]
+    Simple,
+    Stellate,
+    Dendritic,
+}
+
+impl Branching {
+    #[must_use]
+    pub fn is_simple(&self) -> bool {
+        *self == Self::Simple
+    }
 }
 
 impl Default for Hairs {
@@ -141,15 +190,49 @@ impl Default for Hairs {
             curl: 0.0,
             colour: [0.8, 0.8, 0.76],
             edge: None,
+            veins: None,
+            branching: Branching::Simple,
+            glands: None,
+            stings: None,
         }
     }
 }
 
 impl Hairs {
-    /// Whether there are any to draw.
+    /// Whether there are any to draw: these, or glandular or stinging
+    /// hairs among them.
     #[must_use]
     pub fn drawn(&self) -> bool {
+        self.own_drawn()
+            || self.glands.as_deref().is_some_and(Self::own_drawn)
+            || self.stings.as_deref().is_some_and(Self::own_drawn)
+    }
+
+    /// Whether these hairs themselves, leaving out the glandular and
+    /// stinging hairs among them, are any to draw.
+    #[must_use]
+    pub fn own_drawn(&self) -> bool {
         (self.density > 0.0 || self.edge.is_some_and(|edge| edge > 0.0)) && self.length > 0.0
+    }
+
+    /// These hairs with `share` of each kind kept: young wood's, worn by
+    /// its age.
+    #[must_use]
+    pub fn thinned(&self, share: f64) -> Self {
+        let thin = |hairs: &Option<Box<Self>>| {
+            hairs.as_ref().map(|hairs| {
+                Box::new(Self {
+                    density: hairs.density * share,
+                    ..(**hairs).clone()
+                })
+            })
+        };
+        Self {
+            density: self.density * share,
+            glands: thin(&self.glands),
+            stings: thin(&self.stings),
+            ..self.clone()
+        }
     }
 }
 
@@ -209,6 +292,28 @@ pub struct Variegation {
     /// For `zone`: what the band follows.
     #[serde(default, skip_serializing_if = "ZoneFrom::is_midrib")]
     pub from: ZoneFrom,
+    /// For `zone`: how far the band's edge reaches along the lateral veins
+    /// (`cross` apart, leaning by `slant`) past where it lies between them,
+    /// as a share of the half-width: the toothed edge of Cyclamen's
+    /// silver. 0 for a plain edge.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub feather: f64,
+    /// For `spots` and `mottle`: how many times longer than wide the
+    /// patches are, drawn out along the blade as a parallel-veined leaf's
+    /// are (trout lily's blotches). 1 for round.
+    #[serde(
+        default = "default_variegation_stretch",
+        skip_serializing_if = "is_one"
+    )]
+    pub stretch: f64,
+    /// How much of a leaf's share is its plant's rather than its own, 0 to
+    /// 1: at 1 every leaf of a plant has the same share and plants differ
+    /// by `spread` (air-space and pigment patterns: Cyclamen's silver,
+    /// "varying between plants, but consistent within each plant"), at 0
+    /// every leaf draws its own (chimeras). See
+    /// [`crate::mesh::PlantMesh::vary_by_plant`].
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub plants: f64,
 }
 
 /// What a `zone` variegation's band follows.
@@ -271,6 +376,10 @@ fn default_variegation_at() -> f64 {
 
 fn default_variegation_scale() -> f64 {
     0.08
+}
+
+fn default_variegation_stretch() -> f64 {
+    1.0
 }
 
 /// Where a [`Variegation`]'s patches lie on a blade.
@@ -346,8 +455,160 @@ impl Variegation {
         within("variegation rim", self.rim, 0.0, 0.5)?;
         within("variegation at", self.at, 0.0, 1.0)?;
         within("variegation slant", self.slant, 0.0, 4.0)?;
+        within("variegation feather", self.feather, 0.0, 0.5)?;
+        within("variegation stretch", self.stretch, 1.0, 10.0)?;
+        within("variegation plants", self.plants, 0.0, 1.0)?;
         for channel in self.colour {
             within("variegation colour", f64::from(channel), 0.0, 1.0)?;
+        }
+        Ok(())
+    }
+}
+
+/// A fern's sori as its flora words them (Flora of North America: "Sori in
+/// 1 row between midrib and margin, round; indusia round-reniform",
+/// Dryopteris), painted on the lower face of its pinnae or segments:
+/// clusters of brown sporangia, each round, oblong along its vein, a line
+/// beside the midrib, or a band along the edge, part hidden under a pale
+/// indusium where it has one. Each segment of a card (a pinna, or each
+/// pinnule of a divided one) carries its own, placed by how far a point
+/// lies from the segment's midrib toward its edge (`crate::templates`).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Sori {
+    /// A sorus's outline.
+    pub shape: SorusShape,
+    /// Where on a segment the sori sit.
+    pub position: SorusPosition,
+    /// What covers each sorus.
+    pub indusium: Indusium,
+    /// Rows of sori on each side of a segment's midrib.
+    pub rows: f64,
+    /// A sorus's half-width, as a share of its segment's half-width
+    /// there: a round sorus's radius, a line's or band's half-width.
+    pub size: f64,
+    /// The share of cards that bear sori, 0 to 1: every fertile pinna, or
+    /// the share of a fern's pinnae that are fertile where they are alike.
+    pub amount: f64,
+    /// The ripe sporangia's colour, linear RGB.
+    pub colour: [f32; 3],
+    /// The indusium's colour, linear RGB.
+    pub indusium_colour: [f32; 3],
+}
+
+impl Default for Sori {
+    fn default() -> Self {
+        Self {
+            shape: SorusShape::Round,
+            position: SorusPosition::Medial,
+            indusium: Indusium::None,
+            rows: 1.0,
+            size: 0.25,
+            amount: 1.0,
+            colour: [0.155, 0.061, 0.017],
+            indusium_colour: [0.515, 0.43, 0.262],
+        }
+    }
+}
+
+/// A sorus's outline (the trait `sorus_shape`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SorusShape {
+    /// A round dot (Polystichum, Dryopteris).
+    #[default]
+    Round,
+    /// Short and oblong along its vein, two or three times as long as
+    /// wide (Athyrium, Asplenium).
+    Oblong,
+    /// A line beside the midrib or along a vein (Blechnum).
+    Linear,
+    /// A band along the segment's edge (Pteridium, Pteris, Adiantum).
+    Marginal,
+}
+
+/// Where on a segment its sori sit (the trait `sorus_position`), as a
+/// share of the way from its midrib to its edge.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SorusPosition {
+    /// Beside the midrib.
+    Costal,
+    /// About halfway to the edge.
+    #[default]
+    Medial,
+    /// Near the edge.
+    Submarginal,
+    /// On the edge.
+    Marginal,
+}
+
+impl SorusPosition {
+    /// The share of the way from midrib (0) to edge (1) the sori are
+    /// centred on.
+    #[must_use]
+    pub fn across(self) -> f64 {
+        match self {
+            Self::Costal => 0.22,
+            Self::Medial => 0.5,
+            Self::Submarginal => 0.7,
+            Self::Marginal => 0.9,
+        }
+    }
+}
+
+/// What covers a young sorus (the trait `indusium`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Indusium {
+    /// Nothing: the sporangia are bare (Polypodium).
+    #[default]
+    None,
+    /// A kidney-shaped flap attached at a notch (Dryopteris).
+    Kidney,
+    /// A round shield on a central stalk (Polystichum).
+    Shield,
+    /// A flap along one side (Athyrium, Asplenium, Blechnum).
+    Flap,
+    /// The leaf's own edge rolled over the sori (Pteridium, Pteris).
+    Margin,
+}
+
+impl Indusium {
+    /// Whether it covers a point of a sorus `reach` from the sorus's
+    /// middle (1 at its edge), on the side away from the midrib (`outer`;
+    /// along an oblong sorus, one side), in a kidney's sinus or not.
+    #[must_use]
+    pub fn veils(self, reach: f64, outer: bool, sinus: bool) -> bool {
+        match self {
+            Self::None => false,
+            Self::Kidney => reach < 0.85 && !sinus,
+            Self::Shield => reach < 0.75,
+            Self::Flap | Self::Margin => reach < 0.95 && outer,
+        }
+    }
+}
+
+impl Sori {
+    /// Whether a card with `seed` (0 to 1, see
+    /// [`crate::templates::card_seed`]) bears its sori: the cards whose
+    /// own number, drawn afresh from the seed so it does not follow the
+    /// card's variegation, falls below `amount`.
+    #[must_use]
+    pub fn borne(&self, seed: f64) -> bool {
+        (seed * 7.31 + 0.37).fract() < self.amount
+    }
+
+    /// Whether its values are in range.
+    ///
+    /// # Errors
+    /// Names the first value out of range.
+    pub fn validate(&self) -> Result<(), String> {
+        within("sori rows", self.rows, 1.0, 20.0)?;
+        within("sori size", self.size, 0.02, 1.0)?;
+        within("sori amount", self.amount, 0.0, 1.0)?;
+        for channel in self.colour.into_iter().chain(self.indusium_colour) {
+            within("sori colour", f64::from(channel), 0.0, 1.0)?;
         }
         Ok(())
     }
@@ -1098,6 +1359,12 @@ pub struct Simple {
     /// share of the blade's length (emarginate, retuse). 0 for none.
     #[serde(skip_serializing_if = "is_zero")]
     pub apex_notch: f64,
+    /// Veins each side of the midrib that run from the base to the tip
+    /// beside it, following the outline (parallel and acrodromous
+    /// venation: lilies, plantains, Smilax), drawn in place of the
+    /// branching veins; 0 for a pinnate or palmate blade's.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub parallel: u32,
 }
 
 impl Default for Simple {
@@ -1118,6 +1385,7 @@ impl Default for Simple {
             base_taper: None,
             apex_point: 0.0,
             apex_notch: 0.0,
+            parallel: 0,
         }
     }
 }
@@ -1441,9 +1709,21 @@ pub struct Flower {
     /// are, if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub filament: Option<[f32; 3]>,
-    /// A single pistil's ovary's colour; the accent if absent.
+    /// A single pistil's ovary's colour, and free carpels'; the accent if
+    /// absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pistil: Option<[f32; 3]>,
+    /// The stigma lobes' colour; the filaments' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stigma: Option<[f32; 3]>,
+    /// What a cactus flower's pericarpel (the inferior ovary's skin) bears,
+    /// as its fruit will ([`Skin`]).
+    #[serde(skip_serializing_if = "Skin::is_naked")]
+    pub pericarpel: Skin,
+    /// The colour its closed bud shows, its sepals' or the bracts' that
+    /// wrap it; the petals' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bud: Option<[f32; 3]>,
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
@@ -1490,6 +1770,11 @@ pub struct Flower {
     /// Their length over the flower's radius.
     #[serde(skip_serializing_if = "is_default_stamen_length")]
     pub stamen_length: f64,
+    /// A stamen's width over its length: 0.03 a slender filament, toward
+    /// 0.15 a flat strap (a magnolia's or a custard apple's laminar
+    /// stamens).
+    #[serde(skip_serializing_if = "is_default_stamen_width")]
+    pub stamen_width: f64,
     /// An anther's length over its stamen's.
     #[serde(skip_serializing_if = "is_default_anther")]
     pub anther: f64,
@@ -1509,6 +1794,12 @@ pub struct Flower {
     /// Where the ovary sits.
     #[serde(skip_serializing_if = "Ovary::is_superior")]
     pub ovary: Ovary,
+    /// An elongate receptacle's (a torus's) carpels' length over the
+    /// flower's radius: 0 for none, the free carpels round a low dome;
+    /// above it, a magnolia's: the carpels on a spiral up a tall cone with
+    /// the stamens crowded on a spiral round its foot.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub torus: f64,
     /// A labellate flower's column over the flower's radius.
     #[serde(skip_serializing_if = "is_default_column")]
     pub column: f64,
@@ -1519,6 +1810,16 @@ pub struct Flower {
     /// How far it has opened: 0 a closed bud, 1 open.
     #[serde(skip_serializing_if = "is_one")]
     pub open: f64,
+    /// Tepals in each whorl: 0 for two whorls of half the tepals each, as
+    /// a lily's stand; else as many whorls of this many as `petals` fill
+    /// (a magnolia's 9 to 15 in whorls of three), up to six.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub whorl: u32,
+    /// Degrees its petals or tepals rise from the plane square to its
+    /// axis, as the form's `cup` (`crate::blooms::FlowerForm`) where the
+    /// look states no form: 10 a flat star, 55 a deep bowl.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rise: Option<f64>,
 }
 
 impl Default for Flower {
@@ -1538,6 +1839,9 @@ impl Default for Flower {
             calyx: None,
             filament: None,
             pistil: None,
+            stigma: None,
+            pericarpel: Skin::Naked,
+            bud: None,
             corolla: Corolla::Regular,
             petal_whorls: 1,
             banner: BANNER,
@@ -1550,14 +1854,18 @@ impl Default for Flower {
             tube: 0.0,
             stamens: 0,
             stamen_length: STAMEN_LENGTH,
+            stamen_width: STAMEN_WIDTH,
             anther: crate::flowers::ANTHER,
             anther_tilt: 0.0,
             staminodes: 0,
             carpels: 0,
             ovary: Ovary::Superior,
+            torus: 0.0,
             column: COLUMN,
             turn: 0.0,
             open: 1.0,
+            whorl: 0,
+            rise: None,
         }
     }
 }
@@ -1589,6 +1897,7 @@ impl Flower {
             && self.stamens == 0
             && self.staminodes == 0
             && self.carpels == 0
+            && self.torus == 0.0
             && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
@@ -1608,6 +1917,8 @@ const ODD_RISE: f64 = 15.0;
 const LIP: f64 = 1.3;
 const THROAT: f64 = 0.3;
 const STAMEN_LENGTH: f64 = 0.35;
+/// A stamen's width over its length, where the flower does not say.
+pub const STAMEN_WIDTH: f64 = 0.03;
 const COLUMN: f64 = 0.45;
 
 #[allow(clippy::trivially_copy_pass_by_ref)]
@@ -1658,6 +1969,11 @@ fn is_default_throat(value: &f64) -> bool {
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
 fn is_default_stamen_length(value: &f64) -> bool {
     *value == STAMEN_LENGTH
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_stamen_width(value: &f64) -> bool {
+    *value == STAMEN_WIDTH
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
@@ -1989,6 +2305,29 @@ pub struct Fruit {
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
     pub unripe: f64,
+    /// How much wider the fruit is toward its tip than toward its base,
+    /// -0.8 to 0.8: 0 an ellipsoid, above 0 obovoid to obconic or
+    /// club-shaped, below 0 ovoid ([`crate::fruit`]).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub flare: f64,
+    /// The colour of the seeds a ripe fruit shows: a magnolia's red seeds
+    /// hanging from its split follicles. Only follicles show them.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub seeds: Option<[f32; 3]>,
+    /// The colour of the cup a ripe fruit stands in and the swollen stalk
+    /// under it (a sassafras's red club and cup); no cup unless set. An
+    /// unripe fruit's cup is in the accent colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cup: Option<[f32; 3]>,
+    /// The colour ripening fruit pass through on the way to their own (a
+    /// magnolia's green cone turning rose before it browns); straight to
+    /// their own unless set.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ripening: Option<[f32; 3]>,
+    /// How far a ripe follicle's seeds hang below its split on their
+    /// threads, as a share of the fruit's length; 0 for seeds held in it.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub threads: f64,
 }
 
 impl Default for Fruit {
@@ -1998,6 +2337,11 @@ impl Default for Fruit {
             cone: 0.0,
             kind: FruitKind::Berry,
             unripe: 0.0,
+            flare: 0.0,
+            seeds: None,
+            cup: None,
+            ripening: None,
+            threads: 0.0,
         }
     }
 }
@@ -2011,6 +2355,11 @@ struct FruitCard {
     cone: f64,
     kind: FruitKind,
     unripe: f64,
+    flare: f64,
+    seeds: Option<[f32; 3]>,
+    cup: Option<[f32; 3]>,
+    ripening: Option<[f32; 3]>,
+    threads: f64,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -2025,6 +2374,11 @@ impl Default for FruitCard {
             cone: fruit.cone,
             kind: fruit.kind,
             unripe: fruit.unripe,
+            flare: fruit.flare,
+            seeds: None,
+            cup: None,
+            ripening: None,
+            threads: 0.0,
             count: None,
             cluster: None,
             size: None,
@@ -2054,6 +2408,11 @@ impl TryFrom<FruitCard> for Fruit {
             cone: card.cone,
             kind: card.kind,
             unripe: card.unripe,
+            flare: card.flare,
+            seeds: card.seeds,
+            cup: card.cup,
+            ripening: card.ripening,
+            threads: card.threads,
         })
     }
 }
@@ -2086,12 +2445,65 @@ pub enum FruitKind {
     Pod,
     /// A capsule or follicle: ribbed lengthwise.
     Capsule,
+    /// A cactus fruit under broad scales, crowned by its dried perianth
+    /// (Ferocactus, saguaro).
+    Scaly,
+    /// A cactus fruit studded with felted areoles, crowned by its dried
+    /// perianth (prickly pears, spineless chollas).
+    Areolate,
+    /// A cactus fruit whose areoles bear short spines, crowned by its
+    /// dried perianth (hedgehogs, organ pipe, spiny chollas).
+    Spiny,
+    /// An aggregate of follicles on a cone-like axis (magnolias), the
+    /// ripe ones split along their backs, each showing its seeds.
+    Follicles,
+    /// An aggregate of samaras overlapping up a spindle (the tulip tree):
+    /// a slender cone of upturned wings.
+    Samaras,
+    /// Several berries from one flower, splayed from one stalk (the
+    /// pawpaw's), each as wide as `aspect` makes it.
+    Berries,
 }
 
 impl FruitKind {
     #[allow(clippy::trivially_copy_pass_by_ref)]
     fn is_berry(&self) -> bool {
         *self == Self::Berry
+    }
+
+    /// The skin a cactus fruit wears, if it is one.
+    #[must_use]
+    pub fn skin(self) -> Option<Skin> {
+        match self {
+            Self::Scaly => Some(Skin::Scaly),
+            Self::Areolate => Some(Skin::Areolate),
+            Self::Spiny => Some(Skin::Spiny),
+            _ => None,
+        }
+    }
+}
+
+/// What a cactus's pericarpel bears on its skin, on the flower and on the
+/// fruit it grows into (Anderson, The Cactus Family pp. 31 to 33): the
+/// states of the `fruit_surface` character.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Skin {
+    /// Nothing (pincushions).
+    #[default]
+    Naked,
+    /// Broad scales (barrels, saguaro).
+    Scaly,
+    /// Felted areoles, with glochids but no spines (prickly pears).
+    Areolate,
+    /// Areoles with spines (hedgehogs, organ pipe).
+    Spiny,
+}
+
+impl Skin {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_naked(&self) -> bool {
+        *self == Self::Naked
     }
 }
 
@@ -2182,6 +2594,12 @@ pub struct Inflorescence {
     /// peduncle (12 with neither set), and other kinds 12.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flowers: Option<u32>,
+    /// Units of the whole cluster that set fruit, 1 to 200: the rest fall
+    /// with their flowers and leave their pedicels bare (a laurel's umbel
+    /// of six flowers ripens one to three drupes). Every unit unless set;
+    /// only the cluster's own axis sets it.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fruits: Option<u32>,
     /// Branches the axis bears in place of units, making a compound
     /// cluster: 0 to 60; 8 in a panicle, 12 in a compound umbel, else 0.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2551,6 +2969,7 @@ impl Shape {
                 }
                 check("apex_point", s.apex_point, 0.0, 0.3)?;
                 check("apex_notch", s.apex_notch, 0.0, 0.2)?;
+                count("parallel", s.parallel, 0, 12)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Lobed(s) => {
@@ -2624,6 +3043,12 @@ impl Shape {
                 for channel in s.pistil.into_iter().flatten() {
                     check("pistil", f64::from(channel), 0.0, 1.0)?;
                 }
+                for channel in s.stigma.into_iter().flatten() {
+                    check("stigma", f64::from(channel), 0.0, 1.0)?;
+                }
+                for channel in s.bud.into_iter().flatten() {
+                    check("bud", f64::from(channel), 0.0, 1.0)?;
+                }
                 for channel in s.calyx.into_iter().flatten() {
                     check("calyx", f64::from(channel), 0.0, 1.0)?;
                 }
@@ -2634,10 +3059,15 @@ impl Shape {
                 check("belly", s.belly, 0.0, 0.5)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
-                count("stamens", s.stamens, 0, 200)?;
+                count("stamens", s.stamens, 0, 400)?;
                 check("stamen_length", s.stamen_length, 0.05, 2.0)?;
+                check("stamen_width", s.stamen_width, 0.01, 0.3)?;
                 count("staminodes", s.staminodes, 0, 50)?;
-                count("carpels", s.carpels, 0, 30)?;
+                count("carpels", s.carpels, 0, 100)?;
+                check("torus", s.torus, 0.0, 1.5)?;
+                if let Some(rise) = s.rise {
+                    check("rise", rise, -20.0, 90.0)?;
+                }
                 check("column", s.column, 0.1, 1.5)?;
                 check("turn", s.turn, 0.0, 360.0)?;
                 check("open", s.open, 0.0, 1.0)?;
@@ -2656,11 +3086,23 @@ impl Shape {
                 if !(1..=2).contains(&s.petal_whorls) {
                     return Err(format!("petal_whorls is 1 or 2, found {}", s.petal_whorls));
                 }
-                if s.perianth == Perianth::Tepals && s.petals % 2 != 0 {
-                    return Err(format!(
-                        "tepals stand in two like whorls: petals must be even, found {}",
-                        s.petals
-                    ));
+                if s.perianth == Perianth::Tepals {
+                    let whorled = s.whorl > 0
+                        && s.petals % s.whorl == 0
+                        && (2..=6).contains(&(s.petals / s.whorl));
+                    if s.whorl > 0 && !whorled {
+                        return Err(format!(
+                            "tepals stand in 2 to 6 whorls of {}: petals must be a multiple \
+                             of it, found {}",
+                            s.whorl, s.petals
+                        ));
+                    }
+                    if s.whorl == 0 && s.petals % 2 != 0 {
+                        return Err(format!(
+                            "tepals stand in two like whorls: petals must be even, found {}",
+                            s.petals
+                        ));
+                    }
                 }
                 match s.corolla {
                     Corolla::Papilionaceous if s.petals != 5 || s.perianth != Perianth::Corolla => {
@@ -2777,7 +3219,17 @@ impl Shape {
             Self::Fruit(s) => {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
-                check("unripe", s.unripe, 0.0, 1.0)
+                for channel in s.seeds.into_iter().chain(s.cup).chain(s.ripening).flatten() {
+                    check(
+                        "seeds, cup or ripening colour",
+                        f64::from(channel),
+                        0.0,
+                        1.0,
+                    )?;
+                }
+                check("threads", s.threads, 0.0, 1.0)?;
+                check("unripe", s.unripe, 0.0, 1.0)?;
+                check("flare", s.flare, -0.8, 0.8)
             }
         }
     }
@@ -2920,6 +3372,7 @@ impl Compound {
         crate::divided::reach(self) * 2.0 + 0.03
     }
 
+    #[allow(clippy::too_many_lines)]
     fn validate(&self) -> Result<(), String> {
         let form = crate::divided::Form::of(self);
         let check = |field: &str, value: f64, low: f64, high: f64| {
@@ -3057,6 +3510,8 @@ pub struct Look {
     /// Its lower face's colour ([`OrganLook::underside`]), if it differs.
     pub underside: Option<[f32; 3]>,
     pub variegation: Option<Variegation>,
+    /// Its sori ([`OrganLook::sori`]), if it bears any.
+    pub sori: Option<Sori>,
     pub face_up: f64,
     /// Degrees its card turns about its own length ([`OrganLook::roll`]).
     pub roll: f64,
@@ -3077,6 +3532,8 @@ pub struct Look {
     pub varieties: Vec<Look>,
     /// The hairs on its face, where it has any to draw.
     pub hairs: Option<Hairs>,
+    /// The hairs on its lower face, where it has any to draw.
+    pub hairs_beneath: Option<Hairs>,
 }
 
 /// The varieties of each look that varies (spec rework VARY): as many as
@@ -3244,9 +3701,18 @@ pub fn resolve<'a>(
                     organ: name.to_string(),
                     colour,
                     shade,
-                    accent: look.accent.unwrap_or(colour),
+                    // Unripe fruit, and a fruit's stalk and cup, are
+                    // green as the foliage until an accent is stated.
+                    accent: look
+                        .accent
+                        .unwrap_or(if matches!(look.shape, Shape::Fruit(_)) {
+                            foliage
+                        } else {
+                            colour
+                        }),
                     underside: look.underside,
                     variegation: look.variegation,
+                    sori: look.sori,
                     face_up: look.face_up,
                     roll: look.roll,
                     insertion: look.insertion,
@@ -3273,11 +3739,13 @@ pub fn resolve<'a>(
                     shape: drawn,
                     varieties: Vec::new(),
                     hairs: look.hairs.clone().filter(Hairs::drawn),
+                    hairs_beneath: look.hairs_beneath.clone().filter(Hairs::drawn),
                 }
             }
             None => Look {
                 underside: None,
                 variegation: None,
+                sori: None,
                 organ: name.to_string(),
                 bend: crate::bend::Bend::default_for(&Shape::default_for(kind)),
                 form: crate::blooms::Form::default_for(&Shape::default_for(kind)),
@@ -3293,6 +3761,7 @@ pub fn resolve<'a>(
                 inflorescence: None,
                 varieties: Vec::new(),
                 hairs: None,
+                hairs_beneath: None,
             },
         })
         .collect::<Vec<_>>()
@@ -3456,7 +3925,12 @@ fn in_stage_of(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Loo
             }
             if season.bud_look.is_none() {
                 // A lone flower's bud is the flower itself, closed (spec
-                // rework P5).
+                // rework P5), at the flower's size: closing already draws
+                // its petals half as long.
+                let size = season
+                    .flower_look
+                    .as_ref()
+                    .map_or(bud.size, |flower| flower.size);
                 let flower = season
                     .flower_look
                     .as_ref()
@@ -3466,12 +3940,18 @@ fn in_stage_of(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Loo
                         open: 0.0,
                         ..shape.clone()
                     });
+                    // Its outside: the bud's own colour where it is stated.
+                    let (colour, accent) = shape
+                        .bud
+                        .map_or((flower.colour, flower.accent), |bud| (bud, bud));
                     return (
                         Look {
                             shape: closed,
+                            colour,
+                            accent,
                             ..flower
                         },
-                        bud.size,
+                        size,
                     );
                 }
             }
@@ -3490,9 +3970,7 @@ fn in_stage_of(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Loo
                 return (look, 0.0);
             }
             let mut look = opened(look, open);
-            if let Shape::Fruit(fruit) = &mut look.shape {
-                fruit.unripe = unripe;
-            }
+            ripen(&mut look, unripe);
             (look, 1.0)
         }
     }
@@ -3519,6 +3997,26 @@ fn opened(mut look: Look, open: f64) -> Look {
     look
 }
 
+/// `look`'s fruit with `unripe` of it still unripe, its ripe fruit in the
+/// fruit's `ripening` colour while most are unripe and in their own once
+/// all have ripened.
+fn ripen(look: &mut Look, unripe: f64) {
+    let Shape::Fruit(fruit) = &mut look.shape else {
+        return;
+    };
+    fruit.unripe = unripe;
+    if let Some(ripening) = fruit.ripening {
+        let ripe = crate::math::smoothstep(0.0, RIPENING, RIPENING - unripe);
+        for (own, mid) in look.colour.iter_mut().zip(ripening) {
+            *own = mid + (*own - mid) * ripe as f32;
+        }
+    }
+}
+
+/// The share still unripe above which ripe fruit are all in their
+/// ripening colour; below it they turn to their own.
+const RIPENING: f64 = 0.6;
+
 /// A cluster's `look` on `day` of `season`, `stage` its first unit's,
 /// which is not `whole`: each unit in a stage of its own (see [`Season`]),
 /// the cluster at its full size, or gone while none of its units shows.
@@ -3536,9 +4034,7 @@ fn in_units(
         // fruit as unripe as the cluster.
         match stage {
             Stage::Fruit { unripe } if own_fruit => {
-                if let Shape::Fruit(fruit) = &mut look.shape {
-                    fruit.unripe = unripe;
-                }
+                ripen(&mut look, unripe);
                 if let Some(cluster) = &mut look.inflorescence
                     && let Some(unit) = crate::clusters::Unit::of(&look.shape)
                 {
@@ -3620,6 +4116,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
     Look {
         underside: None,
         variegation: None,
+        sori: None,
         organ: look.organ.clone(),
         shape: stage.shape.clone(),
         colour,
@@ -3637,6 +4134,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         inflorescence: None,
         varieties: Vec::new(),
         hairs: None,
+        hairs_beneath: None,
     }
 }
 
@@ -3905,6 +4403,12 @@ impl OrganLook {
         if let Some(variegation) = &self.variegation {
             variegation.validate()?;
         }
+        if let Some(sori) = &self.sori {
+            sori.validate()?;
+            if self.variegation.is_some() {
+                return Err("a look with sori is not variegated: both are painted from the same texture channel".to_string());
+            }
+        }
         if let Some(season) = &self.season {
             season.validate()?;
             self.check_stages(season)?;
@@ -3962,9 +4466,13 @@ mod tests {
         // Written back, the defaults stay out.
         let written = serde_json::to_string(&veins).expect("writes");
         assert!(
-            !written.contains("faces") && !written.contains("rim"),
+            !written.contains("faces")
+                && !written.contains("rim")
+                && !written.contains("stretch")
+                && !written.contains("plants"),
             "{written}"
         );
+        assert!((veins.stretch - 1.0).abs() < 1e-12 && veins.feather.abs() < 1e-12);
         for wrong in [
             Variegation { lines: 13, ..veins },
             Variegation {
@@ -3972,6 +4480,18 @@ mod tests {
                 ..veins
             },
             Variegation { rim: 0.6, ..veins },
+            Variegation {
+                stretch: 0.5,
+                ..veins
+            },
+            Variegation {
+                feather: 0.6,
+                ..veins
+            },
+            Variegation {
+                plants: 1.5,
+                ..veins
+            },
         ] {
             assert!(wrong.validate().is_err(), "{wrong:?}");
         }
@@ -4119,8 +4639,10 @@ mod tests {
             "leaf".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
+                sori: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Lobed(Lobed::default()),
@@ -4376,8 +4898,10 @@ mod tests {
             "bloom".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
+                sori: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4404,6 +4928,40 @@ mod tests {
         assert_eq!(looks[1].accent, [0.9, 0.7, 0.1]);
         // A look with its own colour darkens it for shade.
         assert!(looks[1].shade[0] < 0.6 && looks[1].shade[0] > 0.0);
+    }
+
+    #[test]
+    fn unripe_fruit_is_green_as_the_foliage_unless_an_accent_is_stated() {
+        let types = [("bloom", OrganKind::Fruit)];
+        let fruit = |accent: Option<[f32; 3]>| {
+            let mut organs = BTreeMap::new();
+            organs.insert(
+                "bloom".to_string(),
+                OrganLook {
+                    hairs: None,
+                    hairs_beneath: None,
+                    underside: None,
+                    variegation: None,
+                    sori: None,
+                    roll: 0.0,
+                    insertion: crate::looks::Insertion::Marginal,
+                    shape: Shape::Fruit(Fruit::default()),
+                    colour: Some([0.1, 0.1, 0.4]),
+                    shade: None,
+                    accent,
+                    face_up: 0.0,
+                    solid: None,
+                    bend: None,
+                    form: None,
+                    season: None,
+                    families: None,
+                    inflorescence: None,
+                },
+            );
+            resolve(types, &organs, [0.1, 0.3, 0.05], [0.03, 0.1, 0.03])[0].accent
+        };
+        assert_eq!(fruit(None), [0.1, 0.3, 0.05]);
+        assert_eq!(fruit(Some([0.8, 0.7, 0.1])), [0.8, 0.7, 0.1]);
     }
 
     fn cherry() -> Season {
@@ -4471,8 +5029,10 @@ mod tests {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
+            sori: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
@@ -4502,12 +5062,12 @@ mod tests {
         }
         // Gone before its bud shows.
         assert_eq!(on(&organs, 50.0).1[1], 0.0);
-        // Its flower closed, a third of its flower's size (spec rework
-        // P5), in its flower's colours.
+        // Its flower closed at its flower's size (closing halves its
+        // petals), in its flower's colours.
         let (looks, sizes) = on(&organs, 100.0);
         assert!(matches!(&looks[1].shape, Shape::Flower(f) if f.open == 0.0));
         assert_eq!(looks[1].colour, [0.95, 0.95, 0.9]);
-        assert!((sizes[1] - 0.5 / 3.0).abs() < 1e-12);
+        assert!((sizes[1] - 0.5).abs() < 1e-12);
         // Its flower look in flower.
         let (looks, sizes) = on(&organs, 120.0);
         assert!(matches!(looks[1].shape, Shape::Flower(_)));
@@ -4564,8 +5124,10 @@ mod tests {
             "bloom".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
+                sori: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4684,8 +5246,10 @@ mod tests {
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
+            sori: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
@@ -4814,7 +5378,7 @@ mod tests {
         let (look, size) = on(clustered(ClusterKind::Umbel, 6, whole), 100.0);
         assert!(look.inflorescence.is_none());
         assert!(matches!(&look.shape, Shape::Flower(f) if f.open == 0.0));
-        assert!((size - 0.5 / 3.0).abs() < 1e-12, "{size}");
+        assert!((size - 0.5).abs() < 1e-12, "{size}");
         // Fruit with no flower look shows nothing in flower: gone.
         let bare = Season {
             flower_look: None,
@@ -4940,6 +5504,11 @@ mod tests {
                         assert!(with(field, points).is_ok(), "{at}");
                         assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
                     }
+                    Field::Colour => {
+                        let red = serde_json::json!([0.8, 0.1, 0.1]);
+                        assert!(with(field, red).is_ok(), "{at}");
+                        assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
+                    }
                 }
             }
             // Every field the template writes is listed.
@@ -4986,7 +5555,7 @@ mod tests {
                     let error = with("none".into()).unwrap_err().to_string();
                     assert!(error.contains("unknown variant"), "{key}: {error}");
                 }
-                Field::Outline => panic!("{key} takes no outline"),
+                Field::Outline | Field::Colour => panic!("{key} takes no outline or colour"),
             }
         }
     }

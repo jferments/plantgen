@@ -58,10 +58,18 @@
 # the next flowering (The Cactus Primer: one flower to an areole made the
 # year before). One ring, as before, unless a lineage asks for more.
 #
+# Revision 3 (thread "Cacti"): flowers may open down a column's flank as
+# well as round its crown (flank): each of a column's pieces from the last
+# flank years, below the newest, opens about flowers / flank flowers, buds
+# or fruit on its side, so the flank below the crown carries about another
+# ring's worth: a hedgehog's flowers burst from the upper half of its
+# stems and an organ pipe's open near the tips and along their sides.
+# None, as before, unless a lineage asks.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem column 2;
+lsystem column 3;
 
 # The plant.
 param vigour_spread;          # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -150,6 +158,7 @@ param dioecious;              # 1: each plant is male or female; 0: every plant 
 param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param crown_rings;            # rings round a column's tip: this year's, then older rings of fruit
 param ring_step;              # degrees each older ring sits below the one above
+param flank;                  # a column's pieces of the last this many years open flowers on their sides
 
 module Y(k, v, b);                      # the crown: k stems so far, vigour, arm propensity
 module Ss(k, m, v, b);                  # stems k to k + m - 1 sprouting this year
@@ -162,6 +171,7 @@ module A(v, b, kind, dr, inside, e);
 # it has an arm, and its column's kind, droop and elbow.
 module P(len, r0, rf, v, b, kind, armed, at, dr, e) queries position;
 module Ri(k, m, r, d);                  # places k to k + m - 1 of a crown's rings
+module Fk(n, len, r);                   # n flowers on the side of a piece len long and r in radius
 module Fo;                              # one place in this year's ring: a bud, a flower or a fruit
 # A joint: its length and radius, its place (a trunk joint's number up
 # the trunk, a lateral's depth in its branch), vigour, whether it has
@@ -261,10 +271,23 @@ rule P(len, r0, rf, v, b, kind, armed, at, dr, e) :
 # A piece: turned a little at random, bent toward its column's tropism,
 # filled out by its age. A column turns toward its tilt from upright; an
 # arm turns up, or a drooping one down until it has hung droop_length.
+# A recent piece of a flowering column whose flowers open down its flank
+# also opens a few on its side.
+interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) :
+        kind == 0 && flank > 0 && flowers > 0 && age >= 1 && age < flank + 1 && t * v >= bloom_age ->
+    ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
+    T(0, cos(rad(sun_tilt)), sin(rad(sun_tilt)), bend * len)
+    !(r0 + (rf - r0) * (1 - exp(-age / fill_years))) stem(len)
+    Fk(floor(flowers / flank + rand()), len, r0 + (rf - r0) * (1 - exp(-age / fill_years)));
 interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) : kind == 0 ->
     ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
     T(0, cos(rad(sun_tilt)), sin(rad(sun_tilt)), bend * len)
     !(r0 + (rf - r0) * (1 - exp(-age / fill_years))) stem(len);
+interpret Fk(n, len, r) : n >= 1 ->
+    [ f(-len * uniform(0, 1)) /(uniform(0, 360)) &(90) f(r)
+      ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ]
+    Fk(n - 1, len, r);
+interpret Fk(n, len, r) -> ;
 interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) ->
     ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
     T(0, at < dr ? -1 : 1, 0, elbow * e * len)

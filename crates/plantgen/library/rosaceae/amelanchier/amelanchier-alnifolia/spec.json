@@ -146,7 +146,8 @@
     "leaf_width_m": {"min": 0.015, "max": 0.04},
     "sexual_system": "hermaphrodite",
     "inflorescence_length_m": {"min": 0.03, "max": 0.06},
-    "fruit_size_m": {"min": 0.008, "max": 0.015}
+    "fruit_size_m": {"min": 0.008, "max": 0.015},
+    "leaf_shape": "orbicular"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -232,7 +233,8 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."}
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."}
   },
   "provenance": {
     "sources": [

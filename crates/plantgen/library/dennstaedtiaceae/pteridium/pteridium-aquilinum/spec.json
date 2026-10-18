@@ -27,8 +27,7 @@
       "crown_age": 1,
       "season": 0.5,
       "emerge_spread": 0.3,
-      "unroll": 0.3,
-      "curl": 45
+      "unroll": 0.3
     }
   },
   "growth": {
@@ -78,6 +77,7 @@
     "litter_kind": {"leaves": "usually"},
     "division_pattern": "pinnate",
     "leaf_division": "compound",
+    "ternate_blade": {"true": "usually"},
     "height_typical_m": {"min": 0.5, "max": 1.5},
     "height_max_m": 2.5,
     "life_span": "perennial",
@@ -93,6 +93,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), western bracken: stipes erect, stout, 15 to 100 cm; blades triangular to triangular-ovate, 25 to 100 cm, nearly ternately decompound, usually three times pinnate below."
+    },
+    "traits.ternate_blade": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), western bracken: blades \"nearly ternately decompound\", so usually rather than always ternate."
     },
     "traits.leaf_habit": {
       "evidence": "SourceInferred",

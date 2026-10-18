@@ -36,9 +36,8 @@
       "flower_angle": 40,
       "bud_share": 0.2,
       "fruit_share": 0.3,
-      "bud_size": 0.01,
       "flower_area": 0.363,
-      "bud_area": 0.636,
+      "bud_area": 0.029,
       "fruit_area": 1.143
     }
   },
@@ -66,13 +65,6 @@
           "centre": 0.2
         },
         "accent": [0.6, 0.5, 0.2]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.5, 0.2, 0.3]
       },
       "fruit": {
         "shape": {
@@ -164,7 +156,8 @@
     "woodiness": "herbaceous",
     "rosette": "none",
     "flowering_months": [6, 7, 8],
-    "fruiting_months": [8, 9, 10]
+    "fruiting_months": [8, 9, 10],
+    "height_typical_m": {"min": 0.05, "max": 0.15}
   },
   "evidence": {
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: tubercles ovoid to cylindrical, often four-angled; standing out from the stem, so prominent here."},
@@ -267,7 +260,8 @@
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."}
   },
   "provenance": {
     "sources": [

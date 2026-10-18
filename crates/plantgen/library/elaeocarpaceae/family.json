@@ -20,8 +20,8 @@
       "false": "sometimes"
     },
     "sexual_system": {
-      "hermaphrodite": "often",
-      "dioecious": "often"
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
     },
     "ovary_position": {
       "superior": "usually",
@@ -34,9 +34,9 @@
       "herbaceous": "sometimes"
     },
     "inflorescence": {
-      "panicle": "often",
-      "cyme": "often",
-      "raceme": "often"
+      "raceme": "usually",
+      "panicle": "sometimes",
+      "cyme": "sometimes"
     },
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -47,9 +47,9 @@
       "tepals": "sometimes"
     },
     "fruit_type": {
+      "drupe": "usually",
       "capsule": "often",
-      "drupe": "often",
-      "berry": "often"
+      "berry": "sometimes"
     },
     "stamens": {
       "min": 12,
@@ -77,6 +77,21 @@
       "evidence": "SourceInferred",
       "source": "stevens-apweb",
       "note": "APweb, Oxalidales page, Elaeocarpaceae (read 2026-10-16): flowers often 4-merous."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Elaeocarpus (read 2026-10-17): ~480 spp, flowers usually bisexual. Elaeocarpus is well over half the family (Sloanea next at ~150, Wikipedia Sloanea, sex not stated there). Dioecy is confined to smaller genera such as Aristotelia."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Elaeocarpus (read 2026-10-17): ~480 spp with flowers usually in racemes, well over half the family. Sloanea (~150, Wikipedia Sloanea) is not counted as its page gives no inflorescence; panicles and cymes stay for the remaining genera."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Elaeocarpus (read 2026-10-17): fruit an oval to round, usually blue drupe; ~480 spp, the family's largest genus by far. Sloanea (~150 spp, Wikipedia Sloanea, fruit not stated there) and the Tetratheca group carry capsules, so capsule stays often; berries (Aristotelia, Muntingia) are fewer."
     }
   }
 }

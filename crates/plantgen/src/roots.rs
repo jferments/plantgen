@@ -387,6 +387,7 @@ mod tests {
             shed: None,
             body: 0,
             within: None,
+            young: 0.0,
         };
         PlantGraph {
             age: 30.0,

@@ -121,7 +121,8 @@
     "rosette": "none",
     "perennation": "rhizome",
     "fruit_size_m": {"min": 0.001, "max": 0.0015},
-    "fruiting_months": [8, 9]
+    "fruiting_months": [8, 9],
+    "leaf_habit": "deciduous"
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -204,7 +205,8 @@
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L417775), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L417775), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L417775), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L417775), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L417775), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L417775), as no source read gives it."}
   },
   "provenance": {
     "sources": [

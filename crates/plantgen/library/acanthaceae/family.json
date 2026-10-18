@@ -35,11 +35,7 @@
       "perennial": "often"
     },
     "leaf_division": "simple",
-    "inflorescence": {
-      "cyme": "often",
-      "raceme": "often",
-      "solitary": "often"
-    },
+    "inflorescence": {"cyme": "usually", "raceme": "often", "solitary": "often", "spike": "sometimes"},
     "sexual_system": "hermaphrodite",
     "bract_form": {"petaloid": "usually"},
     "flowering_position": {"terminal": "usually"}
@@ -98,11 +94,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 412, 414, family Acanthaceae: leaf division simple; read as \"simple\"."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 412, 414, family Acanthaceae: inflorescence cyme, raceme or solitary, usually; read as {\"cyme\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Acanthaceae (read 2026-10-17; ~2,400 spp, ~250 genera): flowers solitary or grouped in cymes, racemes or verticils; the ultimate units cymose in roughly three quarters of the coded genera, the rest racemose, dichasial cymes common. Genus weighting (approximate sizes, not read this session): Justicia (~700) and Dicliptera bear cymose clusters or cymose thyrses; Strobilanthes (~400) and Aphelandra carry dense bracteate spikes (added as sometimes); Ruellia and Barleria (~300 each) mix solitary flowers and cymes; Thunbergia flowers solitary. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.sexual_system": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
