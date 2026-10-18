@@ -24,6 +24,12 @@
 //! | husked | a nut in its first third inside a husk drawn out into a beak |
 //! | pod | flat (a third as thick as wide), bulging over its seeds |
 //! | capsule | ribbed with three ribs |
+//! | follicles | a core under up to 24 beaked follicles on a Fibonacci spiral, a ripe one's seeds hanging from its split |
+//! | samaras | a spindle under up to 24 narrow wings rising round it, overlapping |
+//! | berries | three berries splayed from the stalk, each as wide as the aspect makes it |
+//!
+//! A fruit with a `cup` stands in a shallow cup on a swollen stalk, in that
+//! colour when ripe and in the accent before.
 //!
 //! A cone (`cone` of a half or more) is drawn as a single cone is
 //! (`crate::blooms`). Fruit in large clusters take fewer facets, so a
@@ -192,6 +198,17 @@ pub(crate) fn draw_unit(
 ) {
     let width = length * fruit.aspect.clamp(0.05, 2.0);
     let body = if unripe { accent } else { colour };
+    // A ripe fruit's seeds and cup in their own colours; an unripe one's
+    // seeds stay shut in it and its cup is green.
+    let extras = Extras {
+        seeds: if unripe {
+            None
+        } else {
+            Some(fruit.seeds.unwrap_or(colour))
+        },
+        cup: fruit.cup.map(|cup| if unripe { accent } else { cup }),
+        threads: fruit.threads,
+    };
     let one = One {
         base,
         direction,
@@ -211,7 +228,20 @@ pub(crate) fn draw_unit(
         blooms::draw_fruit(&cone, direction, one.across, form, fruit, body, part, mesh);
         return;
     }
-    one.draw(fruit.kind, body, accent, part, mesh);
+    one.draw(fruit.kind, body, accent, extras, part, mesh);
+}
+
+/// The silky white of the threads a magnolia's seeds hang on.
+const THREAD: [f32; 3] = [0.88, 0.86, 0.8];
+
+/// What a fruit shows beyond its body: the colour of its seeds where it
+/// opens on them (`None` while it is shut), and of its cup, if it has one.
+#[derive(Debug, Clone, Copy)]
+struct Extras {
+    seeds: Option<[f32; 3]>,
+    cup: Option<[f32; 3]>,
+    /// How far shown seeds hang on their threads, a share of the length.
+    threads: f64,
 }
 
 /// An ellipsoid at `centre`, half-lengths `(a, b, c)` along `axis`,
@@ -311,9 +341,20 @@ impl One {
         }
     }
 
-    fn draw(&self, kind: FruitKind, body: [f32; 3], accent: [f32; 3], part: Part, mesh: &mut Mesh) {
+    fn draw(
+        &self,
+        kind: FruitKind,
+        body: [f32; 3],
+        accent: [f32; 3],
+        extras: Extras,
+        part: Part,
+        mesh: &mut Mesh,
+    ) {
         let first = mesh.positions.len();
         let first_index = mesh.indices.len();
+        if let Some(cup) = extras.cup {
+            self.cup(cup, part, mesh);
+        }
         match kind {
             FruitKind::Berry => self
                 .body()
@@ -398,6 +439,9 @@ impl One {
                 capsule.rib_depth = 0.14;
                 capsule.draw(self.direction, self.across, body, part, mesh);
             }
+            FruitKind::Follicles => self.follicles(body, extras, part, mesh),
+            FruitKind::Samaras => self.samaras(body, part, mesh),
+            FruitKind::Berries => self.berries(body, part, mesh),
         }
         leaves::smooth_normals(mesh, first, first_index);
     }
@@ -499,6 +543,225 @@ impl One {
             }
             .draw(self.direction, self.across, colour, part, mesh);
         }
+    }
+
+    /// How many parts an aggregate of follicles or samaras is drawn with,
+    /// and their facets, by its detail.
+    fn parts(&self) -> (u32, Detail) {
+        let (count, around, rings) = match self.detail.around {
+            14.. => (24, 6, 4),
+            10..=13 => (18, 5, 3),
+            8..=9 => (12, 4, 3),
+            _ => (8, 4, 2),
+        };
+        (
+            count,
+            Detail {
+                around,
+                rings,
+                fine: None,
+            },
+        )
+    }
+
+    /// The point and outward direction `i` of `count` round the fruit on
+    /// a Fibonacci spiral, from `low` to `high` of its length, `out` of its
+    /// half-width from its axis there.
+    fn spiral(&self, i: u32, count: u32, (low, high): (f64, f64), out: f64) -> (Vec3, Vec3, f64) {
+        let other = self.direction.cross(self.across);
+        let t = low + (high - low) * (f64::from(i) + 0.5) / f64::from(count.max(1));
+        // The body's half-width at `t`, as an ellipsoid's.
+        let z = 2.0 * t - 1.0;
+        let ring = math::sqrt((1.0 - z * z).max(0.0));
+        let angle = math::radians(GOLDEN_DEGREES) * f64::from(i);
+        let radial = self.across * math::cos(angle) + other * math::sin(angle);
+        (
+            self.at(t) + radial * (ring * self.width * 0.5 * out),
+            radial,
+            ring,
+        )
+    }
+
+    /// A core under beaked follicles on a Fibonacci spiral; where `seeds`
+    /// is set, every third follicle split, a seed hanging from it on a
+    /// thread.
+    fn follicles(&self, colour: [f32; 3], extras: Extras, part: Part, mesh: &mut Mesh) {
+        let mut core = self.body();
+        core.a *= 0.92;
+        core.b *= 0.72;
+        core.c *= 0.72;
+        core.detail = Detail {
+            around: 6,
+            rings: 4,
+            fine: None,
+        };
+        core.draw(
+            self.direction,
+            self.across,
+            blooms::shade(colour, 0.8),
+            part,
+            mesh,
+        );
+        let (count, facets) = self.parts();
+        let size = self.width * 0.5 * 2.6 / math::sqrt(f64::from(count));
+        for i in 0..count {
+            let (centre, radial, ring) = self.spiral(i, count, (0.08, 0.95), 0.72);
+            let size = size * (0.6 + 0.4 * ring);
+            // Each follicle a flattened, beaked bulge standing out from the
+            // core, its beak toward the tip.
+            Spheroid {
+                centre,
+                a: size * 0.7,
+                b: size * 0.55,
+                c: size * 0.5,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: facets,
+            }
+            .draw(
+                (self.direction + radial * 0.6).normalize_or(self.direction),
+                radial,
+                colour,
+                part,
+                mesh,
+            );
+            // Its seed: out of the split and hanging on its thread when
+            // ripe, shut inside it until then.
+            let (seed, out) = match extras.seeds {
+                Some(seed) if i % 3 != 0 => (seed, 1.0),
+                _ => (colour, 0.0),
+            };
+            let mut hang = centre + radial * (size * (0.35 + 0.45 * out))
+                - self.direction * (size * 0.6 * out);
+            if out > 0.0 && extras.threads > 0.0 {
+                // Dangling straight down from the split on its thread.
+                let mouth = centre + radial * (size * 0.4);
+                let drop = extras.threads * self.length;
+                stalk_between(mouth, -Vec3::Y, drop, size * 0.03, THREAD, part, mesh);
+                hang = mouth - Vec3::Y * (drop + size * 0.3);
+            }
+            Spheroid {
+                centre: hang,
+                a: size * 0.42,
+                b: size * 0.34,
+                c: size * 0.34,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: Detail {
+                    around: 5,
+                    rings: 3,
+                    fine: None,
+                },
+            }
+            .draw(self.direction, radial, seed, part, mesh);
+        }
+    }
+
+    /// A slender spindle under narrow wings on a Fibonacci spiral, each
+    /// rising from the spindle and leaning out a little, overlapping up
+    /// to the tip as a cone's scales do.
+    fn samaras(&self, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        let mut spindle = self.body();
+        spindle.b *= 0.3;
+        spindle.c *= 0.3;
+        spindle.detail = Detail {
+            around: 5,
+            rings: 4,
+            fine: None,
+        };
+        spindle.draw(
+            self.direction,
+            self.across,
+            blooms::shade(colour, 0.75),
+            part,
+            mesh,
+        );
+        let (count, _) = self.parts();
+        let wing = SolidLeaf {
+            section: Section::Flat,
+            thickness: 0.04,
+            fold: 0.0,
+            widest: 0.7,
+            base: 0.15,
+            taper: 0.4,
+            tip: 0.0,
+            arch: 4.0,
+            twist: 0.0,
+            margin: None,
+            teeth: None,
+            spine: None,
+            levels: 1,
+        };
+        let stations = if self.detail.around >= 10 { 3 } else { 2 };
+        for i in 0..count {
+            let (foot, radial, _) = self.spiral(i, count, (0.04, 0.62), 0.25);
+            let tilt = (self.direction + radial * 0.32).normalize_or(self.direction);
+            let side = tilt.cross(radial).normalize_or(self.across);
+            let leaf = part.leaf(
+                foot,
+                tilt,
+                side,
+                self.length * 0.45,
+                self.width * 0.42,
+                colour,
+            );
+            leaf.draw(&wing, stations, 1, mesh);
+        }
+    }
+
+    /// Three berries splayed from the stalk, each the fruit's length and
+    /// width, leaning out to either side and forward.
+    fn berries(&self, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        let other = self.direction.cross(self.across);
+        for (k, lean) in [(-1.0, 0.0), (1.0, 0.0), (0.0, 1.0)]
+            .into_iter()
+            .enumerate()
+        {
+            let out = (self.across * lean.0 + other * lean.1) * 0.42;
+            let direction = (self.direction + out).normalize_or(self.direction);
+            let mut berry = self.body();
+            berry.a *= 0.92;
+            berry.b *= 0.9;
+            berry.c *= 0.9;
+            berry.centre = self.base + direction * (self.length * 0.48);
+            // Each a little different in size, as they ripen unevenly.
+            let grown = [1.0, 0.86, 0.74][k];
+            berry.a *= grown;
+            berry.b *= grown;
+            berry.c *= grown;
+            berry.draw(direction, self.across, colour, part, mesh);
+        }
+    }
+
+    /// A shallow cup round the fruit's base on a swollen stalk under it,
+    /// reaching up a sixth of its length.
+    fn cup(&self, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        let mut cup = self.body();
+        cup.centre = self.at(0.16);
+        cup.a = self.length * 0.16;
+        cup.b = self.width * 0.42;
+        cup.c = self.width * 0.42;
+        cup.detail = Detail {
+            around: self.detail.around.min(8),
+            rings: 3,
+            fine: None,
+        };
+        cup.half(self.direction, self.across, colour, part, mesh);
+        blooms::frustum(
+            self.base - self.direction * (self.length * 0.3),
+            self.direction,
+            self.across,
+            self.length * 0.3,
+            self.width * 0.07,
+            self.width * 0.2,
+            colour,
+            part,
+            mesh,
+        );
     }
 
     /// A seed in the first fifth and a flat wing beyond it.
@@ -713,6 +976,9 @@ mod tests {
             FruitKind::Husked,
             FruitKind::Pod,
             FruitKind::Capsule,
+            FruitKind::Follicles,
+            FruitKind::Samaras,
+            FruitKind::Berries,
         ];
         let organ = GraphOrgan {
             id: 11,

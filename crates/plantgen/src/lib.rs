@@ -681,7 +681,25 @@ pub mod venation;
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
 /// white clover's are (106 is evergreen herbs, #200).
-/// 108: cycad cones by sex (palm revision 11): a male plant bears its
+/// 108: unripe fruit, and a fruit's stalk and cup, green as the foliage
+/// unless an accent is stated; a cluster ripens only its
+/// `fruits_per_inflorescence` (`Inflorescence::fruits`), its other units
+/// gone in fruit; an aggregate drawn as its `fruitlets` say: beaked
+/// follicles with their seeds hanging in `fruit_seed_colour`, samaras up a
+/// spindle, berries splayed from one stalk, or a hip; a fruit with a
+/// `fruit_cup_colour` stands in a cup on a swollen stalk; tepals take
+/// `perianth_parts`, standing in whorls of the merosity, each inner whorl
+/// more upright and narrower; `petal_whorls` doubles a
+/// corolla; stamens as long as `stamen_length_m`, flat straps where
+/// `stamen_form` is laminar, filaments in `filament_colour`, anthers in
+/// `anther_colour`; an elongate `floral_receptacle` raises the stamens and
+/// free carpels up a cone, the carpels in `pistil_colour`; `corolla_shape`
+/// sets how far the petals rise; a lone flower's bud as large as its
+/// flower and in `bud_colour`; up to 400 stamens and 100 carpels; reduced
+/// blunt petals keep their shoulders; ripening fruit pass through
+/// `fruit_colour_ripening`, and a follicle's seeds hang on threads
+/// `fruit_seed_thread_m` long (107 is leaf zones and veins, #191).
+/// 109: cycad cones by sex (palm revision 11): a male plant bears its
 /// pollen cones (`cone_male`), a female its seed cones or, in Cycas, a
 /// crown of megasporophylls (`sporophyll`) with seeds along them, each
 /// with its own length, count, stalk, lean and life, and the stem grows on
@@ -696,6 +714,6 @@ pub mod venation;
 /// in Zamia, in vertical rows of flat-topped hexagons fitting together
 /// (`rows`); a compound card's stalk may be stout (`stalk_width`: a Cycas
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
-/// its foot (`foot`: a Zamia leaflet's jointed base) (107 is a zone's
-/// feathered edge and the plant's variegation share, #191).
-pub const GENERATOR_REVISION: u32 = 108;
+/// its foot (`foot`: a Zamia leaflet's jointed base) (108 is magnoliid
+/// fruit, #202).
+pub const GENERATOR_REVISION: u32 = 109;

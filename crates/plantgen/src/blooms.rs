@@ -181,7 +181,11 @@ impl Form {
     #[must_use]
     pub fn default_for(shape: &Shape) -> Self {
         match shape {
-            Shape::Flower(_) => Self::Flower(FlowerForm::default()),
+            // Its petals rise as far as its look says, where it says.
+            Shape::Flower(flower) => Self::Flower(FlowerForm {
+                cup: flower.rise.unwrap_or(FlowerForm::default().cup),
+                ..FlowerForm::default()
+            }),
             // A daisy's rays spread nearly flat round its disc.
             Shape::Head(_) => Self::Flower(FlowerForm {
                 cup: 8.0,

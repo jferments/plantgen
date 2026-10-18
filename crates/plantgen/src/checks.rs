@@ -2544,6 +2544,8 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
         FruitKind::Acorn | FruitKind::Husked => "nut",
         FruitKind::Pod => "legume|pod",
         FruitKind::Capsule => "capsule|follicle|schizocarp",
+        FruitKind::Follicles | FruitKind::Samaras => "aggregate",
+        FruitKind::Berries => "berry|aggregate",
     }
 }
 
@@ -2585,6 +2587,13 @@ fn flower_parts(
                 flower.petals / flower.petal_whorls.max(1),
             );
             "sepals_and_petals"
+        }
+        // Tepals stated by count stand in whorls of the merosity; else
+        // in two whorls.
+        Perianth::Tepals if flower.whorl > 0 => {
+            tally.count("flower_merosity", organ, part, flower.whorl);
+            tally.count("perianth_parts", organ, part, flower.petals);
+            "tepals"
         }
         Perianth::Tepals => {
             tally.add(
