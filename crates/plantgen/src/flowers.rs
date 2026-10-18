@@ -1662,8 +1662,9 @@ fn anther(tip: Vec3, direction: Vec3, length: f64, colour: [f32; 3], part: Part,
 }
 
 /// The rise, in degrees from the flower's plane, from which free tepals
-/// make a bell or a funnel rather than a flat or cupped perianth.
-pub const BELL: f64 = 50.0;
+/// make a bell or a funnel rather than a flat or cupped perianth: above a
+/// cupped bloom's 55 (a magnolia's), below a lily's bell at 60.
+pub const BELL: f64 = 58.0;
 
 /// How much wider than drawn flat each of `n` free tepals (`radius` from
 /// the axis, `length` long, `width` wide) is drawn where they rise as a
@@ -2621,7 +2622,7 @@ mod tests {
     fn free_tepals_in_a_bell_widen_to_overlap() {
         assert!((bell_width(30.0, false, 6.0, (0.01, 0.05, 0.01)) - 1.0).abs() < 1e-12);
         assert!((bell_width(60.0, true, 6.0, (0.01, 0.05, 0.01)) - 1.0).abs() < 1e-12);
-        let wide = bell_width(55.0, false, 6.0, (0.002, 0.05, 0.008));
+        let wide = bell_width(60.0, false, 6.0, (0.002, 0.05, 0.008));
         assert!(wide > 1.0, "{wide}");
         assert!(
             wide * 0.008 <= 0.6 * 0.05 + 1e-12,

@@ -60,7 +60,7 @@
       "why": "Free tepals or petals are drawn unjoined, however bell- or funnel-shaped the flower they make: a lily's 'sepals and petals distinct'."
     },
     "appearance.organs.flower.form.flower.cup": {
-      "map": {"corolla_shape": {"rotate": 15, "cupped": 40, "campanulate": 55, "funnelform": 65, "tubular": 75, "salverform": 15, "urceolate": 75}},
+      "map": {"corolla_shape": {"rotate": 15, "cupped": 40, "campanulate": 60, "funnelform": 65, "tubular": 75, "salverform": 15, "urceolate": 75}},
       "else": 45,
       "why": "Tepals rise from the flower's plane as its shape says: nearly flat in a star, a bowl, steeper in a bell, steeper again in a funnel or tube. A Turk's cap, which the floras name apart from those shapes, keeps the foot of its tepals at half a right angle before they curve back."
     }

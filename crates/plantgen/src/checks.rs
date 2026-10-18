@@ -2689,7 +2689,7 @@ fn nearest(table: &[(&str, f64)], value: f64) -> String {
 /// rule draws them (`liliaceae/family.json`): a bell, a funnel, and a
 /// tube or urn of tepals held close.
 const FREE_CUPS: [(&str, f64); 4] = [
-    ("campanulate", 55.0),
+    ("campanulate", 60.0),
     ("funnelform", 65.0),
     ("tubular", 75.0),
     ("urceolate", 75.0),
@@ -3428,7 +3428,7 @@ mod tests {
             ..Flower::default()
         };
         assert_eq!(raised(&lily, 40.0)[1], "rotate|cupped");
-        assert_eq!(raised(&lily, 55.0)[1], "campanulate");
+        assert_eq!(raised(&lily, 60.0)[1], "campanulate");
         assert_eq!(raised(&lily, 65.0)[1], "funnelform");
         let orchid = Flower {
             perianth: Perianth::Tepals,
