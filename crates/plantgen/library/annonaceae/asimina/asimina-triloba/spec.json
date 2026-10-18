@@ -148,7 +148,8 @@
     ],
     "life_span": "perennial",
     "rosette": "none",
-    "sexual_system": "hermaphrodite"
+    "sexual_system": "hermaphrodite",
+    "fruitlets": "berries"
   },
   "evidence": {
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Asimina triloba (read 2026-10-18): \"In autumn, the leaves are a rusty yellow\". Colour ours."},
@@ -284,7 +285,8 @@
     },
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2655435), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2655435), as no source read gives it."},
-    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2655435), as no source read gives it."}
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2655435), as no source read gives it."},
+    "traits.fruitlets": {"evidence": "SourceInferred", "source": "usda-wpsm-2008", "note": "Woody Plant Seed Manual, Asimina (read 2026-10-17): fleshy berries; each flower's three to seven pistils ripen one to several berries together, in clusters of one to four, rarely more (Pomper and Layne 2005, as a review cites them)."}
   },
   "provenance": {
     "sources": [

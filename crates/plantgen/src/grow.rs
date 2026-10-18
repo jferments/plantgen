@@ -1128,6 +1128,7 @@ fn snapshot(
                 body: segment.body,
                 left: segment.left,
                 within: within(segment.within),
+                young: segment.young,
             }
         })
         .collect();
