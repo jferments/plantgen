@@ -696,11 +696,11 @@ impl One {
         let stations = if self.detail.around >= 10 { 3 } else { 2 };
         for i in 0..count {
             let (foot, radial, _) = self.spiral(i, count, (0.04, 0.62), 0.25);
-            let lean = (self.direction + radial * 0.32).normalize_or(self.direction);
-            let side = lean.cross(radial).normalize_or(self.across);
+            let tilt = (self.direction + radial * 0.32).normalize_or(self.direction);
+            let side = tilt.cross(radial).normalize_or(self.across);
             let leaf = part.leaf(
                 foot,
-                lean,
+                tilt,
                 side,
                 self.length * 0.45,
                 self.width * 0.42,
