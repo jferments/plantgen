@@ -289,11 +289,16 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
                 _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
+            // A close-up of a few millimetres stands back with a narrower
+            // lens, as a macro lens does, so nothing it frames comes
+            // nearer than the rasterizer's near plane.
+            let distance = (span * 0.5 / half_fov).max(MACRO_DISTANCE);
+            let fov_y = crate::math::degrees(2.0 * crate::math::atan(span * 0.5 / distance));
             Camera {
-                eye: above_ground(target + direction * (span * 0.5 / half_fov)),
+                eye: above_ground(target + direction * distance),
                 target,
                 up: Vec3::Y,
-                projection: Projection::Perspective { fov_y: fov },
+                projection: Projection::Perspective { fov_y },
             }
         }
         (View::Side | View::ThreeQuarter | View::Oblique | View::Under, None) => {
@@ -357,14 +362,17 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
         || templates
             .templates
             .iter()
-            .any(|template| template.hairs.is_some())
+            .any(|template| template.hairs.is_some() || template.hairs_beneath.is_some())
     {
         crate::hairs::strand_mesh(plant, templates, &pixel)
     } else {
-        Mesh::default()
+        crate::hairs::Strands::default()
     };
-    if !strands.indices.is_empty() {
-        meshes.push((&strands, Material::Hair));
+    if !strands.hairs.indices.is_empty() {
+        meshes.push((&strands.hairs, Material::Hair));
+    }
+    if !strands.heads.indices.is_empty() {
+        meshes.push((&strands.heads, Material::Gland));
     }
     let mut shaded = vec![(&figure_mesh, Material::Opaque)];
     shaded.extend(items);
@@ -410,6 +418,11 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     }
     image
 }
+
+/// The nearest a close-up's camera stands to the point it frames, metres:
+/// well beyond the rasterizer's near plane (5 cm), so a frame a few
+/// millimetres across is drawn through a narrower lens instead.
+const MACRO_DISTANCE: f64 = 0.15;
 
 /// A surface's linear value times [`EXPOSURE`], unchanged up to
 /// [`SHOULDER`] and then rolling off toward 1 with no kink.

@@ -310,6 +310,11 @@ pub struct AtlasLayer {
     /// ([`crate::hairs::sheen`]); absent for a bare face.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hairs: Option<crate::looks::Hairs>,
+    /// The hairs on its cards' lower faces, as `hairs` are on the upper
+    /// (the lower face is the one `underside` paints); absent for a bare
+    /// lower face.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hairs_beneath: Option<crate::looks::Hairs>,
     /// The colour of its cards' lower faces, linear RGB, darkened as the
     /// accent is; absent when it is the card's colour. A card's lower face
     /// is the back (the side `heading × left` points away from) when that
@@ -1604,6 +1609,7 @@ fn assemble(
                     accent: template.accent_colour,
                     bend: (!template.bend.is_flat()).then_some(template.bend),
                     hairs: template.hairs.clone(),
+                    hairs_beneath: template.hairs_beneath.clone(),
                     underside: template.underside,
                     variegation: template.variegation,
                     sori: template.sori,
