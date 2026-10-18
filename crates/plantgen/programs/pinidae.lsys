@@ -196,7 +196,9 @@
 # shed, so a lineage can ease limb_light, which sheds a limb for the
 # segments it carries and so, in the end, for its age. And with seg_min an
 # apex holds its growth until it reaches seg_min and lays it down as one
-# shoot, its sprays as large in area as the years' it holds, so an old
+# shoot, its sprays as large in area as the years' it holds (below the
+# top_ramp metres of the treetop, whose short shoots lay down every year so
+# a young top is not a bare stick), so an old
 # limb's slow shoots cost a segment, a bud and a spray every few years, not
 # every year: a fully branched old Douglas-fir or western hemlock then fits
 # the module and segment limits without shedding its inner side shoots.
@@ -357,7 +359,7 @@ rule C(o, v, s, w, a, n) : o > 1 && side_years > 0 && age >= side_years -> ;
 rule C(o, v, s, w, a, n) : o > side_order && twig_years > 0 && age >= twig_years -> ;
 rule C(o, v, s, w, a, n) : v * pow(side_growth, o - 1) * (apical > 0 ? max(o > 1 ? max(branch_floor, side_floor) : branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2))
                      * (0.3 + 0.7 * light) < min_shoot -> ;
-rule C(o, v, s, w, a, n) : seg_min > 0 && a + v * pow(side_growth, o - 1) * (apical > 0 ? max(o > 1 ? max(branch_floor, side_floor) : branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / top_ramp)) : 1) * (0.3 + 0.7 * light) < seg_min ->
+rule C(o, v, s, w, a, n) : seg_min > 0 && height - py > top_ramp && a + v * pow(side_growth, o - 1) * (apical > 0 ? max(o > 1 ? max(branch_floor, side_floor) : branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / top_ramp)) : 1) * (0.3 + 0.7 * light) < seg_min ->
     C(o, v, light < shade_death ? s + 1 : 0, w + v * pow(side_growth, o - 1) * (apical > 0 ? max(o > 1 ? max(branch_floor, side_floor) : branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / top_ramp)) : 1) * (0.3 + 0.7 * light), a + v * pow(side_growth, o - 1) * (apical > 0 ? max(o > 1 ? max(branch_floor, side_floor) : branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / top_ramp)) : 1) * (0.3 + 0.7 * light), n + 1);
 rule C(o, v, s, w, a, n) -> G(o, a + v * pow(side_growth, o - 1) * (apical > 0 ? max(o > 1 ? max(branch_floor, side_floor) : branch_floor, apical * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / top_ramp)) : 1) * (0.3 + 0.7 * light),
                         needle_years * 2 / (1 + needle_low) * (1 + (needle_low - 1) * max(0, 1 - py / max(height, 0.1))),
