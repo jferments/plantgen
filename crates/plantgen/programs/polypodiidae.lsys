@@ -86,10 +86,26 @@
 # A scaly piece is drawn as one segment, as a bare one is, so scales no
 # longer make a stipe bend further (three segments took the tropism
 # three times).
+#
+# Revision 10 (Phase C batch 3 gaps): a pinna is sized by where it is
+# drawn on the blade, the lowest at pinna_base of the longest and the
+# topmost at pinna_tip (before, by a place half a piece below it, so a
+# short blade's lowest pair was never its longest). A pedate blade
+# (`pedate`) forks atop the stipe into two equal arms that spread level,
+# each arm_length of a pinnate rachis long, curving back arm_turn
+# degrees and bearing its pinnae on its outer side, so the blade is a
+# flat fan (Abrams 1923, p. 24, the western
+# maidenhair: "pinnae somewhat pedately arranged, arising from the outer
+# side of 2 equal branches surmounting the stipe"). A scaly piece of
+# stipe is drawn in three segments, a ring of scales at the foot of
+# each, and bends a third as much at each, as much in all as a bare
+# piece: before, the rings were set back along a piece in a straight
+# line from its end, after the tropism had turned the heading, so on a
+# long piece of an arching frond they stood off it.
 
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem polypodiidae 9;
+lsystem polypodiidae 10;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -122,6 +138,10 @@ param pinna_tip = 0.1;        # the topmost pinna, as a share of the longest
 param pinna_angle = 70;       # angle of a pinna to the rachis
 param pinna_lift = 10;        # degrees the pinnae rise out of the frond's plane
 param pinna_area = 0.23;      # leaf area of a pinna 1 m long, m²
+param pedate = 0;             # 1: the blade forks atop the stipe into two arms bearing pinnae on their outer sides
+param arm_spread = 90;        # how far each arm of a pedate blade turns off the frond's heading at the fork
+param arm_turn = 90;          # how far each arm curves back over its length
+param arm_length = 0.3;       # each arm of a pedate blade, as a share of a pinnate blade's rachis
 # Unrolling and sagging.
 param season = 0.5;           # share of the year at the keyframe
 param emerge_spread = 0.3;    # fronds emerge over this share of the year
@@ -147,13 +167,14 @@ module Fc(i, m, c);           # fronds i to i + m - 1 of this year's cohort, on 
 module Fr(s, a, e);           # a frond s long at a degrees, emerging at phase e of its year
 module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
 module Pp(k, s, e);           # a drawn piece of a rachis
-module Pn(k, s, e, h);        # a pair of pinnae h of a piece along piece k
-module Pq(z);                 # a pair of pinnae z long
+module Pn(k, s, e, h, d);     # pinnae h of a piece along piece k: a pair (d 0), or one on an arm's outer side (d 1 left arm, -1 right)
+module Pq(z, d);              # a pair of pinnae z long (d 0), or one on the side away from d
+module Ar(k, m, s, e, d);     # pieces k to k + m - 1 of a pedate blade's arm, d 1 the left, -1 the right
 module Cn(n, c);              # a new crown on its rhizome, the n-th, starting c years old
 module Sb(s, a);              # a frond's stipe base, its frond s long, opening at a degrees
 module Fe(l, e);              # a frond l long and its foot, emerging at phase e
 module Sk(z, r, n, o);        # n scales z long in a ring round a stipe r in radius, turned o degrees
-module Sq(z, r, l);           # a piece of stipe l long and r in radius, scales z long along it
+module Sq(z, r, l, g);        # a piece of stipe l long and r in radius, scales z long along it, bending under elasticity g
 module Fb(r, j, e);           # a frond's foot, r of crown_radius out at j degrees from its side, its frond emerging at phase e
 
 organ pinna leaf as leaflet area pinna_area;
@@ -213,18 +234,43 @@ interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe * scale_reach ->
     !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
     Sq(scale_length * lerp(1, scale_top, (k + 0.5) / pieces / (stipe * scale_reach)),
        frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces),
-       s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
+       s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))),
+       arch * pi / 180 / (1.5 * pieces) * clamp((age + season - e) / unroll, 0, 1)
+       + droop * min(max(0, age + season - e), droop_years));
 interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe ->
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
     !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
     F(s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
+# A pedate blade: at its first piece the frond turns level and forks
+# into its two arms, which draw the blade's pieces; the pieces after it
+# along the frond draw nothing.
+interpret Pp(k, s, e) : pedate >= 1 && k <= ceil(stipe * pieces - 0.5) ->
+    face(0, 1, 0, 1) T(0, -1, 0, 0)
+    [ +(arm_spread) Ar(k, max(1, pieces - k), s, e, 1) ]
+    [ -(arm_spread) Ar(k, max(1, pieces - k), s, e, -1) ];
+interpret Pp(k, s, e) : pedate >= 1 -> ;
 interpret Pp(k, s, e) ->
     !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
     F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
-    Pn(k, s, e, 0)
+    Pn(k, s, e, 0, 0)
     F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
-    Pn(k, s, e, 0.5);
+    Pn(k, s, e, 0.5, 0);
+
+# An arm of a pedate blade, piece by piece: each arm_length of a piece
+# of a pinnate blade's rachis, so the arms are short beside the long
+# pinnae they bear, turning back arm_turn over the arm, a pinna on its
+# outer side at each half piece.
+interpret Ar(k, m, s, e, d) : m > 1 ->
+    Ar(k, floor(m / 2), s, e, d) Ar(k + floor(m / 2), m - floor(m / 2), s, e, d);
+interpret Ar(k, m, s, e, d) ->
+    +(d * arm_turn / max(1, pieces - ceil(stipe * pieces - 0.5)))
+    !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
+    ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
+    F(s / pieces * 0.5 * arm_length * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
+    Pn(k, s, e, 0, d)
+    F(s / pieces * 0.5 * arm_length * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
+    Pn(k, s, e, 0.5, d);
 
 # A frond's foot: out from the crown's centre toward the side the frond
 # opens to (turned j degrees off it), from near the centre while it is a
@@ -239,21 +285,23 @@ interpret Fb(r, j, e) ->
 # narrowing to its broken end.
 interpret Sb(s, a) : age + dt < frond_life -> ;
 interpret Sb(s, a) ->
-    &(a + 10) !(frond_radius * 1.3) Sq(scale_length, frond_radius * 1.3, s * stub * 0.5)
-    &(8) !(frond_radius * 0.8) Sq(scale_length * 0.8, frond_radius * 0.8, s * stub * 0.5);
+    &(a + 10) !(frond_radius * 1.3) Sq(scale_length, frond_radius * 1.3, s * stub * 0.5, 0)
+    &(8) !(frond_radius * 0.8) Sq(scale_length * 0.8, frond_radius * 0.8, s * stub * 0.5, 0);
 
 # A piece of stipe clothed in its scales: three rings of a third of them
 # along it, each turned from the last, so they overlap like shingles. The
-# piece is drawn whole and the rings set back along it in a branch, so a
-# scaly stipe bends as a bare one does (a tropism acts once a segment)
-# and its scales stand on the piece that bears them.
-interpret Sq(z, r, l) : scales >= 1 ->
-    F(l)
-    [ ^(180) f(l) ^(180)
-      Sk(z, r, ceil(scales / 3), 0) f(l / 3)
-      Sk(z, r, ceil(scales / 3), 40) f(l / 3)
-      Sk(z, r, ceil(scales / 3), 80) ];
-interpret Sq(z, r, l) -> F(l);
+# piece is drawn in three segments, a ring at the foot of each, so every
+# scale stands where the stipe is; each segment bends under a third of
+# the frond's elasticity g, so a scaly stipe bends as much as a bare one
+# drawn in one (a tropism acts once a segment), and the frond's own
+# elasticity is put back after it.
+interpret Sq(z, r, l, g) : scales >= 1 ->
+    T(0, -1, 0, g / 3)
+    [ Sk(z, r, ceil(scales / 3), 0) ] F(l / 3)
+    [ Sk(z, r, ceil(scales / 3), 40) ] F(l / 3)
+    [ Sk(z, r, ceil(scales / 3), 80) ] F(l / 3)
+    T(0, -1, 0, g);
+interpret Sq(z, r, l, g) -> F(l);
 
 # A ring of scales round a stipe, each from its surface and pressed toward
 # its tip, turned a little at random; halved till one is left, so the
@@ -264,15 +312,19 @@ interpret Sk(z, r, n, o) : n >= 1 ->
     /(360 / ceil(scales / 3));
 interpret Sk(z, r, n, o) -> ;
 
-# A pair of pinnae half a piece along: sized along the blade (b from 0 at
-# the stipe's top to 1 at the tip), folded small while coiled.
-interpret Pn(k, s, e, h) ->
+# Pinnae half a piece along: sized by where they stand along the blade,
+# b from 0 at its lowest pinnae (on the first piece past the stipe,
+# ceil(stipe pieces - 0.5)) to 1 at its topmost, folded small while
+# coiled.
+interpret Pn(k, s, e, h, d) ->
     Pq(s * pinna_length
-       * (((k + h) / pieces - stipe) / (1 - stipe) < pinna_peak
-          ? lerp(pinna_base, 1, ((k + h) / pieces - stipe) / (1 - stipe) / pinna_peak)
-          : lerp(1, pinna_tip, (((k + h) / pieces - stipe) / (1 - stipe) - pinna_peak) / (1 - pinna_peak)))
-       * lerp(0.15, 1, 1 - smoothstep(0, 0.15, (k + h) / pieces - clamp((age + season - e) / unroll, 0, 1))));
-interpret Pq(z) -> [ +(pinna_angle) ^(pinna_lift) pinna(z) ] [ -(pinna_angle) ^(pinna_lift) pinna(z) ];
+       * (clamp((k + h - ceil(stipe * pieces - 0.5)) / max(0.5, pieces - ceil(stipe * pieces - 0.5) - 0.5), 0, 1) < pinna_peak
+          ? lerp(pinna_base, 1, clamp((k + h - ceil(stipe * pieces - 0.5)) / max(0.5, pieces - ceil(stipe * pieces - 0.5) - 0.5), 0, 1) / max(pinna_peak, 0.000001))
+          : lerp(1, pinna_tip, (clamp((k + h - ceil(stipe * pieces - 0.5)) / max(0.5, pieces - ceil(stipe * pieces - 0.5) - 0.5), 0, 1) - pinna_peak) / max(1 - pinna_peak, 0.000001)))
+       * lerp(0.15, 1, 1 - smoothstep(0, 0.15, (k + h) / pieces - clamp((age + season - e) / unroll, 0, 1))),
+       d);
+interpret Pq(z, d) : d == 0 -> [ +(pinna_angle) ^(pinna_lift) pinna(z) ] [ -(pinna_angle) ^(pinna_lift) pinna(z) ];
+interpret Pq(z, d) -> [ -(d * pinna_angle) ^(pinna_lift) pinna(z) ];
 
 # A new crown: out along the rhizome, then up.
 decompose Cn(n, c) ->

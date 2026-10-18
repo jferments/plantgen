@@ -1100,6 +1100,13 @@
       "type": "colour",
       "why": "a grown leaf's upper side in summer"
     },
+    "leaf_underside_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "why": "a grown leaf's underside where it differs from its upper side: paler, waxy, hairy or powdered (a goldback fern's golden farina)"
+    },
     "stipe_scale_colour": {
       "group": "leaves",
       "organ": "palea",
