@@ -669,4 +669,9 @@ pub mod venation;
 /// `stinging_hairs`), with round heads and glass needles on green feet;
 /// the strand budget spent on the hairs nearest the eye first (104 is
 /// flowering branches, #188).
-pub const GENERATOR_REVISION: u32 = 105;
+/// 106: evergreen herbs keep their basal leaves, and stems bearing leaves
+/// only, into a second year, and wintergreen grasses, rushes and sedges
+/// keep last year's blades green, from the leaf habit their taxa state
+/// (`leaf_years`; herb program revision 11, grass revision 8) (105 is
+/// hairs, #185).
+pub const GENERATOR_REVISION: u32 = 106;

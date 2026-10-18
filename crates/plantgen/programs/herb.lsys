@@ -76,9 +76,16 @@
 # herbs' draws. With flower_branches 0, as every program gives it unless
 # it says otherwise, a herb grows as before.
 #
+# Revision 11: a leaf may outlive its year. A flowering stem dies back
+# after it fruits, but its basal leaves, and a stem that bears leaves
+# only, stay leaf_years (wild ginger's evergreen leaves, a rattlesnake
+# plantain's rosette, beargrass's tufts), so an evergreen herb carries
+# last year's leaves beside this year's. With leaf_years 1, as every
+# program gives it unless a rule says otherwise, a herb grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 10;
+lsystem herb 11;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -86,6 +93,7 @@ param stem_rate;              # cohort size: stems * (1 - exp(-stem_rate * age))
 param clump_radius;           # radius a mature clump's stems spread over
 param stem_lean;              # how far the outermost stems lean out
 param maturity;               # years over which stems reach full size
+param leaf_years = 1;         # years a basal leaf, or a stem bearing leaves only, stays on: more than 1 for evergreens
 param adult_age;              # the first year the plant is adult and flowers
 # A stem.
 param stem_height;            # stem height at maturity, raceme included
@@ -147,10 +155,12 @@ param light_cell;             # light voxel edge
 module Y;                     # the crown: sends up a cohort each year
 module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
 module Sm;                    # the base of a stem
+module Sw(r);                 # where a stem leaves its basal leaves: r of it a raceme
 module Bs(j);                 # j basal leaves still to place
 module Bl(len, a);            # a basal leaf len long bending a at each joint
 module Pc(k, s, a);           # piece k of a basal leaf, s long
 module St(h, r);              # a stem h tall with a raceme r long
+module Sv(h, r);              # the same stem, past where it leaves its basal leaves
 module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
 module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
 module Lf(s);                 # the leaves at one node
@@ -206,7 +216,16 @@ decompose Pc(k, s, a) -> basal(s);
 
 # A stem h tall: a bare foot, the leafy part, then the raceme, r of the
 # height. Nodes split in halves so a long stem stays within the
-# decomposition depth.
+# decomposition depth. Where leaves outlive their year, the stem starts
+# where it leaves its basal leaves (Sw); with leaf_years 1 it needs no
+# mark, so every draw stays where it was.
+decompose St(h, r) : leaf_years > 1 -> Sw(r) Sv(h, r);
+decompose Sv(h, r) : arch > 0 ->
+    T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+decompose Sv(h, r) ->
+    !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
 decompose St(h, r) : arch > 0 ->
     T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
     Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
@@ -271,5 +290,7 @@ decompose Br(a) : bract_length > 0 ->
     [ &(a * bract_lean * uniform(0.85, 1.15)) $ bract(bract_length * uniform(0.85, 1.15)) ];
 decompose Br(a) -> ;
 
-# Last year's stems are gone.
-rule Sm -> %;
+# Last year's flowering stems are gone; their basal leaves, and stems
+# bearing leaves only, stay leaf_years.
+rule Sw(r) : r > 0 -> %;
+rule Sm : age + dt >= leaf_years -> %;

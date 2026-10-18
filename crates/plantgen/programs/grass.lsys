@@ -49,9 +49,16 @@
 # from the culm, with no random draw, so every other draw stays where it
 # was.
 #
+# Revision 8: a blade may stay green past its first year. It turns to
+# thatch after leaf_years (2 for a wintergreen grass, rush or sedge, whose
+# blades of last year stay green through winter beside this year's), and
+# its thatch stays thatch_years - 1 more as before. With leaf_years 1, as
+# every program gives it unless a rule says otherwise, a grass grows as
+# before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 7;
+lsystem grass 8;
 
 param tillers;                # living tillers in a mature tussock
 param tiller_rate;            # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -77,6 +84,7 @@ param panicle_length;
 param dioecious;              # 1: each plant is male or female; 0: every plant bears both
 param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param panicle_nod;            # degrees a panicle tips over
+param leaf_years = 1;         # years a blade stays green: more than 1 for wintergreens
 param thatch_years;           # years dead blades stay on
 param thatch_droop;           # extra degrees a dead blade bends at each joint
 param light_cell;             # light voxel edge: about a blade's spacing
@@ -138,7 +146,7 @@ decompose Lv(j) -> ;
 decompose Bl(len, a) -> leaf Pc(0, len * 0.12 / (1 - pow(0.88, pieces)), a);
 decompose Pc(k, s, a) : k < pieces - 1 -> blade(s) f(s) Bd(a) Pc(k + 1, s * 0.88, a);
 decompose Pc(k, s, a) -> blade_tip(s);
-interpret Bd(a) -> /(gauss() * twist) &(a + thatch_droop * min(age, 1));
+interpret Bd(a) -> /(gauss() * twist) &(a + thatch_droop * min(max(age - leaf_years + 1, 0), 1));
 
 # A flowering tiller's culm: a leaf at each node, the panicle at the top.
 decompose Fl : t >= adult_age && rand() < flowering ->
@@ -159,7 +167,7 @@ decompose Cu(s, j) -> F(s) &(panicle_nod * uniform(0.5, 1.5))
 
 # A year on, the cohort is dead: its blades become thatch without their
 # tips, and its culms fall. After thatch_years as thatch it is gone.
-rule blade(s) -> thatch(s);
-rule blade_tip(s) -> ;
+rule blade(s) : age + dt >= leaf_years -> thatch(s);
+rule blade_tip(s) : age + dt >= leaf_years -> ;
 rule Cm -> %;
-rule Tl : age >= thatch_years -> %;
+rule Tl : age >= thatch_years + leaf_years - 1 -> %;

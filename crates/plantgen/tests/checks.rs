@@ -233,11 +233,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
-        "leaf_habit",
-        "a cohort's blades turn to thatch the year after they grow, so a wintergreen grass, rush or sedge (the fescues, tufted hairgrass, orchardgrass, Yorkshire fog, soft rush, slough sedge) draws its leaves as deciduous until the grass program keeps a green blade through winter",
-    ),
-    (
-        "program:grass",
         "phyllotaxis_pattern",
         "a tiller's blades are measured round the vertical, so where a tiller leans out about as far as its blades stand off it (tufted hairgrass, coirón, Roemer's and red fescue: blades 10° to 15° off, tillers leaning up to 22°) the lean turns them all one way and the turns read as a spiral or three ranks (inferred, not traced)",
     ),
@@ -245,11 +240,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:grass",
         "shoot_leaves",
         "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
-    ),
-    (
-        "program:herb",
-        "leaf_habit",
-        "a herb's stems and their leaves live one season, so an evergreen herb (western rattlesnake plantain, common beargrass) draws its leaves as deciduous until the herb program keeps a leaf through winter",
     ),
     (
         "program:herb",
