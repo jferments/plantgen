@@ -718,7 +718,111 @@ pub mod venation;
 /// 112: the soft tree fern puts out a year's fronds in one spring flush
 /// (`emerge_spread` 0.15, from 0.3), so its croziers stand together at
 /// the crown's top (111 is tree-fern croziers, #205).
-/// 113: cycad cones by sex (palm revision 12): a male plant bears its
+/// 113: a spine set can keep to the upper areoles of a pad or joint
+/// (`SpineSet::distal`, from `lower_areole_spines`): its lower areoles
+/// carry fewer spines or none and draw smaller far cards, and a tuft
+/// stores where it sits along its segment (112 is the soft tree fern's
+/// spring flush, #207).
+/// 114: a cactus column's flowers may open down its flank as well as round
+/// its crown (`column` revision 3, `flank`: the pieces of its last flank
+/// years open a few on their sides; `cactaceae` revision 9), from the new
+/// `flower_zone`: a hedgehog's along the upper half of its stems, an organ
+/// pipe's near the tips and down their sides (113 is spines on the
+/// upper areoles).
+/// 115: a cactus's fruit wears its pericarpel (`FruitKind::Scaly`,
+/// `Areolate` and `Spiny`, from the new `fruit_surface`): broad scales on
+/// a barrel's or the saguaro's, felted areoles with glochids on a prickly
+/// pear's, areoles with short spines on a hedgehog's, the organ pipe's or
+/// a spiny cholla's, each crowned by its dried perianth; and a cactus
+/// stem's tip tapers, rounds or broadens into a shoulder as the new
+/// `stem_apex` says (`BodyLook::shoulder`), and a club-shaped column
+/// stays narrower at its foot (`stem_outline`) (114 is flank flowers).
+/// 116: a cactus flower's pericarpel wears its fruit's skin
+/// (`Flower::pericarpel`, from `fruit_surface`), its bud is the flower
+/// closed (no hand bud looks; `bud_size` seven tenths of the flower's), a
+/// prickly pear's or cholla's flower sits on a pericarpel longer than its
+/// radius, a fruit narrows toward its base or tip (`Fruit::flare`, from
+/// the new `fruit_shape`), and stigma lobes take their own colour
+/// (`Flower::stigma`, from the new `stigma_colour`) (115 is fruit skins
+/// and stem tips).
+/// 117: a lineage whose flowers end its shoots (`flowering_position`
+/// terminal or both: `tip_bloom`, broadleaf revision 17) ends each shoot
+/// tip that has stopped at the crown's edge, once adult and in the light,
+/// in its year's blooms, nearly along the shoot, so its flowers and fruit
+/// stand on the crown's surface, not only on the short shoots inside it;
+/// other plants draw as before. Sarcandra and Chloranthus serratus state
+/// their terminal inflorescences. The leaf-arrangement check counts only
+/// leaves born with their internode, so short shoots crowding a node are
+/// not read as a whorl (116 is cactus
+/// pericarpels and stigmas, #184).
+/// 118: a flowering herb's side branches bear leaves, as large as the leaf
+/// in whose axil they stand, and branch again where the taxon states two
+/// orders (`flowering_branch_orders`; herb program revision 12) (117 is
+/// terminal blooms, #170).
+/// 119: a herb's stem may be a sympodium (`sympodium`; herb program
+/// revision 13, program `solanaceae`); a measured corolla tube is drawn as
+/// long as stated (`corolla_tube_length_m`, a flower's `tube_reach`); a
+/// flower's posture turns a sympodium's flowers and a woody plant's blooms
+/// (`flower_posture`); a panicle's cluster size is its branches' length; a
+/// lone bloom may hang on a stalk of its own (`pedicel_length_m`;
+/// broadleaf program revision 18); a flower's sepals, petals, floral tube,
+/// stamens and style are drawn at their stated lengths and postures and in
+/// their own colours; a fruit keeps its calyx or bears prickles or
+/// bristles (`fruit_armature`); young wood takes its twig colour; bark
+/// texture sets the bark pattern; leaves in whorls of three or more are
+/// drawn round the node (broadleaf program revision 19); a fruit hangs,
+/// spreads or stands as its posture says (`fruit_posture`, a fruit's
+/// `hang`).
+/// 120: a lily is drawn from its flora's words: a herb's flower and bud
+/// stalks arch over to the flower's posture (herb program revision 14); a
+/// flower's tepals bend back from part way along them (`curl_from`, from
+/// `perianth_reflexion` and `perianth_reflexion_from`), up to 270 degrees
+/// where they roll; spots on their inner faces (`spots`, from
+/// `perianth_spots`, in `perianth_spot_colour`); anthers in their own
+/// colour (`anther_colour`); stamens as far out as `stamen_exsertion`
+/// says; free tepals unjoined however bell-shaped (`perianth_fused`); a
+/// petal's or tepal's foot is drawn in its own colour where a flora gives
+/// one (`base_colour`, `base_length`, from `perianth_base_colour` and
+/// `perianth_base_length`), its nectaries as a star at the flower's heart
+/// (`star_colour`, from `nectary_colour`); free tepals rising as a bell
+/// are widened to overlap; a lily's whorled stem bears a few scattered
+/// leaves below and above its whorls, and bulbils in its upper leaf axils
+/// where its flora says (liliaceae program revision 2, `bulbils`,
+/// `bulbil_colour`).
+/// 121: previews and impostors cut a card where its coverage, read
+/// bilinearly between texels, is below one half, so an entire blade's edge
+/// follows its outline rather than a staircase of texels that reads as
+/// teeth up close (118 is herb branch leaves, #190).
+/// 122: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// give it, so their blades narrow to the stated tip; six of them
+/// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
+/// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
+/// their stated leaf shape where a hand-drawn profile stood (118 is
+/// flowering herbs' branch leaves, #190).
+/// 123: the family programs built on broadleaf (asterales, fabales,
+/// malvaceae, moraceae, salicaceae, simmondsiaceae, each revision 2) bear
+/// one bloom on each short shoot in the light once adult where a species
+/// leaves `blooms` unset, as broadleaf's forms do; until now nine species
+/// on them (bursage, umbrella thorn, baobab, Florida strangler fig,
+/// aspen, black cottonwood, two willows, jojoba) never flowered or fruited,
+/// whatever months they stated. A regular flower is not judged by the
+/// kind of zygomorphy its family states (109 is fern
+/// croziers green, #186).
+/// 124: a chain-fruit cholla's chains of fruit hang toward the ground
+/// (`column` revision 4, `cactaceae` revision 10), the organ pipe's
+/// flowers carry hundreds of stamens and an 11- to 12-lobed stigma, and a
+/// type of laid-out flowers too many to draw fine is drawn one step
+/// coarser instead of as cards (`blooms::step`) (116 is pericarpels, buds,
+/// fruit outlines and stigma colours).
+/// 125: a deciduous tree's, shrub's or woody vine's leaves keep a year
+/// (`appearance.organs.leaf.leafing`, set from `leaf_habit`,
+/// `leaf_out_months`, `leaf_fall_months` and `leaf_colour_autumn`): the
+/// plant stands bare in winter, puts out small pale leaves in spring that
+/// grow to full size and green, turns its autumn colour and drops them,
+/// where its leaves had stood green all year; months falling before the
+/// leaves unfold are the next year's, as a southern beech's are (109 is fern
+/// croziers green, #186).
+/// 126: cycad cones by sex (palm revision 12): a male plant bears its
 /// pollen cones (`cone_male`), a female its seed cones or, in Cycas, a
 /// crown of megasporophylls (`sporophyll`) with seeds along them, each
 /// with its own length, count, stalk, lean and life, and the stem grows on
@@ -733,6 +837,6 @@ pub mod venation;
 /// in Zamia, in vertical rows of flat-topped hexagons fitting together
 /// (`rows`); a compound card's stalk may be stout (`stalk_width`: a Cycas
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
-/// its foot (`foot`: a Zamia leaflet's jointed base) (112 is the soft
-/// tree fern's flush, #207).
-pub const GENERATOR_REVISION: u32 = 113;
+/// its foot (`foot`: a Zamia leaflet's jointed base) (125 is deciduous
+/// leaf years, #214).
+pub const GENERATOR_REVISION: u32 = 126;

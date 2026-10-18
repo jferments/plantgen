@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Circaea",
+  "traits": {
+    "flower_merosity": 2,
+    "stamens": 2,
+    "petal_apex": "bilobed",
+    "leaf_arrangement": "opposite",
+    "inflorescence": "raceme",
+    "carpels": 2
+  },
+  "evidence": {
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "hooker-1884",
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea (genus account), p. 159 (read on the Internet Archive, 2026-10-17): calyx limb 2-parted, petals 2, stamens 2; Bentham (p. 154) the same."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "hooker-1884",
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea (genus account), p. 159 (read on the Internet Archive, 2026-10-17): stamens 2."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "hooker-1884",
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea (genus account), p. 159 (read on the Internet Archive, 2026-10-17): petals 2, obcordate (notched at the tip); Wikipedia 'Circaea lutetiana' (read 2026-10-17): 2 notched petals."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "bentham-hooker-1908",
+      "note": "Bentham and Hooker, Handbook of the British Flora (1908 printing), Circaea, p. 154 (read on the Internet Archive, 2026-10-17): leaves opposite, on rather long stalks."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "hooker-1884",
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea, p. 159 (read on the Internet Archive, 2026-10-17): lax erect racemes, terminal and lateral, stalked, usually without bracts."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "hooker-1884",
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea, p. 159 (read on the Internet Archive, 2026-10-17): fruit 2-celled, each cell with one seed."
+    }
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "schema": 1,
+  "id": "solanum-melongena",
+  "taxon": {
+    "scientific_name": "Solanum melongena",
+    "common_name": "eggplant",
+    "family": "Solanaceae",
+    "genus": "Solanum",
+    "plant_name_id": 3032200
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "clump_radius": 0.01,
+      "stem_radius": 0.008,
+      "first_leaves": 7,
+      "side_shoots": 2
+    }
+  },
+  "growth": {
+    "years": 1,
+    "step": 1,
+    "keyframes": [
+      1
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.75,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "annual",
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 0.9,
+      "low": 0.4,
+      "high": 1.5
+    },
+    "sympodial_unit_leaves": 2,
+    "leaf_shape": "ovate",
+    "leaf_incision": "lobed",
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.2,
+      "low": 0.075,
+      "high": 0.3
+    },
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "petiole_length_m": 0.025,
+    "bark_colour": [
+      115,
+      135,
+      95
+    ],
+    "leaf_colour": [
+      80,
+      105,
+      70
+    ],
+    "inflorescence": "cyme",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 5,
+      "typical": 2
+    },
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.06
+    },
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.04
+    },
+    "flower_colour": [
+      150,
+      100,
+      190
+    ],
+    "fruit_size_m": {
+      "min": 0.1,
+      "max": 0.2,
+      "low": 0.025,
+      "high": 0.23
+    },
+    "fruit_width_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "fruit_colour_ripe": [
+      45,
+      20,
+      50
+    ],
+    "fruit_posture": "pendent",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "calyx_in_fruit": "accrescent",
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the nightshades work (2026-10-17): every character from the floras in the nightshades notes (plantgen-claude project-files/nightshades/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Solanum melongena, plant_name_id 3032200 (Library 1.0 list, read 2026-10-17)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Solanaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its habit as the floras describe it, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown to the age it is drawn at: an annual's one season, a perennial's or shrub's few years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawing values no character gives (nightshades, 2026-10-17): one plant from one seed; stem 16 mm at the foot, seven leaves below the first cluster and two side shoots, by eye from photographs (iNaturalist 133102788), Bailey (vol. 6 p. 3182) calling it much branched."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): 2-3 ft; Wikipedia 'Eggplant': 40-150 cm. Its reference height is the middle of that range, 0.75 m, at its last keyframe."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Eggplant, p. 1101 (read on the Internet Archive, 2026-10-17): a perennial herb or subshrub grown as a garden annual."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): 2-3 ft; Wikipedia 'Eggplant': 40-150 cm."
+    },
+    "traits.sympodial_unit_leaves": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Two leaves on each unit between clusters, from photographs (iNaturalist 133102788); no source read this session counts them."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): leaves large, ovate or oblong-ovate."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): shallowly sinuate-lobed; Flora of British India (p. 235): sinuate or lobed."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Eggplant' (read 2026-10-17): leaves 10-20 cm long, over 30 cm in semi-wild types; Flora of British India: 3-6 in."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Eggplant' (read 2026-10-17): 5-10 cm broad; Flora of British India: 2-4 in."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Solanum Melongena, p. 235 (read on the Internet Archive, 2026-10-17): petiole 1 in."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): woolly or scurfy and spiny; the stems grey-green in photographs (iNaturalist 205124070). The colour is our reading."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): woolly or scurfy, nearly glabrous above, densely tomentose beneath; photographs (iNaturalist 133102788) grey-green. The colour is our reading."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Solanum Melongena, p. 235 (read on the Internet Archive, 2026-10-17): cymes lateral, few-flowered; Bailey: mostly solitary in cultivated plants."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Solanum Melongena, p. 235 (read on the Internet Archive, 2026-10-17): 1-5 fruits on a peduncle in escapes."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: inflorescence 2-5 cm, widened to its flowers."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): corolla 1 in or more across; Flora of British India 1-1.5 in."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): corolla purplish; Flora of British India: blue. The colour is our reading of the words."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Solanum Melongena, p. 235 (read on the Internet Archive, 2026-10-17): cultivated berries 1-9 in; Britton and Brown: up to 6 in."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "An egg-shaped berry (Wikipedia, Bailey) about half as wide as long; our reading of 'egg-shaped', no width read."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Eggplant' (read 2026-10-17): a glossy purple berry; Bailey: purple, white, yellowish or striped. The colour is our reading of the word."
+    },
+    "traits.fruit_posture": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 296012680 (CC-licensed photograph, viewed 2026-10-17): the fruit hang. No text read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flowers June-September."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Solanum Melongena, p. 235 (read on the Internet Archive, 2026-10-17): the calyx lobes enlarge in fruit, usually much shorter than the fruit and often prickly."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Eggplant, p. 1102 (read on the Internet Archive, 2026-10-17): sow 120 to 150 days before the fruit is wanted, set out when the weather allows, and pinch the blossoms three weeks before frost so the fruit sizes; so fruit from August until the frost. The months are our reading of the days."
+    }
+  }
+}

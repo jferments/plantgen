@@ -23,6 +23,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "ambrosia-dumosa",
+        "fruit_size_m",
+        "bursage first flowers with the family programs' blooms (revision 110): its bur, 4 to 6 mm with its hooked spines, is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
+    ),
+    (
+        "ambrosia-dumosa",
+        "involucre_diameter_m",
+        "bursage first flowers with the family programs' blooms (revision 110): its small staminate heads are drawn with the capitulum's default involucre, wider than the 3 to 5 mm the records give",
+    ),
+    (
+        "ambrosia-dumosa",
         "leaf_shape",
         "its dissected blade is drawn on a compound card of three pairs of lobed segments (spec rework E1), whose outline reads obovate or orbicular against the deltate, oblong or ovate outline Abrams and Ferris give the whole blade",
     ),
@@ -57,9 +67,29 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
     ),
     (
+        "capsicum-annuum",
+        "leaf_length_m",
+        "the smaller leaf of each geminate pair is drawn half the larger (Kilmer's ratio for belladonna) and the sympodium's leaves shrink to three quarters upward, so the least draw about 2 cm long, against the 5 to 10 cm Bailey gives the leaves of its varieties, which are not the smaller of a pair",
+    ),
+    (
+        "capsicum-annuum",
+        "leaf_width_m",
+        "the smaller leaf of each geminate pair is drawn half the larger and the sympodium's leaves shrink to three quarters upward, so the least draw about 1.2 cm wide, against the 2 to 6.4 cm Bailey gives the leaves of its varieties",
+    ),
+    (
+        "celastrus-scandens",
+        "shoot_leaves",
+        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18, from maples' long shoots; the climber program grows few leaves on a shoot (as on aristolochia-macrophylla)",
+    ),
+    (
         "chloranthus-serratus",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
+    ),
+    (
+        "circaea-lutetiana",
+        "leaf_length_m",
+        "its stem leaves shrink upward to 0.4 of the longest (the forb's default), so the topmost blades draw about 2.3 cm against the 2.5 cm least Hooker gives",
     ),
     (
         "cirsium-vulgare",
@@ -87,6 +117,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
     ),
     (
+        "datura-stramonium",
+        "leaf_shape",
+        "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Britton and Brown give",
+    ),
+    (
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
@@ -110,6 +145,21 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "frangula-purshiana",
         "inflorescence",
         "Rhamnaceae's flowers are in cymes or panicles (Simpson 2019), but cascara's axillary clusters are drawn as an umbel",
+    ),
+    (
+        "fuchsia-excorticata",
+        "petiole_length_m",
+        "Hooker (p. 75) has the blade twice the petiole, but no rule sets a broadleaf's petiole from a trait yet, so it is drawn at the library's default share",
+    ),
+    (
+        "fuchsia-magellanica",
+        "leaf_arrangement",
+        "its leaves are in threes (Bailey, Bean), but the broadleaf program draws at most two leaves a node, so it draws them opposite",
+    ),
+    (
+        "fuchsia-magellanica",
+        "shoot_leaves",
+        "a cut-back plant's shoots grow 3 to 5 ft a season (Bean) with some 15 to 25 whorls, but in the open at six years its shoots grow no more than a few vigour units, bearing about 8 leaves",
     ),
     (
         "hedera-helix",
@@ -172,6 +222,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
     (
+        "nicotiana-tabacum",
+        "leaf_length_m",
+        "its stem leaves shrink upward to a quarter of the longest (King's: smaller upward), so the topmost draw about 9 cm against the 1 to 2 ft King's gives, which it measures on the main leaves",
+    ),
+    (
+        "nicotiana-tabacum",
+        "leaf_width_m",
+        "its stem leaves shrink upward to a quarter of the longest, so the topmost draw about 4 cm wide against the 6 to 8 in King's gives the main leaves",
+    ),
+    (
         "nymphaea-odorata",
         "shoot_leaves",
         "its rhizome is not drawn and each pad's petiole is, as a stem of its own, so each reads as a shoot of one leaf against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
@@ -207,6 +267,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a climbing shoot adds one or two nodes a season, each with one leaf, so it bears 1 to 2 leaves a year against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "populus-tremuloides",
+        "juvenile_period_years",
+        "aspen first flowers with the family programs' blooms (revision 110): its stated 2 to 3 years is adult_age, but broadleaf bears blooms only on short shoots, which a young aspen whose buds all grow out as long shoots first makes in its fourth year",
+    ),
+    (
         "stachys-byzantina",
         "leaf_arrangement",
         "the herb program turns a stem's basal leaves one at a time by the divergence, not in pairs, so lamb's ear's rosette reads as alternate though its stem leaves stand in opposite pairs",
@@ -230,6 +295,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:grass",
         "shoot_leaves",
         "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "program:herb",
+        "petiole_length_m",
+        "a leaf card's petiole is the card's own share of the leaf (0.15 of a simple card's length), not read from petiole_length_m, so jimsonweed's and enchanter's nightshade's long petioles draw under a centimetre and tobacco's sessile leaves draw one",
     ),
     (
         "program:herb",
@@ -277,6 +347,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are drawn on one card, the three-lobed form with broad rounded lobes as photographs show it, 16.9 cm wide, against FNA's 5 to 10 cm, which covers its narrower unlobed and mitten leaves too (inferred: FNA gives one width for all three forms)",
     ),
     (
+        "solanum-melongena",
+        "leaf_shape",
+        "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Bailey and Wikipedia give",
+    ),
+    (
         "tillandsia-usneoides",
         "leaf_shape",
         "its leaves are drawn as cards tapering from the base, an eighth as broad as long, so they read deltate or lanceolate against the linear leaves Bromeliaceae state",
@@ -285,6 +360,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
+    ),
+    (
+        "vachellia-tortilis",
+        "inflorescence_length_m",
+        "umbrella thorn first flowers with the family programs' blooms (revision 110): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
     ),
 ];
 

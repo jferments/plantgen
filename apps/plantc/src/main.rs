@@ -2814,6 +2814,14 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
         for &day in &row_days {
             let (looks, shares) = looks_of(&spec, &growth, day);
             let share = shares.get(index).copied().unwrap_or(1.0);
+            // A fruit that hangs is borne a length above the ground, so
+            // it hangs in the air as it does on the plant.
+            let lift = match looks.get(index).map(|look| &look.shape) {
+                Some(plantgen::looks::Shape::Fruit(fruit)) if fruit.hang > 0.0 => {
+                    length * largest * 1.1
+                }
+                _ => 0.0,
+            };
             let alone = PlantGraph {
                 age,
                 height: length,
@@ -2823,7 +2831,7 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                         id: 1,
                         organ: u16::try_from(index).map_err(|_| "too many organ types")?,
                         segment: None,
-                        position: Vec3::ZERO,
+                        position: Vec3::Y * lift,
                         heading: Vec3::Y,
                         left: Vec3::X,
                         size: length * share,
@@ -2857,7 +2865,23 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                     figure: false,
                     frame_height: None,
                     focus: Some((
-                        Vec3::Y * middle.map_or(length * largest * 0.5, |middle| length * middle),
+                        Vec3::Y
+                            * if lift > 0.0 {
+                                // Round the solid it drew, wherever it hangs.
+                                let (low, high) = plant.wood.positions.iter().fold(
+                                    (f64::MAX, f64::MIN),
+                                    |(low, high), p| {
+                                        (low.min(f64::from(p[1])), high.max(f64::from(p[1])))
+                                    },
+                                );
+                                if low <= high {
+                                    0.5 * (low + high)
+                                } else {
+                                    lift
+                                }
+                            } else {
+                                middle.map_or(length * largest * 0.5, |middle| length * middle)
+                            },
                         length * largest * 1.3,
                     )),
                 },

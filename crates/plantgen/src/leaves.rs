@@ -130,8 +130,14 @@ pub struct SolidLeaf {
     /// square end (a daisy ray's truncate tip).
     #[serde(skip_serializing_if = "is_zero")]
     pub tip: f64,
-    /// Degrees the midrib bends toward the leaf's back from base to tip.
+    /// Degrees the midrib bends toward the leaf's back from base to tip,
+    /// up to 270 (a revolute tepal rolled back on itself).
     pub arch: f64,
+    /// Share of the length from the base that stays straight before the
+    /// arch begins: 0 bends it evenly from the base, 0.45 keeps a lily
+    /// tepal's lower part in its cup and bends the rest back.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub arch_from: f64,
     /// Degrees the section turns about the midrib from base to tip.
     pub twist: f64,
     /// Colour of the margins, the organ's colour if absent (linear RGB):
@@ -160,7 +166,8 @@ impl SolidLeaf {
         within("solid base", self.base, 0.0, 4.0)?;
         within("solid taper", self.taper, 0.05, 10.0)?;
         within("solid tip", self.tip, 0.0, 1.0)?;
-        within("solid arch", self.arch, -180.0, 180.0)?;
+        within("solid arch", self.arch, -180.0, 270.0)?;
+        within("solid arch_from", self.arch_from, 0.0, 0.95)?;
         within("solid twist", self.twist, -720.0, 720.0)?;
         within(
             "solid levels",
@@ -199,6 +206,7 @@ impl Default for SolidLeaf {
             taper: 1.0,
             tip: 0.0,
             arch: 0.0,
+            arch_from: 0.0,
             twist: 0.0,
             margin: None,
             teeth: None,
@@ -372,7 +380,16 @@ impl Leaf {
         let mut frames = Vec::with_capacity(stations + 1);
         for i in 0..=stations {
             let u = i as f64 / stations as f64;
-            let tangent = self.heading.rotate_about(self.left, arch * u);
+            // A blade bent from part way takes each segment's direction
+            // at its middle, so the bend is whole by the tip however few
+            // stations it has.
+            let bent = if solid.arch_from > 0.0 {
+                let mid = (u + 0.5 / stations as f64).min(1.0);
+                ((mid - solid.arch_from) / (1.0 - solid.arch_from)).clamp(0.0, 1.0)
+            } else {
+                u
+            };
+            let tangent = self.heading.rotate_about(self.left, arch * bent);
             let side = self.left.rotate_about(tangent, twist * u);
             let face = tangent.cross(side);
             frames.push((point, tangent, side, face, u));
@@ -654,6 +671,7 @@ mod tests {
             section: Section::Keeled,
             fold: 0.3,
             arch: 30.0,
+            arch_from: 0.0,
             teeth: Some(Teeth::default()),
             spine: Some(TipSpine::default()),
             ..SolidLeaf::default()

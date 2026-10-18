@@ -115,7 +115,8 @@
     "rosette": "none",
     "inflorescence_length_m": {"min": 0.03, "max": 0.1},
     "flower_symmetry": "actinomorphic",
-    "fruit_size_m": {"min": 0.004, "max": 0.008}
+    "fruit_size_m": {"min": 0.004, "max": 0.008},
+    "leaf_apex": {"caudate": "usually", "acuminate": "often"}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -195,7 +196,8 @@
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.050)."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.050)."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Salix lasiandra (read 2026-10-18): the largest mid-shoot blades taper to a caudate to acuminate tip."}
   },
   "provenance": {
     "sources": [

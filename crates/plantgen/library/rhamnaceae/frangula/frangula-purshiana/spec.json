@@ -126,6 +126,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [215, 185, 60],
     "height_max_m": {
       "min": 3,
       "max": 10
@@ -145,9 +146,11 @@
     "leaf_shape": "elliptic",
     "leaf_margin": "serrate",
     "inflorescence_length_m": {"min": 0.01, "max": 0.03},
-    "fruiting_months": [7, 8, 9]
+    "fruiting_months": [7, 8, 9],
+    "leaf_apex": {"obtuse": "usually", "truncate": "sometimes"}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Frangula purshiana (read 2026-10-18): \"The leaves turn yellow in autumn\". Colour ours."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
@@ -233,7 +236,8 @@
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2814099), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2814099), as no source read gives it."},
     "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2814099), as no source read gives it."},
-    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.234)."}
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.234)."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Frangula purshiana (read 2026-10-18): the tip is blunt or squared off."}
   },
   "provenance": {
     "sources": [

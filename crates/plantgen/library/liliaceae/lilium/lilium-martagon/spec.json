@@ -1,0 +1,260 @@
+{
+  "schema": 1,
+  "id": "lilium-martagon",
+  "taxon": {
+    "scientific_name": "Lilium martagon",
+    "common_name": "martagon lily",
+    "plant_name_id": 279985,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 1.35,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.9,
+      "max": 1.8
+    },
+    "leaf_arrangement": {
+      "whorled": "usually",
+      "alternate": "often"
+    },
+    "leaf_whorls": {
+      "min": 2,
+      "max": 4,
+      "typical": 3
+    },
+    "leaves_per_whorl": {
+      "min": 6,
+      "max": 9,
+      "typical": 7
+    },
+    "leaf_length_m": {
+      "min": 0.076,
+      "max": 0.152
+    },
+    "leaf_width_m": {
+      "min": 0.025,
+      "max": 0.038
+    },
+    "leaf_shape": "oblanceolate",
+    "leaf_posture": "spreading",
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 20,
+      "high": 50,
+      "typical": 8
+    },
+    "flower_posture": "pendent",
+    "perianth_reflexion": "revolute",
+    "flower_colour": [
+      145,
+      65,
+      105
+    ],
+    "perianth_spots": "many",
+    "perianth_spot_colour": [
+      55,
+      20,
+      40
+    ],
+    "tepal_length_m": {
+      "min": 0.032,
+      "max": 0.038
+    },
+    "anther_colour": [
+      175,
+      55,
+      35
+    ],
+    "bark_colour": [
+      90,
+      115,
+      55
+    ],
+    "fruit_size_m": {
+      "min": 0.02,
+      "max": 0.028
+    },
+    "flowering_months": [
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium martagon, plant_name_id 279985."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): stem 3-6 ft high; Wikipedia 'Lilium martagon': 1-2 m. Its reference height is the middle of that range, 1.35 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): stem 3-6 ft high; Wikipedia 'Lilium martagon': 1-2 m."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): leaves usually in 2-4 whorls of 6-9 leaves each, with a few scattered ones above; Wikipedia: mostly in whorls."
+    },
+    "traits.leaf_whorls": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): usually in 2-4 whorls; var. dalmaticum 5-7."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): whorls of 6-9 leaves each. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): leaves 3-6 in long; Wikipedia: up to 16 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): leaves 1-1 1/2 in wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Lilium martagon' (read 2026-10-18): leaves elliptic to inverse lanceolate."
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): leaves horizontal, deep green."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): flowers 3-20; Wikipedia: up to 50 on vigorous plants. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium martagon var. pilosiusculum (efloras.org, read 2026-10-18): flowers 2-7 in a raceme, nodding; Bailey's segments reflexed to the stem leave the flower hanging."
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): segments thick, waxy, reflexed to the stem: rolled back until they touch the stalk, drawn as revolute."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): dull claret-purple; Wikipedia: typically a pink-purple, quite variable. The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): spotted purplish black; Wikipedia: with dark spots."
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): spotted purplish black. The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium martagon var. pilosiusculum (efloras.org, read 2026-10-18): tepals 3.2-3.8 cm x 8-9 mm, the only variety it describes; Bailey: flowers 2-3 in diam., which tepals of that length reflexed to the stem give."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): anthers red. The colour is our reading of the words."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): stem smooth, green, often spotted purple; Wikipedia: green stems can be flushed with purple or red. The colour is our reading of the words."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium martagon var. pilosiusculum (efloras.org, read 2026-10-18): capsule obovoid-oblong, 2-2.8 cm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): late June, July; Flora of China (var. pilosiusculum): Jun-Jul."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 24, Lilium martagon var. pilosiusculum (efloras.org, read 2026-10-18): fruit Aug."
+    }
+  }
+}

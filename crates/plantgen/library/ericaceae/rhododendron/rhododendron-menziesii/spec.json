@@ -177,7 +177,8 @@
     "height_typical_m": {"min": 1, "max": 2},
     "rosette": "none",
     "leaf_width_m": {"min": 0.01, "max": 0.025},
-    "leaf_margin": "entire"
+    "leaf_margin": "entire",
+    "leaf_apex": {"acute": "usually", "rounded": "often", "mucronate": "often"}
   },
   "evidence": {
     "taxon": {
@@ -273,7 +274,8 @@
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2905087), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2905087), as no source read gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2905087), as no source read gives it."},
-    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2905087), as no source read gives it."}
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2905087), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Rhododendron menziesii (read 2026-10-18): treated as Menziesia ferruginea, the blade tip is acute or rounded and ends in a tiny mucro."}
   },
   "provenance": {
     "sources": [

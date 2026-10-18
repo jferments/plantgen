@@ -27,7 +27,7 @@ pub const SPEC_SCHEMA: u32 = 1;
 pub const UNNOTED: &[&str] = &["schema", "id", "tier", "evidence", "provenance"];
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 86] = [
+pub const PROGRAMS: [(&str, &str); 87] = [
     ("pinidae", include_str!("../programs/pinidae.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -142,6 +142,7 @@ pub const PROGRAMS: [(&str, &str); 86] = [
         "schoenoplectus",
         include_str!("../programs/schoenoplectus.lsys"),
     ),
+    ("solanaceae", include_str!("../programs/solanaceae.lsys")),
     ("urticaceae", include_str!("../programs/urticaceae.lsys")),
     ("violaceae", include_str!("../programs/violaceae.lsys")),
     ("vitaceae", include_str!("../programs/vitaceae.lsys")),
@@ -519,6 +520,12 @@ pub struct Appearance {
     /// up close stand from it as strands. None where none are stated.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub stem_hairs: Option<crate::looks::Hairs>,
+    /// Colour of the young wood where it differs from the bark: a
+    /// fuchsia's red shoots, a dogwood's red twigs. The wood is in it its
+    /// first year and turns to the bark's as it ages past
+    /// [`crate::hairs::YOUNG_YEARS`]. The bark's where none is stated.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub young_wood: Option<[f32; 3]>,
     /// Colour of organs in full light, unless their look gives one.
     pub foliage: [f32; 3],
     /// Colour of organs in deep shade; shaded organs blend toward it.

@@ -94,7 +94,7 @@
 //!        sheds f32×C, templates u8×C
 //! tufts: u32 tuft count T, positions f32×3T, normals f32×3T, ups f32×3T,
 //!        scales f32×T, greys f32×T, seeds u32×T, births f32×T,
-//!        sheds f32×T, body types u8×T
+//!        sheds f32×T, alongs f32×T, body types u8×T
 //! ```
 //!
 //! Tufts, the areoles of fleshy bodies whose spines a renderer expands
@@ -2444,6 +2444,7 @@ pub fn encode_mesh(plant: &PlantMesh) -> Vec<u8> {
         }
         out.f32s(tufts.iter().map(|tuft| &tuft.born));
         out.f32s(tufts.iter().map(|tuft| &tuft.shed));
+        out.f32s(tufts.iter().map(|tuft| &tuft.along));
         for tuft in tufts {
             out.u8(tuft.body);
         }
@@ -2666,7 +2667,7 @@ fn read_part_variants(input: &mut Reader) -> Result<Vec<Mesh>, PackageError> {
 /// Bytes per wood vertex, per card and per tuft, without padding.
 const WOOD_VERTEX_BYTES: usize = 57;
 const CARD_BYTES: usize = 65;
-const TUFT_BYTES: usize = 57;
+const TUFT_BYTES: usize = 61;
 
 fn triples(values: &[f32]) -> Vec<[f32; 3]> {
     values.as_chunks::<3>().0.to_vec()
@@ -2778,6 +2779,7 @@ fn decode_tufts(input: &mut Reader<'_>, count: usize) -> Result<Vec<Tuft>, Packa
     }
     let births = input.f32s(count)?;
     let shed_ages = input.f32s(count)?;
+    let alongs = input.f32s(count)?;
     let bodies = input.take(count)?;
     let tufts = (0..count)
         .map(|index| Tuft {
@@ -2790,6 +2792,7 @@ fn decode_tufts(input: &mut Reader<'_>, count: usize) -> Result<Vec<Tuft>, Packa
             body: bodies[index],
             born: births[index],
             shed: shed_ages[index],
+            along: alongs[index],
         })
         .collect();
     input.skip_padding()?;

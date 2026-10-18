@@ -199,7 +199,8 @@
       10
     ],
     "leaf_width_m": {"min": 0.01, "max": 0.03},
-    "leaf_shape": "elliptic"
+    "leaf_shape": "elliptic",
+    "leaf_apex": "acute"
   },
   "evidence": {
     "taxon": {
@@ -303,7 +304,8 @@
       "note": "A model estimate (confidence high), as the FEIS review read gives no months."
     },
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L91873), as no source read gives it."},
-    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L91873), as no source read gives it."}
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L91873), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Goodyera oblongifolia (read 2026-10-18): the tip is acute."}
   },
   "provenance": {
     "sources": [

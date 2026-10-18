@@ -136,6 +136,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [95, 90, 45],
     "height_max_m": {
       "min": 15,
       "max": 25
@@ -157,9 +158,11 @@
     "rosette": "none",
     "leaf_width_m": {"min": 0.03, "max": 0.08},
     "inflorescence_length_m": {"min": 0.06, "max": 0.15},
-    "fruit_size_m": {"min": 0.015, "max": 0.03}
+    "fruit_size_m": {"min": 0.015, "max": 0.03},
+    "leaf_apex": {"acute": "usually", "obtuse": "often"}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Alnus rubra (read 2026-10-18): \"Rather than turning yellow in autumn, its leaves darken in colour and wither before they are shed\". Colour ours: a darkened olive."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -251,7 +254,8 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.379)."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.379)."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Alnus rubra (read 2026-10-18): the leaf tip is acute to obtuse."}
   },
   "provenance": {
     "sources": [

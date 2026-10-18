@@ -19,6 +19,7 @@ Do not use that knowledge for anything else.
   "kind": "photo | herbarium_sheet | drawing | render (optional; see below)",
   "views": ["V1", "V4"],
   "organs_visible": ["leaf", "flower"],
+  "leaf_face": "upper | lower | both | none | cannot tell",
   "stage": "vegetative | bud | flowering | fruiting | leafless | mixed | cannot tell",
   "leaf_state": "none | flushing | full | autumn_colour | leafless | cannot tell",
   "setting": "open_grown | forest | garden_or_street | pot_or_indoor | pruned_or_hedge | cannot tell",
@@ -54,10 +55,19 @@ Do not use that knowledge for anything else.
   | V5 | one or more leaves face-on and flat (herbarium sheets usually) |
   | V6 | one or more flowers or flower heads face-on |
   | V7 | flowers or an inflorescence from the side |
-  | V8 | a close-up of fruit, cones, bark, or the stem surface |
+  | V8 | a close-up of fruit, cones, bark, or the stem surface (a cactus's ribs and areoles, its top) |
 
+  A species is photographed to a target number of images per view
+  (`SOURCES.md`), and these views are what `imagekit views` counts.
 - **organs_visible**: from `plant, stem, bark, leaf, leaflet, shoot, flower,
-  inflorescence, fruit, cone, seed, spine, areole, root`.
+  inflorescence, fruit, cone, seed, spine, areole, apex, root`. `apex` is
+  the growing top of a stem seen close enough to tell what covers it: a
+  cactus's crown with its wool and youngest spines, a rosette's heart.
+- **leaf_face**: which face of the leaves shows clearly enough to read its
+  colour and hairs: `upper`, `lower` (the underside: a leaf turned over, or
+  a shoot seen from below), `both`, or `none` (no leaves in frame). Leaf
+  undersides are a target of their own: felted and coloured undersides
+  were missed in v1 for want of photos of them.
 - **age_class**: for trees and shrubs, judge by trunk thickness, bark, crown
   shape and any scale cue: `seedling` (under knee height), `juvenile`
   (no flowers or cones, slim stem), `young` (adult form, still slim,

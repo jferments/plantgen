@@ -555,6 +555,38 @@ impl Templates {
         }
     }
 
+    /// The template's coverage at `(u, v)`, read bilinearly between the
+    /// four nearest texel centres, so that a card cut where it is below
+    /// one half has an edge as smooth as the outline it was painted from,
+    /// not a staircase of texels a close view would read as teeth. A
+    /// template that does not exist is fully covered.
+    #[must_use]
+    pub fn coverage(&self, template: usize, u: f32, v: f32) -> f32 {
+        let Some(template) = self.templates.get(template) else {
+            return 1.0;
+        };
+        let size = self.size;
+        #[allow(clippy::cast_precision_loss)]
+        let last = (size - 1) as f32;
+        // The lower texel and how far past its centre the point lies.
+        let lower = |coordinate: f32| -> (usize, f32) {
+            #[allow(clippy::cast_precision_loss)]
+            let at = (coordinate * size as f32 - 0.5).clamp(0.0, last);
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let index = (at as usize).min(size - 1);
+            #[allow(clippy::cast_precision_loss)]
+            let fraction = at - index as f32;
+            (index, fraction)
+        };
+        let (x, fx) = lower(u);
+        let (y, fy) = lower(v);
+        let (x1, y1) = ((x + 1).min(size - 1), (y + 1).min(size - 1));
+        let at = |row: usize, column: usize| template.coverage[row * size + column];
+        let below = at(y, x) + (at(y, x1) - at(y, x)) * fx;
+        let above = at(y1, x) + (at(y1, x1) - at(y1, x)) * fx;
+        below + (above - below) * fy
+    }
+
     /// Albedo of a card texel: the card's colour, blended toward the look's
     /// accent colour by the texel's accent weight, times its brightness.
     /// The accent colour is darkened as much as the card's colour is
@@ -3519,6 +3551,29 @@ fn one_fruit(
             let seeds = (math::cos(std::f64::consts::TAU * 5.0 * t)).max(0.0);
             Paint::solid(0.65 + 0.25 * seeds + 0.2 * math::sqrt(1.0 - d), 0.0)
         }
+        FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
+            let d = ellipse(0.5, 0.5, 1.0);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            // The dried perianth's dark crown, and the scales or felted
+            // areoles in offset rows over the skin.
+            if ellipse(0.94, 0.08, 0.32) < 1.0 {
+                return Paint::solid(0.4, 0.0);
+            }
+            let rows = 5.0;
+            let row = (t * rows).floor();
+            let offset = if row % 2.0 == 0.0 { 0.0 } else { 0.5 };
+            let du = frac(t * rows) - 0.5;
+            let dv = frac(v * 1.6 + offset) - 0.5;
+            let dot = du * du + dv * dv < 0.03;
+            let bright = match (dot, s.kind) {
+                (false, _) => ball(d, 0.5, 0.5),
+                (true, FruitKind::Scaly) => 0.55,
+                (true, _) => 1.25,
+            };
+            Paint::solid(bright, 0.0)
+        }
         FruitKind::Capsule => {
             let d = ellipse(0.5, 0.5, 1.0);
             if d >= 1.0 {
@@ -4384,6 +4439,7 @@ mod tests {
                     bend: None,
                     form: None,
                     season: None,
+                    leafing: None,
                     families: None,
                     inflorescence: None,
                 },
@@ -4741,6 +4797,32 @@ mod tests {
         let petal = templates.sample(1, 0.5, 0.82);
         assert_eq!(petal.coverage, 1.0);
         assert!(petal.accent < 0.2);
+    }
+
+    #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn a_card_s_cut_coverage_runs_smoothly_between_texels() {
+        let templates = Templates::for_looks(&looks_of(&[Shape::Palmate(Palmate::default())]));
+        let size = templates.size;
+        let texel = |x: usize, y: usize| templates.templates[0].coverage[y * size + x];
+        // At a texel's centre the coverage is the texel's own.
+        let centre = |i: usize| (i as f32 + 0.5) / size as f32;
+        for (x, y) in [(64, 6), (6, 6), (64, 64), (40, 90)] {
+            let read = templates.coverage(0, centre(x), centre(y));
+            assert!((read - texel(x, y)).abs() < 1e-5, "{read} {}", texel(x, y));
+        }
+        // Between two texels of one row it is their mean, so an edge
+        // between a covered and a bare texel is cut halfway, not on the
+        // texel's side.
+        let row = 6;
+        let edge = (0..size - 1)
+            .find(|&x| texel(x, row) < 0.5 && texel(x + 1, row) >= 0.5)
+            .expect("an edge on the row");
+        let between = templates.coverage(0, (edge as f32 + 1.0) / size as f32, centre(row));
+        let mean = f32::midpoint(texel(edge, row), texel(edge + 1, row));
+        assert!((between - mean).abs() < 1e-5, "{between} {mean}");
+        // A template that does not exist is fully covered.
+        assert_eq!(templates.coverage(9, 0.5, 0.5), 1.0);
     }
 
     #[test]

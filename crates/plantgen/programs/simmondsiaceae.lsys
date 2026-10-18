@@ -5,10 +5,14 @@
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem simmondsiaceae 1 extends broadleaf;
+# Revision 2: a species that leaves `blooms` unset bears one bloom on
+# each short shoot in the light once adult, as on broadleaf's forms;
+# until now it bore none, so it never flowered or fruited.
+
+lsystem simmondsiaceae 2 extends broadleaf;
 
 param light_half = 0.3;     # light at which a tip gathers half of full light's vigour; 0: in proportion
-param blooms = 0;           # blooms at the tip of a short shoot in the light
+param blooms = 1;           # blooms at the tip of a short shoot in the light
 param adult_age = 4;        # the first year the plant is adult and flowers
 param bloom_size = 0.05;    # bloom card length
 param bloom_angle = 35;     # angle of a bloom to its shoot; past 90 it hangs

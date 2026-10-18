@@ -87,5 +87,13 @@
     },
     "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Solanaceae (read 2026-10-17; ~2,700 spp): berries across Solanoideae (bar Datura and Hyoscyameae), Juanulloideae and Cestrum; capsules in the rest of Cestroideae, Schizanthoideae, Salpiglossideae, Datura; drupes in Lycieae and Iochrominae. DELTA (read 2026-10-17) lists capsule, berry or drupe. Weighted by genus size (approximate, not read this session): berry-fruited Solanum (~1,250) alone is nearly half the family, plus Lycianthes (~200), Cestrum (~150), Physalis, Capsicum; capsular Nicotiana (~75), Petunia, Schizanthus, Datura total a few hundred. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.leaf_division": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add compound (sometimes): Simpson, Plant Systematics (2019) p. 428, 429: simple, pinnate or ternate."}
+  },
+  "forms": {
+    "forb": {
+      "generator": {"program": "solanaceae"},
+      "evidence": {
+        "generator.program": {"evidence": "Authored", "source": "plantgen-authors", "note": "The lineage's own program (growth plan G2.3a), on the herb base: a nightshade's stem is a sympodium, each unit ending in an inflorescence that the next unit pushes aside, so its flowers stand beside the stem across from a leaf or in the forks of its branches."}
+      }
+    }
   }
 }
