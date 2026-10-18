@@ -111,7 +111,7 @@ class Detect(unittest.TestCase):
         self.assertNotIn(self.sha["d.jpg"], rows)
         a = rows[self.sha["a.jpg"]]
         self.assertEqual((a["task"], a["region"], a["out"]["image"]), ("detect", 0, [320, 240]))
-        leaf = [r for r in a["out"]["regions"] if r["organ"] == "leaf"][0]
+        leaf = next(r for r in a["out"]["regions"] if r["organ"] == "leaf")
         for got, want in zip(leaf["box"], self.boxes["a.jpg"]):
             self.assertAlmostEqual(got, want, delta=0.04)
         self.assertEqual([r["organ"] for r in rows[self.sha["c.jpg"]]["out"]["regions"]], ["plant"])
@@ -137,7 +137,7 @@ class Detect(unittest.TestCase):
         self.assertEqual(got, {("a.jpg", "leaf"), ("b.jpg", "plant")})
         self.assertEqual(res["crops"], 2)
         leaf = next(x for x in lines if x["organ"] == "leaf")
-        w, h = Image.open(out / leaf["file"]).size
+        w = Image.open(out / leaf["file"]).width
         self.assertAlmostEqual(w / 320, 0.5 * 1.08, delta=0.08)  # the box plus its margin
         everything = json.loads(self.cli("crops", "--out", str(self.tmp / "all"), "--triage", "none"))
         self.assertEqual(everything["crops"], 5)
