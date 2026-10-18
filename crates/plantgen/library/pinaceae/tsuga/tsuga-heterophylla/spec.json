@@ -12,7 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
-      "apical": 0.5,
+      "apical": 0.8,
       "cone_chance": 0.15,
       "cone_years": 1,
       "cone_area": 0.785,
@@ -35,7 +35,9 @@
       "shade_death": 0.06,
       "shade_years": 5,
       "pipe_organ": 0.009,
-      "branch_reach": 6.0,
+      "branch_reach": 8.0,
+      "bole": 0.15,
+      "side_years": 30,
       "pipe_rings": 6.8e-06
     }
   },
@@ -144,7 +146,22 @@
     "generator.params.apical": {
       "evidence": "SourceInferred",
       "source": "inaturalist-crowns-2026-10",
-      "note": "Old conifers (pinidae revision 13): the share of the leader's yearly growth a branch grows, fitted so the drawn crown's widths match the photographed open-grown trees', young (2 trees): .43 .53 .58 .59 .49 .38 .34 .29 .11 .04; drawn at 60 years .58 .58 .59 .49 .49 .41 .31 .24 .15 .08."
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (2 trees) .43 .53 .58 .59 .49 .38 .34 .29 .11 .04; mature (3) .31 .54 .62 .66 .62 .57 .54 .39 .25 .11; drawn 60 years .69 .68 .63 .58 .52 .46 .38 .28 .17 .06; 150 years .49 .51 .46 .41 .39 .36 .32 .27 .17 .05. apical sets the young crown's width."
+    },
+    "generator.params.branch_reach": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (2 trees) .43 .53 .58 .59 .49 .38 .34 .29 .11 .04; mature (3) .31 .54 .62 .66 .62 .57 .54 .39 .25 .11; drawn 60 years .69 .68 .63 .58 .52 .46 .38 .28 .17 .06; 150 years .49 .51 .46 .41 .39 .36 .32 .27 .17 .05. branch_reach, the wood at which a limb's yearly shoot is halved, sets how far old limbs spread."
+    },
+    "generator.params.bole": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of an old tree's height cleared of limbs, cleared in step with height so saplings keep limbs to the ground: no old open-grown tree among the photographs; mature ones keep limbs to the ground, and .15 leaves an old tree a short clean trunk like the other old Pinaceae photographed."
+    },
+    "generator.params.side_years": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Old conifers (pinidae revision 13): a limb's side shoots live 30 years and are replaced from its dormant buds, so the old crown's living wood stays within the program's module limit at 300 years; without it the crown fitted to the photographs (inaturalist-crowns-2026-10) passed the limit before 300 years."
     },
     "generator.params": {
       "evidence": "Authored",

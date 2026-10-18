@@ -12,7 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
-      "apical": 0.55,
+      "apical": 0.9,
       "cone_chance": 0.12,
       "cone_length": 0.09,
       "cone_area": 0.524,
@@ -27,7 +27,8 @@
       "shade_years": 4,
       "pipe_organ": 0.009,
       "pipe_rings": 6.6e-06,
-      "branch_reach": 6.0
+      "branch_reach": 6.0,
+      "bole": 0.05
     }
   },
   "growth": {
@@ -135,7 +136,17 @@
     "generator.params.apical": {
       "evidence": "SourceInferred",
       "source": "inaturalist-crowns-2026-10",
-      "note": "Old conifers (pinidae revision 13): the share of the leader's yearly growth a branch grows, fitted so the drawn crown's widths match the photographed open-grown trees', young (3 trees): widths .67 .71 .69 .63 .55 .42 .36 .25 .16 .09 of height at each tenth from the ground; drawn at 60 years .68 .70 .67 .61 .51 .46 .35 .26 .16 .09."
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (3 trees) .67 .71 .69 .63 .55 .42 .36 .25 .16 .09; old (1) .50 .64 .67 .65 .61 .50 .57 .58 .45 .28; drawn 60 years .65 .64 .59 .56 .51 .44 .38 .31 .18 .07; 300 years .47 .54 .50 .50 .43 .40 .36 .31 .28 .11. apical sets the young crown's width."
+    },
+    "generator.params.branch_reach": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (3 trees) .67 .71 .69 .63 .55 .42 .36 .25 .16 .09; old (1) .50 .64 .67 .65 .61 .50 .57 .58 .45 .28; drawn 60 years .65 .64 .59 .56 .51 .44 .38 .31 .18 .07; 300 years .47 .54 .50 .50 .43 .40 .36 .31 .28 .11. branch_reach, the wood at which a limb's yearly shoot is halved, sets how far old limbs spread."
+    },
+    "generator.params.bole": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of an old tree's height cleared of limbs, cleared in step with height so saplings keep limbs to the ground: open-grown trees photographed keep limbs nearly to the ground at every stage (crown base .03 young, .05 old)."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -31,6 +31,26 @@
       "rule": "0",
       "why": "A pine's apical control weakens as it ages: its upper branches turn up and keep growing while the leader slows, so an old pine's crown flattens or domes (Farjon: ponderosa pine's crown broad, columnar or domed) rather than staying conical as the rest of the family's do."
     },
+    "generator.params.side_order": {
+      "rule": "1",
+      "why": "Pines keep the Pinidae program's single order of side shoots until their old crowns are fitted (the family's ramifying crown starved whitebark and western white pine by 150 years)."
+    },
+    "generator.params.twig_years": {
+      "rule": "0",
+      "why": "With side_order 1 a pine has no twig order to retire."
+    },
+    "generator.params.epi_years": {
+      "rule": "300",
+      "why": "A pine's dormant buds keep the Pinidae program's life until its old crowns are fitted."
+    },
+    "generator.params.branch_floor": {
+      "rule": "0.02",
+      "why": "Unused while a pine's apical is 0; the Pinidae program's value."
+    },
+    "generator.params.top_ramp": {
+      "rule": "0",
+      "why": "Pines keep the Pinidae program's full-length top shoots until their crowns are fitted."
+    },
     "generator.params.bend_set": {
       "rule": "0.1",
       "why": "A pine's limbs keep a tenth of each year's sag, as a broadleaf tree's do, not the half other conifers keep: Farjon gives first-order pine branches as spreading and assurgent or ascending, and keeping half drew old ponderosa and whitebark pines' limbs hanging to the ground."
@@ -46,7 +66,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Conifer lives (M6): the ratio of the longest to the shortest needle life a species states, in place of the Pinidae program's 1.56 (a western redcedar's, Harlow et al. 2005), which kept western white and ponderosa pines' lowest needles up to 5 and 6 years against their stated 2 to 3 and 3 to 4. Long-needled pines (conifers, needle shading): a long-needled pine's spray card is a single brush with no side twigs (Abrams' needles in bundles on dwarf shoots, standing out all round the twig), its needles their stated length up to 0.6 of the card and the card as wide as they reach; the 0.4 cap at the Pinidae drew ponderosa pine's 12 to 25 cm needles 9.8 cm long. Pine limbs (pinidae revision 13): bend_set 0.1, from Farjon (2017)'s pine branches, spreading and assurgent (ponderosa) or ascending; at the Pinidae's 0.5, limbs grown 150 years hung in a skirt below the crown. Pine crowns (the same revision): apical 0, against the family's 0.6, as Farjon gives old pines' crowns broad, domed or flat-topped; capped, ponderosa pine starved by 150 years as its leader slowed."
+      "note": "Conifer lives (M6): the ratio of the longest to the shortest needle life a species states, in place of the Pinidae program's 1.56 (a western redcedar's, Harlow et al. 2005), which kept western white and ponderosa pines' lowest needles up to 5 and 6 years against their stated 2 to 3 and 3 to 4. Long-needled pines (conifers, needle shading): a long-needled pine's spray card is a single brush with no side twigs (Abrams' needles in bundles on dwarf shoots, standing out all round the twig), its needles their stated length up to 0.6 of the card and the card as wide as they reach; the 0.4 cap at the Pinidae drew ponderosa pine's 12 to 25 cm needles 9.8 cm long. Pine limbs (pinidae revision 13): bend_set 0.1, from Farjon (2017)'s pine branches, spreading and assurgent (ponderosa) or ascending; at the Pinidae's 0.5, limbs grown 150 years hung in a skirt below the crown. Pine crowns (the same revision): apical 0, against the family's 0.6, as Farjon gives old pines' crowns broad, domed or flat-topped; capped, ponderosa pine starved by 150 years as its leader slowed. Pine limbs keep the program's single order of side shoots, bud life and full-length tops (side_order 1, twig_years 0, epi_years 300, branch_floor 0.02, top_ramp 0) against the family's ramifying crown, which starved whitebark and western white pines by 150 years in trials (2026-10-18); old pines are still to be fitted."
     }
   }
 }

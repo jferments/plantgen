@@ -615,6 +615,10 @@ pub mod venation;
 /// a branch's yearly shoot may be a share of the leader's (`apical`,
 /// fitted to photographed crowns for six Pinaceae, 0.5 for the rest but
 /// pines; `branch_floor`), so crowns are cones instead of tubes, and the
-/// family's limbs keep 0.15 of each year's sag (96 is
-/// nodding leaders, #167).
+/// family's limbs keep 0.15 of each year's sag; and the family's old
+/// limbs branch again (`side_order` 2, twigs living `twig_years` with one
+/// spray each), stop lengthening with their reach, start short below the
+/// treetop (`top_ramp`) and clear the trunk in step with height (`bole`),
+/// so fully branched crowns grow to 300 years (96 is nodding leaders,
+/// #167).
 pub const GENERATOR_REVISION: u32 = 97;
