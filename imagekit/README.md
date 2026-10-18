@@ -25,7 +25,9 @@ What it does now:
 - **render** a species' standing views with `plantc` into the store, and
   **compare** the renders' answers with the photos' and the text;
 - **embed** each image once per model (SigLIP2, DINOv2, BioCLIP-2) and
-  **search** the library by words or by a photo.
+  **search** the library by words or by a photo;
+- **detect** organs (leaf, flower, fruit, bark, the whole plant) in each
+  image, cut them out as **crops**, and embed and search the organs alone.
 
 ## Install
 
@@ -241,6 +243,31 @@ a rerun embeds nothing and a stopped run picks up where it left off.
 reciprocal-rank fusion. `--by-species` ranks species by the mean of their
 best three images, and `--html` writes a contact sheet with each photo's
 credit and licence.
+
+## Organs: detect, crop, embed
+
+```sh
+imagekit detect --taxon "Asimina triloba"                  # Grounding DINO on the usable photos and the renders
+imagekit crops --taxon "Asimina triloba" --organ leaf --out ~/pawpaw-leaves
+imagekit embed --model dinov2 --regions --taxon "Asimina triloba"
+imagekit search --model dinov2 --organ leaf --image leaf.jpg --by-species
+```
+
+`detect` asks Grounding DINO (`gdino-tiny` by default, `gdino-base` for
+more recall) for a whole plant, leaves, flowers, flower clusters, fruit,
+cones and trunks in one pass. It stores one `detect` analysis per image,
+listing each region's organ, box (fractions of width and height) and
+score. Photos need a triage first: only usable ones are detected, and
+renders always are. About 5 s an image on a CPU at 1024 px.
+
+Crops keep only the organs the image's triage saw (`organs_visible`, and
+the whole plant in views V1 to V3), so fingers holding a flower are not
+kept as leaves. `crops` writes them as JPEGs with `crops.jsonl` (source,
+licence, box, score) for looking at them or handing them to a chat
+observer. `embed --regions` embeds each kept organ with a small margin.
+Its analyzer names the detector, organs, triage and margin, so organ
+vectors never mix with whole-image vectors. `search --organ` ranks those
+crops: give it a photo of just the organ, or `--box` round it.
 
 ## Render and compare
 

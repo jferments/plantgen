@@ -56,6 +56,14 @@ def jsonl(path: Path):
                     yield json.loads(line)
 
 
+def is_render(row: dict) -> bool:
+    """A PlantGen render: a `render` source block (imagekit render), or the replay set's renders,
+    which say so only in their creator."""
+    src = row.get("source") or {}
+    return (bool(src.get("render")) or src.get("source") == "render"
+            or str(src.get("creator") or "").startswith("PlantGen render"))
+
+
 SEALED = ".pushed.json"  # in a batch or run folder: it is on data.plantgen.io and takes no more rows
 
 
