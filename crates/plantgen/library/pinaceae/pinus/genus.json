@@ -62,6 +62,10 @@
     "generator.params.limb_tip": {
       "rule": "0",
       "why": "Pines keep the Pinidae program's limb shedding until their old crowns are fitted."
+    },
+    "generator.params.seg_min": {
+      "rule": "0",
+      "why": "Pines lay down every year's shoot, as the Pinidae program does, until their old crowns are fitted."
     }
   },
   "evidence": {

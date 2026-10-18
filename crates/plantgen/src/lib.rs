@@ -623,6 +623,7 @@ pub mod venation;
 /// foliage from 150 to 300 years: a side shoot keeps growing at least
 /// `side_floor` once the leader stops rising, the family's dormant buds
 /// wait on the limbs' main axes for 300 years (`epi_order`), and a limb is
-/// shed for the mean light of its tips (`limb_tip`) more than for its size
-/// (96 is nodding leaders, #167).
+/// shed for the mean light of its tips (`limb_tip`) more than for its size,
+/// and slow shoots are laid down every few years (`seg_min`) so the fully
+/// branched old crowns fit the module limit (96 is nodding leaders, #167).
 pub const GENERATOR_REVISION: u32 = 97;

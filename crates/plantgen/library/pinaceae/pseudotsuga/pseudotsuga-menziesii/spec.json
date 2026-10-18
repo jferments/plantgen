@@ -24,7 +24,6 @@
       "pipe_organ": 0.0095,
       "branch_reach": 8.0,
       "bole": 0.3,
-      "limb_light": 0.01,
       "pipe_rings": 3e-05
     }
   },
@@ -171,11 +170,6 @@
       "evidence": "SourceInferred",
       "source": "inaturalist-crowns-2026-10",
       "note": "Old conifers (pinidae revision 13): the share of an old tree's height cleared of limbs, cleared in step with height so saplings keep limbs to the ground: the old open-grown tree photographed is bare to .30 of its height, mature ones to .10."
-    },
-    "generator.params.limb_light": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Old conifers (pinidae revision 13): the Pinidae program's limb shedding, against the family's 0.003, so the open-grown tree's crown stays within the program's 4 million module limit (peak 3.5 million at about 100 years; at 0.006 it reached 3.8 million and at 0.003 passed the limit before 90 years). Its old crown keeps about half its foliage from 150 to 300 years at 0.01, two thirds at 0.006."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -55,6 +55,10 @@
       "rule": "1",
       "why": "A limb older than limb_age whose tips' mean light has fallen to the starving point is shed whatever its size, as a shaded limb dies once its foliage no longer pays for it (branch autonomy): with the per-segment rule eased, shaded limbs would otherwise linger and fill the program's module limit."
     },
+    "generator.params.seg_min": {
+      "rule": "0.08",
+      "why": "An old limb's slow shoots, a centimetre or two a year, are laid down as one shoot every few years with the same needle area, so a fully branched old crown keeps its side shoots within the program's module and segment limits: laid down every year, old Douglas-fir and western hemlock passed them unless their inner side shoots were shed or cut short (side_years), which left their lower limbs bare whips. Young shoots, longer than 8 cm a year, grow as before."
+    },
     "generator.params.top_ramp": {
       "rule": "2",
       "why": "Branch shoots are shortest in the top whorls and lengthen over the first metres below the treetop (Cannell et al. 1976, Sitka spruce), so the top is a point: at full length from the first year, young treetops were three to five times as wide as photographed ones."

@@ -37,7 +37,6 @@
       "pipe_organ": 0.009,
       "branch_reach": 8.0,
       "bole": 0.15,
-      "side_years": 30,
       "pipe_rings": 6.8e-06
     }
   },
@@ -157,11 +156,6 @@
       "evidence": "SourceInferred",
       "source": "inaturalist-crowns-2026-10",
       "note": "Old conifers (pinidae revision 13): the share of an old tree's height cleared of limbs, cleared in step with height so saplings keep limbs to the ground: no old open-grown tree among the photographs; mature ones keep limbs to the ground, and .15 leaves an old tree a short clean trunk like the other old Pinaceae photographed."
-    },
-    "generator.params.side_years": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Old conifers (pinidae revision 13): a limb's side shoots live 30 years and are replaced from its dormant buds, so the old crown's living wood stays within the program's module limit at 300 years; without it the crown fitted to the photographs (inaturalist-crowns-2026-10) passed the limit before 300 years."
     },
     "generator.params": {
       "evidence": "Authored",
