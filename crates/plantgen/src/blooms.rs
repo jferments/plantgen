@@ -1029,6 +1029,7 @@ mod tests {
                     bend: None,
                     form: Some(Form::Thorn),
                     season: None,
+                    leafing: None,
                     families: None,
                     inflorescence: None,
                 },

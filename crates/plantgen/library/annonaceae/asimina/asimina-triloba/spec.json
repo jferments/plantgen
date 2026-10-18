@@ -90,6 +90,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [200, 160, 60],
     "height_max_m": {
       "min": 6,
       "max": 12,
@@ -150,6 +151,7 @@
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Asimina triloba (read 2026-10-18): \"In autumn, the leaves are a rusty yellow\". Colour ours."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

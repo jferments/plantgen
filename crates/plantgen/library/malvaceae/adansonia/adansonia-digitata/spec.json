@@ -98,6 +98,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_out_months": [12],
+    "leaf_fall_months": [3, 4],
     "crown_form": "spreading",
     "wood_density_basic_kg_m3": 310,
     "height_typical_m": {"min": 10, "max": 20},
@@ -110,6 +112,8 @@
     "fruit_size_m": {"min": 0.15, "max": 0.25}
   },
   "evidence": {
+    "traits.leaf_out_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-10-18): \"All baobabs are deciduous, losing their leaves in the dry season, and remaining leafless for about eight months of the year.\" Its leaves come with the southern African summer rains; December is ours."},
+    "traits.leaf_fall_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-10-18): leafless \"for about eight months of the year\" in the dry season: shed in March and April, ours, so it stands in leaf about four months."},
     "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The trunk stands bare to the fork about 8 m up (crown_base 8, was 7; crown_height 13, was 12), where five or so thick limbs spread at a wide angle (fork_stems 5, fork_angle 50, were 4 and 40), in iNaturalist photographs (observations 18299511, 185799293). Shorter shoots and sparser attraction points (internode 0.35, space_density 1.5, were 0.45 and 4) keep a crown of few thick limbs."},
     "generator.params.pipe_rings": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (woody forms, broadleaf revision 16): wood laid down per m² of leaf a year, raised from 4e-5 so the water-storing trunk swells to about 1.6 m across at 100 years (it was 63 cm), as the bottle-shaped trunks in iNaturalist photographs do (observations 18299511, 185799293)."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs (observations 18299511, 185799293, 37979372, 142536045): a few thick limbs spread from the top of the swollen trunk into a crown wider than tall."},

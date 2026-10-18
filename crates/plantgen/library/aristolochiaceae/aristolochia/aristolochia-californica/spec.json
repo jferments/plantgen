@@ -98,6 +98,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "woodiness": "woody",
     "height_max_m": {
       "min": 2,
       "max": 5
@@ -159,6 +160,7 @@
     ]
   },
   "evidence": {
+    "traits.woodiness": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Aristolochia californica (read 2026-10-18): \"a perennial woody vine of western North America\"."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

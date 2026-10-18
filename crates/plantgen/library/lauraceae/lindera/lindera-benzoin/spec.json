@@ -96,6 +96,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [235, 200, 40],
     "height_max_m": {
       "min": 2,
       "max": 5
@@ -155,6 +156,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Lindera benzoin (read 2026-10-18): \"In the fall the leaves turn bright yellow\". Colour ours."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

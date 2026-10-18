@@ -123,6 +123,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [190, 80, 60],
     "height_max_m": {
       "min": 4,
       "max": 25
@@ -149,6 +150,7 @@
     "inflorescence_length_m": {"min": 0.01, "max": 0.02}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cornus nuttallii (read 2026-10-18): the leaves \"turn orange to purplish in autumn\". Colour ours, between the two."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "gbif-inaturalist",

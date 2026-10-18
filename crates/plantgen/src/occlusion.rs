@@ -334,6 +334,7 @@ mod tests {
                 bend: None,
                 form: None,
                 season: None,
+                leafing: None,
                 families: None,
                 inflorescence: None,
             },

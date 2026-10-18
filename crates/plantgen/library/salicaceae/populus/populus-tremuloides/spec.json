@@ -86,6 +86,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [235, 185, 40],
     "height_max_m": {
       "min": 30,
       "max": 35
@@ -110,6 +111,7 @@
     "fruiting_months": [5, 6]
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Populus tremuloides (read 2026-10-18): the leaves \"become golden to yellow, rarely red, in autumn\". Colour ours."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

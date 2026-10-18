@@ -681,4 +681,12 @@ pub mod venation;
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
 /// white clover's are (106 is evergreen herbs, #200).
-pub const GENERATOR_REVISION: u32 = 107;
+/// 108: a deciduous tree's, shrub's or woody vine's leaves keep a year
+/// (`appearance.organs.leaf.leafing`, set from `leaf_habit`,
+/// `leaf_out_months`, `leaf_fall_months` and `leaf_colour_autumn`): the
+/// plant stands bare in winter, puts out small pale leaves in spring that
+/// grow to full size and green, turns its autumn colour and drops them,
+/// where its leaves had stood green all year; months falling before the
+/// leaves unfold are the next year's, as a southern beech's are (107 is
+/// variegation edges, #191).
+pub const GENERATOR_REVISION: u32 = 108;

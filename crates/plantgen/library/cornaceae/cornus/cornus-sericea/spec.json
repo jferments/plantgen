@@ -124,6 +124,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [170, 40, 50],
     "juvenile_period_years": {
       "min": 3,
       "max": 4
@@ -154,6 +155,7 @@
     "inflorescence_length_m": {"min": 0.03, "max": 0.06}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cornus sericea (read 2026-10-18): \"fall color is commonly bright red to purple\". Colour ours."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "gbif-inaturalist",

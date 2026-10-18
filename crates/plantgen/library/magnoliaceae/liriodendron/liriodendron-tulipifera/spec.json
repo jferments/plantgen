@@ -96,6 +96,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [240, 205, 50],
     "height_max_m": {
       "min": 30.5,
       "max": 45.7,
@@ -166,6 +167,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Liriodendron tulipifera (read 2026-10-18): \"In autumn they turn a clear, bright yellow\". Colour ours."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
