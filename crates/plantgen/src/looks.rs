@@ -2123,7 +2123,6 @@ impl Flower {
             && self.staminodes == 0
             && self.carpels == 0
             && self.torus == 0.0
-            && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
             && self.spots == 0

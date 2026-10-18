@@ -278,7 +278,12 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let nf = f64::from(n);
     let length = (r - s).max(r * 0.1);
     let spread = |count: f64, from: f64, to: f64| flower.petal_share() * PI * (from + to) / count;
-    let width = spread(nf, s, r).clamp(length * 0.08, length);
+    // A petal whose outline is stated is as wide for its length as stated,
+    // as its card draws it; else its share of the circle.
+    let width = flower
+        .petal_ratio
+        .map_or_else(|| spread(nf, s, r), |ratio| ratio * length)
+        .clamp(length * 0.08, length);
     let open = flower.open.clamp(0.0, 1.0);
     // Closing raises every part toward the axis and shortens the petals.
     let rise = |cup: f64| cup + (CLOSED - cup) * (1.0 - open);
@@ -297,7 +302,14 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         (1.2 * c).max(0.3 * r)
     };
     let floral_cup = (cup_length > 0.0).then_some((cup_length, 0.6 * s, s));
-    let (seat, cup, ovary) = match flower.ovary {
+    // A flower with no carpels (a staminate or a sterile flower) has no
+    // ovary to stand on, whatever its taxa's ovary position.
+    let position = if flower.carpels == 0 {
+        Ovary::Superior
+    } else {
+        flower.ovary
+    };
+    let (seat, cup, ovary) = match position {
         Ovary::Superior => (cup_length, floral_cup, None),
         Ovary::Half => {
             let seat = cup_length.max(ovary_length * 0.5);
@@ -319,7 +331,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     };
     // A floral tube on the inferior ovary, widening a little to the rim
     // the perianth stands on.
-    let floral_tube = (flower.ovary == Ovary::Inferior && flower.floral_tube > 0.0).then(|| {
+    let floral_tube = (position == Ovary::Inferior && flower.floral_tube > 0.0).then(|| {
         let neck = s.max(0.12 * ovary_length) * 0.7;
         Tube {
             height: seat,
@@ -1289,7 +1301,8 @@ const SHOULDER: f64 = 0.85;
 /// first coarse step), its tubes as `n`-sided bands, a low pyramid of a
 /// centre or a column in the accent, and stamens while the flower is a
 /// centimetre across or more and drawn fine; from the second coarse step
-/// one hexagon round its petal tips.
+/// one flat polygon through the tips of its three to six petals, or a
+/// hexagon round them where it has more or fewer.
 #[allow(clippy::too_many_lines)]
 pub(crate) fn draw_reduced(
     laid: &Floral,
@@ -1358,9 +1371,26 @@ pub(crate) fn draw_reduced(
             (ring.abs(), rise, colours.petal)
         };
         if ring > 0.0 {
-            let corners: Vec<Vec3> = (0..6)
-                .map(|k| frame.point(TAU * f64::from(k) / 6.0, ring, rise))
-                .collect();
+            // Three to six petals: a polygon through their tips, turned as
+            // they are, so a four-petalled flower draws a square; else a
+            // hexagon.
+            let corners: Vec<Vec3> = if (3..=6).contains(&petals.len()) && !naked {
+                petals
+                    .iter()
+                    .map(|p| {
+                        let cup = math::radians(p.cup);
+                        frame.point(
+                            p.angle,
+                            (p.radius + p.length * math::cos(cup)).abs(),
+                            p.height + p.length * math::sin(cup),
+                        )
+                    })
+                    .collect()
+            } else {
+                (0..6)
+                    .map(|k| frame.point(TAU * f64::from(k) / 6.0, ring, rise))
+                    .collect()
+            };
             both(&corners, paint, mesh);
         }
         leaves::smooth_normals(mesh, first, first_index);

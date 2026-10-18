@@ -1664,6 +1664,24 @@
       "when": {"flower_symmetry": ["zygomorphic"]},
       "why": "how a zygomorphic flower's parts differ by place: a pea flower's banner, wings and keel; two lips; an orchid's lip and column; or otherwise"
     },
+    "sterile_flowers": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["none", "marginal", "all"],
+      "when": {"inflorescence": ["raceme", "spike", "catkin", "corymb", "umbel", "compound_umbel", "panicle", "cyme", "scorpioid", "head", "spadix"]},
+      "optional": true,
+      "why": "which flowers of a cluster are sterile, with no stamens or pistil and their calyx enlarged into showy petaloid sepals: none, a rim of them round fertile ones (a lacecap hydrangea's), or every one (a mophead's)"
+    },
+    "sterile_sepal_shape": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular"],
+      "when": {"sterile_flowers": ["marginal", "all"]},
+      "optional": true,
+      "why": "the outline of a sterile flower's enlarged petaloid sepals, its showy part: a mophead hydrangea's are obovate to broadly elliptic"
+    },
     "hypanthium": {
       "group": "flowers",
       "organ": "flower",

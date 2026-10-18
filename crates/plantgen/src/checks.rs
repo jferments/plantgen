@@ -291,10 +291,21 @@ pub const TREE_OUTLINE_FIT: Stated = Stated {
     typical: None,
 };
 
+/// A fertile flower's parts, which a sterile flower lacks: a cluster
+/// whose flowers are all sterile (`sterile_flowers`, a mophead
+/// hydrangea's) draws none, so its stated counts are not judged on it.
+const FERTILE_PARTS: [&str; 3] = ["stamens", "staminodes", "carpels"];
+
 /// `character` as `spec` states it in `traits`, or as a check holds it
-/// where it states none ([`TREE_OUTLINE_FIT`]).
+/// where it states none ([`TREE_OUTLINE_FIT`]); none for a fertile
+/// flower's parts ([`FERTILE_PARTS`]) where every flower is sterile.
 #[must_use]
 pub fn stated(spec: &PlantSpec, traits: &Map<String, Value>, character: &str) -> Option<Stated> {
+    if FERTILE_PARTS.contains(&character)
+        && traits.get("sterile_flowers").and_then(Value::as_str) == Some("all")
+    {
+        return None;
+    }
     traits.get(character).and_then(Stated::of).or_else(|| {
         (character == "crown_outline_fit"
             && matches!(
@@ -2340,17 +2351,19 @@ fn reproductive(
         let layout = cluster.laid_on(organ);
         cluster_kinds(cluster, &layout, look, phase, tally);
         if in_stage(phase, Stage::Open) {
+            // Along its axis: a nodding or hanging cluster held straight.
+            let straight = cluster.laid_straight_on(organ);
             tally.add(
                 "inflorescence_length_m",
                 organ.id,
                 0,
-                organ.size * layout.length(cluster.unit),
+                organ.size * straight.length(cluster.unit),
             );
             tally.add(
                 "peduncle_length_m",
                 organ.id,
                 0,
-                organ.size * layout.peduncle(),
+                organ.size * straight.peduncle(),
             );
             tally.count(
                 "units_per_inflorescence",

@@ -835,4 +835,15 @@ pub mod venation;
 /// a shrub's stated stem clump (`stem_clump`) sends up suckers (broadleaf
 /// revision 20) and a herb's lying stems (`stem_posture`) run along the
 /// ground before they rise (herb revision 15) (125 is the leafing year).
-pub const GENERATOR_REVISION: u32 = 126;
+/// 129: a raceme's, spike's, catkin's, panicle's or corymb's nodes run
+/// from its peduncle's top to where its top unit reaches the tip, not
+/// half a node in from each, so a panicle of few branches draws its
+/// stated length; a cluster whose flowers are all sterile
+/// (`sterile_flowers`, a mophead hydrangea's) draws them as its showy
+/// sepals (`sterile_sepal_shape`) with no stamens, pistil or floral cup; a
+/// flower with no carpels stands on no ovary; a petal whose outline is
+/// stated is as wide on the solid as on its card; and from the flat
+/// coarse step a flower of three to six petals is a polygon through
+/// their tips, not a hexagon (127 and 128 are #143's short shoots and
+/// #211's cycad cones).
+pub const GENERATOR_REVISION: u32 = 129;
