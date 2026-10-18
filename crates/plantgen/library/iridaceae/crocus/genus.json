@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Crocus",
+  "traits": {
+    "inflorescence": {"solitary": "usually"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Crocus (read 2026-10-17): one to several underground flower stalks per corm, the flowers single or a few together; no branched axis, so each flower reads as solitary."}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Pinguicula",
+  "traits": {
+    "inflorescence": "solitary"
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Pinguicula (read 2026-10-17; 126 spp): single long-lasting flowers held high on a long stalk."}
+  }
+}

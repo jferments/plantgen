@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Carya",
+  "traits": {
+    "fruit_type": "nut"
+  },
+  "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Hickory (read 2026-10-17): fruit a nut inside a four-valved husk that splits when ripe; some authors call it drupe-like, but APG treats it as a nut."}
+  }
+}

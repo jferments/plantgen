@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Amorphophallus",
+  "traits": {
+    "perianth": "absent"
+  },
+  "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Amorphophallus (read 2026-10-17): monoecious, separate male and female flowers on the spadix, flowers without corollas; ~200 species. Page does not use the word perianth."}
+  }
+}
