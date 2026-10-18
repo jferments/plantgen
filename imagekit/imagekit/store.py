@@ -7,6 +7,7 @@
         images.parquet                          the same rows, when pyarrow is installed
     <root>/sources/image-analyses/<run>/        one analysis run
         run.json, analyses.jsonl                (schemas/analysis)
+    <root>/sources/image-library/<snapshot>/    a merged Parquet copy for readers (imagekit compact)
     <root>/analyzers.jsonl                      every analyzer id and its definition
     <root>/incoming/<batch>/                    downloads waiting for `imagekit ingest`
     <root>/index.sqlite                         a lookup index, rebuilt from the files by `imagekit reindex`
@@ -118,9 +119,18 @@ class Store:
     def run_dir(self, run: str) -> Path:
         return self.root / "sources" / "image-analyses" / run
 
+    def library_dir(self, snapshot: str) -> Path:
+        return self.root / "sources" / "image-library" / snapshot
+
+    def kind_dir(self, kind: str, name: str) -> Path:
+        return {"batch": self.batch_dir, "run": self.run_dir, "library": self.library_dir}[kind](name)
+
+    def snapshots(self) -> list[str]:
+        d = self.root / "sources" / "image-library"
+        return sorted(p.name for p in d.iterdir() if p.is_dir() and not p.name.endswith(".part")) if d.exists() else []
+
     def sealed(self, kind: str, name: str) -> bool:
-        d = self.batch_dir(name) if kind == "batch" else self.run_dir(name)
-        return (d / SEALED).exists()
+        return (self.kind_dir(kind, name) / SEALED).exists()
 
     def unsealed(self, kind: str, base: str) -> str:
         """`base`, or `base-2`, `base-3`, ... if it is already on data.plantgen.io (a default name only)."""

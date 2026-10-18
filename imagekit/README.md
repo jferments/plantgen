@@ -331,6 +331,25 @@ backend costs nothing: hand each folder's images to observers that see
 only the folder (no species name), and read their answers back with the
 same command. A paid model needs the owner's go and `plan` first.
 
+## The library snapshot
+
+```sh
+imagekit compact                     # sources/image-library/<date>/: every batch and run merged into Parquet
+imagekit push --library              # also upload the snapshots not yet on data.plantgen.io
+```
+
+A snapshot is a merged, read-only copy for readers and search:
+`images.parquet` (one row per image, with provenance, taxon and whether it
+is a render), `analyzers.parquet`, one Parquet file per task (`triage`,
+`observe`, `branching`, `detect`, `segment`, ...; each answer's `out` as
+JSON, and triage's main fields as columns), `regions.parquet` (each
+detected organ's box), `species.parquet` (usable photos per view and
+regions per organ, per taxon), each embedding analyzer's vectors in one
+`.npy` with its ids, and `stats.json`. DuckDB, pandas or polars read it in
+place, on disk or over HTTPS. The batches and runs stay the record, so a
+snapshot holds nothing new and is made again when wanted. On the server it
+is the private source `image-library`, one version per snapshot.
+
 ## Share through data.plantgen.io
 
 ```sh

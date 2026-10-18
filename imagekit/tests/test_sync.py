@@ -115,6 +115,21 @@ class TestSync(Base):
         self.assertEqual([r["id"] for r in jsonl(Path(other) / "analyzers.jsonl")], [aid])
         self.assertEqual(json.loads(self.quiet("pull", "--base", self.base, store=other))["pulled"], {})
 
+    def test_library_snapshots_push_only_when_asked(self):
+        import importlib.util
+        if importlib.util.find_spec("pyarrow") is None:
+            self.skipTest("pyarrow not installed")
+        from imagekit import library
+        with Store(self.store_dir) as store:
+            snap = library.compact(store, with_vectors=False)["snapshot"]
+        out = json.loads(self.quiet("push"))
+        self.assertEqual(out["library"], [])
+        out = json.loads(self.quiet("push", "--library"))
+        self.assertEqual((out["batches"], out["runs"], out["library"]), ([], [], [snap]))
+        man = json.loads((self.server_dir / f"private/sources/image-library/{snap}/manifest.json").read_text())
+        self.assertIn(f"sources/image-library/{snap}/images.parquet", [f["path"] for f in man["files"]])
+        self.assertIn("nothing to push", self.quiet("push", "--library"))
+
     def test_a_pushed_batch_or_run_takes_no_more_rows(self):
         self.quiet("push")
         photos = self.tmp / "more"

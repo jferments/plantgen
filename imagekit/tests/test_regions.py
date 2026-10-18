@@ -200,6 +200,36 @@ class Detect(unittest.TestCase):
         everything = json.loads(self.cli("crops", "--out", str(self.tmp / "all"), "--triage", "none"))
         self.assertEqual(everything["crops"], 5)
 
+    @unittest.skipUnless(HAVE_NUMPY and importlib.util.find_spec("pyarrow") is not None, "needs numpy and pyarrow")
+    def test_compact_merges_into_a_snapshot(self):
+        import pyarrow.parquet as pq
+        from imagekit import embed, library
+        self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det")
+        with Store(self.store_dir) as store, contextlib.redirect_stderr(io.StringIO()):
+            embed.embed(store, "fake", run="whole")
+            stats = library.compact(store)
+            again = library.compact(store)
+            snap = library.latest(store)
+        self.assertEqual(snap.name, again["snapshot"])
+        self.assertNotEqual(stats["snapshot"], again["snapshot"])  # snapshots are written once
+        self.assertEqual((stats["images"], stats["photos"]), (4, 4))
+        self.assertEqual(stats["answers by task"], {"triage": 4, "detect": 3, "embed": 4})
+        tri = pq.read_table(snap / "triage.parquet").to_pylist()
+        self.assertEqual(sorted(r["usable"] for r in tri), [False, True, True, True])
+        regs = pq.read_table(snap / "regions.parquet").to_pylist()
+        self.assertEqual(len(regs), stats["regions"])
+        self.assertEqual({r["organ"] for r in regs}, {"plant", "leaf"})
+        sp = pq.read_table(snap / "species.parquet").to_pylist()
+        self.assertEqual(json.loads(sp[0]["usable_photos_by_view"]), {"V1": 1, "V4": 2})
+        ids = pq.read_table(next((snap / "vectors" / "fake").glob("*.ids.parquet"))).to_pylist()
+        self.assertEqual(len(ids), 4)
+
+    def test_mixed_columns_become_text(self):
+        from imagekit.library import uniform
+        rows = uniform([{"id": 3, "x": 1}, {"id": "a3", "x": 2.5}, {"y": True}])
+        self.assertEqual([r["id"] for r in rows], ["3", "a3", None])
+        self.assertEqual([r["x"] for r in rows], [1, 2.5, None])
+
     @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
     def test_segment_masks_kept_regions_once(self):
         import numpy as np
