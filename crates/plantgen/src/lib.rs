@@ -715,7 +715,10 @@ pub mod venation;
 /// inward spiral of shortening pieces, its leaflets small and rolled
 /// beside it, unrolling from its foot; the soft tree fern's croziers and
 /// young stipes are a hairy red-brown (110 is rolled pinnae, #197).
-/// 112: cycad cones by sex (palm revision 12): a male plant bears its
+/// 112: the soft tree fern puts out a year's fronds in one spring flush
+/// (`emerge_spread` 0.15, from 0.3), so its croziers stand together at
+/// the crown's top (111 is tree-fern croziers, #205).
+/// 113: cycad cones by sex (palm revision 12): a male plant bears its
 /// pollen cones (`cone_male`), a female its seed cones or, in Cycas, a
 /// crown of megasporophylls (`sporophyll`) with seeds along them, each
 /// with its own length, count, stalk, lean and life, and the stem grows on
@@ -730,6 +733,6 @@ pub mod venation;
 /// in Zamia, in vertical rows of flat-topped hexagons fitting together
 /// (`rows`); a compound card's stalk may be stout (`stalk_width`: a Cycas
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
-/// its foot (`foot`: a Zamia leaflet's jointed base) (111 is tree-fern
-/// croziers, #205).
-pub const GENERATOR_REVISION: u32 = 112;
+/// its foot (`foot`: a Zamia leaflet's jointed base) (112 is the soft
+/// tree fern's flush, #207).
+pub const GENERATOR_REVISION: u32 = 113;
