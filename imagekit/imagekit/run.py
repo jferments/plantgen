@@ -27,8 +27,11 @@ from . import analyzer, backends
 from .prompts import TASKS, Rules, first_json, problems
 from .store import Store, append_jsonl, check_open, jsonl, now
 
-IMAGE_PX = {"triage": 512, "observe": 1536, "describe": 1024}
-TOKENS_OUT = {"triage": 400, "observe": 1500, "describe": 500}  # answer sizes measured on the replay set, plus margin
+IMAGE_PX = {"triage": 512, "observe": 1536, "describe": 1024, "branching": 1536}
+TOKENS_OUT = {"triage": 400, "observe": 1500, "describe": 500,  # answer sizes measured on the replay set, plus margin
+              "branching": 900}  # estimated: 14 short answers
+# Tasks sent only for images a triage found usable, with the triage's views; branching only in these views.
+TRIAGED = {"observe": None, "branching": {"V1", "V2", "V3", "V4", "V8"}}
 ASK_OVER_USD = 1.0
 
 
@@ -47,7 +50,7 @@ def register(sub) -> None:
         p.add_argument("--taxon", help="only images of this taxon (name as fetched, or accepted name)")
         p.add_argument("--limit", type=int)
         p.add_argument("--image-px", type=int, help="long side sent to the model (default: triage 512, observe 1536, describe 1024)")
-        p.add_argument("--triage", help="observe: the triage analyzer whose views to use (default: the one with most answers)")
+        p.add_argument("--triage", help="observe, branching: the triage analyzer whose views to use (default: the one with most answers)")
         p.add_argument("--retry-invalid", action="store_true", help="send again the images whose answer failed the schema")
         p.add_argument("--claude-batch", action="store_true", help="send through the Message Batches API (half price)")
         p.set_defaults(func=cmd_plan if name == "plan" else cmd_run)
@@ -110,13 +113,14 @@ class Job:
         self.rows = rows
         self.views = {}
         params = {"image_px": self.px}
-        if self.task == "observe":
+        if self.task in TRIAGED:
             tri = args.triage or default_triage(store, rows)
             if not tri:
-                raise SystemExit("observe needs a triage first: imagekit run triage --backend ...")
+                raise SystemExit(f"{self.task} needs a triage first: imagekit run triage --backend ...")
             params["triage"] = tri
+            want = TRIAGED[self.task]
             for sha, out in outputs(store, tri).items():
-                if out.get("usable") and out.get("views"):
+                if out.get("usable") and out.get("views") and (want is None or want & set(out["views"])):
                     self.views[sha] = out["views"]
             rows = {s: r for s, r in rows.items() if s in self.views}
         if self.backend is None:  # chat

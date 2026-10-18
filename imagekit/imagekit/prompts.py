@@ -35,6 +35,7 @@ TASKS = {
     "triage": ("01-triage.md", "triage"),
     "observe": ("02-observe.md", "observation"),
     "describe": ("08-describe.md", "description"),
+    "branching": ("09-branching.md", "branching"),
 }
 # Besides 00-ground-rules.md, its task file and its schema, the files a task's prompt is built from.
 TASK_EXTRA = {"observe": ("palette.yaml", "features.yaml")}
@@ -111,6 +112,9 @@ class Rules:
 
     def parts(self, task: str, photo_id: str, views: list[str] | None = None) -> list[str]:
         """[shared text, per-image text]: the request's user text, sent around the image."""
+        if task == "branching":  # the characters are the same for every image; its views say which apply
+            return [self.shared(task), (f"Views (from triage): {', '.join(views)}\n\n" if views else "")
+                    + f"Photo id: {photo_id}"]
         return [self.shared(task, views), f"Photo id: {photo_id}"]
 
     def user(self, task: str, photo_id: str, views: list[str] | None = None) -> str:

@@ -68,11 +68,12 @@ class RulesVersion(unittest.TestCase):
     def test_rules_v2_answers_keep_their_analyzer(self):
         from imagekit.prompts import LEGACY_VERSIONS, Rules
         r = Rules(self.path)
-        if r.version != "b9470f22326e2d05":
-            self.skipTest("photo-rules has changed since v2")
-        for task in ("triage", "observe", "describe"):
-            self.assertIn((task, r.task_version(task)), LEGACY_VERSIONS)
+        kept = [t for t in ("triage", "observe", "describe") if (t, r.task_version(t)) in LEGACY_VERSIONS]
+        if not kept:
+            self.skipTest("every task's files have changed since rules v2")
+        for task in kept:
             self.assertEqual(r.analyzer_version(task), "b9470f22326e2d05")
+        self.assertEqual(r.analyzer_version("branching"), r.task_version("branching"))
 
 
 class Labels(unittest.TestCase):
