@@ -99,6 +99,10 @@ pub struct OrganLook {
     /// day, and how it looks then. Without one it looks the same all year.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub season: Option<Season>,
+    /// A deciduous plant's leaves' year ([`Leafing`]): when they unfold,
+    /// turn and fall. Without one they look the same all year.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub leafing: Option<Leafing>,
     /// Its leaves' families (plant roadmap P4): sun and shade leaves, and
     /// juvenile leaves on a young plant. Without them every leaf is alike.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1143,9 +1147,153 @@ impl Season {
     }
 }
 
+/// A deciduous plant's year in its leaves (leaf phenology): its leaves
+/// unfold on day `out`, a third of their size and the pale yellow-green of
+/// a spring flush, grow to their full size and colour by `full`, begin to
+/// turn toward `autumn` on `turn`, are wholly turned halfway to `fall` and
+/// are all down by `fall`, and the plant stands bare from `fall` until the
+/// next `out`. Days of the year, 1 to 365, in order within one year; a
+/// `fall` past 365 keeps the leaves into the next year, as [`Season`]'s
+/// does (a shrub that leafs out with the winter rains and sheds its leaves
+/// in the dry summer).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Leafing {
+    pub out: f64,
+    pub full: f64,
+    pub turn: f64,
+    pub fall: f64,
+    /// Colour of its leaves wholly turned, linear RGB; a dull yellow
+    /// browning, as most leaves turn, if absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub autumn: Option<[f32; 3]>,
+}
+
+impl Leafing {
+    /// What most leaves turn to where a flora names no autumn colour: a
+    /// dull yellow going brown (sRGB about 0.7, 0.6, 0.25).
+    pub const AUTUMN: [f32; 3] = [0.45, 0.32, 0.05];
+    /// The yellow-green a spring flush is mixed toward (sRGB about 0.6,
+    /// 0.7, 0.25), half of it on the day the leaves unfold.
+    pub const FLUSH: [f32; 3] = [0.32, 0.45, 0.05];
+    /// A leaf's size on the day it unfolds as a share of its full size.
+    pub const UNFOLDING: f64 = 1.0 / 3.0;
+
+    /// Day `day` of the year as a day of the leaves' year: a day before
+    /// `out` is in the next year where its `fall` comes then.
+    fn on(&self, day: f64) -> f64 {
+        if day < self.out && day + 365.0 < self.fall {
+            day + 365.0
+        } else {
+            day
+        }
+    }
+
+    /// The leaves' size on day `day` as a share of their full size: 0 while
+    /// the plant is bare, from [`Self::UNFOLDING`] to 1 as they unfold.
+    #[must_use]
+    pub fn size(&self, day: f64) -> f64 {
+        let d = self.on(day);
+        if d < self.out || d >= self.fall {
+            0.0
+        } else if d < self.full {
+            crate::math::lerp(
+                Self::UNFOLDING,
+                1.0,
+                (d - self.out) / (self.full - self.out),
+            )
+        } else {
+            1.0
+        }
+    }
+
+    /// How far their colour is toward the spring flush (`(flush, 0)`, from
+    /// 0.5 to 0 as they unfold) or toward `autumn` (`(0, turned)`, from 0
+    /// to 1 over the first half of the days from `turn` to `fall`) on day
+    /// `day`.
+    fn tints(&self, day: f64) -> (f64, f64) {
+        let d = self.on(day);
+        if d < self.out || d >= self.fall {
+            (0.0, 0.0)
+        } else if d < self.full {
+            (0.5 * (1.0 - (d - self.out) / (self.full - self.out)), 0.0)
+        } else if d < self.turn {
+            (0.0, 0.0)
+        } else {
+            (
+                0.0,
+                ((d - self.turn) / (0.5 * (self.fall - self.turn))).min(1.0),
+            )
+        }
+    }
+
+    /// `look`, a leaf's, as it is on day `day`, and its size then as a
+    /// share of its full size (see the type): its colours mixed toward the
+    /// flush or its autumn colour, its shade colour toward a darker one.
+    #[must_use]
+    pub fn on_day(&self, mut look: Look, day: f64) -> (Look, f64) {
+        let (flush, turned) = self.tints(day);
+        let autumn = self.autumn.unwrap_or(Self::AUTUMN);
+        let tint = |colour: [f32; 3], dark: f32| -> [f32; 3] {
+            let toward = |target: [f32; 3], share: f64| {
+                let share = share as f32;
+                std::array::from_fn(|i| colour[i] + (target[i] * dark - colour[i]) * share)
+            };
+            if turned > 0.0 {
+                toward(autumn, turned)
+            } else if flush > 0.0 {
+                toward(Self::FLUSH, flush)
+            } else {
+                colour
+            }
+        };
+        let darkness = |look: &Look| {
+            let bright = look.colour.iter().sum::<f32>().max(1.0e-6);
+            (look.shade.iter().sum::<f32>() / bright).min(1.0)
+        };
+        let retint = |look: &mut Look| {
+            let dark = darkness(look);
+            look.colour = tint(look.colour, 1.0);
+            look.shade = tint(look.shade, dark);
+            look.accent = tint(look.accent, 1.0);
+            look.underside = look.underside.map(|colour| tint(colour, 1.0));
+        };
+        retint(&mut look);
+        for variety in &mut look.varieties {
+            retint(variety);
+        }
+        (look, self.size(day))
+    }
+
+    /// Check the days, in order within one year, and the colour.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first problem.
+    pub fn validate(&self) -> Result<(), String> {
+        within("leafing out", self.out, 1.0, 365.0)?;
+        let days = [self.out, self.full, self.turn, self.fall];
+        if days.windows(2).any(|pair| pair[1] <= pair[0]) {
+            return Err(format!(
+                "leafing days must run out, full, turn, fall in order, found {days:?}"
+            ));
+        }
+        if self.fall - self.out > 365.0 {
+            return Err(format!(
+                "leafing fall must come within a year of out, found {} after",
+                self.fall - self.out
+            ));
+        }
+        for channel in self.autumn.into_iter().flatten() {
+            within("colours", f64::from(channel), 0.0, 1.0)?;
+        }
+        Ok(())
+    }
+}
+
 // Serde's `skip_serializing_if` passes a reference.
 #[allow(clippy::trivially_copy_pass_by_ref)]
-fn is_zero(value: &f64) -> bool {
+pub(crate) fn is_zero(value: &f64) -> bool {
     *value == 0.0
 }
 
@@ -1724,6 +1872,26 @@ pub struct Flower {
     /// absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pistil: Option<[f32; 3]>,
+    /// The anthers' colour; the accent, as before, if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub anther_colour: Option<[f32; 3]>,
+    /// Dark spots, in the accent colour, on each petal's or tepal's inner
+    /// face toward its foot: 0 none, about 20 a lily's copious spots.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub spots: u32,
+    /// The inner face of each petal's or tepal's foot in a colour of its
+    /// own, fading into the petal's at `base_length` of its length (a
+    /// western lily's yellow throat under red tips); none if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base_colour: Option<[f32; 3]>,
+    /// Share of each petal's length from its foot `base_colour` reaches.
+    #[serde(skip_serializing_if = "is_default_base_length")]
+    pub base_length: f64,
+    /// The nectaries at each petal's very foot in a colour of their own,
+    /// together a star at the flower's heart (a Turk's-cap lily's green
+    /// star); none if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub star_colour: Option<[f32; 3]>,
     /// The stigma lobes' colour; the filaments' if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stigma: Option<[f32; 3]>,
@@ -1767,6 +1935,12 @@ pub struct Flower {
     /// How much the tube swells in its middle, over a petal's length.
     #[serde(skip_serializing_if = "is_zero")]
     pub belly: f64,
+    /// The corolla tube's length over the flower's radius, where a flora
+    /// measures it longer than `fused` of a petal reaches (a jimsonweed's,
+    /// a tobacco's or an angel's trumpet's): 0 leaves it `fused` of a
+    /// petal's length.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub tube_reach: f64,
     /// A spur's length over the flower's radius: every petal's on a regular
     /// corolla, a bilabiate lower lip's middle petal's, a lip's.
     #[serde(skip_serializing_if = "is_zero")]
@@ -1775,12 +1949,40 @@ pub struct Flower {
     /// the flower's radius.
     #[serde(skip_serializing_if = "is_zero")]
     pub tube: f64,
+    /// A hypanthium prolonged above an inferior ovary into a floral tube
+    /// that bears the sepals and petals on its rim (a fuchsia's), its
+    /// length over the flower's radius; 0 draws none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub floral_tube: f64,
+    /// Degrees the sepals rise from the plane square to the axis, where
+    /// their posture is stated: negative bends them back; half the
+    /// petals' cup if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sepal_rise: Option<f64>,
+    /// Degrees the petals or corolla lobes rise from the plane square to
+    /// the axis, where their posture is stated, in place of the form's
+    /// cup: negative bends them back (a nightshade's reflexed lobes).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub petal_rise: Option<f64>,
+    /// The corolla tube's colour, where it differs from the lobes' (a
+    /// tobacco's cream tube under its pink limb); the petals' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tube_colour: Option<[f32; 3]>,
     /// Stamens: in whorls up to twice the petals, on a spiral above.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub stamens: u32,
     /// Their length over the flower's radius.
     #[serde(skip_serializing_if = "is_default_stamen_length")]
     pub stamen_length: f64,
+    /// The style's length over the flower's radius, where it differs from
+    /// the stamens' (a fuchsia's, longer); the stamens' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub style_length: Option<f64>,
+    /// How far each stamen leans out from the axis, the tangent of its
+    /// angle: below 0 leans the anthers together in a cone round the style
+    /// (a tomato's); 0.35 (0.15 on a tube) if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stamen_lean: Option<f64>,
     /// A stamen's width over its length: 0.03 a slender filament, toward
     /// 0.15 a flat strap (a magnolia's or a custard apple's laminar
     /// stamens).
@@ -1850,6 +2052,11 @@ impl Default for Flower {
             calyx: None,
             filament: None,
             pistil: None,
+            anther_colour: None,
+            spots: 0,
+            base_colour: None,
+            base_length: BASE_LENGTH,
+            star_colour: None,
             stigma: None,
             pericarpel: Skin::Naked,
             bud: None,
@@ -1861,10 +2068,17 @@ impl Default for Flower {
             fused: 0.0,
             throat: THROAT,
             belly: 0.0,
+            tube_reach: 0.0,
             spur: 0.0,
             tube: 0.0,
+            floral_tube: 0.0,
+            sepal_rise: None,
+            petal_rise: None,
+            tube_colour: None,
             stamens: 0,
             stamen_length: STAMEN_LENGTH,
+            style_length: None,
+            stamen_lean: None,
             stamen_width: STAMEN_WIDTH,
             anther: crate::flowers::ANTHER,
             anther_tilt: 0.0,
@@ -1912,6 +2126,9 @@ impl Flower {
             && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
+            && self.spots == 0
+            && self.base_colour.is_none()
+            && self.star_colour.is_none()
     }
 
     /// Whether the flower's plane of symmetry is fixed by the axis that
@@ -1927,6 +2144,9 @@ const BANNER: f64 = 1.6;
 const ODD_RISE: f64 = 15.0;
 const LIP: f64 = 1.3;
 const THROAT: f64 = 0.3;
+/// How far a petal's own foot colour reaches by default: two fifths of
+/// its length.
+const BASE_LENGTH: f64 = 0.4;
 const STAMEN_LENGTH: f64 = 0.35;
 /// A stamen's width over its length, where the flower does not say.
 pub const STAMEN_WIDTH: f64 = 0.03;
@@ -1970,6 +2190,11 @@ fn is_default_odd_rise(value: &f64) -> bool {
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
 fn is_default_lip(value: &f64) -> bool {
     *value == LIP
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_base_length(value: &f64) -> bool {
+    *value == BASE_LENGTH
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
@@ -2316,6 +2541,24 @@ pub struct Fruit {
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
     pub unripe: f64,
+    /// A calyx kept under the fruit, in the accent colour: each lobe's
+    /// length over the fruit's width, 0 for none; small, it clasps the
+    /// fruit's foot (a tomato's), large, it spreads in a star (a
+    /// belladonna's).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub kept_calyx: f64,
+    /// The kept calyx's lobes; 0 for five.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub kept_lobes: u32,
+    /// What arms the fruit's surface.
+    #[serde(skip_serializing_if = "Armed::is_none")]
+    pub armed: Armed,
+    /// How the fruit holds itself, -1 to 1: 0 along its organ, 1 hanging
+    /// straight down from where it is borne (an eggplant's), -1 standing
+    /// straight up (a jimsonweed's capsule), between them turned that
+    /// share of the way.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub hang: f64,
     /// How much wider the fruit is toward its tip than toward its base,
     /// -0.8 to 0.8: 0 an ellipsoid, above 0 obovoid to obconic or
     /// club-shaped, below 0 ovoid ([`crate::fruit`]).
@@ -2348,12 +2591,36 @@ impl Default for Fruit {
             cone: 0.0,
             kind: FruitKind::Berry,
             unripe: 0.0,
+            kept_calyx: 0.0,
+            kept_lobes: 0,
+            armed: Armed::None,
+            hang: 0.0,
             flare: 0.0,
             seeds: None,
             cup: None,
             ripening: None,
             threads: 0.0,
         }
+    }
+}
+
+/// What arms a fruit's surface (`crate::fruit`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Armed {
+    /// Nothing: a smooth fruit.
+    #[default]
+    None,
+    /// Stout prickles all over (a jimsonweed's capsule).
+    Prickles,
+    /// Fine hooked bristles all over (an enchanter's nightshade's burr).
+    Bristles,
+}
+
+impl Armed {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_none(&self) -> bool {
+        *self == Self::None
     }
 }
 
@@ -2366,6 +2633,10 @@ struct FruitCard {
     cone: f64,
     kind: FruitKind,
     unripe: f64,
+    kept_calyx: f64,
+    kept_lobes: u32,
+    armed: Armed,
+    hang: f64,
     flare: f64,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
@@ -2385,6 +2656,10 @@ impl Default for FruitCard {
             cone: fruit.cone,
             kind: fruit.kind,
             unripe: fruit.unripe,
+            kept_calyx: fruit.kept_calyx,
+            kept_lobes: fruit.kept_lobes,
+            armed: fruit.armed,
+            hang: fruit.hang,
             flare: fruit.flare,
             seeds: None,
             cup: None,
@@ -2419,6 +2694,10 @@ impl TryFrom<FruitCard> for Fruit {
             cone: card.cone,
             kind: card.kind,
             unripe: card.unripe,
+            kept_calyx: card.kept_calyx,
+            kept_lobes: card.kept_lobes,
+            armed: card.armed,
+            hang: card.hang,
             flare: card.flare,
             seeds: card.seeds,
             cup: card.cup,
@@ -3055,7 +3334,7 @@ impl Shape {
                 check("notch", s.notch, 0.0, 0.8)?;
                 check("centre", s.centre, 0.0, 0.8)?;
                 count("sepals", s.sepals, 0, 12)?;
-                check("sepal_length", s.sepal_length, 0.1, 1.5)?;
+                check("sepal_length", s.sepal_length, 0.1, 3.0)?;
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
@@ -3078,11 +3357,36 @@ impl Shape {
                 check("fused", s.fused, 0.0, 0.95)?;
                 check("throat", s.throat, 0.05, 1.0)?;
                 check("belly", s.belly, 0.0, 0.5)?;
+                check("tube_reach", s.tube_reach, 0.0, 12.0)?;
+                count("spots", s.spots, 0, 60)?;
+                check("base_length", s.base_length, 0.05, 1.0)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
+                check("floral_tube", s.floral_tube, 0.0, 12.0)?;
+                if s.floral_tube > 0.0 && s.ovary != Ovary::Inferior {
+                    return Err(
+                        "flower floral_tube stands on an inferior ovary: ovary must be inferior"
+                            .into(),
+                    );
+                }
+                if let Some(rise) = s.sepal_rise {
+                    check("sepal_rise", rise, -90.0, 90.0)?;
+                }
+                if let Some(rise) = s.petal_rise {
+                    check("petal_rise", rise, -90.0, 90.0)?;
+                }
+                for channel in s.tube_colour.into_iter().flatten() {
+                    check("tube_colour", f64::from(channel), 0.0, 1.0)?;
+                }
                 count("stamens", s.stamens, 0, 400)?;
-                check("stamen_length", s.stamen_length, 0.05, 2.0)?;
+                check("stamen_length", s.stamen_length, 0.05, 12.0)?;
                 check("stamen_width", s.stamen_width, 0.01, 0.3)?;
+                if let Some(style) = s.style_length {
+                    check("style_length", style, 0.05, 12.0)?;
+                }
+                if let Some(lean) = s.stamen_lean {
+                    check("stamen_lean", lean, -0.5, 1.5)?;
+                }
                 count("staminodes", s.staminodes, 0, 50)?;
                 count("carpels", s.carpels, 0, 100)?;
                 check("torus", s.torus, 0.0, 1.5)?;
@@ -3240,6 +3544,11 @@ impl Shape {
             Self::Fruit(s) => {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
+                check("kept_calyx", s.kept_calyx, 0.0, 2.0)?;
+                check("hang", s.hang, -1.0, 1.0)?;
+                if s.kept_lobes != 0 {
+                    count("kept_lobes", s.kept_lobes, 3, 12)?;
+                }
                 for channel in s.seeds.into_iter().chain(s.cup).chain(s.ripening).flatten() {
                     check(
                         "seeds, cup or ripening colour",
@@ -3866,7 +4175,8 @@ impl WithFamilies for Vec<Look> {
 /// that day. An organ with a [`Season`] shows its stage's look: in bud its
 /// bud look; in flower its flower look, or its own if that is not fruit;
 /// in fruit its own look, its fruit that share unripe, or nothing if its
-/// own look is a flower. A cluster stays at its full size, each of its
+/// own look is a flower. A leaf with a [`Leafing`] is gone while the plant
+/// is bare, small and pale as it unfolds, and turns before it falls. A cluster stays at its full size, each of its
 /// units in its own stage's look (spec rework L1b), its card in the two
 /// colours most of them show, unless the stage's look is `whole`. Organs
 /// without a season, and every organ when `day` is `None`, keep their own
@@ -3882,11 +4192,14 @@ pub fn resolve_on<'a>(
     resolve(organs, looks, foliage, foliage_shade)
         .into_iter()
         .map(|look| {
-            let season = looks.get(&look.organ).and_then(|own| own.season.as_ref());
-            match (season, day) {
-                (Some(season), Some(day)) => {
+            let own = looks.get(&look.organ);
+            let season = own.and_then(|own| own.season.as_ref());
+            let leafing = own.and_then(|own| own.leafing.as_ref());
+            match (season, leafing, day) {
+                (Some(season), _, Some(day)) => {
                     in_season(look, &season.with_bracts(foliage), day, foliage)
                 }
+                (None, Some(leafing), Some(day)) => leafing.on_day(look, day),
                 _ => (look, 1.0),
             }
         })
@@ -4448,6 +4761,12 @@ impl OrganLook {
             season.validate()?;
             self.check_stages(season)?;
         }
+        if let Some(leafing) = &self.leafing {
+            if self.season.is_some() || self.inflorescence.is_some() {
+                return Err("leafing is for leaves, without a season".to_string());
+            }
+            leafing.validate()?;
+        }
         if let Some(families) = &self.families {
             if self.season.is_some() {
                 return Err("families are for leaves, without a season".to_string());
@@ -4689,6 +5008,7 @@ mod tests {
                 bend: None,
                 form: None,
                 season: None,
+                leafing: None,
                 families: Some(Families {
                     plasticity: 0.5,
                     juvenile: Some(Juvenile {
@@ -4948,6 +5268,7 @@ mod tests {
                 bend: None,
                 form: None,
                 season: None,
+                leafing: None,
                 families: None,
                 inflorescence: None,
             },
@@ -4989,6 +5310,7 @@ mod tests {
                     bend: None,
                     form: None,
                     season: None,
+                    leafing: None,
                     families: None,
                     inflorescence: None,
                 },
@@ -5060,6 +5382,86 @@ mod tests {
     }
 
     #[test]
+    fn deciduous_leaves_unfold_turn_and_fall() {
+        let maple = Leafing {
+            out: 101.0,
+            full: 131.0,
+            turn: 264.0,
+            fall: 325.0,
+            autumn: Some([0.8, 0.5, 0.05]),
+        };
+        maple.validate().unwrap();
+        let types = [("leaf", OrganKind::Leaf)];
+        let leaf = OrganLook {
+            hairs: None,
+            hairs_beneath: None,
+            underside: None,
+            variegation: None,
+            sori: None,
+            roll: 0.0,
+            insertion: crate::looks::Insertion::Marginal,
+            shape: Shape::Fruit(Fruit::default()),
+            colour: Some([0.1, 0.3, 0.05]),
+            shade: None,
+            accent: None,
+            face_up: 0.0,
+            solid: None,
+            bend: None,
+            form: None,
+            season: None,
+            leafing: Some(maple.clone()),
+            families: None,
+            inflorescence: None,
+        };
+        let organs = BTreeMap::from([("leaf".to_string(), leaf)]);
+        let on = |day| {
+            resolve_on(
+                types,
+                &organs,
+                [0.1, 0.3, 0.05],
+                [0.03, 0.1, 0.03],
+                Some(day),
+            )
+        };
+        // Bare in winter, before the leaves unfold and after they fall.
+        assert_eq!(on(15.0).1[0], 0.0);
+        assert_eq!(on(340.0).1[0], 0.0);
+        // A third of their size and paler as they unfold, then full.
+        let (looks, sizes) = on(101.0);
+        assert!((sizes[0] - 1.0 / 3.0).abs() < 1e-12);
+        assert!(looks[0].colour[0] > 0.1 && looks[0].colour[1] > 0.3);
+        let (looks, sizes) = on(200.0);
+        assert_eq!(sizes[0], 1.0);
+        assert_eq!(looks[0].colour, [0.1, 0.3, 0.05]);
+        // Wholly turned halfway from turning to falling, still on.
+        let (looks, sizes) = on(300.0);
+        assert_eq!(sizes[0], 1.0);
+        assert_eq!(looks[0].colour, [0.8, 0.5, 0.05]);
+        // Without a day it keeps its summer look.
+        assert_eq!(
+            resolve_on(types, &organs, [0.1, 0.3, 0.05], [0.03, 0.1, 0.03], None).1,
+            [1.0]
+        );
+        // A southern beech's leaves fall in the next year's April.
+        let beech = Leafing {
+            out: 284.0,
+            full: 314.0,
+            turn: 446.0,
+            fall: 507.0,
+            autumn: None,
+        };
+        beech.validate().unwrap();
+        assert_eq!(beech.size(15.0), 1.0);
+        assert_eq!(beech.size(182.0), 0.0);
+        assert!(beech.size(290.0) < 1.0);
+        let days = Leafing {
+            turn: 100.0,
+            ..beech
+        };
+        assert!(days.validate().is_err());
+    }
+
+    #[test]
     fn an_organ_looks_as_it_is_on_the_day() {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
@@ -5079,6 +5481,7 @@ mod tests {
             bend: None,
             form: None,
             season,
+            leafing: None,
             families: None,
             inflorescence: None,
         };
@@ -5174,6 +5577,7 @@ mod tests {
                 bend: None,
                 form: None,
                 season: Some(season),
+                leafing: None,
                 families: None,
                 inflorescence,
             },
@@ -5296,6 +5700,7 @@ mod tests {
             bend: None,
             form: None,
             season: Some(season),
+            leafing: None,
             families: None,
             inflorescence: Some(Inflorescence {
                 kind: Some(kind),
@@ -5531,7 +5936,7 @@ mod tests {
                     }
                     Field::Number => assert!(with(field, 2.5.into()).is_ok(), "{at}"),
                     Field::Word => {
-                        let error = with(field, "none".into()).unwrap_err().to_string();
+                        let error = with(field, "no-such-word".into()).unwrap_err().to_string();
                         assert!(error.contains("unknown variant"), "{at}: {error}");
                     }
                     Field::Outline => {

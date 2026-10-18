@@ -1009,6 +1009,7 @@ impl Sheet {
             // The face toward the units, so a forward arch bends against
             // the leaf's own.
             arch: -self.hood,
+            arch_from: 0.0,
             twist: 0.0,
             margin: None,
             teeth: None,
@@ -2053,7 +2054,7 @@ fn draw_laid(
                 organ,
                 shape,
                 form,
-                (base, direction, unit_length),
+                (base, fruit::hung(direction, shape.hang), unit_length),
                 shown.unripe,
                 detail,
                 shown.colour,
@@ -2084,7 +2085,18 @@ fn draw_laid(
                         ),
                         accent: shown.accent,
                         filament: flower.filament.unwrap_or(shown.accent),
+                        anther: flower.anther_colour.unwrap_or(shown.accent),
                         ovary: flower.pistil.unwrap_or(shown.accent),
+                        base: flower
+                            .base_colour
+                            .map(|base| crate::blooms::with_shading(base, look.colour, colour)),
+                        base_length: flower.base_length,
+                        star: flower
+                            .star_colour
+                            .map(|star| crate::blooms::with_shading(star, look.colour, colour)),
+                        tube: flower
+                            .tube_colour
+                            .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),
                         stigma: flower.stigma.or(flower.filament).unwrap_or(shown.accent),
                     },
                     part,
@@ -3275,6 +3287,7 @@ mod tests {
                     bend: None,
                     form: None,
                     season: None,
+                    leafing: None,
                     families: None,
                 },
             )]),
@@ -3362,6 +3375,7 @@ mod tests {
                     bend: None,
                     form: None,
                     season: season.map(|(season, _)| season),
+                    leafing: None,
                     families: None,
                 },
             )]),

@@ -899,7 +899,7 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
          wild carrot and poison hemlock (lacy leaves), white clover\'s heads, the four \
          whose families now rank their clusters: aloe vera's racemes, black mangrove's cymes, \
          harsh paintbrush's spikes and Pacific bleeding heart's racemes, and lamb\'s ear\'s spike \
-         (hair practice)"
+         (hair practice), and the tomato's, eggplant's and tobacco's cymes and panicle (nightshades)"
     );
 }
 

@@ -33,10 +33,12 @@
 # Revision 9 (thread "Cacti"): on column revision 3; no flowers down the
 # flank (flank 0) unless a genus's rule asks.
 #
+# Revision 10 (thread "Cacti"): on column revision 4; chains of fruit hang.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 9 extends column;
+lsystem cactaceae 10 extends column;
 
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
 param lean = 3;               # most degrees a lone stem leans at its foot, in a random direction

@@ -130,6 +130,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [225, 120, 40],
     "height_max_m": {
       "min": 10,
       "max": 15
@@ -148,6 +149,7 @@
     "fruit_size_m": {"min": 0.02, "max": 0.04}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Acer circinatum (read 2026-10-18): \"the leaves turn bright yellow to orange red\". Colour ours, between the two."},
     "generator.params.spur_leaf": {
       "evidence": "Authored",
       "source": "plantgen-authors",

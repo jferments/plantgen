@@ -20,12 +20,31 @@ your AI or by you.
      its share, n;
    - **ratio, share, angle, count**: median, 25th and 75th percentile, n;
    - **colour**: convert hex to CIELAB; median L, a, b per lighting group; n
-     per group.
+     per group;
+   - **profile**: band by band, the median, 25th and 75th percentile and n
+     of the widths (`band_median`, `band_q1`, `band_q3`, `band_n`). Widths
+     read by eye ("no bands" in the note) are dropped where five or more
+     read on bands remain. Estimated widths count, but a band where more
+     than half are estimated is listed in `bands_estimated`, and its verdict
+     is at most ~. Aggregate profiles within one age class (triage
+     `age_class`): a crown's outline changes with age more than between
+     species (young grand firs are widest near the ground, old ones broad
+     and flat-topped).
 5. Mark the feature **insufficient** if fewer than 5 answers from at least
    3 photographers remain. Insufficient features are not compared; they go
    on the list of photos to find.
 
 Render answers are aggregated the same way over seeds.
+
+A render's crown profile comes either from observing its side view like a
+photo (bands drawn on it), or, more exactly, from its geometry: export the
+same seed, age and setting (`plantc export <id> --env open --seed S --age N
+--quality draft --out DIR`) and run `python3
+photo-rules/tools/crown_profile.py glb DIR/<id>-open-S-Ny-lod1.glb`. It takes
+the foliage vertices in each tenth of the height and gives the spread of
+their x from the 0.5th to the 99.5th percentile, over the height: the width
+across each band an observer reads, single strays left out. Three seeds give three
+profiles, aggregated like photos.
 
 ## 2. Give each feature a verdict
 
@@ -35,6 +54,22 @@ Render answers are aggregated the same way over seeds.
 | ordinal | same state as the majority, or a neighbour with 25% or more | one step from the majority | two or more steps |
 | ratio, share, angle, count | render median inside the photo IQR | within 1.5 x IQR of the photo median | further |
 | colour (same lighting) | ΔE2000 under 15 | 15-25 | over 25 |
+| profile | no band misses, at most two partly | one band misses, or three or more partly | two or more bands miss |
+
+A profile is judged band by band with the ratio rule, the render's median
+width against the photos' median and IQR in that band, the IQR taken as at
+least 0.05 of the height (the reading's own accuracy). Report each band's
+distance in units of the photos' IQR, `(render - photo median) / IQR`,
+signed, and say where the outline differs: lower bands (0.05-0.25 H),
+middle (0.35-0.65 H) or upper (0.75-0.95 H), wider or narrower. A band with
+fewer than five photo widths is not compared, and a profile with fewer than
+six compared bands is insufficient.
+
+A verdict on a `face_on` feature needs face-on answers on both sides: the
+photo answers from organs lying flat to the camera, and the render answers
+from face-on cards (`plantc atlas`) or measured sizes (`plantc validate
+--group sizes`), never from a tilted parts panel or an oblique view.
+Without them the verdict is "render insufficient", not ✗.
 
 If photos are split with no majority (no state over 60%), a render showing
 any state with 25% or more passes: the plant varies, and so may the

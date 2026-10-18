@@ -18,6 +18,8 @@ V1 and V2, and the close-ups answer the shoot features
 ([`whitebark-pine/observation-photo.json`](whitebark-pine/observation-photo.json)).
 The whole-tree photo says "cannot tell" for needle direction: the needles
 are too small to read from there, and a guess would have been a false vote.
+It also gives the crown profile, read on tick bands drawn on the crop, with
+the lowest band marked estimated where a boulder hides one side.
 
 ## 3. Match the render
 

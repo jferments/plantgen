@@ -143,7 +143,8 @@
     "sexual_system": "dioecious",
     "inflorescence": "raceme",
     "fruit_size_m": {"min": 0.008, "max": 0.012},
-    "leaf_shape": "oblanceolate"
+    "leaf_shape": "oblanceolate",
+    "leaf_apex": {"acute": "usually", "obtuse": "often"}
   },
   "evidence": {
     "traits.leaf_length_m": {
@@ -247,7 +248,8 @@
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
-    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."}
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Oemleria cerasiformis (read 2026-10-18): the tip ranges from acute to blunt."}
   },
   "provenance": {
     "sources": [

@@ -125,7 +125,8 @@
     "stem_hairs": "hispid",
     "stinging_hairs": "scattered",
     "stinging_hair_length_m": 0.0014,
-    "leaf_hair_length_m": 0.0003
+    "leaf_hair_length_m": 0.0003,
+    "leaf_apex": {"acuminate": "usually", "acute": "often"}
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -225,7 +226,8 @@
     "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2448560), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Urtica dioica (read 2026-10-18): the blade tip is acute or acuminate (Wikipedia says acuminate)."}
   },
   "provenance": {
     "sources": [

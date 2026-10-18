@@ -134,7 +134,8 @@
     "height_typical_m": {"min": 0.5, "max": 1.2},
     "leaf_habit": "drought_deciduous",
     "rosette": "none",
-    "inflorescence_length_m": {"min": 0.1, "max": 0.3}
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
+    "leaf_apex": {"obtuse": "usually", "acute": "often"}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -296,7 +297,8 @@
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."}
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Encelia farinosa (read 2026-10-18): the leaf tip is obtuse or acute."}
   },
   "provenance": {
     "sources": [

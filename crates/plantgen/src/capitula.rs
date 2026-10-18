@@ -513,6 +513,7 @@ pub(crate) fn draw(
         taper: math::lerp(0.45, 0.2, square),
         tip: 0.85 * square,
         arch: form.curl,
+        arch_from: 0.0,
         twist: 0.0,
         margin: None,
         teeth: None,

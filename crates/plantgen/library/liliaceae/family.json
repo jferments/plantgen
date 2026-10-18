@@ -36,7 +36,8 @@
     },
     "sexual_system": "hermaphrodite",
     "life_span": "perennial",
-    "perennation": {"bulb": "often", "corm": "often", "rhizome": "often", "tuber": "often"}
+    "perennation": {"bulb": "often", "corm": "often", "rhizome": "often", "tuber": "often"},
+    "perianth_fused": false
   },
   "forms": {
     "forb": {
@@ -52,7 +53,21 @@
       }
     }
   },
+  "rules": {
+    "appearance.organs.*.shape.fused": {
+      "template": "flower",
+      "map": {"perianth_fused": {"false": 0}},
+      "why": "Free tepals or petals are drawn unjoined, however bell- or funnel-shaped the flower they make: a lily's 'sepals and petals distinct'."
+    },
+    "appearance.organs.flower.form.flower.cup": {
+      "map": {"corolla_shape": {"rotate": 15, "cupped": 40, "campanulate": 55, "funnelform": 65, "tubular": 75, "salverform": 15, "urceolate": 75}},
+      "else": 45,
+      "why": "Tepals rise from the flower's plane as its shape says: nearly flat in a star, a bowl, steeper in a bell, steeper again in a funnel or tube. A Turk's cap, which the floras name apart from those shapes, keeps the foot of its tepals at half a right angle before they curve back."
+    }
+  },
   "evidence": {
+    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How a flower of the family is drawn from its perianth's characters, a choice of the model's (lilies, 2026-10-18): free tepals drawn unjoined however bell-shaped the flower, and the angle they rise at from the corolla's shape, the Turk's cap the Columbia lily was drawn with by hand before where none is named."},
+    "traits.perianth_fused": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 218, 221, 222, family Liliaceae: tepals or sepals and petals, 3+3, free; FNA vol. 26 (2002, Lilium): sepals and petals distinct."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Liliaceae (read 2026-10-17): leaves simple, lamina undivided."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-17): lamina entire; Wikipedia Liliaceae: margins entire."},
     "traits": {

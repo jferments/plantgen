@@ -28,14 +28,79 @@
       "why": "A cluster's flower is as wide, for the length of the cluster and its peduncle, as floras measure them, whichever axis bears it: a panicle's or compound umbel's flowers sit on its branches."
     },
     "generator.params.flower_size": {
-      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "solitary": {"rule": "flower_size_m"}}},
-      "else": {"rule": "flower_size_m"},
-      "why": "A herb's flowering organ is as long as its inflorescence and the peduncle it stands on where its flowers are in clusters, else as wide as its flower."
+      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "solitary": {"rule": "flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)"}}},
+      "else": {"rule": "flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)"},
+      "why": "A herb's flowering organ is as long as its inflorescence and the peduncle it stands on where its flowers are in clusters, else as wide as its flower; where its sepals outreach its petals, the flower's width is theirs, and its petals reach that share of it."
     },
     "generator.params.bloom_size": {
-      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "solitary": {"rule": "flower_size_m"}}},
-      "else": {"rule": "flower_size_m"},
-      "why": "A tree's or shrub's bloom is as long as its inflorescence and the peduncle it stands on where its flowers are in clusters, else as wide as its flower."
+      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "solitary": {"rule": "flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)"}}},
+      "else": {"rule": "flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)"},
+      "why": "A tree's or shrub's bloom is as long as its inflorescence and the peduncle it stands on where its flowers are in clusters, else as wide as its flower; where its sepals outreach its petals, the flower's width is theirs, and its petals reach that share of it."
+    },
+    "generator.params.units": {
+      "map": {"sympodium": {"none": 0, "monochasial": 6, "dichasial": 4}},
+      "why": "A stem that grows on past its flowers is drawn as a sympodium: six units above the first inflorescence where one bud grows on each time, four where two do (sixteen tips), so either reaches its height in units as long as its leaves allow; one that grows on from its tip ends in a raceme."
+    },
+    "generator.params.forks": {
+      "map": {"sympodium": {"monochasial": 1, "dichasial": 2}},
+      "why": "One shoot grows on past each inflorescence of a monochasium, two of a dichasium."
+    },
+    "generator.params.fork_angle": {
+      "map": {"sympodium": {"monochasial": 12, "dichasial": 30}},
+      "why": "A monochasium's shoot grows on nearly in line, the inflorescence pushed aside, so the stem zigzags a little; a dichasium's two shoots spread apart round the flower in their fork."
+    },
+    "generator.params.unit_leaves": {
+      "rule": "sympodial_unit_leaves",
+      "why": "Each unit of a sympodium bears as many leaves as its taxa state."
+    },
+    "generator.params.geminate": {
+      "map": {"leaves_geminate": {"true": 0.5, "false": 0}},
+      "why": "Geminate leaves are drawn as a pair at one node, the smaller half as long as the larger."
+    },
+    "generator.params.flower_tilt": {
+      "map": {"flower_posture": {"erect": 15, "ascending": 45, "spreading": 90, "nodding": 135, "pendent": 170}},
+      "why": "A flower on a sympodium's peduncle faces as its posture says: up, at a slant, level, down and out, or straight down."
+    },
+    "generator.params.bloom_angle": {
+      "map": {"flower_posture": {"erect": 20, "ascending": 45, "spreading": 80, "nodding": 120, "pendent": 150}},
+      "why": "A woody plant's bloom stands from its shoot as the flower's posture says; past a right angle it hangs."
+    },
+    "appearance.organs.flower.form.flower.curl": {
+      "map": {"perianth_reflexion": {"none": 0, "spreading": 30, "recurved": 90, "reflexed": 180, "revolute": 220}},
+      "why": "A flower's petals or tepals bend back from their cup as far as its flora says: not at all, a little where they spread, a quarter turn where their tips curve back (recurved), half a turn where they sweep back to the stalk (reflexed, a Turk's cap), and further where they roll (revolute)."
+    },
+    "appearance.organs.flower.form.flower.curl_from": {
+      "map": {"perianth_reflexion": {"recurved": {"rule": "first(perianth_reflexion_from, 0.6)"}, "reflexed": {"rule": "first(perianth_reflexion_from, 0.35)"}, "revolute": {"rule": "first(perianth_reflexion_from, 0.2)"}}},
+      "why": "They bend back from as far along their length as the flora says ('reflexed 2/5 along length from base'); where it gives no share, a recurved tip from three fifths, a reflexed one from about a third, a revolute one from a fifth, as the North American lilies mostly are."
+    },
+    "appearance.organs.*.shape.spots": {
+      "template": "flower",
+      "map": {"perianth_spots": {"none": 0, "few": 4, "many": 9, "copious": 12}},
+      "why": "Dark spots on the inner face of each petal or tepal, toward its base: a few, many, or crowded as its flora words them (12 is as many as a flower's part keeps at full detail)."
+    },
+    "appearance.organs.*.shape.anther_colour": {
+      "template": "flower",
+      "colour": "anther_colour",
+      "why": "Anthers are drawn in the colour their flora gives them, apart from the look's accent."
+    },
+    "appearance.organs.*.shape.base_colour": {
+      "template": "flower",
+      "colour": "perianth_base_colour",
+      "why": "Where a flora colours the petals' or tepals' base apart from their tips, their inner face is drawn in that colour from the foot, fading into the petal's colour where it stops."
+    },
+    "appearance.organs.*.shape.base_length": {
+      "template": "flower",
+      "rule": "clamp(perianth_base_length, 0.05, 1)",
+      "why": "The base colour reaches as far along each petal or tepal as its flora says ('red-orange on distal 1/5-1/4' leaves the base colour about four fifths)."
+    },
+    "appearance.organs.*.shape.star_colour": {
+      "template": "flower",
+      "colour": "nectary_colour",
+      "why": "Nectaries a flora says show at the foot of each petal or tepal are drawn there in their colour, together a star at the flower's heart."
+    },
+    "generator.params.bloom_stalk": {
+      "map": {"inflorescence": {"solitary": {"rule": "pedicel_length_m"}}},
+      "why": "A tree's or shrub's solitary flower hangs or stands on its own stalk, as long as its flora measures it; a cluster's flowers keep their stalks in the cluster."
     },
     "generator.params.suckers": {
       "map": {"stem_clump": {"single": 0, "few": 3, "many": 10, "thicket": 16}},
@@ -61,6 +126,11 @@
       "colour": "flower_colour",
       "why": "A tree's or shrub's blooms are drawn in the colour its flowers' showiest part is stated in."
     },
+    "appearance.organs.leaf.leafing.out": {"map": {"woodiness": {"woody": {"map": {"leaf_habit": {"deciduous": {"rule": "month_start(first(min(leaf_out_months), 4)) + 10"}}}}}}, "why": "A deciduous woody plant's leaves unfold a third of the way into the first month floras say they do, or into April, when most temperate broadleaves leaf out, where they give none."},
+    "appearance.organs.leaf.leafing.full": {"map": {"woodiness": {"woody": {"map": {"leaf_habit": {"deciduous": {"rule": "month_start(first(min(leaf_out_months), 4)) + 40"}}}}}}, "why": "Its leaves reach their full size about a month after they unfold."},
+    "appearance.organs.leaf.leafing.turn": {"map": {"woodiness": {"woody": {"map": {"leaf_habit": {"deciduous": {"rule": "month_start(first(min(leaf_fall_months), 10)) - 10 + (first(min(leaf_fall_months), 10) < first(min(leaf_out_months), 4) ? 365 : 0)"}}}}}}, "why": "Its leaves begin to turn ten days before the first month floras say they fall in, or before October where they give none."},
+    "appearance.organs.leaf.leafing.fall": {"map": {"woodiness": {"woody": {"map": {"leaf_habit": {"deciduous": {"rule": "month_start(first(max(leaf_fall_months), 11) + 1) - 10 + (first(min(leaf_fall_months), 10) < first(min(leaf_out_months), 4) ? 365 : 0)"}}}}}}, "why": "The last of its leaves are down ten days before the last month floras say they fall in ends, or November where they give none. Months that fall before the months they unfold in are the next year's, as a southern beech's are."},
+    "appearance.organs.leaf.leafing.autumn": {"map": {"woodiness": {"woody": {"map": {"leaf_habit": {"deciduous": {"colour": "leaf_colour_autumn"}}}}}}, "why": "Its leaves turn the colour floras give them in autumn, or a dull yellow browning where they give none."},
     "appearance.organs.fruit.colour": {
       "colour": "fruit_colour_ripe",
       "why": "A fruit is drawn in the colour it is stated to ripen to; its unripe share keeps the look's accent."
@@ -113,13 +183,13 @@
       "why": "A cluster's fruit is as long, for the length of the cluster and its peduncle, as floras measure them, whichever axis bears it."
     },
     "appearance.organs.*.season.flower_look.size": {
-      "rule": "clamp(flower_size_m / fruit_size_m, 0.05, 4)",
-      "why": "A flower is as wide, for its fruit's length, as floras measure the flower and the fruit: a cluster's flower against its fruit, a lone flower against the fruit it becomes."
+      "rule": "clamp(flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3) / fruit_size_m, 0.05, 4)",
+      "why": "A flower is as wide, for its fruit's length, as floras measure the flower and the fruit (the flower by its petals' reach where sepals outreach them, as the bloom size rule grows it): a cluster's flower against its fruit, a lone flower against the fruit it becomes."
     },
     "appearance.organs.*.season.fruit_size": {
-      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "spike": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "catkin": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "corymb": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "umbel": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "compound_umbel": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "panicle": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "cyme": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "scorpioid": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "head": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "spadix": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "solitary": {"rule": "clamp(fruit_size_m / flower_size_m, 0.05, 20)"}}},
-      "else": {"rule": "clamp(fruit_size_m / flower_size_m, 0.05, 20)"},
-      "why": "A lone flower's organ is grown as wide as its flower, so its fruit is drawn at the fruit's stated length; a cluster grown as long as its inflorescence grows in fruit where its fruit outgrow it, to hold them on their stalks (a third again their length, as an umbel's rays need)."
+      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "spike": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "catkin": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "corymb": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "umbel": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "compound_umbel": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "panicle": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "cyme": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "scorpioid": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "head": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "spadix": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m + first(peduncle_length_m, 0), 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "solitary": {"rule": "clamp(fruit_size_m / (flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0.05, 20)"}}},
+      "else": {"rule": "clamp(fruit_size_m / (flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0.05, 20)"},
+      "why": "A lone flower's organ is grown as wide as its petals reach (its flower's width less sepals that outreach them, as the bloom size rule grows it), so its fruit is drawn at the fruit's stated length; a cluster grown as long as its inflorescence grows in fruit where its fruit outgrow it, to hold them on their stalks (a third again their length, as an umbel's rays need)."
     },
     "appearance.organs.*.inflorescence.kind": {
       "map": {"inflorescence": {"raceme": "raceme", "spike": "spike", "catkin": "catkin", "corymb": "corymb", "umbel": "umbel", "compound_umbel": "compound_umbel", "panicle": "panicle", "cyme": "cyme", "scorpioid": "scorpioid", "head": "head", "spadix": "spike"}},
@@ -239,6 +309,57 @@
       "map": {"corolla_shape": {"rotate": 0.3, "cupped": 0.3, "campanulate": 0.45, "funnelform": 0.4, "tubular": 0.2, "salverform": 0.12, "urceolate": 0.1}}, "between": true,
       "why": "A tube's mouth, over a petal's length: wide for a bell, narrow for a tube, narrower for a salver's or an urn's."
     },
+    "appearance.organs.*.shape.tube_reach": {
+      "template": "flower",
+      "rule": "clamp(corolla_tube_length_m / (0.5 * flower_size_m), 0, 12)",
+      "why": "A corolla tube a flora measures is drawn that long, over the flower's radius, however short its lobes leave it: a trumpet longer than it is wide."
+    },
+    "appearance.organs.*.shape.tube_colour": {
+      "template": "flower",
+      "colour": "corolla_tube_colour",
+      "why": "A joined corolla's tube is drawn in its own colour where it is stated apart from the lobes'."
+    },
+    "appearance.organs.*.shape.petal_rise": {
+      "template": "flower",
+      "map": {"corolla_lobe_posture": {"erect": 70, "spreading": 10, "reflexed": -40}},
+      "why": "Petals or corolla lobes stand up, out nearly flat, or bent back toward the stalk as their posture says."
+    },
+    "appearance.organs.*.shape.sepal_rise": {
+      "template": "flower",
+      "map": {"sepal_posture": {"erect": 60, "spreading": 0, "reflexed": -50}},
+      "why": "Sepals stand up against the corolla, out flat, or bent back toward the stalk as their posture says."
+    },
+    "appearance.organs.*.shape.calyx": {
+      "template": "flower",
+      "colour": "calyx_colour",
+      "why": "Sepals, and a floral tube that bears them, are drawn in their stated colour; leaf green where none is stated."
+    },
+    "appearance.organs.*.shape.sepal_length": {
+      "template": "flower",
+      "rule": "clamp(sepal_length_m / petal_length_m, 0.1, 3)",
+      "why": "A sepal is as long, for a petal's length, as its flora measures both."
+    },
+    "appearance.organs.*.shape.floral_tube": {
+      "template": "flower",
+      "rule": "clamp(hypanthium_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0, 12)",
+      "why": "A floral tube a flora measures above an inferior ovary is drawn that long, over the radius its petals reach."
+    },
+    "appearance.organs.*.shape.stamen_length": {
+      "template": "flower",
+      "map": {"stamen_exsertion": {"included": 0.5, "barely_exserted": 0.7, "exserted": 0.85, "strongly_exserted": 1.0}},
+      "else": {"rule": "clamp(stamen_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0.05, 12)"},
+      "why": "Stamens reach as far, for a petal's length, as their flora says: within the perianth, just to its mouth, well out of it, or past its tips. Where it gives no such words, a stamen it measures is drawn that long, over the radius the petals reach, so long-exserted stamens hang out past them, and a magnolia's 2 to 3 cm in a flower 20 cm across reaches a fifth of the way out."
+    },
+    "appearance.organs.*.shape.style_length": {
+      "template": "flower",
+      "rule": "clamp(style_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0.05, 12)",
+      "why": "A style a flora measures apart from the stamens is drawn that long, over the radius the petals reach."
+    },
+    "appearance.organs.*.shape.stamen_lean": {
+      "template": "flower",
+      "map": {"anthers_connivent": {"true": -0.1, "false": 0.35}},
+      "why": "Connivent anthers lean together in a cone round the style; free ones spread a little."
+    },
     "appearance.organs.*.shape.belly": {
       "template": "flower",
       "map": {"corolla_shape": {"rotate": 0, "cupped": 0, "campanulate": 0, "funnelform": 0, "tubular": 0, "salverform": 0, "urceolate": 0.25}}, "between": true,
@@ -276,13 +397,12 @@
     },
     "appearance.organs.*.shape.petal_whorls": {"template": "flower", "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(first(petal_whorls, 1)), 1, 2)"}}}, "why": "A corolla stands in the whorls it is stated in."},
     "appearance.organs.*.shape.whorl": {"template": "flower", "map": {"perianth": {"tepals": {"rule": "first(perianth_parts, 0) > 0 ? clamp(round(flower_merosity), 2, 6) : 0"}}}, "why": "Tepals whose number is stated stand in whorls of the flower's merosity (a magnolia's three, four or five whorls of three); otherwise in two whorls of half each."},
-    "appearance.organs.*.shape.stamen_length": {"template": "flower", "rule": "clamp(stamen_length_m / (flower_size_m / 2), 0.05, 2)", "why": "A stamen is as long, over the flower's radius, as floras measure it against the flower across: a magnolia's 2 to 3 cm in a flower 20 cm across reaches a fifth of the way out."},
     "appearance.organs.*.shape.stamen_width": {"template": "flower", "map": {"stamen_form": {"filamentous": 0.03, "laminar": 0.16}}, "why": "A filament is a slender thread; a laminar stamen is a flat strap about a sixth as wide as it is long."},
     "appearance.organs.*.shape.anther": {"template": "flower", "map": {"stamen_form": {"laminar": 0.6}}, "why": "A laminar stamen bears its pollen sacs along most of its length, over a short foot."},
     "appearance.organs.*.shape.filament": {"template": "flower", "colour": "filament_colour", "why": "A flower's filaments and styles are drawn in the colour its filaments are stated in; its anthers keep the accent."},
     "appearance.organs.*.shape.pistil": {"template": "flower", "colour": "pistil_colour", "why": "A flower's ovaries and its free carpels are drawn in the colour its carpels are stated in at flowering."},
     "appearance.organs.*.shape.torus": {"template": "flower", "map": {"floral_receptacle": {"flat": 0, "convex": 0, "elongate": {"rule": "first(gynoecium_length_m, 0) > 0 ? clamp(gynoecium_length_m / (flower_size_m / 2), 0.1, 1.5) : 0.35"}}}, "why": "Free carpels on an elongate receptacle stand on a spiral up a cone as long, over the flower's radius, as the gynoecium is stated (a third of the radius where it is not), the stamens crowded round its foot; on a flat or convex one, round a low dome."},
-    "appearance.organs.flower.accent": {"colour": "anther_colour", "why": "A flower's anthers, and its centre where it draws no stamens, are drawn in the colour its anthers are stated in."},
+    "appearance.organs.flower.accent": {"colour": ["perianth_spot_colour", "anther_colour"], "why": "A spotted flower's spots are drawn in their stated colour, the look's accent (its anthers then in their own, `anther_colour`); an unspotted flower's anthers, and its centre where it draws no stamens, in the colour its anthers are stated in."},
     "appearance.organs.bloom.accent": {"colour": "anther_colour", "why": "A tree's or shrub's blooms draw their anthers, and their centre where they draw no stamens, in the colour its anthers are stated in."},
     "appearance.organs.*.shape.bud": {"template": "flower", "colour": "bud_colour", "why": "A lone flower's closed bud shows the colour its bud is stated in: its sepals', or the bracts' that wrap it."},
     "appearance.organs.*.shape.rise": {"template": "flower", "map": {"corolla_shape": {"rotate": 10, "cupped": 55}}, "why": "A rotate corolla's petals spread nearly flat, 10 degrees above the plane square to the axis; a cupped one's rise 55 degrees into a bowl; other forms keep the drawn default of 30."},
@@ -293,6 +413,27 @@
     "generator.params.fruit_size": {
       "rule": "fruit_size_m",
       "why": "A fruit is as long as floras measure it at its longest."
+    },
+    "appearance.organs.*.shape.kept_calyx": {
+      "template": "fruit",
+      "map": {"calyx_in_fruit": {"falling": 0, "persistent": 0.35, "accrescent": 0.9}},
+      "why": "A calyx that stays on the fruit is drawn under it, its lobes a third of the fruit's width and clasping its foot; one that grows on after flowering spreads in a star nearly as long as the fruit is wide."
+    },
+    "appearance.organs.*.shape.kept_lobes": {
+      "template": "fruit",
+      "needs": ["calyx_in_fruit"],
+      "rule": "clamp(round(flower_merosity), 3, 12)",
+      "why": "A kept calyx has as many lobes as the flower's merosity."
+    },
+    "appearance.organs.*.shape.hang": {
+      "template": "fruit",
+      "map": {"fruit_posture": {"erect": -0.8, "spreading": 0, "deflexed": 0.5, "pendent": 1}},
+      "why": "A fruit is held as floras say it is: a pendent one hangs straight down from where it is borne, a deflexed one turns half way down, an erect one stands nearly upright, a spreading one keeps its stalk's line."
+    },
+    "appearance.organs.*.shape.armed": {
+      "template": "fruit",
+      "map": {"fruit_armature": {"smooth": "none", "prickly": "prickles", "bristly": "bristles"}},
+      "why": "A prickly fruit is drawn with stout prickles all over, a bristly one with fine bristles."
     },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
@@ -367,9 +508,35 @@
     "rules.generator.params.sucker_spread": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a shrub's stems from the words floras use for them (shrub habit, 2026-10-18): a clump's stems rise within a tenth to a fifth of its crown's radius, a thicket's over six tenths of it, as FEIS describes thickets spread by rhizomes; shares chosen by the model."},
     "rules.generator.params.fork_height": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a single-stemmed woody plant (shrub habit, 2026-10-18): one trunk that never forks into equal stems."},
     "rules.generator.params.lie": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen lays a herb's stems from the words floras use for their posture (shrub habit, 2026-10-18): a decumbent stem lies along the ground for half its leafy length, a prostrate or trailing one for three quarters of it, and the rest turns up to stand nearly upright; shares chosen by the model. Only species that state stem_posture change."},
+    "rules.generator.params.units": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a sympodial stem (nightshades, 2026-10-17): herb revision 10's sympodium, its units counted so a plant forks about as often as the floras' figures and photographs of tomato, jimsonweed and belladonna show; the floras say the stems fork or bear leaf-opposed clusters, not how many times."},
+    "rules.generator.params.forks": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a sympodial stem (nightshades, 2026-10-17): monochasial and dichasial are the botanist's words for one and two shoots growing on past a terminal flower."},
+    "rules.generator.params.fork_angle": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a sympodial stem (nightshades, 2026-10-17): angles by eye from photographs of tomato and jimsonweed (iNaturalist observations 184420443, 99933529)."},
+    "rules.generator.params.unit_leaves": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a sympodial stem (nightshades, 2026-10-17): the stated count drawn as it is."},
+    "rules.generator.params.geminate": {"evidence": "SourceInferred", "source": "kings-american-dispensatory-1898", "note": "King's American Dispensatory (1898 text, 1905 printing read on the Internet Archive, 2026-10-17), Belladonna, p. 332, citing Kilmer: the leaves come in two sizes, the smaller about half the larger. Drawn so for every species stating geminate leaves until one states its own ratio."},
+    "rules.generator.params.flower_tilt": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's posture (nightshades, 2026-10-17): the floras' words erect, ascending, spreading, nodding and pendent as angles from straight up, by eye from photographs of jimsonweed, pepper, belladonna and angel's trumpet (iNaturalist 99933529, 88011298, 133257326, 180856408)."},
+    "rules.generator.params.bloom_angle": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's posture (nightshades, 2026-10-17): the same words as angles from the shoot, a bloom past 90 degrees hanging, as the broadleaf program reads it."},
+    "rules.generator.params.bloom_stalk": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen stalks a woody plant's solitary flower (nightshades round 2, 2026-10-17): its stated pedicel length; broadleaf revision 17."},
+    "rules.appearance.organs.*.shape.tube_reach": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a measured corolla tube (nightshades, 2026-10-17): its stated length over half the flower's stated width, so a trumpet is as long as the flora says, its limb as wide."},
+    "rules.appearance.organs.*.shape.hang": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen holds a fruit (nightshades round 3, 2026-10-18), a choice of the model's: the fruit's line turned toward straight down by 1 (pendent), 0.5 (deflexed) or toward straight up by 0.8 (erect)."},
+    "rules.appearance.organs.*.shape.kept_calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a calyx kept on the fruit (nightshades round 2, 2026-10-17), a choice of the model's: persistent lobes a third of the fruit's width clasping its foot, accrescent ones 0.9 of it spreading in a star."},
+    "rules.appearance.organs.*.shape.kept_lobes": {"evidence": "Authored", "source": "plantgen-authors", "note": "A kept calyx's lobes are the flower's sepals (nightshades round 2, 2026-10-17)."},
+    "rules.appearance.organs.*.shape.armed": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an armed fruit (nightshades round 2, 2026-10-17), a choice of the model's: 48 prickles a fifth of the fruit's width long, or 80 bristles an eighth of it."},
+    "rules.appearance.organs.*.shape.tube_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours a corolla tube apart from its lobes (nightshades round 2, 2026-10-17): the stated tube colour on the tube, the flower's colour on the lobes."},
+    "rules.appearance.organs.*.shape.petal_rise": {"evidence": "Authored", "source": "plantgen-authors", "note": "Angles PlantGen gives the three postures of petals or lobes (nightshades round 2, 2026-10-17), a choice of the model's: erect 70°, spreading 10°, reflexed -40° from the plane square to the axis."},
+    "rules.appearance.organs.*.shape.sepal_rise": {"evidence": "Authored", "source": "plantgen-authors", "note": "Angles PlantGen gives the three postures of sepals (nightshades round 2, 2026-10-17), a choice of the model's: erect 60°, spreading 0°, reflexed -50°."},
+    "rules.appearance.organs.*.shape.calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours sepals and a floral tube (nightshades round 2, 2026-10-17): the stated calyx colour, else leaf green as before."},
+    "rules.appearance.organs.*.shape.sepal_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes sepals against petals (nightshades round 2, 2026-10-17): the stated lengths' ratio."},
+    "rules.appearance.organs.*.shape.floral_tube": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fuchsia's floral tube (nightshades round 2, 2026-10-17): its stated length over the radius the petals reach, the flower's width over its sepals' outreach."},
+    "rules.appearance.organs.*.shape.style_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a measured style (nightshades round 2, 2026-10-17): its stated length over the radius the petals reach."},
+    "rules.appearance.organs.*.shape.stamen_lean": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen leans connivent anthers (nightshades round 2, 2026-10-17), a choice of the model's: a tangent of -0.1, together over the style; free ones at the usual 0.35."},
     "rules.generator.params.bloom_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.bloom.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
+    "rules.appearance.organs.leaf.leafing.out": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
+    "rules.appearance.organs.leaf.leafing.full": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
+    "rules.appearance.organs.leaf.leafing.turn": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
+    "rules.appearance.organs.leaf.leafing.fall": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
+    "rules.appearance.organs.leaf.leafing.autumn": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
     "rules.appearance.organs.fruit.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.fruit.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect."},
     "rules.appearance.organs.*.season": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a plant's year from the months floras give, a choice of the model's (seasonal looks, 2026-10-16): its flowers show in the months it flowers in and its fruit in the months it is ripe in, as the season rules set their days, where they had shown all year and never fruited."},

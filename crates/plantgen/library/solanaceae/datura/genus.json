@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Datura",
+  "traits": {
+    "sympodium": "dichasial",
+    "inflorescence": "solitary",
+    "corolla_shape": "funnelform",
+    "fruit_type": "capsule"
+  },
+  "evidence": {
+    "traits.sympodium": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura (genus account), c. p. 170 (read on the Internet Archive, 2026-10-17): erect, tall, branching herbs; Gray (p. 717) and Bentham (p. 317) put the flowers in the forks of the branching stem, Bentham's branches forked and spreading."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura, c. p. 170 (read on the Internet Archive, 2026-10-17): flowers large, solitary, short-peduncled."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura, c. p. 170 (read on the Internet Archive, 2026-10-17): corolla funnelform with a plaited limb; Bailey (vol. 2, p. 970): trumpet-shaped with a spreading 5-10-toothed limb."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura, c. p. 170 (read on the Internet Archive, 2026-10-17): a capsule opening by 4 valves (D. stramonium); Gray p. 717: 4-valved."
+    }
+  }
+}

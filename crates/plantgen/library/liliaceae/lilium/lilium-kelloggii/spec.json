@@ -1,0 +1,278 @@
+{
+  "schema": 1,
+  "id": "lilium-kelloggii",
+  "taxon": {
+    "scientific_name": "Lilium kelloggii",
+    "common_name": "Kellogg's lily",
+    "plant_name_id": 279920,
+    "family": "Liliaceae",
+    "genus": "Lilium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.2,
+      "high": 2.1
+    },
+    "height_max_m": 2.1,
+    "leaf_arrangement": "whorled",
+    "leaf_whorls": {
+      "min": 2,
+      "max": 7,
+      "typical": 4
+    },
+    "leaves_per_whorl": {
+      "min": 3,
+      "max": 22,
+      "high": 40,
+      "typical": 8
+    },
+    "leaf_length_m": {
+      "min": 0.06,
+      "max": 0.16
+    },
+    "leaf_width_m": {
+      "min": 0.009,
+      "max": 0.044,
+      "typical": 0.018
+    },
+    "leaf_shape": "elliptic",
+    "leaf_posture": "spreading",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 27,
+      "typical": 6
+    },
+    "flower_posture": "pendent",
+    "perianth_reflexion": "reflexed",
+    "perianth_reflexion_from": 0.33,
+    "flower_colour": [
+      235,
+      160,
+      190
+    ],
+    "perianth_spots": "copious",
+    "perianth_spot_colour": [
+      110,
+      25,
+      35
+    ],
+    "tepal_length_m": {
+      "min": 0.034,
+      "max": 0.072
+    },
+    "stamen_exsertion": "exserted",
+    "anther_colour": [
+      210,
+      95,
+      110
+    ],
+    "pedicel_length_m": {
+      "min": 0.088,
+      "max": 0.238
+    },
+    "fruit_size_m": {
+      "min": 0.029,
+      "max": 0.057
+    },
+    "fruit_width_m": {
+      "min": 0.01,
+      "max": 0.016
+    },
+    "flowering_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lilies work (2026-10-18): every character from the floras in the lilies notes (plantgen-claude project-files/lilies/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Lilium kelloggii, plant_name_id 279920."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Liliaceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bulbous herb with one leafy flowering stem a year, drawn by the forb form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown five years from seed, as a lily bulb takes three to five to flower; drawn at its third and fifth years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.6-1.2 m; FNA gives only 'stems to 2.1 m'. Its reference height is the middle of that range, 0.9 m, at its last keyframe."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems usually 0.6-1.2 m; FNA gives only 'stems to 2.1 m'."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): stems to 2.1 m"
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): leaves in 2-7 whorls or partial whorls (scattered and more or less proximal in dry, exposed sites)"
+    },
+    "traits.leaf_whorls": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): leaves in 2-7 whorls. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): 3-22(-40) leaves per whorl. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): leaves 6-16 x 0.9-4.4 cm"
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): leaves 0.9-4.4 cm wide, 2.6-8.5 times longer than wide. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): blade elliptic, usually narrowly so, often weakly oblanceolate"
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): leaves drooping at tips to ascending"
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): inflorescences racemose, 1-27-flowered. The typical value is our pick of a usual plant inside that range."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): flowers pendent, fragrant"
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): perianth Turk's-cap-shaped; sepals and petals reflexed 1/3 along length from base"
+    },
+    "traits.perianth_reflexion_from": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): reflexed 1/3 along length from base"
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): pink, less often white, and if so usually aging pink The colour is our reading of the words."
+    },
+    "traits.perianth_spots": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): usually with copious maroon spots"
+    },
+    "traits.perianth_spot_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): maroon spots The colour is our reading of the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): sepals 3.4-7.2 cm, petals 3.2-7.1 cm"
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): stamens moderately exserted"
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): anthers pale red-orange or magenta The colour is our reading of the words."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): pedicel 8.8-23.8 cm"
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): capsules 2.9-5.7 x 1-1.6 cm"
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): capsules 1-1.6 cm wide"
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): flowering summer (mid Jun-early Aug)"
+    }
+  }
+}

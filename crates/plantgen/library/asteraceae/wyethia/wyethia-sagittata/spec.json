@@ -152,7 +152,8 @@
     "fruit_size_m": {"min": 0.007, "max": 0.01},
     "fruiting_months": [6, 7, 8],
     "leaf_length_m": {"min": 0.15, "max": 0.4},
-    "leaf_width_m": {"min": 0.05, "max": 0.15}
+    "leaf_width_m": {"min": 0.05, "max": 0.15},
+    "leaf_apex": {"acute": "usually", "acuminate": "sometimes"}
   },
   "evidence": {
     "taxon": {
@@ -253,7 +254,8 @@
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
     "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."}
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3217172), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Wyethia sagittata (read 2026-10-18): treated as Balsamorhiza sagittata, the basal blades are acute to drawn-out (attenuate) at the tip."}
   },
   "provenance": {
     "sources": [

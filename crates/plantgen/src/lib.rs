@@ -759,7 +759,70 @@ pub mod venation;
 /// in whose axil they stand, and branch again where the taxon states two
 /// orders (`flowering_branch_orders`; herb program revision 12) (117 is
 /// terminal blooms, #170).
-/// 121: clusters draw their stated length and units: a cluster's unit
+/// 119: a herb's stem may be a sympodium (`sympodium`; herb program
+/// revision 13, program `solanaceae`); a measured corolla tube is drawn as
+/// long as stated (`corolla_tube_length_m`, a flower's `tube_reach`); a
+/// flower's posture turns a sympodium's flowers and a woody plant's blooms
+/// (`flower_posture`); a panicle's cluster size is its branches' length; a
+/// lone bloom may hang on a stalk of its own (`pedicel_length_m`;
+/// broadleaf program revision 18); a flower's sepals, petals, floral tube,
+/// stamens and style are drawn at their stated lengths and postures and in
+/// their own colours; a fruit keeps its calyx or bears prickles or
+/// bristles (`fruit_armature`); young wood takes its twig colour; bark
+/// texture sets the bark pattern; leaves in whorls of three or more are
+/// drawn round the node (broadleaf program revision 19); a fruit hangs,
+/// spreads or stands as its posture says (`fruit_posture`, a fruit's
+/// `hang`).
+/// 120: a lily is drawn from its flora's words: a herb's flower and bud
+/// stalks arch over to the flower's posture (herb program revision 14); a
+/// flower's tepals bend back from part way along them (`curl_from`, from
+/// `perianth_reflexion` and `perianth_reflexion_from`), up to 270 degrees
+/// where they roll; spots on their inner faces (`spots`, from
+/// `perianth_spots`, in `perianth_spot_colour`); anthers in their own
+/// colour (`anther_colour`); stamens as far out as `stamen_exsertion`
+/// says; free tepals unjoined however bell-shaped (`perianth_fused`); a
+/// petal's or tepal's foot is drawn in its own colour where a flora gives
+/// one (`base_colour`, `base_length`, from `perianth_base_colour` and
+/// `perianth_base_length`), its nectaries as a star at the flower's heart
+/// (`star_colour`, from `nectary_colour`); free tepals rising as a bell
+/// are widened to overlap; a lily's whorled stem bears a few scattered
+/// leaves below and above its whorls, and bulbils in its upper leaf axils
+/// where its flora says (liliaceae program revision 2, `bulbils`,
+/// `bulbil_colour`).
+/// 121: previews and impostors cut a card where its coverage, read
+/// bilinearly between texels, is below one half, so an entire blade's edge
+/// follows its outline rather than a staircase of texels that reads as
+/// teeth up close (118 is herb branch leaves, #190).
+/// 122: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// give it, so their blades narrow to the stated tip; six of them
+/// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
+/// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
+/// their stated leaf shape where a hand-drawn profile stood (118 is
+/// flowering herbs' branch leaves, #190).
+/// 123: the family programs built on broadleaf (asterales, fabales,
+/// malvaceae, moraceae, salicaceae, simmondsiaceae, each revision 2) bear
+/// one bloom on each short shoot in the light once adult where a species
+/// leaves `blooms` unset, as broadleaf's forms do; until now nine species
+/// on them (bursage, umbrella thorn, baobab, Florida strangler fig,
+/// aspen, black cottonwood, two willows, jojoba) never flowered or fruited,
+/// whatever months they stated. A regular flower is not judged by the
+/// kind of zygomorphy its family states (109 is fern
+/// croziers green, #186).
+/// 124: a chain-fruit cholla's chains of fruit hang toward the ground
+/// (`column` revision 4, `cactaceae` revision 10), the organ pipe's
+/// flowers carry hundreds of stamens and an 11- to 12-lobed stigma, and a
+/// type of laid-out flowers too many to draw fine is drawn one step
+/// coarser instead of as cards (`blooms::step`) (116 is pericarpels, buds,
+/// fruit outlines and stigma colours).
+/// 125: a deciduous tree's, shrub's or woody vine's leaves keep a year
+/// (`appearance.organs.leaf.leafing`, set from `leaf_habit`,
+/// `leaf_out_months`, `leaf_fall_months` and `leaf_colour_autumn`): the
+/// plant stands bare in winter, puts out small pale leaves in spring that
+/// grow to full size and green, turns its autumn colour and drops them,
+/// where its leaves had stood green all year; months falling before the
+/// leaves unfold are the next year's, as a southern beech's are (109 is fern
+/// croziers green, #186).
+/// 126: clusters draw their stated length and units: a cluster's unit
 /// share (`unit`) sizes the innermost axis's flowers or fruit through the
 /// branch sizes above it, a cyme's own unit ends its peduncle and its
 /// units are alike, and a corymb stated rounded or globose
@@ -770,6 +833,6 @@ pub mod venation;
 /// frond forks into a level fan and every fern's pinnae are sized where
 /// they stand, its stipe scales on the stipe (fern program revision 14);
 /// a shrub's stated stem clump (`stem_clump`) sends up suckers (broadleaf
-/// revision 18) and a herb's lying stems (`stem_posture`) run along the
-/// ground before they rise (herb revision 13) (120 is #208).
-pub const GENERATOR_REVISION: u32 = 121;
+/// revision 20) and a herb's lying stems (`stem_posture`) run along the
+/// ground before they rise (herb revision 15) (125 is the leafing year).
+pub const GENERATOR_REVISION: u32 = 126;
