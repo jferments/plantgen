@@ -49,7 +49,7 @@
 use crate::blooms::{self, FruitForm, Part};
 use crate::graph::GraphOrgan;
 use crate::leaves::{self, Section, SolidLeaf};
-use crate::looks::{Armed, Fruit, FruitKind, Skin};
+use crate::looks::{Armed, Fruit, FruitKind, KeptPosture, Skin};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
@@ -255,6 +255,12 @@ pub(crate) fn draw_unit(
         width,
         detail,
         flare: fruit.flare,
+        // A capsule opens into its valves only once ripe.
+        valves: if unripe || fruit.kind != FruitKind::Capsule {
+            0
+        } else {
+            fruit.valves
+        },
     };
     if fruit.cone >= 0.5 {
         let cone = GraphOrgan {
@@ -267,8 +273,11 @@ pub(crate) fn draw_unit(
         blooms::draw_fruit(&cone, direction, one.across, form, fruit, body, part, mesh);
         return;
     }
+    let first = mesh.positions.len();
+    let first_index = mesh.indices.len();
     one.draw(fruit.kind, body, accent, extras, part, mesh);
     one.dress(fruit, body, accent, part, mesh);
+    one.open(first, first_index, mesh);
 }
 
 /// The silky white of the threads a magnolia's seeds hang on.
@@ -483,6 +492,8 @@ struct One {
     detail: Detail,
     /// How much wider toward its tip ([`Fruit::flare`]).
     flare: f64,
+    /// The valves it is drawn opened into ([`Fruit::valves`]), 0 for shut.
+    valves: u32,
 }
 
 impl One {
@@ -596,12 +607,7 @@ impl One {
                 pod.wave_depth = 0.12;
                 pod.draw(self.direction, self.across, body, part, mesh);
             }
-            FruitKind::Capsule => {
-                let mut capsule = self.body();
-                capsule.ribs = 3;
-                capsule.rib_depth = 0.14;
-                capsule.draw(self.direction, self.across, body, part, mesh);
-            }
+            FruitKind::Capsule => self.capsule(body, part, mesh),
             FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
                 self.body()
                     .draw(self.direction, self.across, body, part, mesh);
@@ -617,26 +623,58 @@ impl One {
         leaves::smooth_normals(mesh, first, first_index);
     }
 
-    /// What the fruit keeps or bears beyond its kind: a calyx under it, in
-    /// the accent, clasping its foot where its lobes are short and
-    /// spreading in a star where they are long; prickles or bristles over
-    /// it, drawn only at the finer steps.
-    fn dress(&self, fruit: &Fruit, body: [f32; 3], accent: [f32; 3], part: Part, mesh: &mut Mesh) {
-        if fruit.kept_calyx > 0.0 {
-            let rise = if fruit.kept_calyx < 0.6 { 0.12 } else { -0.04 };
-            self.calyx(
-                0.06,
-                if fruit.kept_lobes == 0 {
-                    5
-                } else {
-                    fruit.kept_lobes
-                },
-                fruit.kept_calyx,
-                rise,
-                accent,
+    /// A capsule, ribbed lengthwise; one that has opened ribbed once a
+    /// valve, the sutures it splits along in the grooves, each valve drawn
+    /// apart so it can be turned out ([`One::open`]), lined in a paler
+    /// inside.
+    fn capsule(&self, body: [f32; 3], part: Part, mesh: &mut Mesh) {
+        let mut capsule = self.body();
+        if self.valves == 0 {
+            capsule.ribs = 3;
+            capsule.rib_depth = 0.14;
+            capsule.draw(self.direction, self.across, body, part, mesh);
+            return;
+        }
+        capsule.ribs = self.valves;
+        capsule.rib_depth = 0.1;
+        let step = std::f64::consts::TAU / f64::from(self.valves);
+        let inside = [0, 1, 2].map(|k| body[k] * 0.5 + 0.4);
+        for v in 0..self.valves {
+            let mid = step * f64::from(v);
+            capsule.shell(
+                self.direction,
+                self.across,
+                (mid - step * 0.49, mid + step * 0.49),
+                (body, inside),
                 part,
                 mesh,
             );
+        }
+    }
+
+    /// What the fruit keeps or bears beyond its kind: a calyx under it, in
+    /// the accent, lying as its posture says (pressed over the fruit,
+    /// spread flat or turned back) or, unstated, clasping its foot where
+    /// its lobes are short and spreading in a star where they are long;
+    /// prickles, bristles or hooked bristles over it, drawn only at the
+    /// finer steps.
+    fn dress(&self, fruit: &Fruit, body: [f32; 3], accent: [f32; 3], part: Part, mesh: &mut Mesh) {
+        if fruit.kept_calyx > 0.0 {
+            let lobes = if fruit.kept_lobes == 0 {
+                5
+            } else {
+                fruit.kept_lobes
+            };
+            let rise = match fruit.kept_posture {
+                KeptPosture::ByLength if fruit.kept_calyx < 0.6 => Some(0.12),
+                KeptPosture::ByLength | KeptPosture::Spreading => Some(-0.04),
+                KeptPosture::Reflexed => Some(-0.2),
+                KeptPosture::Clasping => None,
+            };
+            match rise {
+                Some(rise) => self.calyx(0.06, lobes, fruit.kept_calyx, rise, accent, part, mesh),
+                None => self.clasp(lobes, fruit.kept_calyx, accent, part, mesh),
+            }
         }
         // Prickles as a thorn apple's: stout cones, broad at the foot, a
         // sixth of the fruit's width long and packed over it (the
@@ -645,7 +683,7 @@ impl One {
         let (count, reach, foot) = match fruit.armed {
             Armed::None => return,
             Armed::Prickles => (150_u32, 0.16, 0.05),
-            Armed::Bristles => (200, 0.14, 0.008),
+            Armed::Bristles | Armed::Hooks => (200, 0.14, 0.008),
         };
         if self.detail.around < 8 {
             return;
@@ -658,6 +696,14 @@ impl One {
             // On a Fibonacci spiral over the body, its ends left bare.
             let along = 0.1 + 0.8 * (f64::from(k) + 0.5) / f64::from(count);
             let angle = math::radians(137.507_764 * f64::from(k));
+            // None along a capsule's sutures, where it splits.
+            if fruit.valves > 0 {
+                let step = std::f64::consts::TAU / f64::from(fruit.valves);
+                let place = (angle.rem_euclid(std::f64::consts::TAU) / step).fract();
+                if (place - 0.5).abs() < 0.1 {
+                    continue;
+                }
+            }
             let radial = self.across * math::cos(angle) + other * math::sin(angle);
             let half = self.width * 0.5 * math::sqrt((1.0 - (2.0 * along - 1.0).powi(2)).max(0.0));
             // Sunk a little, so no gap shows where the body's facets
@@ -665,15 +711,126 @@ impl One {
             // fruit's tip, as they grow.
             let base = self.at(along) + radial * (half - self.width * foot * 0.5);
             let axis = (radial + self.direction * 0.15).normalize_or(radial);
-            spine(
-                base,
-                axis,
-                self.width * (reach + foot * 0.5),
-                self.width * foot,
-                colour,
-                part,
-                mesh,
-            );
+            let length = self.width * (reach + foot * 0.5);
+            spine(base, axis, length, self.width * foot, colour, part, mesh);
+            if fruit.armed == Armed::Hooks {
+                // The tip bent back on itself toward the fruit's foot, a
+                // quarter of the bristle long: the hook a burr catches by.
+                let back = (axis * -0.45 - self.direction).normalize_or(-axis);
+                spine(
+                    base + axis * (length * 0.94),
+                    back,
+                    length * 0.25,
+                    self.width * foot * 0.7,
+                    colour,
+                    part,
+                    mesh,
+                );
+            }
+        }
+        leaves::smooth_normals(mesh, first, first_index);
+    }
+
+    /// A kept calyx pressed to the fruit: `count` lobes, each `reach` of
+    /// the fruit's width long, laid over its surface up from the stalk
+    /// and narrowing to a point, seen from either side.
+    fn clasp(&self, count: u32, reach: f64, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        const STEPS: u32 = 6;
+        const ACROSS: u32 = 4;
+        let other = self.direction.cross(self.across);
+        // The fruit's outline, as `taper` widens it, just proud of it.
+        let surface = |along: f64, radial: Vec3| {
+            let z = 2.0 * along - 1.0;
+            let half =
+                self.width * 0.5 * math::sqrt((1.0 - z * z).max(0.0)) * (1.0 + self.flare * z);
+            self.at(along) + radial * (half + self.width * 0.02)
+        };
+        // How far up the fruit the lobes reach: walked along its outline
+        // until as long as stated, at most to its middle.
+        let wanted = self.width * reach;
+        let mut steps = vec![0.02_f64];
+        let mut walked = 0.0;
+        while walked < wanted && steps.len() < 64 {
+            let last = *steps.last().unwrap_or(&0.02);
+            let next = last + 0.01;
+            if next > 0.5 {
+                break;
+            }
+            walked += surface(next, self.across).distance(surface(last, self.across));
+            steps.push(next);
+        }
+        let end = *steps.last().unwrap_or(&0.02);
+        let half_turn = std::f64::consts::PI / f64::from(count.max(1)) * 0.92;
+        let first = mesh.positions.len();
+        let first_index = mesh.indices.len();
+        for k in 0..count {
+            let mid = std::f64::consts::TAU * f64::from(k) / f64::from(count.max(1));
+            for inner in [false, true] {
+                let leaf = part.leaf(self.at(0.02), self.direction, self.across, 0.0, 0.0, colour);
+                let start = u32::try_from(mesh.positions.len()).unwrap_or(0);
+                for i in 0..=STEPS {
+                    let u = f64::from(i) / f64::from(STEPS);
+                    let along = 0.02 + (end - 0.02) * u;
+                    // Broad at the foot, narrowing to a point; curved
+                    // across with the fruit, so its middle stays outside it.
+                    let spread = half_turn * (1.0 - u).powf(0.7);
+                    for j in 0..ACROSS {
+                        let side = 2.0 * f64::from(j) / f64::from(ACROSS - 1) - 1.0;
+                        let angle = mid + side * spread;
+                        let radial = self.across * math::cos(angle) + other * math::sin(angle);
+                        mesh.push(leaf.vertex(surface(along, radial), colour));
+                    }
+                }
+                let v = |i: u32, j: u32| start + i * ACROSS + j;
+                for i in 0..STEPS {
+                    for j in 0..ACROSS - 1 {
+                        let quad = [
+                            v(i, j),
+                            v(i, j + 1),
+                            v(i + 1, j),
+                            v(i, j + 1),
+                            v(i + 1, j + 1),
+                            v(i + 1, j),
+                        ];
+                        if inner {
+                            mesh.indices.extend(quad.iter().rev());
+                        } else {
+                            mesh.indices.extend_from_slice(&quad);
+                        }
+                    }
+                }
+            }
+        }
+        leaves::smooth_normals(mesh, first, first_index);
+    }
+
+    /// Open a ripe capsule drawn from vertex `first` (index `first_index`)
+    /// into its valves: each turned outward about where it is still
+    /// joined, half way up (a tobacco's "2-valved to the middle", Flora of
+    /// British India; a jimsonweed's "4 valves from the top", Britton and
+    /// Brown), carrying what it bears with it.
+    fn open(&self, first: usize, first_index: usize, mesh: &mut Mesh) {
+        const HINGE: f64 = 0.5;
+        if self.valves == 0 {
+            return;
+        }
+        let turn = math::radians(24.0);
+        let other = self.direction.cross(self.across);
+        let step = std::f64::consts::TAU / f64::from(self.valves);
+        for p in &mut mesh.positions[first..] {
+            let point = Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]));
+            let v = point - self.base;
+            let along = v.dot(self.direction) / self.length.max(1e-9);
+            if along <= HINGE {
+                continue;
+            }
+            let radial = v - self.direction * v.dot(self.direction);
+            let theta = math::atan2(radial.dot(other), radial.dot(self.across));
+            let mid = (theta / step).round() * step;
+            let out = self.across * math::cos(mid) + other * math::sin(mid);
+            let pivot = self.at(HINGE) + out * (self.width * 0.5);
+            let hinge = self.direction.cross(out).normalize_or(other);
+            *p = (pivot + (point - pivot).rotate_about(hinge, turn)).to_f32();
         }
         leaves::smooth_normals(mesh, first, first_index);
     }
@@ -1175,6 +1332,57 @@ impl Spheroid {
             for k in 0..around {
                 let (a0, a1, b0, b1) = (at(r, k), at(r, k + 1), at(r + 1, k), at(r + 1, k + 1));
                 mesh.indices.extend_from_slice(&[a0, a1, b0, a1, b1, b0]);
+            }
+        }
+    }
+
+    /// The part of its surface between angles `from` and `to` round
+    /// `axis` (from `across`): a capsule's valve, its outer face in
+    /// `colours.0` and the face inside it, a little within, in
+    /// `colours.1`. The tip stops just short of the axis, so each valve's
+    /// points keep their angle.
+    fn shell(
+        &self,
+        axis: Vec3,
+        across: Vec3,
+        (from, to): (f64, f64),
+        colours: ([f32; 3], [f32; 3]),
+        part: Part,
+        mesh: &mut Mesh,
+    ) {
+        let Detail { around, rings, .. } = self.detail;
+        let (wide, long) = self.detail.widening();
+        let (a, b, c) = (self.a * long, self.b * wide, self.c * wide);
+        let other = axis.cross(across);
+        let columns = (around / self.ribs.max(1)).max(2) + 1;
+        let rings = rings.max(3);
+        for (scale, colour, inner) in [(1.0, colours.0, false), (0.94, colours.1, true)] {
+            let leaf = part.leaf(self.centre, axis, across, 0.0, 0.0, colour);
+            let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
+            for r in 0..=rings {
+                let phi = (math::PI * f64::from(r) / f64::from(rings)).clamp(0.0, math::PI - 0.03);
+                let along = -math::cos(phi) * a * scale;
+                let out = math::sin(phi) * scale;
+                for k in 0..columns {
+                    let theta = from + (to - from) * f64::from(k) / f64::from(columns - 1);
+                    let rib = 1.0 + self.rib_depth * math::cos(f64::from(self.ribs) * theta);
+                    let point = self.centre
+                        + axis * along
+                        + across * (math::cos(theta) * b * out * rib)
+                        + other * (math::sin(theta) * c * out * rib);
+                    mesh.push(leaf.vertex(point, colour));
+                }
+            }
+            let at = |r: u32, k: u32| first + r * columns + k;
+            for r in 0..rings {
+                for k in 0..columns - 1 {
+                    let (a0, a1, b0, b1) = (at(r, k), at(r, k + 1), at(r + 1, k), at(r + 1, k + 1));
+                    if inner {
+                        mesh.indices.extend_from_slice(&[a0, b0, a1, a1, b0, b1]);
+                    } else {
+                        mesh.indices.extend_from_slice(&[a0, a1, b0, a1, b1, b0]);
+                    }
+                }
             }
         }
     }

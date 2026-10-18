@@ -104,6 +104,16 @@
       235,
       228,
       200
+    ],
+    "flowering_months": [
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
     ]
   },
   "provenance": {
@@ -253,6 +263,16 @@
       "evidence": "SourceInferred",
       "source": "bailey-cyclopedia-1914",
       "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1914-17), Nicotiana Tabacum, p. 2144 (read on the Internet Archive, 2026-10-17): corolla with a white or whitish tube and a rose or red limb; Wikipedia 'Nicotiana tabacum': tube greenish cream, pink or red. The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: in flower from July to September: Britton and Brown (vol. 3, c. p. 171) give June to September for the field tobacco of the same genus, Nicotiana rustica, an annual grown the same way; N. tabacum is set out later, after frost, and topped as its flowers open (Wikipedia 'Tobacco')."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripening from August into October, after the July to September flowers."
     }
   }
 }
