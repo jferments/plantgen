@@ -117,6 +117,32 @@
       "colour": "nectary_colour",
       "why": "Nectaries a flora says show at the foot of each petal or tepal are drawn there in their colour, together a star at the flower's heart."
     },
+    "appearance.organs.*.shape.stripe_colour": {
+      "template": "flower",
+      "colour": "perianth_stripe_colour",
+      "why": "A stripe a flora names down the middle of each petal or tepal is drawn in its colour along the midrib of the inner face, from the foot."
+    },
+    "appearance.organs.*.shape.stripe_length": {
+      "template": "flower",
+      "needs": ["perianth_stripe_colour"],
+      "rule": "clamp(first(perianth_stripe_length, 0.5), 0.05, 1)",
+      "why": "The stripe reaches as far along each petal or tepal as its flora says; a 'proximal' stripe with no share given reaches half way, the proximal half."
+    },
+    "appearance.organs.*.shape.back_colour": {
+      "template": "flower",
+      "colour": "perianth_abaxial_colour",
+      "why": "Where a flora colours the petals' or tepals' outer (abaxial) face apart from the inner, the outer face is drawn in that colour, as seen from behind or under a nodding flower."
+    },
+    "appearance.organs.*.shape.back_base_colour": {
+      "template": "flower",
+      "colour": "perianth_abaxial_base_colour",
+      "why": "Where a flora colours the outer face's base apart from the rest, it is drawn in that colour from the foot, fading into the outer face's colour where it stops."
+    },
+    "appearance.organs.*.shape.back_base_length": {
+      "template": "flower",
+      "rule": "clamp(perianth_abaxial_base_length, 0.05, 1)",
+      "why": "The outer base colour reaches as far along each petal or tepal as its flora says ('green abaxially on proximal 2/5-1/2')."
+    },
     "generator.params.bloom_stalk": {
       "map": {"inflorescence": {"solitary": {"rule": "pedicel_length_m"}}},
       "why": "A tree's or shrub's solitary flower hangs or stands on its own stalk, as long as its flora measures it; a cluster's flowers keep their stalks in the cluster."

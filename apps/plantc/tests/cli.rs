@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (657):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (662):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -88,7 +88,7 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.inflorescence.pedicel  {flowering}\n  appearance.organs.*.inflorescence.peduncle  {flowering}\n  appearance.organs.*.inflorescence.unit  {flowering}\n  appearance.organs.*.season  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
         ),
         format!(
-            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.armed on `fruit` cards  {flowering}\n  appearance.organs.*.shape.base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
+            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.armed on `fruit` cards  {flowering}\n  appearance.organs.*.shape.back_base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
         ),
         format!(
             "\n  appearance.organs.*.shape.carpels on `flower` cards  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
@@ -199,7 +199,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (658):\n"),
+        rules.starts_with("Rules, by their home (663):\n"),
         "{rules}"
     );
     assert!(

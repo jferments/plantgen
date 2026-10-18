@@ -2097,6 +2097,16 @@ fn draw_laid(
                         star: flower
                             .star_colour
                             .map(|star| crate::blooms::with_shading(star, look.colour, colour)),
+                        stripe: flower
+                            .stripe_colour
+                            .map(|stripe| crate::blooms::with_shading(stripe, look.colour, colour)),
+                        back: flower
+                            .back_colour
+                            .map(|back| crate::blooms::with_shading(back, look.colour, colour)),
+                        back_base: flower
+                            .back_base_colour
+                            .map(|back| crate::blooms::with_shading(back, look.colour, colour)),
+                        back_base_length: flower.back_base_length,
                         tube: flower
                             .tube_colour
                             .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),

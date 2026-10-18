@@ -1650,6 +1650,45 @@
       "optional": true,
       "why": "how far that base colour reaches along a petal or tepal, as a share of its length from its base: 'red on distal 1/2-2/3' leaves about 0.4 to the base colour, 'red-orange on distal 1/5-1/4' about 0.78"
     },
+    "perianth_stripe_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of a stripe down the middle of each petal's or tepal's inner face from its base, where a flora names one: Kellogg's lily's 'proximal median longitudinal yellow stripe extending from basal nectaries'"
+    },
+    "perianth_stripe_length": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "share",
+      "range": [0.05, 0.95],
+      "optional": true,
+      "why": "how far that stripe reaches along a petal or tepal, as a share of its length from its base; a flora's 'proximal' stripe without a share is drawn to half"
+    },
+    "perianth_abaxial_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the petals' or tepals' outer (abaxial) face where a flora gives it apart from the inner: a Canada lily's 'red or pale red abaxially', a Michigan lily's 'red-orange abaxially'"
+    },
+    "perianth_abaxial_base_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the outer face toward the base, where it differs from the rest of the outer face: a western lily's tepals 'conspicuously green abaxially on proximal 2/5-1/2'"
+    },
+    "perianth_abaxial_base_length": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "share",
+      "range": [0.05, 0.95],
+      "optional": true,
+      "why": "how far that outer base colour reaches along a petal or tepal, as a share of its length from its base: 'on proximal 2/5-1/2' is 0.4 to 0.5"
+    },
     "bulbils": {
       "group": "stem_and_bark",
       "organ": "bulbil",

@@ -1368,6 +1368,9 @@ fn carried(v: Vec3, from: Vec3, to: Vec3) -> Vec3 {
     v * cos + k.cross(v) * sin + k * (k.dot(v) * (1.0 - cos))
 }
 
+/// The patterns [`arrangement`] reads between pairs or whorls.
+const WHORL_PATTERNS: [&str; 2] = ["decussate", "superposed"];
+
 /// How the plant's leaves stand at their nodes, measured on the graph:
 /// the leaves at each node (`leaf_arrangement`, and `leaves_per_whorl` at
 /// a whorl), and how far each node turns from the one below it round its
@@ -3327,12 +3330,30 @@ pub fn judge_plants(
         .filter(|&&character| vocabulary.applies(character, traits) != crate::traits::Applies::No)
         .filter_map(|&character| {
             let stated = states_of(traits.get(character)?);
-            let drawn: BTreeSet<String> = plants
+            let mut drawn: BTreeSet<String> = plants
                 .iter()
                 .filter_map(|plant| plant.kinds.get(character))
                 .flatten()
                 .cloned()
                 .collect();
+            // A species whose nodes turn one leaf at a time (spiral, two or
+            // three ranks) yet is drawn with its leaves in whorls of three or
+            // more has false whorls,
+            // a spiral's nodes crowded together (a lily's): the turn from
+            // one drawn whorl to the next says nothing of that spiral, so it
+            // is left unread. Whether it is whorled is `leaf_arrangement`'s.
+            let whorled = plants.iter().all(|plant| {
+                plant
+                    .kinds
+                    .get("leaf_arrangement")
+                    .is_some_and(|states| states.iter().all(|state| state == "whorled"))
+            });
+            if character == "phyllotaxis_pattern"
+                && whorled
+                && !stated.iter().any(|s| s == "decussate")
+            {
+                drawn.retain(|state| !WHORL_PATTERNS.contains(&state.as_str()));
+            }
             // A drawn state may be any of several (`berry|drupe`), where
             // the drawing does not tell them apart.
             let verdict = if drawn.is_empty() {
