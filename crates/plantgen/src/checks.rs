@@ -1532,7 +1532,9 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
         }
     }
     nodes.retain(|_, node| !node.around.is_empty());
-    // The plant's usual leaves at a node, and each whorl's count.
+    // The plant's usual leaves at a node, the count most of its leaves
+    // stand in (a lily's whorls, not the few leaves scattered between
+    // them), and each whorl's count.
     let mut per_node: BTreeMap<usize, usize> = BTreeMap::new();
     for (index, node) in nodes.values().enumerate() {
         let leaves = node.around.len();
@@ -1548,7 +1550,7 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
     }
     let Some(usual) = per_node
         .iter()
-        .max_by_key(|(leaves, nodes)| (**nodes, std::cmp::Reverse(**leaves)))
+        .max_by_key(|(leaves, nodes)| (**nodes * **leaves, std::cmp::Reverse(**leaves)))
         .map(|(leaves, _)| *leaves)
     else {
         return;
@@ -2274,7 +2276,7 @@ fn reproductive(
             };
             if let Some((Shape::Flower(flower), size)) = shown {
                 let width = organ.size * unit.length * size;
-                flower_parts(flower, width, (organ.id, part), tally);
+                flower_parts(flower, flower_cup(look), width, (organ.id, part), tally);
             }
             unit_sizes(
                 &look.shape,
@@ -2297,7 +2299,7 @@ fn reproductive(
         // A flower, head or spikelet borne alone.
         let unit = match &look.shape {
             Shape::Flower(flower) => {
-                flower_parts(flower, organ.size, (organ.id, 0), tally);
+                flower_parts(flower, flower_cup(look), organ.size, (organ.id, 0), tally);
                 "flower"
             }
             Shape::Head(_) => "capitulum",
@@ -2464,6 +2466,9 @@ fn unit_sizes(
         // A flower drawn as a fruit with no season is its bud (a herb's
         // `bud`), never a fruit.
         Shape::Fruit(_) if term == "flower" && phase.is_none() => {}
+        // A bulbil drawn as a fruit is a small bulb in a leaf's axil, never
+        // a fruit.
+        Shape::Fruit(_) if term == "bulbil" => {}
         Shape::Fruit(fruit) if in_stage(phase, Stage::Ripe) => {
             if term == "cone" {
                 tally.add("cone_length_m", organ, part, length);
@@ -2523,6 +2528,7 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
 /// floral cup bears its whorls and whether it is turned half round.
 fn flower_parts(
     flower: &crate::looks::Flower,
+    cup: f64,
     width: f64,
     (organ, part): (u64, u32),
     tally: &mut Tally,
@@ -2602,7 +2608,7 @@ fn flower_parts(
         },
     );
     if matches!(flower.perianth, Perianth::Corolla | Perianth::Tepals) {
-        tally.kind("corolla_shape", &corolla_shape(flower));
+        tally.kind("corolla_shape", &corolla_shape(flower, cup));
     }
     tally.kind(
         "hypanthium",
@@ -2678,10 +2684,50 @@ fn nearest(table: &[(&str, f64)], value: f64) -> String {
         .join("|")
 }
 
+/// How steeply free tepals rise for each shape they make
+/// without a tube, in degrees from the flower's plane, as the Liliaceae's
+/// rule draws them (`liliaceae/family.json`): a bell, a funnel, and a
+/// tube or urn of tepals held close.
+const FREE_CUPS: [(&str, f64); 4] = [
+    ("campanulate", 60.0),
+    ("funnelform", 65.0),
+    ("tubular", 75.0),
+    ("urceolate", 75.0),
+];
+
+/// How steeply the look's flower form raises its petals, in degrees; 0
+/// where it draws no flower form.
+fn flower_cup(look: &Look) -> f64 {
+    match &look.form {
+        crate::blooms::Form::Flower(form) => form.cup,
+        _ => 0.0,
+    }
+}
+
 /// The corolla shape a flower draws: the nearest of [`COROLLA_SHAPES`] to
 /// its tube, or each of the nearest where they are drawn alike (a flat
-/// and a cupped corolla, both free petals).
-fn corolla_shape(flower: &crate::looks::Flower) -> String {
+/// and a cupped corolla, both free petals). Free tepals raised steeply (a
+/// lily's) draw a bell or a funnel with no tube: the nearest of
+/// [`FREE_CUPS`] to their rise. A corolla's free petals are judged by
+/// their tube alone, as before: a columbine's raised blades over its
+/// spurs are not its corolla's shape.
+fn corolla_shape(flower: &crate::looks::Flower, cup: f64) -> String {
+    if flower.fused <= 0.0
+        && flower.perianth == crate::looks::Perianth::Tepals
+        && cup >= crate::flowers::BELL
+    {
+        let off = |rise: f64| libm::fabs(rise - cup);
+        let nearest = FREE_CUPS
+            .iter()
+            .map(|(_, rise)| off(*rise))
+            .fold(f64::INFINITY, f64::min);
+        return FREE_CUPS
+            .iter()
+            .filter(|(_, rise)| off(*rise) <= nearest + 1e-12)
+            .map(|(name, _)| *name)
+            .collect::<Vec<_>>()
+            .join("|");
+    }
     let drawn = [flower.fused, flower.throat, flower.belly];
     let distance = |shape: &[f64; 3]| -> f64 {
         shape
@@ -3253,14 +3299,14 @@ mod tests {
             ovary: Ovary::Inferior,
             ..Flower::default()
         };
-        flower_parts(&cactus, 0.1, (1, 0), &mut tally);
+        flower_parts(&cactus, 0.0, 0.1, (1, 0), &mut tally);
         let pea = Flower {
             corolla: Corolla::Papilionaceous,
             stamens: 10,
             carpels: 1,
             ..Flower::default()
         };
-        flower_parts(&pea, 0.02, (2, 0), &mut tally);
+        flower_parts(&pea, 0.0, 0.02, (2, 0), &mut tally);
         let (measures, kinds) = tally.measures();
         assert_eq!(measures["stamens"], [200.0, 10.0]);
         assert_eq!(measures["carpels"], [12.0, 1.0]);
@@ -3280,25 +3326,25 @@ mod tests {
             petals: 6,
             ..Flower::default()
         };
-        flower_parts(&lily, 0.1, (1, 0), &mut tally);
+        flower_parts(&lily, 0.0, 0.1, (1, 0), &mut tally);
         // A columbine spurs every petal; a pea's keel draws no spur.
         let columbine = Flower {
             spur: 1.5,
             ..Flower::default()
         };
-        flower_parts(&columbine, 0.04, (2, 0), &mut tally);
+        flower_parts(&columbine, 0.0, 0.04, (2, 0), &mut tally);
         let pea = Flower {
             corolla: Corolla::Papilionaceous,
             spur: 1.0,
             ..Flower::default()
         };
-        flower_parts(&pea, 0.02, (3, 0), &mut tally);
+        flower_parts(&pea, 0.0, 0.02, (3, 0), &mut tally);
         let water_lily = Flower {
             perianth: Perianth::Spiral,
             petals: 24,
             ..Flower::default()
         };
-        flower_parts(&water_lily, 0.1, (4, 0), &mut tally);
+        flower_parts(&water_lily, 0.0, 0.1, (4, 0), &mut tally);
         let (measures, _) = tally.measures();
         assert_eq!(measures["flower_merosity"], [3.0, 5.0, 5.0]);
         let [spur] = measures["spur_length_m"][..] else {
@@ -3333,9 +3379,9 @@ mod tests {
     #[test]
     fn a_flower_draws_its_symmetry_corolla_cup_and_turn() {
         use crate::looks::{Corolla, Flower, Perianth};
-        let kinds = |flower: &Flower| {
+        let raised = |flower: &Flower, cup: f64| {
             let mut tally = Tally::default();
-            flower_parts(flower, 0.02, (1, 0), &mut tally);
+            flower_parts(flower, cup, 0.02, (1, 0), &mut tally);
             let (_, kinds) = tally.measures();
             [
                 "flower_symmetry",
@@ -3350,6 +3396,7 @@ mod tests {
                     .unwrap_or_default()
             })
         };
+        let kinds = |flower: &Flower| raised(flower, 0.0);
         assert_eq!(
             kinds(&Flower::default()),
             ["actinomorphic", "rotate|cupped", "false", "false"]
@@ -3374,6 +3421,15 @@ mod tests {
             ..Flower::default()
         };
         assert_eq!(kinds(&harebell)[1], "campanulate");
+        // Free tepals raised steeply: a lily's bell and funnel, no tube.
+        let lily = Flower {
+            perianth: Perianth::Tepals,
+            petals: 6,
+            ..Flower::default()
+        };
+        assert_eq!(raised(&lily, 40.0)[1], "rotate|cupped");
+        assert_eq!(raised(&lily, 60.0)[1], "campanulate");
+        assert_eq!(raised(&lily, 65.0)[1], "funnelform");
         let orchid = Flower {
             perianth: Perianth::Tepals,
             petals: 6,

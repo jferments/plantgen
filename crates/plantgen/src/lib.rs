@@ -773,4 +773,20 @@ pub mod venation;
 /// drawn round the node (broadleaf program revision 19); a fruit hangs,
 /// spreads or stands as its posture says (`fruit_posture`, a fruit's
 /// `hang`).
-pub const GENERATOR_REVISION: u32 = 119;
+/// 120: a lily is drawn from its flora's words: a herb's flower and bud
+/// stalks arch over to the flower's posture (herb program revision 14); a
+/// flower's tepals bend back from part way along them (`curl_from`, from
+/// `perianth_reflexion` and `perianth_reflexion_from`), up to 270 degrees
+/// where they roll; spots on their inner faces (`spots`, from
+/// `perianth_spots`, in `perianth_spot_colour`); anthers in their own
+/// colour (`anther_colour`); stamens as far out as `stamen_exsertion`
+/// says; free tepals unjoined however bell-shaped (`perianth_fused`); a
+/// petal's or tepal's foot is drawn in its own colour where a flora gives
+/// one (`base_colour`, `base_length`, from `perianth_base_colour` and
+/// `perianth_base_length`), its nectaries as a star at the flower's heart
+/// (`star_colour`, from `nectary_colour`); free tepals rising as a bell
+/// are widened to overlap; a lily's whorled stem bears a few scattered
+/// leaves below and above its whorls, and bulbils in its upper leaf axils
+/// where its flora says (liliaceae program revision 2, `bulbils`,
+/// `bulbil_colour`).
+pub const GENERATOR_REVISION: u32 = 120;

@@ -1145,7 +1145,7 @@ impl Season {
 
 // Serde's `skip_serializing_if` passes a reference.
 #[allow(clippy::trivially_copy_pass_by_ref)]
-fn is_zero(value: &f64) -> bool {
+pub(crate) fn is_zero(value: &f64) -> bool {
     *value == 0.0
 }
 
@@ -1713,6 +1713,26 @@ pub struct Flower {
     /// absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pistil: Option<[f32; 3]>,
+    /// The anthers' colour; the accent, as before, if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub anther_colour: Option<[f32; 3]>,
+    /// Dark spots, in the accent colour, on each petal's or tepal's inner
+    /// face toward its foot: 0 none, about 20 a lily's copious spots.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub spots: u32,
+    /// The inner face of each petal's or tepal's foot in a colour of its
+    /// own, fading into the petal's at `base_length` of its length (a
+    /// western lily's yellow throat under red tips); none if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base_colour: Option<[f32; 3]>,
+    /// Share of each petal's length from its foot `base_colour` reaches.
+    #[serde(skip_serializing_if = "is_default_base_length")]
+    pub base_length: f64,
+    /// The nectaries at each petal's very foot in a colour of their own,
+    /// together a star at the flower's heart (a Turk's-cap lily's green
+    /// star); none if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub star_colour: Option<[f32; 3]>,
     /// The stigma lobes' colour; the filaments' if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stigma: Option<[f32; 3]>,
@@ -1873,6 +1893,11 @@ impl Default for Flower {
             calyx: None,
             filament: None,
             pistil: None,
+            anther_colour: None,
+            spots: 0,
+            base_colour: None,
+            base_length: BASE_LENGTH,
+            star_colour: None,
             stigma: None,
             pericarpel: Skin::Naked,
             bud: None,
@@ -1942,6 +1967,9 @@ impl Flower {
             && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
+            && self.spots == 0
+            && self.base_colour.is_none()
+            && self.star_colour.is_none()
     }
 
     /// Whether the flower's plane of symmetry is fixed by the axis that
@@ -1957,6 +1985,9 @@ const BANNER: f64 = 1.6;
 const ODD_RISE: f64 = 15.0;
 const LIP: f64 = 1.3;
 const THROAT: f64 = 0.3;
+/// How far a petal's own foot colour reaches by default: two fifths of
+/// its length.
+const BASE_LENGTH: f64 = 0.4;
 const STAMEN_LENGTH: f64 = 0.35;
 /// A stamen's width over its length, where the flower does not say.
 pub const STAMEN_WIDTH: f64 = 0.03;
@@ -2000,6 +2031,11 @@ fn is_default_odd_rise(value: &f64) -> bool {
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
 fn is_default_lip(value: &f64) -> bool {
     *value == LIP
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_base_length(value: &f64) -> bool {
+    *value == BASE_LENGTH
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
@@ -3153,6 +3189,8 @@ impl Shape {
                 check("throat", s.throat, 0.05, 1.0)?;
                 check("belly", s.belly, 0.0, 0.5)?;
                 check("tube_reach", s.tube_reach, 0.0, 12.0)?;
+                count("spots", s.spots, 0, 60)?;
+                check("base_length", s.base_length, 0.05, 1.0)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
                 check("floral_tube", s.floral_tube, 0.0, 12.0)?;

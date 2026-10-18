@@ -71,8 +71,14 @@ pub struct FlowerForm {
     /// Degrees the petals rise from the plane square to the flower's axis:
     /// 0 a flat star, about 40 a bowl, 70 or more a cup or tube.
     pub cup: f64,
-    /// Degrees each petal curls back over its length.
+    /// Degrees each petal curls back over its length, up to 270: past
+    /// half a turn a revolute tepal rolls back on itself.
     pub curl: f64,
+    /// Share of each petal's length from its foot that stays in the cup
+    /// before it curls back: 0 curls it evenly from its foot; a Turk's-cap
+    /// lily's tepals, reflexed from two fifths of their length, 0.4.
+    #[serde(skip_serializing_if = "crate::looks::is_zero")]
+    pub curl_from: f64,
     /// Levels, from the nearest, drawn solid: 1 or 2.
     pub levels: u8,
     /// Moved to the flower card (spec rework P5): refused here.
@@ -91,6 +97,7 @@ impl Default for FlowerForm {
         Self {
             cup: 30.0,
             curl: 12.0,
+            curl_from: 0.0,
             levels: 1,
             tube: None,
             stamens: None,
@@ -236,7 +243,8 @@ impl Form {
         match self {
             Self::Flower(form) => {
                 within("form flower cup", form.cup, -90.0, 90.0)?;
-                within("form flower curl", form.curl, -180.0, 180.0)?;
+                within("form flower curl", form.curl, -180.0, 270.0)?;
+                within("form flower curl_from", form.curl_from, 0.0, 0.9)?;
                 for (key, moved) in [
                     ("tube", &form.tube),
                     ("stamens", &form.stamens),
@@ -424,7 +432,15 @@ pub(crate) fn build_coarse(
                         ),
                         accent: look.accent,
                         filament: flower.filament.unwrap_or(look.accent),
+                        anther: flower.anther_colour.unwrap_or(look.accent),
                         ovary: flower.pistil.unwrap_or(look.accent),
+                        base: flower
+                            .base_colour
+                            .map(|base| with_shading(base, look.colour, painted)),
+                        base_length: flower.base_length,
+                        star: flower
+                            .star_colour
+                            .map(|star| with_shading(star, look.colour, painted)),
                         tube: flower
                             .tube_colour
                             .map(|tube| with_shading(tube, look.colour, painted)),
@@ -609,6 +625,7 @@ fn draw_flower(
         taper: if petals.pointed >= 0.5 { 1.3 } else { 0.45 },
         tip: 0.0,
         arch: form.curl,
+        arch_from: form.curl_from,
         twist: 0.0,
         margin: None,
         teeth: None,
