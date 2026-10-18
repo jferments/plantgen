@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Myrica",
+  "traits": {
+    "leaf_habit": {"evergreen": "usually", "deciduous": "sometimes"},
+    "sexual_system": {"dioecious": "usually", "monoecious": "sometimes"}
+  },
+  "evidence": {
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Myrica (read 2026-10-17; 35-50 spp, Morella not split): most species evergreen, some deciduous (e.g. M. gale)."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Myrica (read 2026-10-17): male and female catkins mostly on separate plants. Monoecious kept as minor state from family value."}
+  }
+}

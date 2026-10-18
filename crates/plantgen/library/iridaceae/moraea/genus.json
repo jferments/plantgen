@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Moraea",
+  "traits": {
+    "inflorescence": {"cyme": "usually", "corymb": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Moraea (read 2026-10-17): inflorescence unbranched to corymb-like; stalked flowers two to four per pair of terminal spathe valves, opening one after another (a rhipidium, a one-sided cyme). Wikipedia Moraea (read same day) gave no arrangement."}
+  }
+}

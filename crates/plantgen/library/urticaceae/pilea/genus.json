@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Pilea",
+  "traits": {
+    "leaf_arrangement": "opposite"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Pilea (read 2026-10-17): the genus is recognised by opposite leaves, with rare exceptions, and one stipule per leaf axil; some 600-715 species."}
+  }
+}

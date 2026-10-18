@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Oenothera",
+  "traits": {
+    "leaf_arrangement": "alternate"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Oenothera (read 2026-10-17): leaves in a basal rosette and set spirally up the flowering stems, i.e. alternate."}
+  }
+}
