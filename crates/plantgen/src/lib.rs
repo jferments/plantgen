@@ -669,11 +669,16 @@ pub mod venation;
 /// `stinging_hairs`), with round heads and glass needles on green feet;
 /// the strand budget spent on the hairs nearest the eye first (104 is
 /// flowering branches, #188).
-/// 106: a zone's edge drawn out along the lateral veins (`feather`),
+/// 106: evergreen herbs keep their basal leaves, and stems bearing leaves
+/// only, into a second year, and wintergreen grasses, rushes and sedges
+/// keep last year's blades green, from the leaf habit their taxa state
+/// (`leaf_years`; herb program revision 11, grass revision 8) (105 is
+/// hairs, #185).
+/// 107: a zone's edge drawn out along the lateral veins (`feather`),
 /// spots and mottle drawn out along the blade (`stretch`), and a simple
 /// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
 /// trout lily's long blotches and its veins meeting at the tip; and a
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
-/// white clover's are (105 is hairs beneath and on veins, #185).
-pub const GENERATOR_REVISION: u32 = 106;
+/// white clover's are (106 is evergreen herbs, #200).
+pub const GENERATOR_REVISION: u32 = 107;

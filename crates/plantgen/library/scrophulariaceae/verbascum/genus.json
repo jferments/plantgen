@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Verbascum",
+  "traits": {
+    "leaf_arrangement": "alternate"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Verbascum (read 2026-10-17): over 450 species; leaves set spirally up the stem after a basal rosette, i.e. alternate, never paired."}
+  }
+}

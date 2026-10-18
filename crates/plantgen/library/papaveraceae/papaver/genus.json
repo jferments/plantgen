@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Papaver",
+  "traits": {
+    "flower_symmetry": "actinomorphic"
+  },
+  "evidence": {
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Papaver (read 2026-10-17, 70-100 spp): two sepals, four to six petals, many stamens, no spur or unequal petal described; Wikipedia Papaveraceae (read 2026-10-17) calls the family's flowers regular. Symmetry inferred, not stated by FNA."}
+  }
+}

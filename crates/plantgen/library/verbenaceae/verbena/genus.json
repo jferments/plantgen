@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Verbena",
+  "traits": {
+    "inflorescence": {"spike": "usually", "panicle": "sometimes", "corymb": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Verbena genus account (read 2026-10-17): inflorescence mostly one or more terminal spikes, these often grouped corymb-like or panicle-like. Spike added (not in family value)."}
+  }
+}
