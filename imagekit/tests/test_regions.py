@@ -76,6 +76,24 @@ class RulesVersion(unittest.TestCase):
         self.assertEqual(r.analyzer_version("branching"), r.task_version("branching"))
 
 
+class Tally(unittest.TestCase):
+    def test_one_vote_per_observation_and_renders_apart(self):
+        from imagekit import tally
+        def item(kind, vote, **answers):
+            return {"kind": kind, "vote": vote, "answers": {k: {"value": v} for k, v in answers.items()}}
+        items = [item("photo", "obs:1", leader="lost", limb_angle=60), item("photo", "obs:1", leader="lost", limb_angle=70),
+                 item("photo", "obs:2", leader="kept", limb_angle=40), item("photo", "obs:3", leader="lost"),
+                 item("photo", "obs:4", leader="cannot tell", limb_angle="cannot tell"),
+                 item("render", "r1", leader="kept", limb_angle=30), item("render", "r2", leader="kept", limb_angle=35)]
+        res = tally.tally(items, ["leader", "limb_angle"])
+        self.assertEqual(res["leader"]["photos"]["states"], {"lost": 2, "kept": 1})
+        self.assertEqual((res["leader"]["photos"]["votes"], res["leader"]["photos"]["unknown"]), (3, 1))
+        self.assertEqual(res["limb_angle"]["photos"]["median"], 52.5)  # obs:1 is one vote of 65, obs:2 one of 40
+        self.assertEqual(res["leader"]["renders"]["states"], {"kept": 2})
+        md = tally.markdown("Testus", "abc", res, 5, 2)
+        self.assertIn("| leader | lost 2, kept 1; 3 votes thin, unknown 1 | kept 2; 2 votes thin, unknown 0 | no |", md)
+
+
 class Labels(unittest.TestCase):
     def test_run_together_labels(self):
         f = lambda label: regions.organ_of_label(label, regions.PHRASES)  # noqa: E731
