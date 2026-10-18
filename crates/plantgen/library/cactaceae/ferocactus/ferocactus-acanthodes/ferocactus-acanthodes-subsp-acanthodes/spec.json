@@ -32,12 +32,7 @@
       "crown_rings": 2,
       "ring_step": 14,
       "ring_angle": 25,
-      "flower_angle": 25,
-      "bud_share": 0.25,
-      "fruit_share": 0.0,
-      "flower_area": 0.366,
-      "bud_area": 0.033,
-      "fruit_area": 0.89
+      "flower_angle": 25
     }
   },
   "growth": {
@@ -54,23 +49,6 @@
     "foliage": [0.1, 0.17, 0.06],
     "foliage_shade": [0.045, 0.077, 0.027],
     "variation": 0.1,
-    "organs": {
-      "flower": {
-        "shape": {
-          "template": "flower",
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.3
-        },
-        "accent": [0.6, 0.3, 0.05]
-      },
-      "fruit": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.7
-        }
-      }
-    },
     "bodies": {
       "stem": {
         "colour": [0.08, 0.15, 0.06],
@@ -153,7 +131,11 @@
     "central_spine_form": {"curved": "usually", "twisted": "often"},
     "ribs": {"min": 20, "max": 30},
     "radial_spines": {"min": 15, "max": 25},
-    "central_spines": {"min": 4, "max": 7}
+    "central_spines": {"min": 4, "max": 7},
+    "flowering_months": [3, 4, 5, 6],
+    "fruiting_months": [6, 7, 8, 9, 10, 11],
+    "fruit_width_m": {"min": 0.015, "max": 0.02},
+    "stigma_colour": [230, 200, 50]
   },
   "evidence": {
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 328 to 329, Ferocactus cylindraceus: tuberculate, the ribs sometimes undulate with transverse creases."},
@@ -207,11 +189,7 @@
       "source": "cactus-primer-gibson-nobel",
       "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: most cacti flower in a ring near the stem tip, one flower to an areole made about a year before, with a few areoles in the ring left unused; 18 here, for 18 to 30 ribs, flowers and fruit together."
     },
-    "generator.params.crown_rings": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Photographs of the crown (iNaturalist, credits in plantgen-claude project-files/cacti/photo-credits-2026-10-15.md): flowers open among a ring of older fruit and buds below them, so two rings, the older about 14 degrees farther down the dome (by eye). This year's ring therefore holds buds and flowers only (fruit_share 0; bud_share by eye), the fruit being the older ring's."
-    },
+    "generator.params.crown_rings": {"evidence": "Authored", "source": "plantgen-authors", "note": "Photographs of the crown (iNaturalist, credits in plantgen-claude project-files/cacti/photo-credits-2026-10-15.md): flowers open among a ring of older fruit and buds below them, so two rings, the older about 14 degrees farther down the dome (by eye). This year's ring therefore holds buds and flowers only, the fruit being the older ring's. Since 2026-10-18 neither ring draws buds or fruit all year: every place in this year's ring is a bud before it opens, a flower in its months and fruit after them (the family's rule, bud_share and fruit_share 0, where its months are stated), and the older ring holds its fruit in its fruiting months."},
     "generator.params.ring_step": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -232,11 +210,7 @@
       "source": "cactus-primer-gibson-nobel",
       "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: the young areoles' trichomes crowd at the apex into a woolly mat, in barrel cacti more than 4 cm thick. 1 cm here, less than that, because in photographs this species' apex shows mostly spines over its wool (thickness by eye)."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: 18 to 30 ribs, areoles close together, red to yellow-tipped radials and four long, curved but never hooked centrals that cover the body, greying with age. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral, as many and as broad as the family's rules give from its funnelform flower (Anderson, The Cactus Family), on a floral cup above the inferior ovary, and a style with 13 to 20 stigma lobes, from the characters of Cactaceae and Ferocactus by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: 18 to 30 ribs, areoles close together, red to yellow-tipped radials and four long, curved but never hooked centrals that cover the body, greying with age. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -276,7 +250,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "The genus WCVP v16's accepted name is written in."
-    }
+    },
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4, Ferocactus cylindraceus (read on eFloras, 2026-10-18): flowering early spring to early summer, now and then again in late summer and early fall; stated as March to June, the main season. Abrams vol. 3 (1951) and Kearney and Peebles (1942, Yuma County) give April to June; iNaturalist research-grade records annotated as flowering (counted 2026-10-18) are most in March and April."},
+    "traits.fruiting_months": {"evidence": "SourceInferred", "source": "usa-npn", "note": "USA-NPN Nature's Notebook phenometrics for Ferocactus cylindraceus (species 2133, fetched 2026-10-18; the method of the phenology work of 2026-10-14 without its Pacific Northwest filter): 652 individual-year spans with ripe fruit, from 27 plants at 3 main sites near Scottsdale, Arizona, 2023 to 2026; the months with at least a third of the busiest month's days, June to November. Fewer sites than the 5 that method asks for, and no flora read gives the months; the Flora of North America says Ferocactus fruit is long persistent."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Ferocactus cylindraceus: fruit bright yellow, 30 to 40 (to 50) by 15 to 20 mm."},
+    "traits.stigma_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Ferocactus cylindraceus: stigma lobes yellow (to red)."}
   },
   "provenance": {
     "sources": [

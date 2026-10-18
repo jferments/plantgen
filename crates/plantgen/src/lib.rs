@@ -859,7 +859,16 @@ pub mod venation;
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
 /// its foot (`foot`: a Zamia leaflet's jointed base) (127 is broadleaf
 /// foliage, #143).
-/// 129: fan palms' blades, petiole teeth, skirts and fishtail palms (palm
+/// 129: a fruit that stays on the plant for years
+/// (`fruit_persistence` persistent) keeps no season in a program's `fruit`
+/// organ, the fruit of earlier years: a chain-fruit cholla's chains hang
+/// all year while each year's flowers bud, open and fruit in their months
+/// (128 is cycad cones, #211).
+/// 130: a reduced flower mesh (a part mesh's coarser steps) draws what its
+/// perianth stands on, a floral cup or an inferior ovary such as a
+/// cactus's pericarpel, so the tepals no longer float above the joint; a
+/// pericarpel the tepals open straight from is globose, not a stalk.
+/// 131: fan palms' blades, petiole teeth, skirts and fishtail palms (palm
 /// revision 13): a fan's segments part only over their outer share
 /// (`split_depth`, from `fan_split_depth`), inside it one piece drawn as
 /// wedges (`palman`), their free parts turning down where they part
@@ -875,5 +884,5 @@ pub mod venation;
 /// `leaflets`), and a simple blade may end in a bitten, jagged tip
 /// (`Simple.praemorse`, from `leaflet_end`) and lack a midrib
 /// (`Simple.midrib`, from `leaflet_midrib`): Caryota's fishtail leaflets
-/// (128 is cycad cones by sex, #211).
-pub const GENERATOR_REVISION: u32 = 129;
+/// (130 is reduced flower meshes, #220).
+pub const GENERATOR_REVISION: u32 = 131;
