@@ -681,4 +681,8 @@ pub mod venation;
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
 /// white clover's are (106 is evergreen herbs, #200).
-pub const GENERATOR_REVISION: u32 = 107;
+/// 108: previews and impostors cut a card where its coverage, read
+/// bilinearly between texels, is below one half, so an entire blade's edge
+/// follows its outline rather than a staircase of texels that reads as
+/// teeth up close (107 is variegation, #191).
+pub const GENERATOR_REVISION: u32 = 108;
