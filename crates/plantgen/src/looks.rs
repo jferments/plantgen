@@ -99,6 +99,10 @@ pub struct OrganLook {
     /// day, and how it looks then. Without one it looks the same all year.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub season: Option<Season>,
+    /// A deciduous plant's leaves' year ([`Leafing`]): when they unfold,
+    /// turn and fall. Without one they look the same all year.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub leafing: Option<Leafing>,
     /// Its leaves' families (plant roadmap P4): sun and shade leaves, and
     /// juvenile leaves on a young plant. Without them every leaf is alike.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1138,6 +1142,150 @@ impl Season {
             if let Some(form) = &look.form {
                 form.validate(&look.shape)?;
             }
+        }
+        Ok(())
+    }
+}
+
+/// A deciduous plant's year in its leaves (leaf phenology): its leaves
+/// unfold on day `out`, a third of their size and the pale yellow-green of
+/// a spring flush, grow to their full size and colour by `full`, begin to
+/// turn toward `autumn` on `turn`, are wholly turned halfway to `fall` and
+/// are all down by `fall`, and the plant stands bare from `fall` until the
+/// next `out`. Days of the year, 1 to 365, in order within one year; a
+/// `fall` past 365 keeps the leaves into the next year, as [`Season`]'s
+/// does (a shrub that leafs out with the winter rains and sheds its leaves
+/// in the dry summer).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Leafing {
+    pub out: f64,
+    pub full: f64,
+    pub turn: f64,
+    pub fall: f64,
+    /// Colour of its leaves wholly turned, linear RGB; a dull yellow
+    /// browning, as most leaves turn, if absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub autumn: Option<[f32; 3]>,
+}
+
+impl Leafing {
+    /// What most leaves turn to where a flora names no autumn colour: a
+    /// dull yellow going brown (sRGB about 0.7, 0.6, 0.25).
+    pub const AUTUMN: [f32; 3] = [0.45, 0.32, 0.05];
+    /// The yellow-green a spring flush is mixed toward (sRGB about 0.6,
+    /// 0.7, 0.25), half of it on the day the leaves unfold.
+    pub const FLUSH: [f32; 3] = [0.32, 0.45, 0.05];
+    /// A leaf's size on the day it unfolds as a share of its full size.
+    pub const UNFOLDING: f64 = 1.0 / 3.0;
+
+    /// Day `day` of the year as a day of the leaves' year: a day before
+    /// `out` is in the next year where its `fall` comes then.
+    fn on(&self, day: f64) -> f64 {
+        if day < self.out && day + 365.0 < self.fall {
+            day + 365.0
+        } else {
+            day
+        }
+    }
+
+    /// The leaves' size on day `day` as a share of their full size: 0 while
+    /// the plant is bare, from [`Self::UNFOLDING`] to 1 as they unfold.
+    #[must_use]
+    pub fn size(&self, day: f64) -> f64 {
+        let d = self.on(day);
+        if d < self.out || d >= self.fall {
+            0.0
+        } else if d < self.full {
+            crate::math::lerp(
+                Self::UNFOLDING,
+                1.0,
+                (d - self.out) / (self.full - self.out),
+            )
+        } else {
+            1.0
+        }
+    }
+
+    /// How far their colour is toward the spring flush (`(flush, 0)`, from
+    /// 0.5 to 0 as they unfold) or toward `autumn` (`(0, turned)`, from 0
+    /// to 1 over the first half of the days from `turn` to `fall`) on day
+    /// `day`.
+    fn tints(&self, day: f64) -> (f64, f64) {
+        let d = self.on(day);
+        if d < self.out || d >= self.fall {
+            (0.0, 0.0)
+        } else if d < self.full {
+            (0.5 * (1.0 - (d - self.out) / (self.full - self.out)), 0.0)
+        } else if d < self.turn {
+            (0.0, 0.0)
+        } else {
+            (
+                0.0,
+                ((d - self.turn) / (0.5 * (self.fall - self.turn))).min(1.0),
+            )
+        }
+    }
+
+    /// `look`, a leaf's, as it is on day `day`, and its size then as a
+    /// share of its full size (see the type): its colours mixed toward the
+    /// flush or its autumn colour, its shade colour toward a darker one.
+    #[must_use]
+    pub fn on_day(&self, mut look: Look, day: f64) -> (Look, f64) {
+        let (flush, turned) = self.tints(day);
+        let autumn = self.autumn.unwrap_or(Self::AUTUMN);
+        let tint = |colour: [f32; 3], dark: f32| -> [f32; 3] {
+            let toward = |target: [f32; 3], share: f64| {
+                let share = share as f32;
+                std::array::from_fn(|i| colour[i] + (target[i] * dark - colour[i]) * share)
+            };
+            if turned > 0.0 {
+                toward(autumn, turned)
+            } else if flush > 0.0 {
+                toward(Self::FLUSH, flush)
+            } else {
+                colour
+            }
+        };
+        let darkness = |look: &Look| {
+            let bright = look.colour.iter().sum::<f32>().max(1.0e-6);
+            (look.shade.iter().sum::<f32>() / bright).min(1.0)
+        };
+        let retint = |look: &mut Look| {
+            let dark = darkness(look);
+            look.colour = tint(look.colour, 1.0);
+            look.shade = tint(look.shade, dark);
+            look.accent = tint(look.accent, 1.0);
+            look.underside = look.underside.map(|colour| tint(colour, 1.0));
+        };
+        retint(&mut look);
+        for variety in &mut look.varieties {
+            retint(variety);
+        }
+        (look, self.size(day))
+    }
+
+    /// Check the days, in order within one year, and the colour.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first problem.
+    pub fn validate(&self) -> Result<(), String> {
+        within("leafing out", self.out, 1.0, 365.0)?;
+        let days = [self.out, self.full, self.turn, self.fall];
+        if days.windows(2).any(|pair| pair[1] <= pair[0]) {
+            return Err(format!(
+                "leafing days must run out, full, turn, fall in order, found {days:?}"
+            ));
+        }
+        if self.fall - self.out > 365.0 {
+            return Err(format!(
+                "leafing fall must come within a year of out, found {} after",
+                self.fall - self.out
+            ));
+        }
+        for channel in self.autumn.into_iter().flatten() {
+            within("colours", f64::from(channel), 0.0, 1.0)?;
         }
         Ok(())
     }
@@ -3992,7 +4140,8 @@ impl WithFamilies for Vec<Look> {
 /// that day. An organ with a [`Season`] shows its stage's look: in bud its
 /// bud look; in flower its flower look, or its own if that is not fruit;
 /// in fruit its own look, its fruit that share unripe, or nothing if its
-/// own look is a flower. A cluster stays at its full size, each of its
+/// own look is a flower. A leaf with a [`Leafing`] is gone while the plant
+/// is bare, small and pale as it unfolds, and turns before it falls. A cluster stays at its full size, each of its
 /// units in its own stage's look (spec rework L1b), its card in the two
 /// colours most of them show, unless the stage's look is `whole`. Organs
 /// without a season, and every organ when `day` is `None`, keep their own
@@ -4008,11 +4157,14 @@ pub fn resolve_on<'a>(
     resolve(organs, looks, foliage, foliage_shade)
         .into_iter()
         .map(|look| {
-            let season = looks.get(&look.organ).and_then(|own| own.season.as_ref());
-            match (season, day) {
-                (Some(season), Some(day)) => {
+            let own = looks.get(&look.organ);
+            let season = own.and_then(|own| own.season.as_ref());
+            let leafing = own.and_then(|own| own.leafing.as_ref());
+            match (season, leafing, day) {
+                (Some(season), _, Some(day)) => {
                     in_season(look, &season.with_bracts(foliage), day, foliage)
                 }
+                (None, Some(leafing), Some(day)) => leafing.on_day(look, day),
                 _ => (look, 1.0),
             }
         })
@@ -4574,6 +4726,12 @@ impl OrganLook {
             season.validate()?;
             self.check_stages(season)?;
         }
+        if let Some(leafing) = &self.leafing {
+            if self.season.is_some() || self.inflorescence.is_some() {
+                return Err("leafing is for leaves, without a season".to_string());
+            }
+            leafing.validate()?;
+        }
         if let Some(families) = &self.families {
             if self.season.is_some() {
                 return Err("families are for leaves, without a season".to_string());
@@ -4815,6 +4973,7 @@ mod tests {
                 bend: None,
                 form: None,
                 season: None,
+                leafing: None,
                 families: Some(Families {
                     plasticity: 0.5,
                     juvenile: Some(Juvenile {
@@ -5074,6 +5233,7 @@ mod tests {
                 bend: None,
                 form: None,
                 season: None,
+                leafing: None,
                 families: None,
                 inflorescence: None,
             },
@@ -5115,6 +5275,7 @@ mod tests {
                     bend: None,
                     form: None,
                     season: None,
+                    leafing: None,
                     families: None,
                     inflorescence: None,
                 },
@@ -5186,6 +5347,86 @@ mod tests {
     }
 
     #[test]
+    fn deciduous_leaves_unfold_turn_and_fall() {
+        let maple = Leafing {
+            out: 101.0,
+            full: 131.0,
+            turn: 264.0,
+            fall: 325.0,
+            autumn: Some([0.8, 0.5, 0.05]),
+        };
+        maple.validate().unwrap();
+        let types = [("leaf", OrganKind::Leaf)];
+        let leaf = OrganLook {
+            hairs: None,
+            hairs_beneath: None,
+            underside: None,
+            variegation: None,
+            sori: None,
+            roll: 0.0,
+            insertion: crate::looks::Insertion::Marginal,
+            shape: Shape::Fruit(Fruit::default()),
+            colour: Some([0.1, 0.3, 0.05]),
+            shade: None,
+            accent: None,
+            face_up: 0.0,
+            solid: None,
+            bend: None,
+            form: None,
+            season: None,
+            leafing: Some(maple.clone()),
+            families: None,
+            inflorescence: None,
+        };
+        let organs = BTreeMap::from([("leaf".to_string(), leaf)]);
+        let on = |day| {
+            resolve_on(
+                types,
+                &organs,
+                [0.1, 0.3, 0.05],
+                [0.03, 0.1, 0.03],
+                Some(day),
+            )
+        };
+        // Bare in winter, before the leaves unfold and after they fall.
+        assert_eq!(on(15.0).1[0], 0.0);
+        assert_eq!(on(340.0).1[0], 0.0);
+        // A third of their size and paler as they unfold, then full.
+        let (looks, sizes) = on(101.0);
+        assert!((sizes[0] - 1.0 / 3.0).abs() < 1e-12);
+        assert!(looks[0].colour[0] > 0.1 && looks[0].colour[1] > 0.3);
+        let (looks, sizes) = on(200.0);
+        assert_eq!(sizes[0], 1.0);
+        assert_eq!(looks[0].colour, [0.1, 0.3, 0.05]);
+        // Wholly turned halfway from turning to falling, still on.
+        let (looks, sizes) = on(300.0);
+        assert_eq!(sizes[0], 1.0);
+        assert_eq!(looks[0].colour, [0.8, 0.5, 0.05]);
+        // Without a day it keeps its summer look.
+        assert_eq!(
+            resolve_on(types, &organs, [0.1, 0.3, 0.05], [0.03, 0.1, 0.03], None).1,
+            [1.0]
+        );
+        // A southern beech's leaves fall in the next year's April.
+        let beech = Leafing {
+            out: 284.0,
+            full: 314.0,
+            turn: 446.0,
+            fall: 507.0,
+            autumn: None,
+        };
+        beech.validate().unwrap();
+        assert_eq!(beech.size(15.0), 1.0);
+        assert_eq!(beech.size(182.0), 0.0);
+        assert!(beech.size(290.0) < 1.0);
+        let days = Leafing {
+            turn: 100.0,
+            ..beech
+        };
+        assert!(days.validate().is_err());
+    }
+
+    #[test]
     fn an_organ_looks_as_it_is_on_the_day() {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
@@ -5205,6 +5446,7 @@ mod tests {
             bend: None,
             form: None,
             season,
+            leafing: None,
             families: None,
             inflorescence: None,
         };
@@ -5300,6 +5542,7 @@ mod tests {
                 bend: None,
                 form: None,
                 season: Some(season),
+                leafing: None,
                 families: None,
                 inflorescence,
             },
@@ -5422,6 +5665,7 @@ mod tests {
             bend: None,
             form: None,
             season: Some(season),
+            leafing: None,
             families: None,
             inflorescence: Some(Inflorescence {
                 kind: Some(kind),

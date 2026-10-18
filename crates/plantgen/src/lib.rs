@@ -814,4 +814,12 @@ pub mod venation;
 /// type of laid-out flowers too many to draw fine is drawn one step
 /// coarser instead of as cards (`blooms::step`) (116 is pericarpels, buds,
 /// fruit outlines and stigma colours).
-pub const GENERATOR_REVISION: u32 = 124;
+/// 125: a deciduous tree's, shrub's or woody vine's leaves keep a year
+/// (`appearance.organs.leaf.leafing`, set from `leaf_habit`,
+/// `leaf_out_months`, `leaf_fall_months` and `leaf_colour_autumn`): the
+/// plant stands bare in winter, puts out small pale leaves in spring that
+/// grow to full size and green, turns its autumn colour and drops them,
+/// where its leaves had stood green all year; months falling before the
+/// leaves unfold are the next year's, as a southern beech's are (109 is fern
+/// croziers green, #186).
+pub const GENERATOR_REVISION: u32 = 125;

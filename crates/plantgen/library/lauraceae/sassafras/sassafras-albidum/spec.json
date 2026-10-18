@@ -95,6 +95,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [225, 150, 50],
     "height_max_m": {
       "min": 12,
       "max": 30,
@@ -155,6 +156,7 @@
     "fruits_per_inflorescence": {"min": 1, "max": 4}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Sassafras albidum (read 2026-10-18): \"In fall, they turn to shades of yellow, tinged with red\". Colour ours."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

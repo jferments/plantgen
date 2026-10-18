@@ -138,6 +138,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_habit": "deciduous",
+    "leaf_colour_autumn": [140, 100, 55],
     "crown_form": "spreading",
     "height_max_m": {
       "min": 15,
@@ -163,6 +165,8 @@
     "leaf_apex": "rounded"
   },
   "evidence": {
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"The leaves are deciduous\"."},
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"Its fall color is unspectacular, with many trees turning plain brown\". Colour ours."},
     "generator.params.crown_base": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The crown starts about 4 m up and the stem forks into its big limbs about 5 m up (fork_height), read by eye against the trunk in iNaturalist photographs of open-grown trees (observations 28744863, 83148498)."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Open-grown trees in iNaturalist research-grade photographs (observations 28744863, 28832264, 83148498) spread wider than tall on a few big limbs that rise from a short trunk and arch outward."},
     "generator.params.spur_light": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (woody forms, broadleaf revision 16): a short shoot leafs out in at least a quarter of the open sky's light, so the inner crown thins and its limbs show between the leaf clumps, as in iNaturalist photographs of open-grown trees (observations 28744863, 28832264); with fewer attraction points (space_density 4, was 8) the crown grows fewer, bigger limbs. spur_light was 0.14 (leaf life, generator revision 44, fitted to the Urban Tree Database's leaf per crown area)."},

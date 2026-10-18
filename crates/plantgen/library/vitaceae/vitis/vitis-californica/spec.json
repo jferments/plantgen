@@ -95,6 +95,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [225, 140, 40],
     "leaf_width_m": {
       "min": 0.07,
       "max": 0.15
@@ -111,6 +112,7 @@
     "fruiting_months": [8, 9, 10]
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Vitis californica (read 2026-10-18): \"In autumn, the leaves turn orange and yellow before falling\". Colour ours."},
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",

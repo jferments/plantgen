@@ -125,6 +125,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [235, 200, 50],
     "height_max_m": {
       "min": 21,
       "max": 30,
@@ -152,6 +153,7 @@
     "leaf_apex": {"acute": "usually", "acuminate": "often"}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Betula papyrifera (read 2026-10-18): \"The fall color is a bright yellow\". Colour ours."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
