@@ -859,4 +859,13 @@ pub mod venation;
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
 /// its foot (`foot`: a Zamia leaflet's jointed base) (127 is broadleaf
 /// foliage, #143).
-pub const GENERATOR_REVISION: u32 = 128;
+/// 129: a fruit that stays on the plant for years
+/// (`fruit_persistence` persistent) keeps no season in a program's `fruit`
+/// organ, the fruit of earlier years: a chain-fruit cholla's chains hang
+/// all year while each year's flowers bud, open and fruit in their months
+/// (128 is cycad cones, #211).
+/// 130: a reduced flower mesh (a part mesh's coarser steps) draws what its
+/// perianth stands on, a floral cup or an inferior ovary such as a
+/// cactus's pericarpel, so the tepals no longer float above the joint; a
+/// pericarpel the tepals open straight from is globose, not a stalk.
+pub const GENERATOR_REVISION: u32 = 130;

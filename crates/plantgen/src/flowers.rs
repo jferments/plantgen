@@ -313,7 +313,14 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             Some((
                 ovary_length * 0.5,
                 ovary_length * 0.5,
-                s.max(0.12 * ovary_length),
+                // A pericarpel the tepals open straight from, with no
+                // floral tube between (a prickly pear's or a cholla's), is
+                // a globose to top-shaped joint of stem, not a stalk.
+                if flower.pericarpel != Skin::Naked && flower.floral_tube <= 0.0 {
+                    s.max(0.4 * ovary_length)
+                } else {
+                    s.max(0.12 * ovary_length)
+                },
             )),
         ),
     };
@@ -1365,6 +1372,35 @@ pub(crate) fn draw_reduced(
         }
         leaves::smooth_normals(mesh, first, first_index);
         return;
+    }
+    // What the perianth stands on: a floral cup, as an open frustum, or
+    // an inferior ovary (a cactus's pericarpel), as on the full flower;
+    // its length sets the seat the pieces stand at, so leaving it out
+    // would float them.
+    if let Some((length, r0, r1)) = laid.cup {
+        blooms::frustum(
+            frame.foot,
+            axis,
+            frame.side,
+            length,
+            r0,
+            r1,
+            colours.calyx,
+            part,
+            mesh,
+        );
+    }
+    if let Some((height, a, b)) = laid.ovary {
+        blooms::ellipsoid(
+            frame.foot + axis * height,
+            axis,
+            frame.side,
+            a,
+            b,
+            colours.calyx,
+            part,
+            mesh,
+        );
     }
     for tube in [&laid.floral_tube, &laid.calyx_tube, &laid.tube]
         .into_iter()
