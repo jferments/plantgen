@@ -23,7 +23,10 @@
     "inflorescence": {
       "cyme": "often",
       "solitary": "often"
-    }
+    },
+    "petal_whorls": 2,
+    "stamen_form": "laminar",
+    "floral_receptacle": "convex"
   },
   "evidence": {
     "traits": {
@@ -40,6 +43,21 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 198, family Annonaceae: inflorescence solitary or cyme; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.petal_whorls": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 10 Annonaceae: \"sepals usually 3; petals often 6 in two whorls of 3\"."
+    },
+    "traits.stamen_form": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 19, Annonaceae (family account, eFloras taxon 10047, read 2026-10-18): stamens many, spirally arranged, with a short stout filament and a connective broadened and flat-topped over the anther: a flat strap with its pollen sacs along most of its length, read as laminar."
+    },
+    "traits.floral_receptacle": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 19, Annonaceae (family account, read 2026-10-18): receptacle enlarged, flat to raised under the spiral stamens and carpels; read as convex (a low dome, not a torus)."
     }
   }
 }
