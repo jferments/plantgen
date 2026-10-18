@@ -27,7 +27,8 @@ What it does now:
 - **embed** each image once per model (SigLIP2, DINOv2, BioCLIP-2) and
   **search** the library by words or by a photo;
 - **detect** organs (leaf, flower, fruit, bark, the whole plant) in each
-  image, cut them out as **crops**, and embed and search the organs alone.
+  image, cut them out as **crops**, embed and search the organs alone, and
+  **segment** the crown into a mask.
 
 ## Install
 
@@ -251,6 +252,7 @@ imagekit detect --taxon "Asimina triloba"                  # Grounding DINO on t
 imagekit crops --taxon "Asimina triloba" --organ leaf --out ~/pawpaw-leaves
 imagekit embed --model dinov2 --regions --taxon "Asimina triloba"
 imagekit search --model dinov2 --organ leaf --image leaf.jpg --by-species
+imagekit segment --taxon "Asimina triloba"                 # SAM 2.1 crown masks on the whole-plant boxes
 ```
 
 `detect` asks Grounding DINO (`gdino-tiny` by default, `gdino-base` for
@@ -268,6 +270,15 @@ observer. `embed --regions` embeds each kept organ with a small margin.
 Its analyzer names the detector, organs, triage and margin, so organ
 vectors never mix with whole-image vectors. `search --organ` ranks those
 crops: give it a photo of just the organ, or `--box` round it.
+
+`segment` gives SAM 2.1 each kept region's box (by default only the whole
+plant, in whole-plant views and renders) and stores the object's mask as a
+1-bit PNG in the run folder, with its share of the image and of the box.
+About 1.3 s a region on a CPU. A mask's outline is reliable. Whether sky
+inside the crown is left out varies from image to image, so measure
+see-through from the pixels inside the outline, not from the mask alone.
+These masks are what crown-shape measures read, for photos and renders
+alike.
 
 ## Render and compare
 

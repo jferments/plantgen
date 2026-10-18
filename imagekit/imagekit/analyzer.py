@@ -14,7 +14,7 @@ import json
 
 from .store import Store, append_jsonl, jsonl, now
 
-TASKS = ("triage", "observe", "check", "describe", "detect", "count", "measure", "embed")
+TASKS = ("triage", "observe", "check", "describe", "detect", "segment", "count", "measure", "embed")
 REQUIRED = ("task", "model", "model_revision")
 KEYS = REQUIRED + ("rules_version", "prompt_hash", "params")
 

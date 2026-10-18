@@ -15,7 +15,7 @@ from .store import DEFAULT_ROOT, Store, check_open, jsonl
 
 # Commands that live in their own modules, each with register(subparsers). Their
 # heavy imports (models, numpy) happen inside the command, so `fetch` stays light.
-COMMAND_MODULES = ("run", "views", "embed", "search", "sync", "render", "compare", "regions")
+COMMAND_MODULES = ("run", "views", "embed", "search", "sync", "render", "compare", "regions", "segment")
 
 FETCHERS = {
     "inat": inat.fetch, "inat-dump": inat_dump.fetch, "gbif": gbif.fetch, "commons": commons.fetch,

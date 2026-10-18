@@ -36,6 +36,10 @@ def photo(seed: int, leaf_box=None) -> bytes:
     return out.getvalue()
 
 
+def analyzer_params(store, aid: str) -> dict:
+    return next(r for r in jsonl(store.root / "analyzers.jsonl") if r["id"] == aid)["params"]
+
+
 class Labels(unittest.TestCase):
     def test_run_together_labels(self):
         f = lambda label: regions.organ_of_label(label, regions.PHRASES)  # noqa: E731
@@ -141,6 +145,30 @@ class Detect(unittest.TestCase):
         self.assertAlmostEqual(w / 320, 0.5 * 1.08, delta=0.08)  # the box plus its margin
         everything = json.loads(self.cli("crops", "--out", str(self.tmp / "all"), "--triage", "none"))
         self.assertEqual(everything["crops"], 5)
+
+    @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
+    def test_segment_masks_kept_regions_once(self):
+        import numpy as np
+        from imagekit import segment
+        self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det")
+        first = json.loads(self.cli("segment", "--model", "fake", "--organ", "plant", "--organ", "leaf",
+                                    "--run", "seg"))
+        self.assertEqual(first["segmented"], 2)  # a's leaf, b's plant (whole view); c's plant is not kept
+        again = json.loads(self.cli("segment", "--model", "fake", "--organ", "plant", "--organ", "leaf",
+                                    "--run", "seg2"))
+        self.assertEqual(again["segmented"], 0)
+        with Store(self.store_dir) as store:
+            got = segment.masks(store, first["analyzer"])
+            path, out = got[(self.sha["a.jpg"], 2)]
+            self.assertEqual(out["organ"], "leaf")
+            m = np.asarray(Image.open(path).convert("L")) > 0
+            self.assertEqual(m.shape, (240, 320))
+            self.assertAlmostEqual(out["area"], 0.25, delta=0.03)  # the green square is a quarter of the image
+            self.assertGreater(out["fill"], 0.9)
+            for got_v, want in zip(out["box"], self.boxes["a.jpg"]):
+                self.assertAlmostEqual(got_v, want, delta=0.02)
+            params = analyzer_params(store, first["analyzer"])
+            self.assertEqual(params["regions"]["organs"], ["leaf", "plant"])
 
     @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
     def test_organ_vectors_stay_apart_from_whole_images(self):
