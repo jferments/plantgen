@@ -2691,7 +2691,7 @@ mod tests {
     }
 
     /// Today's fruit layouts as `crate::fruit` laid them out before L1,
-    /// but for a raceme's nodes (revision 129).
+    /// but for a raceme's nodes (revision 131).
     #[allow(clippy::many_single_char_names)]
     fn before(kind: &str, n: u32, s: f64, spread: f64, aspect: f64, turn: f64) -> Vec<Placed> {
         let sigma = math::radians(spread);
@@ -2706,7 +2706,7 @@ mod tests {
                 let q = (k + 0.5) / f64::from(n);
                 let (attach, direction, stalk) = match kind {
                     "raceme" => {
-                        // Since revision 129 its nodes run from the
+                        // Since revision 131 its nodes run from the
                         // peduncle's top to where its top unit reaches the
                         // tip, not half a node in from each.
                         let reach = (1.9 * s * math::cos(sigma)).min(0.9);

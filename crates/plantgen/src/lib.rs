@@ -859,7 +859,16 @@ pub mod venation;
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
 /// its foot (`foot`: a Zamia leaflet's jointed base) (127 is broadleaf
 /// foliage, #143).
-/// 129: a raceme's, spike's, catkin's, panicle's or corymb's nodes run
+/// 129: a fruit that stays on the plant for years
+/// (`fruit_persistence` persistent) keeps no season in a program's `fruit`
+/// organ, the fruit of earlier years: a chain-fruit cholla's chains hang
+/// all year while each year's flowers bud, open and fruit in their months
+/// (128 is cycad cones, #211).
+/// 130: a reduced flower mesh (a part mesh's coarser steps) draws what its
+/// perianth stands on, a floral cup or an inferior ovary such as a
+/// cactus's pericarpel, so the tepals no longer float above the joint; a
+/// pericarpel the tepals open straight from is globose, not a stalk.
+/// 131: a raceme's, spike's, catkin's, panicle's or corymb's nodes run
 /// from its peduncle's top to where its top unit reaches the tip, not
 /// half a node in from each, so a panicle of few branches draws its
 /// stated length; a cluster whose flowers are all sterile
@@ -875,6 +884,6 @@ pub mod venation;
 /// (broadleaf program revision 22), so a hydrangea's heads stand at the
 /// crown's surface above their leaves, not along the old wood; and a
 /// flower may be drawn up to eight times its fruit's size, where it was
-/// four, so a mophead's sterile flowers reach their stated size (128 is
-/// #211's cycad cones).
-pub const GENERATOR_REVISION: u32 = 129;
+/// four, so a mophead's sterile flowers reach their stated size (130 is
+/// #220's cactus pericarpels).
+pub const GENERATOR_REVISION: u32 = 131;

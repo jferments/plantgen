@@ -3429,7 +3429,11 @@ mod tests {
                 .filter(|drawn| ["*", "fruit"].contains(&organ) || drawn == organ)
             {
                 remove_one(spec, &format!("appearance.organs.{organ}.{rest}"));
-                if rest.starts_with("shape.") || rest == "colour" || rest == "accent" {
+                if rest.starts_with("shape.")
+                    || rest.starts_with("form.")
+                    || rest == "colour"
+                    || rest == "accent"
+                {
                     for stage in ["flower_look", "bud_look"] {
                         remove_one(
                             spec,
