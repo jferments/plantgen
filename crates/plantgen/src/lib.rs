@@ -674,4 +674,11 @@ pub mod venation;
 /// keep last year's blades green, from the leaf habit their taxa state
 /// (`leaf_years`; herb program revision 11, grass revision 8) (105 is
 /// hairs, #185).
-pub const GENERATOR_REVISION: u32 = 106;
+/// 107: a zone's edge drawn out along the lateral veins (`feather`),
+/// spots and mottle drawn out along the blade (`stretch`), and a simple
+/// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
+/// trout lily's long blotches and its veins meeting at the tip; and a
+/// variegation's share set by the plant rather than the leaf (`plants`,
+/// the card's packed seed moved toward the plant's), as Cyclamen's and
+/// white clover's are (106 is evergreen herbs, #200).
+pub const GENERATOR_REVISION: u32 = 107;
