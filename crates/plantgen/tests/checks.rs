@@ -283,6 +283,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "whipplea-modesta",
+        "shoot_leaves",
+        "the angiosperms' default of 4 to 18 leaves a year's shoot is Critchfield's for woody shoots; a herb's trailing stem grows its 47 nodes in one year, so from #170's count of a year's growth it bears 94, until the measure or the default tells a lying herb's stem from a woody shoot",
+    ),
+    (
+        "whipplea-modesta",
         "phyllotaxis_pattern",
         "its trailing stems' leaf pairs are drawn turned out to the stem's two sides in one plane, as a trailing stem's leaves lie flat to the light, so the measure reads the pairs as superposed where Hydrangeaceae state decussate or spiral, until a lying stem can set its pairs crossing and twist each leaf flat",
     ),
