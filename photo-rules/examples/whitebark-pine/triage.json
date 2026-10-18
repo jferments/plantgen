@@ -1,0 +1,18 @@
+{
+  "photo_id": "own-whitebark-03",
+  "description": "A single old conifer on an open rocky ridge, seen from the side at eye level with the base and top in frame. Several stems rise together from the base and fork low into a broad, irregular crown with a few thick, twisted limbs. Overcast light; sky behind; no scale object.",
+  "usable": true,
+  "unusable_reason": null,
+  "species_match": "yes",
+  "kind": "photo",
+  "views": ["V1", "V2"],
+  "organs_visible": ["plant", "stem", "bark", "shoot"],
+  "stage": "vegetative",
+  "leaf_state": "full",
+  "setting": "open_grown",
+  "cultivar_look": "no",
+  "age_class": "old",
+  "scale_cue": "none",
+  "lighting": "overcast",
+  "quality": "sharp"
+}

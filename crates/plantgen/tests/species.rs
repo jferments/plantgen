@@ -880,7 +880,7 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 108,
+        checked, 109,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -891,9 +891,10 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
          the magnoliids, the eight the species-facts records name (step 6): bur-sage's and \
          baneberry's racemes, ragwort's and foothill palo verde's corymbs, golden bamboo's \
          panicles, and the catkins of quaking aspen and two willows, and the umbels of fennel, \
-         wild carrot and poison hemlock (lacy leaves), white clover\'s heads, and the four \
+         wild carrot and poison hemlock (lacy leaves), white clover\'s heads, the four \
          whose families now rank their clusters: aloe vera's racemes, black mangrove's cymes, \
-         harsh paintbrush's spikes and Pacific bleeding heart's racemes"
+         harsh paintbrush's spikes and Pacific bleeding heart's racemes, and lamb\'s ear\'s spike \
+         (hair practice)"
     );
 }
 

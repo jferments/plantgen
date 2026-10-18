@@ -217,6 +217,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a climbing shoot adds one or two nodes a season, each with one leaf, so it bears 1 to 2 leaves a year against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "stachys-byzantina",
+        "leaf_arrangement",
+        "the herb program turns a stem's basal leaves one at a time by the divergence, not in pairs, so lamb's ear's rosette reads as alternate though its stem leaves stand in opposite pairs",
+    ),
+    (
         "program:broadleaf",
         "crown_outline_fit",
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",

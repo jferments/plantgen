@@ -125,7 +125,8 @@
       7
     ],
     "leaf_hairs": "strigose",
-    "leaf_hairs_beneath": "strigose",
+    "leaf_hairs_beneath": {"glabrous": "often", "strigose": "often"},
+    "leaf_hairs_on_veins": true,
     "leaf_ciliate": true,
     "stem_hairs": "crisped",
     "height_max_m": 0.3,
@@ -244,7 +245,12 @@
     "traits.leaf_hairs_beneath": {
       "evidence": "SourceInferred",
       "source": "fna-online",
-      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces abaxially appressed-hirsute, usually sparsely so (strigose)."
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces abaxially appressed-hirsute, usually sparsely so (strigose); read as half way between bare and strigose, so sparse."
+    },
+    "traits.leaf_hairs_on_veins": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asarum canadense (read on eFloras, 2026-10-16): surfaces adaxially appressed-hirsute, at least along main veins."
     },
     "traits.stem_hairs": {
       "evidence": "SourceInferred",

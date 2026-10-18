@@ -67,7 +67,16 @@
 # papery bracts). With bract_length 0, as every program gives it unless
 # it says otherwise, no bract is drawn and a herb grows as before.
 #
-# Revision 10: a leaf may outlive its year. A flowering stem dies back
+# Revision 10: a flowering stem may branch. Its top flower_branches leaf
+# nodes each bear, in the axil of their leaf, a side branch at
+# branch_angle to the stem, ending in a raceme like the stem's own
+# (fennel's and poison hemlock's candelabra of umbels). The lowest branch
+# is branch_length of the stem's height, the topmost half as long.
+# Nothing about a branch is drawn at random, which would move other
+# herbs' draws. With flower_branches 0, as every program gives it unless
+# it says otherwise, a herb grows as before.
+#
+# Revision 11: a leaf may outlive its year. A flowering stem dies back
 # after it fruits, but its basal leaves, and a stem that bears leaves
 # only, stay leaf_years (wild ginger's evergreen leaves, a rattlesnake
 # plantain's rosette, beargrass's tufts), so an evergreen herb carries
@@ -76,7 +85,7 @@
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 10;
+lsystem herb 11;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -135,6 +144,9 @@ param nod;                    # degrees the bud-tipped end bends over
 param bract_length = 0;       # a floral bract's length below each stalk of the raceme; 0: none
 param bract_lean = 1.1;       # a bract's angle to the axis as a share of its stalk's
 param bract_area = 0.235;     # leaf area of a bract 1 m long, m² (the default leaf card's)
+param flower_branches = 0;    # top leaf nodes of a flowering stem that bear a flowering side branch
+param branch_angle = 40;      # angle of a side branch to the stem
+param branch_length = 0.3;    # the lowest side branch's length, as a share of the stem's height
 param flower_area;
 param bud_area;
 param fruit_area;
@@ -153,6 +165,8 @@ module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
 module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
 module Lf(s);                 # the leaves at one node
 module Br(a);                 # a floral bract, a degrees from the axis
+module Bx(i, h, r);           # the side branch, if any, at leaf node i of a stem
+module Bh(len);               # a flowering side branch len long
 
 organ leaf leaf area leaf_area;
 organ basal leaf as piece area basal_area;
@@ -230,11 +244,25 @@ decompose Nd(i, m, h, r) : m == 1 ->
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
-    /(divergence);
+    Bx(i, h, r) /(divergence);
 decompose Nd(i, m, h, r) -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
     ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
+
+# A flowering stem's top flower_branches nodes each bear a side branch in
+# the axil of their leaf, shorter toward the top, ending in a raceme. A
+# branch is as thick as the raceme's own axis, so the two join smoothly.
+# The branches draw nothing at random: random call sites are numbered
+# through the program and the programs built on it, so a draw here would
+# move every later draw of every herb.
+decompose Bx(i, h, r) : r > 0 && flower_branches > 0 && i >= nodes - flower_branches ->
+    [ &(branch_angle)
+      Bh(h * branch_length
+         * lerp(1, 0.5, (i - max(0, nodes - flower_branches)) / max(1, min(nodes, flower_branches) - 1))) ];
+decompose Bx(i, h, r) -> ;
+decompose Bh(len) ->
+    !(stem_radius * 0.5) F(len * (1 - raceme)) Rc(0, flowers, len, raceme);
 
 # The raceme: fruit, then open flowers, then buds, the buds' part bending
 # over toward its tip. A male plant's fruit are open flowers.
