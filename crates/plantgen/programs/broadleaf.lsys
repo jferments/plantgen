@@ -374,8 +374,8 @@ rule A(split) : vigour >= 1 && space > 0 ->
 # A lateral bud breaks into a long shoot when it has the vigour and free
 # space; otherwise, in enough light, it leafs out as a short shoot.
 rule B : vigour >= bud_break && space > 0 -> A(0);
-rule B : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age * spur_pairs) Bo(blooms) B;
-rule B : light >= spur_light -> Q(spur_pairs, age * spur_pairs) B;
+rule B : light >= spur_light && blooms > 0 && t >= adult_age && bloom_stalk <= 0 -> Q(spur_pairs, age * spur_pairs) Bo(blooms) B;
+rule B : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0) -> Q(spur_pairs, age * spur_pairs) B;
 
 # One internode, turned a little at random, with a pair of buds and a pair
 # of leaves; the next pair is turned by divergence (a quarter turn:
@@ -496,8 +496,8 @@ rule S : shed_ratio > 0 && age > shed_age && qsum < shed_ratio * nseg -> %;
 rule K(s) : s <= 0 -> ;
 rule K(s) : life > 0 && t >= life -> ;
 rule K(s) : light < shade_death || age >= bud_years -> ;
-rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age * spur_pairs) Bo(blooms) K(s);
-rule K(s) : light >= spur_light -> Q(spur_pairs, age * spur_pairs) K(s);
+rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age && bloom_stalk <= 0 -> Q(spur_pairs, age * spur_pairs) Bo(blooms) K(s);
+rule K(s) : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0) -> Q(spur_pairs, age * spur_pairs) K(s);
 
 # Dormant buds and reiteration: most of an old crown's leafy shoots come
 # from buds that wait on its limbs, not from the branching of its tips
@@ -575,3 +575,12 @@ decompose Bo(n) : n > 0 ->
     Bo(n - 1);
 decompose Bo(n) -> ;
 decompose Bs -> !(bloom_size * 0.03) F(bloom_stalk);
+
+# A bud or short shoot whose blooms stand on stalks of their own grows a
+# sliver of wood the year it flowers, at its own depth, for the stalks to
+# stand on: a stalk drawn straight from the bud would be wood two orders
+# above the shoot that bears it, with none between.
+rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age ->
+    !(bloom_size * 0.04) F(0.002) Q(spur_pairs, age * spur_pairs) Bo(blooms) K(s);
+rule B : light >= spur_light && blooms > 0 && t >= adult_age ->
+    !(bloom_size * 0.04) F(0.002) Q(spur_pairs, age * spur_pairs) Bo(blooms) B;

@@ -1930,8 +1930,8 @@ pub struct Fruit {
     /// belladonna's).
     #[serde(skip_serializing_if = "is_zero")]
     pub kept_calyx: f64,
-    /// The kept calyx's lobes.
-    #[serde(skip_serializing_if = "is_five_count")]
+    /// The kept calyx's lobes; 0 for five.
+    #[serde(skip_serializing_if = "is_zero_count")]
     pub kept_lobes: u32,
     /// What arms the fruit's surface.
     #[serde(skip_serializing_if = "Armed::is_none")]
@@ -1946,7 +1946,7 @@ impl Default for Fruit {
             kind: FruitKind::Berry,
             unripe: 0.0,
             kept_calyx: 0.0,
-            kept_lobes: 5,
+            kept_lobes: 0,
             armed: Armed::None,
         }
     }
@@ -1970,11 +1970,6 @@ impl Armed {
     fn is_none(&self) -> bool {
         *self == Self::None
     }
-}
-
-#[allow(clippy::trivially_copy_pass_by_ref)]
-fn is_five_count(value: &u32) -> bool {
-    *value == 5
 }
 
 /// A fruit card as a spec writes it: a [`Fruit`], and the keys that set a
@@ -2785,7 +2780,9 @@ impl Shape {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
                 check("kept_calyx", s.kept_calyx, 0.0, 2.0)?;
-                count("kept_lobes", s.kept_lobes, 3, 12)?;
+                if s.kept_lobes != 0 {
+                    count("kept_lobes", s.kept_lobes, 3, 12)?;
+                }
                 check("unripe", s.unripe, 0.0, 1.0)
             }
         }
@@ -4912,7 +4909,7 @@ mod tests {
                     }
                     Field::Number => assert!(with(field, 2.5.into()).is_ok(), "{at}"),
                     Field::Word => {
-                        let error = with(field, "none".into()).unwrap_err().to_string();
+                        let error = with(field, "no-such-word".into()).unwrap_err().to_string();
                         assert!(error.contains("unknown variant"), "{at}: {error}");
                     }
                     Field::Outline => {

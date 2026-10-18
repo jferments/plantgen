@@ -425,7 +425,11 @@ impl One {
             let rise = if fruit.kept_calyx < 0.6 { 0.12 } else { -0.04 };
             self.calyx(
                 0.06,
-                fruit.kept_lobes,
+                if fruit.kept_lobes == 0 {
+                    5
+                } else {
+                    fruit.kept_lobes
+                },
                 fruit.kept_calyx,
                 rise,
                 accent,
