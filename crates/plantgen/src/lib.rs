@@ -648,11 +648,21 @@ pub mod venation;
 /// under the `indusium` stated; most pinnae of a fern whose fronds are
 /// alike, and only the fertile pinnae of a dimorphic one (101 is fern
 /// fiddleheads, #181).
-/// 103: a zone's edge drawn out along the lateral veins (`feather`),
+/// 103: 23 species state facts the species-facts records give that the
+/// checks now judge as floras measure them (#189): basal leaf sizes of
+/// foxglove, columbine, foamflower, bull thistle, lupine and mule's ears,
+/// grasses' and sedges' deciduous blades, and fruit, flower, cluster,
+/// shape and height facts held back from 96; broom's stated obovate
+/// leaflets draw where a hand-drawn profile stood (102 is fern sori,
+/// #182).
+/// 104: a flowering herb's top leaf nodes may each bear a side branch
+/// ending in a raceme (`flowering_branches`; herb program revision 10)
+/// (103 is held-back species facts, #192).
+/// 105: a zone's edge drawn out along the lateral veins (`feather`),
 /// spots and mottle drawn out along the blade (`stretch`), and a simple
 /// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
 /// trout lily's long blotches and its veins meeting at the tip; and a
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
-/// white clover's are (102 is fern sori, #182).
-pub const GENERATOR_REVISION: u32 = 103;
+/// white clover's are (104 is flowering herb branches, #188).
+pub const GENERATOR_REVISION: u32 = 105;

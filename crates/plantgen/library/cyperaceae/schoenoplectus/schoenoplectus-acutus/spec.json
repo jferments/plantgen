@@ -110,7 +110,8 @@
     "inflorescence_length_m": {"min": 0.03, "max": 0.1},
     "flowering_months": [5, 6, 7, 8],
     "fruit_size_m": {"min": 0.002, "max": 0.003},
-    "fruiting_months": [7, 8, 9]
+    "fruiting_months": [7, 8, 9],
+    "leaf_habit": "deciduous"
   },
   "evidence": {
     "traits.culm_length_m": {
@@ -180,7 +181,8 @@
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L262933), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L262933), as no source read gives it."},
     "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L262933), as no source read gives it."},
-    "generator.params.panicle_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `panicle` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.263)."}
+    "generator.params.panicle_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `panicle` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.263)."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L262933), as no source read gives it."}
   },
   "provenance": {
     "sources": [

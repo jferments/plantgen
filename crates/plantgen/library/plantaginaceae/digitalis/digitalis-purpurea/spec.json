@@ -39,8 +39,8 @@
       "bud_spacing": 0.45,
       "nod": 10,
       "bud_size": 0.015,
-      "leaf_area": 0.292,
-      "basal_area": 0.234,
+      "leaf_area": 0.164,
+      "basal_area": 0.132,
       "basal_piece_area": 0.235,
       "flower_area": 0.384,
       "bud_area": 0.127,
@@ -124,7 +124,9 @@
     "sexual_system": "hermaphrodite",
     "flowering_months": [6, 7, 8],
     "fruit_size_m": {"min": 0.01, "max": 0.015},
-    "fruiting_months": [8, 9]
+    "fruiting_months": [8, 9],
+    "leaf_length_m": {"min": 0.1, "max": 0.3},
+    "leaf_width_m": {"min": 0.04, "max": 0.1}
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -197,10 +199,12 @@
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2768087), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2768087), as no source read gives it."},
     "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2768087), as no source read gives it."},
-    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.195)."},
-    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.157)."},
     "generator.params.flower_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `flower` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.129)."},
-    "generator.params.bud_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.090)."}
+    "generator.params.bud_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.090)."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2768087), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2768087), as no source read gives it."},
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.292)."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.234)."}
   },
   "provenance": {
     "sources": [

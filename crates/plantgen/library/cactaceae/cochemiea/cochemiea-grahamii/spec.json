@@ -164,7 +164,8 @@
     "woodiness": "herbaceous",
     "rosette": "none",
     "flowering_months": [6, 7, 8],
-    "fruiting_months": [8, 9, 10]
+    "fruiting_months": [8, 9, 10],
+    "height_typical_m": {"min": 0.05, "max": 0.15}
   },
   "evidence": {
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: tubercles ovoid to cylindrical, often four-angled; standing out from the stem, so prominent here."},
@@ -267,7 +268,8 @@
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."}
   },
   "provenance": {
     "sources": [
