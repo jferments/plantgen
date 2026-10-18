@@ -681,10 +681,28 @@ pub mod venation;
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
 /// white clover's are (106 is evergreen herbs, #200).
-/// 108: a fern's frond is green while it unrolls and turns to its stipe's
+/// 108: unripe fruit, and a fruit's stalk and cup, green as the foliage
+/// unless an accent is stated; a cluster ripens only its
+/// `fruits_per_inflorescence` (`Inflorescence::fruits`), its other units
+/// gone in fruit; an aggregate drawn as its `fruitlets` say: beaked
+/// follicles with their seeds hanging in `fruit_seed_colour`, samaras up a
+/// spindle, berries splayed from one stalk, or a hip; a fruit with a
+/// `fruit_cup_colour` stands in a cup on a swollen stalk; tepals take
+/// `perianth_parts`, standing in whorls of the merosity, each inner whorl
+/// more upright and narrower; `petal_whorls` doubles a
+/// corolla; stamens as long as `stamen_length_m`, flat straps where
+/// `stamen_form` is laminar, filaments in `filament_colour`, anthers in
+/// `anther_colour`; an elongate `floral_receptacle` raises the stamens and
+/// free carpels up a cone, the carpels in `pistil_colour`; `corolla_shape`
+/// sets how far the petals rise; a lone flower's bud as large as its
+/// flower and in `bud_colour`; up to 400 stamens and 100 carpels; reduced
+/// blunt petals keep their shoulders; ripening fruit pass through
+/// `fruit_colour_ripening`, and a follicle's seeds hang on threads
+/// `fruit_seed_thread_m` long (107 is leaf zones and veins, #191).
+/// 109: a fern's frond is green while it unrolls and turns to its stipe's
 /// colour after (the L-system's `young` and the appearance's `young_axis`,
 /// fern program revision 12), a crozier is scaly only where its stipe is
 /// scaly all along, its pinnae lie along its coil, and a ternate frond
-/// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (107
-/// is leaf zones, #191).
-pub const GENERATOR_REVISION: u32 = 108;
+/// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (108
+/// is magnoliid fruit, #202).
+pub const GENERATOR_REVISION: u32 = 109;
