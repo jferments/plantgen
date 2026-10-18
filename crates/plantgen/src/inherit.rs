@@ -1069,6 +1069,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("base_taper", Number),
                 ("apex_point", Number),
                 ("apex_notch", Number),
+                ("praemorse", Number),
+                ("midrib", Number),
             ],
         ),
         (

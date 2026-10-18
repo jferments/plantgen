@@ -8,13 +8,132 @@
     "leaf_incision": "none",
     "division_pattern": "pinnate",
     "division_order": 2,
-    "architectural_model": "holttum"
+    "architectural_model": "holttum",
+    "leaflet_end": "praemorse",
+    "leaflet_midrib": false,
+    "terminal_leaflet": true
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae III 6): the only palms with bipinnate leaves, the leaflets fish-tail-like; they flower from the top down and die (Holttum's model)."
+    },
+    "traits.leaflet_end": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (2008, p. 297): the leaflets' upper margins deeply praemorse, as if bitten off; Flora of China (vol. 23, p. 133) has the secondary pinnae triangular with jagged outer margins."
+    },
+    "traits.leaflet_midrib": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (2008, p. 297): the leaflets obliquely wedge-shaped with no distinct midrib, several major veins diverging from the swollen base."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (vol. 23, p. 133), Caryota: each primary pinna made of several secondary pinnae on a secondary rachis that ends in one."
+    }
+  },
+  "forms": {
+    "palm": {
+      "rules": {
+        "generator.params.leaflet_peak": {
+          "rule": "0.1",
+          "why": "A fishtail leaf is broadly triangular: its longest pinnae near its foot, shorter toward its tip."
+        },
+        "generator.params.leaflet_base": {
+          "rule": "0.85",
+          "why": "The lowest pinnae nearly as long as the longest, a little above them."
+        },
+        "generator.params.leaflet_tip": {
+          "rule": "0.3",
+          "why": "The pinnae near the leaf's tip a third as long as the longest, so the leaf narrows to its end."
+        },
+        "generator.params.leaflet_angle": {
+          "rule": "55",
+          "why": "The pinnae spread at about fifty-five degrees to the rachis (set by eye)."
+        },
+        "generator.params.leaflet_lift": {
+          "rule": "5",
+          "why": "The pinnae spread nearly flat on each side of the rachis, not in a V (set by eye)."
+        },
+        "generator.params.leaflet_scatter": {
+          "rule": "0",
+          "why": "The pinnae stand one pair at a time along the rachis, regularly, not in groups or planes."
+        },
+        "generator.params.pinnule_angle": {
+          "rule": "50",
+          "why": "A pinna's leaflets spread at about fifty degrees to its rachis from their swollen bases, their broad ends meeting along its sides (set by eye)."
+        },
+        "generator.params.sheath_length": {
+          "rule": "0.06 * leaf_length_m",
+          "why": "Each frond's sheath clasps the stem below its foot, its fibres hiding the stem's top among the leaves; about a sixteenth of the leaf's length (set by eye: no flora gives the sheath's length)."
+        },
+        "generator.params.shaft_cards": {
+          "rule": "4",
+          "why": "A sheath drawn as four cards round the stem."
+        }
+      },
+      "evidence": {
+        "rules": {
+          "evidence": "SourceInferred",
+          "source": "genera-palmarum-2008",
+          "note": "Dransfield et al. (2008, p. 297-298): the leaves bipinnate, the secondary rachises like the primary rachis and regularly arranged, the leaflets very numerous and regular along them. The leaf's outline, broad at its foot and narrowing to its tip, and the angles set by eye from photographs of the genus, not from a flora."
+        },
+        "appearance": {
+          "evidence": "SourceInferred",
+          "source": "genera-palmarum-2008",
+          "note": "Dransfield et al. (2008, p. 297): the leaflets obliquely wedge-shaped from a narrow, swollen, sometimes stalk-like base, several main veins fanning from it and no midrib, the upper margin deeply praemorse (the family's rules); drawn as a wedge half as wide as long, widest near its end, with three pairs of veins fanning from its foot. The sheath triangular, disintegrating into strong black fibres under dense felt and chocolate-brown scales: drawn near black."
+        }
+      },
+      "appearance": {
+        "organs": {
+          "pinnule": {
+            "shape": {
+              "template": "simple",
+              "width": 0.5,
+              "outline": [
+                [
+                  0,
+                  0.06
+                ],
+                [
+                  0.15,
+                  0.2
+                ],
+                [
+                  0.6,
+                  0.72
+                ],
+                [
+                  0.9,
+                  1
+                ],
+                [
+                  1,
+                  0
+                ]
+              ],
+              "fan": 3,
+              "petiole": 0.03
+            },
+            "bend": {
+              "fold": 10,
+              "cup": 0,
+              "droop": 0,
+              "twist": 0
+            }
+          },
+          "sheath": {
+            "colour": [
+              0.03,
+              0.025,
+              0.02
+            ]
+          }
+        }
+      }
     }
   }
 }

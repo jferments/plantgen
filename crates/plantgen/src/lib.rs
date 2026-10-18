@@ -901,4 +901,21 @@ pub mod venation;
 /// flower may be drawn up to eight times its fruit's size, where it was
 /// four, so a mophead's sterile flowers reach their stated size (132 is
 /// lily leftovers, #218).
-pub const GENERATOR_REVISION: u32 = 133;
+/// 134: fan palms' blades, petiole teeth, skirts and fishtail palms (palm
+/// revision 13): a fan's segments part only over their outer share
+/// (`split_depth`, from `fan_split_depth`), inside it one piece drawn as
+/// wedges (`palman`), their free parts turning down where they part
+/// (`tip_droop`, from `segment_posture`) and bearing threads in the
+/// sinuses and along their margins (`filament`, from
+/// `segment_filaments`); a petiole's margins bear teeth (`tooth`) as long,
+/// far apart, leaning and shrinking toward the blade as stated
+/// (`petiole_armature` and the `petiole_tooth_*` words); a dead frond
+/// hangs from the trunk's surface, standing out at first and falling flat
+/// against it over a year (`dead_fold_years`), in the colour stated for
+/// dead leaves (`dead_leaf_colour`); a twice-pinnate frond bears pairs
+/// of pinnae with leaflets of their own (`pinnule`, from `pinnae` and
+/// `leaflets`), and a simple blade may end in a bitten, jagged tip
+/// (`Simple.praemorse`, from `leaflet_end`) and lack a midrib
+/// (`Simple.midrib`, from `leaflet_midrib`): Caryota's fishtail leaflets
+/// (133 is panicles and hydrangeas, #219).
+pub const GENERATOR_REVISION: u32 = 134;

@@ -20,9 +20,13 @@
 # Revision 4: gives palm revision 12's cones by sex no cones, so
 # king ferns draw as before.
 #
+# Revision 5: gives palm revision 13's fan palman, threads, petiole
+# teeth, twice-pinnate fronds and slowly falling dead fronds none, so
+# king ferns draw as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem marattiaceae 4 extends palm;
+lsystem marattiaceae 5 extends palm;
 
 param vigour_spread = 0.1;
 param upturn = 0;
@@ -103,3 +107,23 @@ param coil_size = 0.22;       # a coiled piece's length at the crozier's outer t
 param coil_tight = 2;         # how fast the coiled pieces shorten toward the tip
 param coil_pinna = 0.12;      # a coiled leaflet at the outer turn, a share of its open size
 param coil_roll = 0.08;       # a rolled leaflet's thickness, a share of its rolled length
+# Palm revision 13's fan palman, threads, petiole teeth, twice-pinnate
+# fronds and slowly falling dead fronds: none, so king ferns draw as before.
+param split_depth = 1;        # fan segments free to the fan's centre
+param palman_angle = 12;      # a palman card is a 12-degree wedge, its card 0.24 wide
+param palman_area = 0.12;
+param tip_droop = 0;
+param filaments = 0;          # no threads
+param filament_length = 0.5;
+param filament_area = 0.01;
+param tooth_length = 0;       # no petiole teeth
+param tooth_spacing = 0.05;
+param tooth_angle = 90;
+param tooth_tip = 1;
+param tooth_area = 0.25;
+param pinna_pairs = 0;        # once pinnate
+param pinna_leaflets = 10;
+param pinnule_length = 0.2;
+param pinnule_angle = 45;
+param pinnule_area = 0.3;
+param dead_fold_years = 0;    # a dead frond hangs at once
