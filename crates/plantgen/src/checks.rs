@@ -1784,25 +1784,12 @@ fn at_ground(structure: u32, members: &[&GraphOrgan], drawn: &PlantGraph) -> boo
 /// sharply where it meets it, but its pieces are whole.)
 const COILED: f64 = 20.0;
 
-/// Degrees past which a frond's rachis turns in all, from its foot out
-/// along any arm, while it is still coiled in its crozier: more than an
-/// unrolled frond arches over its length, even a pendent one, or than a
-/// pedate blade's arm curves back, so a blade coiled whole, its pieces
-/// all alike short, is told from an unrolled one.
-const CROZIER: f64 = 180.0;
-
-/// The share of its stipe's longest segment under which a segment of a
-/// pedate blade's arm is still coiled: unrolled, the fern program draws an
-/// arm's half pieces 0.15 as long as a bare piece of stipe (`arm_length`
-/// 0.3), and coiled, 0.15 of that.
-const FAN_COILED: f64 = 0.06;
-
 /// A leaf drawn as a structure whose axis is its own segments and whose
 /// leaflets stand on them (a fern's frond: its stipe and rachis, and its
 /// pinnae): the stipe is the axis below the lowest leaflet, the blade the
 /// rest, and the blade's width twice the farthest a leaflet reaches out
 /// from the axis. A frond still in its crozier (see [`COILED`]) has no
-/// outline or size yet.
+/// outline yet.
 fn frond_sizes(
     structure: u32,
     leaflets: &[&GraphOrgan],
@@ -1819,8 +1806,6 @@ fn frond_sizes(
     // its blade's shortest and longest segments.
     let mut turned: f64 = 0.0;
     let (mut shortest, mut longest) = (f64::INFINITY, 0.0_f64);
-    // The stipe's longest segment.
-    let mut stalk: f64 = 0.0;
     let mut heading = None;
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
         if segment.within != Some(structure) {
@@ -1840,7 +1825,6 @@ fn frond_sizes(
         // that bears a leaflet are the stipe.
         if first && !bearing.contains(&index) {
             stipe += length;
-            stalk = stalk.max(length);
         } else {
             first = false;
             blade += length;
@@ -1870,34 +1854,16 @@ fn frond_sizes(
             outline.push((up / blade, reach));
         }
     }
-    // Floras measure grown fronds: one still unrolling is neither its
-    // outline nor its size yet.
-    let fan =
-        forked(structure, &bearing, drawn).and_then(|fork| fan_sizes(fork, leaflets, drawn, looks));
-    // A fan's arms turn at every joint as they curve back, so it is
-    // unrolled by its pieces' length beside its stipe's (see [`FAN_COILED`]).
-    let unrolled = if fan.is_some() {
-        shortest >= FAN_COILED * stalk
-    } else {
-        (turned <= COILED || shortest >= 0.5 * longest) && rachis_turn(structure, drawn) <= CROZIER
-    };
-    if let Some((length, across, _)) = fan {
-        (blade, width) = (length, across);
-    }
-    let words = match &fan {
-        Some((_, _, words)) => words.clone(),
-        None if blade > 0.0 => outline_shape(&outline, width / blade),
-        None => None,
-    };
-    if unrolled && let Some(words) = words {
+    if blade > 0.0
+        && (turned <= COILED || shortest >= 0.5 * longest)
+        && let Some(words) = outline_shape(&outline, width / blade)
+    {
         tally.kind("leaf_shape", &words);
     }
     let id = drawn.structures[structure as usize].id;
-    if unrolled && blade > 0.0 {
-        tally.add("leaf_length_m", id, 0, blade);
-        tally.add("leaf_width_m", id, 0, width);
-        tally.add("petiole_length_m", id, 0, stipe);
-    }
+    tally.add("leaf_length_m", id, 0, blade);
+    tally.add("leaf_width_m", id, 0, width);
+    tally.add("petiole_length_m", id, 0, stipe);
     // Leaflets drawn as frond cards are the frond's pinnae, each divided
     // again; drawn whole, they are its leaflets.
     let again = leaflets
@@ -1907,140 +1873,9 @@ fn frond_sizes(
     let count = u32::try_from(leaflets.len()).unwrap_or(u32::MAX);
     tally.count(if again > 0 { "pinnae" } else { "leaflets" }, id, 0, count);
     tally.count("division_order", id, 0, 1 + again);
-    tally.kind(
-        "division_pattern",
-        if fan.is_some() { "palmate" } else { "pinnate" },
-    );
+    tally.kind("division_pattern", "pinnate");
     tally.kind("leaf_division", "compound");
     tally.kind("leaf_form", "blade");
-}
-
-/// The most a frond's rachis turns, degrees, from its foot out along any
-/// arm: the angles at its joints added up, where it does not fork.
-fn rachis_turn(structure: u32, drawn: &PlantGraph) -> f64 {
-    let mut children: BTreeMap<u32, u32> = BTreeMap::new();
-    for segment in &drawn.segments {
-        if segment.within == Some(structure)
-            && let Some(parent) = segment.parent
-        {
-            *children.entry(parent).or_default() += 1;
-        }
-    }
-    let mut turn: BTreeMap<u32, f64> = BTreeMap::new();
-    let mut most: f64 = 0.0;
-    for (index, segment) in (0_u32..).zip(&drawn.segments) {
-        if segment.within != Some(structure) {
-            continue;
-        }
-        let here = segment.parent.and_then(|parent| {
-            let before = drawn.segments.get(parent as usize)?;
-            let so_far = *turn.get(&parent)?;
-            if children.get(&parent).copied().unwrap_or(0) > 1 {
-                return Some(so_far);
-            }
-            let (a, b) = (before.end - before.start, segment.end - segment.start);
-            if a.length() <= 0.0 || b.length() <= 0.0 {
-                return Some(so_far);
-            }
-            let cos = (a.dot(b) / (a.length() * b.length())).clamp(-1.0, 1.0);
-            Some(so_far + cos.acos().to_degrees())
-        });
-        let here = here.unwrap_or(0.0);
-        most = most.max(here);
-        turn.insert(index, here);
-    }
-    most
-}
-
-/// The top of a frond's bare stipe where its rachis forks into two or
-/// more arms that bear its leaflets (a pedate blade, as a maidenhair's
-/// "2 equal branches surmounting the stipe"), if it does.
-fn forked(structure: u32, bearing: &BTreeSet<u32>, drawn: &PlantGraph) -> Option<u32> {
-    let mut arms: BTreeMap<u32, u32> = BTreeMap::new();
-    for (index, segment) in (0_u32..).zip(&drawn.segments) {
-        if segment.within == Some(structure)
-            && bearing.contains(&index)
-            && let Some(parent) = segment.parent
-            && !bearing.contains(&parent)
-            && drawn
-                .segments
-                .get(parent as usize)
-                .is_some_and(|p| p.within == Some(structure))
-        {
-            *arms.entry(parent).or_default() += 1;
-        }
-    }
-    arms.into_iter()
-        .find(|&(_, n)| n >= 2)
-        .map(|(fork, _)| fork)
-}
-
-/// A forked frond's blade, a fan of leaflets round the top of its stipe:
-/// its length from there to its farthest leaflet tip (a flora's blade
-/// from its foot to the tip of its longest pinna), its width across, and the shape words its outline reads as,
-/// with cordate (and reniform, broader than long) where its leaflets
-/// reach back past the stipe, as a reniform blade's lobes do.
-fn fan_sizes(
-    fork: u32,
-    leaflets: &[&GraphOrgan],
-    drawn: &PlantGraph,
-    looks: &[Look],
-) -> Option<(f64, f64, Option<String>)> {
-    let top = drawn.segments.get(fork as usize)?.end;
-    let tips: Vec<Vec3> = leaflets
-        .iter()
-        .filter_map(|organ| {
-            leaf_look(organ, looks).map(|(_, size)| organ.position + organ.heading * size)
-        })
-        .collect();
-    if tips.is_empty() {
-        return None;
-    }
-    #[allow(clippy::cast_precision_loss)]
-    let middle = tips.iter().fold(Vec3::ZERO, |sum, &tip| sum + (tip - top)) / tips.len() as f64;
-    let forward = middle.normalize_or(Vec3::ZERO);
-    // Across the fan: in its plane, square to its middle.
-    let arm = drawn
-        .segments
-        .iter()
-        .find(|segment| segment.parent == Some(fork))
-        .map(|segment| segment.end - segment.start)?;
-    let side = forward.cross(arm).cross(forward).normalize_or(Vec3::ZERO);
-    if forward == Vec3::ZERO || side == Vec3::ZERO {
-        return None;
-    }
-    let (mut length, mut low, mut high) = (0.0_f64, 0.0_f64, 0.0_f64);
-    let mut back = false;
-    for &tip in &tips {
-        let (out, across) = ((tip - top).dot(forward), (tip - top).dot(side));
-        length = length.max((tip - top).length());
-        (low, high) = (low.min(across), high.max(across));
-        back |= out < 0.0;
-    }
-    let width = high - low;
-    if length <= 0.0 {
-        return None;
-    }
-    let outline: Vec<(f64, f64)> = tips
-        .iter()
-        .map(|&tip| {
-            (
-                (tip - top).dot(forward).max(0.0) / length,
-                (tip - top).dot(side).abs(),
-            )
-        })
-        .collect();
-    let words = outline_shape(&outline, width / length).map(|words| {
-        let mut all: BTreeSet<&str> = words.split('|').collect();
-        if back {
-            all.insert("cordate");
-            if width > length {
-                all.insert("reniform");
-            }
-        }
-        all.into_iter().collect::<Vec<_>>().join("|")
-    });
-    Some((length, width, words))
 }
 
 /// What a leaf drawn as `shape` is made as (`leaf_form`: a needle, a
