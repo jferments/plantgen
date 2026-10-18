@@ -954,6 +954,15 @@
       "range": [0.0001, 0.5],
       "why": "a grown leaflet's blade, or a fern's pinna, at its widest"
     },
+    "leaflet_incision": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "enum",
+      "values": ["none", "lobed", "cleft"],
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "how deeply each leaflet of a compound leaf is cut, where floras say: not at all, into shallow lobes (a poison oak's oak-like leaflets), or to about halfway"
+    },
     "pinnae": {
       "group": "leaves",
       "organ": "leaf",

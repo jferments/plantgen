@@ -1164,6 +1164,15 @@ pub struct Compound {
     /// Teeth on each side of a leaflet; 0 for entire.
     pub teeth: u32,
     pub petiole: f64,
+    /// Lobes on each side of a lobed leaflet, drawn in place of its
+    /// teeth where `lobe_depth` is above 0; unset or 0 for none.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lobes: Option<u32>,
+    /// How far a lobed leaflet's sinuses cut toward its midrib, a share
+    /// of its half-width: about a third for a lobed leaflet, past half
+    /// for a cleft one.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lobe_depth: Option<f64>,
     /// How the leaflets are set: along a rachis (pinnate, the default) or
     /// from the petiole's tip (palmate).
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1261,6 +1270,8 @@ impl Default for Compound {
             leaflet_width: 0.4,
             teeth: 0,
             petiole: 0.15,
+            lobes: None,
+            lobe_depth: None,
             pattern: None,
             pinnules: None,
             segments: None,
@@ -2905,6 +2916,14 @@ impl Palmate {
 }
 
 impl Compound {
+    /// Each leaflet's lobes a side and their depth, where its leaflets
+    /// are lobed.
+    #[must_use]
+    pub fn leaflet_lobes(&self) -> Option<(u32, f64)> {
+        let (lobes, depth) = (self.lobes.unwrap_or(0), self.lobe_depth.unwrap_or(0.0));
+        (lobes > 0 && depth > 0.0).then_some((lobes, depth))
+    }
+
     /// Length of the longest lateral leaflet of a pinnate leaf divided
     /// once.
     #[must_use]
@@ -2915,8 +2934,13 @@ impl Compound {
     fn aspect(&self) -> f64 {
         let form = crate::divided::Form::of(self);
         if form.pattern == Pattern::Pinnate && form.pinnules == 0 {
-            let length = self.leaflet_length();
-            let terminal = if self.leaflets % 2 == 1 {
+            let mut length = self.leaflet_length();
+            let terminal = if let Some((_, terminal, lateral)) =
+                crate::divided::trifoliolate(&form, self.leaflets, form.petiole, length)
+            {
+                length = lateral;
+                0.5 * terminal * self.leaflet_width
+            } else if self.leaflets % 2 == 1 {
                 0.5 * length * form.terminal_size * self.leaflet_width
             } else {
                 0.0
@@ -2930,6 +2954,7 @@ impl Compound {
         crate::divided::reach(self) * 2.0 + 0.03
     }
 
+    #[allow(clippy::too_many_lines)]
     fn validate(&self) -> Result<(), String> {
         let form = crate::divided::Form::of(self);
         let check = |field: &str, value: f64, low: f64, high: f64| {
@@ -2997,6 +3022,7 @@ impl Compound {
         let set = |value: Option<f64>| value.unwrap_or(f64::NAN);
         for (field, value, low, high) in [
             ("confluent", self.confluent, 0.0, 1.0),
+            ("lobe_depth", self.lobe_depth, 0.0, 0.85),
             ("angle", self.angle, 20.0, 90.0),
             ("pinnule_angle", self.pinnule_angle, 20.0, 90.0),
             ("segment_angle", self.segment_angle, 20.0, 90.0),

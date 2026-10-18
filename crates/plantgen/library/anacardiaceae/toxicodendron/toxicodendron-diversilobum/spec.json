@@ -97,6 +97,7 @@
     "leaf_shape": "ovate",
     "leaf_apex": "obtuse",
     "leaf_margin": "dentate",
+    "leaflet_incision": "lobed",
     "inflorescence": "panicle",
     "flowering_position": "lateral",
     "inflorescence_posture": "nodding",
@@ -262,6 +263,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: variously lobed or toothed, or rarely entire; FEIS: usually resembling oak leaves."
+    },
+    "traits.leaflet_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: variously lobed or toothed, or rarely entire; FEIS: usually resembling oak leaves. Stated lobed, as the oak-like leaflets are drawn; the toothed form stays in leaf_margin."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",

@@ -1084,6 +1084,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("leaflet_width", Number),
                 ("teeth", Count),
                 ("petiole", Number),
+                ("lobes", Count),
+                ("lobe_depth", Number),
                 ("pattern", Word),
                 ("pinnules", Count),
                 ("segments", Count),

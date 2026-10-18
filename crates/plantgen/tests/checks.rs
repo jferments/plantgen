@@ -302,11 +302,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "rhus-aromatica",
-        "petiole_length_m",
-        "its leaf is trifoliolate and the compound card sets its one lateral pair halfway up the rachis, so the stalk reads 3.3 to 3.7 cm to that pair against Abrams' 1 to 2.5 cm, until the card sets a lone pair at the top of the petiole",
-    ),
-    (
         "rhus-glabra",
         "fruit_size_m",
         "its panicle's drupes are drawn about 0.6 mm across against the 4 mm Abrams gives: a woody plant's panicle sizes its units within the branch frame, so a large panicle draws each unit small, until the cluster layout sizes a unit by its trait",

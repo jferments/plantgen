@@ -985,6 +985,8 @@ fn leaflet_fade(t: f64) -> f64 {
 const TEETH: (f64, f64) = (0.08, 0.95);
 const LEAFLET_TEETH: (f64, f64) = (0.14, 0.92);
 const LOBES: (f64, f64) = (0.06, 0.9);
+/// How rounded a lobed leaflet's lobes are: blunt, as an oak's.
+const LEAFLET_LOBE_ROUND: f64 = 0.7;
 /// The share of a palmate lobe, along it, that its teeth form in.
 const LOBE_TEETH: (f64, f64) = (0.42, 0.92);
 /// How teeth and lobes are drawn (see [`Drawn`]): a tooth's sinus moves
@@ -1065,6 +1067,22 @@ fn lobed_width(s: &Lobed, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
 fn leaflet_width(s: &Compound, form: &Form, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
     let profile = outline_profile(s.outline.as_deref(), t, form.widest, form.base, form.tip);
     let mut width = s.leaflet_width * length * 0.5 * profile;
+    if let Some((_, depth)) = s.leaflet_lobes() {
+        // A lobed leaflet's margin is its lobes, as a pinnately lobed
+        // leaf's is, over its own outline.
+        if let Some(margin) = margin
+            && (LOBES.0..LOBES.1).contains(&t)
+        {
+            let drawn = Drawn {
+                round: LEAFLET_LOBE_ROUND,
+                ..LOBE
+            };
+            let fall = margin.fall(t, drawn, |share| lobe_flank(share, LEAFLET_LOBE_ROUND));
+            let fade = math::sin(PI * (t - LOBES.0) / (LOBES.1 - LOBES.0));
+            width *= 1.0 - depth * fall * math::pow(fade, 0.4);
+        }
+        return width;
+    }
     if let Some(margin) = margin {
         let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
         width -= (0.036 * length * leaflet_fade(t)).min(DEEPEST * width) * fall;
@@ -1133,6 +1151,8 @@ fn shape_seed(shape: &Shape) -> u64 {
         text = text.replace(", round: 0.0, ", ", ");
     }
     for field in [
+        "lobes",
+        "lobe_depth",
         "pattern",
         "pinnules",
         "segments",
@@ -1219,7 +1239,8 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
             Some(GrownLeaf {
                 layout: Some(divided::layout(s)),
                 ..pinnate_leaf(
-                    (s.teeth, LEAFLET_TEETH),
+                    s.leaflet_lobes()
+                        .map_or((s.teeth, LEAFLET_TEETH), |(lobes, _)| (lobes, LOBES)),
                     &|t| leaflet_width(s, &form, 1.0, t, None),
                     &|t, margin| leaflet_width(s, &form, 1.0, t, Some(margin)),
                     (0.5 * s.leaflet_width + 0.02, Growth::default()),
