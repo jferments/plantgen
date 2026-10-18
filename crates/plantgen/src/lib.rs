@@ -699,10 +699,20 @@ pub mod venation;
 /// blunt petals keep their shoulders; ripening fruit pass through
 /// `fruit_colour_ripening`, and a follicle's seeds hang on threads
 /// `fruit_seed_thread_m` long (107 is leaf zones and veins, #191).
-/// 109: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// 109: a fern's frond is green while it unrolls and turns to its stipe's
+/// colour after (the L-system's `young` and the appearance's `young_axis`,
+/// fern program revision 12), a crozier is scaly only where its stipe is
+/// scaly all along, its pinnae lie along its coil, and a ternate frond
+/// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (108
+/// is magnoliid fruit, #202).
+/// 110: each pinna in a fern's crozier is rolled as its frond is (fern
+/// program revision 13): a short green coil of its own on each side of the
+/// rachis while coiled, its card small until it unrolls (109 is green
+/// croziers and the eagle's claw, #186).
+/// 111: 39 species state their leaf apex as FNA, Flora of China or FEIS
 /// give it, so their blades narrow to the stated tip; six of them
 /// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
 /// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
-/// their stated leaf shape where a hand-drawn profile stood (108 is
-/// magnoliid fruit, #202).
-pub const GENERATOR_REVISION: u32 = 109;
+/// their stated leaf shape where a hand-drawn profile stood (110 is
+/// rolled crozier pinnae, #197).
+pub const GENERATOR_REVISION: u32 = 111;
