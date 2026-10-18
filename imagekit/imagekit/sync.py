@@ -19,6 +19,7 @@ store lacks, checks each file's hash, and rebuilds the index.
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import os
 import shlex
@@ -84,6 +85,8 @@ def pgio_command() -> list[str]:
     here = Path(__file__).resolve().parents[2]  # the plantgen checkout
     for d in (here.parent / "plantgen-io", Path.home() / "code" / "plantgen-io"):
         if (d / "uploader" / "pgio" / "cli.py").exists():
+            if importlib.util.find_spec("boto3") is None:
+                raise SystemExit("pgio needs boto3: python3 -m pip install boto3")
             boot = f"import sys; sys.path.insert(0, {str(d / 'uploader')!r}); from pgio.cli import main; main()"
             return [sys.executable, "-c", boot]
     raise SystemExit("pgio not found: install it (pipx install ~/code/plantgen-io/uploader) or set IMAGEKIT_PGIO")

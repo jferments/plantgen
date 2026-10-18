@@ -114,6 +114,14 @@ class Store:
         d = self.batch_dir(name) if kind == "batch" else self.run_dir(name)
         return (d / SEALED).exists()
 
+    def unsealed(self, kind: str, base: str) -> str:
+        """`base`, or `base-2`, `base-3`, ... if it is already on data.plantgen.io (a default name only)."""
+        name, n = base, 1
+        while self.sealed(kind, name):
+            n += 1
+            name = f"{base}-{n}"
+        return name
+
     def batches(self) -> list[str]:
         d = self.root / "sources" / "images"
         return sorted(p.name for p in d.iterdir() if p.is_dir()) if d.exists() else []

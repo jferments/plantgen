@@ -129,6 +129,21 @@ class TestSync(Base):
                    "--taxon", "Acer circinatum", "--batch", "own-2")
         self.assertEqual(json.loads(self.quiet("push"))["batches"], ["own-2"])
 
+    def test_a_default_name_already_pushed_gets_a_suffix(self):
+        import time
+        photos = self.tmp / "more"
+        photos.mkdir()
+        (photos / "q.jpg").write_bytes(picture(300))
+        args = ("fetch", "folder", str(photos), "--licence", "cc0", "--creator", "Jay", "--taxon", "Acer circinatum")
+        self.quiet(*args)
+        day = time.strftime("%Y-%m-%d")
+        self.assertIn(f"folder-{day}", json.loads(self.quiet("push"))["batches"])
+        (photos / "r.jpg").write_bytes(picture(301))
+        self.quiet(*args)
+        with Store(self.store_dir) as s:
+            self.assertIn(f"folder-{day}-2", s.batches())
+            self.assertEqual(s.unsealed("batch", f"folder-{day}"), f"folder-{day}-2")
+
     def test_pull_checks_hashes(self):
         self.quiet("push")
         man = json.loads((self.server_dir / "private/sources/images/own/manifest.json").read_text())
@@ -142,4 +157,3 @@ class TestSync(Base):
 class QuietHandler(SimpleHTTPRequestHandler):
     def log_message(self, *_):
         pass
-

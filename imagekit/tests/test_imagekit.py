@@ -249,8 +249,14 @@ class Analyses(Base):
         rows = [{"sha256": s, "analyzer": d, "out": {"usable": True}, "usd": 0.00011} for s in shas[:3]]
         self.assertEqual(analyzer.import_analyses(store, "pilot", rows), {"added": 3, "skipped": 0})
         self.assertEqual(analyzer.import_analyses(store, "pilot", rows), {"added": 0, "skipped": 3})
+        key = store.db.execute("select key from refs where sha256=?", (shas[3],)).fetchone()[0]
+        other = {"sha256": "0" * 64, "analyzer": d, "out": {"usable": True}}  # hashed from the original bytes
+        self.assertEqual(analyzer.import_analyses(store, "pilot-2", [other]), {"added": 0, "skipped": 1})
+        self.assertEqual(analyzer.import_analyses(store, "pilot-2", [{**other, "key": key}]),
+                         {"added": 1, "skipped": 0})
+        self.assertEqual(store.missing(analyzer.analyzer_id(d), [shas[3]]), [])
         aid = analyzer.analyzer_id(d)
-        self.assertEqual(store.missing(aid, shas), [shas[3]])
+        self.assertEqual(store.missing(aid, shas), [])
         self.assertEqual(len(store.missing(analyzer.analyzer_id({**d, "model": "other"}), shas)), 4)
         before = store.stats()
         store.close()
@@ -258,7 +264,7 @@ class Analyses(Base):
         store = Store(self.store_dir)
         store.reindex()
         self.assertEqual(store.stats(), before)
-        self.assertEqual(store.missing(aid, shas), [shas[3]])
+        self.assertEqual(store.missing(aid, shas), [])
 
 
 @unittest.skipUnless(__import__("importlib").util.find_spec("jsonschema"), "jsonschema not installed")

@@ -54,7 +54,8 @@ def register(store: Store, defn: dict) -> str:
 def import_analyses(store: Store, run: str, rows: list[dict], run_info: dict | None = None) -> dict:
     """Add analyses made elsewhere (a pilot, a chat session) as a run, so they are never redone.
 
-    Each row: sha256 (or a source `key` the store holds), region (default 0),
+    Each row: sha256 or a source `key` the store holds (the key is used when
+    the sha256 is not one the store holds), region (default 0),
     analyzer (a definition dict, or the id of one already registered), and
     out (the answer). Optional: status, confidence, tokens_in, tokens_out,
     usd, seconds, raw.
@@ -63,7 +64,7 @@ def import_analyses(store: Store, run: str, rows: list[dict], run_info: dict | N
     out, skipped = [], 0
     for r in rows:
         sha = r.get("sha256")
-        if not sha and r.get("key"):
+        if (not sha or not store.has_image(sha)) and r.get("key"):  # e.g. hashed from the source's original bytes
             hit = store.db.execute("select sha256 from refs where key=?", (r["key"],)).fetchone()
             sha = hit[0] if hit else None
         if not sha or not store.has_image(sha):

@@ -114,7 +114,9 @@ imagekit import-analyses pilot.jsonl --run pilot-2026-10-14
 
 `missing` lists the only images a run may send. `import-analyses` takes
 in answers made elsewhere, such as a pilot or a chat session, so they are
-not paid for twice.
+not paid for twice. A row names its image by `sha256` or by its source
+`key` (such as `inat:5000`); answers hashed from a source's original bytes
+match by key once that photo is fetched.
 
 ## Run a model
 
@@ -235,7 +237,8 @@ and `PLANTGEN_UPLOAD_SECRET`, from plantgen-io `tools/cloud-upload-key.sh`).
 A run with Claude batches still to collect is skipped.
 
 A pushed batch or run is sealed: it takes no more rows, so the copy on the
-server never goes stale. Later work goes in a new batch or run, and nothing
+server never goes stale. Later work goes in a new batch or run (a default
+name already pushed or pulled becomes `<name>-2`, `-3`, ...), and nothing
 already answered is sent again, because `missing` sees the answers in every
 run.
 

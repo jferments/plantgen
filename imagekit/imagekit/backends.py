@@ -264,4 +264,3 @@ def load(name: str, overrides: dict | None = None, config: Path | None = None):
     if kind == "openai" and not cfg.get("base_url"):
         raise SystemExit(f"backend {name!r} needs base_url (--base-url)")
     return {"openai": OpenAICompat, "anthropic": AnthropicAPI}[kind](cfg)
-

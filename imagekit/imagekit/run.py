@@ -271,7 +271,7 @@ def cmd_run(args, store: Store) -> None:
             raise SystemExit("the cost is unknown; rerun with --limit 5 to measure it, or --yes")
         if est is not None and est > ASK_OVER_USD and not args.yes:
             raise SystemExit(f"estimated ${est:.2f}: rerun with --yes to go ahead (and --max-usd to cap it)")
-    run = args.run or f"{job.task}-{args.backend}-{time.strftime('%Y-%m-%d')}"
+    run = args.run or store.unsealed("run", f"{job.task}-{args.backend}-{time.strftime('%Y-%m-%d')}")
     check_open(store.run_dir(run))
     analyzer.register(store, job.definition)
     if job.backend is None:

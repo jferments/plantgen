@@ -69,7 +69,7 @@ def embed(store: Store, name: str, *, batches=None, run: str | None = None, devi
         todo = todo[:limit]
     if not todo:
         return {"model": name, "analyzer": aid, "embedded": 0, "failed": 0, "seconds": 0.0}
-    run = run or f"embed-{name}-{time.strftime('%Y-%m-%d')}"
+    run = run or store.unsealed("run", f"embed-{name}-{time.strftime('%Y-%m-%d')}")
     check_open(store.run_dir(run))
     t_load = time.perf_counter()
     enc = vectors.load_embedder(name, revision, defn["params"]["image_px"], device)

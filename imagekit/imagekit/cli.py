@@ -98,7 +98,8 @@ def cmd_fetch(args, store) -> None:
     if args.source == "folder":
         args.licences |= {licences.norm(args.licence)}
         args.licence = licences.norm(args.licence)
-    batch = args.batch or f"{args.source if args.source != 'inat-dump' else 'inat'}-{time.strftime('%Y-%m-%d')}"
+    batch = args.batch or store.unsealed(
+        "batch", f"{args.source if args.source != 'inat-dump' else 'inat'}-{time.strftime('%Y-%m-%d')}")
     check_open(store.batch_dir(batch))
     dl = Downloader(store, batch, max_mb=args.max_mb, dry_run=args.dry_run, allowed=args.licences)
     dl.note_command(sys.argv[1:])
