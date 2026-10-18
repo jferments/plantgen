@@ -30,7 +30,6 @@
       "leaf_angle": 30,
       "raceme": 0.04,
       "flowers": 14,
-      "flower_size": 0.16,
       "pedicel": 0.0,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -90,7 +89,6 @@
           "aspect": 0.3
         },
         "inflorescence": {
-          "size": 0.067,
           "spread": 40,
           "taper": 0.2
         },
@@ -285,7 +283,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "White bog orchid's values, changed by hand for rattlesnake plantain: a basal rosette (FEIS, Reeves 2006) drawn as six leaves held nearly flat, as in research-grade iNaturalist photos (read 2026-10-17), 2-5 small leaves low on the stem drawn as 3, and a dense raceme of 14 small flowers. Not fitted to measurements."
+      "note": "White bog orchid's values, changed by hand for rattlesnake plantain: a basal rosette (FEIS, Reeves 2006) drawn as six leaves held nearly flat, as in research-grade iNaturalist photos (read 2026-10-17), 2-5 small leaves low on the stem drawn as 3, and a dense raceme of 14 small flowers, as long as its stated inflorescence (the bog orchid's 16 cm raceme, longer than the 12 cm FEIS gives, no longer set by hand). Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

@@ -1144,6 +1144,15 @@
       "optional": true,
       "why": "how an inflorescence holds itself: upright, bent over near its tip, or hanging"
     },
+    "inflorescence_outline": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["flat_topped", "rounded", "globose"],
+      "when": {"inflorescence": ["corymb"]},
+      "optional": true,
+      "why": "the shape a corymb's flowers make together: level across its top, a dome, or a ball, as a mophead hydrangea's"
+    },
     "inflorescence_length_m": {
       "group": "flowers",
       "organ": "inflorescence",

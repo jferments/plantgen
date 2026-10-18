@@ -23,9 +23,9 @@
       "map": {"inflorescence": {"raceme": {}, "spike": {}, "catkin": {}, "corymb": {}, "umbel": {}, "compound_umbel": {}, "panicle": {}, "cyme": {}, "scorpioid": {}, "head": {}, "spadix": {}}},
       "why": "A tree's or shrub's flowers borne in clusters of known length are drawn as the clusters; solitary flowers stay single."
     },
-    "appearance.organs.*.inflorescence.size": {
-      "rule": "clamp(flower_size_m / (inflorescence_length_m + first(peduncle_length_m, 0)), 0.005, 1)",
-      "why": "A cluster's flower is as wide, for the length of the cluster and its peduncle, as floras measure them."
+    "appearance.organs.*.inflorescence.unit": {
+      "rule": "clamp(first(flower_size_m, fruit_size_m) / (inflorescence_length_m + first(peduncle_length_m, 0)), 0.0005, 1)",
+      "why": "A cluster's flower is as wide, for the length of the cluster and its peduncle, as floras measure them, whichever axis bears it: a panicle's or compound umbel's flowers sit on its branches. Where no flower size is stated its units are as long as its fruit, which ripen in their place."
     },
     "generator.params.flower_size": {
       "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m + first(peduncle_length_m, 0), flower_size_m)"}, "solitary": {"rule": "flower_size_m"}}},
@@ -58,9 +58,9 @@
       "colour": "leaf_colour",
       "why": "A fruit's unripe share, and its stalk, are drawn in the green of the plant's leaves until a colour of its own is stated."
     },
-    "appearance.organs.fruit.inflorescence.size": {
-      "rule": "clamp(fruit_size_m / (inflorescence_length_m + first(peduncle_length_m, 0)), 0.005, 1)",
-      "why": "A cluster's fruit is as long, for the length of the cluster and its peduncle, as floras measure them."
+    "appearance.organs.fruit.inflorescence.unit": {
+      "rule": "clamp(fruit_size_m / (inflorescence_length_m + first(peduncle_length_m, 0)), 0.0005, 1)",
+      "why": "A cluster's fruit is as long, for the length of the cluster and its peduncle, as floras measure them, whichever axis bears it."
     },
     "appearance.organs.*.season.flower_look.size": {
       "rule": "clamp(flower_size_m / fruit_size_m, 0.05, 4)",
@@ -82,6 +82,10 @@
     "appearance.organs.*.inflorescence.branches": {
       "rule": "clamp(round(inflorescence_branches), 0, 60)",
       "why": "A compound cluster bears the inflorescence's primary branches, up to 60."
+    },
+    "appearance.organs.*.inflorescence.dome": {
+      "map": {"inflorescence_outline": {"flat_topped": 0, "rounded": 90, "globose": 180}},
+      "why": "A flat-topped corymb's flowers stand level; a rounded one's lie on a half sphere, a globose one's round a ball."
     },
     "appearance.organs.*.inflorescence.droop": {
       "map": {"inflorescence_posture": {"erect": 0, "nodding": 90, "pendent": 180}},
@@ -234,8 +238,8 @@
       "why": "A berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
     },
     "appearance.organs.*.inflorescence.peduncle": {
-      "rule": "clamp(peduncle_length_m / (peduncle_length_m + inflorescence_length_m), 0, 0.9)",
-      "why": "A cluster stands on a bare stalk, its peduncle, its share of the stalk and the cluster together; a cluster's units or branches begin above it."
+      "rule": "clamp(first(peduncle_length_m, 0) / (first(peduncle_length_m, 0) + inflorescence_length_m), 0, 0.9)",
+      "why": "A cluster stands on a bare stalk, its peduncle, its share of the stalk and the cluster together; a cluster's units or branches begin above it. Where no peduncle is stated the organ is the cluster alone, as long as floras measure it from its lowest unit or branch, so its units begin at its foot."
     },
     "appearance.organs.*.shape.spur": {
       "template": "flower",
@@ -292,7 +296,7 @@
     "rules.appearance.organs.*.inflorescence.pedicel": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's stalk in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): as long as floras measure the pedicel, for the cluster's length."},
     "rules.appearance.organs.flower.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.bloom.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
-    "rules.appearance.organs.*.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
+    "rules.appearance.organs.*.inflorescence.unit": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.generator.params.fruit_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a fruit (morphology terms to drawing rules, 2026-10-16): a herb's fruit card is as long as the stated ripe fruit at its longest (fruit_size_m), where before every herb drew the program's 6 cm."},
     "rules.generator.params.fruit_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a fruit (morphology terms to drawing rules, 2026-10-16): a climber's, column's or epiphyte's fruit is as long as the stated ripe fruit at its longest (fruit_size_m)."},
     "rules.appearance.organs.*.shape.kind": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille's fruit types (pp. 162-163 of the PDF), with Simpson's Moraceae multiples: an achene, a cypsela (an achene from an inferior ovary) and a caryopsis (a grain) are small dry one-seeded fruits that do not open, a nut the same with a hard wall, so each is drawn as a plain ellipsoid; a schizocarp splits lengthwise into one-seeded mericarps, drawn ribbed lengthwise as a capsule; an aggregate fruit comes from the many free pistils of one flower and a multiple fruit from the flowers of a whole inflorescence, each a cluster of small fleshy units, drawn as drupelets."},
@@ -304,7 +308,8 @@
     "rules.appearance.organs.fruit.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect."},
     "rules.appearance.organs.*.season": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a plant's year from the months floras give, a choice of the model's (seasonal looks, 2026-10-16): its flowers show in the months it flowers in and its fruit in the months it is ripe in, as the season rules set their days, where they had shown all year and never fruited."},
     "rules.appearance.organs.fruit.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours unripe fruit, a choice of the model's (seasonal looks, 2026-10-16): green as the leaves are, since floras state the ripe colour and seldom the unripe one."},
-    "rules.appearance.organs.fruit.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster in fruit, a choice of the model's (seasonal looks, 2026-10-16): each fruit as long, for the cluster's length, as floras measure the fruit, as its flowers are drawn as wide as they measure the flower."},
+    "rules.appearance.organs.*.inflorescence.dome": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a corymb's outline, a choice of the model's (batch 3 review, 2026-10-18): floras word a corymb flat-topped, rounded (convex) or globose, as Dendrology (2019) p. 323 does a mophead hydrangea's; the three are drawn as tips level, on a half sphere and round a ball."},
+    "rules.appearance.organs.fruit.inflorescence.unit": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster in fruit, a choice of the model's (seasonal looks, 2026-10-16): each fruit as long, for the cluster's length, as floras measure the fruit, as its flowers are drawn as wide as they measure the flower."},
     "rules.appearance.organs.*.season.flower_look.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a flower against its fruit, a choice of the model's (seasonal looks, 2026-10-16): a stage's look is sized as a share of the organ in fruit, so a flower is the ratio of the stated flower and fruit sizes (flower_size_m, fruit_size_m), whether it is a cluster's unit or a lone flower."},
     "rules.appearance.organs.*.season.opening": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster that flowers and fruits at once, a choice of the model's (seasonal looks, 2026-10-16): where the stated fruiting months (fruiting_months) begin before the flowering months (flowering_months) end, a cluster's units open one after another from the first ripe month to the end of flowering, so the plant shows flowers and ripe fruit together as the floras describe."},
     "rules.appearance.organs.*.season.fruit_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes an organ in fruit, a choice of the model's (seasonal looks, 2026-10-16): the programs grow a lone flowering organ as wide as its flower (flower_size_m) and a cluster as long as its inflorescence (inflorescence_length_m), so in fruit the organ is scaled to the stated fruit (fruit_size_m): a lone one by the ratio of fruit to flower, a cluster only where its fruit outgrow it, to 1.3 times the fruit's length, the room an umbel's rays leave a unit on its stalk."},

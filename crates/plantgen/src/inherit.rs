@@ -714,7 +714,7 @@ fn rivals(field: &str) -> Vec<&'static str> {
 /// (`crate::looks::Inflorescence`): every key but its `branch` and its
 /// `stalk` and `spathe_colour` colours. The looks module's tests hold this
 /// to the key.
-pub const INFLORESCENCE: [(&str, Field); 15] = {
+pub const INFLORESCENCE: [(&str, Field); 17] = {
     use Field::{Count, Number, Word};
     [
         ("kind", Word),
@@ -728,6 +728,8 @@ pub const INFLORESCENCE: [(&str, Field); 15] = {
         ("size", Number),
         ("taper", Number),
         ("droop", Number),
+        ("dome", Number),
+        ("unit", Number),
         ("spathe", Number),
         ("spathe_width", Number),
         ("spathe_hood", Number),
@@ -885,8 +887,17 @@ fn season_read(spec: &Map<String, Value>, at: &str, key: &str) -> Option<Value> 
     )
 }
 
-/// What the inflorescence's `key` takes.
+/// What the inflorescence's `key` takes: one of [`INFLORESCENCE`], on its
+/// own axis or, after `branch.`, on its branches (and theirs).
 fn inflorescence_takes(key: &str) -> Result<Field, String> {
+    let mut key = key;
+    // A cluster nests three levels deep (`crate::clusters::LEVELS`).
+    for _ in 1..3 {
+        match key.strip_prefix("branch.") {
+            Some(rest) => key = rest,
+            None => break,
+        }
+    }
     INFLORESCENCE
         .iter()
         .find(|(name, _)| *name == key)
@@ -2912,6 +2923,12 @@ impl Ruled<'_> {
         value: &Value,
     ) -> Option<Value> {
         if self.at.starts_with(BODIES) {
+            return None;
+        }
+        // A cluster's unit is a share of its organ, whose length varies
+        // part by part with the range the share divides by, so the unit
+        // keeps the flower's or fruit's stated size as one share.
+        if self.at.ends_with(".inflorescence.unit") {
             return None;
         }
         let varying: Vec<(&String, [f64; 5])> = inputs

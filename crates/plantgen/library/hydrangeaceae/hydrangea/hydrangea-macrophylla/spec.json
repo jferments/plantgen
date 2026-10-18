@@ -90,13 +90,14 @@
     "leaf_margin": "serrate",
     "inflorescence": "corymb",
     "inflorescence_posture": "erect",
+    "inflorescence_outline": "globose",
     "inflorescence_length_m": {
       "min": 0.1,
       "max": 0.2
     },
     "units_per_inflorescence": {
-      "min": 40,
-      "max": 100
+      "min": 80,
+      "max": 200
     },
     "flower_size_m": {
       "min": 0.015,
@@ -230,6 +231,11 @@
       "source": "dendrology",
       "note": "Idžojtić, Dendrology (2019) p. 323, Hydrangea macrophylla: corymb terminal, erect."
     },
+    "traits.inflorescence_outline": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 323, Hydrangea macrophylla: inflorescence 10-20 cm in diameter, globose in the Hortensia Group (mopheads), all its flowers sterile, as the photos show."
+    },
     "traits.inflorescence_length_m": {
       "evidence": "SourceInferred",
       "source": "dendrology",
@@ -238,7 +244,7 @@
     "traits.units_per_inflorescence": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "40 to 100 showy sterile flowers in a mophead, set by hand from iNaturalist photos (observations 177154494, 318011531, 388065803, 177154496, 89309857, 177447706, 328637493, 330196386): the sources read give no count or measure."
+      "note": "40 to 100 showy sterile flowers on the side of a mophead that faces the camera, so about 80 to 200 round the whole ball, set by hand from iNaturalist photos (observations 177154494, 318011531, 388065803, 177154496, 89309857, 177447706, 328637493, 330196386): the sources read give no count or measure."
     },
     "traits.flower_size_m": {
       "evidence": "SourceInferred",

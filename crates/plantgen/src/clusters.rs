@@ -23,7 +23,16 @@
 //!   **catkin** take $`p = 0`$;
 //! - a **corymb** sets its nodes at $`y_k = y_0 + (1 - s - y_0) q_k`$, each
 //!   pedicel $`\max\big((1 - y_k)/\max(\cos\sigma, 0.2) - s\,t_k,\ 0\big)`$
-//!   long, so every unit's tip is level with the organ's;
+//!   long, so every unit's tip is level with the organ's; with a `dome`
+//!   $`\Theta`$ above 0 its units instead point out from a sphere of
+//!   radius $`R = \tfrac12 (1 - y_0)/\sin\min(\Theta, \tfrac\pi2)`$ whose
+//!   top is the organ's tip, unit $`i`$ at the polar angle
+//!   $`\theta_i = \arccos\big(1 - q_i(1 - \cos\Theta)\big)`$ (equal
+//!   areas over the cap, $`q_i = (i + \tfrac12)/n`$), turned
+//!   $`\theta + i\delta`$, its tip (a flower's or head's face) on the
+//!   sphere and its pedicel leaving
+//!   the axis at $`y_0 + (c - y_0)(1 - \theta_i/\Theta)`$, $`c`$ the
+//!   sphere's centre, so the rim's pedicels leave lowest;
 //! - an **umbel** sets its pedicels from $`y_u = y_0 (1 - s)`$, unit $`i`$
 //!   ($`q_i = (i + \tfrac12)/n`$) leaning $`\alpha_i = \sigma\sqrt{q_i}`$,
 //!   turned $`\theta + i\delta`$, on a pedicel
@@ -37,11 +46,13 @@
 //!   it, each turned $`\delta`$ on from its parent, leaning $`\sigma`$ from
 //!   the cluster's axis and $`1 - \tau`$ as long as its parent, each
 //!   ending in a unit and forking again, order by order, until $`n`$ units
-//!   are placed (those of the last order spread evenly over its places);
+//!   are placed (those of the last order spread evenly over its places),
+//!   the axis's own unit at the top of the peduncle, every unit $`s`$ long;
 //!   a **scorpioid** is a cyme forking once at each node, always to the
 //!   same side, each internode turned $`\min(\sigma, \pi/(n - 1))`$ from
 //!   the last and 0.9 as long, so its units lie on a coil. Both are scaled
-//!   so that their highest unit reaches 1.
+//!   so that their highest unit reaches 1, a cyme from its own unit and a
+//!   scorpioid from its first node.
 //!
 //! Where `branches` is above 0 the axis bears that many branches in place
 //! of units, placed as units would be, each laid out as `branch` in a frame
@@ -218,6 +229,8 @@ pub struct Cluster {
     pub taper: f64,
     /// Degrees.
     pub droop: f64,
+    /// Degrees of arc a corymb's units cover round its top; 0 is flat.
+    pub dome: f64,
     pub stalk: [f32; 3],
     /// The spathe's length, a share of the axis; 0 where there is none
     /// (always on a branch).
@@ -234,7 +247,34 @@ impl Cluster {
     /// The cluster `spec` describes, its defaults filled in.
     #[must_use]
     pub fn of(spec: &Inflorescence) -> Self {
-        Self::filled(spec, ClusterKind::Raceme, None, STALK, 1)
+        let mut cluster = Self::filled(spec, ClusterKind::Raceme, None, STALK, 1);
+        if let Some(unit) = spec.unit {
+            cluster.size_units(spec, unit, spec.flowers.is_some());
+        }
+        cluster
+    }
+
+    /// A unit's length over the organ, `unit`, sizes the innermost axis's
+    /// units, unless that axis sets its own: its share of each axis above
+    /// it. Where nothing counts them they are counted again from that size.
+    fn size_units(&mut self, given: &Inflorescence, unit: f64, counted: bool) {
+        let size = self.size;
+        if let Some(branch) = self.branch.as_deref_mut() {
+            let empty = Inflorescence::default();
+            let inner = given.branch.as_deref().unwrap_or(&empty);
+            branch.size_units(inner, unit / size.max(1e-6), counted);
+            return;
+        }
+        if given.size.is_some() {
+            return;
+        }
+        self.size = unit.clamp(0.005, 1.0);
+        if given.flowers.is_none() && !counted && self.kind.along_its_axis() {
+            self.flowers = Self::packed(self.size, self.peduncle, self.per_node);
+        }
+        if given.pedicel.is_none() && self.kind == ClusterKind::Raceme {
+            self.pedicel = self.size;
+        }
     }
 
     /// `spec` at nesting `level`, taking `kind`, `flowers` and `stalk`
@@ -305,6 +345,7 @@ impl Cluster {
             size,
             taper: spec.taper.unwrap_or(0.0),
             droop: spec.droop.unwrap_or(0.0),
+            dome: spec.dome.unwrap_or(0.0),
             stalk,
             spathe: if level == 1 {
                 spec.spathe.unwrap_or(0.0)
@@ -427,8 +468,10 @@ impl Cluster {
             ("pedicel", spec.pedicel, 0.0, 1.0),
             ("peduncle", spec.peduncle, 0.0, 1.0),
             ("size", spec.size, 0.005, 1.0),
+            ("unit", spec.unit, 0.0005, 1.0),
             ("taper", spec.taper, 0.0, 1.0),
             ("droop", spec.droop, 0.0, 180.0),
+            ("dome", spec.dome, 0.0, 180.0),
             ("spathe", spec.spathe, 0.0, 3.0),
             ("spathe_width", spec.spathe_width, 0.1, 1.5),
             ("spathe_hood", spec.spathe_hood, 0.0, 120.0),
@@ -1480,6 +1523,42 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                 });
             }
         }
+        ClusterKind::Corymb if cluster.dome > 0.0 => {
+            // Tips on a sphere's cap as wide as the cluster is long, its
+            // top at the organ's tip; units spread over it by equal area,
+            // each on a pedicel from the axis, the outer ones lower on it.
+            let cap = math::radians(cluster.dome.min(180.0));
+            let room = 1.0 - y0;
+            let radius = 0.5 * room / math::sin(cap.min(math::PI / 2.0));
+            let centre = Vec3::Y * (1.0 - radius);
+            for i in 0..n {
+                let k = f64::from(i);
+                let q = (k + 0.5) / f64::from(n);
+                let polar = math::acos(1.0 - q * (1.0 - math::cos(cap)));
+                let around = turn + delta * k;
+                let ring = math::sin(polar);
+                let direction = Vec3::new(
+                    ring * math::cos(around),
+                    math::cos(polar),
+                    ring * math::sin(around),
+                );
+                let length = s * (1.0 - tau * q);
+                // A flower's or head's face on the sphere, a fruit's tip.
+                let depth = if unit.faces() { 0.5 * length } else { length };
+                let base = centre + direction * (radius - depth).max(0.0);
+                let attach = Vec3::Y * (y0 + (centre.y - y0).max(0.0) * (1.0 - polar / cap));
+                slots.push(Slot {
+                    anchor: attach.y,
+                    attach,
+                    base,
+                    direction,
+                    length,
+                    radial: radial(around),
+                    // From the rim inward, as a corymb opens.
+                    rank: 1.0 - share(i, n),
+                });
+            }
+        }
         ClusterKind::Corymb => {
             for i in 0..n {
                 let qk = q(i / m);
@@ -1587,13 +1666,12 @@ fn fit(units: &[(Vec3, Vec3, f64)], y0: f64) -> f64 {
 }
 
 /// A node of a cyme as first laid out, its first internode 1 long: its
-/// place, the way its branch leans, its turn, its parent and its scale.
+/// place, the way its branch leans, its turn, its parent and its order.
 struct Node {
     at: Vec3,
     direction: Vec3,
     around: f64,
     parent: usize,
-    scale: f64,
     order: u32,
 }
 
@@ -1613,7 +1691,6 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
         direction: Vec3::Y,
         around: turn,
         parent: 0,
-        scale: 1.0,
         order: 0,
     }];
     let (mut first, mut count) = (0_usize, 1_usize);
@@ -1642,20 +1719,21 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
                 direction,
                 around,
                 parent,
-                scale,
                 order,
             });
         }
         first = start;
         count = placed;
     }
+    // The axis's own unit ends the peduncle, and its branches rise from
+    // just below it, so the cyme runs from there to its highest tip.
     let units: Vec<(Vec3, Vec3, f64)> = nodes
         .iter()
-        .map(|node| (node.at, node.direction, s * node.scale))
+        .map(|node| (node.at - Vec3::Y, node.direction, s))
         .collect();
     let f = fit(&units, y0);
-    let place = |at: Vec3| Vec3::Y * y0 + at * f;
-    let anchor = y0 + f;
+    let place = |at: Vec3| Vec3::Y * y0 + (at - Vec3::Y) * f;
+    let anchor = y0;
     // Each axis's own unit before its forks': order by order.
     let orders = nodes.last().map_or(0, |node| node.order) + 1;
     let slots = nodes
@@ -1667,7 +1745,8 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
                 attach: at,
                 base: at,
                 direction: node.direction,
-                length: s * node.scale,
+                // A cyme's flowers are alike; its internodes shorten.
+                length: s,
                 radial: radial(node.around),
                 rank: share(node.order, orders),
             }

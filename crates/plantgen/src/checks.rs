@@ -230,10 +230,11 @@ pub const COUNTS: [&str; 25] = [
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 33] = [
+pub const KINDS: [&str; 34] = [
     "inflorescence",
     "inflorescence_unit",
     "inflorescence_posture",
+    "inflorescence_outline",
     "bract_form",
     "capitulum_kind",
     "awns",
@@ -2374,6 +2375,21 @@ fn cluster_kinds(
             "pendent"
         },
     );
+    // A corymb's units level is flat-topped; on a dome, rounded; on most
+    // of a sphere, a ball.
+    if cluster.cluster.kind == ClusterKind::Corymb {
+        let dome = cluster.cluster.dome;
+        tally.kind(
+            "inflorescence_outline",
+            if dome < 30.0 {
+                "flat_topped"
+            } else if dome < 135.0 {
+                "rounded"
+            } else {
+                "globose"
+            },
+        );
+    }
 }
 
 /// One flower, head, spikelet, fruit or cone drawn with `shape`, `length`

@@ -2223,6 +2223,16 @@ pub struct Inflorescence {
     /// hanging; 0.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub droop: Option<f64>,
+    /// One unit's length as a share of the organ, whichever axis bears it,
+    /// 0.0005 to 1: where set it sizes the units of the innermost axis
+    /// (a panicle's branches' flowers) unless that axis sets its `size`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unit: Option<f64>,
+    /// Degrees of arc round its top a corymb's units cover, 0 to 180: 0
+    /// lays their tips level, a flat top; above it they lie on a dome, 90
+    /// a half sphere, 180 a ball (a mophead hydrangea's). 0.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub dome: Option<f64>,
     /// Colour of the axes and pedicels, on the solid and the card; green
     /// unless set, or for a branch its cluster's.
     #[serde(skip_serializing_if = "Option::is_none")]
