@@ -758,6 +758,36 @@ impl Spheroid {
 }
 
 #[allow(clippy::float_cmp)]
+/// A prickle or bristle: a six-sided cone from `base` along `axis`,
+/// `length` long and `radius` wide at its foot.
+fn spine(
+    base: Vec3,
+    axis: Vec3,
+    length: f64,
+    radius: f64,
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    const SIDES: u32 = 6;
+    let side = any_perpendicular(axis);
+    let other = axis.cross(side);
+    let leaf = part.leaf(base, axis, side, 0.0, 0.0, colour);
+    let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
+    for k in 0..SIDES {
+        let theta = std::f64::consts::TAU * f64::from(k) / f64::from(SIDES);
+        mesh.push(leaf.vertex(
+            base + (side * math::cos(theta) + other * math::sin(theta)) * radius,
+            colour,
+        ));
+    }
+    let tip = mesh.push(leaf.vertex(base + axis * length, colour));
+    for k in 0..SIDES {
+        mesh.indices
+            .extend_from_slice(&[first + k, first + (k + 1) % SIDES, tip]);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -842,35 +872,5 @@ mod tests {
                 assert!(p.length() <= 0.1 * 1.3, "{kind:?}: {p:?}");
             }
         }
-    }
-}
-
-/// A prickle or bristle: a six-sided cone from `base` along `axis`,
-/// `length` long and `radius` wide at its foot.
-fn spine(
-    base: Vec3,
-    axis: Vec3,
-    length: f64,
-    radius: f64,
-    colour: [f32; 3],
-    part: Part,
-    mesh: &mut Mesh,
-) {
-    const SIDES: u32 = 6;
-    let side = any_perpendicular(axis);
-    let other = axis.cross(side);
-    let leaf = part.leaf(base, axis, side, 0.0, 0.0, colour);
-    let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
-    for k in 0..SIDES {
-        let theta = std::f64::consts::TAU * f64::from(k) / f64::from(SIDES);
-        mesh.push(leaf.vertex(
-            base + (side * math::cos(theta) + other * math::sin(theta)) * radius,
-            colour,
-        ));
-    }
-    let tip = mesh.push(leaf.vertex(base + axis * length, colour));
-    for k in 0..SIDES {
-        mesh.indices
-            .extend_from_slice(&[first + k, first + (k + 1) % SIDES, tip]);
     }
 }
