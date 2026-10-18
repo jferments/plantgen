@@ -22,16 +22,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
-        "adiantum-aleuticum",
-        "division_pattern",
-        "its fronds are pedate, the pinnae forking from the top of the stipe (Fern Grower's Manual p. 148), but the fern program draws every frond pinnate, its pinnae along one rachis, until it draws a forking frond",
-    ),
-    (
-        "adiantum-aleuticum",
-        "leaf_length_m",
-        "its young fronds unroll from about 3.5 cm, below the 10 to 30 cm Abrams (1923) p. 24 gives grown fronds, which the measure counts with them (inferred: its grown fronds read 14 to 17 cm)",
-    ),
-    (
         "ambrosia-dumosa",
         "leaf_shape",
         "its dissected blade is drawn on a compound card of three pairs of lobed segments (spec rework E1), whose outline reads obovate or orbicular against the deltate, oblong or ovate outline Abrams and Ferris give the whole blade",
@@ -130,16 +120,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "hedyosmum-mexicanum",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
-    ),
-    (
-        "hemionitis-densa",
-        "leaf_length_m",
-        "its young fronds unroll from about 7 mm, below the 1.5 to 8 cm Abrams gives grown fronds, which the measure counts with them (inferred: its grown fronds read 3 to 4.6 cm)",
-    ),
-    (
-        "hemionitis-triangularis",
-        "leaf_shape",
-        "its pinnae shorten toward the tip as a fern's do, but its lowest pair is not drawn the longest, so the frond reads orbicular or ovate against the deltate frond Abrams (1923) p. 20 gives, until the fern program can widen a frond to its base",
     ),
     (
         "heracleum-maximum",

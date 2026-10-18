@@ -21,7 +21,6 @@
       "season": 0.5,
       "emerge_spread": 0.3,
       "unroll": 0.3,
-      "curl": 45,
       "droop_years": 1,
       "crown_age": 3
     }

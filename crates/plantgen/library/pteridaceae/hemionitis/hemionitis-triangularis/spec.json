@@ -21,7 +21,6 @@
       "season": 0.5,
       "emerge_spread": 0.3,
       "unroll": 0.3,
-      "curl": 45,
       "droop_years": 1,
       "crown_age": 3
     }
@@ -99,6 +98,7 @@
       "max": 16
     },
     "leaf_shape": "deltate",
+    "leaf_underside_colour": [220, 180, 70],
     "stipe_colour": [
       60,
       35,
@@ -218,6 +218,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "4 to 8 pairs of pinnae to a blade, 8 to 16 in all, set by hand from iNaturalist photos (observations 99814168, 104121771, 70040257, 198925083, 11327760, 71102105, 250514270, 214519534): the sources read give no count or measure."
+    },
+    "traits.leaf_underside_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 20, Pityrogramma triangularis: segments \"essentially glabrous above, yellowish-ceraceous beneath, or the powder rarely white or lacking\"; the genus \"covered with a white to deep yellow powder beneath\". The sRGB value, a golden yellow, is the model's reading of that wax, by eye from the photos the appearance cites (gold-powdered beneath)."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
