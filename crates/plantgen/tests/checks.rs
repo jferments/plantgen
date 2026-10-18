@@ -102,11 +102,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its main central is drawn flattened and straight (its lower central, by eye from photographs), against the curved and twisted centrals Britton and Rose describe; a twisted spine is not drawn",
     ),
     (
-        "encelia-farinosa",
-        "shoot_leaves",
-        "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
-    ),
-    (
         "ferocactus-acanthodes-subsp-acanthodes",
         "stem_form",
         "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
@@ -282,21 +277,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "rhus-glabra",
-        "leaf_arrangement",
-        "its crown keeps about 50 leaves 34 cm long on few stout shoots, as FEIS has it, so most shoots hold 2 leaves and the measure cannot tell an alternate pair from an opposite one",
-    ),
-    (
-        "rhus-glabra",
-        "phyllotaxis_pattern",
-        "its crown keeps about 50 leaves 34 cm long on few stout shoots, as FEIS has it, so most shoots hold 2 leaves and the measure cannot tell a spiral from a crossing or stacked pair",
-    ),
-    (
-        "rhus-glabra",
-        "shoot_leaves",
-        "its leaves are 30 to 50 cm long, so the space each needs lets only one measured shoot live, with 2 leaves, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
-    ),
-    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -320,6 +300,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
+    ),
+    (
+        "whipplea-modesta",
+        "phyllotaxis_pattern",
+        "its trailing stems' leaf pairs are drawn turned out to the stem's two sides in one plane, as a trailing stem's leaves lie flat to the light, so the measure reads the pairs as superposed where Hydrangeaceae state decussate or spiral, until a lying stem can set its pairs crossing and twist each leaf flat",
     ),
 ];
 

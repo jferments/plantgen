@@ -13,18 +13,16 @@
     "params": {
       "stems": 40,
       "clump_radius": 0.08,
-      "stem_lean": 70,
-      "stem_height": 0.07,
       "stem_radius": 0.0008,
       "wiggle": 5,
-      "nodes": 14,
+      "nodes": 40,
       "leaves_per_node": 2,
       "leaf_angle": 45,
       "basal_leaves": 0,
       "bare": 0.05,
       "leaf_peak": 0.5,
       "leaf_top": 0.8,
-      "raceme": 0.05,
+      "raceme": 0.0175,
       "flowers": 1
     }
   },
@@ -80,9 +78,14 @@
       "min": 0.05,
       "max": 0.1
     },
+    "stem_length_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
     "woodiness": "semi",
     "life_span": "perennial",
     "rosette": "none",
+    "stem_posture": "decumbent",
     "leaf_arrangement": "opposite",
     "leaf_length_m": {
       "min": 0.01,
@@ -148,7 +151,12 @@
     "traits.height_typical_m": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high), as no source read gives it: a mat 5 cm to 10 cm high; Abrams (1951 p. 412) gives the prostrate branches as 1 dm to 3 dm long, drawn as short ascending stems, 7 cm long and leaning out, as the herb program cannot lay a stem down and turn its tip up."
+      "note": "A model estimate (confidence high), as no source read gives it: a mat 5 cm to 10 cm high; Abrams (1951 p. 412) gives the prostrate branches as 1 dm to 3 dm long, drawn since the shrub habit change (2026-10-18) as decumbent stems of that length lying out from the base and rising to their flowers."
+    },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: the spreading or prostrate branches 1 dm to 3 dm long."
     },
     "traits.woodiness": {
       "evidence": "SourceInferred",
@@ -164,6 +172,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: leaves along the spreading branches, with no basal rosette."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: branches spreading or prostrate, the flowers single at the ends of short leafy branches; read as decumbent, lying below and rising toward the flowering tips, between the two."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -233,7 +246,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for spreading phlox from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Not fitted to measurements."
+      "note": "Set by hand for spreading phlox from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Not fitted to measurements. Since its branches lie down and rise (shrub habit, 2026-10-18) they are drawn as long as Abrams measures them, about 20 cm, not 7 cm, so its nodes and the stem below its flower keep the lengths first set by hand for a 7 cm stem: 40 nodes, where there were 14, and raceme 0.0175, was 0.05; it no longer sets stem_lean or stem_height."
     },
     "allometry": {
       "evidence": "Authored",

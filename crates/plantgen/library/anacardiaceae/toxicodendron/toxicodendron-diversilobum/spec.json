@@ -11,7 +11,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "fork_stems": 8,
       "branch_angle": 40
     }
   },
@@ -71,6 +70,8 @@
     },
     "life_span": "perennial",
     "woodiness": "woody",
+    "clonal": true,
+    "stem_clump": "thicket",
     "leaf_habit": "deciduous",
     "leaf_arrangement": "alternate",
     "leaf_division": "compound",
@@ -193,6 +194,16 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS species review, Toxicodendron diversilobum: a shrub or woody vine."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Toxicodendron diversilobum: reproduces vegetatively by sprouting from the rhizomes and root crown, and by layering when vine stems contact the ground; rhizomes at or just below the soil surface, and extensive."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Toxicodendron diversilobum: a many-stemmed shrub whose rhizomes are extensive, at or just below the soil surface; dense Pacific poison-oak thickets may develop in chaparral; read as a thicket of stems from its rhizomes."
     },
     "traits.leaf_habit": {
       "evidence": "SourceInferred",

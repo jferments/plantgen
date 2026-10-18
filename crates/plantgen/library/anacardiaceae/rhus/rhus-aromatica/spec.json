@@ -11,7 +11,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "fork_stems": 10,
       "branch_angle": 45
     }
   },
@@ -71,6 +70,8 @@
     },
     "life_span": "perennial",
     "woodiness": "woody",
+    "clonal": true,
+    "stem_clump": "thicket",
     "leaf_habit": "deciduous",
     "leaf_arrangement": "alternate",
     "leaf_division": "compound",
@@ -187,6 +188,16 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS species review, Rhus aromatica: a native woody shrub."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: rhizomatous; reproduces clonally by sprouting from the roots and rhizomes, as far as 3.7 m to 4.6 m from the original stem, and by layering where stems touch the ground."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus aromatica: typically has a thicket-forming growth habit as a result of prolific layering and sprouting; FEIS's skunkbush review (as Rhus trilobata) gives thickets as large as 9 m across."
     },
     "traits.leaf_habit": {
       "evidence": "SourceInferred",

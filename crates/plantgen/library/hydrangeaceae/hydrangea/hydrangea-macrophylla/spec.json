@@ -11,7 +11,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "fork_stems": 10,
       "branch_angle": 30
     }
   },
@@ -71,6 +70,7 @@
     },
     "life_span": "perennial",
     "woodiness": "woody",
+    "stem_clump": "many",
     "leaf_habit": "deciduous",
     "leaf_arrangement": "opposite",
     "leaf_length_m": {
@@ -180,6 +180,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it: a woody shrub."
+    },
+    "traits.stem_clump": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Many canes from the base, set by hand from iNaturalist photos (observations 177154494, 318011531, 388065803, 177154496, 89309857, 177447706, 328637493, 330196386): the sources read give no count or measure; the batch 3 review cites Dendrology (2019) p. 323 with the photos for its many stems from the base."
     },
     "traits.leaf_habit": {
       "evidence": "Authored",

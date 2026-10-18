@@ -21,8 +21,8 @@
       "why": "A plant flowers, or bears cones, from the end of its juvenile period."
     },
     "generator.params.unit_nodes": {
-      "rule": "max(1, min(round(shoot_leaves / (leaves_per_node * max_shoot)), floor(4 * internode / leaf_size)))",
-      "why": "A year's shoot is a growth unit of many short internodes, not a few long ones: a vigorous shoot, as long as the program's most internodes a bud grows in a year, bears the taxon's leaves per vigorous long shoot, so each of its internodes is divided into as many nodes as that takes, but never into nodes nearer than a quarter of a leaf's length, so a large-leaved plant's shoots carry fewer."
+      "rule": "max(1, min(round(shoot_leaves / (leaves_per_node * max_shoot)), floor(4 * internode * (leaves_per_node < 2 ? 2 : 1) / leaf_size)))",
+      "why": "A year's shoot is a growth unit of many short internodes, not a few long ones: a vigorous shoot, as long as the program's most internodes a bud grows in a year, bears the taxon's leaves per vigorous long shoot, so each of its internodes is divided into as many nodes as that takes, but never into nodes nearer than a quarter of a leaf's length, so a large-leaved plant's shoots carry fewer; on a spiral, where each leaf turns from the one below it and the next on its side stands two nodes up, never nearer than an eighth."
     },
     "generator.params.long_share": {
       "map": {
@@ -153,7 +153,7 @@
     "rules.generator.params.unit_nodes": {
       "evidence": "SourceInferred",
       "source": "critchfield-1971",
-      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart."
+      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart. That spacing is between leaves that stand over one another: a pair's over the pair below it, but a spiral's single leaf (137.5° round from the one below) over none nearer than two nodes up, so alternate leaves may stand an eighth of the card apart (shrub habit, 2026-10-18), as a sumac's 30 cm to 50 cm leaves crowd a few centimetres apart at its stout twigs' tips (FEIS, Rhus glabra: branches sparse and stout)."
     },
     "rules.generator.params.long_share": {
       "evidence": "SourceInferred",

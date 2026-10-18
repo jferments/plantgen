@@ -11,7 +11,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "fork_stems": 7,
       "branch_angle": 40
     }
   },
@@ -71,6 +70,8 @@
     },
     "life_span": "perennial",
     "woodiness": "woody",
+    "clonal": true,
+    "stem_clump": "thicket",
     "leaf_habit": "deciduous",
     "leaf_arrangement": "alternate",
     "leaf_division": "compound",
@@ -196,6 +197,16 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS species review, Rhus glabra: a shrub or small tree; branches sparse, smooth and stout."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus glabra: readily reproduces vegetatively, spreading through rhizomes to form large, dense thickets; a single clone may cover 22 m by 40 m, spreading on average 94 cm a year."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus glabra: a thicket-forming shrub; thickets are often connected by branched rhizomes, and a stem may arise from a rhizome several years old (stems 0.4 m to 3 m, 1 to 15 years old, the tallest the oldest)."
     },
     "traits.leaf_habit": {
       "evidence": "SourceInferred",

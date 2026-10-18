@@ -13,13 +13,12 @@
     "params": {
       "stems": 12,
       "clump_radius": 0.2,
-      "stem_lean": 60,
-      "nodes": 8,
+      "nodes": 47,
       "basal_leaves": 0,
       "bare": 0.05,
       "leaf_peak": 0.3,
       "leaf_angle": 50,
-      "raceme": 0.03,
+      "raceme": 0.005,
       "flowers": 1,
       "flower_angle": 0,
       "pedicel": 0
@@ -70,8 +69,13 @@
       "min": 0.1,
       "max": 0.3
     },
+    "stem_length_m": {
+      "min": 0.3,
+      "max": 2.0
+    },
     "life_span": "perennial",
     "rosette": "none",
+    "stem_posture": "prostrate",
     "leaf_arrangement": "opposite",
     "leaf_habit": "deciduous",
     "leaf_length_m": {
@@ -175,6 +179,11 @@
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read gives it: trailing stems 10 cm to 30 cm high; Abrams (1944 p. 388) gives their length, 3 dm to 20 dm, not their height."
     },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea modesta: the trailing stems 3 dm to 20 dm long (their length, not their height)."
+    },
     "traits.life_span": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",
@@ -184,6 +193,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Leaves along reclining stems, with no rosette, set by hand from iNaturalist photos (observations 163232735, 6004860, 204233638, 207436697, 343023139, 10742793, 12537421, 7398): the sources read give no count or measure."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 388, Whipplea: low spreading or trailing shrub with weak slender branches; read as prostrate, the flowering branchlets ending in racemes rising from them."
     },
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
@@ -298,7 +312,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for yerba de selva from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+      "note": "Set by hand for yerba de selva from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements. Since its stems trail (shrub habit, 2026-10-18) they are drawn as long as Abrams measures them, about 1.15 m, not 20 cm, so its nodes and the bare stem below its raceme keep the lengths first set by hand for a 20 cm stem: 47 nodes about 2.3 cm apart, where there were 8, and 6 mm of bare stem (raceme 0.005, was 0.03); it no longer sets stem_lean, as a lying stem leaves its foot level."
     },
     "allometry": {
       "evidence": "Authored",
