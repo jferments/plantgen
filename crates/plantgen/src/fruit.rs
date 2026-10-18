@@ -267,7 +267,13 @@ pub(crate) fn draw_unit(
         blooms::draw_fruit(&cone, direction, one.across, form, fruit, body, part, mesh);
         return;
     }
-    one.draw(fruit.kind, body, accent, extras, part, mesh);
+    // A fruit whose spine clusters fall ripens with its felt alone.
+    let kind = if !unripe && fruit.spines_fall >= 0.5 && fruit.kind == FruitKind::Spiny {
+        FruitKind::Areolate
+    } else {
+        fruit.kind
+    };
+    one.draw(kind, body, accent, extras, part, mesh);
     one.dress(fruit, body, accent, part, mesh);
 }
 

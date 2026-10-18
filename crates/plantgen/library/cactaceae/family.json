@@ -54,6 +54,11 @@
       "map": {"fruit_surface": {"naked": "naked", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny"}},
       "why": "A cactus's ovary is sunk in its stem tissue, the pericarpel, which wears on the flower and on the bud below the closed tepals what it will wear as a fruit: nothing on a pincushion's, broad scales on a barrel's or the saguaro's, felted areoles on a prickly pear's, spiny areoles on a hedgehog's (Anderson, The Cactus Family pp. 27 to 33, 139, 231, 328 and 486)."
     },
+    "appearance.organs.*.shape.spines_fall": {
+      "template": "fruit",
+      "map": {"fruit_spine_fall": {"persistent": 0, "deciduous": 1}},
+      "why": "A spiny cactus fruit whose spine clusters fall as it ripens (FNA vol. 4: Stenocereus 'bearing deciduous spine clusters', Echinocereus 'spine clusters usually deciduous at maturity') is drawn ripe with its felted areoles alone."
+    },
     "appearance.organs.*.shape.pericarpel_colour": {
       "template": "flower",
       "colour": "stem_colour",

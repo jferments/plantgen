@@ -2636,6 +2636,11 @@ pub struct Fruit {
     /// club-shaped, below 0 ovoid ([`crate::fruit`]).
     #[serde(skip_serializing_if = "is_zero")]
     pub flare: f64,
+    /// 1 when a ripe fruit's spine clusters fall (Stenocereus,
+    /// Echinocereus): a spiny cactus fruit ripens with felted areoles
+    /// alone.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spines_fall: f64,
     /// The colour of the seeds a ripe fruit shows: a magnolia's red seeds
     /// hanging from its split follicles. Only follicles show them.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2677,6 +2682,7 @@ impl Default for Fruit {
             armed: Armed::None,
             hang: 0.0,
             flare: 0.0,
+            spines_fall: 0.0,
             seeds: None,
             cup: None,
             ripening: None,
@@ -2873,6 +2879,7 @@ struct FruitCard {
     armed: Armed,
     hang: f64,
     flare: f64,
+    spines_fall: f64,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
     ripening: Option<[f32; 3]>,
@@ -2905,6 +2912,7 @@ impl Default for FruitCard {
             armed: fruit.armed,
             hang: fruit.hang,
             flare: fruit.flare,
+            spines_fall: fruit.spines_fall,
             seeds: None,
             cup: None,
             ripening: None,
@@ -2952,6 +2960,7 @@ impl TryFrom<FruitCard> for Fruit {
             armed: card.armed,
             hang: card.hang,
             flare: card.flare,
+            spines_fall: card.spines_fall,
             seeds: card.seeds,
             cup: card.cup,
             ripening: card.ripening,

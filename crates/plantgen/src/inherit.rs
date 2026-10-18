@@ -1271,6 +1271,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("spines_fall", Number),
                 ("profile", Word),
                 ("apiculum", Number),
                 ("face", Word),
