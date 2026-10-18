@@ -859,11 +859,20 @@ pub mod venation;
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
 /// its foot (`foot`: a Zamia leaflet's jointed base) (127 is broadleaf
 /// foliage, #143).
-/// 129: a fruit's kept calyx lies as stated (`kept_posture`, from
+/// 129: a fruit that stays on the plant for years
+/// (`fruit_persistence` persistent) keeps no season in a program's `fruit`
+/// organ, the fruit of earlier years: a chain-fruit cholla's chains hang
+/// all year while each year's flowers bud, open and fruit in their months
+/// (128 is cycad cones, #211).
+/// 130: a reduced flower mesh (a part mesh's coarser steps) draws what its
+/// perianth stands on, a floral cup or an inferior ovary such as a
+/// cactus's pericarpel, so the tepals no longer float above the joint; a
+/// pericarpel the tepals open straight from is globose, not a stalk.
+/// 131: a fruit's kept calyx lies as stated (`kept_posture`, from
 /// `fruiting_calyx_posture`: an eggplant's cap pressed over the fruit, a
 /// belladonna's flat star, or turned back); a ripe capsule opens from its
 /// tip into its valves (`valves`, from `capsule_valves`: a jimsonweed's
 /// four, a tobacco's two), each turned out from half way down and lined
 /// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
 /// `fruit_armature` `hooked`).
-pub const GENERATOR_REVISION: u32 = 129;
+pub const GENERATOR_REVISION: u32 = 131;
