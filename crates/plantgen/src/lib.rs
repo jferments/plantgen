@@ -840,4 +840,8 @@ pub mod venation;
 /// organ, the fruit of earlier years: a chain-fruit cholla's chains hang
 /// all year while each year's flowers bud, open and fruit in their months
 /// (127 is broadleaf short shoots, #143; 128 is cycad cones, #211).
-pub const GENERATOR_REVISION: u32 = 129;
+/// 130: a reduced flower mesh (a part mesh's coarser steps) draws what its
+/// perianth stands on, a floral cup or an inferior ovary such as a
+/// cactus's pericarpel, so the tepals no longer float above the joint; a
+/// pericarpel the tepals open straight from is globose, not a stalk.
+pub const GENERATOR_REVISION: u32 = 130;

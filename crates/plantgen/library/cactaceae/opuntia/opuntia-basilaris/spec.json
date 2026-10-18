@@ -22,7 +22,7 @@
       "joint_spread": 0.2,
       "daughters_low": 0.4,
       "daughters_high": 2.0,
-      "generations": 3,
+      "generations": 2,
       "margin": 60,
       "twist": 25,
       "sag": 0.2,
@@ -123,7 +123,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a low clump under 40 cm tall of pads 5 to 20 cm long, fanning out from the base. Bright magenta flowers along the top of the pads in spring. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a low clump under 40 cm tall of pads 5 to 20 cm long, fanning out from the base. Bright magenta flowers along the top of the pads in spring. Not fitted to measurements. Pads stand two generations deep, not three, after FNA vol. 4 (eFloras, Opuntia basilaris): \"forming clumps, 1-2(-3) segments tall, to 7-40 cm\" (2026-10-18)."
     },
     "allometry": {
       "evidence": "Authored",
