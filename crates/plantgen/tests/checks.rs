@@ -107,11 +107,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
     ),
     (
-        "cytisus-scoparius",
-        "leaf_shape",
-        "its leaflets are drawn by hand on a sprig card widest at the middle, so they read elliptic against the obovate leaflets Abrams gives",
-    ),
-    (
         "datura-stramonium",
         "leaf_shape",
         "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Britton and Brown give",
@@ -192,11 +187,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
     ),
     (
-        "jacobaea-vulgaris",
-        "leaf_width_m",
-        "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
-    ),
-    (
         "larrea-tridentata",
         "leaf_division",
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
@@ -205,11 +195,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "leucanthemum-vulgare",
         "leaf_shape",
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
-    ),
-    (
-        "liriodendron-tulipifera",
-        "carpels",
-        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so tulip tree's cone of 60 to 100 carpels is drawn with 30",
     ),
     (
         "lonicera-involucrata",
@@ -225,11 +210,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
-    ),
-    (
-        "magnolia-grandiflora",
-        "carpels",
-        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so southern magnolia's cone of 55 to 81 carpels is drawn with 30",
     ),
     (
         "nicotiana-tabacum",
@@ -277,6 +257,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a climbing shoot adds one or two nodes a season, each with one leaf, so it bears 1 to 2 leaves a year against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "stachys-byzantina",
+        "leaf_arrangement",
+        "the herb program turns a stem's basal leaves one at a time by the divergence, not in pairs, so lamb's ear's rosette reads as alternate though its stem leaves stand in opposite pairs",
+    ),
+    (
         "program:broadleaf",
         "crown_outline_fit",
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
@@ -288,16 +273,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
-        "leaf_length_m",
-        "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
-    ),
-    (
-        "program:grass",
-        "leaf_width_m",
-        "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
-    ),
-    (
-        "program:grass",
         "phyllotaxis_pattern",
         "a tiller's blades are measured round the vertical, so where a tiller leans out about as far as its blades stand off it (tufted hairgrass, coirón, Roemer's and red fescue: blades 10° to 15° off, tillers leaning up to 22°) the lean turns them all one way and the turns read as a spiral or three ranks (inferred, not traced)",
     ),
@@ -305,11 +280,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:grass",
         "shoot_leaves",
         "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
-    ),
-    (
-        "program:herb",
-        "leaf_habit",
-        "a herb's stems and their leaves live one season, so an evergreen herb (western rattlesnake plantain, common beargrass) draws its leaves as deciduous until the herb program keeps a leaf through winter",
     ),
     (
         "program:herb",

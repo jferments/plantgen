@@ -1,0 +1,346 @@
+{
+  "schema": 1,
+  "id": "verbascum-thapsus",
+  "taxon": {
+    "scientific_name": "Verbascum thapsus",
+    "common_name": "common mullein",
+    "usda_symbol": "VETH",
+    "family": "Scrophulariaceae",
+    "genus": "Verbascum",
+    "plant_name_id": 2453334
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "stem_rate": 1.0,
+      "clump_radius": 0.01,
+      "stem_lean": 3,
+      "maturity": 1.0,
+      "stem_radius": 0.009,
+      "wiggle": 1,
+      "nodes": 22,
+      "bare": 0.02,
+      "leaf_length": 0.2,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.25,
+      "leaf_base": 1.0,
+      "leaf_angle": 35,
+      "basal_leaves": 14,
+      "basal_length": 0.35,
+      "basal_angle": 72,
+      "raceme": 0.45,
+      "flowers": 90,
+      "flower_size": 0.022,
+      "pedicel": 0.001,
+      "flower_angle": 80,
+      "fruit_below": 0.35,
+      "buds_above": 0.45,
+      "nod": 0,
+      "adult_age": 2,
+      "young_height": 0.05,
+      "height_spread": 0.0
+    }
+  },
+  "growth": {
+    "years": 2,
+    "step": 1,
+    "keyframes": [
+      1,
+      2
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.33,
+      0.24
+    ],
+    "foliage": [
+      0.13,
+      0.17,
+      0.09
+    ],
+    "foliage_shade": [
+      0.04,
+      0.052,
+      0.027
+    ],
+    "variation": 0.12,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "widest": 0.4,
+          "tip": 0.5,
+          "base": 0.3,
+          "petiole": 0.0
+        }
+      },
+      "basal": {
+        "shape": {
+          "template": "simple",
+          "widest": 0.65,
+          "tip": 0.55,
+          "base": 0.6,
+          "petiole": 0.12
+        }
+      },
+      "flower": {
+        "colour": [
+          0.95,
+          0.78,
+          0.12
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 1.4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 2.0,
+      "typical": 1.4
+    },
+    "life_span": "biennial",
+    "woodiness": "herbaceous",
+    "rosette": "basal",
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.3
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.14
+    },
+    "leaf_shape": {
+      "oblanceolate": "usually",
+      "lanceolate": "often"
+    },
+    "leaf_margin": "crenate",
+    "leaf_hairs": "tomentose",
+    "leaf_hairs_beneath": "tomentose",
+    "leaf_hair_length_m": 0.0008,
+    "stem_hairs": "tomentose",
+    "hair_branching": "dendritic",
+    "hair_colour": [
+      214,
+      212,
+      186
+    ],
+    "inflorescence": "spike",
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "flower_colour": [
+      248,
+      214,
+      40
+    ],
+    "corolla_shape": "rotate",
+    "flower_merosity": 5,
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): may reach more than 2 m tall in its flowering year; Jepson eFlora: stem 30-200 cm; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): a densely woolly, sturdy biennial; a basal rosette of large furry leaves in the first year, a single stout flowering stem in the second."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): a biennial herb."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): a basal rosette of large furry leaves is produced in the first year; basal leaves 8-50 cm long, may be persistent."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): stem leaves are alternate, their size reduced toward the inflorescence."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora, Verbascum thapsus (Wetherwax): cauline leaves sessile, long-decurrent, 5-30 cm, lanceolate; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Verbascum thapsus (article text read 2026-10-17): leaves up to 50 cm long and 14 cm across; the lower bound is ours, for the stem's upper leaves."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora, Verbascum thapsus (Wetherwax): basal leaves short-petioled, 8-50 cm, oblanceolate, generally entire; cauline leaves sessile, long-decurrent, 5-30 cm, lanceolate; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 18, Verbascum thapsus: leaf blades oblanceolate-oblong, margin crenate; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17); Jepson has them generally entire, the teeth shallow."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): a thick coating of branched hairs on the stems and leaves; Jepson eFlora: densely tomentose, hairs stellate or many-branched; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 17, Verbascum thapsus subsp. thapsus: leaves tomentose on both surfaces; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.leaf_hair_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 0.8 mm, the depth of the felt's mat (0.5-1 mm, the occasional longer hair to 1.5 mm) by eye on iNaturalist photographs at 20x and of a leaf's edge against the light (observations 37671026, 174184662). Alba et al. (2014) measured the mat but its numbers are in a figure that could not be read."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 17, Verbascum thapsus subsp. thapsus: stems 30-200 cm, densely and persistently tomentose, eglandular; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.hair_branching": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora, Verbascum thapsus (Wetherwax): hairs stellate or many-branched; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17); drawn as many-branched candelabra hairs, stalks with whorls of arms up their length, as an iNaturalist photograph at 20x shows them (observation 37671026)."
+    },
+    "traits.hair_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 18, Verbascum thapsus: densely with greyish yellow stellate hairs; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17). The colour is our reading of the words."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): the rod-like spike of fruits often persists through the winter; Jepson: raceme dense, pedicels under 2 mm, generally fused to the stem; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17)."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Verbascum thapsus (article text read 2026-10-17): the corolla bright yellow and 1.5-3 cm wide."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Verbascum thapsus (article text read 2026-10-17): the corolla bright yellow. The colour is our reading of the word."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Verbascum thapsus (article text read 2026-10-17): five petals spreading flat, the flowers almost sessile."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Verbascum thapsus (article text read 2026-10-17): five petals."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): hairy, egg-shaped, two-celled capsules 6-10 mm long."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Verbascum thapsus review (Gucker 2008, read 2026-10-17): capsules 6-10 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 17, Verbascum thapsus subsp. thapsus: flowering May-September; the page itself could not be opened from here, so the wording is as a web-search excerpt quoted it (2026-10-17); drawn from June, when most open."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set after FEIS and Jepson: a flat first-year rosette of large felted leaves (basal_leaves 14, basal_length 0.35 m, spread nearly flat, basal_angle 72), then in the second year a single stout stem (FEIS: over 1 cm thick) with alternate leaves shrinking upward (leaf_top 0.25) ending in a dense cylindrical spike of nearly stalkless flowers that takes nearly half its length (raceme 0.45, flowers 90, pedicel 1 mm), opening from the base up. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.4 m in its flowering second year in the open: Jepson's stems 30-200 cm, Flora of China's to 1.5 m, FEIS's more than 2 m at most. Not measured."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FEIS, Jepson and Wikipedia: a sage grey-green face under its felt (the felt's pale grey drawn by its hairs), oblanceolate rosette leaves on short winged stalks, lanceolate stem leaves on no stalk, bright yellow flat flowers, as iNaturalist photographs show them (observations 174184662, 295526398, 37671026)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the hair practice (2026-10-17): characters from FEIS and Wikipedia, read directly, and excerpts of Jepson, Flora of China and FNA; the felt's depth by eye from photographs."
+  }
+}

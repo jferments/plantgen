@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Primula",
+  "traits": {
+    "inflorescence": {"umbel": "usually", "solitary": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Primula (read 2026-10-17; ~500 spp): flowers often in rounded umbels on stout stalks above basal rosettes. Solitary kept as minor state (not stated; e.g. P. vulgaris)."}
+  }
+}

@@ -127,7 +127,7 @@
       "min": 0.025,
       "max": 0.03
     },
-    "stamen_colour": [
+    "filament_colour": [
       195,
       30,
       50
@@ -360,7 +360,7 @@
       "source": "wikipedia",
       "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): filaments 25-30 mm; Bailey (vol. 3 p. 1301): long-exserted."
     },
-    "traits.stamen_colour": {
+    "traits.filament_colour": {
       "evidence": "SourceInferred",
       "source": "bean-1914",
       "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia corallina, p. 577 (read on the Internet Archive, 2026-10-17): the stamens red, standing 3/4 in beyond the petals; photograph iNaturalist 133411246: red filaments."

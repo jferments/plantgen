@@ -12,15 +12,9 @@
     },
     "leaf_division": "simple",
     "leaf_margin": "entire",
-    "leaf_venation": {
-      "single": "often",
-      "palmate": "often"
-    },
+    "leaf_venation": {"palmate": "usually", "single": "rarely"},
     "leaf_habit": "evergreen",
-    "leaf_shape": {
-      "lanceolate": "often",
-      "ovate": "often"
-    },
+    "leaf_shape": {"ovate": "usually", "lanceolate": "sometimes", "cordate": "sometimes"},
     "stipules": {
       "true": "rarely",
       "false": "usually"
@@ -35,14 +29,7 @@
       "woody": "often",
       "herbaceous": "often"
     },
-    "inflorescence": {
-      "solitary": "often",
-      "cyme": "often",
-      "raceme": "often",
-      "spike": "often",
-      "umbel": "often",
-      "panicle": "sometimes"
-    },
+    "inflorescence": {"umbel": "usually", "raceme": "sometimes", "spike": "rarely", "panicle": "rarely", "cyme": "rarely", "solitary": "rarely"},
     "flower_symmetry": "actinomorphic",
     "perianth": "tepals",
     "fruit_type": "berry",
@@ -58,6 +45,9 @@
     "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "prosea", "note": "PROSEA Smilax (read 2026-10-17): flowers in axillary umbels, or in racemes of umbels. Smilax (~200-350 spp) is nearly all of the family; the other states come from small genera joined to it (Ripogonum, a few spp), so they drop to rarely."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "PROSEA Smilax (read 2026-10-17): blades mostly ovate to roundish, or ovate to lanceolate; Wikipedia Smilax (read 2026-10-17) calls the leaves heart-shaped. Smilax is nearly the whole family, so ovate leads, lanceolate and cordate behind."},
+    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "prosea", "note": "PROSEA Smilax (read 2026-10-17): blades with 3-7 main veins from the base joined by a net of finer veins. Smilax (~200 spp PROSEA, 300-350 Wikipedia Smilax) is nearly the whole family; Ripogonum adds a handful. Palmate leads by far."},
     "traits.flowering_position": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Smilax rotundifolia (read 2026-10-16): umbel peduncles from the leaf axils; DELTA Smilacaceae (read 2026-10-16): terminal or axillary (axillary umbels typical of Smilax)."},
     "traits": {
       "evidence": "SourceInferred",

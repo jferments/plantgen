@@ -181,7 +181,11 @@ impl Form {
     #[must_use]
     pub fn default_for(shape: &Shape) -> Self {
         match shape {
-            Shape::Flower(_) => Self::Flower(FlowerForm::default()),
+            // Its petals rise as far as its look says, where it says.
+            Shape::Flower(flower) => Self::Flower(FlowerForm {
+                cup: flower.rise.unwrap_or(FlowerForm::default().cup),
+                ..FlowerForm::default()
+            }),
             // A daisy's rays spread nearly flat round its disc.
             Shape::Head(_) => Self::Flower(FlowerForm {
                 cup: 8.0,
@@ -424,6 +428,7 @@ pub(crate) fn build_coarse(
                         tube: flower
                             .tube_colour
                             .map(|tube| with_shading(tube, look.colour, painted)),
+                        stigma: flower.stigma.or(flower.filament).unwrap_or(look.accent),
                     },
                     part,
                     mesh,
@@ -1014,8 +1019,10 @@ mod tests {
                 "thorn".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
+                    sori: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Blade(crate::looks::Blade {

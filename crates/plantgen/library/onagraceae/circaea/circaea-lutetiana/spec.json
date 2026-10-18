@@ -95,7 +95,7 @@
       8,
       9
     ],
-    "fruit_surface": "bristly",
+    "fruit_armature": "bristly",
     "calyx_in_fruit": "falling"
   },
   "provenance": {
@@ -236,7 +236,7 @@
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it: fruit July-September."
     },
-    "traits.fruit_surface": {
+    "traits.fruit_armature": {
       "evidence": "SourceInferred",
       "source": "hooker-1884",
       "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea lutetiana, p. 159 (read on the Internet Archive, 2026-10-17): fruit covered with hooked bristles; Bentham (p. 154): stiff hooked hairs forming a small burr."

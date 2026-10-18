@@ -43,6 +43,7 @@
     },
     "leaf_shape": "elliptic",
     "inflorescence": "spike",
+    "flowering_position": "terminal",
     "inflorescence_length_m": {
       "min": 0.015,
       "max": 0.04
@@ -161,6 +162,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china-4-chloranthaceae",
       "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): blades elliptic or ovate to ovate-lanceolate, or broadly elliptic to oblong; elliptic the first named."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): inflorescences terminal."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",

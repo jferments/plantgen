@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "finding.schema.json",
+  "title": "One difference between renders and photos (04-compare.md, 05-diagnose.md)",
+  "type": "object",
+  "required": [
+    "id",
+    "species",
+    "feature",
+    "verdict",
+    "photos",
+    "render"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "species": {
+      "type": "string"
+    },
+    "feature": {
+      "type": "string"
+    },
+    "verdict": {
+      "enum": [
+        "✗",
+        "~",
+        "conflict"
+      ]
+    },
+    "sources_say": {
+      "type": "string",
+      "description": "the species' stated fact, in our words, with the source named"
+    },
+    "photos": {
+      "type": "string",
+      "description": "the photo aggregate in words and numbers, with n"
+    },
+    "render": {
+      "type": "string",
+      "description": "what the renders show, with n seeds"
+    },
+    "severity": {
+      "type": "number"
+    },
+    "cause": {
+      "enum": [
+        "D0",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7",
+        "D8",
+        "D9",
+        "D10",
+        "D11"
+      ]
+    },
+    "suspect": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "rule": {
+          "type": "string"
+        }
+      }
+    },
+    "test": {
+      "type": "string",
+      "description": "command run and what it showed"
+    },
+    "breadth": {
+      "type": "integer",
+      "description": "library species the same cause touches"
+    },
+    "render_set": {
+      "type": "string"
+    }
+  }
+}

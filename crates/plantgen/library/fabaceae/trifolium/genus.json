@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Trifolium",
+  "parent": "subfamily/faboideae",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "palmate"
+  },
+  "evidence": {
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), genus Trifolium: annual or perennial herbs with erect or creeping stems; leaves alternate, divided into three leaflets from one point (digitately), rarely five to seven; leaflets entire or toothed; flowers in short or long racemes, often in heads."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), genus Trifolium: the leaflets spread from one point (digitately three-foliolate), rarely five to seven."
+    }
+  }
+}

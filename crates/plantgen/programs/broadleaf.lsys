@@ -151,12 +151,19 @@
 # crown_fullness. All are off, or as before, unless a lineage or species
 # sets them, so every crown grows as it did.
 #
-# Revision 17 (nightshades round 2): a bloom may hang on a stalk of its
+# Revision 17 (blooms at the shoot tips): a lineage that flowers at its
+# shoot tips (tip_bloom) ends each tip that has stopped for want of free
+# space, once adult and in the light, in its year's blooms, nearly along
+# the shoot (tip_angle) above that year's leaves, so its flowers and fruit
+# stand on the crown's edge where the short shoots' stay inside it. Off
+# unless a lineage sets it.
+#
+# Revision 18 (nightshades round 2): a bloom may hang on a stalk of its
 # own, bloom_stalk long, as a fuchsia's flowers hang on their long
 # peduncles. Off (0) unless a lineage or species sets it, so every plant
 # grows as it did.
 #
-# Revision 18 (nightshades round 3): leaves in whorls of three or more
+# Revision 19 (nightshades round 3): leaves in whorls of three or more
 # (leaves_per_node 3 and up) are drawn round the node, not in pairs, and
 # a bloom's stalk is shed with its bloom. Every plant whose leaves are
 # alternate or opposite grows as it did.
@@ -261,6 +268,8 @@ param limb_arch = 0;          # degrees a limb's held angle grows per metre of l
 param limb_set_max = 95;      # the most a limb's held angle grows to, from straight up
 param flat_top = 0;           # share of the crown's height above which every shoot levels out (Troll's model); 0: none
 param bole_clear = 0;         # 1: the stem sheds every branch below the crown's base
+param tip_bloom = 0;          # 1: a shoot tip with no free space left ends each adult year in its blooms (terminal flowering)
+param tip_angle = 15;         # angle of a shoot tip's bloom to its shoot
 param crown_widest = 0.5;     # share of the region's depth at which it is widest
 param crown_fullness = 2;     # the region's profile: 2 an ellipse, more toward a flat-ended cylinder
 param bloom_stalk = 0;        # a solitary bloom's own stalk, metres; 0 for none
@@ -278,6 +287,7 @@ module Bs;                                # a bloom's own stalk, if it has one
 module Wb(k);                             # k lateral buds still to place round a whorl's node
 module Wk(k, s);                          # k short-shoot buds (s as K's) still to place round it
 module Wl(k);                             # k leaves still to place round it
+module Bt(n);                             # n blooms still to place at a long shoot's tip
 module K(s) queries light, vigour;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
 module D queries light, space;            # a dormant bud
 
@@ -489,6 +499,13 @@ rule A(split) : apex_death > 0 && space <= 0 && t > 10 && rand() < apex_death ->
 
 # A tip with no free space left that lives on leafs out as a short shoot
 # does, in enough light (revision 11), so the crown's edge keeps its leaves.
+# A lineage that flowers at its shoot tips (tip_bloom, revision 17) ends
+# such a tip each adult year in its blooms, nearly along the shoot, above
+# that year's leaves: the crown's edge carries them, not its inside.
+rule A(split) : tip_bloom > 0 && blooms > 0 && t >= adult_age && light >= spur_light && space <= 0
+                && (life <= 0 || t < life) ->
+    Q(spur_pairs, age * spur_pairs) Bt(blooms) A(split);
+
 rule A(split) : light >= spur_light && space <= 0 -> Q(spur_pairs, age * spur_pairs) A(split);
 
 # A limb that no longer pays its way is shed, as in Pałubicki et al.
@@ -617,3 +634,15 @@ decompose Wk(k, s) -> ;
 decompose Wl(k) : k > 0 -> [ /(360 * k / leaves_per_node) &(leaf_angle) $ leaf(leaf_size) ] Wl(k - 1);
 decompose Wl(k) -> ;
 
+# Blooms at a long shoot's tip (revision 17): as at a short shoot's, at
+# tip_angle, set with no random draws (they vary by their place), so every
+# draw here and in the programs built on this one keeps its site.
+decompose Bt(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(tip_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bt(n - 1);
+decompose Bt(n) : n > 0 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(tip_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      bloom(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bt(n - 1);
+decompose Bt(n) -> ;

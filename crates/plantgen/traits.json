@@ -544,6 +544,30 @@
       "when": {"spines": ["areoles"]},
       "why": "how far a cactus's tubercles stand from its stem: barely (ribs with at most a swelling under each areole), low, distinct knobs, or prominent ones"
     },
+    "stem_apex": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["tapering", "rounded", "broad"],
+      "when": {"spines": ["areoles"]},
+      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, or broad, a rounded shoulder under a wide flattish top that may sink at its centre"
+    },
+    "stem_outline": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["cylindrical", "club_shaped"],
+      "when": {"spines": ["areoles"]},
+      "why": "a cactus column's outline from its foot up: cylindrical, as wide at its foot as higher up, or club-shaped, narrower at its foot, where it grew while the plant was young, than above"
+    },
+    "lower_areole_spines": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["as_upper", "fewer", "sometimes_none", "none"],
+      "when": {"spines": ["areoles"]},
+      "why": "how a pad's or joint's lower areoles carry spines against its upper ones: as many, fewer (spines mostly on the distal areoles), sometimes none, or none (spines only on the upper areoles); the glochids are on every areole"
+    },
     "tubercle_shape": {
       "group": "stem_and_bark",
       "organ": "stem",
@@ -907,6 +931,13 @@
       "optional": true,
       "why": "the hairs on a blade's underside, in the words of `leaf_hairs`"
     },
+    "leaf_hairs_on_veins": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a blade's upper side's hairs gather along its main veins, as floras say ('hairy along the veins', 'at least along main veins')"
+    },
     "leaf_ciliate": {
       "group": "leaves",
       "organ": "leaf",
@@ -937,6 +968,48 @@
       "type": "colour",
       "optional": true,
       "why": "the colour of the hairs on a blade, its stalk and the young stems, where they are not white or colourless"
+    },
+    "hair_branching": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["simple", "stellate", "dendritic"],
+      "optional": true,
+      "why": "how the plant's hairs branch, on its blades and young stems alike, as floras say (Harris and Harris): unbranched (simple), a star of arms spreading from a short stalk (stellate), or a stalk with whorls of arms up its length (dendritic, the candelabra hairs of mullein)"
+    },
+    "glandular_hairs": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["sparse", "scattered", "dense"],
+      "optional": true,
+      "why": "glandular hairs among the plant's other hairs on its young stems, leaf stalks and blades, each a stalk ending in a round head of resin, as floras say ('glandular-pubescent', 'stipitate-glandular'): how thickly they stand"
+    },
+    "glandular_hair_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.00002, 0.005],
+      "optional": true,
+      "why": "a glandular hair, from its foot to the top of its head"
+    },
+    "stinging_hairs": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["sparse", "scattered", "dense"],
+      "optional": true,
+      "why": "stinging hairs on the plant's young stems, leaf stalks and blades (nettles, Urtica and Laportea; Cnidoscolus), each a stiff glassy needle on a swollen foot: how thickly they stand"
+    },
+    "stinging_hair_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.01],
+      "optional": true,
+      "why": "a stinging hair, from its foot to its tip"
     },
     "leaf_lobes": {
       "group": "leaves",
@@ -986,6 +1059,14 @@
       "when": {"leaf_division": ["compound"]},
       "optional": true,
       "why": "the divisions on each pinna of a thrice-divided leaf (tripinnate, triternate), each bearing leaflets or segments of its own"
+    },
+    "ternate_blade": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "whether a compound leaf's lowest pair of divisions is nearly as large as the rest of it, so the leaf is three-parted (ternate): a bracken frond, ternately decompound, which comes up as three coils, an eagle's claw"
     },
     "inner_division_pattern": {
       "group": "leaves",
@@ -1037,6 +1118,79 @@
       "values": ["absent", "sparse", "dense"],
       "optional": true,
       "why": "how scaly a fern's stipe is, as floras word it: bare, a few scales, or densely scaly, its foot shaggy with them"
+    },
+    "stipe_scale_extent": {
+      "group": "leaves",
+      "organ": "palea",
+      "type": "enum",
+      "values": ["base", "throughout"],
+      "optional": true,
+      "why": "how far up a fern's stipe its scales go, as floras word it: only at its swollen base (\"scaly at base\", \"scaly proximally\"), or all along it, smaller toward the blade"
+    },
+    "stipe_scale_length_m": {
+      "group": "leaves",
+      "organ": "palea",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 0.05],
+      "optional": true,
+      "why": "the largest scales on a fern's stipe, at its foot"
+    },
+    "fertile_leaf_length_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 5],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "a dimorphic fern's fertile blade, without its stipe, where it differs from the sterile one"
+    },
+    "fertile_petiole_length_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 5],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "a dimorphic fern's fertile stipe"
+    },
+    "fertile_leaf_posture": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["erect", "ascending", "arching", "spreading", "pendent"],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "how a dimorphic fern's fertile fronds hold themselves, as leaf_posture words the sterile ones: often stiffly erect in the crown's centre"
+    },
+    "fertile_leaflet_length_m": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 2],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "a dimorphic fern's longest fertile pinna"
+    },
+    "fertile_leaflet_width_m": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.5],
+      "when": {"frond_dimorphism": ["dimorphic"]},
+      "optional": true,
+      "why": "a dimorphic fern's fertile pinna at its widest, often contracted to a narrow strip under its sori"
+    },
+    "stipe_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "why": "a fern's stipe over most of its length, and so its rachis: straw-coloured, green, reddish brown or dark"
     },
     "leaf_peltation": {
       "group": "leaves",
@@ -1175,6 +1329,13 @@
       "range": [0, 100],
       "why": "bracts at the foot of an inflorescence: an aroid's one spathe, a dogwood's four, an umbel's involucre"
     },
+    "bud_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "optional": true,
+      "why": "a flower bud before it opens, as its outside shows: its sepals, or the bracts that wrap it (a southern magnolia's rusty felted spathe)"
+    },
     "bract_form": {
       "group": "flowers",
       "organ": "inflorescence_bract",
@@ -1195,6 +1356,12 @@
       "organ": "flower",
       "type": "colour",
       "why": "an open flower's showiest part"
+    },
+    "stigma_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "why": "the stigma lobes', where they differ from the style and stamens"
     },
     "flower_size_m": {
       "group": "flowers",
@@ -1287,8 +1454,8 @@
       "organ": "flower",
       "type": "count",
       "range": [2, 200],
-      "when": {"perianth": ["spiral"]},
-      "why": "the tepals in all of a flower whose perianth is a spiral"
+      "when": {"perianth": ["spiral", "tepals"]},
+      "why": "the tepals in all of a flower whose perianth is a spiral, or whose tepals stand in whorls (a magnolia's 9 to 15 in whorls of three)"
     },
     "corolla_shape": {
       "group": "flowers",
@@ -1392,6 +1559,15 @@
       "optional": true,
       "why": "where the filament joins the anther: at its base, so the anther stands along the filament; on its back; or at one point on its back, so the anther swings free across the filament's tip"
     },
+    "petal_whorls": {
+      "group": "flowers",
+      "organ": "petal",
+      "type": "count",
+      "range": [1, 2],
+      "optional": true,
+      "when": {"perianth": ["sepals_and_petals"]},
+      "why": "the whorls a corolla's petals stand in: one, or two like whorls, the inner turned half a petal from the outer (a custard apple's three and three)"
+    },
     "stamen_length_m": {
       "group": "flowers",
       "organ": "stamen",
@@ -1399,14 +1575,29 @@
       "unit": "m",
       "range": [0.0002, 0.2],
       "optional": true,
-      "why": "a stamen's filament with its anther, from where it leaves the flower, where a flora measures it: a fuchsia's long-exserted 2.5-3 cm stamens"
+      "why": "a stamen from its foot to its anther's tip, where a flora measures it: a fuchsia's long-exserted 2.5-3 cm stamens"
     },
-    "stamen_colour": {
+    "stamen_form": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "enum",
+      "values": ["filamentous", "laminar"],
+      "optional": true,
+      "why": "a slender filament under its anther, or a flat strap with its pollen sacs along most of its length and no distinct filament (magnolias, custard apples)"
+    },
+    "anther_colour": {
       "group": "flowers",
       "organ": "stamen",
       "type": "colour",
       "optional": true,
-      "why": "the filaments' colour, and the style's, where it is not the anthers' (a fuchsia's red filaments)"
+      "why": "a stamen's anther: the colour its pollen sacs show at flowering"
+    },
+    "filament_colour": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "colour",
+      "optional": true,
+      "why": "a stamen's filament, and the style, where it differs from the anthers (a southern magnolia's purple, a fuchsia's red)"
     },
     "anthers_connivent": {
       "group": "flowers",
@@ -1438,6 +1629,30 @@
       "type": "count",
       "range": [1, 2000],
       "why": "the carpels in one flower, free or joined"
+    },
+    "floral_receptacle": {
+      "group": "flowers",
+      "organ": "carpel",
+      "type": "enum",
+      "values": ["flat", "convex", "elongate"],
+      "optional": true,
+      "why": "the flower's axis under its free carpels: flat, a low dome, or drawn out into a cone (a torus) with the stamens on a spiral round its foot and the carpels up it (magnolias)"
+    },
+    "gynoecium_length_m": {
+      "group": "flowers",
+      "organ": "carpel",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.3],
+      "optional": true,
+      "why": "the carpels together, from the lowest to the tip, at flowering"
+    },
+    "pistil_colour": {
+      "group": "flowers",
+      "organ": "carpel",
+      "type": "colour",
+      "optional": true,
+      "why": "the carpels at flowering, ovaries and styles, where they differ from the anthers"
     },
     "capitulum_kind": {
       "group": "flowers",
@@ -1679,6 +1894,21 @@
       "values": ["berry", "drupe", "pome", "capsule", "pod", "legume", "nut", "samara", "achene", "cypsela", "caryopsis", "follicle", "schizocarp", "aggregate", "multiple"],
       "why": "what a fruit is (pod for dry pods that split other than a legume; cypsela for the achene of the daisy family)"
     },
+    "fruit_surface": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["naked", "scaly", "areolate", "spiny"],
+      "when": {"spines": ["areoles"]},
+      "why": "what a cactus's pericarpel, and the fruit it grows into, bears on its skin: nothing (naked), broad scales, felted areoles (with glochids but no spines), or areoles with spines"
+    },
+    "fruit_shape": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["globose", "ellipsoid", "ovoid", "obovoid", "obconic", "club_shaped"],
+      "why": "a ripe fruit's outline along its length: round (globose), oval and even (ellipsoid), widest toward its base (ovoid), widest toward its tip (obovoid), narrowing to a point at its base (obconic), or swelling from a long narrow base (club_shaped)"
+    },
     "fruit_size_m": {
       "group": "fruit_and_cones",
       "organ": "fruit",
@@ -1702,11 +1932,57 @@
       "type": "colour",
       "why": "a ripe fruit"
     },
+    "fruit_colour_ripening": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "colour",
+      "optional": true,
+      "why": "a fruit halfway from unripe to ripe, where it passes through a colour of its own (a magnolia's green, rose, then brown)"
+    },
     "fruiting_months": {
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "months",
       "why": "the months its fruit is ripe in"
+    },
+    "fruitlets": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["drupelets", "follicles", "samaras", "berries", "hip"],
+      "optional": true,
+      "why": "what a fruit from one flower's many free pistils is made of: drupelets (a blackberry), follicles on a cone-like axis (a magnolia), samaras overlapping up a spindle (the tulip tree), separate berries from one stalk (the pawpaw), or achenes inside a cup (a hip: roses, sweetshrub)"
+    },
+    "fruit_seed_colour": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "colour",
+      "optional": true,
+      "why": "the seeds a ripe fruit shows where it opens on them, as they are seen: a magnolia's red seeds hanging from its split follicles"
+    },
+    "fruit_seed_thread_m": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 0.2],
+      "optional": true,
+      "why": "how far a ripe seed hangs below its open fruit on its thread (funicle): a magnolia's red seeds dangling from their follicles"
+    },
+    "fruit_cup_colour": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "colour",
+      "optional": true,
+      "why": "the cup a ripe fruit stands in and the swollen stalk under it, where it has one (a sassafras's red club and cup)"
+    },
+    "fruits_per_inflorescence": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "count",
+      "range": [1, 100000],
+      "optional": true,
+      "why": "the fruit one inflorescence ripens, where fewer than its flowers: most of a laurel's or a spicebush's umbel falls, leaving one to a few drupes"
     },
     "fruit_posture": {
       "group": "fruit_and_cones",
@@ -1724,7 +2000,7 @@
       "optional": true,
       "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), or grows on into a large spreading star (a belladonna's)"
     },
-    "fruit_surface": {
+    "fruit_armature": {
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
@@ -1992,6 +2268,14 @@
       "type": "bool",
       "optional": true,
       "why": "whether the leaves stand in unequal pairs, a smaller leaf beside a larger at one place on the stem, as a flora's 'leaves geminate' or 'two together, one smaller' (a belladonna's: the next sympodial unit's first leaf carried up beside the last leaf of the one below)"
+    },
+    "flower_zone": {
+      "group": "architecture",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["crown", "crown_and_flanks", "upper_half"],
+      "when": {"spines": ["areoles"]},
+      "why": "where a cactus column's flowers open: in a ring round its apex, near the apex and down the upper flanks, or along the upper half of the stem, below the apex"
     },
     "short_shoots": {
       "group": "architecture",

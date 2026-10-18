@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Iris",
+  "traits": {
+    "inflorescence": {"cyme": "usually", "solitary": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Iris (read 2026-10-17): flowers borne in fan-shaped clusters (a rhipidium, i.e. a one-sided cyme) of one to several, on stems simple or branched; cushion irises (sect. Oncocyclus) mostly carry single flowers."}
+  }
+}

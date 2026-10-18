@@ -509,6 +509,11 @@ pub struct Appearance {
     /// moss or furrows. The bark's colour and bark if none.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub leaf_axis: Option<[f32; 3]>,
+    /// Young wood's colour, which it loses as it grows for the bark's or
+    /// leaf axis's ([`YoungAxis`]): a fern's green crozier and young
+    /// stipe. Young wood is its bark's colour where none is given.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub young_axis: Option<YoungAxis>,
     /// The hairs on the young stems and the leaf stalks
     /// (`crate::hairs`): they cast the young wood toward their colour,
     /// wearing off as it ages past [`crate::hairs::YOUNG_YEARS`], and
@@ -787,9 +792,60 @@ impl Appearance {
                 .validate()
                 .map_err(|message| format!("appearance: {message}"))?;
         }
+        if let Some(young) = &self.young_axis {
+            young
+                .validate()
+                .map_err(|message| format!("appearance: {message}"))?;
+        }
         for (body, look) in &self.bodies {
             look.validate()
                 .map_err(|message| format!("appearance.bodies.{body}: {message}"))?;
+        }
+        Ok(())
+    }
+}
+
+/// The colour of young wood. A piece of an axis is moved from its bark's
+/// colour toward `colour` by its youth: the youth its program drew it
+/// with (the L-system's `young`, as a fern draws its crozier), or, where
+/// `years` is given, by how new it is, whichever is more.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct YoungAxis {
+    /// Linear RGB.
+    pub colour: [f32; 3],
+    /// Years new wood takes to lose the colour, more than 0. Without it
+    /// only the program's youth colours wood.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub years: Option<f64>,
+}
+
+impl YoungAxis {
+    /// How far a piece of wood drawn with youth `young` and `age` years
+    /// old is moved toward the young colour, 0 to 1: the more of `young`
+    /// and, with `years`, 1 when new falling smoothly to 0 at `years`.
+    #[must_use]
+    pub fn weight(&self, young: f32, age: f64) -> f64 {
+        let new = self
+            .years
+            .map_or(0.0, |years| 1.0 - crate::math::smoothstep(0.0, years, age));
+        f64::from(young.clamp(0.0, 1.0)).max(new)
+    }
+
+    /// Check its colour and years.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first problem.
+    pub fn validate(&self) -> Result<(), String> {
+        if self.colour.iter().any(|c| !(0.0..=1.0).contains(c)) {
+            return Err("young_axis colour must be between 0 and 1".into());
+        }
+        if self
+            .years
+            .is_some_and(|years| !(years > 0.0 && years <= 10.0))
+        {
+            return Err("young_axis years must be more than 0 and at most 10".into());
         }
         Ok(())
     }
@@ -1460,6 +1516,41 @@ impl PlantSpec {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn young_wood_takes_the_more_of_its_youth_and_its_newness() {
+        let drawn = YoungAxis {
+            colour: [0.1, 0.2, 0.05],
+            years: None,
+        };
+        // Without years only the program's youth counts.
+        assert!((drawn.weight(0.6, 0.0) - 0.6).abs() < 1e-6);
+        assert!(drawn.weight(0.0, 0.0).abs() < 1e-12);
+        let timed = YoungAxis {
+            years: Some(2.0),
+            ..drawn
+        };
+        assert!((timed.weight(0.0, 0.0) - 1.0).abs() < 1e-12);
+        assert!(timed.weight(0.0, 2.0).abs() < 1e-12);
+        assert!((timed.weight(0.6, 2.0) - 0.6).abs() < 1e-6);
+        assert!(drawn.validate().is_ok() && timed.validate().is_ok());
+        assert!(
+            YoungAxis {
+                years: Some(0.0),
+                ..drawn
+            }
+            .validate()
+            .is_err()
+        );
+        assert!(
+            YoungAxis {
+                colour: [1.2, 0.0, 0.0],
+                ..drawn
+            }
+            .validate()
+            .is_err()
+        );
+    }
 
     /// Per-value evidence: every value has a note, and every note cites a
     /// source the library holds.
