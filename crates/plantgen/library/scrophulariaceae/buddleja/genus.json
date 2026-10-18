@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Buddleja",
+  "traits": {
+    "leaf_arrangement": {"opposite": "usually", "alternate": "rarely"}
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Buddleja (read 2026-10-17): about 140 species, leaves in opposite pairs in nearly all; B. alternifolia alone has alternate leaves."}
+  }
+}

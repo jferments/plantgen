@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Leea",
+  "traits": {
+    "leaf_division": "compound",
+    "inflorescence": "cyme"
+  },
+  "evidence": {
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Leea (read 2026-10-17, 45 spp per POWO): alternate leaves divided into leaflets."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Leea (read 2026-10-17): inflorescences cymose, flowers four- or five-merous."}
+  }
+}

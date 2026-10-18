@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Clusia",
+  "traits": {
+    "fruit_type": "capsule"
+  },
+  "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Clusia (read 2026-10-17): about 300 to 400 species (327 accepted); fruit a leathery capsule opening by valves to show seeds with red or orange fleshy coats."}
+  }
+}
