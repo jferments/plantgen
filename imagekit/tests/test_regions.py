@@ -255,6 +255,41 @@ class Detect(unittest.TestCase):
             self.assertEqual(params["regions"]["organs"], ["leaf", "plant"])
 
     @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
+    def test_measure_runs_plantc_on_each_mask_with_a_cover(self):
+        import stat
+        from imagekit import measure
+        self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det")
+        self.cli("segment", "--model", "fake", "--organ", "leaf", "--run", "seg")
+        fake = self.tmp / "plantc"
+        fake.write_text(f"""#!{sys.executable}
+import json, sys
+from PIL import Image
+args = sys.argv[1:]
+assert args[0] == "measure-mask"
+m = Image.open(args[1]).convert("L")
+c = Image.open(args[args.index("--cover") + 1]).convert("L") if "--cover" in args else None
+print(json.dumps({{"view": args[args.index("--view") + 1], "cover": c is not None, "width": m.width,
+                  "cover_size": list(c.size) if c else None}}))
+""")
+        fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
+        with Store(self.store_dir) as store, contextlib.redirect_stderr(io.StringIO()):
+            first = measure.measure(store, str(fake), run="m1")
+            again = measure.measure(store, str(fake), run="m2")
+            bare = measure.measure(store, str(fake), cover="none", run="m3")
+        self.assertEqual((first["measured"], again["measured"], bare["measured"]), (1, 0, 1))
+        self.assertNotEqual(first["analyzer"], bare["analyzer"])
+        rows = list(jsonl(Path(self.store_dir) / "sources/image-analyses/m1/analyses.jsonl"))
+        self.assertEqual((rows[0]["region"], rows[0]["task"]), (2, "measure"))
+        self.assertEqual(rows[0]["out"], {"view": "side", "cover": True, "width": 320, "cover_size": [320, 240]})
+
+    def test_sky_rule(self):
+        import numpy as np
+        from imagekit.measure import sky
+        im = Image.new("RGB", (4, 1))
+        im.putdata([(195, 208, 224), (240, 240, 238), (60, 140, 50), (120, 110, 90)])  # render sky, haze, leaf, bark
+        self.assertEqual(list(np.asarray(sky(im))[0]), [True, True, False, False])
+
+    @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
     def test_organ_vectors_stay_apart_from_whole_images(self):
         from imagekit import embed, search, vectors
         self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det")

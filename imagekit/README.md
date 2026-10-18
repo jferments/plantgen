@@ -255,6 +255,7 @@ imagekit crops --taxon "Asimina triloba" --organ leaf --out ~/pawpaw-leaves
 imagekit embed --model dinov2 --regions --taxon "Asimina triloba"
 imagekit search --model dinov2 --organ leaf --image leaf.jpg --by-species
 imagekit segment --taxon "Asimina triloba"                 # SAM 2.1 crown masks on the whole-plant boxes
+imagekit measure --taxon "Asimina triloba" --plantc target/release/plantc   # crown outline measures per mask
 ```
 
 `detect` asks Grounding DINO (`gdino-tiny` by default, `gdino-base` for
@@ -281,6 +282,13 @@ inside the crown is left out varies from image to image, so measure
 see-through from the pixels inside the outline, not from the mask alone.
 These masks are what crown-shape measures read, for photos and renders
 alike.
+
+`measure` runs `plantc measure-mask` on each mask, the same code
+(`crate::form`) that measures a grown plant's side view. It gives outline
+fit, see-through, width to height, where the crown is widest, solidity
+and large gaps. What covers the sky inside the outline is read from the
+image (`--cover sky`: bright bluish or colourless pixels are sky). The
+analyzer is plantc's commit, so a change to the measures measures again.
 
 ## Render and compare
 
