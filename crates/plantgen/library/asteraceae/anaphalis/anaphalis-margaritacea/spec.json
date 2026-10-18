@@ -103,7 +103,8 @@
     "rosette": "none",
     "perennation": "rhizome",
     "inflorescence_length_m": {"min": 0.03, "max": 0.15},
-    "fruiting_months": [8, 9, 10]
+    "fruiting_months": [8, 9, 10],
+    "leaf_apex": "acuminate"
   },
   "evidence": {
     "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (0.235)."},
@@ -212,7 +213,8 @@
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922417), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922417), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922417), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922417), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922417), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China, Anaphalis margaritacea (read 2026-10-18): the middle stem leaves taper to a long point with a small tip; the lower leaves, withered by flowering, are obtuse."}
   },
   "provenance": {
     "sources": [

@@ -104,7 +104,8 @@
     "flowering_months": [3, 5],
     "fruit_size_m": {"min": 0.005, "max": 0.01},
     "fruiting_months": [6, 8],
-    "flower_size_m": {"min": 0.005, "max": 0.008}
+    "flower_size_m": {"min": 0.005, "max": 0.008},
+    "leaf_apex": {"obtuse": "usually", "acute": "often"}
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -187,7 +188,8 @@
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
     "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
-    "traits.flower_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."}
+    "traits.flower_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Lysichiton americanus (read 2026-10-18): the tip ranges from blunt to acute."}
   },
   "provenance": {
     "sources": [

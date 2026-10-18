@@ -793,4 +793,10 @@ pub mod venation;
 /// bilinearly between texels, is below one half, so an entire blade's edge
 /// follows its outline rather than a staircase of texels that reads as
 /// teeth up close (118 is herb branch leaves, #190).
-pub const GENERATOR_REVISION: u32 = 121;
+/// 122: 39 species state their leaf apex as FNA, Flora of China or FEIS
+/// give it, so their blades narrow to the stated tip; six of them
+/// (kinnikinnick, Canadian wild ginger, golden chinquapin, beaked
+/// hazelnut, fish mint, false lily-of-the-valley) draw the outline of
+/// their stated leaf shape where a hand-drawn profile stood (118 is
+/// flowering herbs' branch leaves, #190).
+pub const GENERATOR_REVISION: u32 = 122;

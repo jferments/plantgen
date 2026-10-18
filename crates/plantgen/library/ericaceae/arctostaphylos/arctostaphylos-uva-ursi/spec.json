@@ -90,9 +90,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "widest": 0.7,
-          "tip": 0.3,
-          "base": 0.6,
           "petiole": 0.05
         }
       },
@@ -198,7 +195,8 @@
     "leaf_width_m": {"min": 0.004, "max": 0.01},
     "leaf_shape": "obovate",
     "leaf_margin": "entire",
-    "inflorescence_length_m": {"min": 0.01, "max": 0.03}
+    "inflorescence_length_m": {"min": 0.01, "max": 0.03},
+    "leaf_apex": "rounded"
   },
   "evidence": {
     "taxon": {
@@ -311,7 +309,8 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
     "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."}
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2647407), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Arctostaphylos uva-ursi (read 2026-10-18): the leaf tips are rounded (FNA on efloras (flora_id=1, taxon 220001038) describes the blade but gives no apex)."}
   },
   "provenance": {
     "sources": [

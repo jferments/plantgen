@@ -174,7 +174,8 @@
     "woodiness": "woody",
     "rosette": "none",
     "inflorescence_length_m": {"min": 0.1, "max": 0.3},
-    "fruit_size_m": {"min": 0.001, "max": 0.002}
+    "fruit_size_m": {"min": 0.001, "max": 0.002},
+    "leaf_apex": "rounded"
   },
   "evidence": {
     "taxon": {
@@ -272,7 +273,8 @@
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."}
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2922600), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Artemisia tridentata (read 2026-10-18): the wedge-shaped leaf has three lobes at its tip, each rounded."}
   },
   "provenance": {
     "sources": [

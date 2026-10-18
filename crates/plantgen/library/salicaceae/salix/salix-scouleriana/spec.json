@@ -155,7 +155,8 @@
     "life_span": "perennial",
     "rosette": "none",
     "inflorescence_length_m": {"min": 0.02, "max": 0.05},
-    "leaf_shape": "obovate"
+    "leaf_shape": "obovate",
+    "leaf_apex": {"acuminate": "usually", "obtuse": "often", "rounded": "sometimes"}
   },
   "evidence": {
     "taxon": {
@@ -257,7 +258,8 @@
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
-    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."}
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Salix scouleriana (read 2026-10-18): the largest mid-shoot blades have an acuminate, convex (obtuse) or rounded tip."}
   },
   "provenance": {
     "sources": [

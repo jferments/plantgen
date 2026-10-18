@@ -107,7 +107,8 @@
     "flower_symmetry": "actinomorphic",
     "flowering_months": [4, 5],
     "fruit_size_m": {"min": 0.004, "max": 0.006},
-    "fruiting_months": [5, 6]
+    "fruiting_months": [5, 6],
+    "leaf_apex": {"acuminate": "usually", "acute": "often"}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -193,7 +194,8 @@
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
     "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2917451), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.050)."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.050)."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Populus tremuloides (read 2026-10-18): the blade tip is acuminate to acute."}
   },
   "provenance": {
     "sources": [

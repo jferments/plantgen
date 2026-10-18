@@ -147,7 +147,8 @@
     "sexual_system": "hermaphrodite",
     "inflorescence_length_m": {"min": 0.03, "max": 0.06},
     "fruit_size_m": {"min": 0.008, "max": 0.015},
-    "leaf_shape": "orbicular"
+    "leaf_shape": "orbicular",
+    "leaf_apex": {"rounded": "usually", "truncate": "often", "acute": "rarely", "mucronate": "rarely"}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -234,7 +235,8 @@
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
-    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."}
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2941208), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Amelanchier alnifolia (read 2026-10-18): the leaf tip is rounded to truncate, now and then acute or with a small point."}
   },
   "provenance": {
     "sources": [
