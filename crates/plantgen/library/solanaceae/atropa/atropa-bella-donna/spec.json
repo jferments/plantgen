@@ -116,7 +116,8 @@
       150,
       125,
       115
-    ]
+    ],
+    "fruiting_calyx_posture": "spreading"
   },
   "provenance": {
     "sources": [
@@ -305,6 +306,11 @@
       "evidence": "SourceInferred",
       "source": "kings-american-dispensatory-1898",
       "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 1, Belladonna, p. 331 (read on the Internet Archive, 2026-10-17): corolla dark dull purple at the rim, paler toward the base; Hooker (p. 288): greenish purple. The colour is our reading of the words."
+    },
+    "traits.fruiting_calyx_posture": {
+      "evidence": "SourceInferred",
+      "source": "hooker-1884",
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Atropa Belladonna, p. 288 (read on the Internet Archive, 2026-10-17): the berry set on the spreading calyx; King's American Dispensatory (vol. 1, p. 331): sitting on the enlarged calyx."
     }
   }
 }

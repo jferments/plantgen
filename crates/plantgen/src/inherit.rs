@@ -1281,6 +1281,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("rows", Number),
                 ("kept_calyx", Number),
                 ("kept_lobes", Count),
+                ("kept_posture", Word),
+                ("valves", Count),
                 ("armed", Word),
                 ("hang", Number),
                 ("flare", Number),

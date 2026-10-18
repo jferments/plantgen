@@ -859,4 +859,11 @@ pub mod venation;
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
 /// its foot (`foot`: a Zamia leaflet's jointed base) (127 is broadleaf
 /// foliage, #143).
-pub const GENERATOR_REVISION: u32 = 128;
+/// 129: a fruit's kept calyx lies as stated (`kept_posture`, from
+/// `fruiting_calyx_posture`: an eggplant's cap pressed over the fruit, a
+/// belladonna's flat star, or turned back); a ripe capsule opens from its
+/// tip into its valves (`valves`, from `capsule_valves`: a jimsonweed's
+/// four, a tobacco's two), each turned out from half way down and lined
+/// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
+/// `fruit_armature` `hooked`).
+pub const GENERATOR_REVISION: u32 = 129;

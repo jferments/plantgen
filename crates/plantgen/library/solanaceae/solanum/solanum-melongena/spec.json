@@ -119,7 +119,8 @@
     "fruiting_months": [
       8,
       9
-    ]
+    ],
+    "fruiting_calyx_posture": "clasping"
   },
   "provenance": {
     "sources": [
@@ -283,6 +284,11 @@
       "evidence": "SourceInferred",
       "source": "bailey-cyclopedia-1914",
       "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Eggplant, p. 1102 (read on the Internet Archive, 2026-10-17): sow 120 to 150 days before the fruit is wanted, set out when the weather allows, and pinch the blossoms three weeks before frost so the fruit sizes; so fruit from August until the frost. The months are our reading of the days."
+    },
+    "traits.fruiting_calyx_posture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Eggplant' (read 2026-10-18): the green part at the top of the fruit, the calyx, is cut away in cooking; Flora of British India (p. 235): the calyx lobes enlarge in fruit, much shorter than the fruit. Photographs (iNaturalist 296012680, 205124070) show it pressed over the fruit's shoulder as a cap."
     }
   }
 }

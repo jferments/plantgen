@@ -2617,6 +2617,14 @@ pub struct Fruit {
     /// The kept calyx's lobes; 0 for five.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub kept_lobes: u32,
+    /// How the kept calyx's lobes lie ([`KeptPosture`]): by their length
+    /// unless set.
+    #[serde(skip_serializing_if = "KeptPosture::is_by_length")]
+    pub kept_posture: KeptPosture,
+    /// The valves a ripe capsule opens into from its tip (a jimsonweed's
+    /// four, a tobacco's two), 0 for one that stays shut.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub valves: u32,
     /// What arms the fruit's surface.
     #[serde(skip_serializing_if = "Armed::is_none")]
     pub armed: Armed,
@@ -2669,6 +2677,8 @@ impl Default for Fruit {
             rows: 0.0,
             kept_calyx: 0.0,
             kept_lobes: 0,
+            kept_posture: KeptPosture::ByLength,
+            valves: 0,
             armed: Armed::None,
             hang: 0.0,
             flare: 0.0,
@@ -2834,8 +2844,35 @@ pub enum Armed {
     None,
     /// Stout prickles all over (a jimsonweed's capsule).
     Prickles,
-    /// Fine hooked bristles all over (an enchanter's nightshade's burr).
+    /// Fine straight bristles all over.
     Bristles,
+    /// Fine bristles hooked at their tips (an enchanter's nightshade's
+    /// burr, a cleavers' fruit).
+    Hooks,
+}
+
+/// How a calyx kept under a fruit lies (`crate::fruit`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum KeptPosture {
+    /// As its length gives: short lobes rise a little round the fruit's
+    /// foot, long ones spread in a star.
+    #[default]
+    ByLength,
+    /// Pressed to the fruit, its lobes following the fruit's surface up
+    /// from the stalk (an eggplant's cap, a pepper's cup).
+    Clasping,
+    /// Spread flat in a star (a belladonna's).
+    Spreading,
+    /// Turned back toward the stalk.
+    Reflexed,
+}
+
+impl KeptPosture {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_by_length(&self) -> bool {
+        *self == Self::ByLength
+    }
 }
 
 impl Armed {
@@ -2865,6 +2902,8 @@ struct FruitCard {
     rows: f64,
     kept_calyx: f64,
     kept_lobes: u32,
+    kept_posture: KeptPosture,
+    valves: u32,
     armed: Armed,
     hang: f64,
     flare: f64,
@@ -2897,6 +2936,8 @@ impl Default for FruitCard {
             rows: fruit.rows,
             kept_calyx: fruit.kept_calyx,
             kept_lobes: fruit.kept_lobes,
+            kept_posture: fruit.kept_posture,
+            valves: fruit.valves,
             armed: fruit.armed,
             hang: fruit.hang,
             flare: fruit.flare,
@@ -2944,6 +2985,8 @@ impl TryFrom<FruitCard> for Fruit {
             rows: card.rows,
             kept_calyx: card.kept_calyx,
             kept_lobes: card.kept_lobes,
+            kept_posture: card.kept_posture,
+            valves: card.valves,
             armed: card.armed,
             hang: card.hang,
             flare: card.flare,
@@ -3801,6 +3844,9 @@ impl Shape {
                 check("hang", s.hang, -1.0, 1.0)?;
                 if s.kept_lobes != 0 {
                     count("kept_lobes", s.kept_lobes, 3, 12)?;
+                }
+                if s.valves != 0 {
+                    count("valves", s.valves, 2, 10)?;
                 }
                 for channel in s.seeds.into_iter().chain(s.cup).chain(s.ripening).flatten() {
                     check(
