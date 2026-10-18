@@ -199,8 +199,11 @@ Usage:
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
-      the plant, metres from its foot with +Y up; --view under looks up
-      at it from below, at the lower faces of its leaves. --parts on (level 0)
+      the plant, metres from its foot with +Y up; --focus leaf:F or
+      stalk:F frames the middle of the leaf, or of the hairy young stem
+      or leaf stalk, F of the way up the plant's (0 lowest, 1 highest),
+      SPAN 0.05 unless given; --view under looks up at it from below, at
+      the lower faces of its leaves. --parts on (level 0)
       draws every flower, fruit, cone and needle shoot as its part mesh,
       as WorldLab does near the camera. --conditions grows it in a place
       as plantc grow does (the place itself is not drawn).
@@ -2210,6 +2213,38 @@ fn stand_command(args: &[String]) -> Result<(), Failure> {
 }
 
 #[allow(clippy::too_many_lines)]
+/// The point `--focus leaf:F` or `stalk:F` names on `plant`: the middle
+/// of the leaf card (or of the piece of hairy young stem or leaf stalk,
+/// `mesh::PlantMesh::hair_tubes`) `F` of the way up the plant's, from 0
+/// the lowest to 1 the highest.
+fn named_point(plant: &mesh::PlantMesh, what: &str, at: f64) -> Result<Vec3, Failure> {
+    let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+    let mut points: Vec<Vec3> = match what {
+        "leaf" => plant.cards[..plant.bent_cards()]
+            .iter()
+            .map(|card| vector(card.base) + vector(card.heading) * (f64::from(card.length) * 0.5))
+            .collect(),
+        "stalk" => plant
+            .hair_tubes
+            .iter()
+            .map(|tube| (vector(tube.start) + vector(tube.end)) * 0.5)
+            .collect(),
+        _ => return Err(format!("`--focus` names leaf:F or stalk:F, found `{what}`").into()),
+    };
+    if points.is_empty() {
+        return Err(format!("`--focus {what}:F`: the plant has none drawn at this level").into());
+    }
+    points.sort_by(|a, b| a.y.total_cmp(&b.y));
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    let index = (at.clamp(0.0, 1.0) * (points.len() - 1) as f64).round() as usize;
+    Ok(points[index.min(points.len() - 1)])
+}
+
+#[allow(clippy::too_many_lines)]
 fn render_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
@@ -2259,7 +2294,12 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let quality = options.quality()?;
     let lod = quality.lods.get(level).ok_or("`--lod` must be 0 to 3")?;
     let size: usize = options.number("size")?.unwrap_or(900);
-    let focus = match options.flags.get("focus") {
+    // `--focus leaf:F` or `stalk:F` names a point once the plant is built.
+    let named = options.flags.get("focus").and_then(|text| {
+        let (what, at) = text.split_once(':')?;
+        Some((what.to_owned(), at.trim().parse::<f64>().ok()?))
+    });
+    let focus = match options.flags.get("focus").filter(|_| named.is_none()) {
         Some(text) => {
             let point: Vec<f64> = text
                 .split(',')
@@ -2355,6 +2395,13 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         Templates::for_plant(&looks, &[]).with_bark(host_bark)
     } else {
         templates_of(&spec, &looks, &bodies, &growth)
+    };
+    let focus = match named {
+        Some((what, at)) => {
+            let span: f64 = options.number("span")?.unwrap_or(0.05);
+            Some((named_point(&plant, &what, at)?, span))
+        }
+        None => focus,
     };
     let image = preview::render(
         &plant,

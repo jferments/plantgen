@@ -658,11 +658,22 @@ pub mod venation;
 /// 104: a flowering herb's top leaf nodes may each bear a side branch
 /// ending in a raceme (`flowering_branches`; herb program revision 10)
 /// (103 is held-back species facts, #192).
-/// 105: a zone's edge drawn out along the lateral veins (`feather`),
+/// 105: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
+/// and hairs gathered on its main veins (`Hairs::veins`, from
+/// `leaf_hairs_on_veins`); a face's strands stand on the face that wears
+/// them and on the drawn cells of a bent card, and a stated hair length
+/// wins over the word's; branched hairs (`hair_branching`: stellate,
+/// dendritic) and wool (simple hairs curled through more than a turn)
+/// drawn as stars, little trees and winding strands, white with air;
+/// glandular and stinging hairs among them (`glandular_hairs`,
+/// `stinging_hairs`), with round heads and glass needles on green feet;
+/// the strand budget spent on the hairs nearest the eye first (104 is
+/// flowering branches, #188).
+/// 106: a zone's edge drawn out along the lateral veins (`feather`),
 /// spots and mottle drawn out along the blade (`stretch`), and a simple
 /// blade's parallel veins (`parallel`): Cyclamen's toothed silver, the
 /// trout lily's long blotches and its veins meeting at the tip; and a
 /// variegation's share set by the plant rather than the leaf (`plants`,
 /// the card's packed seed moved toward the plant's), as Cyclamen's and
-/// white clover's are (104 is flowering herb branches, #188).
-pub const GENERATOR_REVISION: u32 = 105;
+/// white clover's are (105 is hairs beneath and on veins, #185).
+pub const GENERATOR_REVISION: u32 = 106;

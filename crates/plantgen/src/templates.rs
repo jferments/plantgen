@@ -210,6 +210,8 @@ pub struct Template {
     pub fringe: Vec<f32>,
     /// The hairs of its look, where it has any (`crate::hairs`).
     pub hairs: Option<crate::looks::Hairs>,
+    /// The hairs of its look's lower face, where it has any.
+    pub hairs_beneath: Option<crate::looks::Hairs>,
     /// Each texel's rank in the variegation pattern ([`Texel::pattern`]);
     /// empty without variegation.
     pub pattern: Vec<f32>,
@@ -234,6 +236,16 @@ impl Template {
         self.hairs
             .as_ref()
             .map_or(0.0, |hairs| crate::hairs::cast(hairs.density) as f32)
+    }
+
+    /// The hairs on its lower face where `lower`, else on its upper.
+    #[must_use]
+    pub fn hairs_on(&self, lower: bool) -> Option<&crate::looks::Hairs> {
+        if lower {
+            self.hairs_beneath.as_ref()
+        } else {
+            self.hairs.as_ref()
+        }
     }
 }
 
@@ -389,6 +401,7 @@ impl Templates {
                     accent: drawn.accent,
                     fringe: Vec::new(),
                     hairs: None,
+                    hairs_beneath: None,
                     pattern: Vec::new(),
                     sorus: Vec::new(),
                 });
@@ -498,6 +511,7 @@ impl Templates {
                     accent,
                     fringe,
                     hairs: look.hairs.clone(),
+                    hairs_beneath: look.hairs_beneath.clone(),
                     pattern,
                     sorus,
                 }
@@ -597,10 +611,17 @@ impl Templates {
                 *value += (sorus[channel] * darkening - *value) * weight;
             }
         }
-        let hair = f64::from(texel.hair);
+        // The lower face wears its own hairs, or none.
+        let hair = if face.lower {
+            template
+                .hairs_beneath
+                .as_ref()
+                .map_or(0.0, |hairs| crate::hairs::cast(hairs.density))
+        } else {
+            f64::from(texel.hair)
+        };
         let hairs = template
-            .hairs
-            .as_ref()
+            .hairs_on(face.lower)
             .map_or([0.0; 3], |hairs| hairs.colour);
         std::array::from_fn(|channel| {
             let accent = f64::from(template.accent_colour[channel]) * darkening;
@@ -4257,6 +4278,7 @@ mod tests {
                 name.clone(),
                 OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
                     sori: None,

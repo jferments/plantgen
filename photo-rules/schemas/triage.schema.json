@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "triage.schema.json",
+  "title": "Triage of one image (01-triage.md)",
+  "type": "object",
+  "required": [
+    "photo_id",
+    "description",
+    "usable",
+    "views",
+    "stage",
+    "setting",
+    "age_class",
+    "lighting"
+  ],
+  "properties": {
+    "photo_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "usable": {
+      "type": "boolean"
+    },
+    "unusable_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "species_match": {
+      "enum": [
+        "yes",
+        "no",
+        "unsure"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "photo",
+        "herbarium_sheet",
+        "drawing",
+        "render"
+      ]
+    },
+    "views": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "V1",
+          "V2",
+          "V3",
+          "V4",
+          "V5",
+          "V6",
+          "V7",
+          "V8"
+        ]
+      }
+    },
+    "organs_visible": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "stage": {
+      "enum": [
+        "vegetative",
+        "bud",
+        "flowering",
+        "fruiting",
+        "leafless",
+        "mixed",
+        "cannot tell"
+      ]
+    },
+    "leaf_state": {
+      "enum": [
+        "none",
+        "flushing",
+        "full",
+        "autumn_colour",
+        "leafless",
+        "cannot tell"
+      ]
+    },
+    "setting": {
+      "enum": [
+        "open_grown",
+        "forest",
+        "garden_or_street",
+        "pot_or_indoor",
+        "pruned_or_hedge",
+        "cannot tell"
+      ]
+    },
+    "cultivar_look": {
+      "enum": [
+        "yes",
+        "no",
+        "cannot tell"
+      ]
+    },
+    "age_class": {
+      "enum": [
+        "seedling",
+        "juvenile",
+        "young",
+        "mature",
+        "old",
+        "cannot tell"
+      ]
+    },
+    "scale_cue": {
+      "enum": [
+        "none",
+        "ruler",
+        "colour_card",
+        "hand",
+        "person",
+        "pole",
+        "other"
+      ]
+    },
+    "lighting": {
+      "enum": [
+        "direct sun",
+        "shade",
+        "overcast",
+        "dim",
+        "flash",
+        "studio",
+        "render"
+      ]
+    },
+    "quality": {
+      "enum": [
+        "sharp",
+        "soft",
+        "blurred"
+      ]
+    }
+  }
+}
