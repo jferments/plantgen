@@ -20,6 +20,8 @@ What it does now:
 - **run** a `photo-rules/` task (triage, observe, describe) on the images
   that lack it, through a model on your own machine, OpenRouter, the Claude
   API or a chat window, with the cost estimated first and capped;
+- count the usable photos of each **view** per species against
+  `photo-rules/`' targets;
 - **embed** each image once per model (SigLIP2, DINOv2, BioCLIP-2) and
   **search** the library by words or by a photo.
 
@@ -65,6 +67,27 @@ imagekit fetch folder ~/Pictures/plants --licence cc-by --creator "Your Name" --
 - **Commons:** reads the files directly in the category. Many species keep
   most of their files in subcategories, so name one with `--category`.
 - **GBIF:** images sit on each herbarium's own server, and some fail.
+
+**Fetch by view.** A species needs photos of each view to a target (whole
+plant, leafless, shoot, leaf face-on and underside, flower face and side,
+fruit, bark, and for cacti the apex and areole close-ups; see
+`photo-rules/SOURCES.md`), not a random sample, which is mostly flowers.
+After a triage run, `views` counts the usable photos of each view per taxon
+against those targets, with how many photographers took them and how many
+more each view needs:
+
+```sh
+imagekit run triage --backend workstation
+imagekit views                                     # every taxon triaged
+imagekit views --taxon "Acer circinatum" --json
+```
+
+It reads the triage analyzer with most answers, or the one `--analyzer`
+names, and counts a photo when triage found it usable and not a cultivar.
+Cacti (family Cactaceae, or areoles seen) get the apex and areole targets in
+place of the leaf ones. Then fetch again for the views still short: more
+iNaturalist photos with `--months` for winter or `--phenology`, Commons and
+your own for whole plants, GBIF sheets for leaves.
 
 ## Licences
 

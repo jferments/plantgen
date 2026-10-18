@@ -538,25 +538,24 @@ pub(crate) fn build_shaded(
     for (solid, lace) in solid.iter_mut().zip(crate::lace::lace_types(looks, level)) {
         *solid |= lace;
     }
-    let blooms: Vec<bool> = looks
+    let blooms: Vec<Option<usize>> = looks
         .iter()
         .enumerate()
         .map(|(index, look)| {
-            look.solid.is_none()
-                && !is_part(index)
-                && look.form.solid_at(level)
-                && blooms::fits(graph, look, index)
+            (look.solid.is_none() && !is_part(index) && look.form.solid_at(level))
+                .then(|| blooms::step(graph, look, index))
+                .flatten()
         })
         .collect();
     for (solid, bloom) in solid.iter_mut().zip(&blooms) {
-        *solid |= *bloom;
+        *solid |= bloom.is_some();
     }
     let variation = appearance.variation;
     let colour =
         |look: &Look, organ: &GraphOrgan| organ_color(look, variation, organ.light, organ.id);
     leaves::build(graph, looks, level, &colour, &mut mesh.wood);
     crate::lace::build(graph, looks, level, &colour, &mut mesh.wood);
-    blooms::build(graph, looks, &blooms, &colour, &mut mesh.wood);
+    blooms::build_stepped(graph, looks, &blooms, &colour, &mut mesh.wood);
     if level <= 1 {
         let stem_hairs = appearance.stem_hairs.as_ref().filter(|hairs| hairs.drawn());
         petioles(graph, looks, stem_hairs, &mut mesh);
@@ -4009,6 +4008,7 @@ mod tests {
             bend: None,
             form: None,
             season: None,
+            leafing: None,
             families: None,
             inflorescence: None,
         }

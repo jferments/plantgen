@@ -5,7 +5,11 @@
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem moraceae 1 extends broadleaf;
+# Revision 2: a species that leaves `blooms` unset bears one bloom on
+# each short shoot in the light once adult, as on broadleaf's forms;
+# until now it bore none, so it never flowered or fruited.
+
+lsystem moraceae 2 extends broadleaf;
 
 param bud_break = 1.3;      # vigour a lateral bud needs to grow a long shoot
 param flux = 2;             # Borchert-Honda alpha: vigour per unit of light
@@ -15,7 +19,7 @@ param spur_light = 0.1;     # light a short shoot needs to leaf out
 param shade_death = 0.06;   # light below which a bud dies
 param steer_weight = 0.35;  # how far a shoot turns toward free space
 param leaf_area = 0.35;     # leaf area of a leaf card 1 m long, m²
-param blooms = 0;           # blooms at the tip of a short shoot in the light
+param blooms = 1;           # blooms at the tip of a short shoot in the light
 param adult_age = 4;        # the first year the plant is adult and flowers
 param bloom_size = 0.05;    # bloom card length
 param bloom_angle = 35;     # angle of a bloom to its shoot; past 90 it hangs

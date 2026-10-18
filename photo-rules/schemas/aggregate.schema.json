@@ -46,7 +46,8 @@
               "share",
               "angle",
               "count",
-              "colour"
+              "colour",
+              "profile"
             ]
           },
           "n": {
@@ -98,6 +99,39 @@
                 }
               }
             }
+          },
+          "band_median": {
+            "description": "profile: the median width in each band",
+            "type": "array",
+            "items": {"type": "number", "minimum": 0, "maximum": 2},
+            "minItems": 10,
+            "maxItems": 10
+          },
+          "band_q1": {
+            "description": "profile: the 25th percentile in each band",
+            "type": "array",
+            "items": {"type": "number", "minimum": 0, "maximum": 2},
+            "minItems": 10,
+            "maxItems": 10
+          },
+          "band_q3": {
+            "description": "profile: the 75th percentile in each band",
+            "type": "array",
+            "items": {"type": "number", "minimum": 0, "maximum": 2},
+            "minItems": 10,
+            "maxItems": 10
+          },
+          "band_n": {
+            "description": "profile: the widths behind each band's median",
+            "type": "array",
+            "items": {"type": "integer", "minimum": 0},
+            "minItems": 10,
+            "maxItems": 10
+          },
+          "bands_estimated": {
+            "description": "profile: bands (0 for the first) where over half the widths were estimated",
+            "type": "array",
+            "items": {"type": "integer", "minimum": 0, "maximum": 9}
           },
           "high_confidence_share": {
             "type": "number"

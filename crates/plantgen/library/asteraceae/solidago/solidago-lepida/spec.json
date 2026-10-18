@@ -113,7 +113,8 @@
     "perennation": "rhizome",
     "inflorescence_length_m": {"min": 0.05, "max": 0.25},
     "fruit_size_m": {"min": 0.001, "max": 0.002},
-    "fruiting_months": [8, 9, 10]
+    "fruiting_months": [8, 9, 10],
+    "leaf_apex": {"acute": "usually", "acuminate": "often"}
   },
   "evidence": {
     "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (0.235); drawn again with the teeth the kingdom's margin rule gives it (2026-10-16)."},
@@ -238,7 +239,8 @@
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2911092), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2911092), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2911092), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2911092), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2911092), as no source read gives it."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Solidago lepida (read 2026-10-18): the lower stem-leaf blades have acute to acuminate tips."}
   },
   "provenance": {
     "sources": [

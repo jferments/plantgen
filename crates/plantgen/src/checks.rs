@@ -2590,15 +2590,20 @@ fn flower_parts(
             Ovary::Inferior => "inferior",
         },
     );
-    tally.kind(
-        "zygomorphy",
-        match flower.corolla {
-            Corolla::Regular | Corolla::Unequal => "other",
-            Corolla::Papilionaceous => "papilionaceous",
-            Corolla::Bilabiate => "bilabiate",
-            Corolla::Labellate => "labellate",
-        },
-    );
+    // A zygomorphic corolla's kind; a regular flower has none, so a genus
+    // whose family states a kind its own flowers lack (mimosoid Vachellia
+    // under the pea family's papilionaceous) is not judged by it.
+    if flower.is_zygomorphic() {
+        tally.kind(
+            "zygomorphy",
+            match flower.corolla {
+                Corolla::Regular | Corolla::Unequal => "other",
+                Corolla::Papilionaceous => "papilionaceous",
+                Corolla::Bilabiate => "bilabiate",
+                Corolla::Labellate => "labellate",
+            },
+        );
+    }
     tally.kind(
         "flower_symmetry",
         if flower.is_zygomorphic() {
@@ -3314,7 +3319,8 @@ mod tests {
         let states = |key: &str| kinds[key].iter().cloned().collect::<Vec<_>>();
         assert_eq!(states("perianth"), ["sepals_and_petals", "spiral"]);
         assert_eq!(states("ovary_position"), ["inferior", "superior"]);
-        assert_eq!(states("zygomorphy"), ["other", "papilionaceous"]);
+        // The cactus's regular flower has no zygomorphy to draw.
+        assert_eq!(states("zygomorphy"), ["papilionaceous"]);
     }
 
     #[test]

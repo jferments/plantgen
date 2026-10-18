@@ -171,6 +171,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_colour_autumn": [225, 180, 50],
     "height_max_m": {
       "min": 9.14,
       "max": 28.96
@@ -192,6 +193,7 @@
     "fruit_size_m": {"min": 0.035, "max": 0.06}
   },
   "evidence": {
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Bigleaf maple (read 2026-10-18): \"In autumn, the leaves turn gold and yellow\". Colour ours."},
     "generator.params.sprout_light": {
       "evidence": "Authored",
       "source": "plantgen-authors",

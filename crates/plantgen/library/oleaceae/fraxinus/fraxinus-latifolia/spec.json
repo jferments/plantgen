@@ -120,6 +120,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_habit": "deciduous",
+    "leaf_colour_autumn": [235, 205, 60],
+    "leaf_fall_months": [10],
     "height_max_m": {
       "min": 10,
       "max": 25
@@ -139,6 +142,9 @@
     "fruit_size_m": {"min": 0.025, "max": 0.05}
   },
   "evidence": {
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): \"a medium-sized deciduous tree\"."},
+    "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): the leaves \"turn bright yellow and fall off early in autumn\". Colour ours."},
+    "traits.leaf_fall_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): the leaves \"fall off early in autumn\": October, ahead of the October to November most broadleaves are given. Month ours."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",

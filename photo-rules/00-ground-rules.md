@@ -63,7 +63,8 @@ For every answer other than "cannot tell", give:
 - **Shapes and ratios of flat organs** (leaves, petals, flower faces) only on
   organs seen face-on. If a round flower looks like an ellipse, or a leaf is
   curled, tilted or folded, it is foreshortened: use another one or say
-  "cannot tell".
+  "cannot tell". Features marked `face_on` say so; `02-observe.md` ("Is it
+  face-on?") gives the checks.
 - **Whole-plant shape** only when the whole plant is in frame, base and top,
   seen from the side.
 - **Angles** only from a side view of the part.

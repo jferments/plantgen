@@ -1,4 +1,4 @@
-# Colour families for observations (v1, 2026-10-17).
+# Colour families for observations (v2, 2026-10-18; unchanged since v1).
 # Name the family by eye, then give a hex of a lit, in-focus patch.
 # The hex anchors are typical midpoints, not limits; comparison is done in
 # CIELAB on the reported hex, within the same lighting.
