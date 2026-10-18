@@ -808,4 +808,10 @@ pub mod venation;
 /// whatever months they stated. A regular flower is not judged by the
 /// kind of zygomorphy its family states (109 is fern
 /// croziers green, #186).
-pub const GENERATOR_REVISION: u32 = 123;
+/// 124: a chain-fruit cholla's chains of fruit hang toward the ground
+/// (`column` revision 4, `cactaceae` revision 10), the organ pipe's
+/// flowers carry hundreds of stamens and an 11- to 12-lobed stigma, and a
+/// type of laid-out flowers too many to draw fine is drawn one step
+/// coarser instead of as cards (`blooms::step`) (116 is pericarpels, buds,
+/// fruit outlines and stigma colours).
+pub const GENERATOR_REVISION: u32 = 124;
