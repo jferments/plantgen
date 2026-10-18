@@ -1,0 +1,313 @@
+{
+  "schema": 1,
+  "id": "euonymus-europaeus",
+  "taxon": {
+    "scientific_name": "Euonymus europaeus",
+    "common_name": "spindle",
+    "family": "Celastraceae",
+    "genus": "Euonymus",
+    "plant_name_id": 2803293
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 5,
+      "branch_angle": 40
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.4,
+      0.43,
+      0.32
+    ],
+    "foliage": [
+      0.1,
+      0.24,
+      0.07
+    ],
+    "foliage_shade": [
+      0.032,
+      0.077,
+      0.022
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 3.0,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 2,
+      "max": 4
+    },
+    "height_max_m": {
+      "min": 3,
+      "max": 6
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.08
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "petiole_length_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "leaf_shape": "elliptic",
+    "leaf_margin": "crenate",
+    "inflorescence": "cyme",
+    "flowering_position": "lateral",
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 10
+    },
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.04
+    },
+    "flower_size_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "flower_merosity": 4,
+    "flower_colour": [
+      215,
+      225,
+      180
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.01
+    },
+    "fruit_width_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "fruit_colour_ripe": [
+      225,
+      75,
+      115
+    ],
+    "flowering_months": [
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a shrub 2 m to 4 m tall."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: up to 6 m tall, as a small tree."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a long-lived shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a woody shrub or small tree."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: deciduous."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves in opposite pairs, set by hand from iNaturalist photos (observations 185275497, 210771524, 357643956, 347280704, 182092852, 251680718, 79916821, 45468662): the sources read give no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 4 cm to 8 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 1.5 cm to 3 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 5 mm to 10 mm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves elliptic."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves finely crenate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 262, Euonymus europaeus: inflorescence a cyme, 3-10-flowered."
+    },
+    "traits.flowering_position": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flowers in small stalked cymes from the leaf axils, set by hand from iNaturalist photos (observations 185275497, 210771524, 357643956, 347280704, 182092852, 251680718, 79916821, 45468662): the sources read give no count or measure."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 262, Euonymus europaeus: cyme 3-10-flowered."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: cymes 2 cm to 4 cm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 262, Euonymus europaeus: flowers 8-10 mm."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 262, Euonymus europaeus: floral formula K4 C4 A4 G(4)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 262, Euonymus europaeus: flowers greenish-yellow to greenish-white; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 263, Euonymus europaeus: fruit a capsule, 4-lobed, pink."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 263, Euonymus europaeus: capsule 1 cm long, 1-1.5 cm in diameter."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 263, Euonymus europaeus: capsule 1 cm long, 1-1.5 cm in diameter."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 263, Euonymus europaeus: capsule pink, the seeds' aril orange; sRGB by eye from the photos."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 262, Euonymus europaeus: flowering April to June."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: capsules ripe September and October."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: an upright shrub of green twigs and finely toothed elliptic leaves in pairs, with small greenish four-petalled flowers in stalked clusters, and pink four-lobed capsules in autumn."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for spindle from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "3.0 m tall at 12 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

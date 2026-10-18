@@ -1,0 +1,363 @@
+{
+  "schema": 1,
+  "id": "rhus-glabra",
+  "taxon": {
+    "scientific_name": "Rhus glabra",
+    "common_name": "smooth sumac",
+    "family": "Anacardiaceae",
+    "genus": "Rhus",
+    "plant_name_id": 2423048
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 7,
+      "branch_angle": 40
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.45,
+      0.4,
+      0.34
+    ],
+    "foliage": [
+      0.11,
+      0.25,
+      0.07
+    ],
+    "foliage_shade": [
+      0.035,
+      0.08,
+      0.022
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 2.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1,
+      "max": 4
+    },
+    "height_max_m": {
+      "min": 3,
+      "max": 6
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": {
+      "min": 11,
+      "max": 31
+    },
+    "terminal_leaflet": true,
+    "leaf_length_m": {
+      "min": 0.3,
+      "max": 0.5
+    },
+    "leaflet_length_m": {
+      "min": 0.025,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.12,
+      "max": 0.25
+    },
+    "petiole_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_apex": "acuminate",
+    "leaf_margin": "serrate",
+    "inflorescence": "panicle",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.25,
+      "high": 0.45
+    },
+    "inflorescence_branches": {
+      "min": 12,
+      "max": 25
+    },
+    "units_per_inflorescence": {
+      "min": 300,
+      "max": 1000
+    },
+    "flower_size_m": {
+      "min": 0.003,
+      "max": 0.003
+    },
+    "flower_colour": [
+      205,
+      210,
+      130
+    ],
+    "sexual_system": "dioecious",
+    "fruit_type": "drupe",
+    "fruit_size_m": {
+      "min": 0.004,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      170,
+      45,
+      30
+    ],
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a shrub 1 m to 4 m tall."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: shrub or small tree, 1-6 m. high; FEIS: 2 to 20 feet (0.5 to 6 m)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus glabra: a native, perennial, deciduous, thicket-forming shrub or small tree."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus glabra: a shrub or small tree; branches sparse, smooth and stout."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus glabra: deciduous."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves borne singly, alternate along the stems, set by hand from iNaturalist photos (observations 86660193, 172071490, 163892106, 26818318, 25522053, 51724636, 137135792, 222347559): the sources read give no count or measure."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: leaflets 11-31."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: leaflets 11-31, pinnately arranged with a terminal one, as in the photos."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: leaflets serrulate, not divided again."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: leaflets 11-31."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "An odd leaflet at each leaf's tip, set by hand from iNaturalist photos (observations 86660193, 172071490, 163892106, 26818318, 25522053, 51724636, 137135792, 222347559): the sources read give no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 30 cm to 50 cm long."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: leaflets lanceolate or oblong-lanceolate, 2.5-10 cm. long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 12 cm to 25 cm across their leaflets, as in the photos."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 4 cm to 10 cm long, as in the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: leaflets lanceolate or oblong-lanceolate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: leaflets acuminate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: sharply serrulate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: inflorescence a large dense terminal panicle."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Upright panicles at the shoot tips, set by hand from iNaturalist photos (observations 86660193, 172071490, 163892106, 26818318, 25522053, 51724636, 137135792, 222347559): the sources read give no count or measure."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Rhus glabra: flowers borne in long (up to 18 inches (45 cm)), dense, compound, terminal panicles; 10 cm to 25 cm usual (species-facts estimate)."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "12 to 25 side branches to a panicle, set by hand from iNaturalist photos (observations 86660193, 172071490, 163892106, 26818318, 25522053, 51724636, 137135792, 222347559): the sources read give no count or measure."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: several hundred to a thousand small flowers in a panicle, as in the photos."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: flowers greenish, about 3 mm. broad."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: flowers greenish; drawn yellow-green as in the photos; sRGB by eye."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: dioecious."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: drupe compressed."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: drupe about 4 mm. in diameter."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: drupe covered with short reddish hairs; the photos show dark red clusters; sRGB by eye."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus glabra: flowering May to July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: drupes ripe August to October."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a sparsely branched, open shrub of long feathery leaves of many narrow leaflets, crowned with upright yellow-green panicles that turn to dark red fruit."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for smooth sumac from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.6 m tall at 12 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

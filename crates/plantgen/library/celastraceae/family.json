@@ -33,7 +33,12 @@
     },
     "ovary_position": "superior"
   },
+  "rules": {
+    "generator.params.leaf_size": {"rule": "leaf_length_m + first(petiole_length_m, 0)", "why": "A shrub's leaf card holds one leaf and its stalk end to end: the blade its flora measures and its petiole where it has one."},
+    "appearance.organs.leaf.shape.petiole": {"template": ["simple", "compound"], "rule": "first(petiole_length_m, 0) / (leaf_length_m + first(petiole_length_m, 0))", "why": "A leaf's card is its petiole and blade end to end, so the petiole's share is its length over theirs together."}
+  },
   "evidence": {
+    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How a Celastraceae shrub's leaf cards are sized from a flora's leaf lengths: the card is the blade with its petiole end to end, and the petiole's share of it its length over both, so the blades and petioles drawn are the ones measured (the shrub form's default card is half again the blade, with a fixed petiole share). Homed at the family, whose built-in species came with the core-species expansion, phase C batch 3 (2026-10-18), so no other species changes."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Celastraceae (read 2026-10-17): lamina undivided."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 262, 264: general formula 2 to 5, up to 10 carpels; Celastrales tend to tricarpellate gynoecia."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 262, 264: 4-5 free, large petals (general formula C (3) 4-5 (6), not fused). Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},

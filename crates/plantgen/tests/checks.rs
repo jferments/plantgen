@@ -22,6 +22,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
+        "adiantum-aleuticum",
+        "division_pattern",
+        "its fronds are pedate, the pinnae forking from the top of the stipe (Fern Grower's Manual p. 148), but the fern program draws every frond pinnate, its pinnae along one rachis, until it draws a forking frond",
+    ),
+    (
+        "adiantum-aleuticum",
+        "leaf_length_m",
+        "its young fronds unroll from about 3.5 cm, below the 10 to 30 cm Abrams (1923) p. 24 gives grown fronds, which the measure counts with them (inferred: its grown fronds read 14 to 17 cm)",
+    ),
+    (
         "ambrosia-dumosa",
         "leaf_shape",
         "its dissected blade is drawn on a compound card of three pairs of lobed segments (spec rework E1), whose outline reads obovate or orbicular against the deltate, oblong or ovate outline Abrams and Ferris give the whole blade",
@@ -125,6 +135,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "hedyosmum-mexicanum",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
+    ),
+    (
+        "hemionitis-densa",
+        "leaf_length_m",
+        "its young fronds unroll from about 7 mm, below the 1.5 to 8 cm Abrams gives grown fronds, which the measure counts with them (inferred: its grown fronds read 3 to 4.6 cm)",
+    ),
+    (
+        "hemionitis-triangularis",
+        "leaf_shape",
+        "its pinnae shorten toward the tip as a fern's do, but its lowest pair is not drawn the longest, so the frond reads orbicular or ovate against the deltate frond Abrams (1923) p. 20 gives, until the fern program can widen a frond to its base",
     ),
     (
         "heracleum-maximum",
@@ -282,6 +302,31 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
+        "rhus-aromatica",
+        "petiole_length_m",
+        "its leaf is trifoliolate and the compound card sets its one lateral pair halfway up the rachis, so the stalk reads 3.3 to 3.7 cm to that pair against Abrams' 1 to 2.5 cm, until the card sets a lone pair at the top of the petiole",
+    ),
+    (
+        "rhus-glabra",
+        "fruit_size_m",
+        "its panicle's drupes are drawn about 0.6 mm across against the 4 mm Abrams gives: a woody plant's panicle sizes its units within the branch frame, so a large panicle draws each unit small, until the cluster layout sizes a unit by its trait",
+    ),
+    (
+        "rhus-glabra",
+        "leaf_arrangement",
+        "its crown keeps about 50 leaves 34 cm long on few stout shoots, as FEIS has it, so most shoots hold 2 leaves and the measure cannot tell an alternate pair from an opposite one",
+    ),
+    (
+        "rhus-glabra",
+        "phyllotaxis_pattern",
+        "its crown keeps about 50 leaves 34 cm long on few stout shoots, as FEIS has it, so most shoots hold 2 leaves and the measure cannot tell a spiral from a crossing or stacked pair",
+    ),
+    (
+        "rhus-glabra",
+        "shoot_leaves",
+        "its leaves are 30 to 50 cm long, so the space each needs lets only one measured shoot live, with 2 leaves, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -305,6 +350,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
+    ),
+    (
+        "toxicodendron-diversilobum",
+        "fruit_size_m",
+        "its panicle's drupes are drawn about 0.7 mm across against the 4 to 6 mm Abrams gives: a woody plant's panicle sizes its units within the branch frame, so each unit draws small, until the cluster layout sizes a unit by its trait",
+    ),
+    (
+        "toxicodendron-diversilobum",
+        "inflorescence_length_m",
+        "its panicle is drawn 1.5 to 2 cm long against Abrams' 3 to 8 cm: a cluster is drawn at about three fifths of the length its traits give, and less on a nodding panicle, until the cluster layout fills its organ",
     ),
 ];
 

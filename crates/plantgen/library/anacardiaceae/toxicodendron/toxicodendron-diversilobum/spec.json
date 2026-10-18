@@ -1,0 +1,364 @@
+{
+  "schema": 1,
+  "id": "toxicodendron-diversilobum",
+  "taxon": {
+    "scientific_name": "Toxicodendron diversilobum",
+    "common_name": "Pacific poison oak",
+    "family": "Anacardiaceae",
+    "genus": "Toxicodendron",
+    "plant_name_id": 2435110
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 8,
+      "branch_angle": 40
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.42,
+      0.36,
+      0.3
+    ],
+    "foliage": [
+      0.13,
+      0.27,
+      0.07
+    ],
+    "foliage_shade": [
+      0.042,
+      0.086,
+      0.022
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 1.8,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1,
+      "max": 3
+    },
+    "height_max_m": {
+      "min": 1,
+      "max": 3
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": 3,
+    "terminal_leaflet": true,
+    "leaf_length_m": {
+      "min": 0.06,
+      "max": 0.15
+    },
+    "leaflet_length_m": {
+      "min": 0.025,
+      "max": 0.07
+    },
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.12
+    },
+    "petiole_length_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "obtuse",
+    "leaf_margin": "dentate",
+    "inflorescence": "panicle",
+    "flowering_position": "lateral",
+    "inflorescence_posture": "nodding",
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
+    "inflorescence_branches": {
+      "min": 4,
+      "max": 8
+    },
+    "units_per_inflorescence": {
+      "min": 15,
+      "max": 40
+    },
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "flower_colour": [
+      228,
+      228,
+      196
+    ],
+    "sexual_system": "dioecious",
+    "fruit_type": "drupe",
+    "fruit_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "fruit_colour_ripe": [
+      232,
+      226,
+      200
+    ],
+    "flowering_months": [
+      4,
+      5
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: an erect shrub, 1-3 m. high, or in forests becoming a vine; the shrub is drawn."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: an erect shrub, 1-3 m. high; as a vine climbing trees to 40 m., which is not drawn."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Toxicodendron diversilobum: a many-stemmed, deciduous, native shrub or woody vine."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Toxicodendron diversilobum: a shrub or woody vine."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: leaves 3-foliolate, deciduous."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves borne singly, alternate along the stems, set by hand from iNaturalist photos (observations 268681104, 56703050, 276456081, 119554185, 121053471, 159668842, 6395203, 74688895): the sources read give no count or measure."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: leaves 3-foliolate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: leaves 3-foliolate, the lateral leaflets usually sessile and the terminal one stalked, as in a pinnate leaf."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: leaflets lobed or toothed but not divided again."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: leaves 3-foliolate; FEIS: three (sometimes five) leaflets."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: the lateral leaflets usually sessile, the terminal one stalked."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 6 cm to 15 cm long, as in the photos."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 2.5 cm to 7 cm long, the terminal one the largest, as in the photos."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 5 cm to 12 cm across their lateral leaflets, as in the photos."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 2 cm to 6 cm long, as in the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: leaflets ovate, obovate or elliptical."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: obtuse or rounded at the apex."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: variously lobed or toothed, or rarely entire; FEIS: usually resembling oak leaves."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: panicles axillary, loosely flowered."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: panicles axillary; FEIS: small flowers occur in leaf axils."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 50, Rhus diversiloba: panicles drooping or spreading."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: panicles 3 cm to 8 cm long."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "4 to 8 side branches to a panicle, set by hand from iNaturalist photos (observations 268681104, 56703050, 276456081, 119554185, 121053471, 159668842, 6395203, 74688895): the sources read give no count or measure."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "15 to 40 flowers in a panicle, set by hand from iNaturalist photos (observations 268681104, 56703050, 276456081, 119554185, 121053471, 159668842, 6395203, 74688895): the sources read give no count or measure."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flowers 4 mm to 6 mm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Petals greenish cream; sRGB by eye, set by hand from iNaturalist photos (observations 268681104, 56703050, 276456081, 119554185, 121053471, 159668842, 6395203, 74688895): the sources read give no count or measure."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Toxicodendron diversilobum: male and female flowers on separate plants."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus diversiloba: drupes glabrous, with a thin deciduous epicarp and a waxy-persistent mesocarp."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus diversiloba: drupes 4-6 mm. in diameter."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Toxicodendron diversilobum: the fruits are white drupes; sRGB by eye."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 51, Rhus diversiloba: flowering April and May."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: drupes ripe July to September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a dense many-stemmed shrub of glossy, lobed leaves in threes, the loose cream flower panicles hanging from the leaf axils."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Pacific poison oak from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.8 m tall at 12 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}

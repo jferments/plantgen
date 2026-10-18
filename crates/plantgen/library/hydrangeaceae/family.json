@@ -76,7 +76,15 @@
       "lobed": "rarely"
     }
   },
+  "rules": {
+    "generator.params.leaf_size": {"rule": "leaf_length_m + first(petiole_length_m, 0)", "why": "A shrub's leaf card holds one leaf and its stalk end to end: the blade its flora measures and its petiole where it has one."},
+    "appearance.organs.leaf.shape.petiole": {"template": ["simple", "compound"], "rule": "first(petiole_length_m, 0) / (leaf_length_m + first(petiole_length_m, 0))", "why": "A leaf's card is its petiole and blade end to end, so the petiole's share is its length over theirs together."},
+    "generator.params.leaf_length": {"rule": "max(leaf_length_m) + first(petiole_length_m, 0)", "why": "A herb's longest stem leaf is as long as the longest blade its flora measures, with its petiole where it has one, as a leaf card holds both; the leaves below and above it are shorter by the shares its program sets."},
+    "generator.params.leaf_top": {"rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)", "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures."},
+    "generator.params.leaf_base": {"rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)", "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures; its basal leaves are drawn apart."}
+  },
   "evidence": {
+    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How a Hydrangeaceae shrub's leaf cards are sized from a flora's leaf lengths: the card is the blade with its petiole end to end, and the petiole's share of it its length over both, so the blades and petioles drawn are the ones measured (the shrub form's default card is half again the blade, with a fixed petiole share). Its herbs take the campanulids' stem-leaf rules (spec rework E1 and E3), as the borage family's do. Homed at the family, whose built-in species came with the core-species expansion, phase C batch 3 (2026-10-18), so no other species changes."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
