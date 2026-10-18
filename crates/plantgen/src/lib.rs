@@ -619,6 +619,10 @@ pub mod venation;
 /// limbs branch again (`side_order` 2, twigs living `twig_years` with one
 /// spray each), stop lengthening with their reach, start short below the
 /// treetop (`top_ramp`) and clear the trunk in step with height (`bole`),
-/// so fully branched crowns grow to 300 years (96 is nodding leaders,
-/// #167).
+/// so fully branched crowns grow to 300 years; and old crowns keep their
+/// foliage from 150 to 300 years: a side shoot keeps growing at least
+/// `side_floor` once the leader stops rising, the family's dormant buds
+/// wait on the limbs' main axes for 300 years (`epi_order`), and a limb is
+/// shed for the mean light of its tips (`limb_tip`) more than for its size
+/// (96 is nodding leaders, #167).
 pub const GENERATOR_REVISION: u32 = 97;

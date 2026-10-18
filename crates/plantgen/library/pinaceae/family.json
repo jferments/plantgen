@@ -32,12 +32,28 @@
       "why": "The twigs on a limb's side shoots live about as long as their needles and are replaced from below; kept for ever, the fully branched crown passed the program's module limit before 200 years."
     },
     "generator.params.epi_years": {
-      "rule": "80",
-      "why": "A branch's dormant buds live for decades and resprout a thinning limb (the reiteration that keeps old crowns full); at 20 years old crowns thinned to a fishbone, kept for ever their buds passed the module limit."
+      "rule": "300",
+      "why": "A limb's dormant buds wait as long as the limb lives and resprout it where light reaches them: old Douglas-fir crowns keep their foliage by such epicormic shoots (Ishii & Ford 2001), as old firs, spruces and hemlocks reiterate theirs. Living 80 years, the buds were spent before the crown aged, and old crowns lost three quarters of their foliage between 150 and 300 years."
+    },
+    "generator.params.epi_order": {
+      "rule": "1",
+      "why": "The dormant buds that resprout an old limb wait along its main axis, where its epicormic shoots stand (Ishii & Ford 2001); buds kept on every side shoot as well filled the program's module limit before 300 years."
     },
     "generator.params.branch_floor": {
       "rule": "0.06",
       "why": "Once the leader slows, a lit limb still lengthens a few centimetres a year, so the old crown keeps its spread instead of stopping where the leader did."
+    },
+    "generator.params.side_floor": {
+      "rule": "0.15",
+      "why": "Once the leader stops rising, a limb's side shoots still grow a few centimetres a year and set twigs, renewing the foliage along it. Held to the leader's dwindling growth with the limb's own tip, they shrank to millimetres and set almost no twigs, and old crowns lost their foliage after 150 years (grand fir, Douglas-fir, western hemlock)."
+    },
+    "generator.params.limb_light": {
+      "rule": "0.003",
+      "why": "An old limb is shed for want of light only when its tips catch little light for the wood they carry, a third as readily as the Pinidae program's 0.01: a fully branched old limb carries many segments, and at 0.01 limbs whose foliage was well lit were shed for their size, so subalpine fir and western larch lost four fifths of their foliage between 150 and 300 years."
+    },
+    "generator.params.limb_tip": {
+      "rule": "1",
+      "why": "A limb older than limb_age whose tips' mean light has fallen to the starving point is shed whatever its size, as a shaded limb dies once its foliage no longer pays for it (branch autonomy): with the per-segment rule eased, shaded limbs would otherwise linger and fill the program's module limit."
     },
     "generator.params.top_ramp": {
       "rule": "2",
