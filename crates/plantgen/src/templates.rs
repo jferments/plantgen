@@ -3518,6 +3518,54 @@ fn one_fruit(
                 .any(|r| (v - r).abs() < 0.07 + fine / half_width);
             Paint::solid(if rib { 0.5 } else { ball(d, 0.5, 0.5) }, 0.0)
         }
+        FruitKind::Follicles => {
+            // Beaked follicles in offset rows knob the outline; each is
+            // darker where it splits.
+            let cell = 0.42;
+            let rows = t * 0.5 / cell * (length / half_width);
+            let offset = if rows.floor() % 2.0 == 0.0 { 0.0 } else { 0.5 };
+            let (fu, fv) = (frac(rows), frac(v / (2.0 * cell) + offset));
+            let bump = (1.0 - ((fu - 0.45).powi(2) + (fv - 0.5).powi(2)) * 4.0).clamp(0.0, 1.0);
+            let d = ellipse(0.5, 0.5, 1.0) * (1.0 + 0.14 * (1.0 - bump));
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            let split = (fv - 0.5).abs() < 0.06 && fu > 0.3;
+            let bright = 0.45 + 0.5 * bump + 0.25 * math::sqrt(1.0 - d);
+            Paint::solid(if split { bright * 0.55 } else { bright }, 0.0)
+        }
+        FruitKind::Samaras => {
+            // Narrow wings overlapping up the spindle, each lighter toward
+            // its free tip; their tips fringe a slender outline.
+            let d = ellipse(0.52, 0.5, 0.9);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            let rows = 5.0;
+            let a = t * rows + v * 1.5;
+            let b = t * rows - v * 1.5;
+            let tip = frac(a).max(frac(b));
+            if d > 0.75 && tip > 0.85 {
+                return Paint::EMPTY;
+            }
+            Paint::solid((0.6 + 0.5 * tip) * (0.75 + 0.25 * math::sqrt(1.0 - d)), 0.0)
+        }
+        FruitKind::Berries => {
+            // Three berries splayed from the foot, the middle one nearest.
+            let mut best: Option<f64> = None;
+            for (lean, grown) in [(0.0, 0.74), (-0.42, 1.0), (0.42, 0.86)] {
+                let (dt, dv) = (t - 0.48 * grown, v - lean * t * length / half_width * 0.5);
+                let reach = 0.46 * grown;
+                let d = (dt / reach).powi(2) + (dv / (0.9 * grown)).powi(2);
+                if d < 1.0 {
+                    best = Some(best.map_or(d, |b: f64| b.min(d)));
+                }
+            }
+            match best {
+                Some(d) => Paint::solid(0.68 + 0.45 * math::sqrt(1.0 - d), 0.0),
+                None => Paint::EMPTY,
+            }
+        }
     }
 }
 

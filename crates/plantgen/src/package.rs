@@ -2246,6 +2246,7 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
             body,
             left: Vec3::ZERO,
             within: None,
+            young: 0.0,
         });
     }
     for index in 0..organs {
