@@ -1837,10 +1837,16 @@ fn frond_sizes(
     looks: &[Look],
     tally: &mut Tally,
 ) {
-    let twice = pinnae_of(structure, leaflets, drawn);
+    // A pedate frond's arms fork from its stipe's top; they are its rachis
+    // forking, not pinnae off it.
+    let own: BTreeSet<u32> = leaflets.iter().filter_map(|organ| organ.segment).collect();
+    let twice = forked(structure, &own, drawn)
+        .is_none()
+        .then(|| pinnae_of(structure, leaflets, drawn))
+        .flatten();
     let bearing: BTreeSet<u32> = match &twice {
         Some((_, of)) => of.iter().flatten().map(|&(_, rachis)| rachis).collect(),
-        None => leaflets.iter().filter_map(|organ| organ.segment).collect(),
+        None => own,
     };
     let (mut stipe, mut blade) = (0.0, 0.0);
     let mut first = true;
@@ -2021,7 +2027,7 @@ fn off_rachis(organ: &GraphOrgan, size: f64, rachis: &GraphSegment) -> (f64, f64
 
 /// The top of a frond's bare stipe where its rachis forks into two or
 /// more arms that bear its leaflets (a pedate blade, as a maidenhair's
-/// "2 equal branches surmounting the stipe"), if it does.
+/// "2 equal branches surmounting the stipe"), if it does, and only there.
 fn forked(structure: u32, bearing: &BTreeSet<u32>, drawn: &PlantGraph) -> Option<u32> {
     let mut arms: BTreeMap<u32, u32> = BTreeMap::new();
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
@@ -2037,9 +2043,14 @@ fn forked(structure: u32, bearing: &BTreeSet<u32>, drawn: &PlantGraph) -> Option
             *arms.entry(parent).or_default() += 1;
         }
     }
-    arms.into_iter()
-        .find(|&(_, n)| n >= 2)
-        .map(|(fork, _)| fork)
+    // One fork: a rachis bare of leaflets that bears pairs of leafy axes
+    // all along it (a fishtail palm's pinnae) does not fork.
+    let mut forks = arms
+        .into_iter()
+        .filter(|&(_, n)| n >= 2)
+        .map(|(fork, _)| fork);
+    let fork = forks.next()?;
+    forks.next().is_none().then_some(fork)
 }
 
 /// A forked frond's blade, a fan of leaflets round the top of its stipe:
