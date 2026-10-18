@@ -59,7 +59,7 @@
   },
   "appearance": {
     "bark": [0.073, 0.04, 0.02],
-    "leaf_axis": [0.2, 0.17, 0.07],
+    "leaf_axis": [0.2, 0.17, 0.07], "young_axis": {"colour": [0.09, 0.037, 0.017]},
     "foliage": [0.02, 0.084, 0.01],
     "foliage_shade": [0.009, 0.0378, 0.0045],
     "variation": 0.1,
@@ -115,7 +115,7 @@
     "appearance": {
       "evidence": "SourceInferred",
       "source": "fern-growers-manual",
-      "note": "Hoshizaki and Moran (2001, p. 282): D. antarctica's stipes lose their hairs early, with tan or green rachises (leaf_axis a tan green). Colours otherwise chosen by eye from photographs: mid-green fronds, a dark brown fibrous trunk."
+      "note": "Hoshizaki and Moran (2001, p. 282): D. antarctica's stipes lose their hairs early, with tan or green rachises (leaf_axis a tan green). A Dicksonia's stipe bases and croziers are clothed in bristly brown hairs, not scales (Hoshizaki and Moran 2001, p. 244, 281), so a young frond, crozier and stipe, is drawn a hairy red-brown (young_axis, sRGB about 85, 54, 35, by eye) until it has unrolled and loses its hair. Colours otherwise chosen by eye from photographs: mid-green fronds, a dark brown fibrous trunk."
     },
     "taxon": {
       "evidence": "Authored",

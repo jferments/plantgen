@@ -699,7 +699,23 @@ pub mod venation;
 /// blunt petals keep their shoulders; ripening fruit pass through
 /// `fruit_colour_ripening`, and a follicle's seeds hang on threads
 /// `fruit_seed_thread_m` long (107 is leaf zones and veins, #191).
-/// 109: cycad cones by sex (palm revision 11): a male plant bears its
+/// 109: a fern's frond is green while it unrolls and turns to its stipe's
+/// colour after (the L-system's `young` and the appearance's `young_axis`,
+/// fern program revision 12), a crozier is scaly only where its stipe is
+/// scaly all along, its pinnae lie along its coil, and a ternate frond
+/// (`ternate_blade`, bracken) comes up as three coils, an eagle's claw (108
+/// is magnoliid fruit, #202).
+/// 110: each pinna in a fern's crozier is rolled as its frond is (fern
+/// program revision 13): a short green coil of its own on each side of the
+/// rachis while coiled, its card small until it unrolls (109 is green
+/// croziers and the eagle's claw, #186).
+/// 111: a tree fern's or a marattioid's frond comes up as a fern's crozier
+/// does (palm program revision 11): where a taxon's vernation is
+/// circinate (the rule now at the ferns' class), its rachis winds a tight
+/// inward spiral of shortening pieces, its leaflets small and rolled
+/// beside it, unrolling from its foot; the soft tree fern's croziers and
+/// young stipes are a hairy red-brown (110 is rolled pinnae, #197).
+/// 112: cycad cones by sex (palm revision 12): a male plant bears its
 /// pollen cones (`cone_male`), a female its seed cones or, in Cycas, a
 /// crown of megasporophylls (`sporophyll`) with seeds along them, each
 /// with its own length, count, stalk, lean and life, and the stem grows on
@@ -714,6 +730,6 @@ pub mod venation;
 /// in Zamia, in vertical rows of flat-topped hexagons fitting together
 /// (`rows`); a compound card's stalk may be stout (`stalk_width`: a Cycas
 /// sporophyll's, its seeds hanging from it); a blade card may narrow to
-/// its foot (`foot`: a Zamia leaflet's jointed base) (108 is magnoliid
-/// fruit, #202).
-pub const GENERATOR_REVISION: u32 = 109;
+/// its foot (`foot`: a Zamia leaflet's jointed base) (111 is tree-fern
+/// croziers, #205).
+pub const GENERATOR_REVISION: u32 = 112;

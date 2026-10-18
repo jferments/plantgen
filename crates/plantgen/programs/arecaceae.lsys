@@ -15,7 +15,11 @@
 # out as it opens (Dransfield et al. 2008, p. 7 and 12-16; Kaplan 2022,
 # p. 487-496).
 #
-# Revision 5: gives palm revision 11's cones by sex no cones, so
+# Revision 5: gives palm revision 11's crozier values: a palm's spear
+# opens without coiling (coil_turns 0); a coiled piece's size,
+# tightness, leaflet size and roll as the fern program's
+# (`polypodiidae`).
+# Revision 6: gives palm revision 12's cones by sex no cones, so
 # palms draw as before.
 #
 # One step is one year. Angles are degrees; lengths are metres.
@@ -51,7 +55,7 @@ param boot_life = 10;        # years a boot stays
 param boot_length = 0.25;    # a boot, metres
 param boot_area = 0.2;
 param crown_cone = 0;        # length of a cone at the crown's centre; 0 none
-# Palm revision 11's cones by sex: none, as crown_cone, male_cone and
+# Palm revision 12's cones by sex: none, as crown_cone, male_cone and
 # sporophylls are 0.
 param cone_interval = 1;
 param cones = 1;
@@ -108,3 +112,8 @@ param spine_area = 0.004;
 param boot_angle = 60;
 param leaflet_young = 1;      # a spear's leaflets are full length, pleated together
 param leaflet_fold = 0.9;     # and lie along the rachis until they open
+param coil_turns = 0;         # turns of a circinate frond's rachis in its crozier; 0 coils by curl
+param coil_size = 0.22;       # a coiled piece's length at the crozier's outer turn, a share of its open length
+param coil_tight = 2;         # how fast the coiled pieces shorten toward the tip
+param coil_pinna = 0.12;      # a coiled leaflet at the outer turn, a share of its open size
+param coil_roll = 0.08;       # a rolled leaflet's thickness, a share of its rolled length

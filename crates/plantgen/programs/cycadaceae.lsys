@@ -13,7 +13,11 @@
 # files (Whitelock 2002), not from here; leaflet groups and coil_short
 # are given as before (none).
 #
-# Revision 5: palm revision 11's cones by sex come from the Cycadales and
+# Revision 5: gives palm revision 11's crozier values: a cycad's frond
+# is not drawn coiled (coil_turns 0) until a taxon's vernation says how;
+# a coiled piece's size, tightness, leaflet size and roll as the fern
+# program's (`polypodiidae`).
+# Revision 6: palm revision 12's cones by sex come from the Cycadales and
 # family rank files (Whitelock 2002): a male bears a pollen cone, a female
 # a crown of sporophylls with seeds along them, not a cone.
 #
@@ -52,3 +56,8 @@ param coil_short = 0;
 param acanthophylls = 0;      # no spines among the leaflets
 param spine_length = 0.1;
 param spine_area = 0.004;
+param coil_turns = 0;         # turns of a circinate frond's rachis in its crozier; 0 coils by curl
+param coil_size = 0.22;       # a coiled piece's length at the crozier's outer turn, a share of its open length
+param coil_tight = 2;         # how fast the coiled pieces shorten toward the tip
+param coil_pinna = 0.12;      # a coiled leaflet at the outer turn, a share of its open size
+param coil_roll = 0.08;       # a rolled leaflet's thickness, a share of its rolled length

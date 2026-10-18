@@ -311,6 +311,7 @@ mod tests {
             body: 0,
             left: Vec3::ZERO,
             within: None,
+            young: 0.0,
         }
     }
 
