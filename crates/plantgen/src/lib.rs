@@ -671,4 +671,7 @@ pub mod venation;
 /// inward spiral of shortening pieces, its leaflets small and rolled
 /// beside it, unrolling from its foot; the soft tree fern's croziers and
 /// young stipes are a hairy red-brown (105 is rolled pinnae, #197).
-pub const GENERATOR_REVISION: u32 = 106;
+/// 107: the soft tree fern puts out a year's fronds in one spring flush
+/// (`emerge_spread` 0.15, from 0.3), so its croziers stand together at
+/// the crown's top (106 is tree-fern croziers, #205).
+pub const GENERATOR_REVISION: u32 = 107;
