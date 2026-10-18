@@ -1,0 +1,14 @@
+{
+  "id": "pinus-albicaulis-needle-direction",
+  "species": "pinus-albicaulis",
+  "feature": "shoot.needle_direction",
+  "verdict": "✗",
+  "sources_say": "Needles in dense tufts near the branchlet ends, pressed forward against the shoot (Farjon)",
+  "photos": "forward, crowded at the twig tips, in every close-up that shows a shoot",
+  "render": "needles standing out at about 58 degrees all along the shoot (foliage card, plantc parts)",
+  "severity": 0.6,
+  "cause": "D5",
+  "suspect": {"file": "crates/plantgen/library/pinaceae/pinus/pinus-albicaulis/spec.json (needle card)", "key": "needle card angle and spacing", "rule": "none: no character for needle posture"},
+  "test": "plantc parts pinus-albicaulis: the card draws needles at 58 degrees along the whole shoot; traits.json has no needle-posture character",
+  "breadth": 50
+}

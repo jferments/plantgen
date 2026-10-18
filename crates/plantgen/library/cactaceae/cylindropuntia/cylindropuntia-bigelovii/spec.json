@@ -35,10 +35,9 @@
       "flower_size": 0.04,
       "bud_share": 0.2,
       "fruit_share": 0.4,
-      "bud_size": 0.015,
       "bud_rate": 0.7,
       "flower_area": 0.368,
-      "bud_area": 0.636,
+      "bud_area": 0.036,
       "fruit_area": 0.587
     }
   },
@@ -65,13 +64,6 @@
           "centre": 0.3
         },
         "accent": [0.5, 0.45, 0.2]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.3, 0.35, 0.1]
       },
       "fruit": {
         "shape": {
@@ -143,6 +135,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_surface": "areolate",
     "tubercle_relief": "prominent",
     "tubercle_shape": "elongate",
     "spine_colour": [215, 180, 80],
@@ -161,6 +154,7 @@
     "fruiting_months": [5, 6, 7]
   },
   "evidence": {
+    "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: fruit leathery-fleshy, spineless, the tubercles fading."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
     "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: spines yellow to golden, becoming brown."},

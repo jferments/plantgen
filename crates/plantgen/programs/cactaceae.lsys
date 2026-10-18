@@ -30,10 +30,13 @@
 # Revision 8 (thread "Cacti"): on column revision 2; one ring in the
 # crown, as before, unless a species asks for more (crown_rings).
 #
+# Revision 9 (thread "Cacti"): on column revision 3; no flowers down the
+# flank (flank 0) unless a genus's rule asks.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 8 extends column;
+lsystem cactaceae 9 extends column;
 
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
 param lean = 3;               # most degrees a lone stem leans at its foot, in a random direction
@@ -114,3 +117,4 @@ param bud_area = 0.89;
 param fruit_area = 0.89;
 param crown_rings = 1;        # rings round a column's tip: this year's, then older rings of fruit
 param ring_step = 15;         # degrees each older ring sits below the one above
+param flank = 0;              # a column's pieces of the last this many years open flowers on their sides

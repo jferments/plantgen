@@ -1,0 +1,22 @@
+{
+  "character": "needle_posture",
+  "new_character": true,
+  "states": {
+    "forward": "pointing forward toward the twig tip, close to it (connivent)",
+    "spreading": "standing out from the twig all round",
+    "two_ranked": "in two flat rows either side of the twig",
+    "upswept": "rising above the twig, a bare underside",
+    "drooping": "hanging down from the twig"
+  },
+  "rank": "subclass Pinidae (needle-leaved conifers)",
+  "file": "crates/plantgen/library/_ranks/subclass/pinidae.json",
+  "change": "needle_posture forward -> needle card lean toward the shoot tip and a bare lower shoot (the card controls `lean` and `bare` on draft plantgen#167); spreading -> current card",
+  "fit": {"method": "pooled close-ups of the conifers Farjon describes as tufted at branch ends; values to fit"},
+  "sources": ["Farjon, whitebark pine: dense tufts near branchlet ends, connivent, curved forward against shoot", "Farjon: foliage tufted at branch ends in about 50 conifers (Araucaria, Callitris, Dacrydium, junipers, cedars, pines)"],
+  "closes": ["pinus-albicaulis-needle-direction"],
+  "supporting_species": ["pinus-albicaulis", "pinus-ponderosa"],
+  "held_out": [],
+  "blast_radius": ["every Pinidae species that states needle_posture; none change until they state it"],
+  "removes_hand_values": [],
+  "needs": ["Part 1: extract needle posture words for the library's conifers from Farjon"]
+}

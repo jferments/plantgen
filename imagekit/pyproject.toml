@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plantgen-imagekit"
+version = "0.1.0"
+description = "Fetch open-licence plant images with their licences, run photo-rules tasks on them with any vision model, and never analyse an image twice"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = ["Pillow>=10", "PyYAML>=6"]
+
+[project.optional-dependencies]
+parquet = ["pyarrow>=15"]
+claude = ["anthropic>=1.15"]
+local = ["numpy>=1.26", "torch>=2.4", "transformers>=4.49", "open_clip_torch>=3.0", "huggingface_hub>=0.30"]
+test = ["jsonschema>=4", "anthropic>=1.15"]
+
+[project.scripts]
+imagekit = "imagekit.cli:main"
+
+[tool.setuptools]
+packages = ["imagekit", "imagekit.fetch"]

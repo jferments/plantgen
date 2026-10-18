@@ -87,11 +87,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
     ),
     (
-        "cytisus-scoparius",
-        "leaf_shape",
-        "its leaflets are drawn by hand on a sprig card widest at the middle, so they read elliptic against the obovate leaflets Abrams gives",
-    ),
-    (
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
@@ -157,11 +152,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
     ),
     (
-        "liriodendron-tulipifera",
-        "carpels",
-        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so tulip tree's cone of 60 to 100 carpels is drawn with 30",
-    ),
-    (
         "lonicera-involucrata",
         "fruit_size_m",
         "its berries are drawn about 1.6 cm long against the 7 to 8 mm Dendrology (2019) p. 390 gives",
@@ -175,11 +165,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
-    ),
-    (
-        "magnolia-grandiflora",
-        "carpels",
-        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so southern magnolia's cone of 55 to 81 carpels is drawn with 30",
     ),
     (
         "nymphaea-odorata",
@@ -217,6 +202,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a climbing shoot adds one or two nodes a season, each with one leaf, so it bears 1 to 2 leaves a year against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "stachys-byzantina",
+        "leaf_arrangement",
+        "the herb program turns a stem's basal leaves one at a time by the divergence, not in pairs, so lamb's ear's rosette reads as alternate though its stem leaves stand in opposite pairs",
+    ),
+    (
         "program:broadleaf",
         "crown_outline_fit",
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
@@ -228,11 +218,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
-        "leaf_habit",
-        "a cohort's blades turn to thatch the year after they grow, so a wintergreen grass, rush or sedge (the fescues, tufted hairgrass, orchardgrass, Yorkshire fog, soft rush, slough sedge) draws its leaves as deciduous until the grass program keeps a green blade through winter",
-    ),
-    (
-        "program:grass",
         "phyllotaxis_pattern",
         "a tiller's blades are measured round the vertical, so where a tiller leans out about as far as its blades stand off it (tufted hairgrass, coirón, Roemer's and red fescue: blades 10° to 15° off, tillers leaning up to 22°) the lean turns them all one way and the turns read as a spiral or three ranks (inferred, not traced)",
     ),
@@ -240,11 +225,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:grass",
         "shoot_leaves",
         "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
-    ),
-    (
-        "program:herb",
-        "leaf_habit",
-        "a herb's stems and their leaves live one season, so an evergreen herb (western rattlesnake plantain, common beargrass) draws its leaves as deciduous until the herb program keeps a leaf through winter",
     ),
     (
         "program:herb",

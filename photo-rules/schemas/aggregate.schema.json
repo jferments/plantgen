@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aggregate.schema.json",
+  "title": "Per-species summary of photo or render answers (04-compare.md §1)",
+  "type": "object",
+  "required": [
+    "species",
+    "of",
+    "features"
+  ],
+  "properties": {
+    "species": {
+      "type": "string"
+    },
+    "of": {
+      "enum": [
+        "photos",
+        "renders"
+      ]
+    },
+    "filters": {
+      "type": "object",
+      "description": "setting, stage, months kept"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "type",
+          "n"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "state",
+              "states",
+              "ordinal",
+              "ratio",
+              "share",
+              "angle",
+              "count",
+              "colour"
+            ]
+          },
+          "n": {
+            "type": "integer"
+          },
+          "photographers": {
+            "type": "integer"
+          },
+          "insufficient": {
+            "type": "boolean"
+          },
+          "shares": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "majority": {
+            "type": "string"
+          },
+          "majority_share": {
+            "type": "number"
+          },
+          "median": {
+            "type": "number"
+          },
+          "q1": {
+            "type": "number"
+          },
+          "q3": {
+            "type": "number"
+          },
+          "lab": {
+            "type": "object",
+            "description": "per lighting group: [L, a, b] median and n",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "median": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "n": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "high_confidence_share": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

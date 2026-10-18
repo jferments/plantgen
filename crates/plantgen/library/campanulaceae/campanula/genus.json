@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Campanula",
+  "traits": {
+    "inflorescence": {"panicle": "usually", "solitary": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Campanula (read 2026-10-17): flowers borne in panicles, at times single. Racemes not mentioned on the page."}
+  }
+}

@@ -147,7 +147,8 @@
     "height_typical_m": {"min": 2, "max": 10},
     "life_span": "perennial",
     "rosette": "none",
-    "inflorescence_length_m": {"min": 0.02, "max": 0.05}
+    "inflorescence_length_m": {"min": 0.02, "max": 0.05},
+    "leaf_shape": "obovate"
   },
   "evidence": {
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"stout branchlets marked by scattered yellow lenticels, coated when they first appear with pale early deciduous pubescence, becoming bright yellow or dark orange color, and in their second year dark red-brown\". Colour chosen by eye between dark orange and red-brown."},
@@ -249,7 +250,8 @@
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."}
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2920474), as no source read gives it."}
   },
   "provenance": {
     "sources": [

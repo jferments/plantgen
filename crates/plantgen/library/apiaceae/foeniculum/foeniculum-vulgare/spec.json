@@ -134,12 +134,15 @@
       "typical": 1.5
     },
     "inflorescence": "compound_umbel",
+    "flowering_branches": 6,
+    "flowering_branch_orders": 2,
     "inflorescence_branches": {
       "min": 15,
       "max": 40
     },
     "inflorescence_bracts": 0,
     "leaf_length_m": {
+      "low": 0.06,
       "min": 0.1,
       "max": 0.4
     },
@@ -225,6 +228,16 @@
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951) p. 241, Foeniculum vulgare: 15 to 40 rays, glaucous, 1 cm to 6.5 cm long."
     },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Six flowering side branches to a stem, each ending in an umbel, set by hand from iNaturalist photos of flowering plants in Washington and Oregon (observations 29133028, 30106596, 129366460, 248063592, 134576372, 1913852, 125887518, 302382279): Abrams (1951 p. 241) says only that the plant is branched."
+    },
+    "traits.flowering_branch_orders": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Two orders of flowering branches, set by hand from iNaturalist photos of flowering plants (observation 125887518): its side branches bear a sheathing leaf at each fork and branch again, each branch ending in an umbel."
+    },
     "traits.inflorescence_bracts": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -233,7 +246,7 @@
     "traits.leaf_length_m": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high), as no source read gives it: leaves 10 cm to 40 cm long."
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 10 cm to 40 cm long. The reduced leaves of the upper stem and flowering branches go down to about 6 cm, a sheath with a short tuft of threads about as long as an umbel's rays, set by hand from an iNaturalist photo of a flowering plant (observation 125887518)."
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
@@ -323,7 +336,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Cow parsnip's values, changed by hand for fennel: a few tall stems from the crown, many stem leaves on broad clasping petioles (Abrams 1951 p. 241), each stem ending in a yellow compound umbel. Abrams's plant is branched; the herb program grows no side branches, so each stem is drawn unbranched. Not fitted to measurements."
+      "note": "Cow parsnip's values, changed by hand for fennel: a few tall stems from the crown, many stem leaves on broad clasping petioles (Abrams 1951 p. 241), each stem ending in a yellow compound umbel. Each stem bears flowering side branches in its upper leaf axils (flowering_branches), as Abrams's plant is branched. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

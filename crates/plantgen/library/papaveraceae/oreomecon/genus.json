@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Oreomecon",
+  "traits": {
+    "flower_symmetry": "actinomorphic"
+  },
+  "evidence": {
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA Papaver (read 2026-10-17) still holds the scapose arctic-alpine poppies (sect. Meconella, e.g. P. radicatum, P. lapponicum) now in Oreomecon, with the same plain poppy flower: two sepals, four petals, many stamens. Symmetry inferred, not stated."}
+  }
+}

@@ -209,6 +209,18 @@ prompt injection. So, without exception:
   stack. It grows plants only through `plantgen::drawing`, as `plantc`
   does, and computes nothing about the plant on the GPU. See
   `lab/README.md`.
+- `imagekit/`: a Python tool for contributors that fetches open-licence
+  plant images with their licences and credits, keeps one record per image
+  (keyed by the SHA-256 of its bytes) and keys every model analysis by
+  image and analyzer, so no image is analysed twice. It is the one part of
+  this repository that uses the network; nothing in `plantgen`, `plantc`
+  or PlantLab uses it. Images never enter this repository. Its tests:
+  `python3 -m unittest discover -s imagekit/tests`.
+
+- `photo-rules/`: rules any vision model can follow to observe plant
+  photos and PlantGen's renders in the vocabulary of `traits.json`, compare
+  them, and turn the differences into drawing rules at genus, family or
+  library level. Plain text and JSON Schemas; nothing in `plantc` runs them.
 
 ## Rules of the code
 

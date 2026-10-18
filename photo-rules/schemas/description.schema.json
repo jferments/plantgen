@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "description.schema.json",
+  "title": "Description of one image in words, for search (08-describe.md)",
+  "type": "object",
+  "required": ["photo_id", "overall", "organs", "tags", "not_shown"],
+  "additionalProperties": false,
+  "properties": {
+    "photo_id": {"type": "string"},
+    "overall": {"type": "string"},
+    "organs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["organ", "text", "look"],
+        "additionalProperties": false,
+        "properties": {
+          "organ": {
+            "enum": ["whole plant", "shoot", "stem", "leaf", "leaflet", "frond", "flower", "head", "inflorescence",
+                     "bud", "fruit", "seed", "cone", "bark", "spines", "root", "other"]
+          },
+          "text": {"type": "string"},
+          "look": {"type": "array", "items": {"type": "string"}, "maxItems": 6}
+        }
+      }
+    },
+    "tags": {"type": "array", "items": {"type": "string", "pattern": "^[a-z_]+\\.[a-z_]+=.+$"}, "maxItems": 20},
+    "not_shown": {"type": "array", "items": {"type": "string"}}
+  }
+}

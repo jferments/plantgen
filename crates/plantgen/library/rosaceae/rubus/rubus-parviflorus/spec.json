@@ -152,7 +152,8 @@
     "woodiness": "woody",
     "leaf_length_m": {"min": 0.1, "max": 0.2},
     "sexual_system": "hermaphrodite",
-    "inflorescence": "corymb"
+    "inflorescence": "corymb",
+    "fruit_size_m": {"min": 0.01, "max": 0.015}
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -254,7 +255,8 @@
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
-    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."}
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."}
   },
   "provenance": {
     "sources": [

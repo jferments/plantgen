@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Nepenthes",
+  "traits": {
+    "inflorescence": {"raceme": "usually", "panicle": "rarely"}
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Nepenthes (read 2026-10-17, 150+ spp): flowers in racemes, less often panicles, sexes on separate plants; cymes not mentioned."}
+  }
+}

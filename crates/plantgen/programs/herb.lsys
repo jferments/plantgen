@@ -67,9 +67,33 @@
 # papery bracts). With bract_length 0, as every program gives it unless
 # it says otherwise, no bract is drawn and a herb grows as before.
 #
+# Revision 10: a flowering stem may branch. Its top flower_branches leaf
+# nodes each bear, in the axil of their leaf, a side branch at
+# branch_angle to the stem, ending in a raceme like the stem's own
+# (fennel's and poison hemlock's candelabra of umbels). The lowest branch
+# is branch_length of the stem's height, the topmost half as long.
+# Nothing about a branch is drawn at random, which would move other
+# herbs' draws. With flower_branches 0, as every program gives it unless
+# it says otherwise, a herb grows as before.
+#
+# Revision 11: a leaf may outlive its year. A flowering stem dies back
+# after it fruits, but its basal leaves, and a stem that bears leaves
+# only, stay leaf_years (wild ginger's evergreen leaves, a rattlesnake
+# plantain's rosette, beargrass's tufts), so an evergreen herb carries
+# last year's leaves beside this year's. With leaf_years 1, as every
+# program gives it unless a rule says otherwise, a herb grows as before.
+#
+# Revision 12: a side branch bears branch_nodes leaf nodes below its
+# raceme, each with a leaf branch_leaf times the leaf in whose axil the
+# branch stands. With branch_orders 2 or more, each of those nodes bears
+# a branch of its own, half as long, ending in its own raceme (fennel's
+# and hemlock's branches branch again). Its leaves draw
+# through the stem's own leaf rule, so the branch still adds no random
+# call site.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 9;
+lsystem herb 12;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -77,6 +101,7 @@ param stem_rate;              # cohort size: stems * (1 - exp(-stem_rate * age))
 param clump_radius;           # radius a mature clump's stems spread over
 param stem_lean;              # how far the outermost stems lean out
 param maturity;               # years over which stems reach full size
+param leaf_years = 1;         # years a basal leaf, or a stem bearing leaves only, stays on: more than 1 for evergreens
 param adult_age;              # the first year the plant is adult and flowers
 # A stem.
 param stem_height;            # stem height at maturity, raceme included
@@ -127,6 +152,12 @@ param nod;                    # degrees the bud-tipped end bends over
 param bract_length = 0;       # a floral bract's length below each stalk of the raceme; 0: none
 param bract_lean = 1.1;       # a bract's angle to the axis as a share of its stalk's
 param bract_area = 0.235;     # leaf area of a bract 1 m long, m² (the default leaf card's)
+param flower_branches = 0;    # top leaf nodes of a flowering stem that bear a flowering side branch
+param branch_angle = 40;      # angle of a side branch to the stem
+param branch_length = 0.3;    # the lowest side branch's length, as a share of the stem's height
+param branch_nodes = 2;       # leaf nodes along a side branch below its raceme
+param branch_leaf = 1;        # a side branch's leaves, as a share of the leaf in whose axil it stands
+param branch_orders = 1;      # times a flowering stem branches: 1, side branches; 2, they branch again
 param flower_area;
 param bud_area;
 param fruit_area;
@@ -135,14 +166,20 @@ param light_cell;             # light voxel edge
 module Y;                     # the crown: sends up a cohort each year
 module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
 module Sm;                    # the base of a stem
+module Sw(r);                 # where a stem leaves its basal leaves: r of it a raceme
 module Bs(j);                 # j basal leaves still to place
 module Bl(len, a);            # a basal leaf len long bending a at each joint
 module Pc(k, s, a);           # piece k of a basal leaf, s long
 module St(h, r);              # a stem h tall with a raceme r long
+module Sv(h, r);              # the same stem, past where it leaves its basal leaves
 module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
 module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
 module Lf(s);                 # the leaves at one node
 module Br(a);                 # a floral bract, a degrees from the axis
+module Bx(i, h, r, s);        # the side branch, if any, at leaf node i of a stem, whose leaf is s long
+module Bh(len, o, s);         # a flowering side branch len long, o orders of branching to it, leaves s long
+module Bn(j, len, o, s);      # leaf node j of a side branch len long
+module Bk(len, o, s);         # the branch, if any, at a side branch's leaf node
 
 organ leaf leaf area leaf_area;
 organ basal leaf as piece area basal_area;
@@ -192,7 +229,16 @@ decompose Pc(k, s, a) -> basal(s);
 
 # A stem h tall: a bare foot, the leafy part, then the raceme, r of the
 # height. Nodes split in halves so a long stem stays within the
-# decomposition depth.
+# decomposition depth. Where leaves outlive their year, the stem starts
+# where it leaves its basal leaves (Sw); with leaf_years 1 it needs no
+# mark, so every draw stays where it was.
+decompose St(h, r) : leaf_years > 1 -> Sw(r) Sv(h, r);
+decompose Sv(h, r) : arch > 0 ->
+    T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+decompose Sv(h, r) ->
+    !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
 decompose St(h, r) : arch > 0 ->
     T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
     Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
@@ -211,11 +257,41 @@ decompose Nd(i, m, h, r) : m == 1 ->
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    Bx(i, h, r,
+       leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
     /(divergence);
 decompose Nd(i, m, h, r) -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
     ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
+
+# A flowering stem's top flower_branches nodes each bear a side branch in
+# the axil of their leaf, shorter toward the top, ending in a raceme. A
+# branch is as thick as the raceme's own axis, so the two join smoothly.
+# The branches draw nothing at random: random call sites are numbered
+# through the program and the programs built on it, so a draw here would
+# move every later draw of every herb.
+decompose Bx(i, h, r, s) : r > 0 && flower_branches > 0 && i >= nodes - flower_branches ->
+    [ &(branch_angle)
+      Bh(h * branch_length
+         * lerp(1, 0.5, (i - max(0, nodes - flower_branches)) / max(1, min(nodes, flower_branches) - 1)),
+         branch_orders, s * branch_leaf) ];
+decompose Bx(i, h, r, s) -> ;
+# A side branch: its leaf nodes evenly up the part below the raceme, then
+# the raceme. Each node bears a leaf and, while orders remain, a branch
+# of its own, half as long.
+decompose Bh(len, o, s) ->
+    !(stem_radius * 0.5) Bn(0, len, o, s)
+    F(len * (1 - raceme) / (branch_nodes + 1)) Rc(0, flowers, len, raceme);
+decompose Bn(j, len, o, s) : j < branch_nodes ->
+    F(len * (1 - raceme) / (branch_nodes + 1))
+    Lf(s) Bk(len, o, s) /(divergence) Bn(j + 1, len, o, s);
+decompose Bn(j, len, o, s) -> ;
+decompose Bk(len, o, s) : o > 1 -> [ &(branch_angle) Bh(len * 0.5, o - 1, s) ];
+decompose Bk(len, o, s) -> ;
 
 # The raceme: fruit, then open flowers, then buds, the buds' part bending
 # over toward its tip. A male plant's fruit are open flowers.
@@ -243,5 +319,7 @@ decompose Br(a) : bract_length > 0 ->
     [ &(a * bract_lean * uniform(0.85, 1.15)) $ bract(bract_length * uniform(0.85, 1.15)) ];
 decompose Br(a) -> ;
 
-# Last year's stems are gone.
-rule Sm -> %;
+# Last year's flowering stems are gone; their basal leaves, and stems
+# bearing leaves only, stay leaf_years.
+rule Sw(r) : r > 0 -> %;
+rule Sm : age + dt >= leaf_years -> %;
