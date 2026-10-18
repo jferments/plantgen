@@ -745,4 +745,14 @@ pub mod venation;
 /// the new `fruit_shape`), and stigma lobes take their own colour
 /// (`Flower::stigma`, from the new `stigma_colour`) (115 is fruit skins
 /// and stem tips).
-pub const GENERATOR_REVISION: u32 = 116;
+/// 117: a lineage whose flowers end its shoots (`flowering_position`
+/// terminal or both: `tip_bloom`, broadleaf revision 17) ends each shoot
+/// tip that has stopped at the crown's edge, once adult and in the light,
+/// in its year's blooms, nearly along the shoot, so its flowers and fruit
+/// stand on the crown's surface, not only on the short shoots inside it;
+/// other plants draw as before. Sarcandra and Chloranthus serratus state
+/// their terminal inflorescences. The leaf-arrangement check counts only
+/// leaves born with their internode, so short shoots crowding a node are
+/// not read as a whorl (116 is cactus
+/// pericarpels and stigmas, #184).
+pub const GENERATOR_REVISION: u32 = 117;
