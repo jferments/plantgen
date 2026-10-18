@@ -1450,18 +1450,16 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
     // born there later are a short shoot's, from a bud at the node, which
     // crowds each year's leaves at one place (with last year's until they
     // fall); floras state the arrangement of the long shoots' leaves, so
-    // where a plant's stems bear leaves of their own, only those count.
+    // only those count. A plant whose stems keep none (every tip stopped
+    // for some years, its leaves all on short shoots) leaves it unmeasured:
+    // two short shoots at a pair of buds crowd their leaves at one place,
+    // which would read as a whorl.
     let own = |segment: Option<usize>, organ: &GraphOrgan| {
         segment
             .and_then(|index| segments.get(index))
             .is_none_or(|at| (at.born - organ.born).abs() < 1e-9)
     };
-    if holders
-        .iter()
-        .any(|(segment, _, _, organ, _)| segment.is_some() && own(*segment, organ))
-    {
-        holders.retain(|(segment, _, _, organ, _)| own(*segment, organ));
-    }
+    holders.retain(|(segment, _, _, organ, _)| own(*segment, organ));
     // A step is a year, so an axis's segments born in one step are a
     // year's growth of it: the most leaves of their own any one bears are
     // what the plant's most vigorous long shoot bears in a year.
@@ -2490,7 +2488,8 @@ fn unit_sizes(
 /// multiple fruit; a rose hip the achenes in its cup, an aggregate; a
 /// wing a samara, or the pair of them a maple's schizocarp splits into;
 /// a nut in a cup or a husk a nut; a pod a legume or another pod; a
-/// ribbed fruit a capsule, a follicle or a schizocarp of ribbed mericarps.
+/// ribbed fruit a capsule, a follicle or a schizocarp of ribbed mericarps;
+/// a cactus fruit with scales or areoles on its skin a berry.
 fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
     use crate::looks::FruitKind;
     match kind {
@@ -2503,6 +2502,7 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
         FruitKind::Acorn | FruitKind::Husked => "nut",
         FruitKind::Pod => "legume|pod",
         FruitKind::Capsule => "capsule|follicle|schizocarp",
+        FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => "berry",
         FruitKind::Follicles | FruitKind::Samaras => "aggregate",
         FruitKind::Berries => "berry|aggregate",
     }

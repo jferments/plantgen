@@ -24,12 +24,12 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "ambrosia-dumosa",
         "fruit_size_m",
-        "bursage first flowers with the family programs' blooms (revision 110): its bur, 4 to 6 mm with its hooked spines, is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
+        "bursage first flowers with the family programs' blooms (revision 123): its bur, 4 to 6 mm with its hooked spines, is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
     ),
     (
         "ambrosia-dumosa",
         "involucre_diameter_m",
-        "bursage first flowers with the family programs' blooms (revision 110): its small staminate heads are drawn with the capitulum's default involucre, wider than the 3 to 5 mm the records give",
+        "bursage first flowers with the family programs' blooms (revision 123): its small staminate heads are drawn with the capitulum's default involucre, wider than the 3 to 5 mm the records give",
     ),
     (
         "ambrosia-dumosa",
@@ -219,7 +219,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "populus-tremuloides",
         "juvenile_period_years",
-        "aspen first flowers with the family programs' blooms (revision 110): its stated 2 to 3 years is adult_age, but broadleaf bears blooms only on short shoots, which a young aspen whose buds all grow out as long shoots first makes in its fourth year",
+        "aspen first flowers with the family programs' blooms (revision 123): its stated 2 to 3 years is adult_age, but broadleaf bears blooms only on short shoots, which a young aspen whose buds all grow out as long shoots first makes in its fourth year",
     ),
     (
         "stachys-byzantina",
@@ -304,7 +304,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "vachellia-tortilis",
         "inflorescence_length_m",
-        "umbrella thorn first flowers with the family programs' blooms (revision 110): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
+        "umbrella thorn first flowers with the family programs' blooms (revision 123): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
     ),
 ];
 
