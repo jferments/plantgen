@@ -107,6 +107,11 @@ pub struct OrganLook {
     /// absent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hairs: Option<Hairs>,
+    /// The hairs on its lower (abaxial) face, where they differ from its
+    /// upper face's: the felted undersides of many leaves. A lower face
+    /// without them is bare.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hairs_beneath: Option<Hairs>,
 }
 
 /// The hairs on an organ's face, its indumentum (Harris and Harris, *Plant
@@ -135,6 +140,45 @@ pub struct Hairs {
     /// the face's `density`: a ciliate edge on a bare blade.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub edge: Option<f64>,
+    /// How much of the face's hairs gather along its main veins, 0 (spread
+    /// evenly) to 1 (on the veins alone): FNA's "at least along main
+    /// veins". Absent for an even spread.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub veins: Option<f64>,
+    /// How each hair branches ([`Branching`]): a plain hair unless a
+    /// flora says its hairs are stellate or dendritic (mullein's felt).
+    #[serde(skip_serializing_if = "Branching::is_simple")]
+    pub branching: Branching,
+    /// Glandular hairs standing among these, each a stalk ending in a
+    /// round head of resin (a tomato's stems, FNA's "glandular-pubescent"),
+    /// in their own density, length and lie.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub glands: Option<Box<Hairs>>,
+    /// Stinging hairs standing among these (a nettle's): a stiff glassy
+    /// needle on a swollen green foot, straight and erect, sparse among
+    /// the soft hairs, in their own density, length and lie.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stings: Option<Box<Hairs>>,
+}
+
+/// How a hair branches (Harris and Harris): a plain hair, a star of
+/// arms spreading over the face from a short stalk (stellate), or a stalk
+/// with whorls of arms up its length, a little tree (dendritic, the
+/// candelabra hairs of mullein).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Branching {
+    #[default]
+    Simple,
+    Stellate,
+    Dendritic,
+}
+
+impl Branching {
+    #[must_use]
+    pub fn is_simple(&self) -> bool {
+        *self == Self::Simple
+    }
 }
 
 impl Default for Hairs {
@@ -146,15 +190,49 @@ impl Default for Hairs {
             curl: 0.0,
             colour: [0.8, 0.8, 0.76],
             edge: None,
+            veins: None,
+            branching: Branching::Simple,
+            glands: None,
+            stings: None,
         }
     }
 }
 
 impl Hairs {
-    /// Whether there are any to draw.
+    /// Whether there are any to draw: these, or glandular or stinging
+    /// hairs among them.
     #[must_use]
     pub fn drawn(&self) -> bool {
+        self.own_drawn()
+            || self.glands.as_deref().is_some_and(Self::own_drawn)
+            || self.stings.as_deref().is_some_and(Self::own_drawn)
+    }
+
+    /// Whether these hairs themselves, leaving out the glandular and
+    /// stinging hairs among them, are any to draw.
+    #[must_use]
+    pub fn own_drawn(&self) -> bool {
         (self.density > 0.0 || self.edge.is_some_and(|edge| edge > 0.0)) && self.length > 0.0
+    }
+
+    /// These hairs with `share` of each kind kept: young wood's, worn by
+    /// its age.
+    #[must_use]
+    pub fn thinned(&self, share: f64) -> Self {
+        let thin = |hairs: &Option<Box<Self>>| {
+            hairs.as_ref().map(|hairs| {
+                Box::new(Self {
+                    density: hairs.density * share,
+                    ..(**hairs).clone()
+                })
+            })
+        };
+        Self {
+            density: self.density * share,
+            glands: thin(&self.glands),
+            stings: thin(&self.stings),
+            ..self.clone()
+        }
     }
 }
 
@@ -214,6 +292,28 @@ pub struct Variegation {
     /// For `zone`: what the band follows.
     #[serde(default, skip_serializing_if = "ZoneFrom::is_midrib")]
     pub from: ZoneFrom,
+    /// For `zone`: how far the band's edge reaches along the lateral veins
+    /// (`cross` apart, leaning by `slant`) past where it lies between them,
+    /// as a share of the half-width: the toothed edge of Cyclamen's
+    /// silver. 0 for a plain edge.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub feather: f64,
+    /// For `spots` and `mottle`: how many times longer than wide the
+    /// patches are, drawn out along the blade as a parallel-veined leaf's
+    /// are (trout lily's blotches). 1 for round.
+    #[serde(
+        default = "default_variegation_stretch",
+        skip_serializing_if = "is_one"
+    )]
+    pub stretch: f64,
+    /// How much of a leaf's share is its plant's rather than its own, 0 to
+    /// 1: at 1 every leaf of a plant has the same share and plants differ
+    /// by `spread` (air-space and pigment patterns: Cyclamen's silver,
+    /// "varying between plants, but consistent within each plant"), at 0
+    /// every leaf draws its own (chimeras). See
+    /// [`crate::mesh::PlantMesh::vary_by_plant`].
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub plants: f64,
 }
 
 /// What a `zone` variegation's band follows.
@@ -276,6 +376,10 @@ fn default_variegation_at() -> f64 {
 
 fn default_variegation_scale() -> f64 {
     0.08
+}
+
+fn default_variegation_stretch() -> f64 {
+    1.0
 }
 
 /// Where a [`Variegation`]'s patches lie on a blade.
@@ -351,6 +455,9 @@ impl Variegation {
         within("variegation rim", self.rim, 0.0, 0.5)?;
         within("variegation at", self.at, 0.0, 1.0)?;
         within("variegation slant", self.slant, 0.0, 4.0)?;
+        within("variegation feather", self.feather, 0.0, 0.5)?;
+        within("variegation stretch", self.stretch, 1.0, 10.0)?;
+        within("variegation plants", self.plants, 0.0, 1.0)?;
         for channel in self.colour {
             within("variegation colour", f64::from(channel), 0.0, 1.0)?;
         }
@@ -1252,6 +1359,12 @@ pub struct Simple {
     /// share of the blade's length (emarginate, retuse). 0 for none.
     #[serde(skip_serializing_if = "is_zero")]
     pub apex_notch: f64,
+    /// Veins each side of the midrib that run from the base to the tip
+    /// beside it, following the outline (parallel and acrodromous
+    /// venation: lilies, plantains, Smilax), drawn in place of the
+    /// branching veins; 0 for a pinnate or palmate blade's.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub parallel: u32,
 }
 
 impl Default for Simple {
@@ -1272,6 +1385,7 @@ impl Default for Simple {
             base_taper: None,
             apex_point: 0.0,
             apex_notch: 0.0,
+            parallel: 0,
         }
     }
 }
@@ -2705,6 +2819,7 @@ impl Shape {
                 }
                 check("apex_point", s.apex_point, 0.0, 0.3)?;
                 check("apex_notch", s.apex_notch, 0.0, 0.2)?;
+                count("parallel", s.parallel, 0, 12)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Lobed(s) => {
@@ -3074,6 +3189,7 @@ impl Compound {
         crate::divided::reach(self) * 2.0 + 0.03
     }
 
+    #[allow(clippy::too_many_lines)]
     fn validate(&self) -> Result<(), String> {
         let form = crate::divided::Form::of(self);
         let check = |field: &str, value: f64, low: f64, high: f64| {
@@ -3233,6 +3349,8 @@ pub struct Look {
     pub varieties: Vec<Look>,
     /// The hairs on its face, where it has any to draw.
     pub hairs: Option<Hairs>,
+    /// The hairs on its lower face, where it has any to draw.
+    pub hairs_beneath: Option<Hairs>,
 }
 
 /// The varieties of each look that varies (spec rework VARY): as many as
@@ -3430,6 +3548,7 @@ pub fn resolve<'a>(
                     shape: drawn,
                     varieties: Vec::new(),
                     hairs: look.hairs.clone().filter(Hairs::drawn),
+                    hairs_beneath: look.hairs_beneath.clone().filter(Hairs::drawn),
                 }
             }
             None => Look {
@@ -3451,6 +3570,7 @@ pub fn resolve<'a>(
                 inflorescence: None,
                 varieties: Vec::new(),
                 hairs: None,
+                hairs_beneath: None,
             },
         })
         .collect::<Vec<_>>()
@@ -3796,6 +3916,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         inflorescence: None,
         varieties: Vec::new(),
         hairs: None,
+        hairs_beneath: None,
     }
 }
 
@@ -4127,9 +4248,13 @@ mod tests {
         // Written back, the defaults stay out.
         let written = serde_json::to_string(&veins).expect("writes");
         assert!(
-            !written.contains("faces") && !written.contains("rim"),
+            !written.contains("faces")
+                && !written.contains("rim")
+                && !written.contains("stretch")
+                && !written.contains("plants"),
             "{written}"
         );
+        assert!((veins.stretch - 1.0).abs() < 1e-12 && veins.feather.abs() < 1e-12);
         for wrong in [
             Variegation { lines: 13, ..veins },
             Variegation {
@@ -4137,6 +4262,18 @@ mod tests {
                 ..veins
             },
             Variegation { rim: 0.6, ..veins },
+            Variegation {
+                stretch: 0.5,
+                ..veins
+            },
+            Variegation {
+                feather: 0.6,
+                ..veins
+            },
+            Variegation {
+                plants: 1.5,
+                ..veins
+            },
         ] {
             assert!(wrong.validate().is_err(), "{wrong:?}");
         }
@@ -4284,6 +4421,7 @@ mod tests {
             "leaf".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
                 sori: None,
@@ -4542,6 +4680,7 @@ mod tests {
             "bloom".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
                 sori: None,
@@ -4638,6 +4777,7 @@ mod tests {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
             sori: None,
@@ -4732,6 +4872,7 @@ mod tests {
             "bloom".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
                 sori: None,
@@ -4853,6 +4994,7 @@ mod tests {
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
             sori: None,

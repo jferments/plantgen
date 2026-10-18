@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Gladiolus",
+  "traits": {
+    "inflorescence": "spike"
+  },
+  "evidence": {
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Gladiolus (read 2026-10-17): flowers in a large one-sided spike, each flower held between two green bracts; about 260 species."}
+  }
+}

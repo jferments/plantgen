@@ -2145,8 +2145,9 @@ impl Body<'_> {
             #[allow(clippy::cast_possible_truncation)]
             let (wide, tall) = ((2.0 * across) as f32, (f64::from(reach.out) * scale) as f32);
             let lift = f64::from(reach.out) * scale * 0.25;
+            let base = (position + normal * lift - up * across).to_f32();
             out.cards.push(Card {
-                base: (position + normal * lift - up * across).to_f32(),
+                base,
                 heading: up.to_f32(),
                 left: side.to_f32(),
                 length: wide,
@@ -2157,12 +2158,14 @@ impl Body<'_> {
                 shed: tuft.shed,
                 bend: crate::bend::Bend::FLAT,
                 segment: self.bearer(),
+                seed: crate::templates::card_seed(base),
             });
             // Fans stand along the axis and across it in turn, so the
             // outline bristles from every side.
             let flank = if site.ordinal % 2 == 0 { up } else { side };
+            let base = position.to_f32();
             out.cards.push(Card {
-                base: position.to_f32(),
+                base,
                 heading: normal.to_f32(),
                 left: flank.to_f32(),
                 length: tall,
@@ -2173,6 +2176,7 @@ impl Body<'_> {
                 shed: tuft.shed,
                 bend: crate::bend::Bend::FLAT,
                 segment: self.bearer(),
+                seed: crate::templates::card_seed(base),
             });
         }
     }

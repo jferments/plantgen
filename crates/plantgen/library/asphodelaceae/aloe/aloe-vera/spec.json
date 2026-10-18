@@ -24,8 +24,8 @@
       "old_angle": 55,
       "open_years": 1.5,
       "angle_spread": 8,
-      "internode": 0.001,
-      "trunk_radius": 0.02,
+      "internode": 0.0004,
+      "trunk_radius": 0.012,
       "flower_age": 4,
       "bloom": 0.9,
       "stalk_height": 0.65,
@@ -67,11 +67,7 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.18,
-      0.15,
-      0.11
-    ],
+    "bark": [0.2, 0.24, 0.19],
     "foliage": [
       0.19,
       0.26,
@@ -96,23 +92,15 @@
           0.21
         ],
         "solid": {
-          "section": "triangular",
-          "thickness": 0.45,
+          "section": "channelled",
+          "thickness": 0.55,
+          "fold": 0.3,
           "widest": 0.02,
           "base": 1.0,
-          "taper": 1.0,
-          "arch": 15,
-          "teeth": {
-            "spacing": 0.012,
-            "length": 0.002,
-            "hook": 10,
-            "start": 0.1,
-            "colour": [
-              0.55,
-              0.55,
-              0.4
-            ]
-          }
+          "taper": 0.6,
+          "arch": 20,
+          "twist": 8,
+          "teeth": {"spacing": 0.012, "length": 0.003, "hook": 15, "start": 0.08, "colour": [0.7, 0.6, 0.52]}
         }
       },
       "dead": {
@@ -199,7 +187,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a stemless clump of thick, fleshy, grey-green leaves 30 to 50 cm long (Britton and Millspaugh 1920: 3 dm to 6 dm; a pup's first leaves are far shorter, so the length is not checked over every leaf) and 6 to 7 cm wide at the base, triangular in section, with small soft teeth along the margins. Its flowering follows Britton (1918) and Britton and Millspaugh (1920): a stout scape about 0.8 m to 1.2 m high ends in a dense raceme 10 cm to 30 cm long of 40 yellow flowers about 2.5 cm long, drawn as one cluster on the stalk's tip (flowers 1, flower_size 0.22, its look's inflorescence 40 flowers each 0.12 of its length, spread 80, nearly level, on short pedicels 0.03 of its length). Britton (1918) calls the plant stoloniferous, and garden plants crowd with offsets: a crown that flowers may also send out a pup that year, and pups send out up to two of their own (bloom_pup 1, pup_pups 2), so the clump spreads outward. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a stemless clump of thick, fleshy, grey-green leaves 30 to 50 cm long (Britton and Millspaugh 1920: 3 dm to 6 dm; a pup's first leaves are far shorter, so the length is not checked over every leaf) and 6 to 7 cm wide at the base, hollowed above and rounded below, with small soft teeth along the margins. Its flowering follows Britton (1918) and Britton and Millspaugh (1920): a stout scape about 0.8 m to 1.2 m high ends in a dense raceme 10 cm to 30 cm long of 40 yellow flowers about 2.5 cm long, drawn as one cluster on the stalk's tip (flowers 1, flower_size 0.22, its look's inflorescence 40 flowers each 0.12 of its length, spread 80, nearly level, on short pedicels 0.03 of its length). Britton (1918) calls the plant stoloniferous, and garden plants crowd with offsets: a crown that flowers may also send out a pup that year, and pups send out up to two of their own (bloom_pup 1, pup_pups 2), so the clump spreads outward. Its stem stays short and hidden: leaves 0.4 mm apart up a stem 1.2 cm thick (internode 0.0004, trunk_radius 0.012), so the 6 leaves a year add under 4 cm in 15 years and the broad leaf bases close over it, where before a 4 cm stem stood bare under each crown as its lower leaves fell. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
@@ -209,7 +197,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs, made paler and greyer to match Britton's (1918) 'pale glaucous-green' leaves: grey-green leaves with pale teeth, yellow flowers. Its flower laid out whorl by whorl (spec rework P5b): six yellow tepals joined in a tube, six stamens and a superior pistil of three carpels, from the characters of its own and Asphodelaceae's by the rules at the flowering plants. The tepals close into a tube (cup 80, curl 15), the genus's near-cylindric perianth with spreading tips (Britton 1918). Teeth about 1.2 cm apart, within Britton's (1918) 1.3 cm or less."
+      "note": "Colours chosen by eye from photographs, made paler and greyer to match Britton's (1918) 'pale glaucous-green' leaves: grey-green leaves with pale pinkish-white teeth, a grey-green stem and scape, yellow flowers. Its flower laid out whorl by whorl (spec rework P5b): six yellow tepals joined in a tube, six stamens and a superior pistil of three carpels, from the characters of its own and Asphodelaceae's by the rules at the flowering plants. The tepals close into a tube (cup 80, curl 15), the genus's near-cylindric perianth with spreading tips (Britton 1918). Teeth about 1.2 cm apart, within Britton's (1918) 1.3 cm or less, each 3 mm long and turned a little toward the tip. Each leaf is drawn by eye from photographs as thick and fleshy: hollowed along its upper face and rounded below (channelled, 0.55 as thick as wide), widest at its clasping base and keeping its width before it narrows to the tip (taper 0.6), arching out a little (20 degrees) and turning slightly on its length (8 degrees)."
     },
     "taxon": {
       "evidence": "Authored",
