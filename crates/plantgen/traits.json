@@ -2589,6 +2589,22 @@
       "values": ["terminal", "lateral", "both"],
       "why": "whether flowers end a shoot or sit beside its leaves"
     },
+    "flowering_shoots": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["renewed", "spurs"],
+      "optional": true,
+      "why": "where a woody plant's flowers come year after year: on new shoots from the buds of the last year's growth, each ending in its cluster and flowering once, so the flowers stand at the crown's surface (a hydrangea's); or on short shoots (spurs) that flower again each year along the older wood (an apple's, a cherry's)"
+    },
+    "flowering_shoot_leaves": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "count",
+      "range": [1, 40],
+      "optional": true,
+      "why": "the leaves a flowering shoot bears below the inflorescence that ends it, in the year it flowers: a hydrangea's head stands on a shoot of two to four pairs of large leaves"
+    },
     "sympodium": {
       "group": "architecture",
       "organ": "stem",

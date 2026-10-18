@@ -1138,7 +1138,7 @@ impl Season {
                     within("colours", f64::from(channel), 0.0, 1.0)?;
                 }
             }
-            within("stage size", look.size, 0.05, 4.0)?;
+            within("stage size", look.size, 0.05, 8.0)?;
             if let Some(form) = &look.form {
                 form.validate(&look.shape)?;
             }

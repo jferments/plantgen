@@ -202,7 +202,7 @@
       "why": "A cluster's fruit is as long, for the length of the cluster and its peduncle, as floras measure them, whichever axis bears it."
     },
     "appearance.organs.*.season.flower_look.size": {
-      "rule": "clamp(flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3) / fruit_size_m, 0.05, 4)",
+      "rule": "clamp(flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3) / fruit_size_m, 0.05, 8)",
       "why": "A flower is as wide, for its fruit's length, as floras measure the flower and the fruit (the flower by its petals' reach where sepals outreach them, as the bloom size rule grows it): a cluster's flower against its fruit, a lone flower against the fruit it becomes."
     },
     "appearance.organs.*.season.fruit_size": {

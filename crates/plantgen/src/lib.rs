@@ -868,5 +868,13 @@ pub mod venation;
 /// flower with no carpels stands on no ovary; a petal whose outline is
 /// stated is as wide on the solid as on its card; and from the flat
 /// coarse step a flower of three to six petals is a polygon through
-/// their tips, not a hexagon (128 is #211's cycad cones).
+/// their tips, not a hexagon. A lineage whose inflorescences end leafy
+/// shoots (`flowering_shoot_leaves`) unfolds that many leaves below each
+/// cluster, and one that flowers on new shoots (`flowering_shoots`)
+/// flowers on a short shoot or a stopped tip only in its first year
+/// (broadleaf program revision 22), so a hydrangea's heads stand at the
+/// crown's surface above their leaves, not along the old wood; and a
+/// flower may be drawn up to eight times its fruit's size, where it was
+/// four, so a mophead's sterile flowers reach their stated size (128 is
+/// #211's cycad cones).
 pub const GENERATOR_REVISION: u32 = 129;
