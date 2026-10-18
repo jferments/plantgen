@@ -686,7 +686,8 @@ pub enum Field {
     Word,
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
-    /// A colour, red, green and blue from 0 to 1: a fruit's seeds.
+    /// A colour, red, green and blue from 0 to 1: a fruit's seeds, a
+    /// flower's stigma lobes.
     Colour,
 }
 
@@ -1159,6 +1160,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("staminodes", Count),
                 ("carpels", Count),
                 ("ovary", Word),
+                ("stigma", Colour),
+                ("pericarpel", Word),
                 ("torus", Number),
                 ("column", Number),
                 ("turn", Number),
@@ -1235,6 +1238,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("flare", Number),
                 ("seeds", Colour),
                 ("cup", Colour),
                 ("ripening", Colour),
@@ -3119,6 +3123,15 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
         Some(Field::Count) => (value.is_u64(), "a whole number, 0 or more"),
         Some(Field::Number) => (value.is_number(), "a number"),
         Some(Field::Word) => (value.is_string(), "a word"),
+        Some(Field::Colour) => (
+            value.as_array().is_some_and(|rgb| {
+                rgb.len() == 3
+                    && rgb
+                        .iter()
+                        .all(|c| c.as_f64().is_some_and(|c| (0.0..=1.0).contains(&c)))
+            }),
+            "a colour, `[r, g, b]` from 0 to 1",
+        ),
         Some(Field::Outline) => (
             value.as_array().is_some_and(|points| {
                 points.iter().all(|point| {
@@ -3128,12 +3141,6 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
                 })
             }),
             "`[u, w]` points",
-        ),
-        Some(Field::Colour) => (
-            value
-                .as_array()
-                .is_some_and(|rgb| rgb.len() == 3 && rgb.iter().all(Value::is_number)),
-            "a colour",
         ),
     };
     if fits {

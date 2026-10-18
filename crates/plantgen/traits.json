@@ -529,6 +529,30 @@
       "when": {"spines": ["areoles"]},
       "why": "how far a cactus's tubercles stand from its stem: barely (ribs with at most a swelling under each areole), low, distinct knobs, or prominent ones"
     },
+    "stem_apex": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["tapering", "rounded", "broad"],
+      "when": {"spines": ["areoles"]},
+      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, or broad, a rounded shoulder under a wide flattish top that may sink at its centre"
+    },
+    "stem_outline": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["cylindrical", "club_shaped"],
+      "when": {"spines": ["areoles"]},
+      "why": "a cactus column's outline from its foot up: cylindrical, as wide at its foot as higher up, or club-shaped, narrower at its foot, where it grew while the plant was young, than above"
+    },
+    "lower_areole_spines": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["as_upper", "fewer", "sometimes_none", "none"],
+      "when": {"spines": ["areoles"]},
+      "why": "how a pad's or joint's lower areoles carry spines against its upper ones: as many, fewer (spines mostly on the distal areoles), sometimes none, or none (spines only on the upper areoles); the glochids are on every areole"
+    },
     "tubercle_shape": {
       "group": "stem_and_bark",
       "organ": "stem",
@@ -1310,6 +1334,12 @@
       "type": "colour",
       "why": "an open flower's showiest part"
     },
+    "stigma_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "why": "the stigma lobes', where they differ from the style and stamens"
+    },
     "flower_size_m": {
       "group": "flowers",
       "organ": "flower",
@@ -1767,6 +1797,21 @@
       "values": ["berry", "drupe", "pome", "capsule", "pod", "legume", "nut", "samara", "achene", "cypsela", "caryopsis", "follicle", "schizocarp", "aggregate", "multiple"],
       "why": "what a fruit is (pod for dry pods that split other than a legume; cypsela for the achene of the daisy family)"
     },
+    "fruit_surface": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["naked", "scaly", "areolate", "spiny"],
+      "when": {"spines": ["areoles"]},
+      "why": "what a cactus's pericarpel, and the fruit it grows into, bears on its skin: nothing (naked), broad scales, felted areoles (with glochids but no spines), or areoles with spines"
+    },
+    "fruit_shape": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["globose", "ellipsoid", "ovoid", "obovoid", "obconic", "club_shaped"],
+      "why": "a ripe fruit's outline along its length: round (globose), oval and even (ellipsoid), widest toward its base (ovoid), widest toward its tip (obovoid), narrowing to a point at its base (obconic), or swelling from a long narrow base (club_shaped)"
+    },
     "fruit_size_m": {
       "group": "fruit_and_cones",
       "organ": "fruit",
@@ -2086,6 +2131,14 @@
       "type": "enum",
       "values": ["terminal", "lateral", "both"],
       "why": "whether flowers end a shoot or sit beside its leaves"
+    },
+    "flower_zone": {
+      "group": "architecture",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["crown", "crown_and_flanks", "upper_half"],
+      "when": {"spines": ["areoles"]},
+      "why": "where a cactus column's flowers open: in a ring round its apex, near the apex and down the upper flanks, or along the upper half of the stem, below the apex"
     },
     "short_shoots": {
       "group": "architecture",

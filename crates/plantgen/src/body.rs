@@ -12,8 +12,10 @@
 //!    cubic through the segments' radii (Fritsch and Carlson 1980), which
 //!    never swells past them.
 //! 2. A dome closes its tip, and a rounded base its foot if the look asks:
-//!    the radius times `sqrt(1 - x²)` over the last `dome` and the first
-//!    `base` radii of its length.
+//!    the radius times `(1 - xⁿ)^(1/n)` over the last `dome` radii of its
+//!    length, n the look's `shoulder` (2 a quarter ellipse, less a tip
+//!    that tapers, more a broad shoulder under a flat top), and times
+//!    `sqrt(1 - x²)` over its first `base` radii.
 //! 3. A cross-section is a circle, or an ellipse `flatten` times as thick as
 //!    it is wide across the turtle's left vector: a pad. [`Ribs`] fold it
 //!    into crests and valleys; [`Tubercles`] raise a bump under each
@@ -66,6 +68,11 @@ pub struct BodyLook {
     /// Length of the dome that closes the tip, in radii of the tip: 1 a
     /// half sphere, less a flatter top, more a pointed one.
     pub dome: f64,
+    /// How the dome rounds: the exponent of the superellipse it follows, 2
+    /// a quarter ellipse, toward 1 a tip that tapers to its apex, more a
+    /// broad shoulder under a flatter top.
+    #[serde(skip_serializing_if = "is_round")]
+    pub shoulder: f64,
     /// Length of a rounded base, in radii of the foot: 0 leaves the foot
     /// open, as a stem standing in the ground; a joint of a cholla or a
     /// prickly pear's pad is rounded at both ends.
@@ -94,6 +101,7 @@ impl Default for BodyLook {
             valley: None,
             flatten: 1.0,
             dome: 1.0,
+            shoulder: 2.0,
             base: 0.0,
             ribs: None,
             tubercles: None,
@@ -236,6 +244,13 @@ pub struct SpineSet {
     /// How far its tip turns back as a hook: a fishhook's 120 to 180,
     /// curled over the last eighth or so of its length.
     pub hook: f64,
+    /// How far the set keeps to the upper areoles of its segment, 0 to 1:
+    /// at 0 every areole carries the whole set; a pad's or joint's lower
+    /// areoles carry a share `1 - 2 distal (1 - along)` of it, so at 0.5
+    /// the lowest have none and at 1 the lower half none (see
+    /// [`crate::spines::thinning`]).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub distal: f64,
     /// Width at the base, metres, and thickness over width: below 1 a
     /// flattened spine.
     pub width: f64,
@@ -288,12 +303,30 @@ impl Default for SpineSet {
             length_spread: 0.2,
             curve: 0.0,
             hook: 0.0,
+            distal: 0.0,
             width: 0.0006,
             flat: 1.0,
             colour: [0.75, 0.7, 0.6],
             tip: None,
         }
     }
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f64) -> bool {
+    *value == 0.0
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_round(value: &f64) -> bool {
+    *value == 2.0
+}
+
+/// A dome's radius over its foot's at `x` of the way up it, 0 to 1: the
+/// superellipse `(1 - xⁿ)^(1/n)` of exponent `shoulder`.
+fn dome_profile(x: f64, shoulder: f64) -> f64 {
+    let x = x.clamp(0.0, 1.0);
+    math::pow((1.0 - math::pow(x, shoulder)).max(0.0), 1.0 / shoulder)
 }
 
 /// Spines bleach or grey as they age.
@@ -392,6 +425,7 @@ impl BodyLook {
         }
         within("flatten", self.flatten, 0.05, 1.0)?;
         within("dome", self.dome, 0.05, 4.0)?;
+        within("shoulder", self.shoulder, 1.0, 4.0)?;
         within("base", self.base, 0.0, 4.0)?;
         if let Some(ribs) = &self.ribs {
             let [low, high] = ribs.count;
@@ -450,6 +484,7 @@ impl BodyLook {
             within("spines length_spread", set.length_spread, 0.0, 0.9)?;
             within("spines curve", set.curve, -180.0, 180.0)?;
             within("spines hook", set.hook, 0.0, 270.0)?;
+            within("spines distal", set.distal, 0.0, 1.0)?;
             within("spines width", set.width, 0.000_05, 0.01)?;
             within("spines flat", set.flat, 0.05, 1.0)?;
             colour_ok("spines colour", set.colour)?;
@@ -827,6 +862,8 @@ struct Centreline {
     /// Lengths of the dome at the tip and the rounded base at the foot.
     dome: f64,
     base: f64,
+    /// The dome's exponent ([`BodyLook::shoulder`]).
+    shoulder: f64,
 }
 
 impl Centreline {
@@ -967,6 +1004,7 @@ impl Centreline {
             length,
             dome,
             base,
+            shoulder: look.shoulder,
         })
     }
 
@@ -1004,8 +1042,8 @@ impl Centreline {
     fn cap(&self, s: f64) -> f64 {
         let mut cap = 1.0;
         if self.dome > 0.0 && s > self.length - self.dome {
-            let x = ((s - (self.length - self.dome)) / self.dome).min(1.0);
-            cap *= math::sqrt((1.0 - x * x).max(0.0));
+            let x = (s - (self.length - self.dome)) / self.dome;
+            cap *= dome_profile(x, self.shoulder);
         }
         if self.base > 0.0 && s < self.base {
             let x = ((self.base - s) / self.base).min(1.0);
@@ -1515,8 +1553,8 @@ fn apex_crowding(line: &Centreline, s: f64) -> f64 {
     if line.dome <= 0.0 || s <= line.length - line.dome {
         return 1.0;
     }
-    let x = ((s - (line.length - line.dome)) / line.dome).min(1.0);
-    APEX_CROWDING.max(math::sqrt((1.0 - x * x).max(0.0)))
+    let x = (s - (line.length - line.dome)) / line.dome;
+    APEX_CROWDING.max(dome_profile(x, line.shoulder))
 }
 
 /// Areoles on a golden-angle spiral from the apex down, each with
@@ -2126,6 +2164,7 @@ impl Body<'_> {
                 body,
                 born: station.born as f32,
                 shed: station.shed.map_or(f32::INFINITY, |shed| shed as f32),
+                along: (site.s / line.length.max(1e-9)).clamp(0.0, 1.0) as f32,
             };
             // A tuft is pushed only with its two cards, so on a level that
             // draws both the last cards are each tuft's star and fan in
@@ -2140,6 +2179,9 @@ impl Body<'_> {
                 Some(greying) => mix(colour, greying.colour, grey),
                 None => colour,
             };
+            // A lower areole whose spines keep to the upper ones draws
+            // a smaller card, by the share of spine it keeps.
+            let scale = scale * spines::kept(look, tuft.along).sqrt().max(0.3);
             let across = f64::from(reach.across) * scale;
             let side = normal.cross(up);
             #[allow(clippy::cast_possible_truncation)]
@@ -2210,6 +2252,22 @@ impl Surface<'_> {
 #[allow(clippy::float_cmp)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_dome_tapers_rounds_or_shoulders_by_its_exponent() {
+        for x in [0.0, 0.3, 0.6, 0.9, 1.0] {
+            let round = dome_profile(x, 2.0);
+            assert!((round - math::sqrt(1.0 - x * x)).abs() < 1e-9, "{x}");
+        }
+        let (taper, round, broad) = (
+            dome_profile(0.5, 1.4),
+            dome_profile(0.5, 2.0),
+            dome_profile(0.5, 2.8),
+        );
+        assert!(taper < round && round < broad, "{taper} {round} {broad}");
+        assert!(dome_profile(1.0, 1.4).abs() < 1e-9);
+        assert!((dome_profile(0.0, 2.8) - 1.0).abs() < 1e-9);
+    }
     use crate::graph::GraphSegment;
 
     fn segment(
