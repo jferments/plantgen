@@ -1545,6 +1545,7 @@ mod tests {
                 ..crate::bend::Bend::FLAT
             },
             segment: crate::mesh::NO_SEGMENT,
+            seed: 0.5,
         };
         let bare_edge = Hairs {
             edge: Some(0.0),
@@ -1618,6 +1619,7 @@ mod tests {
                 ..crate::bend::Bend::FLAT
             },
             segment: crate::mesh::NO_SEGMENT,
+            seed: 0.5,
         };
         let covered: Vec<f32> = (0..veins.len())
             .filter(|&at| templates.templates[0].coverage[at] >= 0.5)
