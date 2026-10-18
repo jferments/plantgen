@@ -1,4 +1,4 @@
-# PlantGen photo rules (v1, 2026-10-17)
+# PlantGen photo rules (v2, 2026-10-18)
 
 Rules that let any vision-capable AI look at plant photos, describe what
 they show in a fixed vocabulary, look at PlantGen's renders the same way,
@@ -11,12 +11,15 @@ PlantGen's own reviews of its renders against photos and floras.
 
 ## What you need
 
-- **Photos** of the species, with their source, licence and date. See
-  `SOURCES.md` for where to get good ones and `CAPTURE.md` for taking your
-  own. "Solid" means, per species, roughly: 8 whole-plant side views, 8
-  shoot close-ups, 10 face-on leaves (plus a few herbarium sheets for size),
-  10 flowers face-on and side, 8 fruits, 5 bark shots, from at least three
-  different photographers.
+- **Photos** of the species, with their source, licence and date, taken
+  by view to a target for each view, not at random. See `SOURCES.md` for
+  the targets and where to get good photos, and `CAPTURE.md` for taking your
+  own. Per species, from at least three photographers: 8 whole-plant side
+  views, 5 leafless (deciduous), 8 shoot close-ups, 10 face-on leaves (plus 5
+  herbarium sheets for size), 5 leaf undersides, 8 flowers face-on and 6
+  from the side, 8 fruits or cones, 5 bark or stem shots, and for cacti 5 of
+  the apex and 8 areole close-ups. `imagekit views` counts what a triaged
+  set has against these.
 - **Renders** of the same species from PlantGen (`plantc`, see
   `03-match-renders.md`), or someone who can make them for you.
 - **An AI that reads images** at about 1024 px and can answer in JSON. Run
@@ -87,8 +90,50 @@ answers. See `02b-check-named.md` for why both passes are run.
   finding, proposal.
 - `examples/whitebark-pine.md`: one worked run.
 - `tools/check.py`: checks every feature against `crates/plantgen/traits.json`
-  and the examples against the schemas (`python3 photo-rules/tools/check.py`
-  from the repository root; needs PyYAML and jsonschema).
+  and the examples against the schemas and the features (`python3
+  photo-rules/tools/check.py` from the repository root; needs PyYAML and
+  jsonschema).
+- `tools/crown_profile.py`: draws the tick bands for reading a crown profile
+  on a photo, and measures a render's profile from a `plantc export` file
+  (Pillow only).
+
+## v1 to v2 (2026-10-18)
+
+A replay of v1 against 62 hand-found misses on eight species (two barrel
+cacti, five magnoliids, whitebark pine) found 17 of 31 testable ones, with
+5 of 16 hand matches called misses. The rest fell short in three ways, and
+v2 answers each:
+
+- **No feature (14 misses, 10 of them cactus details).** 17 new features:
+  areole size, wool and wool colour; apex wool; gland spines; radial and
+  central spine counts and how the centrals are set; rib course and seams;
+  scales on the bud and flower tube; the dried perianth on the fruit; the
+  ring of hairs inside the flower; inner against outer petal length and how
+  the outer ones curve; carpel counts; and `habit.crown_profile`, the
+  crown's width at ten heights (a new feature type, `profile`, from the
+  Conifers review's measured outlines).
+- **Too few photos for a view (13).** Photos are taken by view to a target
+  per view (`SOURCES.md`), with leaf undersides (triage `leaf_face`) and,
+  for cacti, the apex and areole close-ups as views of their own;
+  `imagekit views` counts a triaged set against the targets.
+- **Too few render answers (most of 14 missed with data).** Three framed
+  close-ups per seed at three seeds (`03-match-renders.md`), so shoot
+  features get at least six render answers.
+- **Ratios read on tilted organs.** The pawpaw leaf "drawn narrower than the
+  photos" (length over width 3.0 against 2.4) was a measuring fault (D0):
+  its render answers came from a tilted `plantc parts` panel and oblique
+  views, and the flat card measures 2.5. Shapes and ratios of leaves,
+  leaflets and petals (`face_on: true`) are now answered only on organs
+  lying flat to the camera (`02-observe.md`), renders give them from
+  `plantc atlas` cards or `plantc validate --group sizes`, and a verdict
+  needs face-on answers on both sides.
+
+Also: every character `features.yaml` had marked proposed was checked
+against `traits.json` at a52bb873; stem colour and tubercle relief now map
+to their characters, `leaf.hairs` now bears on the hair characters
+(`leaf_hairs`, `leaf_hairs_beneath`, `stem_hairs`) and eight more features
+name characters they bear on (`related_trait`); 30 stay proposed. No
+feature id changed.
 
 ## Rules that never bend
 

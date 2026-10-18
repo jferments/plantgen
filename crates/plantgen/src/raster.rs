@@ -562,10 +562,13 @@ impl Surface<'_> {
             let alpha = mesh.colors[corners[0]][3];
             let (template, _, _) = crate::templates::unpack_face(alpha);
             #[allow(clippy::cast_possible_truncation)]
-            let texel = self.templates.sample(template, u as f32, v as f32);
-            if texel.coverage < 0.5 {
+            let (u, v) = (u as f32, v as f32);
+            // Cut where the coverage, read between texels, is below one
+            // half, so the card's edge follows its outline.
+            if self.templates.coverage(template, u, v) < 0.5 {
                 return;
             }
+            let texel = self.templates.sample(template, u, v);
             // Up close the edge's hairs are strands of their own.
             if texel.fringe
                 && let Some(hairs) = self

@@ -34,7 +34,19 @@ which image is a render or what it was meant to show.
 
 A colour value is `{"family": "maroon", "hex": "#6e2330", "lighting":
 "overcast"}`. A count you pointed at is `{"points": [[x, y], ...], "count":
-N}`.
+N}`. A profile (`habit.crown_profile`) is its ten widths, lowest band first,
+with the bands you estimated listed by number:
+
+```json
+"habit.crown_profile": {
+  "value": [0.0, 0.12, 0.31, 0.42, 0.44, 0.40, 0.33, 0.24, 0.15, 0.05],
+  "estimated": [1],
+  "method": "bands",
+  "confidence": "medium",
+  "evidence": "whole tree, ground to top; ticks drawn on the crop",
+  "note": "grass hides the left side below 0.2 H"
+}
+```
 
 ## How to observe, scale by scale
 
@@ -47,6 +59,8 @@ crown.
 Look at the outline first, as if the plant were a silhouette against the
 sky. Where is it widest? How wide is it compared with its height? Where do
 the leaves start above the ground? Is it one stem or several from the base?
+If you are asked for the crown profile, read it as "Reading the crown
+profile" below says, on the tick bands, not by eye from the whole frame.
 Then the setting: an open-grown tree and a forest tree of the same species
 look different, and the comparison needs to know which this is.
 
@@ -85,20 +99,69 @@ For divided leaves, read the leaflet the same way, and count the leaflets.
 
 Face-on (V6): colour of each part, symmetry, number of petals or tepals,
 their shape and tips, whether neighbours overlap or have gaps. For a daisy
-head, the ray tips, ray sides, disc shape and colour. From the side (V7): the
-corolla's shape (flat, cup, bell, funnel, tube), which way the flower faces,
-and the form and posture of the whole cluster.
+head, the ray tips, ray sides, disc shape and colour. Then the middle: the
+pistils or carpels (count them, or bin them), and whether a ring of hairs
+sits between the perianth and the stamens. From the side (V7): the
+corolla's shape (flat, cup, bell, funnel, tube), how the outer parts bend at
+their tips, whether the inner whorl is as long as the outer, which way the
+flower faces, and the form and posture of the whole cluster. On a bud or
+the tube below the petals, look for scales, wool or spines.
 
 ### 7. Fruit and cone (V8)
 
 Shape, colour, which way it hangs, whether single, clustered or in chains,
-the surface, and its size compared with a leaf.
+the surface, what stays on its top (sepals, a dried flower, nothing), and its
+size compared with a leaf.
 
 ### 8. Surface (V8, or any close view)
 
 Bark texture and colour on the trunk; twig colour; for cacti, the ribs, the
 bumps (tubercles) along them, the spacing of the spine clusters, how much of
 the skin the spines hide, and spine colour and shape.
+
+Cacti need close-ups of their own (`SOURCES.md`): a cactus's look at arm's
+length is in its areoles and its top, which a whole-plant photo shows as a
+blur. On a close-up of the ribs, pick two or three grown areoles from the
+middle of the stem and read, in this order:
+
+1. the ribs: straight, winding gradually round the stem, or wavy; and
+   where the rib count changes, whether one rib forks at a time or many end
+   together along a line;
+2. the areole: its length along the rib against the distance to the next
+   one, and its wool (none, a thin felt, a cushion, a tuft) and the wool's
+   colour;
+3. the spines: radials counted round the edge, centrals counted in the
+   middle, how the centrals are set (a cross of four, one main spine, no
+   pattern), and the longest central's shape;
+4. near the apex only, any short, thick, blunt gland spines above the true
+   spines, often yellow or red, sometimes with a drop of nectar or ants.
+
+On a view of the top (from above, or a close-up of it), say what covers the
+growing point: bare skin or a small dot of felt, a small felted cap, or a
+thick thatch of wool and young spines.
+
+## Is it face-on?
+
+Features marked `face_on: true` (shapes, ratios, tips and bases of leaves,
+leaflets and petals) are answered only on an organ lying roughly parallel
+to the image plane. Tilt shortens the organ across the tilt and nothing
+else: a blade tilted 25 degrees reads a tenth narrower (or shorter), 35
+degrees nearly a fifth, so a tilted leaf looks narrower and pointier than it
+is. Before answering, check the organ you chose:
+
+- the midrib (or a petal's middle line) is straight in the image, not bent
+  by perspective, and the blade's two halves are about equally wide on
+  either side of it (for a leaf that is symmetric);
+- you see one face only, evenly lit, with neither edge showing its
+  thickness or a strip of the other face;
+- its outline is sharp all round, with no end much blurrier or larger
+  than the other (a sign it points toward the camera);
+- on a herbarium sheet or a leaf laid on a table, it lies flat and is not
+  folded or curled.
+
+If no organ in the image passes, answer "cannot tell": a ratio from a
+tilted organ is a wrong vote, not a rough one. A round flower that looks
+like an ellipse is tilted too.
 
 ## How to measure by eye
 
@@ -116,6 +179,48 @@ the skin the spines hide, and spine colour and shape.
 - **Counts.** Follow ground rule 6. If the organ repeats (several flowers),
   count two or three of them and give the commonest number.
 
+## Reading the crown profile
+
+`habit.crown_profile` gives the crown's width at ten heights. Read it on a
+crop with the bands drawn on, never by eye from the whole frame: in the
+Conifers review, the words "conical" and "columnar" missed that drawn crowns
+were twice as wide as real ones in their top 40%, and the ten numbers found
+it.
+
+Steps 1 and 2 are for whoever prepares the images (a person, or an agent
+that can run a script): the banded crop is then sent with the photo, under
+the same photo id. An observer sent a photo with no bands drawn reads the
+widths against the plant's height by eye, answers with confidence `low`, and
+writes "no bands" in the note.
+
+1. **Set the frame.** Find the ground point, where the trunk (or the clump's
+   middle) meets the ground, and the top, the plant's highest point. On
+   sloping ground, take the ground halfway between where the trunk enters
+   it uphill and downhill. Draw a percentage grid
+   on the photo to read both (`photo-rules/tools/crown_profile.py grid
+   PHOTO --out grid.png`) and write them as per cent of the image's width
+   and height from its top left.
+2. **Draw the bands.** `crown_profile.py bands PHOTO --ground X,Y --top X,Y
+   --out bands.png` crops the plant and draws ten bands, each a tenth of the
+   height, centred on 0.05, 0.15 ... 0.95 of it, with ticks every 0.02 of
+   the height out from the trunk line on both sides, labelled every 0.1. Any
+   tool that draws the same will do (it is a few lines of Pillow: crop,
+   then lines and ticks at fixed shares of the ground-to-top distance).
+3. **Read each band.** Where does the outer foliage edge cross the band on
+   the left, and on the right, in ticks from the trunk line? Leave out a
+   single twig sticking out alone. The band's width is the two readings
+   added. 0 where only bare trunk crosses it (below the crown base).
+4. **Mark what you estimated.** Where grass, rocks, a neighbour or the frame
+   hides one side of a band, read the side you can see, double it, and list
+   that band in `estimated`. A band hidden on both sides is estimated from
+   its neighbours, or, if more than two are, answer "cannot tell".
+
+Read so (`"method": "bands"`), each width is good to about ±0.03-0.05 of
+the height; estimated ones are worse. Photos taken from near the foot shorten the top (the upper
+widths read a little wide): say so in the note when the camera looks up.
+A render is read the same way on its side view, or measured from its
+geometry (`04-compare.md` §1).
+
 ## When to hand a feature to a tool
 
 If your platform has them, these tools beat any model's eye:
@@ -130,4 +235,5 @@ If your platform has them, these tools beat any model's eye:
 
 Record which method answered each feature in the answer's `"method"` field
 (`"vlm"`, `"points"`, `"mask"`, `"pixels"` for a colour sampled from pixels,
-`"ruler"`, `"hand"`), so aggregation can weigh them.
+`"bands"` for a profile read on drawn tick bands, `"ruler"`, `"hand"`), so
+aggregation can weigh them.

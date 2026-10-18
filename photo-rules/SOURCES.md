@@ -126,19 +126,46 @@ describes them. They are copyright: look, compare, never keep or publish.
   Credit the creator in the observation record.
 - Copyright (book figures, most specialist sites): compare only.
 
-## What makes a photo set "solid"
+## Photos by view, to a target per view
 
-Per species, from at least three photographers:
+Take photos by view, to the target for each view below, not at random. In
+the v1 replay, 29-32 photos per species fetched at random still left the
+whole plant, leafless and leaf-underside views under five answers, and 13 of
+62 hand-found misses could not be tested for want of them. Online
+collections are mostly flowers; the other views have to be sought.
 
-| View | Photos |
-| --- | --- |
-| V1 whole plant, open-grown | 8 |
-| V2 leafless (deciduous trees and shrubs) | 5 |
-| V4 shoot close-up | 8 |
-| V5 leaf face-on, plus herbarium sheets for size | 10 + 5 |
-| V6 and V7 flowers face-on and side | 10 |
-| V8 fruit or cone | 8 |
-| V8 bark or stem surface | 5 |
+A species' set is solid when each view that applies has its target of
+usable photos (triage `usable`, not `cultivar_look`), from at least three
+photographers:
 
-For a family rule, the same for three or more species in two or more
-genera.
+| View | Triage shows | Photos |
+| --- | --- | --- |
+| Whole plant, side, open-grown | V1 | 8 |
+| Leafless, in winter (deciduous trees and shrubs) | V2 | 5 |
+| Shoot close-up | V4 | 8 |
+| Leaf face-on, plus herbarium sheets for size | V5 | 10 + 5 sheets |
+| Leaf underside | V4 or V5 with `leaf_face` lower or both | 5 |
+| Flower face-on | V6 | 8 |
+| Flower or cluster from the side | V7 | 6 |
+| Fruit or cone | V8 with fruit or cone | 8 |
+| Bark or stem surface | V8 with bark or stem | 5 |
+| Cacti: the apex, from above or close | V3 or V8 with apex | 5 |
+| Cacti: areole close-up | V8 with areole | 8 |
+
+For cacti, the leaf views do not apply. For a family rule, the same for
+three or more species in two or more genera.
+
+How to get there: fetch more than the targets need, triage, and count what
+each view has (`imagekit views`, see `imagekit/README.md`); then fetch again
+for the views still short:
+
+- whole plants: Wikimedia Commons and your own photos (`CAPTURE.md`); from
+  iNaturalist, fetch many and keep what triage calls V1;
+- leafless: iNaturalist with `--months` set to the winter months;
+- flowers and fruit: iNaturalist with `--phenology flowering` or
+  `fruiting`;
+- leaf face-on and sizes: herbarium sheets (GBIF, `--basis
+  PRESERVED_SPECIMEN`);
+- undersides, apexes and areoles: a large iNaturalist fetch, searched by
+  look (`imagekit search --model siglip2 --text "underside of a leaf"`)
+  before triage.

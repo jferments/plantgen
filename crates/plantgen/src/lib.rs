@@ -789,4 +789,8 @@ pub mod venation;
 /// leaves below and above its whorls, and bulbils in its upper leaf axils
 /// where its flora says (liliaceae program revision 2, `bulbils`,
 /// `bulbil_colour`).
-pub const GENERATOR_REVISION: u32 = 120;
+/// 121: previews and impostors cut a card where its coverage, read
+/// bilinearly between texels, is below one half, so an entire blade's edge
+/// follows its outline rather than a staircase of texels that reads as
+/// teeth up close (118 is herb branch leaves, #190).
+pub const GENERATOR_REVISION: u32 = 121;

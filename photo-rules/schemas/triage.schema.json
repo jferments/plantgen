@@ -65,6 +65,16 @@
         "type": "string"
       }
     },
+    "leaf_face": {
+      "description": "which face of the leaves shows clearly (V4, V5): the underside is a view of its own in the photo targets",
+      "enum": [
+        "upper",
+        "lower",
+        "both",
+        "none",
+        "cannot tell"
+      ]
+    },
     "stage": {
       "enum": [
         "vegetative",
