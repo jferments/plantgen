@@ -106,8 +106,8 @@
       "why": "A herb's flowering side branches branch again from their own leaf axils as many times as the taxon states."
     },
     "generator.params.stem_height": {
-      "rule": "height_typical_m",
-      "why": "A herb's stems grow back each year to about the plant's usual height."
+      "rule": "first(stem_length_m, height_typical_m)",
+      "why": "A herb's stems grow back each year to about the plant's usual height; where they lie or lean, as long as floras measure them."
     },
     "generator.params.height_max": {
       "rule": "height_max_m",
@@ -176,7 +176,7 @@
     "rules.generator.params.stem_height": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height."
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height. Where a flora measures a lying or leaning stem's length (stem_length_m, shrub habit 2026-10-18), the stem is that long instead, and its height is what its posture leaves."
     },
     "rules.generator.params.height_max": {
       "evidence": "Authored",

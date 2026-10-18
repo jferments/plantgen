@@ -342,6 +342,28 @@
       "type": "bool",
       "why": "whether it spreads by its own shoots, runners or roots"
     },
+    "stem_clump": {
+      "group": "form",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["single", "few", "many", "thicket"],
+      "why": "how many stems a woody plant stands on and where they come from, as floras word it: one trunk (single-stemmed), a few or many stems from its base (a many-stemmed shrub, a clump of canes), or a thicket of stems sent up from its spreading roots, rhizomes or layered branches (thicket-forming, colonial)"
+    },
+    "stem_posture": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["erect", "ascending", "decumbent", "prostrate"],
+      "why": "how a plant's leafy stems hold themselves, as floras word it: upright, curving up from a leaning foot, lying on the ground below and rising toward their tips, or lying flat along the ground (trailing or creeping) with only their flowering tips raised"
+    },
+    "stem_length_m": {
+      "group": "size",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.005, 100],
+      "why": "how long a stem is from its foot to its tip, where it lies or leans so that its length is not the plant's height: a trailing or prostrate stem's run along the ground"
+    },
     "rhizome_habit": {
       "group": "form",
       "organ": "stem",
@@ -1057,6 +1079,15 @@
       "range": [0.0001, 0.5],
       "why": "a grown leaflet's blade, or a fern's pinna, at its widest"
     },
+    "leaflet_incision": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "enum",
+      "values": ["none", "lobed", "cleft"],
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "how deeply each leaflet of a compound leaf is cut, where floras say: not at all, into shallow lobes (a poison oak's oak-like leaflets), or to about halfway"
+    },
     "pinnae": {
       "group": "leaves",
       "organ": "leaf",
@@ -1251,6 +1282,13 @@
       "type": "colour",
       "why": "a grown leaf's upper side in summer"
     },
+    "leaf_underside_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "why": "a grown leaf's underside where it differs from its upper side: paler, waxy, hairy or powdered (a goldback fern's golden farina)"
+    },
     "stipe_scale_colour": {
       "group": "leaves",
       "organ": "palea",
@@ -1319,6 +1357,15 @@
       "when": {"inflorescence": ["raceme", "spike", "catkin", "corymb", "umbel", "compound_umbel", "panicle", "cyme", "scorpioid", "head", "spadix"]},
       "optional": true,
       "why": "how an inflorescence holds itself: upright, bent over near its tip, or hanging"
+    },
+    "inflorescence_outline": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["flat_topped", "rounded", "globose"],
+      "when": {"inflorescence": ["corymb"]},
+      "optional": true,
+      "why": "the shape a corymb's flowers make together: level across its top, a dome, or a ball, as a mophead hydrangea's"
     },
     "inflorescence_length_m": {
       "group": "flowers",

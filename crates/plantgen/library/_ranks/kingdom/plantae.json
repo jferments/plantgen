@@ -416,6 +416,26 @@
       "template": ["simple", "sprig"],
       "map": {"leaf_margin": {"serrate": 0, "dentate": 0.35, "crenate": 1, "spiny": 0}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: Serrate teeth are saw teeth pointing to the tip; dentate teeth point outward, so they are drawn blunter and more upright; crenate teeth are rounded scallops."
+    },
+    "appearance.organs.leaf.shape.lobes": {
+      "template": ["compound"],
+      "map": {"leaflet_incision": {"none": 0, "lobed": 3, "cleft": 3}},
+      "why": "Each leaflet of a compound leaf stated lobed is drawn with three shallow, blunt lobes up each side, its sinuses cutting about a third of the way to its midrib, an oak leaf's margin in small; one stated cleft is cut past halfway. The lobes take the place of the leaflet's teeth; a leaflet stated not cut keeps them."
+    },
+    "appearance.organs.leaf.shape.lobe_depth": {
+      "template": ["compound"],
+      "map": {"leaflet_incision": {"none": 0, "lobed": 0.35, "cleft": 0.6}},
+      "why": "Each leaflet of a compound leaf stated lobed is drawn with three shallow, blunt lobes up each side, its sinuses cutting about a third of the way to its midrib, an oak leaf's margin in small; one stated cleft is cut past halfway. The lobes take the place of the leaflet's teeth; a leaflet stated not cut keeps them."
+    },
+    "appearance.organs.basal.shape.lobes": {
+      "template": ["compound"],
+      "map": {"leaflet_incision": {"none": 0, "lobed": 3, "cleft": 3}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: Each leaflet of a compound leaf stated lobed is drawn with three shallow, blunt lobes up each side, its sinuses cutting about a third of the way to its midrib, an oak leaf's margin in small; one stated cleft is cut past halfway. The lobes take the place of the leaflet's teeth; a leaflet stated not cut keeps them."
+    },
+    "appearance.organs.basal.shape.lobe_depth": {
+      "template": ["compound"],
+      "map": {"leaflet_incision": {"none": 0, "lobed": 0.35, "cleft": 0.6}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: Each leaflet of a compound leaf stated lobed is drawn with three shallow, blunt lobes up each side, its sinuses cutting about a third of the way to its midrib, an oak leaf's margin in small; one stated cleft is cut past halfway. The lobes take the place of the leaflet's teeth; a leaflet stated not cut keeps them."
     }
   },
   "evidence": {
@@ -573,6 +593,26 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.leaf.shape.lobes": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated lobed or cleft leaflet, a choice of the model's (leaf gaps, 2026-10-18): lobed is cut less than halfway to the midrib, cleft to about halfway, as Harris and Harris define the words for a blade; three lobes a side and a third of the half-width for lobed match the shallow oak-like lobes of Pacific poison oak's leaflets (Abrams vol. 3 1951 p. 50, Rhus diversiloba: leaflets variously lobed or toothed; FEIS: usually resembling oak leaves). Not calibrated on measured leaflets."
+    },
+    "rules.appearance.organs.leaf.shape.lobe_depth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated lobed or cleft leaflet, a choice of the model's (leaf gaps, 2026-10-18): lobed is cut less than halfway to the midrib, cleft to about halfway, as Harris and Harris define the words for a blade; three lobes a side and a third of the half-width for lobed match the shallow oak-like lobes of Pacific poison oak's leaflets (Abrams vol. 3 1951 p. 50, Rhus diversiloba: leaflets variously lobed or toothed; FEIS: usually resembling oak leaves). Not calibrated on measured leaflets."
+    },
+    "rules.appearance.organs.basal.shape.lobes": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated lobed or cleft leaflet, a choice of the model's (leaf gaps, 2026-10-18): lobed is cut less than halfway to the midrib, cleft to about halfway, as Harris and Harris define the words for a blade; three lobes a side and a third of the half-width for lobed match the shallow oak-like lobes of Pacific poison oak's leaflets (Abrams vol. 3 1951 p. 50, Rhus diversiloba: leaflets variously lobed or toothed; FEIS: usually resembling oak leaves). Not calibrated on measured leaflets."
+    },
+    "rules.appearance.organs.basal.shape.lobe_depth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated lobed or cleft leaflet, a choice of the model's (leaf gaps, 2026-10-18): lobed is cut less than halfway to the midrib, cleft to about halfway, as Harris and Harris define the words for a blade; three lobes a side and a third of the half-width for lobed match the shallow oak-like lobes of Pacific poison oak's leaflets (Abrams vol. 3 1951 p. 50, Rhus diversiloba: leaflets variously lobed or toothed; FEIS: usually resembling oak leaves). Not calibrated on measured leaflets."
     }
   }
 }

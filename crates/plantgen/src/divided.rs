@@ -13,7 +13,9 @@
 //! $`u = (j + \tfrac12)/P`$ of the rachis above the petiole and is
 //! $`L\,f(u)`$ long: $`f`$ rises from `lowest` at the foot to 1 at
 //! `largest` and falls back to `lowest` at the top. The terminal leaflet is
-//! `terminal_size` times $`L`$.
+//! `terminal_size` times $`L`$. A **trifoliolate** leaf, one pair and a
+//! terminal leaflet, sets its pair at the petiole's tip and its terminal
+//! leaflet on a short stalk, reaching the leaf's tip ([`trifoliolate`]).
 //!
 //! A **palmate** leaf sets them from its petiole's tip, fanned evenly over
 //! `spread` degrees, the middle one longest and the outermost `lowest` of
@@ -286,6 +288,13 @@ fn pinnate(form: &Form, count: u32, stalk: f64, angle: f64, longest: f64) -> (f6
     let span = f64::from(pairs.max(1));
     let (sin, cos) = (math::sin(angle), math::cos(angle));
     let terminal = count % 2 == 1;
+    if let Some((top, length, lateral)) = trifoliolate(form, count, stalk, longest) {
+        let mut leaflets = vec![((0.0, top), (0.0, 1.0), length)];
+        for side in [1.0, -1.0] {
+            leaflets.push(((0.0, stalk), (side * sin, cos), lateral));
+        }
+        return (top + 0.02, leaflets);
+    }
     let top = if terminal {
         1.0 - longest * form.terminal_size.max(1.0)
     } else {
@@ -311,6 +320,29 @@ fn pinnate(form: &Form, count: u32, stalk: f64, angle: f64, longest: f64) -> (f6
         }
     }
     (end, leaflets)
+}
+
+/// The terminal leaflet's stalk above a trifoliolate leaf's lateral pair,
+/// a share of the terminal leaflet's length.
+pub const TERMINAL_STALK: f64 = 0.15;
+
+/// A trifoliolate leaf, divided once into a terminal leaflet and one
+/// lateral pair, on a rachis from `(0, 0)` to `(0, 1)` whose first `stalk` is bare: where
+/// its terminal leaflet leaves the rachis, its length and its laterals'.
+/// The pair sits at the top of the stalk (a trifoliolate leaf's laterals
+/// are at its petiole's tip, "lateral leaflets usually sessile and the
+/// terminal one stalked", Abrams vol. 3 p. 50), and the terminal leaflet
+/// stands on a short stalk, [`TERMINAL_STALK`] of its length, its tip at
+/// the rachis's end. The laterals are `terminal_size` as long, but no
+/// longer than `longest`. `None` for any other leaf or group: a pinna's
+/// or pinnule's group of three keeps its pair halfway up.
+#[must_use]
+pub fn trifoliolate(form: &Form, count: u32, stalk: f64, longest: f64) -> Option<(f64, f64, f64)> {
+    (count == 3 && form.pinnules == 0).then(|| {
+        let length = (1.0 - stalk) / (1.0 + TERMINAL_STALK);
+        let lateral = (length / form.terminal_size.max(0.3)).min(longest);
+        (stalk + TERMINAL_STALK * length, length, lateral)
+    })
 }
 
 /// A palmate group of `count` leaflets from `(0, stalk)`, fanned over
@@ -815,6 +847,33 @@ mod tests {
         assert_eq!(laid.axes.len(), 1);
         assert!((laid.axes[0].to.1 - (top + 0.02)).abs() < 1e-12);
         assert!(laid.leaflets.iter().all(|l| l.within.is_none()));
+    }
+
+    #[test]
+    fn a_trifoliolate_leaf_sets_its_pair_at_the_petiole_tip() {
+        let laid = layout(&compound(|c| {
+            c.leaflets = 3;
+            c.petiole = 0.25;
+        }));
+        assert_eq!(laid.leaflets.len(), 3);
+        let terminal = laid.leaflets[0];
+        for lateral in &laid.leaflets[1..] {
+            assert!((lateral.base.1 - 0.25).abs() < 1e-12, "{lateral:?}");
+        }
+        // The terminal leaflet stands on a short stalk and reaches the tip.
+        let stalk = terminal.base.1 - 0.25;
+        assert!((stalk - TERMINAL_STALK * terminal.length).abs() < 1e-12);
+        assert!((terminal.base.1 + terminal.length - 1.0).abs() < 1e-9);
+        assert!(
+            (dimensions(&compound(|c| {
+                c.leaflets = 3;
+                c.petiole = 0.25;
+            }))
+            .petiole
+                - 0.25)
+                .abs()
+                < 1e-12
+        );
     }
 
     #[test]

@@ -1,0 +1,291 @@
+{
+  "schema": 1,
+  "id": "hemionitis-densa",
+  "taxon": {
+    "scientific_name": "Hemionitis densa",
+    "common_name": "Indian's dream",
+    "family": "Pteridaceae",
+    "genus": "Hemionitis",
+    "plant_name_id": 3218328
+  },
+  "growth_form": "fern",
+  "generator": {
+    "params": {
+      "frond_seed": 0.2,
+      "size_years": 2,
+      "open_years": 0.5,
+      "angle_spread": 12,
+      "frond_radius": 0.0008,
+      "pinna_angle": 60,
+      "pinna_lift": 10,
+      "season": 0.5,
+      "emerge_spread": 0.3,
+      "unroll": 0.3,
+      "droop_years": 1,
+      "crown_age": 3
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      8
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.16,
+      0.3,
+      0.12
+    ],
+    "foliage_shade": [
+      0.051,
+      0.096,
+      0.038
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.15,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.07,
+      "max": 0.3
+    },
+    "height_max_m": 0.3,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "evergreen",
+    "reproduction": "spores",
+    "rosette": "basal",
+    "perennation": "rhizome",
+    "rhizome_habit": "ascending",
+    "leaf_posture": "erect",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.08
+    },
+    "petiole_length_m": {
+      "min": 0.05,
+      "max": 0.22
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.07
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 3,
+    "leaf_shape": "ovate",
+    "leaf_margin": "entire",
+    "stipe_colour": [
+      110,
+      60,
+      35
+    ],
+    "stipe_scales": "sparse",
+    "stipe_scale_extent": "base",
+    "sorus_position": "marginal",
+    "indusium": {
+      "margin": "usually"
+    },
+    "frond_dimorphism": "hemidimorphic"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: fronds many, crowded, 7-30 cm. long."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: fronds 7-30 cm. long."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: rhizome multicipital, cespitose."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: a fern."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "fern-growers-manual",
+      "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 193, Aspidotis densa: evergreen."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: sporangia of adjacent sori crowded in a continuous line."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: fronds many, crowded."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: rhizome multicipital, the divisions oblique."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "fern-growers-manual",
+      "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 193, Aspidotis densa: rhizome short-creeping to ascending, branching, fairly compact."
+    },
+    "traits.leaf_posture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fronds stiffly erect in a dense tuft, set by hand from iNaturalist photos (observations 33941332, 244171741, 33941322, 33941329, 244000992, 29003607, 33941319, 155550924): the sources read give no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: blades broadly ovate, deltoid-oblong, or subpentagonal, 1.5-8 cm. long."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: stipes 5-22 cm. long, nearly naked."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades 1.5 cm to 7 cm broad, about as broad as long, as in the photos."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: blades 3-pinnate below."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: pinnae few, close, oblique."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: blades 3-pinnate below."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: blades broadly ovate, deltoid-oblong, or subpentagonal."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: segments narrowly linear, mucronate, their margins sharply revolute."
+    },
+    "traits.stipe_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: stipes brownish-castaneous, lustrous; sRGB by eye from the photos."
+    },
+    "traits.stipe_scales": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: stipes nearly naked."
+    },
+    "traits.stipe_scale_extent": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: stipes nearly naked, the rhizome's scales at their foot."
+    },
+    "traits.sorus_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: margins sharply revolute, the sporangia in a continuous line."
+    },
+    "traits.indusium": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 26, Cheilanthes siliquosa: margins revolute, giving rise to a continuous delicate erose-denticulate indusium."
+    },
+    "traits.frond_dimorphism": {
+      "evidence": "SourceInferred",
+      "source": "fern-growers-manual",
+      "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 193, Aspidotis densa: hemidimorphic; fertile fronds with longer stipes and narrower segments."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a dense tuft of stiff, wiry brown stalks, each with a small triangular blade divided into many narrow linear segments."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Indian's dream from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.15 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 3 (2026-10-18): sizes and forms from Abrams, FEIS and Dendrology, counts from photos."
+  }
+}
