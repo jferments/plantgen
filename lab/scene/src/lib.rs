@@ -1001,7 +1001,7 @@ pub fn cut_cards(
         // normal points down.
         let face = plantgen::templates::Face {
             lower: plantgen::templates::card_flipped(card.heading, card.left),
-            seed: plantgen::templates::card_seed(card.base),
+            seed: card.seed,
         };
         index.fill(u32::MAX);
         for (cell, &keep) in cells.iter().enumerate() {
@@ -1683,6 +1683,7 @@ mod tests {
                     hair,
                     fringe: false,
                     pattern: 1.0,
+                    sorus: 0.0,
                 };
                 let want = templates.albedo(template, colour.map(f64::from), texel);
                 let got: [f64; 3] = std::array::from_fn(|c| {
@@ -1726,6 +1727,9 @@ mod tests {
                 at: 0.6,
                 from: plantgen::looks::ZoneFrom::Midrib,
                 slant: 0.0,
+                feather: 0.0,
+                stretch: 1.0,
+                plants: 0.0,
             });
             the_card_paint_matches(&templates);
         }

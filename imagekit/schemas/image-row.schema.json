@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jferments/plantgen/imagekit/schemas/image-row.schema.json",
+  "title": "One row of sources/images/<batch>/images.jsonl",
+  "description": "One image taken in from one source. sha256 names the stored image; a row whose duplicate is set adds a second source to an image already held, which is stored and analysed once.",
+  "type": "object",
+  "required": ["sha256", "phash", "width", "height", "bytes", "stored", "changes", "duplicate", "source", "taxon", "batch", "ingested"],
+  "properties": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 of the stored bytes: the image's key everywhere"},
+    "phash": {"type": "string", "pattern": "^[0-9a-f]{16}$", "description": "64-bit difference hash of the stored image"},
+    "width": {"type": "integer", "minimum": 1},
+    "height": {"type": "integer", "minimum": 1},
+    "bytes": {"type": "integer", "minimum": 1},
+    "format": {"type": ["string", "null"]},
+    "stored": {"enum": ["as fetched", "re-encoded"]},
+    "changes": {"type": "array", "items": {"type": "string"}, "description": "why it was re-encoded: metadata stripped, scaled, converted"},
+    "duplicate": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "required": ["of", "match", "distance"],
+         "properties": {
+           "of": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+           "match": {"enum": ["sha256", "phash"]},
+           "distance": {"type": "integer", "minimum": 0, "maximum": 64},
+           "download": {"type": "object", "description": "this download's own hash and size, for a look-alike match"}
+         }}
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": ["source", "id", "key", "licence", "attribution"],
+      "properties": {
+        "source": {"type": "string", "description": "inat, gbif, commons, archive, own, ..."},
+        "id": {"type": ["string", "integer"]},
+        "key": {"type": "string", "description": "<source>:<id>"},
+        "url": {"type": ["string", "null"]},
+        "page": {"type": "string"},
+        "licence": {"enum": ["cc0", "pd", "cc-by", "cc-by-sa", "cc-by-nc", "cc-by-nc-sa", "cc-by-nd", "cc-by-nc-nd"]},
+        "creator": {"type": "string"},
+        "attribution": {"type": "string"},
+        "date": {"type": "string"},
+        "place": {"type": "string"},
+        "lat": {"type": "number"},
+        "lon": {"type": "number"},
+        "accuracy_m": {"type": "number"},
+        "annotations": {"type": "object"},
+        "original_sha256": {"type": "string", "description": "SHA-256 of the bytes as downloaded"},
+        "fetched": {"type": "string"}
+      }
+    },
+    "taxon": {
+      "type": "object",
+      "properties": {
+        "name_as_given": {"type": "string", "description": "the name the fetch asked for"},
+        "source_taxon_id": {"type": ["string", "integer"]},
+        "source_taxon_name": {"type": "string"},
+        "accepted": {"type": "string"},
+        "accepted_name": {"type": "string"},
+        "wcvp_id": {"type": "string"},
+        "family": {"type": "string"},
+        "genus": {"type": "string"},
+        "status_of_given_name": {"type": "string"}
+      }
+    },
+    "batch": {"type": "string"},
+    "ingested": {"type": "string"}
+  }
+}
