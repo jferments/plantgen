@@ -137,11 +137,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its flowers are drawn about 5.8 mm across against the 3 to 3.5 mm Dendrology (2019) p. 318 gives",
     ),
     (
-        "holodiscus-discolor",
-        "inflorescence_length_m",
-        "its panicles are drawn about 7.5 cm long against the 10 to 25 cm Dendrology (2019) p. 318 gives",
-    ),
-    (
         "houttuynia-cordata",
         "inflorescence_bracts",
         "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",

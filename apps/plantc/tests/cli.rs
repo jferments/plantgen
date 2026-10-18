@@ -101,10 +101,10 @@ fn rules_and_traits_say_where_they_come_from() {
         // leaf length and leaf habit; a stem succulent's
         // from its girth and flowers.
         format!(
-            "\n  appearance.organs.leaf.shape.template  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.params.fruit_length  {flowering}\n  generator.params.fruit_size  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
+            "\n  appearance.organs.leaf.shape.template  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.params.fork_height  {flowering}\n  generator.params.fruit_length  {flowering}\n  generator.params.fruit_size  {flowering}\n  generator.params.lie  {flowering}\n  generator.params.sucker_spread  {flowering}\n  generator.params.suckers  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
         ),
         format!(
-            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.spur_leaf  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n"
+            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.space_reach  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.spur_leaf  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n"
         ),
         // The monocots' rules sort between the campanulids' and the seed
         // plants'.
@@ -161,12 +161,12 @@ fn rules_and_traits_say_where_they_come_from() {
     // compound leaf's word is its leaflets'.
     assert!(
         built_in.contains(
-            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
+            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobe_depth on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobes on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
         ),
         "{built_in}"
     );
     assert!(
-        built_in.contains("General, with no taxonomic home: 80 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 84 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.
