@@ -1264,6 +1264,14 @@
       "optional": true,
       "why": "side branches a herb's flowering stem bears from its upper leaf axils, each ending in an inflorescence like the stem's own: a fennel's or poison hemlock's candelabra of umbels"
     },
+    "flowering_branch_orders": {
+      "group": "flowers",
+      "organ": "stem",
+      "type": "count",
+      "range": [1, 3],
+      "optional": true,
+      "why": "how many times a herb's flowering stem branches: 1, its side branches end in an inflorescence; 2, they branch again from their own leaf axils, as fennel's and poison hemlock's do"
+    },
     "inflorescence_branches": {
       "group": "flowers",
       "organ": "inflorescence",

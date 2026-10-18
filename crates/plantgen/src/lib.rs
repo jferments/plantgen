@@ -755,4 +755,8 @@ pub mod venation;
 /// leaves born with their internode, so short shoots crowding a node are
 /// not read as a whorl (116 is cactus
 /// pericarpels and stigmas, #184).
-pub const GENERATOR_REVISION: u32 = 117;
+/// 118: a flowering herb's side branches bear leaves, as large as the leaf
+/// in whose axil they stand, and branch again where the taxon states two
+/// orders (`flowering_branch_orders`; herb program revision 12) (117 is
+/// terminal blooms, #170).
+pub const GENERATOR_REVISION: u32 = 118;
