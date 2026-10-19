@@ -434,6 +434,82 @@ pub(crate) fn skin(
         let radial = across * math::cos(angle) + other * math::sin(angle);
         let at = centre + axis * (z * long) + radial * (ring * wide);
         let normal = (axis * (z / long) + radial * (ring / wide)).normalize_or(radial);
+        site(
+            at,
+            normal,
+            axis,
+            angle,
+            (kind, spines),
+            (long, wide),
+            colour,
+            dress,
+            part,
+            mesh,
+        );
+    }
+}
+
+/// A cactus floral tube's skin, carrying the pericarpel's up to the
+/// perianth (Anderson, The Cactus Family pp. 31 to 33: the receptacle
+/// bears scales and areoles over both): `count` of its scales or areoles
+/// on a Fibonacci spiral from its foot to below its mouth, each sized as
+/// on a pericarpel `long` by `wide`. `radius` gives the tube's radius
+/// `u` of the way up its `length` from `foot`.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn tube_skin(
+    (foot, axis, across, length): (Vec3, Vec3, Vec3, f64),
+    radius: impl Fn(f64) -> f64,
+    (kind, count, spines): (Skin, u32, u32),
+    (long, wide): (f64, f64),
+    colour: [f32; 3],
+    dress: Dress,
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    if kind == Skin::Naked || count == 0 || length <= 0.0 {
+        return;
+    }
+    let other = axis.cross(across);
+    let golden = math::radians(GOLDEN_DEGREES);
+    for i in 0..count {
+        let u = 0.05 + 0.85 * (f64::from(i) + 0.5) / f64::from(count);
+        let angle = golden * f64::from(i);
+        let radial = across * math::cos(angle) + other * math::sin(angle);
+        let slope = (radius((u + 0.01).min(1.0)) - radius((u - 0.01).max(0.0))) / (0.02 * length);
+        let normal = (radial - axis * slope).normalize_or(radial);
+        let at = foot + axis * (u * length) + radial * radius(u);
+        site(
+            at,
+            normal,
+            axis,
+            angle,
+            (kind, spines),
+            (long, wide),
+            colour,
+            dress,
+            part,
+            mesh,
+        );
+    }
+}
+
+/// One scale or areole of a cactus skin at `at`, facing out along
+/// `normal`, its tip toward `axis`: sized for a pericarpel `long` by
+/// `wide`.
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
+fn site(
+    at: Vec3,
+    normal: Vec3,
+    axis: Vec3,
+    angle: f64,
+    (kind, spines): (Skin, u32),
+    (long, wide): (f64, f64),
+    colour: [f32; 3],
+    dress: Dress,
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    {
         // Up the skin toward the tip, and across it.
         let up = (axis - normal * axis.dot(normal)).normalize_or(axis);
         let side = normal.cross(up);
@@ -475,7 +551,7 @@ pub(crate) fn skin(
                 },
             }
             .draw(normal, side, dress.felt.unwrap_or(WOOL), part, mesh);
-            continue;
+            return;
         }
         if kind == Skin::Scaly {
             // Broad and rounded, pressed to the skin and reaching toward
@@ -497,7 +573,7 @@ pub(crate) fn skin(
                 },
             }
             .draw(normal, side, blooms::shade(colour, 0.82), part, mesh);
-            continue;
+            return;
         }
         // A round cushion of felt, half sunk in the skin.
         let felt = wide * 0.1;

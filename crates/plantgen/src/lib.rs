@@ -981,5 +981,8 @@ pub mod venation;
 /// Astrophytum); a flat stem top (`stem_apex` flat); white hair flecks
 /// between the areoles (new trait `stem_flecks`, body `flecks`); an
 /// apex's woolly cap closes over the tip; a reduced flower with more than
-/// 12 stamens draws a ring of anthers (140 is cactus pericarpels, #226).
+/// 12 stamens draws a ring of anthers; a cactus's floral tube wears its
+/// pericarpel's colour and skin and flares near its mouth, over a
+/// pericarpel shortened to the ovary's swelling (140 is cactus
+/// pericarpels, #226).
 pub const GENERATOR_REVISION: u32 = 141;
