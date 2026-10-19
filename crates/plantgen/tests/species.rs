@@ -265,8 +265,8 @@ fn fronds_and_pads_lie_on_the_ground() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
     assert_eq!(
-        checked, 49,
-        "ten ferns, seven palms, a tree fern, fifteen cycads and sixteen cacti"
+        checked, 52,
+        "ten ferns, seven palms, a tree fern, fifteen cycads and nineteen cacti"
     );
 }
 
@@ -870,7 +870,7 @@ fn builtin_clusters_draw_as_part_meshes() {
         }
     }
     assert_eq!(
-        checked, 170,
+        checked, 171,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -900,7 +900,7 @@ fn builtin_clusters_draw_as_part_meshes() {
          and the glands' great and thread-leaved sundews' coils and hemp's spikes, \
          and the blooms of six vines that state their inflorescences (climber revision 8): Malabar \
          spinach's spikes, orange honeysuckle's and bittersweet's clusters, the wild grape's and ivy's \
-         panicles and umbels, and black pepper's spikes"
+         panicles and umbels, and black pepper's spikes, and the rose cactus's cymes"
     );
 }
 

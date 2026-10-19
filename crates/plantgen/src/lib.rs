@@ -1152,4 +1152,14 @@ pub mod venation;
 /// whole height needs, so its blade keeps its flora's size (brambles);
 /// a Rosaceae herb's compound leaf card is as long as its blade, not its
 /// width (157 is Caryophyllales gaps, #267).
-pub const GENERATOR_REVISION: u32 = 158;
+/// 159: cacti of four more genera. A cactus's tubercles stand out along
+/// the skin's normal, sized by the body's radius and smaller toward a young
+/// apex, so they show on flat tops; a flat-faced, fissured plate
+/// (`tubercles.face`, `fissures`: Ariocarpus); wool and bristles in the
+/// tubercles' axils (`axils`: Mammillaria); crinkled radials (spine
+/// `crinkle`); fine dome rings. New programs `pereskia` (a leafy cactus on
+/// the broadleaf base, its areoles adding spines as they age) and
+/// `schlumbergera` (flat joints toothed along their margins). A fruit set
+/// after New Year counts its season from the next year's start
+/// (158 is bramble leaves, #272).
+pub const GENERATOR_REVISION: u32 = 159;

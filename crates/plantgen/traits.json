@@ -668,9 +668,9 @@
       "group": "stem_and_bark",
       "organ": "stem",
       "type": "enum",
-      "values": ["rounded", "conical", "cylindrical", "elongate", "broad"],
+      "values": ["rounded", "conical", "cylindrical", "elongate", "broad", "deltoid"],
       "when": {"spines": ["areoles"]},
-      "why": "a tubercle's shape: rounded (ovoid), conical, cylindrical (standing out as a steep-sided nipple), elongate along the stem, or broad (broadly oval)"
+      "why": "a tubercle's shape: rounded (ovoid), conical, cylindrical (standing out as a steep-sided nipple), elongate along the stem, broad (broadly oval), or deltoid: a flat-faced triangular plate, its tip pointing down and out, its face sharply set off from its sides (a living-rock cactus's)"
     },
     "joint_length_m": {
       "group": "size",
@@ -689,6 +689,15 @@
       "range": [0.003, 1],
       "when": {"stem_form": ["cylindric_joints", "flat_joints"]},
       "why": "a grown joint's thickness across, or a pad's width at its widest"
+    },
+    "joint_teeth": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "count",
+      "range": [0, 20],
+      "optional": true,
+      "when": {"stem_form": ["flat_joints"]},
+      "why": "saw teeth on each margin of a flat joint, the top pair included, as a Christmas cactus's 'sharply serrate' joints; 0 an entire pad"
     },
     "areole_spacing_m": {
       "group": "stem_and_bark",
@@ -711,6 +720,15 @@
       "range": [0, 100],
       "when": {"spines": ["areoles"]},
       "why": "spines round an areole's edge, spreading flat or nearly so; where a flora does not tell radials from centrals, all of them"
+    },
+    "young_areole_spines": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "count",
+      "range": [0, 100],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "the spines of a new areole on a young branch, where a flora counts them apart from an old stem's, whose areoles go on making spines (a leafy cactus's twigs against its very spiny trunk)"
     },
     "central_spines": {
       "group": "stem_and_bark",
@@ -752,6 +770,46 @@
       "type": "bool",
       "when": {"spines": ["areoles"]},
       "why": "whether the central spines twist about their length like a wrung ribbon, as a flora's 'often twisted' centrals do, whatever their main form"
+    },
+    "tubercle_face": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["smooth", "wrinkled", "fissured"],
+      "when": {"spines": ["areoles"]},
+      "why": "the surface of a flat-faced tubercle's exposed face: nearly smooth, wrinkled or roughened, or deeply fissured on either side of its areole's groove (Flora of North America's Ariocarpus, 'prominently fissured [wrinkled, roughened, or nearly smooth]')"
+    },
+    "radial_spine_texture": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["needlelike", "bristlelike", "hairlike"],
+      "when": {"spines": ["areoles"]},
+      "why": "how stiff a cactus's radial spines are: needlelike and stiff, bristlelike, or hairlike and soft, curling every which way (a mammillaria's 'hairlike, soft' radials)"
+    },
+    "tubercle_axils": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["naked", "woolly", "bristly", "woolly_and_bristly"],
+      "when": {"spines": ["areoles"]},
+      "why": "what a tubercled cactus bears in the axils between its tubercles, apart from the spine clusters at their tips: nothing, short wool, bristles, or wool and bristles (a mammillaria's 'axils with short wool', 'axils bearing sparse white hairs and slender bristles')"
+    },
+    "axil_bristle_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.1],
+      "optional": true,
+      "why": "how long the bristles in a tubercle's axil are"
+    },
+    "axil_hair_colour": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the wool and bristles in the tubercles' axils, where it differs from the areoles' wool"
     },
     "spine_sheaths": {
       "group": "stem_and_bark",
@@ -1822,6 +1880,15 @@
       "unit": "m",
       "range": [0.0005, 1.5],
       "why": "an open flower across"
+    },
+    "flower_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.5],
+      "optional": true,
+      "why": "an open flower's length from its foot to its tepals' tips, where a flora gives it with the width (a cactus flora's 'flowers 1.9-3.8 × 1.5-3 cm', length by width)"
     },
     "petal_length_m": {
       "group": "flowers",
@@ -3250,9 +3317,9 @@
       "group": "architecture",
       "organ": "inflorescence",
       "type": "enum",
-      "values": ["crown", "crown_and_flanks", "upper_half"],
+      "values": ["crown", "crown_and_flanks", "upper_half", "ring_below_apex"],
       "when": {"spines": ["areoles"]},
-      "why": "where a cactus column's flowers open: in a ring round its apex, near the apex and down the upper flanks, or along the upper half of the stem, below the apex"
+      "why": "where a cactus column's flowers open: in a ring round its apex, near the apex and down the upper flanks, along the upper half of the stem, below the apex, or in a ring distant from the apex, in the tubercles' axils of the year before (a mammillaria's), last year's fruit in a ring farther down"
     },
     "short_shoots": {
       "group": "architecture",

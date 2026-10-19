@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Mammillaria",
+  "parent": "subfamily/cactoideae",
+  "traits": {
+    "stem_form": "globose",
+    "ribs": 0,
+    "tubercles": true,
+    "tubercle_relief": "distinct",
+    "tubercle_shape": "conical",
+    "fruit_surface": "naked",
+    "flower_zone": "ring_below_apex"
+  },
+  "evidence": {
+    "traits.stem_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Mammillaria: Mammillaria: stems unsegmented, green to gray-green, spheric to cylindric or turbinate, often flat-topped, 1-15(-25) × 1.8-12(-20) cm; tubercles distinct, not confluent into ribs, pyramidal, conic, or cylindric, 3-25 × 2-9 mm; areoles of 2 kinds: vegetative areoles (spine clusters) at tips of tubercles; reproductive areoles in axils of tubercles, woolly, bristly, or naked. Flowers diurnal, in ring distant from stem apex (or nearly apical at anthesis forming a ring around new growth, subsequent apical growth displacing fruits even farther away from apex), in axils of tubercles, unconnected to spine clusters, funnelform, campanulate, or rotate; ovary lacking scales and spines. Fruits indehiscent, usually pink, bright red, or greenish, scales and spines absent (or rudimentary)."
+    },
+    "traits.ribs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Mammillaria: Mammillaria: stems unsegmented, green to gray-green, spheric to cylindric or turbinate, often flat-topped, 1-15(-25) × 1.8-12(-20) cm; tubercles distinct, not confluent into ribs, pyramidal, conic, or cylindric, 3-25 × 2-9 mm; areoles of 2 kinds: vegetative areoles (spine clusters) at tips of tubercles; reproductive areoles in axils of tubercles, woolly, bristly, or naked. Flowers diurnal, in ring distant from stem apex (or nearly apical at anthesis forming a ring around new growth, subsequent apical growth displacing fruits even farther away from apex), in axils of tubercles, unconnected to spine clusters, funnelform, campanulate, or rotate; ovary lacking scales and spines. Fruits indehiscent, usually pink, bright red, or greenish, scales and spines absent (or rudimentary)."
+    },
+    "traits.tubercles": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Mammillaria: Mammillaria: stems unsegmented, green to gray-green, spheric to cylindric or turbinate, often flat-topped, 1-15(-25) × 1.8-12(-20) cm; tubercles distinct, not confluent into ribs, pyramidal, conic, or cylindric, 3-25 × 2-9 mm; areoles of 2 kinds: vegetative areoles (spine clusters) at tips of tubercles; reproductive areoles in axils of tubercles, woolly, bristly, or naked. Flowers diurnal, in ring distant from stem apex (or nearly apical at anthesis forming a ring around new growth, subsequent apical growth displacing fruits even farther away from apex), in axils of tubercles, unconnected to spine clusters, funnelform, campanulate, or rotate; ovary lacking scales and spines. Fruits indehiscent, usually pink, bright red, or greenish, scales and spines absent (or rudimentary)."
+    },
+    "traits.tubercle_relief": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Mammillaria: Mammillaria: stems unsegmented, green to gray-green, spheric to cylindric or turbinate, often flat-topped, 1-15(-25) × 1.8-12(-20) cm; tubercles distinct, not confluent into ribs, pyramidal, conic, or cylindric, 3-25 × 2-9 mm; areoles of 2 kinds: vegetative areoles (spine clusters) at tips of tubercles; reproductive areoles in axils of tubercles, woolly, bristly, or naked. Flowers diurnal, in ring distant from stem apex (or nearly apical at anthesis forming a ring around new growth, subsequent apical growth displacing fruits even farther away from apex), in axils of tubercles, unconnected to spine clusters, funnelform, campanulate, or rotate; ovary lacking scales and spines. Fruits indehiscent, usually pink, bright red, or greenish, scales and spines absent (or rudimentary)."
+    },
+    "traits.tubercle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Mammillaria: Mammillaria: stems unsegmented, green to gray-green, spheric to cylindric or turbinate, often flat-topped, 1-15(-25) × 1.8-12(-20) cm; tubercles distinct, not confluent into ribs, pyramidal, conic, or cylindric, 3-25 × 2-9 mm; areoles of 2 kinds: vegetative areoles (spine clusters) at tips of tubercles; reproductive areoles in axils of tubercles, woolly, bristly, or naked. Flowers diurnal, in ring distant from stem apex (or nearly apical at anthesis forming a ring around new growth, subsequent apical growth displacing fruits even farther away from apex), in axils of tubercles, unconnected to spine clusters, funnelform, campanulate, or rotate; ovary lacking scales and spines. Fruits indehiscent, usually pink, bright red, or greenish, scales and spines absent (or rudimentary)."
+    },
+    "traits.fruit_surface": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Mammillaria: Mammillaria: stems unsegmented, green to gray-green, spheric to cylindric or turbinate, often flat-topped, 1-15(-25) × 1.8-12(-20) cm; tubercles distinct, not confluent into ribs, pyramidal, conic, or cylindric, 3-25 × 2-9 mm; areoles of 2 kinds: vegetative areoles (spine clusters) at tips of tubercles; reproductive areoles in axils of tubercles, woolly, bristly, or naked. Flowers diurnal, in ring distant from stem apex (or nearly apical at anthesis forming a ring around new growth, subsequent apical growth displacing fruits even farther away from apex), in axils of tubercles, unconnected to spine clusters, funnelform, campanulate, or rotate; ovary lacking scales and spines. Fruits indehiscent, usually pink, bright red, or greenish, scales and spines absent (or rudimentary)."
+    },
+    "traits.flower_zone": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Mammillaria: Mammillaria: stems unsegmented, green to gray-green, spheric to cylindric or turbinate, often flat-topped, 1-15(-25) × 1.8-12(-20) cm; tubercles distinct, not confluent into ribs, pyramidal, conic, or cylindric, 3-25 × 2-9 mm; areoles of 2 kinds: vegetative areoles (spine clusters) at tips of tubercles; reproductive areoles in axils of tubercles, woolly, bristly, or naked. Flowers diurnal, in ring distant from stem apex (or nearly apical at anthesis forming a ring around new growth, subsequent apical growth displacing fruits even farther away from apex), in axils of tubercles, unconnected to spine clusters, funnelform, campanulate, or rotate; ovary lacking scales and spines. Fruits indehiscent, usually pink, bright red, or greenish, scales and spines absent (or rudimentary)."
+    }
+  }
+}
