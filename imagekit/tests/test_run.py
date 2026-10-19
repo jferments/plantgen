@@ -210,6 +210,7 @@ class TestChat(RunBase):
         prompts = sorted(d.glob("*.prompt.md"))
         self.assertEqual((len(prompts), len(list(d.glob("*.jpg")))), (4, 4))
         self.assertTrue((d / "00-system.md").exists())
+        self.assertIn("You do not need to open them", (d / "00-system.md").read_text())
         pid = prompts[0].name.split(".")[0]
         (d / f"{pid}.json").write_text(json.dumps({"photo_id": pid, **DESCRIBE}))
         self.quiet("run", "describe", "--backend", "chat", "--model", "my chat", "--chat-dir", str(d), "--run", "c1")
