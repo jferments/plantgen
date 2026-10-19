@@ -1089,7 +1089,47 @@ pub mod venation;
 /// first fruit ripen, bearing fruit below its flowers (`fruit_below`),
 /// shows its earlier flowers' fruit from its first fruiting month and
 /// keeps flowering to its last (149 is palms, #250).
-/// 151: cacti of four more genera. A cactus's tubercles stand out along
+/// 151: a columnar Pinaceae crown stops widening once its height slows:
+/// its shoots' floor growth fades past `floor_reach` of the height out
+/// from the trunk, down to `floor_keep` (Pinaceae rule on `crown_form`;
+/// subalpine fir; 150 is poppies, #242).
+/// 152: palm 16, the date palm's foot. Its roots bend, leaving the trunk
+/// further out and turning down along their length (`root_bend`); each
+/// sucker has a root zone of its own; the root zone widens the foot into a
+/// collar that grows as the zone rises (`root_flare`)
+/// (151 is subalpine fir, #261).
+/// 153: broadleaf 24. A stalkless pendent bloom turns toward straight down
+/// (`bloom_hang`); a trunk that forks at a stated height grows no long shoot
+/// from below the fork (`fork_clear`) and blooms only above it
+/// (`bloom_floor`), as an angel's trumpet does. A once-pinnate leaf may
+/// carry small interjected leaflets between its pairs (`interjected`), as
+/// a tomato's does. A kept calyx is sized from its stated fruiting length
+/// (`kept_calyx`), and an armed one carries prickles up its lobes
+/// (`kept_prickles`), as an eggplant's cap does (152 is the date palm's foot, #263).
+/// 154: poppies round 4. Sepals a flora calls green are drawn in the
+/// plant's own leaf colour where it is stated (an opium poppy's glaucous
+/// bud), and a hooked bud's neck narrows over its bends (herb revision
+/// 17). Fern pinnules may be oblong (a maidenhair's broad pinnae), a
+/// capsule's large seeds sit one to a cell (a spindle's arils), and a
+/// freely branching lying stem spreads into a mat (herb revision 18)
+/// (153 is nightshades round 6, #262).
+/// 155: Rosaceae (#236): the family's shrub form, twig spacing, compound
+/// and lobed leaf cards from their outline words and leaflet sizes, herb
+/// leaf sizes, armed stems from `spines`, bramble fruit by its fruitlets,
+/// clusters of few flowers drawn whole; broadleaf 25's canes that die at
+/// `stem_life_years` while the base renews them (thimbleberry) and a stem
+/// that flowers every year and grows on from one bud (devil's club);
+/// hawthorn's inferior ovary, round petals and oval haws in twos and
+/// threes (154 is poppies round 4, #254).
+/// 156: growth-form language (broadleaf 26): limbs hold the angle floras
+/// give them (`set_point`, from `limb_angle`), a tree's branches droop
+/// apart from its limbs and hold their angle more or less firmly
+/// (`branch_droop`, `branch_hold`, from `branch_posture`), tortuous limbs
+/// bend year by year (`limb_turn`, from `limb_course`), where the leader
+/// is lost the trunk's fork stems spread as scaffold limbs (`fork_set`,
+/// from `leader`), and a flat-topped crown is flattened (`crown_form`
+/// `flat_topped`) (155 is Rosaceae, #236).
+/// 157: cacti of four more genera. A cactus's tubercles stand out along
 /// the skin's normal, sized by the body's radius and smaller toward a young
 /// apex, so they show on flat tops; a flat-faced, fissured plate
 /// (`tubercles.face`, `fissures`: Ariocarpus); wool and bristles in the
@@ -1098,5 +1138,5 @@ pub mod venation;
 /// the broadleaf base, its areoles adding spines as they age) and
 /// `schlumbergera` (flat joints toothed along their margins). A fruit set
 /// after New Year counts its season from the next year's start
-/// (150 is poppies, #242).
-pub const GENERATOR_REVISION: u32 = 151;
+/// (156 is growth forms, #252).
+pub const GENERATOR_REVISION: u32 = 157;

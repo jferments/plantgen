@@ -76,6 +76,9 @@ pub struct Leaflet {
     pub division: u32,
     pub within: Option<u32>,
     pub segment: Option<u32>,
+    /// One of the small leaflets interjected between a pinnate leaf's
+    /// pairs, which are not counted among its leaflets.
+    pub interjected: bool,
 }
 
 /// A compound leaf laid out: its form, its axes, its leaflets in the order
@@ -106,6 +109,7 @@ pub struct Form {
     pub largest: f64,
     pub lowest: f64,
     pub terminal_size: f64,
+    pub interjected: f64,
     pub width: f64,
     pub widest: f64,
     pub tip: f64,
@@ -140,6 +144,22 @@ impl Form {
         };
         let pinnule_angle = c.pinnule_angle.unwrap_or(angle);
         let once_pinnate = pattern == Pattern::Pinnate && pinnules == 0 && confluent <= 0.0;
+        let profile_at = |t: f64| {
+            crate::templates::outline_profile(c.outline.as_deref(), t, widest, blade_base, tip)
+        };
+        let spread = c.spread.unwrap_or_else(|| {
+            open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, profile_at)
+        });
+        let petiolule = c.petiolule.unwrap_or_else(|| {
+            apart(
+                pattern,
+                c.leaflets,
+                pinnules,
+                spread,
+                c.leaflet_width,
+                profile_at,
+            )
+        });
         let profile = (c.outline.is_some() || !once_pinnate).then(|| {
             ALONG.map(|t| {
                 crate::templates::outline_profile(c.outline.as_deref(), t, widest, blade_base, tip)
@@ -155,25 +175,16 @@ impl Form {
             angle,
             pinnule_angle,
             segment_angle: c.segment_angle.unwrap_or(pinnule_angle),
-            spread: c.spread.unwrap_or_else(|| {
-                open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, |t| {
-                    crate::templates::outline_profile(
-                        c.outline.as_deref(),
-                        t,
-                        widest,
-                        blade_base,
-                        tip,
-                    )
-                })
-            }),
+            spread,
             largest: c.largest.unwrap_or(1.0),
             lowest: c.lowest.unwrap_or(0.82),
             terminal_size: c.terminal_size.unwrap_or(0.98),
+            interjected: c.interjected.unwrap_or(0.0).clamp(0.0, 0.8),
             width: c.leaflet_width,
             widest,
             tip,
             base: blade_base,
-            petiolule: c.petiolule.unwrap_or(0.0) * (1.0 - confluent),
+            petiolule: petiolule * (1.0 - confluent),
             petiole: c.petiole,
             blade_width: c.blade_width,
             profile,
@@ -241,6 +252,60 @@ pub fn open_enough(
     (f64::from(count - 1) * angle.to_degrees() * 1.5).clamp(180.0, 340.0)
 }
 
+/// Where along its blade a leaflet whose half-width along it is `profile`
+/// (1 at the widest) is widest, sampled at [`ALONG`].
+fn widest_along(profile: impl Fn(f64) -> f64) -> f64 {
+    ALONG
+        .iter()
+        .copied()
+        .fold((0.5, 0.0), |best: (f64, f64), t| {
+            let w = profile(t);
+            if w > best.1 { (t, w) } else { best }
+        })
+        .0
+}
+
+/// The stalk (petiolule) a once-divided palmate leaf whose look leaves it
+/// unset gives each leaflet, as a share of the leaflet's length: none
+/// where its leaflets, fanned over `spread` degrees, already stand apart
+/// where they are widest, else as long as sets their blades out from the
+/// petiole's tip until neighbours just touch there, at most
+/// [`MOST_PETIOLULE`]. A palmately compound leaf's leaflets are separate
+/// blades, each narrowed to its own stalk or base, where a palmately lobed
+/// leaf's lobes join in one blade; fanned from one point without stalks,
+/// broad leaflets on a fan narrower than they need (a bramble's 3 to 5
+/// over about 200 degrees) run together and read as a lobed leaf.
+///
+/// A leaflet `1` long whose first `s` is stalk, `w` as wide as long and
+/// widest at `t` of its blade, spans the angle
+/// $`2\arctan\big(\tfrac12 w (1 - s) / (s + t (1 - s))\big)`$ seen from
+/// the petiole's tip; for it to be at most the angle $`a`$ between
+/// neighbours, with $`T = \tan(a/2)`$,
+/// $`s \ge (\tfrac12 w - T t) / (T (1 - t) + \tfrac12 w)`$.
+#[must_use]
+pub fn apart(
+    pattern: Pattern,
+    count: u32,
+    pinnules: u32,
+    spread: f64,
+    width: f64,
+    profile: impl Fn(f64) -> f64,
+) -> f64 {
+    if pattern != Pattern::Palmate || pinnules > 0 || count < 2 {
+        return 0.0;
+    }
+    let t = widest_along(profile);
+    let half = 0.5 * math::radians(spread) / f64::from(count - 1);
+    let tan = math::tan(half.min(1.5));
+    let need = (0.5 * width - tan * t) / (tan * (1.0 - t) + 0.5 * width);
+    need.clamp(0.0, MOST_PETIOLULE)
+}
+
+/// The longest stalk [`apart`] gives a palmate leaflet, as a share of its
+/// length: a bramble's terminal leaflet stands on a stalk about a quarter
+/// to a third of its length.
+pub const MOST_PETIOLULE: f64 = 0.35;
+
 /// How crowded a once-divided palmate leaf's leaflets are where they are
 /// widest: the angle each spans there, seen from the petiole's tip, over
 /// the angle between neighbours. Above 1 they overlap, and the leaf reads
@@ -262,7 +327,13 @@ pub fn crowding(c: &Compound) -> Option<f64> {
             if w > best.1 { (t, w) } else { best }
         })
         .0;
-    let span = 2.0 * math::atan2(0.5 * form.width, widest);
+    // Its blade, set out on its stalk.
+    let stalk = form.petiolule;
+    let span = 2.0
+        * math::atan2(
+            0.5 * form.width * (1.0 - stalk),
+            stalk + widest * (1.0 - stalk),
+        );
     let apart = form.spread.to_radians() / f64::from(form.leaflets - 1);
     Some(span / apart.max(1e-9))
 }
@@ -459,6 +530,15 @@ pub fn layout(c: &Compound) -> Layout {
             }
         }
     }
+    if once && form.pattern == Pattern::Pinnate && form.interjected > 0.0 {
+        let first = u32::try_from(leaflets.len()).unwrap_or(u32::MAX);
+        for (k, placed) in (first..).zip(interjected(&form, &leaflets)) {
+            leaflets.push(Leaflet {
+                interjected: true,
+                ..leaflet(placed, k, None, None)
+            });
+        }
+    }
     let mut laid = Layout {
         form,
         axes,
@@ -467,6 +547,35 @@ pub fn layout(c: &Compound) -> Layout {
     };
     laid.fit(about);
     laid
+}
+
+/// The small leaflets interjected between a once-pinnate leaf's pairs: a
+/// pair halfway between each two pairs, and between the top pair and the
+/// terminal leaflet, each `interjected` as long as the shorter of the two
+/// pairs, set at their angle. Drawn after the rest, so under them.
+fn interjected(form: &Form, leaflets: &[Leaflet]) -> Vec<Placed> {
+    // The pairs' places up the rachis, each with its length and angle.
+    let mut pairs: Vec<(f64, f64, Point)> = leaflets
+        .iter()
+        .filter(|l| l.direction.0 > 0.0)
+        .map(|l| (l.base.1, l.length, l.direction))
+        .collect();
+    pairs.sort_by(|a, b| a.0.total_cmp(&b.0));
+    if let Some(top) = leaflets.iter().find(|l| l.direction.0 == 0.0) {
+        if let Some(&(_, length, direction)) = pairs.last() {
+            pairs.push((top.base.1, length, direction));
+        }
+    }
+    let mut placed = Vec::new();
+    for pair in pairs.windows(2) {
+        let (lower, upper) = (pair[0], pair[1]);
+        let at = 0.5 * (lower.0 + upper.0);
+        let length = form.interjected * lower.1.min(upper.1);
+        for side in [1.0, -1.0] {
+            placed.push(((0.0, at), (side * lower.2.0, lower.2.1), length));
+        }
+    }
+    placed
 }
 
 fn leaflet(
@@ -482,6 +591,7 @@ fn leaflet(
         division,
         within,
         segment,
+        interjected: false,
     }
 }
 
@@ -648,7 +758,8 @@ pub fn counts(c: &Compound) -> Counts {
     let once = laid.form.pinnules == 0;
     let thrice = laid.form.segments > 0;
     let leaflets = if once {
-        vec![u32::try_from(laid.leaflets.len()).unwrap_or(u32::MAX)]
+        let counted = laid.leaflets.iter().filter(|l| !l.interjected).count();
+        vec![u32::try_from(counted).unwrap_or(u32::MAX)]
     } else {
         per_group.values().copied().collect()
     };

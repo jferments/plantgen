@@ -114,6 +114,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "branch_posture": "pendulous",
     "height_max_m": {
       "min": 2,
       "max": 10.6,
@@ -152,6 +153,7 @@
     "leaf_apex": {"acuminate": "usually", "obtuse": "often", "rounded": "sometimes"}
   },
   "evidence": {
+    "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 161): 'slender pendulous branches forming a rather compact round-topped shapely head'."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"stout branchlets marked by scattered yellow lenticels, coated when they first appear with pale early deciduous pubescence, becoming bright yellow or dark orange color, and in their second year dark red-brown\". Colour chosen by eye between dark orange and red-brown."},
     "taxon": {
       "evidence": "Authored",

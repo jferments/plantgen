@@ -175,6 +175,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "limb_angle": "ascending",
     "height_max_m": {
       "min": 1,
       "max": 4
@@ -202,6 +203,7 @@
     "inflorescence_length_m": {"min": 0.03, "max": 0.07}
   },
   "evidence": {
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 546): 'stout branches spreading and ascending and forming a compact round-topped head'."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

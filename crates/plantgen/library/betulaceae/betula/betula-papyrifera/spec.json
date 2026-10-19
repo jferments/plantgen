@@ -121,6 +121,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "branch_posture": "pendulous",
+    "limb_angle": "spreading",
     "leaf_colour_autumn": [235, 200, 50],
     "shade_tolerance": "intolerant",
     "height_max_m": {
@@ -151,6 +153,8 @@
     "leaf_apex": {"acute": "usually", "acuminate": "often"}
   },
   "evidence": {
+    "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, pp. 212-213): 'a narrow open head of short pendulous branches'."},
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 205): 'short slender branches more or less erect and forming on young trees a narrow symmetrical pyramidal head, becoming horizontal and often pendulous on older trees'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Betula papyrifera (read 2026-10-18): \"The fall color is a bright yellow\". Colour ours."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Betula papyrifera: branchlets \"dark orange color ... during the summer, becoming dull red in their first winter, gradually growing dark orange-brown, lustrous for four or five years and ultimately covered with the white papery bark\". Colour chosen by eye for dark orange-brown; `twig_radius` 8 mm, twice the default, for the four or five years before the white bark (inferred)."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's paper birch review (Betula papyrifera, read 2026-10-16): \"Paper birch is shade-intolerant and can regenerate under even-aged silviculture\"; it is restricted to openings in older forests."},

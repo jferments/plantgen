@@ -134,7 +134,12 @@
     "leaf_hairs": "pubescent",
     "leaf_hairs_beneath": "tomentose",
     "spines": "prickles",
-    "prickle_density": "sparse"
+    "prickle_density": "sparse",
+    "calyx_prickle_length_m": 0.003,
+    "fruiting_calyx_length_m": {
+      "min": 0.015,
+      "max": 0.03
+    }
   },
   "provenance": {
     "sources": [
@@ -338,6 +343,16 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): herbs or subshrubs sparingly armed."
+    },
+    "traits.calyx_prickle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-19): calyx stellate tomentose, often with ca. 3 mm prickles abaxially; Flora of British India (p. 235): the calyx lobes enlarge in fruit and are often prickly."
+    },
+    "traits.fruiting_calyx_length_m": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observations 229312673, 456932481, 91412213 and 583993506 (CC-licensed photographs, viewed 2026-10-19 through imagekit, batch inat-eggplant-fruit-2026-10-19): the cap's lobes cover the top fifth to quarter of the fruit, about 0.3 of its 5-10 cm width; Flora of British India (p. 235): the lobes enlarge, much shorter than the fruit. The length is our reading of the photographs."
     }
   }
 }

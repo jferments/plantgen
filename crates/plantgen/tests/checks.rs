@@ -157,11 +157,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
     ),
     (
-        "datura-stramonium",
-        "leaf_shape",
-        "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Britton and Brown give",
-    ),
-    (
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
@@ -397,6 +392,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Caryophyllales' single whorl of 4 tepals (FNA vol. 4: tepals 4) is drawn as two whorls of 2 each, as a flower card's tepals stand in 2 to 6 whorls, so the measure counts 8",
     ),
     (
+        "rosa-rugosa",
+        "leaf_arrangement",
+        "a short shoot of an alternate-leaved plant unfolds its two leaves a year at one point (broadleaf's Q), so where short shoots bear most of the leaves, as on beach rose's crowded laterals, the measure counts two leaves at most nodes and reads them opposite",
+    ),
+    (
+        "rubus-pedatus",
+        "phyllotaxis_pattern",
+        "its creeping stems are drawn lying on the ground, and the measure reads their leaves in two ranks where Rosaceae state a spiral (why the herb program ranks them so is not yet traced); FNA gives its leaves no arrangement",
+    ),
+    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -420,11 +425,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "sedum-divergens",
         "leaf_habit",
         "its leafy stems end in cymes, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so spreading stonecrop's evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
-    ),
-    (
-        "solanum-melongena",
-        "leaf_shape",
-        "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Bailey and Wikipedia give",
     ),
     (
         "tamarix-ramosissima",
