@@ -143,7 +143,9 @@
 #
 # Revision 18: a lying stem may branch along the ground (lie_branch), each
 # branch lying and rising as the rest of the stem does, so a trailing
-# plant spreads into a mat. With lie_branch 0 a herb grows as before.
+# plant spreads into a mat. With lie_branch 0 a herb grows as before:
+# the rules for it come after all others, as a herb's random draws
+# follow the order of the rules it uses.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -347,21 +349,7 @@ decompose Nd(i, m, h, r) : m > 1 ->
     Nd(i, floor(m / 2), h, r) Nd(i + floor(m / 2), m - floor(m / 2), h, r);
 # One node: an internode, then its leaves, sized by where the node sits
 # between the foot and the top of the leafy part.
-decompose Nd(i, m, h, r) : m == 1 -> Nn(i, h, r) Lb(i, h, r);
-decompose Nd(i, m, h, r) -> ;
-# A lying stem's lie_branch of its lying nodes, from its second, each put
-# out a branch to alternate sides that lies and rises as the stem's
-# remaining nodes do, so the plant spreads into a mat; a branch's nodes
-# branch no further.
-decompose Lb(i, h, r) : lie_branch > 0 && i >= 1 && i < round(lie * nodes) - 1
-                        && floor((i + 1) * lie_branch) > floor(i * lie_branch) ->
-    [ +((floor(i * lie_branch) - 2 * floor(i * lie_branch / 2) == 0 ? 1 : -1) * 55) Ln(i + 1, nodes - i - 1, h, r) ];
-decompose Lb(i, h, r) -> ;
-decompose Ln(i, m, h, r) : m > 1 ->
-    Ln(i, floor(m / 2), h, r) Ln(i + floor(m / 2), m - floor(m / 2), h, r);
-decompose Ln(i, m, h, r) : m == 1 -> Nn(i, h, r);
-decompose Ln(i, m, h, r) -> ;
-decompose Nn(i, h, r) ->
+decompose Nd(i, m, h, r) : m == 1 && lie_branch == 0 ->
     /(lie > 0 && i >= round(lie * nodes) ? -(round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
     ^(lie > 0 && i >= round(lie * nodes) ? rise / max(1, nodes - round(lie * nodes)) : 0)
     /(lie > 0 && i >= round(lie * nodes) ? (round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
@@ -379,6 +367,7 @@ decompose Nn(i, h, r) ->
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
     /(lie > 0 && i < round(lie * nodes) ? (leaves_per_node == 2 ? -90 : 90) : divergence);
+decompose Nd(i, m, h, r) : m < 1 -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
     ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
@@ -522,3 +511,39 @@ decompose Sd(i, h) : t >= adult_age && i >= first_leaves - side_shoots ->
            * pow(unit_shrink, max(0, units - side_units)) / cos(rad(forks > 1.5 ? fork_angle : 0)),
          stem_radius * 0.55, h) ];
 decompose Sd(i, h) -> ;
+
+# A node of a stem that branches along the ground (lie_branch > 0): the
+# same node, then its lying branch, if any. These rules come last so a
+# herb that does not branch grows exactly as before.
+decompose Nd(i, m, h, r) : m == 1 -> Nn(i, h, r) Lb(i, h, r);
+decompose Nd(i, m, h, r) -> ;
+# A lying stem's lie_branch of its lying nodes, from its second, each put
+# out a branch to alternate sides that lies and rises as the stem's
+# remaining nodes do, so the plant spreads into a mat; a branch's nodes
+# branch no further.
+decompose Lb(i, h, r) : lie_branch > 0 && i >= 1 && i < round(lie * nodes) - 1
+                        && floor((i + 1) * lie_branch) > floor(i * lie_branch) ->
+    [ +((floor(i * lie_branch) - 2 * floor(i * lie_branch / 2) == 0 ? 1 : -1) * 55) Ln(i + 1, nodes - i - 1, h, r) ];
+decompose Lb(i, h, r) -> ;
+decompose Ln(i, m, h, r) : m > 1 ->
+    Ln(i, floor(m / 2), h, r) Ln(i + floor(m / 2), m - floor(m / 2), h, r);
+decompose Ln(i, m, h, r) : m == 1 -> Nn(i, h, r);
+decompose Ln(i, m, h, r) -> ;
+decompose Nn(i, h, r) ->
+    /(lie > 0 && i >= round(lie * nodes) ? -(round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
+    ^(lie > 0 && i >= round(lie * nodes) ? rise / max(1, nodes - round(lie * nodes)) : 0)
+    /(lie > 0 && i >= round(lie * nodes) ? (round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
+    ^(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 0 : 1)) +(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 3 : 1))
+    !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
+    F(h * (1 - r) * (1 - bare) / nodes)
+    /(lie > 0 && i < round(lie * nodes) ? 90 : 0)
+    Lf(leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    Bx(i, h, r,
+       leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    /(lie > 0 && i < round(lie * nodes) ? (leaves_per_node == 2 ? -90 : 90) : divergence);
