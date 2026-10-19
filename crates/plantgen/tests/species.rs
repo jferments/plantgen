@@ -265,8 +265,8 @@ fn fronds_and_pads_lie_on_the_ground() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
     assert_eq!(
-        checked, 49,
-        "ten ferns, seven palms, a tree fern, fifteen cycads and sixteen cacti"
+        checked, 52,
+        "ten ferns, seven palms, a tree fern, fifteen cycads and nineteen cacti"
     );
 }
 
@@ -870,7 +870,7 @@ fn builtin_clusters_draw_as_part_meshes() {
         }
     }
     assert_eq!(
-        checked, 154,
+        checked, 155,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -895,7 +895,7 @@ fn builtin_clusters_draw_as_part_meshes() {
          and the twelve of the Caryophyllales families: bladder campion's and four o'clock's cymes, \
          pigweed's and jewels of Opar's panicles, thrift's and purslane's heads, sundew's coil, \
          carpetweed's umbels, the racemes of pokeweed, saltcedar and rougeplant, and greasewood's catkins, \
-         and the glands' great and thread-leaved sundews' coils and hemp's spikes"
+         and the glands' great and thread-leaved sundews' coils and hemp's spikes, and the rose cactus's cymes"
     );
 }
 
