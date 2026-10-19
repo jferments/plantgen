@@ -3711,7 +3711,7 @@ fn one_fruit(
             let seeds = (math::cos(std::f64::consts::TAU * 5.0 * t)).max(0.0);
             Paint::solid(0.65 + 0.25 * seeds + 0.2 * math::sqrt(1.0 - d), 0.0)
         }
-        FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
+        FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny | FruitKind::Woolly => {
             let d = ellipse(0.5, 0.5, 1.0);
             if d >= 1.0 {
                 return Paint::EMPTY;
@@ -3730,6 +3730,7 @@ fn one_fruit(
             let bright = match (dot, s.kind) {
                 (false, _) => ball(d, 0.5, 0.5),
                 (true, FruitKind::Scaly) => 0.55,
+                (true, FruitKind::Woolly) => 1.4,
                 (true, _) => 1.25,
             };
             Paint::solid(bright, 0.0)

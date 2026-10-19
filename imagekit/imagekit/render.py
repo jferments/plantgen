@@ -39,6 +39,8 @@ from .store import Store, check_open
 SKY_GROUND = ((195, 208, 224), (160, 173, 136))  # the flat sky and ground of plantc's render look
 ATLAS_BG = (203, 203, 203)
 MIN_PLANT = 0.15  # a close-up with less plant than this is sky or ground: moved on, not observed
+BLOOM_AT = (0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)  # heights tried for the bloom close-up
+MIN_FLOWER = 0.01  # a bloom close-up with less flower than this shows none: the fallback is used
 
 
 def register(sub) -> None:
@@ -106,6 +108,32 @@ def plant_share(path: Path) -> float:
     return sum(all(far(p, q) for q in SKY_GROUND) for p in px) / len(px)
 
 
+def flower_share(path: Path) -> float:
+    """Share of the frame that is flower-coloured: saturated and not green, or near white."""
+    im = Image.open(path).convert("RGB").resize((128, 128))
+    n = 0
+    for r, g, b in im.getdata():
+        hi, lo = max(r, g, b), min(r, g, b)
+        n += (hi - lo > 70 and not (g >= r and g >= b)) or lo > 215
+    return n / (128 * 128)
+
+
+def bloom_focus(base: list, span: str, parts: list, tmp: Path) -> str | None:
+    """The bloom:F whose draft close-up holds the most flower, or None when none shows any."""
+    best = (MIN_FLOWER, None)
+    probe = base[:]
+    probe[probe.index("--out") + 1] = str(tmp / "probe.png")
+    probe[probe.index("--size") + 1] = "256"
+    probe[probe.index("--quality") + 1] = "draft"
+    for f in BLOOM_AT:
+        cmd = probe + ["--view", "side", "--focus", f"bloom:{f:g}", "--span", span, *parts]
+        if subprocess.run(cmd, capture_output=True).returncode == 0 and (tmp / "probe.png").exists():
+            share = flower_share(tmp / "probe.png")
+            if share > best[0]:
+                best = (share, f"bloom:{f:g}")
+    return best[1]
+
+
 def grown(plantc: str, sid: str, env: str, seed: int, age: float | None, day: int) -> dict:
     """Height and crown radius at that age, from a draft render's summary line."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -133,9 +161,10 @@ def shots(sid: str, cactus: bool, size: dict, views: set, parts: list) -> list[t
                     ("bloom", ["--view", "side", "--focus", "bloom:0.9", "--span", "0.3", *parts], None),
                     ("apex", ["--view", "oblique", "--focus", f"0,{h:.2f},0", "--span", f"{max(0.2, 3 * r):.2f}", *parts],
                      None)]
-        else:
-            out += [("shoot", ["--view", "side", "--focus", "leaf:0.7", "--span", "1.0", *parts], None),
-                    ("bloom", ["--view", "side", "--focus", "bloom:0.7", "--span", "0.3", *parts], "leaf:0.4"),
+        else:  # frames scale with the plant, so a herb's shoot and flower fill them as a tree's do
+            shoot, bloom = f"{min(1.0, max(0.2, 0.4 * h)):.2f}", f"{min(0.3, max(0.1, 0.25 * h)):.2f}"
+            out += [("shoot", ["--view", "side", "--focus", "leaf:0.7", "--span", shoot, *parts], None),
+                    ("bloom", ["--view", "side", "--focus", "bloom:0.7", "--span", bloom, *parts], "leaf:0.4"),
                     ("under", ["--view", "under", "--focus", "leaf:0.5", "--span", "0.3"], None)]
     return out
 
@@ -202,6 +231,12 @@ def cmd_render(args, store: Store) -> None:
                         "--day", str(day), "--size", str(args.size), "--quality", args.quality] + \
                     (["--age", f"{args.age:g}"] if args.age else [])
                 cmd = base + extra
+                if view == "bloom" and not cactus and not args.dry_run:  # the height where the flowers are
+                    at = bloom_focus(base, extra[extra.index("--span") + 1], parts, work)
+                    cmd[cmd.index("--focus") + 1] = at or fallback
+                    if not at:
+                        cmd[cmd.index("--span") + 1] = "1.0"
+                        view = "shoot-low"
                 if args.dry_run:
                     print(shlex.join(cmd))
                     continue

@@ -57,6 +57,10 @@ use crate::rng::{mix64, unit};
 /// The tan felt of a cactus fruit's areoles.
 const FELT: [f32; 3] = [0.74, 0.66, 0.52];
 
+/// The white of a woolly cactus fruit's hairs, where no wool colour is
+/// stated.
+const WOOL: [f32; 3] = [0.86, 0.84, 0.78];
+
 /// The straw of a cactus fruit's spines.
 const STRAW: [f32; 3] = [0.86, 0.8, 0.62];
 
@@ -453,8 +457,9 @@ pub(crate) struct Surface {
 /// toward its tip, or as many felted areoles, each with a star of
 /// `spines` and a third more short spines on a spiny one or a tuft of
 /// glochids on one with felted areoles alone, on a Fibonacci spiral from
-/// near its base to below its crown. Scales take `colour`, a little
-/// darker.
+/// near its base to below its crown; on a woolly one, narrow scales
+/// with a puff of wool in each axil, in the felt's colour. Scales take
+/// `colour`, a little darker.
 pub(crate) fn skin(
     surface: &Surface,
     kind: Skin,
@@ -484,9 +489,125 @@ pub(crate) fn skin(
         let radial = across * math::cos(angle) + other * math::sin(angle);
         let at = centre + axis * (z * long) + radial * (ring * wide);
         let normal = (axis * (z / long) + radial * (ring / wide)).normalize_or(radial);
+        site(
+            at,
+            normal,
+            axis,
+            angle,
+            (kind, spines),
+            (long, wide),
+            colour,
+            dress,
+            part,
+            mesh,
+        );
+    }
+}
+
+/// A cactus floral tube's skin, carrying the pericarpel's up to the
+/// perianth (Anderson, The Cactus Family pp. 31 to 33: the receptacle
+/// bears scales and areoles over both): `count` of its scales or areoles
+/// on a Fibonacci spiral from its foot to below its mouth, each sized as
+/// on a pericarpel `long` by `wide`. `radius` gives the tube's radius
+/// `u` of the way up its `length` from `foot`.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn tube_skin(
+    (foot, axis, across, length): (Vec3, Vec3, Vec3, f64),
+    radius: impl Fn(f64) -> f64,
+    (kind, count, spines): (Skin, u32, u32),
+    (long, wide): (f64, f64),
+    colour: [f32; 3],
+    dress: Dress,
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    if kind == Skin::Naked || count == 0 || length <= 0.0 {
+        return;
+    }
+    let other = axis.cross(across);
+    let golden = math::radians(GOLDEN_DEGREES);
+    for i in 0..count {
+        let u = 0.05 + 0.85 * (f64::from(i) + 0.5) / f64::from(count);
+        let angle = golden * f64::from(i);
+        let radial = across * math::cos(angle) + other * math::sin(angle);
+        let slope = (radius((u + 0.01).min(1.0)) - radius((u - 0.01).max(0.0))) / (0.02 * length);
+        let normal = (radial - axis * slope).normalize_or(radial);
+        let at = foot + axis * (u * length) + radial * radius(u);
+        site(
+            at,
+            normal,
+            axis,
+            angle,
+            (kind, spines),
+            (long, wide),
+            colour,
+            dress,
+            part,
+            mesh,
+        );
+    }
+}
+
+/// One scale or areole of a cactus skin at `at`, facing out along
+/// `normal`, its tip toward `axis`: sized for a pericarpel `long` by
+/// `wide`.
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
+fn site(
+    at: Vec3,
+    normal: Vec3,
+    axis: Vec3,
+    angle: f64,
+    (kind, spines): (Skin, u32),
+    (long, wide): (f64, f64),
+    colour: [f32; 3],
+    dress: Dress,
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    {
         // Up the skin toward the tip, and across it.
         let up = (axis - normal * axis.dot(normal)).normalize_or(axis);
         let side = normal.cross(up);
+        if kind == Skin::Woolly {
+            // A narrow scale tipped with a spine, and a puff of wool in
+            // its axil standing well out from the skin, so the wool hides
+            // most of it.
+            let scale = wide * 0.4;
+            Spheroid {
+                centre: at + up * (scale * 0.35) + normal * (scale * 0.05),
+                a: scale * 0.1,
+                b: scale * 0.25,
+                c: scale * 0.55,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: Detail {
+                    around: 5,
+                    rings: 2,
+                    fine: None,
+                },
+            }
+            .draw(normal, side, blooms::shade(colour, 0.82), part, mesh);
+            let puff = wide * 0.55;
+            Spheroid {
+                centre: at + normal * (puff * 0.35) - up * (puff * 0.2),
+                a: puff * 0.7,
+                b: puff,
+                c: puff,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: Detail {
+                    around: 6,
+                    rings: 3,
+                    fine: None,
+                },
+            }
+            .draw(normal, side, dress.felt.unwrap_or(WOOL), part, mesh);
+            return;
+        }
         if kind == Skin::Scaly {
             // Broad and rounded, pressed to the skin and reaching toward
             // the tip, a little darker.
@@ -507,7 +628,7 @@ pub(crate) fn skin(
                 },
             }
             .draw(normal, side, blooms::shade(colour, 0.82), part, mesh);
-            continue;
+            return;
         }
         // A round cushion of felt, half sunk in the skin.
         let felt = wide * 0.1;
@@ -702,7 +823,7 @@ impl One {
                 pod.draw(self.direction, self.across, body, part, mesh);
             }
             FruitKind::Capsule => self.capsule(body, part, mesh),
-            FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
+            FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny | FruitKind::Woolly => {
                 self.body()
                     .draw(self.direction, self.across, body, part, mesh);
                 self.areoles(
@@ -1780,6 +1901,7 @@ mod tests {
             FruitKind::Scaly,
             FruitKind::Areolate,
             FruitKind::Spiny,
+            FruitKind::Woolly,
             FruitKind::Follicles,
             FruitKind::Samaras,
             FruitKind::Berries,

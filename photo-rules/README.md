@@ -84,10 +84,13 @@ answers. See `02b-check-named.md` for why both passes are run.
 - `07-calibrate.md`: checking an AI before trusting it.
 - `08-describe.md`: a description in words, stored with each image so people
   can search the library by how plants look.
+- `09-branching.md`: a tree's or shrub's branching characters (leader,
+  limb habit and angle, sprays, terminal buds, twig thickness), tallied per
+  genus against the traits that drive growth.
 - `SOURCES.md`: photo sources, licences and access.
 - `CAPTURE.md`: how to take reference photos yourself.
 - `schemas/`: JSON Schemas for triage, observation, check, aggregate,
-  finding, proposal.
+  finding, proposal, description, branching.
 - `examples/whitebark-pine.md`: one worked run.
 - `tools/check.py`: checks every feature against `crates/plantgen/traits.json`
   and the examples against the schemas and the features (`python3
