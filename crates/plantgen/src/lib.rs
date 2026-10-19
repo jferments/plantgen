@@ -1017,4 +1017,8 @@ pub mod venation;
 /// spreading, a stalk colour and a drop of clear, milky or amber secretion,
 /// and strands draw on flower and cluster cards (fifteen Caryophyllales
 /// species, two more sundews and hemp, #243; 144 is #244).
-pub const GENERATOR_REVISION: u32 = 145;
+/// 146: a rosette succulent's flowers are single flowers on its flowering
+/// stalk, not clusters of their own (`inflorescence` from
+/// `inflorescence_length_m`); a lycophyte's program has bud defaults
+/// (58 species for the Rainier and Saguaro scenes, #255).
+pub const GENERATOR_REVISION: u32 = 146;
