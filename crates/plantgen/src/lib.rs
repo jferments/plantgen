@@ -1064,4 +1064,8 @@ pub mod venation;
 /// broad brown wedge along its petiole's base, so the crown's centre is
 /// clothed in leaf bases where the bare stem showed as a flat-topped
 /// cylinder (148 is cacti, #248).
-pub const GENERATOR_REVISION: u32 = 149;
+/// 150: a columnar Pinaceae crown stops widening once its height slows:
+/// its shoots' floor growth fades past `floor_reach` of the height out
+/// from the trunk, down to `floor_keep` (Pinaceae rule on `crown_form`;
+/// subalpine fir).
+pub const GENERATOR_REVISION: u32 = 150;
