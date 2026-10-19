@@ -74,10 +74,19 @@
 # ground, and starts a year after its joint, once the joint's tip is known
 # to be clear.
 #
+# Revision 7 (thread "Cactus flowering seasons"): a joint at the end of
+# its branch, one that sprouted no daughters (done 2), flowers along its
+# top every year from its second (end_bloom), not in its second year
+# alone, as a prickly pear's terminal
+# pads go on flowering from their margin areoles (Anderson, The Cactus
+# Family p. 490: a beavertail's flowers along the top of the pads). A low
+# clump of two generations (beavertail) stopped flowering once its last
+# pads were two years old.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem column 6;
+lsystem column 7;
 
 # The plant.
 param vigour_spread;          # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -159,6 +168,7 @@ param bud_size;
 param fruit_size;
 param joint_flowers;          # flowers along the top of each of the youngest joints
 param chains;                 # share of joints that hang a chain of fruit
+param end_bloom;              # 1: a joint at the end of its branch flowers every year
 param chain_max;              # most fruit in a chain
 param flower_area;
 param bud_area;
@@ -185,10 +195,11 @@ module Fo;                              # one place in this year's ring: a bud, 
 module Sk;                              # a stem's foot, sinking as it grows
 # A joint: its length and radius, its place (a trunk joint's number up
 # the trunk, a lateral's depth in its branch), vigour, whether it has
-# sprouted its daughters, and whether it is a lateral.
+# sprouted its daughters (1, or 2 when it sprouted none), and whether it
+# is a lateral.
 module J(len, r, g, v, done, side) queries position;
 module Js(l, r);                        # a joint's segments
-module Jf(l, r);                        # a young joint's flowers
+module Jf(l, r, last);                  # a young joint's flowers; last 1 at the end of a branch
 # Daughters k to k + m - 1 of n at depth d; s is 1 for laterals out of
 # the side of a trunk joint pa years old, `back` below its tip, 0 for
 # daughters at a tip.
@@ -357,7 +368,10 @@ rule J(len, r, g, v, done, side) : done == 0 && age >= 1 && side == 0 && g + 1 <
     J(joint_length * uniform(1 - joint_spread, 1 + joint_spread), r * uniform(0.95, 1.05),
       g + 1, v, 0, 0);
 rule J(len, r, g, v, done, side) : done == 0 && age >= 1 && (side == 0 || rand() < bud_rate) ->
-    J(len, r, g, v, 1, side)
+    J(len, r, g, v,
+      round(lerp(daughters_low, daughters_high, rand(2))
+            * (side > 0 ? max(0, 1 - g / generations) : 1)) < 1 ? 2 : 1,
+      side)
     Dj(0, round(lerp(daughters_low, daughters_high, rand(2))
                 * (side > 0 ? max(0, 1 - g / generations) : 1)),
        round(lerp(daughters_low, daughters_high, rand(2))
@@ -375,16 +389,18 @@ interpret J(len, r, g, v, done, side) ->
     Js(len * (1 - exp(-(age + 0.5) / 0.4)),
        r * (1 - exp(-(age + 0.5) / 0.4))
        * (1 + swell * (side > 0 ? pow(swell_side, g) : 1) * (1 - exp(-age / swell_years))))
-    Jf(len * (1 - exp(-(age + 0.5) / 0.4)), r * (1 - exp(-(age + 0.5) / 0.4)));
+    Jf(len * (1 - exp(-(age + 0.5) / 0.4)), r * (1 - exp(-(age + 0.5) / 0.4)),
+       done > 1 ? 1 : 0);
 interpret Js(l, r) : pad > 0 ->
     T(0, -1, 0, sag * l / 4) rest(rest_gap)
     !(r * 0.4) stem(l / 4) !(r * 0.85) stem(l / 4) !(r) stem(l / 4) !(r * 0.92) stem(l / 4);
 interpret Js(l, r) ->
     T(0, -1, 0, sag * l / 3) rest(rest_gap)
     !(r * (1 - 0.5 * exp(-age / swell_years))) stem(l / 3) !(r) stem(l / 3) !(r) stem(l / 3);
-interpret Jf(l, r) : joint_flowers > 0 && age >= 1 && age < 2 && t >= bloom_age ->
+interpret Jf(l, r, last) :
+        joint_flowers > 0 && age >= 1 && (age < 2 || (end_bloom > 0 && last > 0)) && t >= bloom_age ->
     Fl(0, joint_flowers, joint_flowers, l, r);
-interpret Jf(l, r) -> ;
+interpret Jf(l, r, last) -> ;
 
 # Daughters k to k + m - 1 of n at depth d: at the tip of a club, out of
 # a trunk joint's side, or anywhere in the k-th of n stretches of a pad's

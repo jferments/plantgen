@@ -35,10 +35,13 @@
 #
 # Revision 10 (thread "Cacti"): on column revision 4; chains of fruit hang.
 #
+# Revision 13 (thread "Cactus flowering seasons"): on column revision 7;
+# a joint at the end of its branch flowers every year (end_bloom 1).
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 12 extends column;
+lsystem cactaceae 13 extends column;
 
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
 param lean = 3;               # most degrees a lone stem leans at its foot, in a random direction
@@ -114,6 +117,7 @@ param bud_size = 0.03;
 param fruit_size = 0.06;
 param joint_flowers = 0;      # flowers along the top of each of the youngest joints
 param chains = 0;             # share of joints that hang a chain of fruit
+param end_bloom = 1;          # 1: a joint at the end of its branch flowers every year
 param chain_max = 7;          # most fruit in a chain
 param flower_area = 0.64;
 param bud_area = 0.89;
