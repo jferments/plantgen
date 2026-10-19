@@ -1,0 +1,208 @@
+{
+  "schema": 1,
+  "id": "papaver-somniferum",
+  "taxon": {
+    "scientific_name": "Papaver somniferum",
+    "common_name": "opium poppy",
+    "usda_symbol": "PASO8",
+    "family": "Papaveraceae",
+    "genus": "Papaver",
+    "plant_name_id": 2561497
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "stem_rate": 0.7,
+      "clump_radius": 0.01,
+      "stem_lean": 4,
+      "maturity": 0.4,
+      "adult_age": 1,
+      "stem_radius": 0.005,
+      "wiggle": 2,
+      "arch": 0,
+      "nodes": 9,
+      "bare": 0.05,
+      "leaf_peak": 0.2,
+      "leaf_top": 0.45,
+      "leaf_base": 0.8,
+      "leaf_angle": 45,
+      "leaf_length": 0.2,
+      "basal_length": 0.2,
+      "basal_leaves": 3,
+      "basal_angle": 60,
+      "raceme": 0.3,
+      "flowers": 1,
+      "flower_branches": 2,
+      "branch_nodes": 1,
+      "branch_length": 0.45,
+      "pedicel": 0.01,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 0.8
+    }
+  },
+  "growth": {
+    "years": 1,
+    "step": 1,
+    "keyframes": [1]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.42, 0.52, 0.45],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": { "template": "simple", "petiole": 0.0 }
+      },
+      "basal": {
+        "shape": { "template": "simple", "petiole": 0.15 }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.8,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {"min": 0.3, "max": 1.0, "typical": 0.8},
+    "height_max_m": 1.5,
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_shape": "oblong",
+    "leaf_margin": "serrate",
+    "leaf_length_m": {"min": 0.07, "max": 0.25},
+    "leaf_hairs": "glabrous",
+    "rosette": "basal",
+    "inflorescence": "solitary",
+    "bud_posture": "nodding",
+    "bud_length_m": {"min": 0.015, "max": 0.035},
+    "flower_posture": "erect",
+    "flower_size_m": {"min": 0.05, "max": 0.12},
+    "petal_length_m": {"min": 0.04, "max": 0.07},
+    "petal_shape": "orbicular",
+    "corolla_shape": "cupped",
+    "flower_colour": [200, 140, 190],
+    "perianth_base_colour": [70, 25, 70],
+    "anther_colour": [240, 225, 170],
+    "filament_colour": [245, 245, 240],
+    "flower_symmetry": "actinomorphic",
+    "petal_whorls": 2,
+    "hypanthium": false,
+    "carpels": {"min": 5, "max": 18},
+    "fruit_type": "capsule",
+    "fruit_shape": "globose",
+    "fruit_size_m": {"min": 0.04, "max": 0.09},
+    "fruit_colour_ripe": [165, 135, 95],
+    "calyx_in_fruit": "falling",
+    "flowering_months": [5, 6, 7, 8],
+    "fruiting_months": [6, 7, 8, 9],
+    "leaf_colour": [140, 170, 150],
+    "fruit_colour_unripe": [145, 178, 160]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact: one year, as the plant is an annual."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "From California poppy's, changed for an opium poppy's form: one erect stout stem (Flora of China vol. 7, Papaver somniferum: stems erect; Flora of North America vol. 3: stems simple or branching), 9 stem leaves 20 cm at the largest (FoC: blade 7-25 cm), the largest low on the stem and the upper ones half as long (FoC: leaves below shortly petiolate, above sessile and amplexicaul), over 3 basal leaves (FNA Papaver: basal leaves rosulate); the top two leaves each bear a flowering side branch with one leaf (FNA Papaver: flowers in 1s, 2s or 3s on long peduncles), and each flowering axis ends in a long bare peduncle, its top 30 percent (FoC: pedicel to 25 cm); its flower turns to a capsule over the season, by the flowering and fruiting months; the stem's flower opens while its branches' are still buds (buds_above 0.8 with the family's branch_lag), as photographs show an open flower over nodding buds (FoC: flower buds nutant at first). Stem radius 5 mm for its stout stem. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.8 m tall in its one year in the open, inside Flora of China's 30-60(-100) cm and FNA's to 15 dm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours from Flora of China vol. 7, Papaver somniferum (read on eFloras, 2026-10-19): stems and leaves glaucous and rather waxy, so a grey blue-green for both. The leaf cards: simple blades, the stem leaves sessile (FoC: above sessile and amplexicaul), the basal ones shortly stalked; their outline and teeth are left to the rules from leaf_shape and leaf_margin."
+    },
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum (read on eFloras, 2026-10-19): herbs 30-60(-100) cm tall (to 1.5 m in cultivation); 0.8 m read as typical of a flowering plant grown in the open."},
+    "traits.height_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaver somniferum (read on eFloras, 2026-10-19): plants to 15 dm; Flora of China agrees (to 1.5 m in cultivation)."},
+    "traits.life_span": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: herbs, annual."},
+    "traits.woodiness": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: herbs."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: leaves alternate."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: blade ovate or oblong, one undivided blade."},
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: margin irregularly undulate-serrate, the blade not lobed; FNA: margins shallowly to deeply toothed."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: blade ovate or oblong, base cordate; oblong taken."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: margin irregularly undulate-serrate."},
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: blade 7-25 cm; FNA gives leaves to 30 cm."},
+    "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: both surfaces glabrous, glaucous and rather waxy."},
+    "traits.rosette": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaver (read on eFloras, 2026-10-19): leaves basal rosulate, petiolate; cauline alternate."},
+    "traits.bud_length_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum (efloras.org, read 2026-10-19): flower buds oval-oblong or broadly ovoid, 1.5-3.5 x 1-3 cm, glabrous."},
+    "traits.bud_posture": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flower buds nutant at first, erect at anthesis."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flowers solitary."},
+    "traits.flower_posture": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flower buds nutant at first, erect at anthesis."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flowers deeply cup-shaped, 5-12 cm in diameter."},
+    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: petals 4-7 x 3-11 cm."},
+    "traits.petal_shape": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: petals suborbicular or almost flabellate."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flowers deeply cup-shaped."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: petals white, pink, red, purple, or various; FNA the same. A pale lilac-pink taken, between white and purple. The colour is our reading of the words."},
+    "traits.perianth_base_colour": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: petals often with a dark basal blotch; FNA: often with dark or pale basal spot. A dark purple taken. The colour is our reading of the words."},
+    "traits.anther_colour": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: anthers yellowish or cream; FNA: anthers pale yellow. The colour is our reading of the words."},
+    "traits.filament_colour": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: filaments white, linear, 1-1.5 cm."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: petals 4, alike, the stigmas actinomorphic."},
+    "traits.petal_whorls": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: petals 4; with the family's merosity 2 (sepals 2), two whorls of two, the outer and inner pair."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaveraceae (read on eFloras, 2026-10-19): a receptacular cup only in Eschscholzia, Meconella and Platystemon; Papaver has none."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaver somniferum (read on eFloras, 2026-10-19): stigmas 5-18 on a more or less flat disc, one per carpel (Papaver: pistil 3-18-carpellate)."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaver somniferum: capsules stipitate, subglobose."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaver somniferum: capsules subglobose, not ribbed; Flora of China: spherical or oblong-elliptic, 4-9 x 4-5 cm."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: capsule 4-9 x 4-5 cm; FNA: to 9 cm."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: capsule brown when mature; Simpson figures it tan-brown. The colour is our reading of the words."},
+    "traits.calyx_in_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaveraceae: sepals caducous, so none stays under the fruit."},
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaver somniferum: flowering spring-summer, read as May to August for the flora's range; Flora of China gives March to August."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "plantgen-authors", "note": "A month after each flowering month, as no source read gives fruiting months: the capsule ripens after the petals fall."},
+    "traits.leaf_colour": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 3, Papaver somniferum (read 2026-10-19): plants glabrate, glaucous; Flora of China vol. 7: glaucous, waxy. The glaucous grey-green is our reading of 40 iNaturalist photos (imagekit batch poppies-2026-10-19): the wax bloom drawn as the leaves' colour."},
+    "traits.fruit_colour_unripe": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 3, Papaver somniferum (read 2026-10-19): capsules glaucous. The blue-green is our reading of the unripe capsules in the iNaturalist photos (imagekit batch poppies-2026-10-19)."}
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (poppies, 2026-10-19) from the California poppy's form, its traits from Flora of China vol. 7 and Flora of North America vol. 3 (species, genus and family). Calibration against measurements and photographs is milestone P4."
+  }
+}
