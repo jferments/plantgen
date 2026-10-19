@@ -101,6 +101,59 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): blades unlobed: suborbiculate, orbiculate, spatulate, obovate, cuneate to linear."
+    },
+    "rules.appearance.stem_hairs.glands.density": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia, D. anglica and D. filiformis (eFloras, read 2026-10-19): scapes glabrous."
+    },
+    "rules.appearance.stem_hairs.glands.count": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia, D. anglica and D. filiformis (eFloras, read 2026-10-19): scapes glabrous."
+    },
+    "rules.appearance.organs.leaf.hairs_beneath.glands.count": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4: 'The whole upper surface is covered with gland-bearing filaments'; p.8: the lower surface bears only minute non-secreting papillae."
+    },
+    "rules.appearance.organs.basal.hairs_beneath.glands.count": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4 and p.8, as for the stem leaves: tentacles on the upper surface only."
+    }
+  },
+  "rules": {
+    "appearance.stem_hairs.glands.density": {
+      "map": {
+        "glandular_hairs": {
+          "sparse": 0,
+          "scattered": 0,
+          "dense": 0
+        }
+      },
+      "why": "A sundew's scape is bare: its tentacles stand on its blades alone."
+    },
+    "appearance.stem_hairs.glands.count": {
+      "rule": "0",
+      "needs": [
+        "glandular_hairs_per_cm2"
+      ],
+      "why": "A sundew's counted tentacles are its blades', none on its scape."
+    },
+    "appearance.organs.leaf.hairs_beneath.glands.count": {
+      "rule": "0",
+      "needs": [
+        "glandular_hairs_per_cm2"
+      ],
+      "why": "A sundew's tentacles stand on the blade's upper face and rim; its underside has none."
+    },
+    "appearance.organs.basal.hairs_beneath.glands.count": {
+      "rule": "0",
+      "needs": [
+        "glandular_hairs_per_cm2"
+      ],
+      "why": "A sundew's tentacles stand on the blade's upper face and rim; its underside has none."
     }
   }
 }
