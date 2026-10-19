@@ -63,6 +63,15 @@ const STRAW: [f32; 3] = [0.86, 0.8, 0.62];
 /// The brown a cactus fruit's perianth dries to, and its glochids.
 const DRIED: [f32; 3] = [0.36, 0.26, 0.16];
 
+/// What a cactus pericarpel's areoles are drawn in where their flora
+/// gives it: their felt, and the spines or glochids on them. Unstated,
+/// the felt is tan, spines straw and glochids brown.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct Dress {
+    pub felt: Option<[f32; 3]>,
+    pub bristles: Option<[f32; 3]>,
+}
+
 /// The golden angle, degrees.
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
 
@@ -246,6 +255,10 @@ pub(crate) fn draw_unit(
         },
         cup: fruit.cup.map(|cup| if unripe { accent } else { cup }),
         threads: fruit.threads,
+        dress: Dress {
+            felt: fruit.felt,
+            bristles: fruit.bristles,
+        },
     };
     let one = One {
         base,
@@ -273,9 +286,15 @@ pub(crate) fn draw_unit(
         blooms::draw_fruit(&cone, direction, one.across, form, fruit, body, part, mesh);
         return;
     }
+    // A fruit whose spine clusters fall ripens with its felt alone.
+    let kind = if !unripe && fruit.spines_fall >= 0.5 && fruit.kind == FruitKind::Spiny {
+        FruitKind::Areolate
+    } else {
+        fruit.kind
+    };
     let first = mesh.positions.len();
     let first_index = mesh.indices.len();
-    one.draw(fruit.kind, body, accent, extras, part, mesh);
+    one.draw(kind, body, accent, extras, part, mesh);
     one.dress(fruit, body, accent, part, mesh);
     one.open(first, first_index, mesh);
 }
@@ -291,6 +310,8 @@ struct Extras {
     cup: Option<[f32; 3]>,
     /// How far shown seeds hang on their threads, a share of the length.
     threads: f64,
+    /// A cactus fruit's areoles' felt and spines or glochids.
+    dress: Dress,
 }
 
 /// An ellipsoid at `centre`, half-lengths `(a, b, c)` along `axis`,
@@ -384,6 +405,7 @@ pub(crate) fn skin(
     kind: Skin,
     (count, spines): (u32, u32),
     colour: [f32; 3],
+    dress: Dress,
     part: Part,
     mesh: &mut Mesh,
 ) {
@@ -450,7 +472,7 @@ pub(crate) fn skin(
                 fine: None,
             },
         }
-        .draw(normal, side, FELT, part, mesh);
+        .draw(normal, side, dress.felt.unwrap_or(FELT), part, mesh);
         // Spines on a spiny skin, as long as a little over half the
         // shorter of its half-length and width; a tuft of short glochids
         // on one with felted areoles alone.
@@ -459,10 +481,15 @@ pub(crate) fn skin(
                 long.min(wide * 2.0) * 0.56,
                 wide * 0.024,
                 spines + spines / 3,
-                STRAW,
+                dress.bristles.unwrap_or(STRAW),
             )
         } else {
-            (long.min(wide * 2.0) * 0.12, wide * 0.012, spines, DRIED)
+            (
+                long.min(wide * 2.0) * 0.12,
+                wide * 0.012,
+                spines,
+                dress.bristles.unwrap_or(DRIED),
+            )
         };
         for k in 0..spines {
             let turn = std::f64::consts::TAU * f64::from(k) / f64::from(spines) + angle;
@@ -611,7 +638,13 @@ impl One {
             FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
                 self.body()
                     .draw(self.direction, self.across, body, part, mesh);
-                self.areoles(kind.skin().unwrap_or_default(), body, part, mesh);
+                self.areoles(
+                    kind.skin().unwrap_or_default(),
+                    body,
+                    extras.dress,
+                    part,
+                    mesh,
+                );
                 let dried = [0, 1, 2].map(|k| body[k] * 0.3 + DRIED[k] * 0.7);
                 self.calyx(0.95, 8, 0.3, 0.1, dried, part, mesh);
             }
@@ -871,7 +904,14 @@ impl One {
     /// A cactus fruit's skin, the pericarpel grown on ([`skin`]): 21, 13
     /// or 8 areoles as finely as the fruit is drawn, spines on the finer
     /// two.
-    fn areoles(&self, skin_kind: Skin, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+    fn areoles(
+        &self,
+        skin_kind: Skin,
+        colour: [f32; 3],
+        dress: Dress,
+        part: Part,
+        mesh: &mut Mesh,
+    ) {
         let count: u32 = match self.detail.around {
             10.. => 21,
             8..=9 => 13,
@@ -889,7 +929,15 @@ impl One {
             long: self.length * 0.5,
             wide: self.width * 0.5,
         };
-        skin(&surface, skin_kind, (count, spines), colour, part, mesh);
+        skin(
+            &surface,
+            skin_kind,
+            (count, spines),
+            colour,
+            dress,
+            part,
+            mesh,
+        );
     }
 
     /// Widen the solid drawn from vertex `first` toward its tip by
