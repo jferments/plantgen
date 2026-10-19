@@ -76,7 +76,6 @@
             "angle": 55,
             "length": 0.003,
             "width": 0.00012,
-            "colour": [0.82, 0.78, 0.58],
             "angle_spread": 20,
             "length_spread": 0.3
           }
@@ -119,6 +118,7 @@
     "areole_wool_colour": [195, 160, 90],
     "flower_colour": [190, 80, 140],
     "fruit_colour_ripe": [115, 135, 100],
+    "glochid_colour": [220, 195, 95],
     "fruit_size_m": {"min": 0.02, "max": 0.055},
     "fruit_width_m": {"min": 0.013, "max": 0.045},
     "joint_length_m": {"min": 0.1, "max": 0.2},
@@ -148,6 +148,7 @@
     "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: wool gold to tan, becoming grey to black."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},
+    "traits.glochid_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia fulgida: glochids in an adaxial tuft, sometimes also scattered along the areole margins, yellow, 1 to 3 mm."},
     "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},
     "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: fruit 2 to 5.5 cm long and 1.3 to 4.5 cm in diameter."},
     "traits": {

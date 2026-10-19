@@ -56,8 +56,7 @@
         "base": 1.2,
         "areoles": {
           "spacing": 0.035,
-          "felt_radius": 0.004,
-          "felt": [0.45, 0.4, 0.3]
+          "felt_radius": 0.004
         },
         "spines": [
           {
@@ -77,7 +76,6 @@
             "angle": 60,
             "length": 0.004,
             "width": 0.00015,
-            "colour": [0.55, 0.45, 0.2],
             "angle_spread": 20,
             "length_spread": 0.3
           }
@@ -112,6 +110,8 @@
     "flower_colour": [225, 190, 45],
     "flower_size_m": {"min": 0.05, "max": 0.08},
     "fruit_colour_ripe": [100, 25, 75],
+    "glochid_colour": [180, 130, 60],
+    "areole_wool_colour": [180, 140, 90],
     "fruit_size_m": {"min": 0.03, "max": 0.07},
     "fruit_width_m": {"min": 0.02, "max": 0.04},
     "joint_length_m": {"min": 0.2, "max": 0.3},
@@ -134,6 +134,8 @@
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: flowers yellow, sometimes reddish, 5 to 8 cm across; fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: flowers yellow, sometimes reddish, 5 to 8 cm across; fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: flowers yellow, sometimes reddish, 5 to 8 cm across; fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},
+    "traits.glochid_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia engelmannii: glochids widely spaced, sparse in a crescent at the adaxial edge and in a subapical tuft, yellow to red-brown, ageing grey to blackish, to 10 mm; an amber between the two here."},
+    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia engelmannii: areoles subcircular to obovate, 4 to 7 by 4 to 6 mm; wool tawny, ageing blackish."},
     "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: flowers yellow, sometimes reddish, 5 to 8 cm across; fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},
     "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: fruit 3 to 7 cm long and 2 to 4 cm in diameter."},
     "traits.lower_areole_spines": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 498, Opuntia engelmannii: spines 1 to 8, sometimes absent from the lower areoles."},

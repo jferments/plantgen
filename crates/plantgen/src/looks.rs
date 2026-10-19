@@ -1927,6 +1927,16 @@ pub struct Flower {
     /// The anthers' colour; the accent, as before, if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub anther_colour: Option<[f32; 3]>,
+    /// An inferior ovary's skin colour where it is not the calyx's: a
+    /// cactus's pericarpel, a joint of the stem, in the stem's colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pericarpel_colour: Option<[f32; 3]>,
+    /// The felt of a cactus pericarpel's areoles, and the spines or
+    /// glochids on them, where their flora gives those colours.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pericarpel_felt: Option<[f32; 3]>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pericarpel_bristles: Option<[f32; 3]>,
     /// Dark spots, in the accent colour, on each petal's or tepal's inner
     /// face toward its foot: 0 none, about 20 a lily's copious spots.
     #[serde(skip_serializing_if = "is_zero_count")]
@@ -2128,6 +2138,9 @@ impl Default for Flower {
             filament: None,
             pistil: None,
             anther_colour: None,
+            pericarpel_colour: None,
+            pericarpel_felt: None,
+            pericarpel_bristles: None,
             spots: 0,
             base_colour: None,
             base_length: BASE_LENGTH,
@@ -2693,6 +2706,17 @@ pub struct Fruit {
     /// club-shaped, below 0 ovoid ([`crate::fruit`]).
     #[serde(skip_serializing_if = "is_zero")]
     pub flare: f64,
+    /// 1 when a ripe fruit's spine clusters fall (Stenocereus,
+    /// Echinocereus): a spiny cactus fruit ripens with felted areoles
+    /// alone.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spines_fall: f64,
+    /// The felt of a cactus fruit's areoles, and the spines or glochids
+    /// on them, where their flora gives those colours.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub felt: Option<[f32; 3]>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bristles: Option<[f32; 3]>,
     /// The colour of the seeds a ripe fruit shows: a magnolia's red seeds
     /// hanging from its split follicles. Only follicles show them.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2736,6 +2760,9 @@ impl Default for Fruit {
             armed: Armed::None,
             hang: 0.0,
             flare: 0.0,
+            spines_fall: 0.0,
+            felt: None,
+            bristles: None,
             seeds: None,
             cup: None,
             ripening: None,
@@ -2961,6 +2988,9 @@ struct FruitCard {
     armed: Armed,
     hang: f64,
     flare: f64,
+    spines_fall: f64,
+    felt: Option<[f32; 3]>,
+    bristles: Option<[f32; 3]>,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
     ripening: Option<[f32; 3]>,
@@ -2995,6 +3025,9 @@ impl Default for FruitCard {
             armed: fruit.armed,
             hang: fruit.hang,
             flare: fruit.flare,
+            spines_fall: fruit.spines_fall,
+            felt: None,
+            bristles: None,
             seeds: None,
             cup: None,
             ripening: None,
@@ -3044,6 +3077,9 @@ impl TryFrom<FruitCard> for Fruit {
             armed: card.armed,
             hang: card.hang,
             flare: card.flare,
+            spines_fall: card.spines_fall,
+            felt: card.felt,
+            bristles: card.bristles,
             seeds: card.seeds,
             cup: card.cup,
             ripening: card.ripening,

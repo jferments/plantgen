@@ -77,7 +77,6 @@
             "angle": 55,
             "length": 0.003,
             "width": 0.00012,
-            "colour": [0.78, 0.66, 0.3],
             "angle_spread": 20,
             "length_spread": 0.3
           }
@@ -119,6 +118,7 @@
     "areole_wool_colour": [215, 200, 160],
     "flower_colour": [195, 105, 30],
     "fruit_colour_ripe": [175, 150, 100],
+    "glochid_colour": [175, 140, 70],
     "wood_density_basic_kg_m3": 640,
     "radial_spines": {"min": 8, "max": 25},
     "radial_spine_length_m": {"min": 0.02, "max": 0.03},
@@ -143,6 +143,7 @@
     "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: wool white, yellow or tan, ageing greyish black; pale tan here."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 204 to 205, Cylindropuntia acanthocarpa: flowers bright yellow to bronze to brick red (bronze here, the middle of the words); fruit dry, tan at maturity. Anderson gives the flower's length (2 to 3 cm) but not its width and no fruit size, so their sizes stay set by hand."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 204 to 205, Cylindropuntia acanthocarpa: flowers bright yellow to bronze to brick red (bronze here, the middle of the words); fruit dry, tan at maturity. Anderson gives the flower's length (2 to 3 cm) but not its width and no fruit size, so their sizes stay set by hand."},
+    "traits.glochid_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Cylindropuntia acanthocarpa: glochids in an inconspicuous to small adaxial tuft, yellow to brown, 0.5 to 2 mm; a yellowish brown here."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cylindropuntia acanthocarpa (gwddagg_v2.2_species.csv, read): specific gravity 0.64 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.64, branches 0.58. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.lower_areole_spines": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: spines 6 to 20, up to 30, mostly on the distal areoles."},
     "traits": {
