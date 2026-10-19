@@ -57,11 +57,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18 (3 before its blades took their stated breadth, 10 to 35 cm, which drops one more on some shoots); the climber program grows few leaves on a shoot",
     ),
     (
-        "armeria-maritima",
-        "leaf_width_m",
-        "its grass-like leaves, 0.5 to 3 mm wide (FNA vol. 5), are drawn on cards no narrower than 0.03 of their length, so 15 cm leaves draw 3.5 to 5.3 mm wide",
-    ),
-    (
         "ascarina-lucida",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",

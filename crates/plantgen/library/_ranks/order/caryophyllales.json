@@ -136,22 +136,17 @@
     "rules.generator.params.leaf_length": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. A rosette leaf's card adds its stalk, as the forb's basal_length does."
-    },
-    "rules.generator.params.basal_length": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. A rosette leaf's card adds its stalk, as the forb's basal_length does."
+      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. Where the herb has a basal rosette its floras' petioles are the rosette's: American bistort's stem leaves (FNA: cauline leaves reduced, sessile above) drew 27 cm cards, past the 15 cm the flora gives, until a rosette herb's stem leaves went back to the forbs' middle length; a rosette leaf's card is the forbs' blade and petiole, since the longest blade with the longest stalk drew bistort's petioles past the flora's 12 cm."
     },
     "rules.generator.params.leaf_top": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. A rosette leaf's card adds its stalk, as the forb's basal_length does."
+      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. Where the herb has a basal rosette its floras' petioles are the rosette's: American bistort's stem leaves (FNA: cauline leaves reduced, sessile above) drew 27 cm cards, past the 15 cm the flora gives, until a rosette herb's stem leaves went back to the forbs' middle length; a rosette leaf's card is the forbs' blade and petiole, since the longest blade with the longest stalk drew bistort's petioles past the flora's 12 cm."
     },
     "rules.generator.params.leaf_base": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. A rosette leaf's card adds its stalk, as the forb's basal_length does."
+      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. Where the herb has a basal rosette its floras' petioles are the rosette's: American bistort's stem leaves (FNA: cauline leaves reduced, sessile above) drew 27 cm cards, past the 15 cm the flora gives, until a rosette herb's stem leaves went back to the forbs' middle length; a rosette leaf's card is the forbs' blade and petiole, since the longest blade with the longest stalk drew bistort's petioles past the flora's 12 cm."
     }
   },
   "forms": {
@@ -226,12 +221,9 @@
       "why": "A rosette leaf's card holds the blade and its stalk end to end, as a stem leaf's does: a sundew's small round blade at the end of a stalk four times its length."
     },
     "generator.params.leaf_length": {
-      "rule": "max(leaf_length_m) * (1 + first(petiole_length_m / leaf_length_m, 0))",
-      "why": "A herb's longest stem leaf is as long as the longest blade its flora measures, its card longer by the stalk in proportion (the card's petiole share is the flora's petiole over blade and petiole); the leaves below and above it are shorter by the shares its program sets."
-    },
-    "generator.params.basal_length": {
-      "rule": "max(leaf_length_m) * (1 + first(petiole_length_m / leaf_length_m, 0))",
-      "why": "A herb's longest rosette leaf is as long as the longest blade its flora measures, its card longer by the stalk in proportion."
+      "map": {"rosette": {"basal": {"rule": "leaf_length_m"}, "none": {"rule": "max(leaf_length_m) * (1 + first(petiole_length_m / leaf_length_m, 0))"}, "terminal": {"rule": "max(leaf_length_m) * (1 + first(petiole_length_m / leaf_length_m, 0))"}}},
+      "else": {"rule": "max(leaf_length_m) * (1 + first(petiole_length_m / leaf_length_m, 0))"},
+      "why": "A herb's longest stem leaf is as long as the longest blade its flora measures, its card longer by the stalk in proportion (the card's petiole share is the flora's petiole over blade and petiole); the leaves below and above it are shorter by the shares its program sets. Where the herb has a basal rosette, the flora's leaves and petioles are mostly the rosette's (a bistort's or a spring beauty's few stem leaves are smaller and sessile), so its longest stem leaf is the middle of the flora's lengths, with no stalk added, as the forbs' rule draws it."
     },
     "generator.params.leaf_top": {
       "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
