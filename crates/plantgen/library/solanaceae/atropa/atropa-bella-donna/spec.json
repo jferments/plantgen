@@ -117,7 +117,9 @@
       125,
       115
     ],
-    "fruiting_calyx_posture": "spreading"
+    "fruiting_calyx_posture": "spreading",
+    "stem_hairs": "pubescent",
+    "glandular_hairs": "scattered"
   },
   "provenance": {
     "sources": [
@@ -311,6 +313,16 @@
       "evidence": "SourceInferred",
       "source": "hooker-1884",
       "note": "Hooker, Student's Flora, 3rd ed. (1884), Atropa Belladonna, p. 288 (read on the Internet Archive, 2026-10-17): the berry set on the spreading calyx; King's American Dispensatory (vol. 1, p. 331): sitting on the enlarged calyx."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Atropa belladonna (eFloras, read 2026-10-18): herbs pubescent; King's (vol. 1, p. 331): stems slightly downy; Hooker (p. 288): glabrous, or pubescent and glandular."
+    },
+    "traits.glandular_hairs": {
+      "evidence": "SourceInferred",
+      "source": "hooker-1884",
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Atropa Belladonna, p. 288 (read on the Internet Archive, 2026-10-17): pubescent and glandular; Kilmer (in King's vol. 1, p. 332): the petioles and the veins beneath downy, hairy and glandular."
     }
   }
 }

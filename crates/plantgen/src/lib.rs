@@ -1017,4 +1017,20 @@ pub mod venation;
 /// spreading, a stalk colour and a drop of clear, milky or amber secretion,
 /// and strands draw on flower and cluster cards (fifteen Caryophyllales
 /// species, two more sundews and hemp, #243; 144 is #244).
-pub const GENERATOR_REVISION: u32 = 145;
+/// 146: an opened capsule shows its seeds (`seed_size`, from
+/// `fruit_seed_length_m`, where `fruit_seed_colour` is stated) packed
+/// round a placenta between its valves; a joined calyx is drawn from
+/// `sepal_length_m` and `calyx_lobe_length_m` (`sepals_fused`), a sheath
+/// standing close round the corolla tube, angled where `calyx_section`
+/// says so (`calyx_angled`), its teeth carrying on up its line; a calyx
+/// that breaks off round its base (`calyx_in_fruit` `circumscissile`)
+/// leaves a torn rim; a lobed blade takes its lobes, sinus depth, lobe
+/// tips (`leaf_lobe_apex`), width and petiole from its traits, acute lobes
+/// narrowing fast to a point; a joined calyx may swell low down
+/// (`calyx_swell`, from `calyx_base` `swollen`); a herb's stem leaf card
+/// holds its petiole unless the herb has a basal rosette; a map whose
+/// states tie reads its `else` formula's names; a nightshade's prickles
+/// stand among its stem hairs (`prickles`, from `spines` `prickles` and
+/// `prickle_density`) (145 is the
+/// Caryophyllales families, #243).
+pub const GENERATOR_REVISION: u32 = 146;
