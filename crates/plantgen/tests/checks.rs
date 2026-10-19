@@ -87,11 +87,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
-        "circaea-lutetiana",
-        "leaf_length_m",
-        "its stem leaves shrink upward to 0.4 of the longest (the forb's default), so the topmost blades draw about 2.3 cm against the 2.5 cm least Hooker gives",
-    ),
-    (
         "cirsium-vulgare",
         "leaf_shape",
         "its pinnatifid blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate as well as oblanceolate, against the lanceolate to oblong blades Abrams and Ferris give",
