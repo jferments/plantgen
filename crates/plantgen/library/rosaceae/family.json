@@ -136,6 +136,11 @@
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "A Rosaceae shrub grows as the flowering plants' shrubs do (angiosperms' shrub defaults, the built-in shrubs' medians): many slender stems from the ground and quick lateral growth, with the vigour, shade tolerance and steering every one of the family's eleven built-in shrubs was given by hand (flux 4, shade death 0.03, spur light 0.08, steer weight 0.4), which the flowering plants' shrubs take at half that vigour. The family's own program carries tree values for these (single trunk, thick twigs), which a shrub with no hand values took until 2026-10-19; every built-in Rosaceae shrub sets them by hand, so only new species change."
+        },
+        "rules": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The family's shrub internode, 0.06 of the usual height, is the median of its eleven built-in shrubs' hand values over the middle of their usual heights (2026-10-19)."
         }
       }
     }
