@@ -123,6 +123,13 @@ a 1.8 m figure beside it (a rod striped in 10 cm bands beside plants under
 | `--view three-quarter\|side\|oblique\|top` | Where the camera stands (default three-quarter); `oblique` (or `above`) looks down at 45 degrees from the south-east. |
 | `--focus X,Y,Z`, `--span M` | A close-up of M metres (default 0.5) round a point of the plant, metres from its foot with +Y up, as `plantc render --focus` frames one. |
 | `--quality draft\|standard` | Detail of the meshes (default standard). |
+| `--height PX` | Picture height; `--size` is then its width (default square). |
+| `--clear` | The plant alone on a transparent background, without its ground and scale: a cut-out for a web page or a sprite sheet. |
+| `--env open\|edge\|interior\|suppressed` | Where the plant grows (default its typical site). |
+| `--seed N` | The variant (default the spec's first seed). |
+| `--lod 0-3` | The level of detail, 0 the nearest (default 0). |
+| `--scale on\|off` | The 1.8 m figure or the rod beside the plant (default on). |
+| `--focus X,Y,Z[,SPAN]` | A close-up of the point X,Y,Z metres from the plant's foot (+Y up), SPAN metres tall (default 0.5). |
 | `--look review\|photo` | `review` (default) is fixed, so species compare fairly. `photo` adds soft shadows from the sun's real size, sky light from every direction, ambient occlusion, a filmic tone map and 3×3 supersampling. |
 
 ## Review sheets
@@ -148,8 +155,16 @@ cargo run --release -p plantlab -- batch jobs.jsonl --out pictures --gpu 1
 A batch file has one JSON object a line, for example
 `{"species": "acer-macrophyllum", "kind": "review", "look": "photo"}`;
 `kind` is `thumb` (the default) or `review`, and `size`, `day`, `age`,
-`view`, `quality`, `look`, `focus` (`"X,Y,Z"`) and `span` work as the options above. Lines starting
-with `#` are skipped. A picture whose sidecar records the same inputs (the
+`view`, `quality` and `look` work as the options above, as do `height`
+(a picture `size` wide and `height` tall), `env` (`open`, `edge`,
+`interior` or `suppressed`), `seed`, `lod` (0 to 3), `scale` (`"off"`
+leaves out the scale figure), `focus` (`"X,Y,Z"`, `[x, y, z]` or
+`[x, y, z, span]` in metres, a close-up of that point) and `span`.
+`"background": "clear"` draws the plant alone on a transparent
+background, with no ground or scale figure, and `name` names the files
+(`NAME.png` and `NAME.json`; letters, digits, `-`, `_` and `.`), so one
+batch can hold several pictures of a species. Lines starting with `#`
+are skipped. A picture whose sidecar records the same inputs (the
 spec, the generator's revision and every setting) is skipped, so a
 stopped batch picks up where it stopped; `--force` renders everything
 again.
