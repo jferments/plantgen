@@ -168,18 +168,8 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "drosera-filiformis",
-        "crown_width_max_m",
-        "as round-leaved sundew: Droseraceae's perennation tie draws six scapes, and they spread to 19 cm against 12 cm; #233 fixes the tie",
-    ),
-    (
-        "drosera-filiformis",
         "leaf_width_m",
         "its thread leaves, 1 mm wide and up to 25 cm long (FNA vol. 6), are drawn on cards no narrower than 0.03 of their length, so they draw 5 to 7.7 mm wide",
-    ),
-    (
-        "drosera-rotundifolia",
-        "crown_width_max_m",
-        "Droseraceae's perennation is a tie (rhizome or tuber, often), and on a tie the forb's stems rule takes its else without reading `flowering_stems`, so sundew draws six scapes where it states one or two and spreads to 19 cm against 15 cm; #233 fixes the tie",
     ),
     (
         "ferocactus-acanthodes-subsp-acanthodes",
