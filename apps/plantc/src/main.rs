@@ -2328,7 +2328,20 @@ fn named_point(
                         .get(usize::from(card.template))
                         .copied()
                         .unwrap_or(0.5);
-                    vector(card.base) + vector(card.heading) * (f64::from(card.length) * along)
+                    // On the card as it is bent, not on its straight
+                    // heading: a curled blade's middle lies millimetres
+                    // off that line, out of a few-millimetre frame.
+                    card.bend
+                        .point(
+                            vector(card.base),
+                            vector(card.heading),
+                            vector(card.left),
+                            f64::from(card.width) * 0.5,
+                            f64::from(card.length),
+                            0.0,
+                            along,
+                        )
+                        .0
                 })
                 .collect()
         }

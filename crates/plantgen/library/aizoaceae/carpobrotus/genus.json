@@ -41,7 +41,12 @@
       "high": 25
     },
     "ovary_position": "inferior",
-    "fruit_type": "berry"
+    "fruit_type": "berry",
+    "fruit_seed_colour": [
+      110,
+      75,
+      45
+    ]
   },
   "evidence": {
     "traits.life_span": {
@@ -143,6 +148,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): fruits berries, fleshy, edible, indehiscent."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): seeds to 1000, brown, obovoid, compressed, shiny; sRGB by eye for the word."
     }
   }
 }

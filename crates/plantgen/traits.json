@@ -890,6 +890,14 @@
       "values": ["alternate", "opposite", "whorled"],
       "why": "leaves at each node: one (alternate), a pair (opposite) or three or more (whorled)"
     },
+    "upper_leaf_arrangement": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["alternate", "opposite", "whorled"],
+      "optional": true,
+      "why": "leaves at each node toward the top of a stem, where a flora says they differ from those below (hemp's 'opposite proximally, alternate distally')"
+    },
     "leaves_per_whorl": {
       "group": "leaves",
       "organ": "leaf",
@@ -1230,6 +1238,29 @@
       "type": "colour",
       "optional": true,
       "why": "the colour of a glandular hair's own stalk where it is pigmented (a sundew's red tentacles), not clear over the organ"
+    },
+    "disc_gland_stalk_colour": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of a glandular hair's stalk in a blade's middle where it differs from those toward the margin (a round-leaved sundew's green disc tentacles among purple marginal ones)"
+    },
+    "gland_head_shape": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["round", "oval", "elongated"],
+      "optional": true,
+      "why": "the shape of a glandular hair's head, mid-blade: round, oval or elongated along the hair"
+    },
+    "marginal_gland_head_shape": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["round", "oval", "elongated"],
+      "optional": true,
+      "why": "the shape of the heads of a blade's marginal glandular hairs where it differs from mid-blade (a sundew's elongated marginal glands)"
     },
     "stinging_hairs": {
       "group": "stem_and_bark",
@@ -2992,6 +3023,14 @@
       "type": "enum",
       "values": ["terminal", "lateral", "both"],
       "why": "whether flowers end a shoot or sit beside its leaves"
+    },
+    "inflorescence_spacing": {
+      "group": "architecture",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["crowded", "spaced"],
+      "optional": true,
+      "why": "whether a plant's inflorescences crowd into the upper leaf axils of its flowering branches, one in each (hemp's congested pseudospikes), or stand apart, one ending each branch"
     },
     "flowering_shoots": {
       "group": "architecture",

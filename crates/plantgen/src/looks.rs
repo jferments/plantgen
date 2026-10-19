@@ -191,6 +191,22 @@ pub struct Hairs {
     /// in it and in `colour`, not clear over the organ's colour.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stalk: Option<[f32; 3]>,
+    /// The colour of a graded hair's stalk at the face's middle, linear
+    /// RGB, shading to `stalk` at its edge as the hairs lengthen
+    /// (`edge_length`): a sundew's green disc tentacles among purple
+    /// marginal ones (Darwin 1875). Absent, `stalk` throughout.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stalk_inner: Option<[f32; 3]>,
+    /// A glandular head's length along its hair, as a multiple of its
+    /// width, at the face's middle: 1 round, about 1.5 oval (a sundew's
+    /// disc glands). Absent, round.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub head_length: Option<f64>,
+    /// The same at the face's edge, graded between as the hairs' lengths
+    /// are: a sundew's elongated marginal glands. Absent, as at the
+    /// middle.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub edge_head_length: Option<f64>,
     /// Prickles standing among these on the young stems and stalks (an
     /// eggplant's "stout recurved prickles", Flora of China): a stout
     /// broad-footed cone of the skin, bent back toward the stem's foot,
@@ -266,6 +282,9 @@ impl Default for Hairs {
             count: None,
             edge_length: None,
             stalk: None,
+            stalk_inner: None,
+            head_length: None,
+            edge_head_length: None,
             prickles: None,
         }
     }
@@ -5956,6 +5975,7 @@ mod tests {
             ripening: 20.0,
             fall: 245.0,
             opening: 0.0,
+            stagger: 0.0,
             fruit_size: 1.0,
             bud_look: None,
             flower_look: Some(StageLook {
@@ -6174,6 +6194,7 @@ mod tests {
             ripening: 10.0,
             fall: 200.0,
             opening: 10.0,
+            stagger: 0.0,
             fruit_size: 1.0,
             bud_look: None,
             flower_look: None,
@@ -6518,8 +6539,8 @@ mod tests {
             organs: vec![organ(0, 0.1), organ(1, 0.04), organ(2, 0.2)],
             structures: Vec::new(),
         };
-        assert!(staged(&graph, &[1.0, 1.0, 1.0]).is_none());
-        let drawn = staged(&graph, &[1.0, 0.0, 0.5]).unwrap();
+        assert!(staged(&graph, &[1.0, 1.0, 1.0], &[]).is_none());
+        let drawn = staged(&graph, &[1.0, 0.0, 0.5], &[]).unwrap();
         assert_eq!(drawn.organs.len(), 2);
         assert_eq!(drawn.organs[0].size, 0.1);
         assert_eq!(drawn.organs[1].organ, 2);

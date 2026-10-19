@@ -50,7 +50,12 @@
       "berry": "usually",
       "achene": "rarely"
     },
-    "fruit_shape": "globose"
+    "fruit_shape": "globose",
+    "fruit_seed_colour": [
+      16,
+      14,
+      16
+    ]
   },
   "evidence": {
     "traits.life_span": {
@@ -127,6 +132,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 5, Phytolacca (eFloras, read 2026-10-19): berry oblate; the vocabulary's nearest state is globose."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca (eFloras, read 2026-10-19): seeds black, shiny, reniform, compressed. sRGB by eye for the word."
     }
   }
 }

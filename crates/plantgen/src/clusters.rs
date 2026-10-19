@@ -3661,6 +3661,7 @@ mod tests {
             ripening: 20.0,
             fall: 245.0,
             opening: 40.0,
+            stagger: 0.0,
             fruit_size: 1.0,
             bud_look: None,
             flower_look: Some(crate::looks::StageLook {

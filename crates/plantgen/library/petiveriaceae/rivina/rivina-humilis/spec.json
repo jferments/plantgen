@@ -236,7 +236,11 @@
       "max": 20,
       "typical": 14
     },
-    "flowering_branches": 2
+    "flowering_branches": 2,
+    "fruit_seed_length_m": {
+      "min": 0.002,
+      "max": 0.003
+    }
   },
   "evidence": {
     "taxon": {
@@ -578,6 +582,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read counts it: FNA: racemes terminal and from the upper axils."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): seeds lenticular, 2-3 mm, in thin, densely pubescent membranes; Flora of China ca. 2 mm."
     }
   },
   "provenance": {

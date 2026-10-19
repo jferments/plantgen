@@ -30,7 +30,13 @@
       "high": 5
     },
     "fruit_type": "capsule",
-    "capsule_valves": 3
+    "capsule_valves": 3,
+    "fruit_seed_length_m": 0.001,
+    "fruit_seed_colour": [
+      25,
+      22,
+      20
+    ]
   },
   "evidence": {
     "traits.growth_form": {
@@ -107,6 +113,16 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): 3[-5]-valved."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): seeds ca. 1 mm."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): seeds black, lustrous; sRGB by eye for the word."
     }
   }
 }

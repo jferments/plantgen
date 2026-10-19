@@ -61,9 +61,16 @@
 # honeysuckle's. The pair's internode is the program's last rule, so a
 # single leaf's node keeps its draws and no species renumbers.
 #
+# Revision 8 (climber flowers): with blooms 1, as the rules set it where
+# the taxon states its inflorescence's length, a fruiting node bears a
+# bloom instead of a lone fruit: its flower cluster, bloom_size long at
+# bloom_angle, which flowers and then fruits as its season says (a
+# Malabar spinach's spikes of pink flowers, then its black berries). The
+# node draws as before, so a vine with blooms 0 grows as it did.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem climber 7;
+lsystem climber 8;
 
 param vigour_spread;
 param shoots;                 # stems from the foot
@@ -98,6 +105,10 @@ param fruit_area;
 param pipe_tip;
 param pipe_organ;
 param pipe_rings;
+param blooms = 0;             # 1: a fruiting node bears a bloom, a flower cluster that fruits, not a lone fruit
+param bloom_size = 0.05;      # bloom card length
+param bloom_angle = 60;       # angle of a bloom to its shoot; past 90 it hangs
+param bloom_area = 0.5;       # leaf area of a bloom card 1 m long, m²
 
 module A(o, h, a) queries host, light;  # a shoot's tip: order, h years free, a 1 adult of its own habit
 module S queries vigour;      # the foot of a side shoot
@@ -106,6 +117,7 @@ module Sh(k, m);              # shoots k to k + m - 1 from the foot
 
 organ leaf leaf area leaf_area;
 organ fruit fruit area fruit_area;
+organ bloom flower area bloom_area;
 
 tool host@1 { reach = reach };
 tool vigour@1 { lambda = 0.5, alpha = 2 };
@@ -150,10 +162,11 @@ decompose M(n, o, w) : n > 0 && leaves_per_node < 2 ->
 decompose M(n, o, w) : n <= 0 -> ;
 module Mb(o, w);              # what a node may carry besides its leaf
 module Lb;                    # a node's bud, which may leaf again
+module Fr(s);                 # a fruiting node's fruit s long, or its bloom (revision 8)
 decompose Mb(o, w) : o < max_order && rand() < branch_chance ->
     [ /(uniform(0, 360)) &(branch_angle) S A(o + 1, 0, w > 1 ? 1 : 0) ];
 decompose Mb(o, w) : w > 0 && rand() < fruiting && (dioecious < 0.5 || sex >= 0.5) ->
-    [ &(150) fruit(fruit_size * uniform(0.8, 1.2)) ];
+    [ &(150) Fr(fruit_size * uniform(0.8, 1.2)) ];
 decompose Mb(o, w) -> ;
 
 # Leaves fall after leaf_years, fruit after a year; a side shoot with no
@@ -174,3 +187,9 @@ decompose M(n, o, w) : n > 0 && leaves_per_node >= 2 ->
     [ /(90) Lb ]
     Mb(o, w)
     M(n - 1, o, w);
+
+# A fruiting node's fruit, or with blooms 1 its bloom, as long for
+# bloom_size as the fruit is for fruit_size (revision 8). It draws nothing
+# at random, so every draw above keeps its site.
+decompose Fr(s) : blooms > 0.5 -> &(bloom_angle - 150) bloom(bloom_size * s / fruit_size);
+decompose Fr(s) -> fruit(s);

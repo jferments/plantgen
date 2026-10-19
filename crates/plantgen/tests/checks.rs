@@ -23,11 +23,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "amaranthus-retroflexus",
-        "perianth_parts",
-        "Caryophyllales' single whorl of 5 tepals (FNA vol. 4: tepals 5) is drawn as two whorls of 2 and 3, as a flower card's tepals stand in 2 to 6 whorls, so the measure counts 10",
-    ),
-    (
-        "amaranthus-retroflexus",
         "petiole_length_m",
         "the order's rules draw each leaf's petiole as its stated share of the card and shrink the uppermost leaves as a whole, so the small leaves under the panicle draw petioles of 8 to 9 mm against FNA's 1.5 to 5.5 cm for the stem leaves (inferred: FNA gives one petiole length for all)",
     ),
@@ -74,7 +69,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "basella-alba",
         "juvenile_period_years",
-        "the climber program first flowers in its second year, so Malabar spinach, which flowers in its first, is drawn flowering at 2 years; the climber program draws no flowers yet either",
+        "the climber program first flowers in its second year (a shoot turns adult once the vine is adult_age old, counted from 0), so Malabar spinach, which flowers in its first, is drawn flowering at 2 years",
     ),
     (
         "basella-alba",
@@ -90,36 +85,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "capsicum-annuum",
         "leaf_width_m",
         "the smaller leaf of each geminate pair is drawn half the larger and the sympodium's leaves shrink to three quarters upward, so the least draw about 1.2 cm wide, against the 2 to 6.4 cm Bailey gives the leaves of its varieties",
-    ),
-    (
-        "carpobrotus-edulis",
-        "flowering_months",
-        "flowering all year (FNA vol. 4) is stated February to December, as no season runs all year, and the herb program flowers each stem once from its season's start, so it draws February to September (inferred from the drawn seasons)",
-    ),
-    (
-        "carpobrotus-edulis",
-        "fruiting_months",
-        "its fruit ripens after its single drawn flowering (February to September), so it draws September and October against the June to October stated",
-    ),
-    (
-        "carpobrotus-edulis",
-        "leaf_habit",
-        "its leafy stems end in solitary flowers, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so ice plant's evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
-    ),
-    (
-        "carpobrotus-edulis",
-        "leaf_width_m",
-        "the herb program grades its leaves smaller towards the stem tips, so the youngest leaves draw 7.4 mm wide against the 1 to 1.5 cm the floras give grown leaves",
-    ),
-    (
-        "carpobrotus-edulis",
-        "perianth_parts",
-        "its flower's many narrow 'petals' are staminodes, 100 to 150 (FNA vol. 4), drawn as a spiral perianth, and a flower card draws at most 60 parts",
-    ),
-    (
-        "carpobrotus-edulis",
-        "phyllotaxis_pattern",
-        "its trailing stems' leaf pairs are drawn turned out to the stem's two sides in one plane, as a lying stem's leaves lie to the light, so the measure reads them superposed where the floras give decussate pairs, until a lying stem can set its pairs crossing (as whipplea's)",
     ),
     (
         "chloranthus-serratus",
@@ -167,11 +132,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
     ),
     (
-        "drosera-filiformis",
-        "leaf_width_m",
-        "its thread leaves, 1 mm wide and up to 25 cm long (FNA vol. 6), are drawn on cards no narrower than 0.03 of their length, so they draw 5 to 7.7 mm wide",
-    ),
-    (
         "ferocactus-acanthodes-subsp-acanthodes",
         "stem_form",
         "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
@@ -195,11 +155,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "hedyosmum-mexicanum",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
-    ),
-    (
-        "heracleum-maximum",
-        "inflorescence_bracts",
-        "a cluster draws its bracts only as a spathe, so the umbel's involucre of 5 to 10 narrow bracts, which fall early, is not drawn",
     ),
     (
         "heracleum-maximum",
@@ -247,16 +202,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
     (
-        "mirabilis-jalapa",
-        "inflorescence_bracts",
-        "its calyx-like involucre of 5 bracts under each flower (FNA vol. 4) is not drawn: a cyme's card draws no bracts unless a rule sets them, and no rule yet draws an involucre under a single flower",
-    ),
-    (
-        "mollugo-verticillata",
-        "perianth_parts",
-        "Caryophyllales' single whorl of 5 tepals (FNA vol. 4: tepals 5) is drawn as two whorls of 2 and 3, as a flower card's tepals stand in 2 to 6 whorls, so the measure counts 10",
-    ),
-    (
         "nicotiana-tabacum",
         "leaf_length_m",
         "its stem leaves shrink upward to a quarter of the longest (King's: smaller upward), so the topmost draw about 9 cm against the 1 to 2 ft King's gives, which it measures on the main leaves",
@@ -292,11 +237,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, so the crown keeps within the module limit, against Abrams's pinnae 1 to 3 cm",
     ),
     (
-        "phytolacca-americana",
-        "perianth_parts",
-        "Caryophyllales' single whorl of 5 tepals (FNA vol. 4: tepals 5) is drawn as two whorls of 2 and 3, as a flower card's tepals stand in 2 to 6 whorls, so the measure counts 10",
-    ),
-    (
         "piper-nigrum",
         "fruit_size_m",
         "the climber draws a fruiting spike as one fruit card, about 10 cm long (Flora of China: spikes to as long as the leaves), so the measure reads the spike against the 3 to 4 mm drupes on it",
@@ -313,23 +253,8 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "portulaca-oleracea",
-        "inflorescence_bracts",
-        "the 2 to 6 small bracts under its tip clusters (FNA vol. 4) are not drawn: a cluster's card draws no bracts unless a rule sets them",
-    ),
-    (
-        "portulaca-oleracea",
         "inflorescence_length_m",
         "its flowers sit 1 to 3 together at the stem tips, sessile, and the cluster is measured across its drawn flowers, 4 to 9 mm, against FNA's 8 to 15 mm, which includes the crowded leaves around them (inferred)",
-    ),
-    (
-        "portulaca-oleracea",
-        "phyllotaxis_pattern",
-        "its prostrate stems' leaves are drawn turned out to the stem's two sides, as a lying stem's leaves lie to the light, so the measure reads them distichous where the floras give alternate or subopposite, until a lying stem keeps its leaves' arrangement",
-    ),
-    (
-        "portulacaria-afra",
-        "crown_width_max_m",
-        "the shrub program sizes the crown from its height, and no rule yet takes a flora's greatest width (one tried at the order did not narrow the drawn crown), so elephant bush draws 3.4 to 4.2 m across against 3 m",
     ),
     (
         "program:broadleaf",
@@ -382,21 +307,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "rivina-humilis",
-        "fruiting_months",
-        "flowering all year (FNA vol. 4) is stated February to December, and the herb program flowers each stem once, so ripe berries draw July to December against the March to December stated",
-    ),
-    (
-        "rivina-humilis",
-        "leaf_habit",
-        "its leafy stems end in racemes, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so rougeplant's evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
-    ),
-    (
-        "rivina-humilis",
-        "perianth_parts",
-        "Caryophyllales' single whorl of 4 tepals (FNA vol. 4: tepals 4) is drawn as two whorls of 2 each, as a flower card's tepals stand in 2 to 6 whorls, so the measure counts 8",
-    ),
-    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -404,12 +314,12 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "sarcobatus-vermiculatus",
         "crown_width_max_m",
-        "the shrub program sizes the crown from its height, and no rule yet takes a flora's greatest width, so greasewood draws 2.7 to 3.5 m across against FNA's 1.8 m",
+        "a shrub's crown is now sized from its flora's greatest width, but greasewood, grown 20 years, overshoots its usual height (below) and spreads with it, 1.6 to 2.2 m across against FNA's 1.8 m",
     ),
     (
         "sarcobatus-vermiculatus",
         "height_typical_m",
-        "grown 20 years in the open it reaches 2.1 to 2.6 m, past the 1 to 2 m FNA gives as usual but within its 5 m at most; the shrub program's height comes from its age, not the flora's usual height",
+        "grown 20 years in the open it reaches 2.1 to 3.0 m, past the 1 to 2 m FNA gives as usual but within its 5 m at most: the shrubs' internode rule (a tenth of the usual height) is calibrated to their 12-year growth, and a rule cannot read the age a species is grown to",
     ),
     (
         "sassafras-albidum",
@@ -425,16 +335,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "solanum-melongena",
         "leaf_shape",
         "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Bailey and Wikipedia give",
-    ),
-    (
-        "tamarix-ramosissima",
-        "inflorescence_bracts",
-        "the small bract under each flower of its racemes (FNA vol. 6) is not drawn: a raceme's card draws no bracts unless a rule sets them",
-    ),
-    (
-        "tamarix-ramosissima",
-        "leaf_form",
-        "its scale leaves are drawn on branchlet sprig cards (Tamaricaceae's rule), and the measure reads a sprig card as a blade",
     ),
     (
         "tellima-grandiflora",
@@ -465,11 +365,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "whipplea-modesta",
         "shoot_leaves",
         "the angiosperms' default of 4 to 18 leaves a year's shoot is Critchfield's for woody shoots; a herb's trailing stem grows its 47 nodes in one year, so from #170's count of a year's growth it bears 94, until the measure or the default tells a lying herb's stem from a woody shoot",
-    ),
-    (
-        "whipplea-modesta",
-        "phyllotaxis_pattern",
-        "its trailing stems' leaf pairs are drawn turned out to the stem's two sides in one plane, as a trailing stem's leaves lie flat to the light, so the measure reads the pairs as superposed where Hydrangeaceae state decussate or spiral, until a lying stem can set its pairs crossing and twist each leaf flat",
     ),
 ];
 

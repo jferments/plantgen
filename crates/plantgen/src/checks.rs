@@ -1088,20 +1088,26 @@ fn year(grown: &Grown<'_>, tally: &mut Tally) {
         for day in 1..=365_u16 {
             let (flowers, ripe) = match &cohorts {
                 None => (own_flower, own_fruit),
-                Some(cohorts) => cohorts.iter().flat_map(|season| ranks.iter().map(move |&rank| (season, rank))).fold((false, false), |(flowers, ripe), (season, rank)| {
-                    match season.unit_stage(f64::from(day), rank) {
-                        crate::looks::Stage::Flower => (
-                            flowers
-                                || season.flower_look.is_some()
-                                || !matches!(look.shape, Shape::Fruit(_)),
-                            ripe,
-                        ),
-                        crate::looks::Stage::Fruit { unripe } => {
-                            (flowers || own_flower, ripe || (own_fruit && unripe < 0.5))
-                        }
-                        _ => (flowers, ripe),
-                    }
-                }),
+                Some(cohorts) => cohorts
+                    .iter()
+                    .flat_map(|season| ranks.iter().map(move |&rank| (season, rank)))
+                    .fold(
+                        (false, false),
+                        |(flowers, ripe), (season, rank)| match season
+                            .unit_stage(f64::from(day), rank)
+                        {
+                            crate::looks::Stage::Flower => (
+                                flowers
+                                    || season.flower_look.is_some()
+                                    || !matches!(look.shape, Shape::Fruit(_)),
+                                ripe,
+                            ),
+                            crate::looks::Stage::Fruit { unripe } => {
+                                (flowers || own_flower, ripe || (own_fruit && unripe < 0.5))
+                            }
+                            _ => (flowers, ripe),
+                        },
+                    ),
             };
             let month = month_of(day).to_string();
             if flowers {
@@ -2521,7 +2527,12 @@ fn reproductive(
                     .iter()
                     .filter(|sheet| matches!(sheet.kind, crate::clusters::SheetKind::Floral(_))),
             ) {
-                tally.add("floral_bract_length_m", organ.id, index, organ.size * sheet.length);
+                tally.add(
+                    "floral_bract_length_m",
+                    organ.id,
+                    index,
+                    organ.size * sheet.length,
+                );
                 tally.kind("bract_form", sheet.kind.form());
             }
             if matches!(
