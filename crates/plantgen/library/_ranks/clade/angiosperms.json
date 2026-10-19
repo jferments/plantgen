@@ -157,7 +157,21 @@
     },
     "generator.params.fork_height": {
       "map": {"stem_clump": {"single": 0}},
-      "why": "A single-stemmed woody plant stands on one trunk that never divides into equal stems."
+      "else": {"rule": "trunk_fork_height_m"},
+      "why": "A single-stemmed woody plant stands on one trunk that never divides into equal stems; one whose flora says how high its young stem first divides forks there into its main stems."
+    },
+    "generator.params.fork_clear": {
+      "needs": ["trunk_fork_height_m"],
+      "rule": "1",
+      "why": "A woody plant whose flora says how high its young stem first divides grows that stem single up to the fork, with no limb below it."
+    },
+    "generator.params.bloom_floor": {
+      "map": {"flowers_above_fork": {"true": {"rule": "1.3 * fork_height"}}},
+      "why": "A woody plant that flowers only on its growth above its first fork has no bloom below the highest its fork stands."
+    },
+    "generator.params.bloom_hang": {
+      "map": {"flower_posture": {"pendent": 0.8}},
+      "why": "A hanging flower on its own stalk turns most of the way from its stalk toward straight down, whichever way its shoot points; floras' pendent flowers hang from straight down to nearly level."
     },
     "generator.params.scape": {"map": {"cauline_leaves": {"none": 1, "reduced": 0, "like_basal": 0}}, "why": "A flowering stem without leaves is drawn as a leafless scape above the leaves at its foot: a thrift's or a sundew's, as a lily's."},
     "appearance.organs.*.inflorescence.branch.kind": {
@@ -271,6 +285,11 @@
       "template": "compound",
       "map": {"division_pattern": {"pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((pinnae - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnae / 2), 2, 40)) : (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))"}, "palmate": {"rule": "clamp(round(division_order >= 2 ? pinnae : leaflets), 3, 17)"}}},
       "why": "A compound leaf divided once draws its leaflets; one divided twice (or more), its pinnae. A pinnate leaf's count is the nearest odd one if it ends in a leaflet, else the nearest even one, up to 41; a palmate leaf draws 3 to 17."
+    },
+    "appearance.organs.*.shape.interjected": {
+      "template": "compound",
+      "map": {"interjected_leaflets": {"true": 0.25, "false": 0}},
+      "why": "An interruptedly pinnate leaf bears a small pair between each two of its pairs, and between its top pair and its end leaflet, each a quarter as long as the shorter pair beside it."
     },
     "appearance.organs.*.shape.pinnules": {
       "template": "compound",
@@ -489,8 +508,14 @@
     },
     "appearance.organs.*.shape.kept_calyx": {
       "template": "fruit",
-      "map": {"calyx_in_fruit": {"falling": 0, "persistent": 0.35, "accrescent": 0.9, "circumscissile": 0.2}},
-      "why": "A calyx that stays on the fruit is drawn under it, its lobes a third of the fruit's width and clasping its foot; one that grows on after flowering spreads in a star nearly as long as the fruit is wide; one that breaks off round its base leaves a rim a fifth of the fruit's width under it."
+      "map": {"calyx_in_fruit": {"falling": 0, "persistent": {"rule": "first(clamp(fruiting_calyx_length_m / first(fruit_width_m, fruit_size_m), 0.05, 2), 0.35)"}, "accrescent": {"rule": "first(clamp(fruiting_calyx_length_m / first(fruit_width_m, fruit_size_m), 0.05, 2), 0.9)"}, "circumscissile": 0.2}},
+      "why": "A calyx that stays on the fruit is drawn under it, its lobes as long, for the fruit's width, as floras measure the calyx in fruit; where they do not, a third of the fruit's width and clasping its foot, and one that grows on after flowering spreading in a star nearly as long as the fruit is wide; one that breaks off round its base leaves a rim a fifth of the fruit's width under it."
+    },
+    "appearance.organs.*.shape.kept_prickles": {
+      "template": "fruit",
+      "needs": ["calyx_in_fruit"],
+      "rule": "clamp(calyx_prickle_length_m / first(fruit_width_m, fruit_size_m), 0.005, 0.5)",
+      "why": "A prickly calyx kept as a cap on the fruit bears its prickles there, as long as floras measure them."
     },
     "appearance.organs.*.shape.kept_posture": {
       "template": "fruit",
@@ -598,7 +623,10 @@
     "rules.generator.params.flower_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.generator.params.suckers": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a shrub's stems from the words floras use for them (shrub habit, phase C batch 3 gaps, 2026-10-18): a few-stemmed shrub sends up 3 stems beside its first, a many-stemmed one 10, a thicket 16 over its years, from its base or its roots and rhizomes; counts chosen by the model, as floras give words, not counts. Only species that state stem_clump change."},
     "rules.generator.params.sucker_spread": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a shrub's stems from the words floras use for them (shrub habit, 2026-10-18): a clump's stems rise within a tenth to a fifth of its crown's radius, a thicket's over six tenths of it, as FEIS describes thickets spread by rhizomes; shares chosen by the model."},
-    "rules.generator.params.fork_height": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a single-stemmed woody plant (shrub habit, 2026-10-18): one trunk that never forks into equal stems."},
+    "rules.generator.params.fork_height": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a single-stemmed woody plant (shrub habit, 2026-10-18): one trunk that never forks into equal stems. Where its flora gives the height of the first fork (nightshades round 6, 2026-10-19), the stem divides there, each plant within three tenths of it (broadleaf's draw)."},
+    "rules.generator.params.fork_clear": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-19): in the initial vegetative stage the young seedling grows straight up on usually a single stalk, until it reaches its first main fork. A flora that gives a first fork's height describes a stem single up to it, so no lateral bud below the lowest a fork stands (0.7 of its height, broadleaf's draw) grows out; broadleaf revision 24."},
+    "rules.generator.params.bloom_floor": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws flowers only above the first fork (nightshades round 6, 2026-10-19), a choice of the model's: a fork stands at 0.7 to 1.3 of its height, so no shoot below 1.3 of it blooms; broadleaf revision 24."},
+    "rules.generator.params.bloom_hang": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen hangs a stalked flower (nightshades round 6, 2026-10-19), a choice of the model's: four fifths of the turn from its stalk toward straight down, so most hang near vertical and a few lean out, as Wikipedia ('Brugmansia suaveolens') has them hang from fully pendulous to nearly horizontal; broadleaf revision 24."},
     "rules.generator.params.scape": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flowering stem without leaves, a choice of the model's: the monocots' rule (visual forms Skill 5, 2026-10-15), stated for all flowering plants (Caryophyllales families, 2026-10-19) as floras say the same of thrift's and sundews' scapes."},
     "rules.appearance.organs.*.inflorescence.branch.kind": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen lays out a compound inflorescence's branches from the kind its taxon names them (Caryophyllales families, 2026-10-19), a choice of the model's: floras call Amaranthus a panicle of spikes (FNA vol. 4, Amaranthus), and without the kind a panicle's branches are racemes."},
     "rules.generator.params.lie": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen lays a herb's stems from the words floras use for their posture (shrub habit, 2026-10-18): a decumbent stem lies along the ground for half its leafy length, a prostrate or trailing one for three quarters of it, and the rest turns up to stand nearly upright; shares chosen by the model. Only species that state stem_posture change."},
@@ -612,7 +640,8 @@
     "rules.generator.params.bloom_stalk": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen stalks a woody plant's solitary flower (nightshades round 2, 2026-10-17): its stated pedicel length; broadleaf revision 17."},
     "rules.appearance.organs.*.shape.tube_reach": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a measured corolla tube (nightshades, 2026-10-17): its stated length over half the flower's stated width, so a trumpet is as long as the flora says, its limb as wide."},
     "rules.appearance.organs.*.shape.hang": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen holds a fruit (nightshades round 3, 2026-10-18), a choice of the model's: the fruit's line turned toward straight down by 1 (pendent), 0.5 (deflexed) or toward straight up by 0.8 (erect)."},
-    "rules.appearance.organs.*.shape.kept_calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a calyx kept on the fruit (nightshades round 2, 2026-10-17), a choice of the model's: persistent lobes a third of the fruit's width clasping its foot, accrescent ones 0.9 of it spreading in a star; a circumscissile one's rim a fifth of it (round 5, 2026-10-18)."},
+    "rules.appearance.organs.*.shape.kept_calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a calyx kept on the fruit (nightshades round 2, 2026-10-17), a choice of the model's: persistent lobes a third of the fruit's width clasping its foot, accrescent ones 0.9 of it spreading in a star; a circumscissile one's rim a fifth of it (round 5, 2026-10-18). Where a flora measures the calyx in fruit (round 6, 2026-10-19), its length over the fruit's width."},
+    "rules.appearance.organs.*.shape.kept_prickles": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a prickly kept calyx (nightshades round 6, 2026-10-19), a choice of the model's: three prickles down each clasping lobe's middle, as long as stated, a fifth as thick at the foot, standing out and leaning toward the fruit's tip; Flora of China (Solanum melongena) has the calyx often with ca. 3 mm prickles, Flora of British India (p. 235) the enlarged lobes often prickly. Only a clasping calyx bears them."},
     "rules.appearance.organs.*.shape.kept_lobes": {"evidence": "Authored", "source": "plantgen-authors", "note": "A kept calyx's lobes are the flower's sepals (nightshades round 2, 2026-10-17); the rim a circumscissile calyx leaves is torn into twice as many (round 5, 2026-10-18), a choice of the model's from photographs of a jimsonweed's frilled collar."},
     "rules.appearance.organs.*.shape.calyx_swell": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a calyx tube swollen at its base (nightshades round 5, 2026-10-19), a choice of the model's: a bulge of 0.3 of the mouth's radius, greatest a third of the way up and fading to nothing at the foot and the mouth; Wikipedia's jimsonweed calyx, swollen at the base."},
     "rules.appearance.organs.*.shape.calyx_angled": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an angled calyx tube (nightshades round 5, 2026-10-18), a choice of the model's: a ridge down each sepal's midrib standing out a seventh of the radius, a groove between; Flora of China's 5-angular, Britton and Brown's prismatic."},
@@ -657,6 +686,7 @@
       "source": "plantgen-authors",
       "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
     },
+    "rules.appearance.organs.*.shape.interjected": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an interruptedly pinnate leaf (nightshades round 6, 2026-10-19), a choice of the model's: Flora of North America (vol. 14, Solanum lycopersicum) has the tomato's 3(-5) pairs of leaflets interspersed with smaller interjected leaflets without measuring them; photographs show them a fifth to a third of the pairs beside them, so a quarter, one pair between each two pairs."},
     "rules.appearance.organs.*.shape.leaflets": {
       "evidence": "Authored",
       "source": "plantgen-authors",

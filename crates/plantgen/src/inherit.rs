@@ -1106,6 +1106,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("largest", Number),
                 ("lowest", Number),
                 ("terminal_size", Number),
+                ("interjected", Number),
                 ("outline", Outline),
                 ("widest", Number),
                 ("tip", Number),
@@ -1308,6 +1309,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("ripening", Colour),
                 ("threads", Number),
                 ("seed_size", Number),
+                ("kept_prickles", Number),
             ],
         ),
     ]

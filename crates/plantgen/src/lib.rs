@@ -1064,4 +1064,12 @@ pub mod venation;
 /// broad brown wedge along its petiole's base, so the crown's centre is
 /// clothed in leaf bases where the bare stem showed as a flat-topped
 /// cylinder (148 is cacti, #248).
-pub const GENERATOR_REVISION: u32 = 149;
+/// 150: broadleaf 24. A stalkless pendent bloom turns toward straight down
+/// (`bloom_hang`); a trunk that forks at a stated height grows no long shoot
+/// from below the fork (`fork_clear`) and blooms only above it
+/// (`bloom_floor`), as an angel's trumpet does. A once-pinnate leaf may
+/// carry small interjected leaflets between its pairs (`interjected`), as
+/// a tomato's does. A kept calyx is sized from its stated fruiting length
+/// (`kept_calyx`), and an armed one carries prickles up its lobes
+/// (`kept_prickles`), as an eggplant's cap does.
+pub const GENERATOR_REVISION: u32 = 150;

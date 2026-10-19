@@ -1736,6 +1736,12 @@ pub struct Compound {
     /// The terminal leaflet's length as a share of the longest lateral's.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub terminal_size: Option<f64>,
+    /// Small leaflets interjected between a once-pinnate leaf's pairs, as
+    /// a share of the length of the pairs they stand between: a tomato's
+    /// leaf "interspersed with smaller interjected leaflets"; unset or 0
+    /// for none. They are not counted among its leaflets.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub interjected: Option<f64>,
     /// Each leaflet's blade, as in [`Simple`]: its outline, or where it is
     /// widest, its tip and its base.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1806,6 +1812,7 @@ impl Default for Compound {
             largest: None,
             lowest: None,
             terminal_size: None,
+            interjected: None,
             outline: None,
             widest: None,
             tip: None,
@@ -2826,6 +2833,11 @@ pub struct Fruit {
     /// for a twelfth of it.
     #[serde(skip_serializing_if = "is_zero")]
     pub seed_size: f64,
+    /// Prickles on a kept calyx pressed to the fruit, each as long as
+    /// this share of the fruit's width, a few down each lobe's middle (an
+    /// eggplant's cap); 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub kept_prickles: f64,
 }
 
 impl Default for Fruit {
@@ -2859,6 +2871,7 @@ impl Default for Fruit {
             ripening: None,
             threads: 0.0,
             seed_size: 0.0,
+            kept_prickles: 0.0,
         }
     }
 }
@@ -3088,6 +3101,7 @@ struct FruitCard {
     ripening: Option<[f32; 3]>,
     threads: f64,
     seed_size: f64,
+    kept_prickles: f64,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -3126,6 +3140,7 @@ impl Default for FruitCard {
             ripening: None,
             threads: 0.0,
             seed_size: 0.0,
+            kept_prickles: 0.0,
             count: None,
             cluster: None,
             size: None,
@@ -3179,6 +3194,7 @@ impl TryFrom<FruitCard> for Fruit {
             ripening: card.ripening,
             threads: card.threads,
             seed_size: card.seed_size,
+            kept_prickles: card.kept_prickles,
         })
     }
 }
@@ -4061,6 +4077,7 @@ impl Shape {
                 }
                 check("threads", s.threads, 0.0, 1.0)?;
                 check("seed_size", s.seed_size, 0.0, 0.5)?;
+                check("kept_prickles", s.kept_prickles, 0.0, 0.5)?;
                 check("unripe", s.unripe, 0.0, 1.0)?;
                 check("apiculum", s.apiculum, 0.0, 0.3)?;
                 check("spine", s.spine, 0.0, 0.5)?;
@@ -4301,6 +4318,7 @@ impl Compound {
             ("largest", self.largest, 0.0, 1.0),
             ("lowest", self.lowest, 0.2, 1.0),
             ("terminal_size", self.terminal_size, 0.3, 2.0),
+            ("interjected", self.interjected, 0.0, 0.8),
             ("widest", self.widest, 0.15, 0.85),
             ("tip", self.tip, 0.0, 1.0),
             ("base", self.base, 0.0, 1.0),

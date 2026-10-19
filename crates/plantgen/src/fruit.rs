@@ -844,7 +844,14 @@ impl One {
             };
             match rise {
                 Some(rise) => self.calyx(0.06, lobes, fruit.kept_calyx, rise, accent, part, mesh),
-                None => self.clasp(lobes, fruit.kept_calyx, accent, part, mesh),
+                None => self.clasp(
+                    lobes,
+                    fruit.kept_calyx,
+                    fruit.kept_prickles,
+                    accent,
+                    part,
+                    mesh,
+                ),
             }
         }
         // Prickles as a thorn apple's: stout cones, broad at the foot, a
@@ -904,8 +911,19 @@ impl One {
 
     /// A kept calyx pressed to the fruit: `count` lobes, each `reach` of
     /// the fruit's width long, laid over its surface up from the stalk
-    /// and narrowing to a point, seen from either side.
-    fn clasp(&self, count: u32, reach: f64, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+    /// and narrowing to a point, seen from either side; and, where
+    /// `prickles` is above 0, three prickles that share of the fruit's
+    /// width long down each lobe's middle (an eggplant's cap "often with
+    /// ca. 3 mm prickles", Flora of China), drawn only at the finer steps.
+    fn clasp(
+        &self,
+        count: u32,
+        reach: f64,
+        prickles: f64,
+        colour: [f32; 3],
+        part: Part,
+        mesh: &mut Mesh,
+    ) {
         const STEPS: u32 = 6;
         const ACROSS: u32 = 4;
         let other = self.direction.cross(self.across);
@@ -970,6 +988,27 @@ impl One {
                         }
                     }
                 }
+            }
+        }
+        leaves::smooth_normals(mesh, first, first_index);
+        if prickles <= 0.0 || self.detail.around < 8 {
+            return;
+        }
+        let prickle = blooms::shade(colour, 0.85);
+        let first = mesh.positions.len();
+        let first_index = mesh.indices.len();
+        for k in 0..count {
+            let mid = std::f64::consts::TAU * f64::from(k) / f64::from(count.max(1));
+            let radial = self.across * math::cos(mid) + other * math::sin(mid);
+            // Up the lobe's middle, from near its foot to two thirds of
+            // the way to its tip, each standing out from the fruit and
+            // leaning a little toward its tip, as they grow.
+            for i in 1..=3 {
+                let along = 0.02 + (end - 0.02) * f64::from(i) / 4.0;
+                let base = surface(along, radial);
+                let axis = (radial + self.direction * 0.35).normalize_or(radial);
+                let length = self.width * prickles;
+                spine(base, axis, length, length * 0.18, prickle, part, mesh);
             }
         }
         leaves::smooth_normals(mesh, first, first_index);

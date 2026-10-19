@@ -226,9 +226,18 @@
 # The draws these make are the last rules', so every draw above keeps
 # its site.
 #
+# Revision 24 (nightshades round 6): a bloom, on a stalk of its own or
+# none, turns bloom_hang of the way toward straight down, as an angel's
+# trumpet's flowers hang below the shoot whatever way the shoot points;
+# and no shoot below bloom_floor blooms, as an angel's trumpet flowers only
+# on its growth above its first fork; and with fork_clear no bud on the
+# stem below the lowest a fork stands grows out into a long shoot, so the
+# young stem stands single up to its fork. All are off (0) unless a rule on
+# the taxon's characters sets them, so every other plant grows as it did.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 23;
+lsystem broadleaf 24;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -334,6 +343,10 @@ param bloom_stalk = 0;        # a solitary bloom's own stalk, metres; 0 for none
 # Leafy flowering shoots (revision 22).
 param bloom_pairs = 0;        # leaf pairs a shoot unfolds below its blooms in a year it flowers; 0: spur_pairs
 param bloom_years = 0;        # years from its bud's forming that a short shoot flowers; 0: all its life
+# Hanging blooms and blooms above the first fork (revision 24).
+param bloom_hang = 0;         # share of the turn a stalked bloom makes from its stalk toward straight down; 0: none
+param bloom_floor = 0;        # height, metres, below which no shoot blooms; 0: anywhere
+param fork_clear = 0;         # 1: no bud below the fork grows a long shoot, so the young stem stands single up to it
 # A many-stemmed shrub's or a thicket's stems (revision 20).
 param suckers = 0;            # stems the base sends up besides the first; 0: none, the first stem forks
 param sucker_rate = 2;        # new stems a year, until there are suckers
@@ -353,7 +366,7 @@ param dead_keep = 0;          # 1: a living tree's dead branches stand until the
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
 module A(split) queries light, vigour, space, position;
-module B queries light, vigour, space;    # a lateral bud or short shoot
+module B queries light, vigour, space, position;    # a lateral bud or short shoot
 module S queries vigour, position;                  # the base of a branch
 module M(n, u, l);                        # n nodes still to form this year, of u in the growth unit, each l long
 module Fk(n);                             # n stems still to start at a fork
@@ -364,7 +377,7 @@ module Wb(k);                             # k lateral buds still to place round 
 module Wk(k, s);                          # k short-shoot buds (s as K's) still to place round it
 module Wl(k);                             # k leaves still to place round it
 module Bt(n);                             # n blooms still to place at a long shoot's tip
-module K(s) queries light, vigour;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
+module K(s) queries light, vigour, position;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
 module D queries light, space;            # a dormant bud
 module R(n);                              # the base of a many-stemmed plant: n stems still to send up
 module Mp(n, u, l);                       # a flat shoot's nodes still to form this year, as M's
@@ -443,7 +456,7 @@ rule A(split) : split > 0 && (py >= split || (py <= 0 && split < internode / uni
 # below it (terminal flowering: the cluster ends the year's growth, so a
 # fork always stands on wood). Only lineages that set terminal_bloom
 # (revision 10; the maples' since G1).
-rule A(split) : terminal_bloom > 0 && blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1
+rule A(split) : terminal_bloom > 0 && blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1 && (bloom_floor <= 0 || py >= bloom_floor)
                 && space > 0 && light >= spur_light && (life <= 0 || t < life)
                 && rand() < terminal_bloom ->
     steer(sx, sy, sz, steer_weight)
@@ -503,9 +516,9 @@ rule A(split) : vigour >= 1 && space > 0 ->
 
 # A lateral bud breaks into a long shoot when it has the vigour and free
 # space; otherwise, in enough light, it leafs out as a short shoot.
-rule B : vigour >= bud_break && space > 0 -> A(0);
-rule B : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) && bloom_stalk <= 0 -> Q(bloom_pairs > 0 ? bloom_pairs : spur_pairs, age * spur_pairs) Bo(blooms) B;
-rule B : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0) -> Q(spur_pairs, age * spur_pairs) B;
+rule B : vigour >= bud_break && space > 0 && (fork_clear <= 0 || py >= 0.7 * fork_height) -> A(0);
+rule B : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) && bloom_stalk <= 0 && (bloom_floor <= 0 || py >= bloom_floor) -> Q(bloom_pairs > 0 ? bloom_pairs : spur_pairs, age * spur_pairs) Bo(blooms) B;
+rule B : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0 || (bloom_floor > 0 && py < bloom_floor)) -> Q(spur_pairs, age * spur_pairs) B;
 
 # One internode, turned a little at random, with a pair of buds and a pair
 # of leaves; the next pair is turned by divergence (a quarter turn:
@@ -570,6 +583,14 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0 && dormant_bu
 # Blooms spread round a short shoot's tip: a male plant's are male, set
 # with no random draws (they vary by their place), so every rule's draws
 # keep their sites.
+# A hanging bloom with no stalk of its own (revision 24): spread by its
+# place in the shoot, as the male blooms are, with no draw of its own, so
+# every rule's draws keep their sites, and turned bloom_hang of the way
+# toward straight down.
+decompose Bo(n) : n > 0 && bloom_stalk <= 0 && bloom_hang > 0 && (dioecious < 0.5 || sex >= 0.5) ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      steer(0, -1, 0, bloom_hang) bloom(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bo(n - 1);
 decompose Bo(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 && bloom_stalk <= 0 ->
     [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
       bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
@@ -634,8 +655,8 @@ rule S : shed_ratio > 0 && age > shed_age && qsum < shed_ratio * nseg -> %;
 rule K(s) : s <= 0 -> ;
 rule K(s) : life > 0 && t >= life -> ;
 rule K(s) : light < shade_death || age >= bud_years -> ;
-rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) && bloom_stalk <= 0 -> Q(bloom_pairs > 0 ? bloom_pairs : spur_pairs, age * spur_pairs) Bo(blooms) K(s);
-rule K(s) : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0) -> Q(spur_pairs, age * spur_pairs) K(s);
+rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) && bloom_stalk <= 0 && (bloom_floor <= 0 || py >= bloom_floor) -> Q(bloom_pairs > 0 ? bloom_pairs : spur_pairs, age * spur_pairs) Bo(blooms) K(s);
+rule K(s) : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0 || (bloom_floor > 0 && py < bloom_floor)) -> Q(spur_pairs, age * spur_pairs) K(s);
 
 # Dormant buds and reiteration: most of an old crown's leafy shoots come
 # from buds that wait on its limbs, not from the branching of its tips
@@ -714,15 +735,16 @@ decompose Bo(n) : n > 0 ->
       S Bs bloom(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
     Bo(n - 1);
 decompose Bo(n) -> ;
+decompose Bs : bloom_hang > 0 -> !(bloom_size * 0.03) F(bloom_stalk) steer(0, -1, 0, bloom_hang);
 decompose Bs -> !(bloom_size * 0.03) F(bloom_stalk);
 
 # A bud or short shoot whose blooms stand on stalks of their own grows a
 # sliver of wood the year it flowers, at its own depth, for the stalks to
 # stand on: a stalk drawn straight from the bud would be wood two orders
 # above the shoot that bears it, with none between.
-rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) ->
+rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) && (bloom_floor <= 0 || py >= bloom_floor) ->
     !(bloom_size * 0.04) F(0.002) Q(bloom_pairs > 0 ? bloom_pairs : spur_pairs, age * spur_pairs) Bo(blooms) K(s);
-rule B : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) ->
+rule B : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) && (bloom_floor <= 0 || py >= bloom_floor) ->
     !(bloom_size * 0.04) F(0.002) Q(bloom_pairs > 0 ? bloom_pairs : spur_pairs, age * spur_pairs) Bo(blooms) B;
 
 # Leaves in whorls of three or more (revision 18), a fuchsia's: the
