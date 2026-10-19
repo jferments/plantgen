@@ -44,7 +44,7 @@ PAD = 0.08
 def prompt(what: str) -> str:
     """For vision models without native pointing (Qwen-VL, API models, chat observers)."""
     return (f"Point to each of {what}. Give every one its own point, even where they overlap or are partly hidden; "
-            "point only at ones you can see. Answer with one JSON object and nothing else:\n"
+            "point only at ones you can see, and do not expect any particular number. Answer with one JSON object and nothing else:\n"
             '{"points": [[x, y], ...], "count": N}\n'
             "x and y are positions in the image from 0 to 1000 (0,0 is the top left corner). "
             'If the image does not show them at all, answer {"points": [], "count": null}.')
