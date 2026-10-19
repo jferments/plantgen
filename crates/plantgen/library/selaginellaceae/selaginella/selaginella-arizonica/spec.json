@@ -15,7 +15,12 @@
       "clump_radius": 0.1,
       "stem_lean": 80,
       "raceme": 0.07,
-      "leaf_angle": 25
+      "leaf_angle": 25,
+      "lie": 0.85,
+      "leaf_years": 3,
+      "leaf_length": 0.0023,
+      "leaf_top": 1,
+      "leaf_base": 1
     }
   },
   "growth": {
@@ -189,7 +194,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for Arizona spikemoss from Flora of North America vol. 2: a loose mat (stems 30, clump_radius 0.1) of prostrate stems (stem_lean 80) whose leaves are tightly appressed to ascending (leaf_angle 25), each fertile stem ending in a solitary strobilus 5-10 mm long, about a fourteenth of its length (raceme 0.07). The stem's length comes from stem_length_m and the leaf's from leaf_length_m through the class's rules."
+      "note": "Set by hand for Arizona spikemoss from Flora of North America vol. 2: a loose mat (stems 30, clump_radius 0.1) of prostrate stems (stem_lean 80, lying for most of their length, lie 0.85) whose leaves are tightly appressed to ascending (leaf_angle 25), each fertile stem ending in a solitary strobilus 5-10 mm long, about a fourteenth of its length (raceme 0.07). The stem's length comes from stem_length_m through the class's rules; its leaves are all one size (leaf_length 0.0023, leaf_top and leaf_base 1) within the 1.9-2.5 mm, and kept three years as an evergreen's (leaf_years 3)."
     },
     "appearance": {
       "evidence": "Authored",
