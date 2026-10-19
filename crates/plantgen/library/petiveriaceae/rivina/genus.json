@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Rivina",
+  "traits": {
+    "woodiness": "semi",
+    "life_span": "perennial",
+    "inflorescence": "raceme",
+    "units_per_inflorescence": {
+      "min": 5,
+      "max": 50
+    },
+    "flowering_position": "both",
+    "stem_cross_section": "angled",
+    "perianth_parts": 4,
+    "flower_merosity": 4,
+    "stamens": 4,
+    "carpels": 1,
+    "fruit_type": "berry",
+    "fruit_shape": "globose",
+    "fruit_colour_ripe": [
+      214,
+      30,
+      38
+    ]
+  },
+  "evidence": {
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): herbs or subshrubs, perennial, woody at base."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): perennial."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): axillary or terminal racemes."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): racemes 5-50-flowered."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): racemes axillary or terminal; Flora of China: terminal or axillary."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina (eFloras flora_id=2 taxon_id=128629, read 2026-10-19): stems erect, dichotomous, angulate; German Wikipedia: ribbed stems."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): sepals 4 (Flora of China: tepals 4, persistent)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): sepals 4, stamens 4."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): stamens 4."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): carpel 1, ovary 1-loculed; style present; stigma 1, capitate."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): fruits berries (FNA's note: called berries, drupes or just fruits; the latest study says berry)."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): berries subglobose."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): berries red to orange or yellow; Flora of China: red or orange; English Wikipedia: glossy, bright red. Red taken; sRGB by eye for the word."
+    }
+  }
+}

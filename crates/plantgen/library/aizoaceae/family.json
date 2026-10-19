@@ -16,8 +16,8 @@
       "palmate": "often"
     },
     "stipules": {
-      "true": "often",
-      "false": "often"
+      "false": "usually",
+      "true": "rarely"
     },
     "rosette": {
       "basal": "often",
@@ -31,16 +31,14 @@
     },
     "ovary_position": {
       "inferior": "usually",
-      "half_inferior": "often",
-      "superior": "often"
+      "half_inferior": "sometimes",
+      "superior": "sometimes"
     },
-    "hypanthium": {
-      "true": "often",
-      "false": "often"
-    },
+    "hypanthium": true,
     "woodiness": {
-      "woody": "often",
-      "herbaceous": "often"
+      "herbaceous": "often",
+      "semi": "often",
+      "woody": "sometimes"
     },
     "inflorescence": {
       "cyme": "usually",
@@ -62,20 +60,32 @@
     },
     "stamens": {
       "min": 5,
-      "max": 120,
-      "low": 1
+      "max": 500,
+      "low": 1,
+      "high": 700
     },
     "carpels": {
       "min": 2,
       "max": 5,
       "low": 1,
-      "high": 20
+      "high": 25
     },
     "leaf_incision": "none",
     "flowering_position": "both",
     "phyllotaxis_pattern": {
       "decussate": "usually",
       "spiral": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5,
+      "low": 3,
+      "high": 8
+    },
+    "leaf_margin": {
+      "entire": "usually",
+      "dentate": "rarely"
     }
   },
   "evidence": {
@@ -121,8 +131,53 @@
     },
     "traits.ovary_position": {
       "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "DELTA Aizoaceae (read 2026-10-17): ovary superior to inferior, no usual state. Our weighting by subfamily size (approximate, not read this session): the inferior ovary of Ruschioideae and Mesembryanthemoideae (~1,600 spp) outweighs the half-inferior ovaries of Aizooideae and Tetragonia and the superior ovary of Sesuvioideae (~200 together)."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Aizoaceae family account (Vivrette, Bleck & Ferren) (eFloras, read 2026-10-19): ovary superior, inferior or half-inferior; FOC: ovary inferior. Inferior kept as usual (mesembs); half-inferior lowered from often to sometimes, superior from often to sometimes, since neither flora makes them common."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Aizoaceae family account (Vivrette, Bleck & Ferren) (eFloras, read 2026-10-19): stipules usually absent, or free from or adnate to the petiole; FOC: true stipules absent, sometimes a stipule-like sheath at the petiole base."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Aizoaceae family account (Vivrette, Bleck & Ferren) (eFloras, read 2026-10-19): hypanthium present (stated for the family without exception); FOC: flowers perigynous or epigynous."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Aizoaceae family account (Vivrette, Bleck & Ferren) (eFloras, read 2026-10-19): calyx lobes (3-)4-5(-8); FOC tepals (4 or) 5 (-8)."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Aizoaceae family account (Vivrette, Bleck & Ferren) (eFloras, read 2026-10-19): stamens 1-500(-700); FOC 3 to many."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Aizoaceae family account (Vivrette, Bleck & Ferren) (eFloras, read 2026-10-19): pistil 1, 1-25-carpellate; stigmas 2-25."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Aizoaceae family account (Vivrette, Bleck & Ferren) (eFloras, read 2026-10-19): herbs, shrubs or subshrubs; FOC herbs, subshrubs or shrubs, succulent. Subshrubs (semi-woody) as common as herbs among the mesembs (Carpobrotus, Malephora, Drosanthemum)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Aizoaceae family account (eFloras, read 2026-10-19): margin entire, rarely with teeth; FNA Carpobrotus entire or dentate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Aizoaceae family account (eFloras, read 2026-10-19): leaves simple, rarely pinnate."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Aizoaceae family account (eFloras, read 2026-10-19): flowers actinomorphic."
     }
   }
 }

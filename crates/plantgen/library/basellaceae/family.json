@@ -4,10 +4,7 @@
   "name": "Basellaceae",
   "parent": "order/caryophyllales",
   "traits": {
-    "leaf_arrangement": {
-      "opposite": "often",
-      "alternate": "often"
-    },
+    "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_venation": {
       "pinnate": "often",
@@ -15,8 +12,8 @@
     },
     "stipules": false,
     "rosette": {
-      "basal": "often",
-      "none": "often"
+      "none": "usually",
+      "basal": "rarely"
     },
     "sexual_system": {
       "hermaphrodite": "usually",
@@ -28,7 +25,7 @@
     "inflorescence": {
       "raceme": "often",
       "spike": "often",
-      "panicle": "often"
+      "panicle": "sometimes"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": {
@@ -36,9 +33,22 @@
       "tepals": "often"
     },
     "flower_merosity": 5,
-    "stamens": 5,
+    "stamens": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 9
+    },
     "carpels": 3,
-    "perennation": {"rhizome": "often", "tuber": "often"}
+    "perennation": {
+      "rhizome": "often",
+      "tuber": "often"
+    },
+    "growth_form": "vine",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "fruit_type": "achene",
+    "calyx_in_fruit": "persistent"
   },
   "evidence": {
     "traits": {
@@ -46,6 +56,105 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Basellaceae: leaves opposite or alternate; leaves simple; veins pinnate or palmate; stipules absent; leaf rosettes basal or none; plants usually hermaphrodite, sometimes monoecious; ovary superior; floral cup present; stems herbaceous; flowers in racemes, in spikes or in panicles; flowers actinomorphic; perianth sepals and petals or tepals; parts of each whorl 5; stamens 5; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Basellaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Family file kept: FNA vol. 4 (read 2026-10-19) mentions the tubers of Ullucus and the tubers or starchy rhizomes of Anredera."
+    },
+    "traits.growth_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): vines (herbs outside the flora), perennial, succulent, mucilaginous, glabrous; FOC vol. 5: herbaceous vines or twining herbs, usually fleshy."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): leaves alternate; FOC vol. 5: simple, alternate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): leaves simple."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): blade margins entire (toothed outside the flora); FOC: entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): plants glabrous; FOC: glabrous."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): stipules absent."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): twining vines with leafy stems; neither FNA vol. 4 nor FOC vol. 5 describes a rosette. DELTA's basal state kept as rarely."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): succulent herbaceous vines."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): flowers usually bisexual; FOC: bisexual. Family file kept."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): spikes, racemes or panicles; FNA: racemose (spicate or paniculate outside the flora)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): flowers actinomorphic, small."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): sepals 2, petals (4-)5(-13) basally connate, but some authors take the 2 sepals for bracts and the petals for sepals; FOC vol. 5 follows that view: 2 persistent bracteoles and 5 perianth segments. Family file's either-way reading kept."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): perianth segments 5; stamens 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): stamens (4-)5(-9), on the petals, basally connate; FOC: 5, opposite the segments."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): pistil 3-carpellate, unilocular, 1 ovule; styles 3."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): ovary superior."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): perianth hypogynous, hypanthium present."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Basellaceae (eFloras, read 2026-10-19): fruits utricles wrapped in a dry or fleshy perianth; FOC: a utricle, dry or fleshy. The vocabulary has no utricle, so achene (a dry one-seeded fruit)."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): perianth segments persistent in fruit, the bracteoles too, often surrounding the utricle."
+    }
   }
 }

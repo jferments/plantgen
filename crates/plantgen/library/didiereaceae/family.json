@@ -4,34 +4,120 @@
   "name": "Didiereaceae",
   "parent": "order/caryophyllales",
   "traits": {
-    "leaf_arrangement": "alternate",
+    "leaf_arrangement": {
+      "opposite": "often",
+      "alternate": "often"
+    },
     "leaf_division": "simple",
     "stipules": false,
     "sexual_system": {
       "dioecious": "often",
-      "polygamous": "often"
+      "hermaphrodite": "often",
+      "polygamous": "rarely"
     },
     "ovary_position": "superior",
     "woodiness": "woody",
     "inflorescence": "cyme",
     "perianth": "sepals_and_petals",
     "stamens": {
-      "min": 8,
-      "max": 8,
-      "high": 10
+      "min": 4,
+      "max": 10
     },
     "carpels": {
       "min": 3,
       "max": 3,
       "low": 2,
       "high": 4
-    }
+    },
+    "life_span": "perennial",
+    "short_shoots": true,
+    "flower_symmetry": "actinomorphic",
+    "fruit_type": {
+      "capsule": "usually",
+      "samara": "sometimes"
+    },
+    "calyx_in_fruit": "persistent"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Didiereaceae: leaves alternate; leaves simple; stipules absent; plants dioecious or polygamous; ovary superior; stems woody; flowers in cymes; perianth sepals and petals; stamens 8 (-10); carpels (2-) 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): succulent, thick-stemmed shrubs or trees, often cactus-like in build."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): shrubs and trees, so perennial; English Wikipedia: Didiereoideae shrubs and trees 2-20 m."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Kept from the library family file (Watson and Dallwitz DELTA data): leaves simple; nothing read contradicts it."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): long-shoot leaves small and soon falling; the short-shoot leaves stand in decussate (opposite) pairs and last one growing season. English Wikipedia 'Didiereaceae': in Didiereoideae the short-shoot leaves come singly or in pairs. So both, not alternate alone."
+    },
+    "traits.short_shoots": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): branches start as long shoots, and short shoots develop in their leaf axils; leaves and spines come from these areole-like short shoots."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): German Wikipedia 'Portulacaria afra' says stipules absent; the family file's DELTA 'stipules absent' is kept."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): Calyptrotheca and Portulacaria have only bisexual flowers; Decarya female and bisexual; all other genera (Didiereoideae) unisexual and dioecious. By species roughly 11 dioecious to 9 bisexual, so both 'often'."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): carpels united into a superior, one-chambered ovary."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): inflorescences from the areoles, branching forked or umbel-like (cymose); the file's 'cyme' kept."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Didiereaceae' (read 2026-10-19, lower trust): Didiereoideae flowers radially symmetric; German Wikipedia: Portulacaria flowers small and regular."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): flowers with a double perianth: only two sepals, free and often unequal; petals four (Didiereoideae) or five, free or (Portulacaria) united. English Wikipedia instead calls them four tepals with two basal bracts in Didiereoideae."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): Didiereoideae two whorls of four or five stamens; Ceraria one whorl of five; Portulacaria mostly four to seven, rarely to ten; Calyptrotheca many (uncounted)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): usually three, rarely two or four carpels, a long style with a usually three-lobed stigma; matches the file's (2-)3(-4)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): a dry, more or less three-angled capsule with one seed, wrapped in the persistent pair of sepals; in Portulacaria (German Wikipedia 'Portulacaria') the fruit is a dry three-winged fruit that does not open, read here as a samara."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): the fruit is enclosed by the persistent pair of sepals."
     }
   }
 }

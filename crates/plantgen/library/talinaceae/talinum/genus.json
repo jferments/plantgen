@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Talinum",
+  "traits": {
+    "growth_form": "forb",
+    "woodiness": "herbaceous",
+    "life_span": "perennial",
+    "perennation": "tuber",
+    "stem_posture": "erect",
+    "stem_hairs": "glabrous",
+    "leaf_hairs": "glabrous",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "leaf_form": "blade",
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.07
+    },
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 15,
+      "max": 35
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "high": 5
+    },
+    "fruit_type": "capsule",
+    "capsule_valves": 3
+  },
+  "evidence": {
+    "traits.growth_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): herbs [or subshrubs], perennial, caulescent."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): herbs, stems sometimes suffrutescent."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): perennial; Flora of China: annual or perennial, or subshrubs."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): roots tuberous, fleshy to woody; German Wikipedia: a tuberous caudex, some species dying back above ground in the resting season."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): stems erect, simple or branching."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): glabrous."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): glabrous."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): leaves alternate or subopposite."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): blade broadly planate, succulent or semisucculent."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): blade 1-7 cm wide."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): petals fugacious, 5 or rarely more."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): stamens 15-35."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): gynoecium 3[-5]-carpellate."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): fruits capsular, tardily dehiscent from the apex."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): 3[-5]-valved."
+    }
+  }
+}

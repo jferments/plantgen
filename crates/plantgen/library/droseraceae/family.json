@@ -17,18 +17,16 @@
       "false": "often"
     },
     "rosette": {
-      "basal": "often",
-      "none": "usually"
+      "basal": "usually",
+      "none": "often"
     },
     "sexual_system": "hermaphrodite",
     "ovary_position": "superior",
-    "hypanthium": {
-      "true": "often",
-      "false": "often"
-    },
+    "hypanthium": false,
     "woodiness": "herbaceous",
     "inflorescence": {
       "scorpioid": "usually",
+      "raceme": "rarely",
       "solitary": "rarely"
     },
     "flower_symmetry": "actinomorphic",
@@ -36,7 +34,9 @@
     "fruit_type": "capsule",
     "flower_merosity": {
       "min": 4,
-      "max": 5
+      "max": 5,
+      "typical": 5,
+      "high": 8
     },
     "stamens": {
       "min": 5,
@@ -46,11 +46,26 @@
     "carpels": {
       "min": 3,
       "max": 3,
+      "low": 2,
       "high": 5
     },
     "vernation": "circinate",
-    "flowering_position": "terminal",
-    "perennation": {"rhizome": "often", "tuber": "often"}
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "perennation": {
+      "rhizome": "often",
+      "tuber": "often"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "glandular_hairs": {
+      "dense": "usually"
+    },
+    "perianth_fused": false
   },
   "evidence": {
     "traits": {
@@ -60,19 +75,123 @@
     },
     "traits.vernation": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 378, family Droseraceae: vernation circinate or folded; read as \"circinate\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): blade infolded or circinate in vernation; FOC juvenile leaf blade circinate."
     },
     "traits.flowering_position": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 378, family Droseraceae: flowering position terminal; read as \"terminal\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): inflorescences terminal umbel-like cymes in Dionaea (one species) but lateral circinate or scorpioid cymes in Drosera (nearly all species); FOC flowers axillary, lateral or terminal."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Droseraceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Droseraceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."
+    },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson (2019) p. 378: scorpioid, circinately coiled one-sided cymes; flowers single in Aldrovanda. Watson and Dallwitz's DELTA gave solitary or in cymes. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Droseraceae family account (eFloras, read 2026-10-19): flowers usually borne in a cincinnus (a coiled one-sided cyme), rarely in a raceme or solitary. Agrees with the family file; raceme added."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): leaves in basal rosettes (alternate-cauline in Drosera intermedia); FOC leaves basal and rosulate, or alternate, rarely whorled. Both floras put the rosette first."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Droseraceae family account (eFloras, read 2026-10-19): leaves basal and rosulate, or alternate, rarely whorled (Aldrovanda). Agrees with the family file."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): perianth and androecium hypogynous; FOC stamens hypogynous."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): pistil 3-5-carpellate; FOC 2-5-carpellate; Drosera 3-carpellate (FNA)."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): stamens usually 5 (Drosera) or (10-)15(-20) (Dionaea); FOC 4 or 5. Agrees with the family file."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Droseraceae family account (eFloras, read 2026-10-19): 4- or 5-merous; sepals 4 or 5 (or 6-8). FNA sepals 5, petals 5."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): herbs, annual or perennial; FOC perennial or annual. Perennial first: the North American species are mostly perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): herbs."
+    },
+    "traits.glandular_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): blades bearing mucilage-tipped, irritable, multicelled hairs (Drosera) or a hinged trap (Dionaea); FOC sticky glandular hairs or sensitive hairs."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): petals 5, distinct."
+    },
+    "rules.appearance.organs.leaf.hairs.glands.colour": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Droseraceae (read 2026-10-19), and Flora of North America vol. 6, Drosera: leaves covered with stalked glandular hairs (tentacles) secreting sticky mucilage, often red. That the stalk and head share one colour is the model's."
+    },
+    "rules.appearance.organs.basal.hairs.glands.colour": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "As for the stem leaves: a sundew's rosette leaves carry the same red tentacles (FNA vol. 6, Drosera)."
+    },
+    "rules.appearance.organs.leaf.hairs_beneath.glands.density": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Drosera (read 2026-10-19): leaf blades with stalked glands on the adaxial surface and margin; the abaxial surface glabrous."
+    },
+    "rules.appearance.organs.basal.hairs_beneath.glands.density": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "As for the stem leaves (FNA vol. 6, Drosera): glands on the upper surface and margin only."
+    }
+  },
+  "rules": {
+    "appearance.organs.leaf.hairs.glands.colour": {
+      "colour": "hair_colour",
+      "why": "A sundew's hairs are its tentacles: each a stalk with a sticky gland on top, both in the hairs' stated colour, red in most sundews, not the pale resin of other glandular hairs."
+    },
+    "appearance.organs.basal.hairs.glands.colour": {
+      "colour": "hair_colour",
+      "why": "A sundew's rosette leaves bear the same tentacles, in the hairs' stated colour."
+    },
+    "appearance.organs.leaf.hairs_beneath.glands.density": {
+      "map": {
+        "glandular_hairs": {
+          "sparse": 0,
+          "scattered": 0,
+          "dense": 0
+        }
+      },
+      "why": "A sundew's tentacles stand on the blade's upper face and rim only; its underside is bare."
+    },
+    "appearance.organs.basal.hairs_beneath.glands.density": {
+      "map": {
+        "glandular_hairs": {
+          "sparse": 0,
+          "scattered": 0,
+          "dense": 0
+        }
+      },
+      "why": "A sundew's rosette leaves bear tentacles on the upper face and rim only."
     }
   }
 }

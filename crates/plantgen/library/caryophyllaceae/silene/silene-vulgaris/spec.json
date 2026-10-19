@@ -1,0 +1,541 @@
+{
+  "schema": 1,
+  "id": "silene-vulgaris",
+  "taxon": {
+    "scientific_name": "Silene vulgaris",
+    "common_name": "bladder campion",
+    "family": "Caryophyllaceae",
+    "genus": "Silene",
+    "plant_name_id": 2487840
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "forb",
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "stem_posture": "ascending",
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.8,
+      "high": 1.0
+    },
+    "height_max_m": 1.0,
+    "crown_width_max_m": 0.6,
+    "stem_cross_section": "terete",
+    "stem_hairs": "glabrous",
+    "leaf_hairs": "glabrous",
+    "rosette": "none",
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "leaf_shape": {
+      "lanceolate": "often",
+      "oblong": "often",
+      "oblanceolate": "often",
+      "ovate": "sometimes",
+      "linear": "rarely"
+    },
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.08,
+      "high": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.005,
+      "max": 0.03,
+      "high": 0.045
+    },
+    "petiole_length_m": 0,
+    "leaf_base_shape": "rounded",
+    "leaf_apex": {
+      "acute": "often",
+      "acuminate": "often"
+    },
+    "leaf_margin": "entire",
+    "leaf_colour": [
+      150,
+      172,
+      150
+    ],
+    "stem_colour": [
+      150,
+      168,
+      150
+    ],
+    "inflorescence": "cyme",
+    "units_per_inflorescence": {
+      "min": 5,
+      "max": 40
+    },
+    "pedicel_length_m": {
+      "min": 0.005,
+      "max": 0.03
+    },
+    "flower_posture": {
+      "spreading": "often",
+      "nodding": "often"
+    },
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "flower_merosity": 5,
+    "perianth": "sepals_and_petals",
+    "petal_length_m": {
+      "min": 0.015,
+      "max": 0.018
+    },
+    "petal_shape": "obovate",
+    "petal_apex": "bilobed",
+    "flower_colour": [
+      250,
+      250,
+      244
+    ],
+    "sepal_length_m": {
+      "min": 0.009,
+      "max": 0.012,
+      "high": 0.016
+    },
+    "calyx_colour": [
+      200,
+      214,
+      182
+    ],
+    "stamens": 10,
+    "stamen_exsertion": "exserted",
+    "anther_colour": [
+      120,
+      80,
+      140
+    ],
+    "carpels": 3,
+    "pistil_colour": [
+      225,
+      228,
+      200
+    ],
+    "sexual_system": "polygamous",
+    "fruit_type": "capsule",
+    "fruit_shape": {
+      "globose": "often",
+      "ovoid": "often"
+    },
+    "fruit_size_m": 0.008,
+    "capsule_valves": 6,
+    "calyx_in_fruit": "accrescent",
+    "fruiting_calyx_posture": "clasping",
+    "fruit_colour_ripe": [
+      190,
+      165,
+      115
+    ],
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 2700,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "mesic",
+      "dry"
+    ],
+    "habitat_notes": "Roadsides, waste ground, gravel pits and shores, arable land (FNA, introduced); meadows and scrub (FOC).",
+    "shoot_leaves": {
+      "min": 10,
+      "max": 24,
+      "typical": 16
+    },
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "flowering_branches": 2
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a loose clump of grey-green leafy stems from a taprooted crown, each ending in a forking cyme of white flowers with inflated bladder calyces."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.6 m tall at 3 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a loose clump of grey-green leafy stems from a taprooted crown, each ending in a forking cyme of white flowers with inflated bladder calyces."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): plants short-lived perennial herbs with a woody caudex: a forb."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): plants short-lived perennial; FOC herbs perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): stems herbaceous from a woody caudex and stout taproot (FOC roots slightly lignified)."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): stems several to many, erect, branched and decumbent at the base: curving up from a leaning foot."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): stems 20-80 cm. FOC gives 40-100 cm tall, taken as the high; Wikipedia says to 60 cm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): 40-100 cm tall."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a clump of several to many decumbent-based stems from one caudex spreads about as wide as the plant is tall, to some 0.6 m."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): stems terete or sometimes angular; no angles named for S. vulgaris."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): glabrous, rarely pubescent; FOC glabrous throughout."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): glabrous, rarely pubescent."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): leaves mainly cauline."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): leaves 2 per node."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Caryophyllaceae family account (eFloras, read 2026-10-19): leaves opposite, decussate."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): blade broadly oblong to oblanceolate or lanceolate, rarely nearly linear; FOC lanceolate to ovate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): blade 2-8 cm long; FOC 4-10 cm, the 10 kept as high."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): blade 5-30 mm wide; FOC 1-3(-4.5) cm, the 4.5 as high."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): leaves sessile, almost clasping."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): base round; FOC: proximal leaves attenuate at base, distal leaves cuneate and slightly clasping."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): apex acute to acuminate; FOC acuminate or acute."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Caryophyllaceae family account (Rabeler & Hartman) (eFloras, read 2026-10-19): margins entire."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): plants glaucous; FOC 'grayish green'; sRGB by eye for the words."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): stems usually gray; with FNA's glaucous plant, a grey-green; sRGB by eye for the words."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): inflorescence an open dichasial cyme; FOC many-flowered dichasia, sometimes thyrsoid."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): cyme 5-40-flowered."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): pedicels 0.5-3 cm; FOC: shorter than or about equal to the calyx."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): flowers sometimes spreading or slightly nodding."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): flowers 15-20 mm across; Wikipedia: to 1.8 cm wide."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): calyx 5-lobed, petals 5."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): sepals joined into a tube; petals 5, clawed."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): petals 1.5-1.8 cm; FNA petals about twice as long as the calyx."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): limb obovate; FOC limb obovate, lobes narrowly obovate."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): limb emarginate to 2-lobed; FOC deeply bifid to the base of the limb."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): petals white; sRGB by eye for the word."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): calyx 9-12 mm in flower, 12-18 mm in fruit; FOC 1.3-1.6 cm, the 16 mm as high."
+    },
+    "traits.calyx_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): calyx pale green, rarely purplish (FOC usually violet-tinged), papery and inflated with a net of veins; sRGB by eye for 'pale green'."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): stamens 10."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): stamens exserted by 2-4 mm; FOC stamens and styles prominently exserted."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): anthers violet; sRGB by eye for the word."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): styles 3; FOC styles 3."
+    },
+    "traits.pistil_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): styles cream to greenish, at most slightly pink-tinged; sRGB by eye for the words."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): some plants bear bisexual flowers, others pistillate flowers only (gynodioecious). The vocabulary has no gynodioecy; 'polygamous' (bisexual and unisexual flowers) is the nearest state."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): capsules ovoid to globose, opening by 6 teeth."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): capsules ovoid to globose; FOC subglobose."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): capsule subglobose, about 8 mm across, shorter than the calyx. (FNA: capsule equalling the calyx.)"
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): capsule opening by 6 teeth."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): calyx inflated, 9-12 mm in flower growing to 12-18 x 7-11 mm in fruit: it enlarges round the capsule."
+    },
+    "traits.fruiting_calyx_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): the inflated calyx encloses the capsule (capsule equalling the calyx; FOC capsule shorter than the calyx)."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a ripe dry capsule straw to pale brown inside the papery bladder; sRGB by eye."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): flowering June-August, fruiting August-September; FNA flowering summer-fall in North America, so September added."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): fruiting August-September; October added for FNA's fall flowering."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): 0-2000 m in North America."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene vulgaris (eFloras, read 2026-10-19): 200-2700 m in China; FNA to 2000 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): roadsides, waste ground, gravel pits, arable land: open places."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): roadsides, gravel pits and shores, arable land; FOC meadows and scrub. Read as mesic to dry."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): habitats as listed; introduced across most of North America from Europe."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA and Flora of China describe leafy stems 20-80 cm with opposite pairs, so about 8 pairs on a stem."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a loose forking cyme of 5-30 flowers on 1-2 cm pedicels, so 5-15 cm."
+    },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: the cyme forks from the top one or two pairs of leaves."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}
