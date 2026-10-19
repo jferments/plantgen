@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Homalocephala",
+  "parent": "subfamily/cactoideae",
+  "traits": {
+    "stem_form": "globose",
+    "stem_apex": "flat",
+    "tubercles": false,
+    "fruit_surface": "woolly",
+    "corolla_shape": "funnelform",
+    "flower_zone": "crown"
+  },
+  "evidence": {
+    "traits.stem_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocactus: Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. WCVP v16 accepts Homalocephala (Vargas and Bárcenas 2018) for the flora's three species of Echinocactus, E. horizonthalonius, polycephalus and texensis, so the flora's Echinocactus in its area is this genus."
+    },
+    "traits.stem_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocactus: Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. WCVP v16 accepts Homalocephala (Vargas and Bárcenas 2018) for the flora's three species of Echinocactus, E. horizonthalonius, polycephalus and texensis, so the flora's Echinocactus in its area is this genus."
+    },
+    "traits.tubercles": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocactus: Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. WCVP v16 accepts Homalocephala (Vargas and Bárcenas 2018) for the flora's three species of Echinocactus, E. horizonthalonius, polycephalus and texensis, so the flora's Echinocactus in its area is this genus."
+    },
+    "traits.fruit_surface": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocactus: Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. WCVP v16 accepts Homalocephala (Vargas and Bárcenas 2018) for the flora's three species of Echinocactus, E. horizonthalonius, polycephalus and texensis, so the flora's Echinocactus in its area is this genus."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocactus: Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. WCVP v16 accepts Homalocephala (Vargas and Bárcenas 2018) for the flora's three species of Echinocactus, E. horizonthalonius, polycephalus and texensis, so the flora's Echinocactus in its area is this genus."
+    },
+    "traits.flower_zone": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocactus: Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. WCVP v16 accepts Homalocephala (Vargas and Bárcenas 2018) for the flora's three species of Echinocactus, E. horizonthalonius, polycephalus and texensis, so the flora's Echinocactus in its area is this genus."
+    }
+  }
+}

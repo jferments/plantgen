@@ -983,7 +983,28 @@ pub mod venation;
 /// place of bands at each year's top; Phoenix keeps its broad leaf bases
 /// for the trunk's life, standing close to the stem (141 is full-quality
 /// part meshes, #237).
-/// 143: an opened capsule shows its seeds (`seed_size`, from
+/// 143: a cactus's central spine form draws its spines: curved and twisted
+/// centrals bend (`curve`), a hooked principal central turns back as a
+/// fishhook (`hook`), in place of hooks and curves set by hand; a woolly
+/// pericarpel and fruit (`fruit_surface` woolly: Homalocephala,
+/// Astrophytum); a flat stem top (`stem_apex` flat); white hair flecks
+/// between the areoles (new trait `stem_flecks`, body `flecks`); an
+/// apex's woolly cap closes over the tip; a reduced flower with more than
+/// 12 stamens draws a ring of anthers; a cactus's floral tube wears its
+/// pericarpel's colour and skin and flares near its mouth, over a
+/// pericarpel shortened to the ovary's swelling; a column stem's sink follows
+/// its height curve, so a seedling's top shows (142 is palm
+/// trunks, #240).
+/// 144: branching form (broadleaf 23): a shoot without a terminal bud
+/// dies back each year and its topmost lateral carries it on, sometimes
+/// as a fork (`tip_abort`, from `terminal_bud`); a plagiotropic plant's
+/// limbs carry flat sprays (`plagio`, from `branch_orientation`); a
+/// tree's dead branches stand until they fall (`dead_keep`); a
+/// small-leaved tree's or shrub's long shoots set their leaves no farther
+/// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
+/// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
+/// cactus genera, #239).
+/// 145: an opened capsule shows its seeds (`seed_size`, from
 /// `fruit_seed_length_m`, where `fruit_seed_colour` is stated) packed
 /// round a placenta between its valves; a joined calyx is drawn from
 /// `sepal_length_m` and `calyx_lobe_length_m` (`sepals_fused`), a sheath
@@ -997,5 +1018,5 @@ pub mod venation;
 /// holds its petiole unless the herb has a basal rosette; a map whose
 /// states tie reads its `else` formula's names; a nightshade's prickles
 /// stand among its stem hairs (`prickles`, from `spines` `prickles` and
-/// `prickle_density`) (142 is palm trunks, #240).
-pub const GENERATOR_REVISION: u32 = 143;
+/// `prickle_density`) (144 is the branching form, #244).
+pub const GENERATOR_REVISION: u32 = 145;
