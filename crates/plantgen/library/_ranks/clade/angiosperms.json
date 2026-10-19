@@ -144,8 +144,8 @@
       "why": "The outer base colour reaches as far along each petal or tepal as its flora says ('green abaxially on proximal 2/5-1/2')."
     },
     "generator.params.bloom_stalk": {
-      "map": {"inflorescence": {"solitary": {"rule": "pedicel_length_m"}}},
-      "why": "A tree's or shrub's solitary flower hangs or stands on its own stalk, as long as its flora measures it; a cluster's flowers keep their stalks in the cluster."
+      "map": {"inflorescence": {"solitary": {"rule": "first(pedicel_length_m, peduncle_length_m)"}}},
+      "why": "A tree's or shrub's solitary flower hangs or stands on its own stalk, as long as its flora measures it, its pedicel or, where it calls a lone flower's or head's stalk a peduncle, that; a cluster's flowers keep their stalks in the cluster."
     },
     "generator.params.suckers": {
       "map": {"stem_clump": {"single": 0, "few": 3, "many": 10, "thicket": 16}},
