@@ -880,7 +880,7 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 135,
+        checked, 145,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -900,7 +900,9 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
          whose families now rank their clusters: aloe vera's racemes, black mangrove's cymes, \
          harsh paintbrush's spikes and Pacific bleeding heart's racemes, and lamb\'s ear\'s spike \
          (hair practice), the tomato's, eggplant's and tobacco's cymes and panicle (nightshades), \
-         and western columbine's cymes, now that its genus states them"
+         and western columbine's cymes, now that its genus states them, and ten of the Rosaceae: \
+         the corymbs of rowan, hawthorn, Catalina ironwood, Woods' and dog roses, woodland strawberry \
+         and whitebark raspberry, red raspberry's racemes, and the panicles of loquat and meadowsweet"
     );
 }
 

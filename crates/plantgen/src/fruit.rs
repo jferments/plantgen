@@ -1003,8 +1003,18 @@ impl One {
         // Where their centres stand, as a share of the fruit's width and
         // length: in from its outline by about half a drupelet.
         let reach = (0.5 - 0.6 * fill).max(0.25);
+        // The whole set down onto the fruit's foot, where its stalk and
+        // calyx are: a few drupelets in a ring (a strawberryleaf
+        // raspberry's) would otherwise stand clear of it.
+        let golden = math::radians(GOLDEN_DEGREES);
+        let lowest = (0..count)
+            .map(|i| drupelet_place(i, count, golden).0)
+            .fold(1.0, f64::min);
+        let gap = (lowest * self.length * reach - radius + 0.5 * self.length).max(0.0);
+        let centre = self.at(0.5) - self.direction * gap;
         let mut core = self.body();
         let core_share = 0.8 * (reach / 0.42).min(1.0) * (1.0 - 0.3 * loose);
+        core.centre = centre;
         core.a *= core_share;
         core.b *= core_share;
         core.c *= core_share;
@@ -1047,12 +1057,11 @@ impl One {
         let first = mesh.positions.len();
         let first_index = mesh.indices.len();
         let other = self.direction.cross(self.across);
-        let golden = math::radians(GOLDEN_DEGREES);
         for i in 0..count {
             let (z, angle) = drupelet_place(i, count, golden);
             let ring = math::sqrt((1.0 - z * z).max(0.0));
             let radial = self.across * math::cos(angle) + other * math::sin(angle);
-            let centre = self.at(0.5)
+            let centre = centre
                 + self.direction * (z * self.length * reach)
                 + radial * (ring * self.width * reach);
             Spheroid {
