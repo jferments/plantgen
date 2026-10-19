@@ -32,7 +32,8 @@ from pathlib import Path
 
 from .store import SEALED, Store, append_jsonl, jsonl, now
 
-SOURCES = {"images": "batch", "image-analyses": "run"}
+SOURCES = {"images": "batch", "image-analyses": "run"}  # what pull fetches; snapshots are pushed only (--library)
+SOURCE_OF = {"batch": "images", "run": "image-analyses", "library": "image-library"}
 BASE = os.environ.get("PGIO_BASE_URL", "https://data.plantgen.io")
 
 
@@ -40,6 +41,8 @@ def register(sub) -> None:
     p = sub.add_parser("push", help="upload finished batches and runs to data.plantgen.io (needs pgio and its login)")
     p.add_argument("--batch", nargs="*", help="only these batches (default: every one not yet pushed)")
     p.add_argument("--run", nargs="*", help="only these runs (default: every finished one not yet pushed)")
+    p.add_argument("--library", nargs="*", help="also these library snapshots (no name: every one not yet pushed); "
+                                                "readers query them on data.plantgen.io")
     p.add_argument("--dry-run", action="store_true", help="hash and check with pgio, upload and seal nothing")
     p.set_defaults(func=cmd_push)
     p = sub.add_parser("pull", help="download the batches and runs this store lacks from data.plantgen.io")
@@ -54,7 +57,7 @@ def register(sub) -> None:
 
 def staging_files(store: Store, kind: str, name: str) -> list[tuple[str, Path]]:
     """(path on the server, local file) for one batch or run, in the store's layout."""
-    d = store.batch_dir(name) if kind == "batch" else store.run_dir(name)
+    d = store.kind_dir(kind, name)
     out = [(p.relative_to(store.root).as_posix(), p) for p in sorted(d.rglob("*"))
            if p.is_file() and not any(part.startswith(".") for part in p.relative_to(d).parts)]
     if kind == "batch":
@@ -93,7 +96,7 @@ def pgio_command() -> list[str]:
 
 
 def push_one(store: Store, kind: str, name: str, dry_run: bool) -> dict:
-    source = "images" if kind == "batch" else "image-analyses"
+    source = SOURCE_OF[kind]
     stage = store.root / ".push" / source / name
     shutil.rmtree(stage, ignore_errors=True)
     for rel, src in staging_files(store, kind, name):
@@ -110,7 +113,7 @@ def push_one(store: Store, kind: str, name: str, dry_run: bool) -> dict:
     shutil.rmtree(stage, ignore_errors=True)
     if res.returncode:
         raise SystemExit(f"pgio push {source} {name} failed (exit {res.returncode}); nothing was sealed")
-    d = store.batch_dir(name) if kind == "batch" else store.run_dir(name)
+    d = store.kind_dir(kind, name)
     if not dry_run:
         (d / SEALED).write_text(json.dumps({"source": source, "version": name, "pushed": now()}) + "\n")
     return {"source": source, "version": name, "dry_run": dry_run}
@@ -131,13 +134,15 @@ def cmd_push(args, store: Store) -> None:
     if waiting:
         print(f"skipping runs with Claude batches still to collect: {', '.join(waiting)}", file=sys.stderr)
         runs = [r for r in runs if r not in waiting]
-    if not batches and not runs:
+    library = [] if args.library is None else pick(store.snapshots(), args.library or None, "library")
+    if not batches and not runs and not library:
         print("nothing to push: every batch and run is already on data.plantgen.io")
         return
     done = [push_one(store, "batch", b, args.dry_run) for b in batches]
     done += [push_one(store, "run", r, args.dry_run) for r in runs]
+    done += [push_one(store, "library", s, args.dry_run) for s in library]
     print(json.dumps({"pushed": len(done), "dry_run": args.dry_run,
-                      "batches": batches, "runs": runs}, indent=1))
+                      "batches": batches, "runs": runs, "library": library}, indent=1))
 
 
 # pull

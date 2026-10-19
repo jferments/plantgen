@@ -352,6 +352,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "umbrella thorn first flowers with the family programs' blooms (revision 110): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
     ),
     (
+        "washingtonia-filifera",
+        "height_max_m",
+        "its greatest height, 20 m, is a model estimate no source read gives, and its third seed already grew to 20.0 m; since palm revision 14 stands a year's newest spear on top of the year's trunk, the second seed's spear reaches 20.1 m, until a flora's greatest height replaces the estimate",
+    ),
+    (
         "whipplea-modesta",
         "shoot_leaves",
         "the angiosperms' default of 4 to 18 leaves a year's shoot is Critchfield's for woody shoots; a herb's trailing stem grows its 47 nodes in one year, so from #170's count of a year's growth it bears 94, until the measure or the default tells a lying herb's stem from a woody shoot",

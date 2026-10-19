@@ -27,8 +27,11 @@ from . import analyzer, backends
 from .prompts import TASKS, Rules, first_json, problems
 from .store import Store, append_jsonl, check_open, jsonl, now
 
-IMAGE_PX = {"triage": 512, "observe": 1536, "describe": 1024}
-TOKENS_OUT = {"triage": 400, "observe": 1500, "describe": 500}  # answer sizes measured on the replay set, plus margin
+IMAGE_PX = {"triage": 512, "observe": 1536, "describe": 1024, "branching": 1536}
+TOKENS_OUT = {"triage": 400, "observe": 1500, "describe": 500,  # answer sizes measured on the replay set, plus margin
+              "branching": 900}  # estimated: 14 short answers
+# Tasks sent only for images a triage found usable, with the triage's views; branching only in these views.
+TRIAGED = {"observe": None, "branching": {"V1", "V2", "V3", "V4", "V8"}}
 ASK_OVER_USD = 1.0
 
 
@@ -45,9 +48,10 @@ def register(sub) -> None:
         p.add_argument("--rules", help="the photo-rules folder (default $IMAGEKIT_RULES, or the plantgen checkout you are in)")
         p.add_argument("--batch", nargs="*", help="only images from these fetch batches")
         p.add_argument("--taxon", help="only images of this taxon (name as fetched, or accepted name)")
+        p.add_argument("--images", help="only the images whose sha256 this file lists, one a line")
         p.add_argument("--limit", type=int)
         p.add_argument("--image-px", type=int, help="long side sent to the model (default: triage 512, observe 1536, describe 1024)")
-        p.add_argument("--triage", help="observe: the triage analyzer whose views to use (default: the one with most answers)")
+        p.add_argument("--triage", help="observe, branching: the triage analyzer whose views to use (default: the one with most answers)")
         p.add_argument("--retry-invalid", action="store_true", help="send again the images whose answer failed the schema")
         p.add_argument("--claude-batch", action="store_true", help="send through the Message Batches API (half price)")
         p.set_defaults(func=cmd_plan if name == "plan" else cmd_run)
@@ -107,16 +111,20 @@ class Job:
         if args.taxon:
             rows = {s: r for s, r in rows.items()
                     if args.taxon in (r["taxon"].get("name_as_given"), r["taxon"].get("accepted_name"))}
+        if getattr(args, "images", None):
+            keep = {line.strip() for line in Path(args.images).expanduser().read_text().splitlines() if line.strip()}
+            rows = {s: r for s, r in rows.items() if s in keep}
         self.rows = rows
         self.views = {}
         params = {"image_px": self.px}
-        if self.task == "observe":
+        if self.task in TRIAGED:
             tri = args.triage or default_triage(store, rows)
             if not tri:
-                raise SystemExit("observe needs a triage first: imagekit run triage --backend ...")
+                raise SystemExit(f"{self.task} needs a triage first: imagekit run triage --backend ...")
             params["triage"] = tri
+            want = TRIAGED[self.task]
             for sha, out in outputs(store, tri).items():
-                if out.get("usable") and out.get("views"):
+                if out.get("usable") and out.get("views") and (want is None or want & set(out["views"])):
                     self.views[sha] = out["views"]
             rows = {s: r for s, r in rows.items() if s in self.views}
         if self.backend is None:  # chat
@@ -130,11 +138,16 @@ class Job:
                 params["temperature"] = self.backend.cfg.get("temperature", 0)
         params["served_by"] = served
         self.definition = {"task": self.task, "model": model, "model_revision": revision,
-                           "rules_version": self.rules.version, "prompt_hash": self.rules.template_hash(self.task),
+                           "rules_version": self.rules.analyzer_version(self.task), "prompt_hash": self.rules.template_hash(self.task),
                            "params": params}
         self.aid = analyzer.analyzer_id(self.definition)
         redo = ("invalid", "refused") if args.retry_invalid else ()
         self.todo = store.missing(self.aid, sorted(rows), 0, redo)
+        gone = [sha for sha in self.todo if not store.blob(sha).exists()]
+        if gone:  # a store pulled with --no-images holds the records, not the files
+            print(f"  {len(gone)} images in scope have no file in this store, skipped "
+                  f"(imagekit pull --batch ... without --no-images fetches them)", file=sys.stderr)
+            self.todo = [sha for sha in self.todo if sha not in set(gone)]
         if args.limit:
             self.todo = self.todo[: args.limit]
         self.held = len(rows) - len(store.missing(self.aid, sorted(rows), 0))

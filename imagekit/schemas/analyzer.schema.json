@@ -11,7 +11,7 @@
     "task": {"enum": ["triage", "observe", "check", "describe", "detect", "count", "measure", "embed"]},
     "model": {"type": "string", "description": "e.g. Qwen/Qwen3-VL-8B-Instruct, claude-haiku-5-5, google/siglip2-so400m-patch14-384"},
     "model_revision": {"type": "string", "description": "a Hugging Face commit, a weights file's hash, or an API model's id and date"},
-    "rules_version": {"type": "string", "description": "git commit of photo-rules/ the prompt was built from"},
+    "rules_version": {"type": "string", "description": "a hash of the photo-rules/ files the task's prompt is built from (imagekit.prompts LEGACY_VERSIONS keeps the rules v2 answers' all-file hash)"},
     "prompt_hash": {"type": "string", "description": "first 16 hex digits of the SHA-256 of the assembled prompt, without the image"},
     "params": {"type": "object", "description": "image_px, effort, temperature, views, region kind and anything else that changes the output"},
     "note": {"type": "string"},

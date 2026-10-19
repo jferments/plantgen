@@ -1387,6 +1387,14 @@ pub struct Needles {
     /// place on it: 2, 3 or 5 for a pine; 1 for needles borne singly; up
     /// to 45 for a short shoot's tuft, a larch's. Only all round a shoot.
     pub bundle: u32,
+    /// Degrees a needle leans out from its shoot: about 58 where needles
+    /// spread, less where they point forward along it, as a whitebark
+    /// pine's do, curved forward against the shoot (Farjon 2017).
+    pub lean: f64,
+    /// Share of each axis, from its foot, that bears no needles: 0 where
+    /// they clothe the whole shoot, more where they crowd in a tuft near
+    /// its end.
+    pub bare: f64,
 }
 
 impl Default for Needles {
@@ -1399,6 +1407,8 @@ impl Default for Needles {
             aspect: 0.85,
             width: 0.06,
             bundle: 1,
+            lean: 58.0,
+            bare: 0.0,
         }
     }
 }
@@ -1935,6 +1945,16 @@ pub struct Flower {
     /// The anthers' colour; the accent, as before, if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub anther_colour: Option<[f32; 3]>,
+    /// An inferior ovary's skin colour where it is not the calyx's: a
+    /// cactus's pericarpel, a joint of the stem, in the stem's colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pericarpel_colour: Option<[f32; 3]>,
+    /// The felt of a cactus pericarpel's areoles, and the spines or
+    /// glochids on them, where their flora gives those colours.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pericarpel_felt: Option<[f32; 3]>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pericarpel_bristles: Option<[f32; 3]>,
     /// Dark spots, in the accent colour, on each petal's or tepal's inner
     /// face toward its foot: 0 none, about 20 a lily's copious spots.
     #[serde(skip_serializing_if = "is_zero_count")]
@@ -2138,6 +2158,9 @@ impl Default for Flower {
             filament: None,
             pistil: None,
             anther_colour: None,
+            pericarpel_colour: None,
+            pericarpel_felt: None,
+            pericarpel_bristles: None,
             spots: 0,
             base_colour: None,
             base_length: BASE_LENGTH,
@@ -2703,6 +2726,17 @@ pub struct Fruit {
     /// club-shaped, below 0 ovoid ([`crate::fruit`]).
     #[serde(skip_serializing_if = "is_zero")]
     pub flare: f64,
+    /// 1 when a ripe fruit's spine clusters fall (Stenocereus,
+    /// Echinocereus): a spiny cactus fruit ripens with felted areoles
+    /// alone.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spines_fall: f64,
+    /// The felt of a cactus fruit's areoles, and the spines or glochids
+    /// on them, where their flora gives those colours.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub felt: Option<[f32; 3]>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bristles: Option<[f32; 3]>,
     /// The colour of the seeds a ripe fruit shows: a magnolia's red seeds
     /// hanging from its split follicles. Only follicles show them.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2751,6 +2785,9 @@ impl Default for Fruit {
             armed: Armed::None,
             hang: 0.0,
             flare: 0.0,
+            spines_fall: 0.0,
+            felt: None,
+            bristles: None,
             seeds: None,
             cup: None,
             ripening: None,
@@ -2977,6 +3014,9 @@ struct FruitCard {
     armed: Armed,
     hang: f64,
     flare: f64,
+    spines_fall: f64,
+    felt: Option<[f32; 3]>,
+    bristles: Option<[f32; 3]>,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
     ripening: Option<[f32; 3]>,
@@ -3012,6 +3052,9 @@ impl Default for FruitCard {
             armed: fruit.armed,
             hang: fruit.hang,
             flare: fruit.flare,
+            spines_fall: fruit.spines_fall,
+            felt: None,
+            bristles: None,
             seeds: None,
             cup: None,
             ripening: None,
@@ -3062,6 +3105,9 @@ impl TryFrom<FruitCard> for Fruit {
             armed: card.armed,
             hang: card.hang,
             flare: card.flare,
+            spines_fall: card.spines_fall,
+            felt: card.felt,
+            bristles: card.bristles,
             seeds: card.seeds,
             cup: card.cup,
             ripening: card.ripening,
@@ -3584,6 +3630,8 @@ impl Shape {
                         "needles in bundles stand all round the shoot: ranks must be 0".to_string(),
                     );
                 }
+                check("lean", s.lean, 10.0, 80.0)?;
+                check("bare", s.bare, 0.0, 0.8)?;
                 check("aspect", s.aspect, 0.1, 2.0)
             }
             Self::Scales(s) => {

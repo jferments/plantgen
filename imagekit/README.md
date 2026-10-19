@@ -25,7 +25,10 @@ What it does now:
 - **render** a species' standing views with `plantc` into the store, and
   **compare** the renders' answers with the photos' and the text;
 - **embed** each image once per model (SigLIP2, DINOv2, BioCLIP-2) and
-  **search** the library by words or by a photo.
+  **search** the library by words or by a photo;
+- **detect** organs (leaf, flower, fruit, bark, the whole plant) in each
+  image, cut them out as **crops**, embed and search the organs alone, and
+  **segment** the crown into a mask.
 
 ## Install
 
@@ -128,8 +131,10 @@ recorded as a second source of that image. It is not stored or analysed
 again.
 
 **Analyzers.** An analyzer is everything that decides an answer except the
-image: the task, the model and its exact revision, the `photo-rules/`
-commit, the prompt's hash and the settings. Its id is a hash of those.
+image: the task, the model and its exact revision, the rules version, the
+prompt's hash and the settings. Its id is a hash of those. The rules
+version hashes only the `photo-rules/` files the task's prompt is built
+from, so adding or changing another task's file keeps every stored answer.
 
 ```sh
 imagekit analyzer-id triage-haiku.json --register
@@ -164,8 +169,8 @@ the full reply in `raw/answers.jsonl.gz`.
 
 **Nothing twice.** Before sending, the run drops every image that already
 has an answer under the same analyzer. A second run with the same model,
-rules and settings sends nothing; a new model, a changed rule file or
-another image size is a new analyzer.
+rules and settings sends nothing; a new model, a change to a file the
+task reads or another image size is a new analyzer.
 
 **Cost.** `plan` and `run` estimate the cost from earlier answers under the
 same analyzer, else from list prices. Over $1 a run needs `--yes`, and it
@@ -242,6 +247,49 @@ reciprocal-rank fusion. `--by-species` ranks species by the mean of their
 best three images, and `--html` writes a contact sheet with each photo's
 credit and licence.
 
+## Organs: detect, crop, embed
+
+```sh
+imagekit detect --taxon "Asimina triloba"                  # Grounding DINO on the usable photos and the renders
+imagekit crops --taxon "Asimina triloba" --organ leaf --out ~/pawpaw-leaves
+imagekit embed --model dinov2 --regions --taxon "Asimina triloba"
+imagekit search --model dinov2 --organ leaf --image leaf.jpg --by-species
+imagekit segment --taxon "Asimina triloba"                 # SAM 2.1 crown masks on the whole-plant boxes
+imagekit measure --taxon "Asimina triloba" --plantc target/release/plantc   # crown outline measures per mask
+```
+
+`detect` asks Grounding DINO (`gdino-tiny` by default, `gdino-base` for
+more recall) for a whole plant, leaves, flowers, flower clusters, fruit,
+cones and trunks in one pass. It stores one `detect` analysis per image,
+listing each region's organ, box (fractions of width and height) and
+score. Photos need a triage first: only usable ones are detected, and
+renders always are. About 5 s an image on a CPU at 1024 px.
+
+Crops keep only the organs the image's triage saw (`organs_visible`, and
+the whole plant in views V1 to V3), so fingers holding a flower are not
+kept as leaves. `crops` writes them as JPEGs with `crops.jsonl` (source,
+licence, box, score) for looking at them or handing them to a chat
+observer. `embed --regions` embeds each kept organ with a small margin.
+Its analyzer names the detector, organs, triage and margin, so organ
+vectors never mix with whole-image vectors. `search --organ` ranks those
+crops: give it a photo of just the organ, or `--box` round it.
+
+`segment` gives SAM 2.1 each kept region's box (by default only the whole
+plant, in whole-plant views and renders) and stores the object's mask as a
+1-bit PNG in the run folder, with its share of the image and of the box.
+About 1.3 s a region on a CPU. A mask's outline is reliable. Whether sky
+inside the crown is left out varies from image to image, so measure
+see-through from the pixels inside the outline, not from the mask alone.
+These masks are what crown-shape measures read, for photos and renders
+alike.
+
+`measure` runs `plantc measure-mask` on each mask, the same code
+(`crate::form`) that measures a grown plant's side view. It gives outline
+fit, see-through, width to height, where the crown is widest, solidity
+and large gaps. What covers the sky inside the outline is read from the
+image (`--cover sky`: bright bluish or colourless pixels are sky). The
+analyzer is plantc's commit, so a change to the measures measures again.
+
 ## Render and compare
 
 ```sh
@@ -256,7 +304,12 @@ species at each seed (default three): side, 45 degrees down, and three
 framed close-ups (a foliage shoot, a flower or fruit or a second shoot
 lower down, a leaf underside; for cacti the ribs, a flower and the apex),
 plus the species' flat cards from `plantc atlas`, one image per card, for
-the face-on features. Close-ups that are mostly sky or ground are dropped.
+the face-on features. Close-up frames scale with the plant's height, so a
+herb's shoot and flower fill them as a tree's do, and the flower close-up
+is aimed at the height whose draft probe shows the most flower. Close-ups
+that are still mostly sky or ground are dropped. Renders merge with a held
+image only on identical bytes, never on a near look: plain atlas cards of
+two species can sit within a few dHash bits of each other.
 Each image goes into a batch (`render-<species>-<date>`) with source
 `render`, licence CC0, and a `render` block saying how it was made: commit,
 generator revision, species id, seed, age, day, env, view, focus, span and
@@ -290,6 +343,25 @@ both with one model, `compare`, then `push`. In a cloud session the chat
 backend costs nothing: hand each folder's images to observers that see
 only the folder (no species name), and read their answers back with the
 same command. A paid model needs the owner's go and `plan` first.
+
+## The library snapshot
+
+```sh
+imagekit compact                     # sources/image-library/<date>/: every batch and run merged into Parquet
+imagekit push --library              # also upload the snapshots not yet on data.plantgen.io
+```
+
+A snapshot is a merged, read-only copy for readers and search:
+`images.parquet` (one row per image, with provenance, taxon and whether it
+is a render), `analyzers.parquet`, one Parquet file per task (`triage`,
+`observe`, `branching`, `detect`, `segment`, ...; each answer's `out` as
+JSON, and triage's main fields as columns), `regions.parquet` (each
+detected organ's box), `species.parquet` (usable photos per view and
+regions per organ, per taxon), each embedding analyzer's vectors in one
+`.npy` with its ids, and `stats.json`. DuckDB, pandas or polars read it in
+place, on disk or over HTTPS. The batches and runs stay the record, so a
+snapshot holds nothing new and is made again when wanted. On the server it
+is the private source `image-library`, one version per snapshot.
 
 ## Share through data.plantgen.io
 

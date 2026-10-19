@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 0.9,
       "cone_chance": 0.12,
       "cone_length": 0.09,
       "cone_area": 0.524,
@@ -26,7 +27,8 @@
       "shade_years": 4,
       "pipe_organ": 0.009,
       "pipe_rings": 6.6e-06,
-      "branch_reach": 6.0
+      "branch_reach": 6.0,
+      "bole": 0.05
     }
   },
   "growth": {
@@ -137,6 +139,21 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS (Howard and Aleksoff 2000, read): cone and seed production begins at 20 to 50 years of age. The Woody Plant Seed Manual (Abies, table 3, read) gives 20 as the minimum age for commercial seed bearing in northern Idaho. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 20 years set by hand."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (3 trees) .67 .71 .69 .63 .55 .42 .36 .25 .16 .09; old (1) .50 .64 .67 .65 .61 .50 .57 .58 .45 .28; drawn 60 years .65 .64 .59 .56 .51 .44 .38 .31 .18 .07; 300 years .47 .54 .50 .50 .43 .40 .36 .31 .28 .11. apical sets the young crown's width."
+    },
+    "generator.params.branch_reach": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (3 trees) .67 .71 .69 .63 .55 .42 .36 .25 .16 .09; old (1) .50 .64 .67 .65 .61 .50 .57 .58 .45 .28; drawn 60 years .65 .64 .59 .56 .51 .44 .38 .31 .18 .07; 300 years .47 .54 .50 .50 .43 .40 .36 .31 .28 .11. branch_reach, the wood at which a limb's yearly shoot is halved, sets how far old limbs spread."
+    },
+    "generator.params.bole": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of an old tree's height cleared of limbs, cleared in step with height so saplings keep limbs to the ground: open-grown trees photographed keep limbs nearly to the ground at every stage (crown base .03 young, .05 old)."
     },
     "generator.params": {
       "evidence": "Authored",

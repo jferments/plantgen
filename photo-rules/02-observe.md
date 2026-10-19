@@ -48,6 +48,22 @@ with the bands you estimated listed by number:
 }
 ```
 
+## Cases the ground rules leave open
+
+Observers of the pawpaw trial (2026-10-18) split on these; answer them so.
+
+- **Lighting of a colour:** name what the light looks like, whatever made
+  the image. Hard-edged shadows and lit faces are `"direct sun"`, even on a
+  plain sky. `"studio"` is soft, even light on a plain backdrop with no
+  cast shadows.
+- **An organ that is missing:** if the plant has the organ but not now
+  (no flowers in winter, fruit not yet set, leaves fallen), answer
+  `"cannot tell"`. Use `"not applicable"` only for a part this kind of
+  plant never has (ground rule 3).
+- **Flowers borne singly:** `infl.type` is `solitary`. `infl.posture` is
+  read from the flower's own stalk. `infl.density`, `infl.open_share` and
+  `infl.length_over_height` are `"not applicable"`.
+
 ## How to observe, scale by scale
 
 Work from the largest scale to the smallest, finishing one before starting
@@ -190,8 +206,8 @@ it.
 Steps 1 and 2 are for whoever prepares the images (a person, or an agent
 that can run a script): the banded crop is then sent with the photo, under
 the same photo id. An observer sent a photo with no bands drawn reads the
-widths against the plant's height by eye, answers with confidence `low`, and
-writes "no bands" in the note.
+widths against the plant's height by eye, answers with confidence `low` and
+`"method": "vlm"`, and writes "no bands" in the note.
 
 1. **Set the frame.** Find the ground point, where the trunk (or the clump's
    middle) meets the ground, and the top, the plant's highest point. On
