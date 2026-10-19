@@ -6,9 +6,45 @@
   "traits": {
     "leaf_division": "simple",
     "leaf_incision": "parted",
-    "division_pattern": "palmate"
+    "division_pattern": "palmate",
+    "fan_split_depth": {"min": 0.25, "max": 0.33},
+    "segment_posture": "stiff",
+    "segment_filaments": "none",
+    "petiole_armature": "stout",
+    "petiole_tooth_form": "straight",
+    "petiole_teeth_distal": "even"
   },
   "evidence": {
+    "traits.fan_split_depth": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (2008, p. 281): the blade divided a quarter to a third of the way to its base into single-fold pointed segments."
+    },
+    "traits.segment_posture": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (2008, p. 281): the segments thick and very stiff."
+    },
+    "traits.segment_filaments": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (2008, p. 281) names no threads; the segments' margins are often spiny instead (not drawn)."
+    },
+    "traits.petiole_armature": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (2008, p. 281): an armed palm, the petiole's margins armed with stout teeth; drawn at the family's size and spacing for stout teeth, as no size is given."
+    },
+    "traits.petiole_tooth_form": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (2008, p. 281): stout teeth, no curve named; drawn square to the petiole."
+    },
+    "traits.petiole_teeth_distal": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (2008, p. 281) names no change in the teeth toward the blade; drawn even."
+    },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",

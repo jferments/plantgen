@@ -868,7 +868,68 @@ pub mod venation;
 /// perianth stands on, a floral cup or an inferior ovary such as a
 /// cactus's pericarpel, so the tepals no longer float above the joint; a
 /// pericarpel the tepals open straight from is globose, not a stalk.
-/// 136: a cactus's pericarpel is drawn in its stem's colour
+/// 131: a cluster of flowers draws its axis as for flowers no wider than
+/// half again their pedicels, not a tenth of a flower thick, so a few
+/// large flowers no longer hang from a stalk thicker than their stem (130
+/// is joint flowers on their pericarpels, #220).
+/// 132: a petal's or tepal's outer face is drawn in its own colour where
+/// a flora gives one (`back_colour`, from `perianth_abaxial_colour`), and
+/// its foot outside in another (`back_base_colour`, `back_base_length`,
+/// from `perianth_abaxial_base_colour` and `perianth_abaxial_base_length`);
+/// a stripe down the middle of its inner face from its foot where a flora
+/// names one (`stripe_colour`, `stripe_length`, from
+/// `perianth_stripe_colour` and `perianth_stripe_length`), as Kellogg's
+/// lily's yellow stripe; a flower's spots are drawn one-sided, as their
+/// backs lie against the part; a lily with scattered leaves bears at least
+/// as many as its flora counts on the stem (`shoot_leaves`), so the
+/// orange lily's 50 to 75 (131 is the cluster axis, #209).
+/// 133: a raceme's, spike's, catkin's, panicle's or corymb's nodes run
+/// from its peduncle's top to where its top unit reaches the tip, not
+/// half a node in from each, so a panicle of few branches draws its
+/// stated length; a cluster whose flowers are all sterile
+/// (`sterile_flowers`, a mophead hydrangea's) draws them as its showy
+/// sepals (`sterile_sepal_shape`) with no stamens, pistil or floral cup; a
+/// flower with no carpels stands on no ovary; a petal whose outline is
+/// stated is as wide on the solid as on its card; and from the flat
+/// coarse step a flower of three to six petals is a polygon through
+/// their tips, not a hexagon. A lineage whose inflorescences end leafy
+/// shoots (`flowering_shoot_leaves`) unfolds that many leaves below each
+/// cluster, and one that flowers on new shoots (`flowering_shoots`)
+/// flowers on a short shoot or a stopped tip only in its first year
+/// (broadleaf program revision 22), so a hydrangea's heads stand at the
+/// crown's surface above their leaves, not along the old wood; and a
+/// flower may be drawn up to eight times its fruit's size, where it was
+/// four, so a mophead's sterile flowers reach their stated size (132 is
+/// lily leftovers, #218).
+/// 134: fan palms' blades, petiole teeth, skirts and fishtail palms (palm
+/// revision 13): a fan's segments part only over their outer share
+/// (`split_depth`, from `fan_split_depth`), inside it one piece drawn as
+/// wedges (`palman`), their free parts turning down where they part
+/// (`tip_droop`, from `segment_posture`) and bearing threads in the
+/// sinuses and along their margins (`filament`, from
+/// `segment_filaments`); a petiole's margins bear teeth (`tooth`) as long,
+/// far apart, leaning and shrinking toward the blade as stated
+/// (`petiole_armature` and the `petiole_tooth_*` words); a dead frond
+/// hangs from the trunk's surface, standing out at first and falling flat
+/// against it over a year (`dead_fold_years`), in the colour stated for
+/// dead leaves (`dead_leaf_colour`); a twice-pinnate frond bears pairs
+/// of pinnae with leaflets of their own (`pinnule`, from `pinnae` and
+/// `leaflets`), and a simple blade may end in a bitten, jagged tip
+/// (`Simple.praemorse`, from `leaflet_end`) and lack a midrib
+/// (`Simple.midrib`, from `leaflet_midrib`): Caryota's fishtail leaflets
+/// (133 is panicles and hydrangeas, #219).
+/// 135: a fruit's kept calyx lies as stated (`kept_posture`, from
+/// `fruiting_calyx_posture`: an eggplant's cap pressed over the fruit, a
+/// belladonna's flat star, or turned back); a ripe capsule opens from its
+/// tip into its valves (`valves`, from `capsule_valves`: a jimsonweed's
+/// four, a tobacco's two), each turned out from half way down and lined
+/// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
+/// `fruit_armature` `hooked`) (134 is palm details, #223).
+/// 136: black cottonwood and wild fig draw single leaves at their flora's
+/// size on its petiole length, and young twigs in its colour, in place of
+/// hand-sized sprig cards; the fig's path_half is refitted to its height
+/// (135 is nightshades round 4, #227).
+/// 137: a cactus's pericarpel is drawn in its stem's colour
 /// (`pericarpel_colour`, from `stem_colour`), and a reduced flower mesh
 /// wears its skin (scales, felted areoles or spines) as the full one does;
 /// a spiny fruit whose spine clusters fall (`fruit_spine_fall` deciduous:
@@ -876,6 +937,5 @@ pub mod venation;
 /// pericarpel's and a cactus fruit's areoles take the stem's wool colour
 /// and their glochids or spines the colours floras give them (new trait
 /// `glochid_colour`, also the stem's glochids); and a round fruit with no
-/// stated width is as wide as long (131 to 135 are the train of #209,
-/// #218, #167 and #219).
-pub const GENERATOR_REVISION: u32 = 136;
+/// stated width is as wide as long (136 is single true-size leaves, #225).
+pub const GENERATOR_REVISION: u32 = 137;

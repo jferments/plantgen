@@ -42,7 +42,7 @@
       "dead_life": 60,
       "leaflet_area": 0.045,
       "ray_area": 0.064,
-      "dead_area": 0.218,
+      "dead_area": 0.062,
       "vigour_spread": 0.06,
       "fan_arch": 30,
       "hang": 50
@@ -74,21 +74,9 @@
         "bend": {
           "fold": 20,
           "cup": 0,
-          "droop": 55,
+          "droop": 35,
           "twist": 0
         }
-      },
-      "dead": {
-        "shape": {
-          "template": "palmate",
-          "lobes": 9,
-          "depth": 0.8,
-          "lobe_width": 0.18,
-          "teeth": 0,
-          "spread": 1.2,
-          "petiole": 0.4
-        },
-        "colour": [0.214, 0.147, 0.073]
       }
     }
   },
@@ -137,7 +125,7 @@
     "appearance": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",
-      "note": "Colours chosen by eye from photographs: grey-green fans, a straw-brown skirt, a grey trunk. Shades as linear light (2026-10-16), from Sargent (1922, p. 104-105): leaves light green [0.1, 0.19, 0.06], sheaths bright chestnut-brown, the trunk's rind light red-brown, the thatch straw-brown; the by-eye values had been written as screen (sRGB) shades and drew near white."
+      "note": "Colours chosen by eye from photographs: grey-green fans, a straw-brown skirt, a grey trunk. Shades as linear light (2026-10-16), from Sargent (1922, p. 104-105): leaves light green [0.1, 0.19, 0.06], sheaths bright chestnut-brown, the trunk's rind light red-brown, the thatch straw-brown; the by-eye values had been written as screen (sRGB) shades and drew near white. Each segment's card droops 35 degrees along its free part (2026-10-18), after the family's rule has turned the free part down where it parts from the palman, where the whole card had drooped 55 from the fan's centre; its dead fans are drawn as the genus draws them, hanging closed against the trunk."
     },
     "taxon": {
       "evidence": "Authored",

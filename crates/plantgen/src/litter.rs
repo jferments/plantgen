@@ -433,6 +433,14 @@ fn draw(canvas: &mut Canvas, litter: &Litter, seed: u64) {
     }
 }
 
+/// How many times over a conifer's needles, and its sprays of scale
+/// leaves, cover their look's ground, each counted once: a conifer's
+/// floor is a mat of them with little duff between (2026-10-18, beside a
+/// photograph of a fir and cedar floor; 1.1 and 1.4 before, which left
+/// the dark duff showing between them).
+const NEEDLE_COVER: f64 = 2.2;
+const SPRAY_COVER: f64 = 2.0;
+
 /// Needles `size_m` = `[shortest, longest, width]`, singly or in bundles
 /// of `bundle`, oldest first.
 fn draw_needles(
@@ -453,8 +461,8 @@ fn draw_needles(
     let count = pieces(
         size,
         f64::midpoint(low, high) * width * f64::from(bundle),
-        1.1,
-        60_000,
+        NEEDLE_COVER,
+        100_000,
     );
     let needles = draws.stream(2);
     for i in 0..count {
@@ -547,7 +555,7 @@ fn draw_sprays(canvas: &mut Canvas, litter: &Litter, draws: Draws, per_m: f64, l
         );
     }
     let sprays = draws.stream(2);
-    let count = pieces(size, mean * mean * aspect * cover, 1.4, 20_000);
+    let count = pieces(size, mean * mean * aspect * cover, SPRAY_COVER, 20_000);
     for i in 0..count {
         let fresh = layer(i, count);
         let age = 1.0 - fresh;

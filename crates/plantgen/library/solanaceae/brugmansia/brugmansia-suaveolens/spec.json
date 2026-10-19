@@ -83,6 +83,16 @@
       110,
       140,
       60
+    ],
+    "flowering_months": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      9,
+      10
     ]
   },
   "provenance": {
@@ -222,6 +232,16 @@
       "evidence": "SourceInferred",
       "source": "inaturalist-photos-2026-10",
       "note": "iNaturalist observation 39560425 (CC-licensed photograph, viewed 2026-10-17): long spindle-shaped green fruit hang. No text read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: in flower from July to October where it is grown outdoors in a temperate summer: Bailey (vol. 2, Datura, culture) has the woody daturas grown outdoors in summer in the North and stored in cellars over winter, almost everblooming in the South; no source gives months."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: fruit set after the first flowers, from September; in cultivation it seldom fruits."
     }
   }
 }

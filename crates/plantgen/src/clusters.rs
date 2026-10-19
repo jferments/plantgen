@@ -17,11 +17,15 @@
 //! $`\psi = \theta + k\delta + 2\pi j/m`$ round the axis, $`\theta`$ the
 //! cluster's turn, and scaled by $`t_k = 1 - \tau q_k`$:
 //!
-//! - a **raceme** sets node $`k`$ at $`y_k = (1 - r)(y_0 + (1 - y_0) q_k)`$
-//!   with $`r = \min\big((p + s)\,t_{K-1}\cos\sigma,\ 0.95\big)`$, each unit
+//! - a **raceme** sets node $`k`$ at $`y_k = l + (1 - r - l)\,u_k`$,
+//!   $`l = \min(y_0, 1 - r)`$, $`u_k = k/(K - 1)`$ (1 where $`K = 1`$),
+//!   so its lowest node ends the peduncle and its top unit reaches the
+//!   organ's tip, as a flora measures a cluster from its lowest node, with
+//!   $`r = \min\big((p + s)\,t_{K-1}\cos\sigma,\ 0.95\big)`$, each unit
 //!   on a pedicel $`p\,t_k`$ long leaning $`\sigma`$; a **spike** and a
 //!   **catkin** take $`p = 0`$;
-//! - a **corymb** sets its nodes at $`y_k = y_0 + (1 - s - y_0) q_k`$, each
+//! - a **corymb** sets its nodes at $`y_k = l + (1 - s - l)\,u_k`$,
+//!   $`l = \min(y_0, 1 - s)`$, each
 //!   pedicel $`\max\big((1 - y_k)/\max(\cos\sigma, 0.2) - s\,t_k,\ 0\big)`$
 //!   long, so every unit's tip is level with the organ's; with a `dome`
 //!   $`\Theta`$ above 0 its units instead point out from a sphere of
@@ -93,7 +97,8 @@
 //! centimetre across or more) and the pedicels and axes are thin prisms in
 //! the cluster's `stalk` colour. A part mesh (`crate::parts`) that must
 //! fit a budget takes up to [`crate::fruit::COARSER`] steps: petals at one
-//! facet; flowers and heads as one flat hexagon each, three-sided stalks
+//! facet; flowers and heads as one flat polygon each (through the tips of
+//! three to six petals, else a hexagon), three-sided stalks
 //! and fruit at fewer facets; each smallest branch's units merged into one
 //! solid round them; every branch merged. A cluster of spikelets draws
 //! half its spikelets instead, each longer ([`thinned`]), then each
@@ -375,6 +380,25 @@ impl Cluster {
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let nodes = nodes.max(1.0) as u32;
         (nodes * per_node.clamp(1, 8)).clamp(1, 200)
+    }
+
+    /// The cluster with none of its axes drooping: a nodding or hanging
+    /// cluster held straight, as a flora measures it along its axis.
+    #[must_use]
+    pub fn straightened(&self) -> Self {
+        let mut straight = self.clone();
+        straight.droop = 0.0;
+        straight.branch = self
+            .branch
+            .as_ref()
+            .map(|branch| Box::new(branch.straightened()));
+        straight
+    }
+
+    /// Whether any of its axes droops.
+    #[must_use]
+    pub fn droops(&self) -> bool {
+        self.droop > 0.0 || self.branch.as_ref().is_some_and(|branch| branch.droops())
     }
 
     /// Units in the whole cluster.
@@ -666,7 +690,13 @@ impl ClusterLook {
     /// unripe fruit chosen by `seed`.
     #[must_use]
     pub fn layout(&self, turn: f64, seed: u64) -> Layout {
-        let mut laid = layout(&self.cluster, self.unit, turn, seed);
+        self.layout_of(&self.cluster, turn, seed)
+    }
+
+    /// `cluster`, this look's or a variant of it, laid out as
+    /// [`Self::layout`] lays out its own.
+    fn layout_of(&self, cluster: &Cluster, turn: f64, seed: u64) -> Layout {
+        let mut laid = layout(cluster, self.unit, turn, seed);
         // Drawn all in fruit: only the units that set it.
         if self.opening.is_none() && matches!(self.unit, Unit::Fruit { .. }) {
             laid.units.retain(|p| p.sets);
@@ -678,8 +708,24 @@ impl ClusterLook {
     /// unripe fruit chosen, by the organ's id.
     #[must_use]
     pub fn laid_on(&self, organ: &GraphOrgan) -> Layout {
-        let turn = rng::unit(mix64(organ.id ^ 0x00F2_0175)) * std::f64::consts::TAU;
-        self.layout(turn, organ.id)
+        self.layout(Self::turn_on(organ), organ.id)
+    }
+
+    /// How far round its axis the cluster on `organ` is turned.
+    fn turn_on(organ: &GraphOrgan) -> f64 {
+        rng::unit(mix64(organ.id ^ 0x00F2_0175)) * std::f64::consts::TAU
+    }
+
+    /// [`Self::laid_on`] with the cluster held straight
+    /// ([`Cluster::straightened`]): what its length is measured on, as a
+    /// flora measures a nodding panicle or a hanging catkin along its
+    /// axis, not by how far it rises.
+    #[must_use]
+    pub fn laid_straight_on(&self, organ: &GraphOrgan) -> Layout {
+        if !self.cluster.droops() {
+            return self.laid_on(organ);
+        }
+        self.layout_of(&self.cluster.straightened(), Self::turn_on(organ), organ.id)
     }
 }
 
@@ -1497,11 +1543,14 @@ fn lay(
 }
 
 /// An axis's radius over its length: a tenth of the width of the units it
-/// bears, or half again its branches' at their length.
+/// bears, or half again its branches' at their length. Flowers count no
+/// wider than half again their pedicels ([`Unit::stalk_width`]): a few
+/// large flowers (a columbine's, a lily's) hang from a slender stalk, not
+/// one a tenth of a flower thick.
 fn axis_radius(cluster: &Cluster, unit: Unit) -> f64 {
     match &cluster.branch {
         Some(branch) => 1.5 * axis_radius(branch, unit) * cluster.size,
-        None => cluster.size * unit.width() * 0.1,
+        None => cluster.size * unit.width().min(1.5 * unit.stalk_width()) * 0.1,
     }
 }
 
@@ -1525,6 +1574,16 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
     let m = cluster.per_node.clamp(1, 8);
     let nodes = n.div_ceil(m);
     let q = |k: u32| (f64::from(k) + 0.5) / f64::from(nodes);
+    // Where node `k` stands between the axis's first node and its last:
+    // the first at the peduncle's top, the last where its units reach the
+    // organ's tip, as a flora measures a cluster from its lowest node.
+    let place = |k: u32| {
+        if nodes > 1 {
+            f64::from(k) / f64::from(nodes - 1)
+        } else {
+            1.0
+        }
+    };
     // Turned the node's divergence and, beyond the node's first, its
     // share of a turn.
     let around = |i: u32| {
@@ -1550,7 +1609,8 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                 let qk = q(i / m);
                 let t = 1.0 - tau * qk;
                 let around = around(i);
-                let attach = Vec3::Y * ((1.0 - reach) * (y0 + (1.0 - y0) * qk));
+                let low = y0.min(1.0 - reach);
+                let attach = Vec3::Y * (low + (1.0 - reach - low) * place(i / m));
                 let direction = lean(sigma, around);
                 slots.push(Slot {
                     anchor: attach.y,
@@ -1604,7 +1664,8 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                 let qk = q(i / m);
                 let t = 1.0 - tau * qk;
                 let around = around(i);
-                let y = y0 + (1.0 - s - y0) * qk;
+                let low = y0.min(1.0 - s);
+                let y = low + (1.0 - s - low) * place(i / m);
                 // Long enough that every unit's tip is level with the
                 // organ's.
                 let stalk = ((1.0 - y) / math::cos(sigma).max(0.2) - s * t).max(0.0);
@@ -2094,6 +2155,16 @@ fn draw_laid(
                         star: flower
                             .star_colour
                             .map(|star| crate::blooms::with_shading(star, look.colour, colour)),
+                        stripe: flower
+                            .stripe_colour
+                            .map(|stripe| crate::blooms::with_shading(stripe, look.colour, colour)),
+                        back: flower
+                            .back_colour
+                            .map(|back| crate::blooms::with_shading(back, look.colour, colour)),
+                        back_base: flower
+                            .back_base_colour
+                            .map(|back| crate::blooms::with_shading(back, look.colour, colour)),
+                        back_base_length: flower.back_base_length,
                         tube: flower
                             .tube_colour
                             .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),
@@ -2120,6 +2191,7 @@ fn draw_laid(
                 &Petals {
                     count: flower.petals.max(1),
                     width: flower.petal_share(),
+                    ratio: flower.petal_ratio,
                     centre: flower.centre,
                     start: 0.6,
                 },
@@ -2169,6 +2241,7 @@ fn draw_laid(
                 &Petals {
                     count: head.rays,
                     width: head.ray_width,
+                    ratio: None,
                     centre: head.disc,
                     start: 0.85,
                 },
@@ -2189,6 +2262,9 @@ struct Petals {
     count: u32,
     /// Petal width over the width of its share of the circle.
     width: f64,
+    /// A petal's width over its length where its outline is stated,
+    /// which `width` then gives way to.
+    ratio: Option<f64>,
     /// The centre's radius over the floret's.
     centre: f64,
     /// Where petals start, as a share of the centre's radius.
@@ -2198,10 +2274,11 @@ struct Petals {
 /// A plain flower ([`crate::looks::Flower::is_plain`]) or a head reduced
 /// for a cluster: its petals as kites (one facet each from the first
 /// coarse step), seen from both sides, round a low pyramid of a centre in
-/// the accent colour; from the [`FLAT`] step one flat hexagon, seen from
-/// both sides. A flower with stamens is drawn by
+/// the accent colour; from the [`FLAT`] step one flat polygon through the
+/// tips of its three to six petals (a hexagon for more or none), seen
+/// from both sides. A flower with stamens is drawn by
 /// [`crate::flowers::draw_reduced`].
-#[allow(clippy::too_many_arguments)]
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
 fn floret(
     petals: &Petals,
     form: &FlowerForm,
@@ -2221,8 +2298,13 @@ fn floret(
     let start = petals.start * centre;
     let length = (radius - start).max(radius * 0.1);
     let n = f64::from(petals.count.max(1));
-    let petal_width =
-        (petals.width * std::f64::consts::PI * (start + radius) / n).clamp(length * 0.08, length);
+    let petal_width = petals
+        .ratio
+        .map_or_else(
+            || petals.width * std::f64::consts::PI * (start + radius) / n,
+            |ratio| ratio * length,
+        )
+        .clamp(length * 0.08, length);
     let cup = math::radians(form.cup);
     let across = any_perpendicular(direction);
     let other = direction.cross(across);
@@ -2245,10 +2327,17 @@ fn floret(
         }
     };
     if part.coarse >= FLAT {
-        // One hexagon round the tips of its petals, or round its centre
-        // where it has none.
+        // One flat polygon through the tips of its three to six petals,
+        // so a four-petalled flower draws a square, not a hexagon; else a
+        // hexagon round their tips, or round its centre where it has none.
         let (ring, rise, paint) = if petals.count == 0 {
             (centre, 0.0, accent)
+        } else if (3..=6).contains(&petals.count) {
+            (
+                start + length * math::cos(cup),
+                length * math::sin(cup),
+                colour,
+            )
         } else {
             let reach = length * 0.85;
             (
@@ -2257,9 +2346,14 @@ fn floret(
                 colour,
             )
         };
-        let corners: Vec<Vec3> = (0..6)
+        let sides = if (3..=6).contains(&petals.count) {
+            petals.count
+        } else {
+            6
+        };
+        let corners: Vec<Vec3> = (0..sides)
             .map(|k| {
-                let angle = spin + std::f64::consts::TAU * f64::from(k) / 6.0;
+                let angle = spin + std::f64::consts::TAU * f64::from(k) / f64::from(sides);
                 base + (across * math::cos(angle) + other * math::sin(angle)) * ring
                     + direction * rise
             })
@@ -2621,7 +2715,8 @@ mod tests {
         }
     }
 
-    /// Today's fruit layouts as `crate::fruit` laid them out before L1.
+    /// Today's fruit layouts as `crate::fruit` laid them out before L1,
+    /// but for a raceme's nodes (revision 131).
     #[allow(clippy::many_single_char_names)]
     fn before(kind: &str, n: u32, s: f64, spread: f64, aspect: f64, turn: f64) -> Vec<Placed> {
         let sigma = math::radians(spread);
@@ -2636,9 +2731,14 @@ mod tests {
                 let q = (k + 0.5) / f64::from(n);
                 let (attach, direction, stalk) = match kind {
                     "raceme" => {
+                        // Since revision 131 its nodes run from the
+                        // peduncle's top to where its top unit reaches the
+                        // tip, not half a node in from each.
                         let reach = (1.9 * s * math::cos(sigma)).min(0.9);
+                        let low = 0.1_f64.min(1.0 - reach);
+                        let u = if n > 1 { k / f64::from(n - 1) } else { 1.0 };
                         (
-                            Vec3::Y * ((1.0 - reach) * (0.1 + 0.9 * q)),
+                            Vec3::Y * (low + (1.0 - reach - low) * u),
                             lean(sigma, turn + golden * k),
                             s * 0.9,
                         )

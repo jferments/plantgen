@@ -238,6 +238,9 @@ pub struct Floral {
     pub notch: f64,
     /// Dark spots on each petal's or tepal's inner face, toward its foot.
     pub spots: u32,
+    /// Share of each petal's or tepal's length a stripe down the middle of
+    /// its inner face reaches from its foot; 0 none.
+    pub stripe: f64,
     /// What an inferior ovary's skin bears: a cactus's pericarpel.
     pub pericarpel: Skin,
 }
@@ -278,7 +281,12 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let nf = f64::from(n);
     let length = (r - s).max(r * 0.1);
     let spread = |count: f64, from: f64, to: f64| flower.petal_share() * PI * (from + to) / count;
-    let width = spread(nf, s, r).clamp(length * 0.08, length);
+    // A petal whose outline is stated is as wide for its length as stated,
+    // as its card draws it; else its share of the circle.
+    let width = flower
+        .petal_ratio
+        .map_or_else(|| spread(nf, s, r), |ratio| ratio * length)
+        .clamp(length * 0.08, length);
     let open = flower.open.clamp(0.0, 1.0);
     // Closing raises every part toward the axis and shortens the petals.
     let rise = |cup: f64| cup + (CLOSED - cup) * (1.0 - open);
@@ -297,7 +305,14 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         (1.2 * c).max(0.3 * r)
     };
     let floral_cup = (cup_length > 0.0).then_some((cup_length, 0.6 * s, s));
-    let (seat, cup, ovary) = match flower.ovary {
+    // A flower with no carpels (a staminate or a sterile flower) has no
+    // ovary to stand on, whatever its taxa's ovary position.
+    let position = if flower.carpels == 0 {
+        Ovary::Superior
+    } else {
+        flower.ovary
+    };
+    let (seat, cup, ovary) = match position {
         Ovary::Superior => (cup_length, floral_cup, None),
         Ovary::Half => {
             let seat = cup_length.max(ovary_length * 0.5);
@@ -326,7 +341,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     };
     // A floral tube on the inferior ovary, widening a little to the rim
     // the perianth stands on.
-    let floral_tube = (flower.ovary == Ovary::Inferior && flower.floral_tube > 0.0).then(|| {
+    let floral_tube = (position == Ovary::Inferior && flower.floral_tube > 0.0).then(|| {
         let neck = s.max(0.12 * ovary_length) * 0.7;
         Tube {
             height: seat,
@@ -908,6 +923,12 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         form_cup: form.cup,
         notch: flower.notch,
         spots: flower.spots,
+        // Not on a closed bud's hidden faces.
+        stripe: if open >= SHOWN {
+            flower.stripe_length
+        } else {
+            0.0
+        },
         pericarpel: flower.pericarpel,
     }
 }
@@ -991,6 +1012,16 @@ pub struct Colours {
     pub base_length: f64,
     /// The nectaries at each petal's very foot; none if absent.
     pub star: Option<[f32; 3]>,
+    /// The stripe down the middle of each petal's inner face; the petal's
+    /// own if absent.
+    pub stripe: Option<[f32; 3]>,
+    /// Each petal's outer face; the inner face's, a shade darker, if
+    /// absent.
+    pub back: Option<[f32; 3]>,
+    /// Each petal's outer face at its foot, fading into the outer face's
+    /// colour at `back_base_length` of its length; none if absent.
+    pub back_base: Option<[f32; 3]>,
+    pub back_base_length: f64,
     /// The corolla tube's, where it differs from the petals'.
     pub tube: Option<[f32; 3]>,
     /// Its stigma lobes.
@@ -1137,7 +1168,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             spine: None,
             levels: 1,
         };
-        let leaf = part.leaf(
+        let mut leaf = part.leaf(
             frame.point(piece.angle, piece.radius, piece.height),
             heading,
             left,
@@ -1145,6 +1176,9 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             piece.width,
             colours.toward_calyx(piece.calyx),
         );
+        if piece.term != Term::Sepal {
+            leaf.underside = colours.back;
+        }
         // A petal is seen close: on the nearest step it takes every
         // station and both samples across, however short it is, so its
         // outline curves rather than breaking into a few facets.
@@ -1158,6 +1192,16 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
         leaf.draw(&solid, stations, across, mesh);
         if piece.term != Term::Sepal {
             tint_foot(mesh, first, stations, across, &colours, leaf.colour);
+            tint_back(mesh, first, stations, across, &colours);
+        }
+        if fine && laid.stripe > 0.0 && piece.term != Term::Sepal {
+            stripe(
+                &leaf,
+                &solid,
+                laid.stripe,
+                colours.stripe.unwrap_or(leaf.colour),
+                mesh,
+            );
         }
         if fine && laid.spots > 0 && piece.term != Term::Sepal {
             spots(&leaf, &solid, laid.spots, colours.accent, mesh);
@@ -1302,7 +1346,8 @@ const SHOULDER: f64 = 0.85;
 /// first coarse step), its tubes as `n`-sided bands, a low pyramid of a
 /// centre or a column in the accent, and stamens while the flower is a
 /// centimetre across or more and drawn fine; from the second coarse step
-/// one hexagon round its petal tips.
+/// one flat polygon through the tips of its three to six petals, or a
+/// hexagon round them where it has more or fewer.
 #[allow(clippy::too_many_lines)]
 pub(crate) fn draw_reduced(
     laid: &Floral,
@@ -1371,9 +1416,26 @@ pub(crate) fn draw_reduced(
             (ring.abs(), rise, colours.petal)
         };
         if ring > 0.0 {
-            let corners: Vec<Vec3> = (0..6)
-                .map(|k| frame.point(TAU * f64::from(k) / 6.0, ring, rise))
-                .collect();
+            // Three to six petals: a polygon through their tips, turned as
+            // they are, so a four-petalled flower draws a square; else a
+            // hexagon.
+            let corners: Vec<Vec3> = if (3..=6).contains(&petals.len()) && !naked {
+                petals
+                    .iter()
+                    .map(|p| {
+                        let cup = math::radians(p.cup);
+                        frame.point(
+                            p.angle,
+                            (p.radius + p.length * math::cos(cup)).abs(),
+                            p.height + p.length * math::sin(cup),
+                        )
+                    })
+                    .collect()
+            } else {
+                (0..6)
+                    .map(|k| frame.point(TAU * f64::from(k) / 6.0, ring, rise))
+                    .collect()
+            };
             both(&corners, paint, mesh);
         }
         leaves::smooth_normals(mesh, first, first_index);
@@ -1790,29 +1852,111 @@ fn tint_foot(
     }
 }
 
-/// `count` dark spots on the inner face of a perianth part drawn as
-/// `leaf` with `solid`, scattered over its lower half and kept off its
-/// margins, each a small diamond standing just off the face. Where they
-/// fall is fixed by the part's own position, so every flower's differ.
-fn spots(leaf: &leaves::Leaf, solid: &SolidLeaf, count: u32, colour: [f32; 3], mesh: &mut Mesh) {
-    const STEPS: usize = 24;
+/// The midrib of a perianth part drawn as `leaf` with `solid`, as
+/// [`leaves::Leaf::draw`] walks it: `steps + 1` points evenly along it from
+/// its foot to its tip, each with the tangent there.
+#[allow(clippy::cast_precision_loss)]
+fn midrib(leaf: &leaves::Leaf, solid: &SolidLeaf, steps: usize) -> Vec<(Vec3, Vec3)> {
     let arch = math::radians(solid.arch);
     let from = solid.arch_from;
-    // The midrib's points and tangents, as `Leaf::draw` walks it.
     let mut point = leaf.base;
-    let mut walk = Vec::with_capacity(STEPS + 1);
-    for i in 0..=STEPS {
-        let u = i as f64 / STEPS as f64;
+    let mut walk = Vec::with_capacity(steps + 1);
+    for i in 0..=steps {
+        let u = i as f64 / steps as f64;
         let bent = if from > 0.0 {
-            let mid = (u + 0.5 / STEPS as f64).min(1.0);
+            let mid = (u + 0.5 / steps as f64).min(1.0);
             ((mid - from) / (1.0 - from)).clamp(0.0, 1.0)
         } else {
             u
         };
         let tangent = leaf.heading.rotate_about(leaf.left, arch * bent);
         walk.push((point, tangent));
-        point += tangent * (leaf.length / STEPS as f64);
+        point += tangent * (leaf.length / steps as f64);
     }
+    walk
+}
+
+/// Share of a petal's width at each point a stripe down its middle takes
+/// there: the median furrow a lily's nectary runs up from the tepal's foot,
+/// the stripe narrowing to a point where it stops.
+const STRIPE_WIDTH: f64 = 0.3;
+
+/// A stripe down the middle of the inner face of a perianth part drawn as
+/// `leaf` with `solid`, from its foot to `reach` of its length in
+/// `colour`: a ribbon standing just off the face along the midrib, a
+/// [`STRIPE_WIDTH`] of the part's width and narrowing to a point at its
+/// end, as Kellogg's lily's yellow stripe runs from its nectary.
+#[allow(
+    clippy::cast_possible_truncation,
+    clippy::cast_sign_loss,
+    clippy::cast_precision_loss
+)]
+fn stripe(leaf: &leaves::Leaf, solid: &SolidLeaf, reach: f64, colour: [f32; 3], mesh: &mut Mesh) {
+    const STEPS: usize = 24;
+    const BANDS: usize = 4;
+    let walk = midrib(leaf, solid, STEPS);
+    let reach = reach.clamp(0.0, 1.0);
+    let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
+    for band in 0..=BANDS {
+        let t = band as f64 / BANDS as f64;
+        let u = reach * t;
+        let station = ((u * STEPS as f64).round() as usize).min(STEPS);
+        let (centre, tangent) = walk[station];
+        let face = tangent.cross(leaf.left).normalize_or(leaf.heading);
+        let half = 0.5 * STRIPE_WIDTH * solid.width_at(u) * leaf.width * (1.0 - t * t * t);
+        let lift = solid.thickness * leaf.width * 0.6;
+        for side in [-1.0, 1.0] {
+            mesh.push(leaf.vertex(centre + leaf.left * (side * half) + face * lift, colour));
+        }
+    }
+    // One face, turned to the inner face's side: a back face is culled.
+    let (centre, tangent) = walk[0];
+    let face = tangent.cross(leaf.left).normalize_or(leaf.heading);
+    let ahead = walk[(reach * STEPS as f64).round().max(1.0) as usize].0 - centre;
+    let toward = leaf.left.cross(ahead).dot(face) > 0.0;
+    for band in 0..BANDS as u32 {
+        let (a, b) = (first + 2 * band, first + 2 * band + 1);
+        let (c, d) = (a + 2, b + 2);
+        if toward {
+            mesh.indices.extend_from_slice(&[a, b, c, b, d, c]);
+        } else {
+            mesh.indices.extend_from_slice(&[a, c, b, b, c, d]);
+        }
+    }
+}
+
+/// Paint the outer face of a petal just drawn from vertex `first` (as
+/// [`tint_foot`] reads it, the outer face last in each ring) at its foot in
+/// the flower's `back_base` colour, fading into the outer face's own at
+/// `back_base_length` of its length.
+fn tint_back(mesh: &mut Mesh, first: usize, stations: usize, across: usize, colours: &Colours) {
+    let Some(base) = colours.back_base else {
+        return;
+    };
+    let ring = 4 * across;
+    for station in 0..stations {
+        #[allow(clippy::cast_precision_loss)]
+        let u = station as f64 / stations as f64;
+        let reach = colours.back_base_length;
+        #[allow(clippy::cast_possible_truncation)]
+        let t = math::smoothstep(reach - 0.5 * FOOT_FADE, reach + 0.5 * FOOT_FADE, u) as f32;
+        for k in 2 * across + 1..ring {
+            if let Some(vertex) = mesh.colors.get_mut(first + station * ring + k) {
+                for c in 0..3 {
+                    vertex[c] = base[c] + (vertex[c] - base[c]) * t;
+                }
+            }
+        }
+    }
+}
+
+/// `count` dark spots on the inner face of a perianth part drawn as
+/// `leaf` with `solid`, scattered over its lower half and kept off its
+/// margins, each a small diamond standing just off the face. Where they
+/// fall is fixed by the part's own position, so every flower's differ.
+fn spots(leaf: &leaves::Leaf, solid: &SolidLeaf, count: u32, colour: [f32; 3], mesh: &mut Mesh) {
+    const STEPS: usize = 24;
+    let walk = midrib(leaf, solid, STEPS);
     let seed =
         (leaf.base.x * 7919.0 + leaf.base.y * 104_729.0 + leaf.base.z * 1_299_709.0).to_bits();
     let size = (leaf.width * 0.07).max(leaf.length * 0.012);
@@ -1840,10 +1984,11 @@ fn spots(leaf: &leaves::Leaf, solid: &SolidLeaf, count: u32, colour: [f32; 3], m
         ] {
             mesh.push(leaf.vertex(at + tangent * along + side * across, colour));
         }
+        // One face, turned to the part's inner face (the diamond's corners
+        // run counter-clockwise seen from there): its back, against the
+        // part, is culled.
         mesh.indices
             .extend_from_slice(&[first, first + 1, first + 2, first, first + 2, first + 3]);
-        mesh.indices
-            .extend_from_slice(&[first, first + 2, first + 1, first, first + 3, first + 2]);
     }
 }
 
@@ -1868,6 +2013,10 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             base: None,
             base_length: 0.4,
             star: None,
+            stripe: None,
+            back: None,
+            back_base: None,
+            back_base_length: 0.4,
             tube: None,
             stigma: [1.0; 3],
             pericarpel: CALYX,
@@ -2520,6 +2669,10 @@ mod tests {
                         base: None,
                         base_length: 0.4,
                         star: None,
+                        stripe: None,
+                        back: None,
+                        back_base: None,
+                        back_base_length: 0.4,
                         tube: None,
                         stigma: [0.9, 0.7, 0.1],
                         pericarpel: CALYX,
@@ -2572,6 +2725,10 @@ mod tests {
                     base: None,
                     base_length: 0.4,
                     star: None,
+                    stripe: None,
+                    back: None,
+                    back_base: None,
+                    back_base_length: 0.4,
                     tube: None,
                     stigma: [0.1, 0.5, 0.1],
                     pericarpel: CALYX,
@@ -2652,6 +2809,10 @@ mod tests {
                     base,
                     base_length: 0.4,
                     star,
+                    stripe: None,
+                    back: None,
+                    back_base: None,
+                    back_base_length: 0.4,
                     tube: None,
                     stigma: [0.5, 0.7, 0.3],
                     pericarpel: CALYX,
@@ -2681,6 +2842,77 @@ mod tests {
         let starred = draw_with(Some(yellow), Some(green));
         assert!(has(&starred, green), "the nectaries' star at the very foot");
         assert_eq!(plain.positions.len(), two_toned.positions.len());
+    }
+
+    #[test]
+    fn a_tepal_takes_its_stripe_and_its_outer_colours() {
+        let lily = |stripe_length: f64| Flower {
+            perianth: Perianth::Tepals,
+            petals: 6,
+            centre: 0.08,
+            stripe_length,
+            ..Flower::default()
+        };
+        let (yellow, red, green) = ([0.9, 0.8, 0.1], [0.6, 0.05, 0.02], [0.2, 0.5, 0.1]);
+        let draw_with = |flower: &Flower, colours: Colours| {
+            let mut mesh = Mesh::default();
+            draw(
+                &layout(flower, &FlowerForm::default(), 0.05, 0.0),
+                Frame::new(Vec3::ZERO, Vec3::Y, Vec3::X, Vec3::Z, false),
+                colours,
+                Part {
+                    born: 1.0,
+                    shed: None,
+                    coarse: 0,
+                },
+                &mut mesh,
+            );
+            mesh
+        };
+        let colours = Colours {
+            petal: [0.9, 0.5, 0.6],
+            calyx: CALYX,
+            accent: [0.3, 0.1, 0.1],
+            filament: [0.5, 0.7, 0.3],
+            anther: [0.3, 0.1, 0.1],
+            ovary: [0.5, 0.7, 0.3],
+            base: None,
+            base_length: 0.4,
+            star: None,
+            stripe: Some(yellow),
+            back: None,
+            back_base: None,
+            back_base_length: 0.4,
+            tube: None,
+            stigma: [0.5, 0.7, 0.3],
+        };
+        let has = |mesh: &Mesh, colour: [f32; 3]| {
+            mesh.colors
+                .iter()
+                .filter(|c| (0..3).all(|i| (c[i] - colour[i]).abs() < 1e-4))
+                .count()
+        };
+        let plain = draw_with(&lily(0.0), colours);
+        let striped = draw_with(&lily(0.5), colours);
+        // Five pairs of corners down each of the six tepals, one face.
+        assert_eq!(has(&plain, yellow), 0);
+        assert_eq!(has(&striped, yellow), 6 * 10);
+        assert_eq!(
+            striped.triangle_count() - plain.triangle_count(),
+            6 * 8,
+            "four bands of two triangles each"
+        );
+        let outside = draw_with(
+            &lily(0.0),
+            Colours {
+                back: Some(red),
+                back_base: Some(green),
+                ..colours
+            },
+        );
+        assert!(has(&outside, red) > 0, "the outer face in its colour");
+        assert!(has(&outside, green) > 0, "and its foot in another");
+        assert_eq!(plain.positions.len(), outside.positions.len());
     }
 
     #[test]

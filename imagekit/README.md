@@ -22,6 +22,8 @@ What it does now:
   API or a chat window, with the cost estimated first and capped;
 - count the usable photos of each **view** per species against
   `photo-rules/`' targets;
+- **render** a species' standing views with `plantc` into the store, and
+  **compare** the renders' answers with the photos' and the text;
 - **embed** each image once per model (SigLIP2, DINOv2, BioCLIP-2) and
   **search** the library by words or by a photo.
 
@@ -239,6 +241,55 @@ a rerun embeds nothing and a stopped run picks up where it left off.
 reciprocal-rank fusion. `--by-species` ranks species by the mean of their
 best three images, and `--html` writes a contact sheet with each photo's
 credit and licence.
+
+## Render and compare
+
+```sh
+imagekit render asimina-triloba --age 20 --day 166 --plantc ../target/release/plantc
+imagekit run triage --backend chat --model "my chat app" --taxon "Asimina triloba" --chat-dir ~/chat-triage
+imagekit run observe --backend chat --model "my chat app" --taxon "Asimina triloba" --chat-dir ~/chat-observe
+imagekit compare --taxon "Asimina triloba" --plantc ../target/release/plantc --out compare/asimina-triloba
+```
+
+`render` makes `photo-rules/03-match-renders.md`'s standing set of one
+species at each seed (default three): side, 45 degrees down, and three
+framed close-ups (a foliage shoot, a flower or fruit or a second shoot
+lower down, a leaf underside; for cacti the ribs, a flower and the apex),
+plus the species' flat cards from `plantc atlas`, one image per card, for
+the face-on features. Close-ups that are mostly sky or ground are dropped.
+Each image goes into a batch (`render-<species>-<date>`) with source
+`render`, licence CC0, and a `render` block saying how it was made: commit,
+generator revision, species id, seed, age, day, env, view, focus, span and
+the plantc command. Match `--age`, `--day` and `--env` to the photos first
+(03-match-renders.md §1-2: `imagekit views` and the photos' dates help).
+
+Observe the renders with the same model, rules and settings as the photos,
+in one run: a render observed by one model and photos by another are not
+compared. Taking `--taxon` covers both, since a render batch is filed under
+the species' name.
+
+`compare` follows `photo-rules/04-compare.md`: it drops what the rules
+drop (unusable photos, cultivar looks, photos from another setting for
+habit and crown features, another leaf state for leaf features, another
+age class for crown profiles), counts several photos of one observation
+(or one photographer on one day) as one vote, aggregates each side per
+feature, gives a verdict (✓, ~, ✗, insufficient under 5 votes from 3
+photographers, render insufficient under 3 render answers or without flat
+cards for a face-on feature), reads what the species' sources state with
+`plantc traits` and calls a disagreement that the sources side with the
+drawing a conflict, checks for flowers or fruit the month's photos show
+and no render does, and ranks the misses by severity. It writes
+`COMPARE.md` (one table per species: sources, photos with n, renders,
+verdict), the two aggregates and `findings.json` for diagnosis
+(`05-diagnose.md`).
+
+**The routine photo check.** After a family's text check, for each species
+it changed: `pull`, `fetch inat` (60 photos spread over the months),
+`render` at the photos' age and month, `run triage` and `run observe` on
+both with one model, `compare`, then `push`. In a cloud session the chat
+backend costs nothing: hand each folder's images to observers that see
+only the folder (no species name), and read their answers back with the
+same command. A paid model needs the owner's go and `plan` first.
 
 ## Share through data.plantgen.io
 

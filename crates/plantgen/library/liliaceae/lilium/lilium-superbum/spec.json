@@ -116,7 +116,11 @@
     "flowering_months": [
       7,
       8
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 18,
+      "max": 200
+    }
   },
   "provenance": {
     "sources": [
@@ -285,6 +289,11 @@
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): flowering summer (Jul-early Aug)"
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Derived: the stem's leaves are its 6-24 whorls times 3-20 leaves in each, 18-480 (capped at 200, the vocabulary's most), from the counts quoted for leaf_whorls (Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): in 6-24 whorls. The typical value is our pick of a usual plant inside that range.) and leaves_per_whorl (Flora of North America vol. 26 (2002), Lilium superbum (efloras.org, read 2026-10-18): 3-20 leaves per whorl. The typical value is our pick of a usual plant inside that range.)."
     }
   }
 }
