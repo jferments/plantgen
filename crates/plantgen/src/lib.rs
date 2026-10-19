@@ -1106,4 +1106,11 @@ pub mod venation;
 /// a tomato's does. A kept calyx is sized from its stated fruiting length
 /// (`kept_calyx`), and an armed one carries prickles up its lobes
 /// (`kept_prickles`), as an eggplant's cap does (152 is the date palm's foot, #263).
-pub const GENERATOR_REVISION: u32 = 153;
+/// 154: poppies round 4. Sepals a flora calls green are drawn in the
+/// plant's own leaf colour where it is stated (an opium poppy's glaucous
+/// bud), and a hooked bud's neck narrows over its bends (herb revision
+/// 17). Fern pinnules may be oblong (a maidenhair's broad pinnae), a
+/// capsule's large seeds sit one to a cell (a spindle's arils), and a
+/// freely branching lying stem spreads into a mat (herb revision 18)
+/// (153 is nightshades round 6, #262).
+pub const GENERATOR_REVISION: u32 = 154;

@@ -388,6 +388,14 @@
       "values": ["erect", "ascending", "decumbent", "prostrate"],
       "why": "how a plant's leafy stems hold themselves, as floras word it: upright, curving up from a leaning foot, lying on the ground below and rising toward their tips, or lying flat along the ground (trailing or creeping) with only their flowering tips raised"
     },
+    "trailing_branches": {
+      "group": "form",
+      "organ": "stem",
+      "type": "bool",
+      "when": {"stem_posture": ["decumbent", "prostrate"]},
+      "optional": true,
+      "why": "whether a plant's lying stems branch along the ground, each branch lying and rising as the stem does, so it spreads into a mat (floras: 'freely branching', 'forming mats', 'trailing with slender branches')"
+    },
     "stem_length_m": {
       "group": "size",
       "organ": "stem",
@@ -1345,6 +1353,15 @@
       "when": {"leaf_division": ["compound"]},
       "optional": true,
       "why": "the divisions on each pinna of a thrice-divided leaf (tripinnate, triternate), each bearing leaflets or segments of its own"
+    },
+    "pinnule_shape": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["lanceolate", "oblong"],
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "the outline of a fern's pinnules (its ultimate segments on a pinna): lanceolate and pointed, angled up the pinna (a sword fern's or a lady fern's), or oblong and blunt, crowded nearly square along a pinna as broad to near its tip (a maidenhair's)"
     },
     "ternate_blade": {
       "group": "leaves",
