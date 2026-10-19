@@ -1089,4 +1089,8 @@ pub mod venation;
 /// first fruit ripen, bearing fruit below its flowers (`fruit_below`),
 /// shows its earlier flowers' fruit from its first fruiting month and
 /// keeps flowering to its last (149 is palms, #250).
-pub const GENERATOR_REVISION: u32 = 150;
+/// 151: poppies round 4. Sepals a flora calls green are drawn in the
+/// plant's own leaf colour where it is stated (an opium poppy's glaucous
+/// bud), and a hooked bud's neck narrows over its bends (herb revision
+/// 17) (150 is poppies, #242).
+pub const GENERATOR_REVISION: u32 = 151;
