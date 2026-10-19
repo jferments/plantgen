@@ -1092,5 +1092,8 @@ pub mod venation;
 /// 151: poppies round 4. Sepals a flora calls green are drawn in the
 /// plant's own leaf colour where it is stated (an opium poppy's glaucous
 /// bud), and a hooked bud's neck narrows over its bends (herb revision
-/// 17) (150 is poppies, #242).
+/// 17). Fern pinnules may be oblong (a maidenhair's broad pinnae), a
+/// capsule's large seeds sit one to a cell (a spindle's arils), and a
+/// freely branching lying stem spreads into a mat (herb revision 18)
+/// (150 is poppies, #242).
 pub const GENERATOR_REVISION: u32 = 151;
