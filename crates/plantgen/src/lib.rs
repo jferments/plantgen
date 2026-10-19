@@ -1004,4 +1004,17 @@ pub mod venation;
 /// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
 /// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
 /// cactus genera, #239).
-pub const GENERATOR_REVISION: u32 = 144;
+/// 145: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
+/// blade on a stalk four times its length); fleshy and succulent blades
+/// are drawn solid (`leaf_succulence`, `leaf_cross_section`); a herb's
+/// rosette and flowering stems are as many as its taxa count
+/// (`rosette_leaves`, `flowering_stems`), a leafless flowering stem is a
+/// scape in any flowering plant, and a compound inflorescence's branches
+/// take the kind its taxa name (`inflorescence_branch_kind`); smooth bark
+/// draws with a valid pattern; a shrub without short shoots has a short
+/// share; a glandular hair has a head, a count per square centimetre,
+/// a margin length that grades it from short and upright to long and
+/// spreading, a stalk colour and a drop of clear, milky or amber secretion,
+/// and strands draw on flower and cluster cards (fifteen Caryophyllales
+/// species, two more sundews and hemp, #243; 144 is #244).
+pub const GENERATOR_REVISION: u32 = 145;

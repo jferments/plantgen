@@ -5,8 +5,8 @@
   "parent": "order/caryophyllales",
   "traits": {
     "leaf_arrangement": {
-      "alternate": "often",
-      "opposite": "often"
+      "alternate": "usually",
+      "opposite": "sometimes"
     },
     "leaf_division": "simple",
     "leaf_margin": "entire",
@@ -21,49 +21,55 @@
       "ovate": "often",
       "obovate": "often"
     },
-    "stipules": {
-      "true": "usually",
-      "false": "rarely"
-    },
-    "sexual_system": {
-      "hermaphrodite": "usually",
-      "polygamous": "sometimes"
-    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
     "ovary_position": {
-      "superior": "usually",
-      "half_inferior": "rarely"
+      "half_inferior": "usually",
+      "inferior": "sometimes"
     },
     "hypanthium": {
       "true": "often",
       "false": "often"
     },
     "woodiness": {
-      "woody": "often",
-      "herbaceous": "often"
+      "herbaceous": "usually",
+      "semi": "rarely"
     },
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often"
+      "head": "usually",
+      "solitary": "sometimes"
     },
-    "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
-    },
-    "perianth": {
-      "sepals_and_petals": "usually",
-      "tepals": "sometimes"
-    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
     "fruit_type": "capsule",
     "stamens": {
-      "min": 3,
-      "max": 50
+      "min": 6,
+      "max": 40,
+      "low": 4,
+      "high": 100
     },
     "carpels": {
       "min": 3,
-      "max": 3,
+      "max": 8,
       "low": 2,
-      "high": 9
-    }
+      "high": 18
+    },
+    "life_span": {
+      "annual": "usually",
+      "perennial": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "bract_form": "leafy",
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 8
+    },
+    "calyx_in_fruit": "falling"
   },
   "evidence": {
     "traits": {
@@ -73,8 +79,93 @@
     },
     "traits.perianth": {
       "evidence": "SourceInferred",
-      "source": "wikipedia",
-      "note": "In the APG sense the family is Portulaca alone (Wikipedia, read 2026-10-17: over 100 spp, the type genus). Flora of Taiwan Portulaca and Flora Costaricensis Portulaca (both read 2026-10-17) describe two unequal sepals plus 4-6 separate, quickly shed petals, i.e. a calyx and a corolla; the tepal reading belongs to the few-genus Hectorella-type plants folded in from DELTA."
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): sepals 2, connate at the base; petals 4 or 5 (to 8 or more), free or shortly connate; FNA: petals 5-7, ephemeral."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): herbs annual (perennial in P. suffrutescens); FOC vol. 5: annual or perennial. The family is Portulaca alone in the APG and WCVP sense."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): stems fleshy or suffrutescent; herbs."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): leaves alternate or opposite; FNA: alternate or subopposite; the genus file's NZ Flora reading agrees."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulacaceae (eFloras, read 2026-10-19): leaf blade simple."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulacaceae (eFloras, read 2026-10-19): margin entire."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulacaceae (eFloras, read 2026-10-19): true stipules absent; nodes sometimes with axillary scales or hairs. FNA vol. 4: Portulaca's nodal hairs are regarded by some as stipular, a reading Geesink (1969) rejected."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): a terminal head of sessile flowers, single or clustered, subtended by an involucre of leaves; FNA: terminal clusters or axillary on short branches."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): inflorescences terminal in clusters, or axillary on short branches."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): leaves congested and involucre-like just below the inflorescence."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulacaceae (eFloras, read 2026-10-19): flowers actinomorphic."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): petals 4 or 5 (to 8 or more); FNA: 5-7."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulacaceae (eFloras, read 2026-10-19): flowers bisexual, very rarely unisexual."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): ovary half inferior to inferior; FOC: half-inferior."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): stamens (4-)6-40(-100); FOC: 4-100."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): stigmas 3-8 (to 18), one per carpel; FOC family: 2-5-carpellate, stigma 2-9-lobed."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): capsules membranaceous or chartaceous, circumscissile (a lid comes off)."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): sepals fall from the top of the capsule (with the lid); FOC: persistent but inconspicuous."
     }
   }
 }

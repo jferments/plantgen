@@ -201,8 +201,9 @@ Usage:
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
       the plant, metres from its foot with +Y up; --focus leaf:F,
-      bloom:F or stalk:F frames the middle of the leaf, of the flower,
-      fruit or cone, or of the hairy young stem or leaf stalk, F of the
+      blade:F, bloom:F or stalk:F frames the middle of the leaf, of its
+      blade past its stalk, of the flower, fruit or cone, or of the
+      hairy young stem or leaf stalk, F of the
       way up the plant's (0 lowest, 1 highest),
       SPAN 0.05 unless given; --view under looks up at it from below, at
       the lower faces of its leaves. --parts on (level 0)
@@ -2276,18 +2277,61 @@ fn stand_command(args: &[String]) -> Result<(), Failure> {
 }
 
 #[allow(clippy::too_many_lines)]
-/// The point `--focus leaf:F`, `bloom:F` or `stalk:F` names on `plant`:
-/// the middle of the leaf card (of the flower, fruit or cone card, or of
-/// the piece of hairy young stem or leaf stalk,
-/// `mesh::PlantMesh::hair_tubes`) `F` of the way up the plant's, from 0
-/// the lowest to 1 the highest.
-fn named_point(plant: &mesh::PlantMesh, what: &str, at: f64) -> Result<Vec3, Failure> {
+/// The point `--focus leaf:F`, `blade:F`, `bloom:F` or `stalk:F` names on
+/// `plant`: the middle of the leaf card (of its blade, past its stalk; of
+/// the flower, fruit or cone card; or of the piece of hairy young stem or
+/// leaf stalk, `mesh::PlantMesh::hair_tubes`) `F` of the way up the
+/// plant's, from 0 the lowest to 1 the highest.
+fn named_point(
+    plant: &mesh::PlantMesh,
+    templates: Option<&Templates>,
+    what: &str,
+    at: f64,
+) -> Result<Vec3, Failure> {
     let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
     let mut points: Vec<Vec3> = match what {
         "leaf" => plant.cards[..plant.bent_cards()]
             .iter()
             .map(|card| vector(card.base) + vector(card.heading) * (f64::from(card.length) * 0.5))
             .collect(),
+        // The middle along the card of its texels that are leaf and not
+        // stalk: a sundew's small blade at the end of its long petiole.
+        "blade" => {
+            let Some(templates) = templates else {
+                return Err("`--focus blade:F` needs the plant's leaf templates".into());
+            };
+            let size = templates.size;
+            let middles: Vec<f64> = templates
+                .templates
+                .iter()
+                .map(|drawn| {
+                    let (mut sum, mut count) = (0.0, 0.0_f64);
+                    for at in 0..size * size {
+                        if drawn.coverage[at] >= 0.5
+                            && drawn.accent.get(at).copied().unwrap_or(0.0) < 0.5
+                        {
+                            #[allow(clippy::cast_precision_loss)]
+                            let row = (at / size) as f64 + 0.5;
+                            sum += row;
+                            count += 1.0;
+                        }
+                    }
+                    #[allow(clippy::cast_precision_loss)]
+                    let size = size as f64;
+                    if count > 0.0 { sum / count / size } else { 0.5 }
+                })
+                .collect();
+            plant.cards[..plant.bent_cards()]
+                .iter()
+                .map(|card| {
+                    let along = middles
+                        .get(usize::from(card.template))
+                        .copied()
+                        .unwrap_or(0.5);
+                    vector(card.base) + vector(card.heading) * (f64::from(card.length) * along)
+                })
+                .collect()
+        }
         // The organs drawn as part meshes, or else the flat cards after
         // the bent leaves: flowers, fruit and cones.
         "bloom" => {
@@ -2314,9 +2358,10 @@ fn named_point(plant: &mesh::PlantMesh, what: &str, at: f64) -> Result<Vec3, Fai
             .map(|tube| (vector(tube.start) + vector(tube.end)) * 0.5)
             .collect(),
         _ => {
-            return Err(
-                format!("`--focus` names leaf:F, bloom:F or stalk:F, found `{what}`").into(),
-            );
+            return Err(format!(
+                "`--focus` names leaf:F, blade:F, bloom:F or stalk:F, found `{what}`"
+            )
+            .into());
         }
     };
     if points.is_empty() {
@@ -2433,7 +2478,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         // The organs to draw as part meshes are known only until they
         // are placed.
         if let Some((what, at)) = named.as_ref().filter(|(what, _)| what == "bloom") {
-            bloom = Some(named_point(&plant, what, *at)?);
+            bloom = Some(named_point(&plant, None, what, *at)?);
         }
         plantgen::parts::place(&mut plant, &looks, &parts);
         plant
@@ -2495,7 +2540,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             let span: f64 = options.number("span")?.unwrap_or(0.05);
             let point = match bloom {
                 Some(point) => point,
-                None => named_point(&plant, &what, at)?,
+                None => named_point(&plant, Some(&templates), &what, at)?,
             };
             Some((point, span))
         }

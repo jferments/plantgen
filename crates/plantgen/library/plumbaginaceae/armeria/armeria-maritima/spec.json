@@ -1,0 +1,454 @@
+{
+  "schema": 1,
+  "id": "armeria-maritima",
+  "taxon": {
+    "scientific_name": "Armeria maritima",
+    "common_name": "thrift",
+    "family": "Plumbaginaceae",
+    "genus": "Armeria",
+    "plant_name_id": 2652527
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 5,
+    "step": 1,
+    "keyframes": [
+      1,
+      3,
+      5
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.54,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "forb",
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "cauline_leaves": "none",
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3,
+      "low": 0.02,
+      "high": 0.6
+    },
+    "height_max_m": 0.6,
+    "crown_width_max_m": 0.3,
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_shape": "linear",
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.0005,
+      "max": 0.003
+    },
+    "petiole_length_m": 0,
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "single": "usually",
+      "parallel": "sometimes"
+    },
+    "leaf_hairs": {
+      "glabrous": "often",
+      "pubescent": "sometimes"
+    },
+    "leaf_posture": "spreading",
+    "leaf_colour": [
+      75,
+      115,
+      70
+    ],
+    "inflorescence": "head",
+    "inflorescence_posture": "erect",
+    "peduncle_length_m": {
+      "min": 0.02,
+      "max": 0.6
+    },
+    "inflorescence_length_m": {
+      "min": 0.013,
+      "max": 0.028
+    },
+    "bract_form": "scale",
+    "bract_length_m": {
+      "min": 0.004,
+      "max": 0.014
+    },
+    "units_per_inflorescence": {
+      "min": 20,
+      "max": 60
+    },
+    "flower_colour": [
+      235,
+      145,
+      185
+    ],
+    "flower_size_m": {
+      "min": 0.006,
+      "max": 0.009
+    },
+    "flower_merosity": 5,
+    "perianth": "sepals_and_petals",
+    "corolla_shape": "rotate",
+    "calyx_colour": [
+      235,
+      225,
+      225
+    ],
+    "stamens": 5,
+    "carpels": 5,
+    "fruit_type": "capsule",
+    "calyx_in_fruit": "persistent",
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 1200,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry",
+      "mesic"
+    ],
+    "soil_texture": [
+      "sand",
+      "rock"
+    ],
+    "habitat_notes": "Maritime rocks, cliffs, sandy bluffs and dunes, salt marshes; inland on gravelly tundra, flood plains and alpine meadows (FNA subspecies; Wikipedia).",
+    "rosette_leaves": {
+      "min": 8,
+      "max": 25,
+      "typical": 15
+    },
+    "flowering_stems": {
+      "min": 5,
+      "max": 30,
+      "typical": 12
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a dense tuft of grass-like leaves with many leafless scapes, each topped by a round pink head."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.54 m tall at 4 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a dense tuft of grass-like leaves with many leafless scapes, each topped by a round pink head."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): perennial scapose herbs: forb."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): herbs, perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): herbs with a branched woody rootstock."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Armeria maritima (read 2026-10-19): a compact evergreen perennial growing in low clumps."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): leaves in basal rosettes; rootstock erect (species)."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): scapes leafless."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): scapes erect, 2-60 cm, the full range kept as low and high; a usual 10-30 cm is an estimate within it (confidence medium)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): scapes to 60 cm."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: old clumps of many rosettes from a branched rootstock reach about 30 cm across."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): leaves alternate, spiralled."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): leaves spiralled."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): leaf blades 1-15 cm x 0.5-3 mm: linear (genus linear to linear-spatulate)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): leaf blades 1-15 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): leaf blades 0.5-3 mm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): leaves sessile."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): margins entire."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): blade base 1- or more or less 3-veined."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): faces glabrous or hairy (subsp. californica, sibirica either; interior glabrous)."
+    },
+    "traits.leaf_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the grass-like leaves spread and arch out from the rosette into a dense tuft."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: no flora read names the leaf colour; a dark green to grey-green, sRGB by eye."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): solitary dense hemispheric heads."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): scapes erect."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): scapes (the bare stalk of the head) 2-60 cm."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): heads 13-28 mm across (a hemispheric head, its depth less; diameter given)."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): involucre of scarious bracts."
+    },
+    "traits.bract_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): outermost involucral bract ovate to triangular-lanceolate, 4-14 mm; involucral sheath below the head 5-32 mm."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a 13-28 mm head of several scorpioid cymes holds a few dozen flowers."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): corolla pink to white; Wikipedia: bright pink, sometimes purple, white or red; sRGB by eye for 'pink'."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: no flora gives a flower size; each flower about 6-9 mm across, several to a 13-28 mm head."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): sepals 5, petals 5, stamens 5."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): calyx tube and 5 petals."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): petals only slightly joined at the base, so the limbs spread: rotate (an estimate of the open posture; FNA gives no corolla form)."
+    },
+    "traits.calyx_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): calyx funnel-shaped, 10-ribbed, its limb membranous (dry, papery, whitish); sRGB by eye for a papery white."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): stamens 5."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): styles 5."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): fruits dry, enclosed in the persistent calyx, opening transversely; read as capsule."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): fruits enclosed in persistent calyces."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): subspecies: californica mid spring-mid summer, maritima late spring-early summer, sibirica and interior summer; together April-August. Wikipedia: British salt marshes April-October."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: fruits ripen within the papery calyx a month or so after flowering, June to September."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): subspecies from 0 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): subsp. sibirica to 1200 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Armeria maritima (read 2026-10-19): coastal cliffs, grassland and salt marshes, mountain rocks: open sites."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Armeria maritima (read 2026-10-19): dry, sandy, saline conditions."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): maritime rocks, cliffs, sandy bluffs and dunes, gravel pavements."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria maritima (eFloras, read 2026-10-19): habitats of the four North American subspecies; Wikipedia adds salt marshes and copper- and lead-rich soils."
+    },
+    "traits.rosette_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a dense cushion of many crowded rosettes of narrow leaves (Flora of China: leaves crowded in a basal tuft), each rosette round one scape."
+    },
+    "traits.flowering_stems": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: each rosette of the cushion sends up a scape, so a plant carries many."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}
