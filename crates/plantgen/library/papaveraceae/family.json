@@ -10,6 +10,7 @@
     "hypanthium": {"false": "usually", "true": "rarely"},
     "flower_merosity": 2,
     "perianth": "sepals_and_petals",
+    "calyx_caducous": {"true": "usually", "false": "sometimes"},
     "ovary_position": "superior",
     "woodiness": {
       "herbaceous": "usually",
@@ -62,6 +63,7 @@
     }
   },
   "evidence": {
+    "traits.calyx_caducous": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaveraceae (read on eFloras, 2026-10-19): sepals caducous, 2 or 3; Dicentra: sepals caducous; Fumariaceae (APG's Fumarioideae): sepals caducous or persistent. Eschscholzia's are connate and calyptrate, deciduous as a unit."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Ranunculales page, Papaveraceae (read 2026-10-16): Papaveroideae with 4 large petals (bowl-like, inferred); Fumarioideae (more species) with spurred outer petals forming a narrow tube. 'usually' cupped reflects likely candidates; genus values needed for Fumarioideae."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 288, 290: stamens usually many, sometimes 4 to 6 (Fumarioideae). Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 288, 290: ovary of 2 to several carpels; 'several' read as up to 20 (Floral Diagrams p. 130: 2 to many)."},

@@ -2,9 +2,16 @@
 # gives the values its species leave unset (14 of herb's parameters), as
 # the herb program's defaults until then; each species sets the rest.
 #
+# Revision 2: a poppy's flowers open one after another, the stem's own
+# first, then its branches' from the top down (Flora of China vol. 7
+# (2008), Papaver somniferum: flowers solitary; iNaturalist photographs, imagekit
+# batch poppies-2026-10-19: an open flower over branches still in bud),
+# so each flowering branch's raceme is a third of a raceme younger than
+# the one above it (branch_lag).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem papaveraceae 1 extends herb;
+lsystem papaveraceae 2 extends herb;
 
 param adult_age = 2;             # the first year the plant is adult and flowers
 param height_spread = 0.12;      # stems are stem_height * (1 ± height_spread)
@@ -19,6 +26,7 @@ param basal_pieces = 1;          # pieces in a basal leaf
 param basal_arch = 12;           # degrees an arching basal leaf bends at each joint
 param flower_divergence = 137.5; # roll from one flower of the raceme to the next
 param fruit_angle = 25;
+param branch_lag = 0.35;       # each flowering branch, from the top down, a third of a raceme younger
 param light_cell = 0.05;         # light voxel edge
 param flowering_share = 1;     # every adult stem ends in a raceme
 param scape = 0;               # a flowering stem keeps its leaves
