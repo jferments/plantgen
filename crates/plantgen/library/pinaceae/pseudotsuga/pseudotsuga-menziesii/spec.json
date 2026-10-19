@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 1.0,
       "cone_chance": 0.12,
       "cone_area": 0.589,
       "height_rate": 0.018,
@@ -21,7 +22,9 @@
       "upturn": 0.006,
       "spray_droop": 25,
       "pipe_organ": 0.0095,
-      "branch_reach": 6.0,
+      "branch_reach": 8.0,
+      "bole": 0.3,
+      "side_years": 20,
       "pipe_rings": 3e-05
     }
   },
@@ -161,6 +164,26 @@
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
       "note": "The Woody Plant Seed Manual (Pseudotsuga, table 3, read): var. menziesii bears seed from 7 to 10 years, commercial collections from 20 to 25. FEIS (Uchytil 1991, read): appreciable seed from 20 to 30 years in open-grown coast Douglas-fir. The range runs from the earliest seed to appreciable crops. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 15 years set by hand."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (2 trees) .07 .47 .61 .63 .60 .56 .43 .36 .21 .07; mature (5) .00 .38 .50 .60 .54 .54 .40 .34 .24 .07; old (1) bare to .30, .17 .23 .23 .23 .20 .18 .07; drawn 60 years .22 .29 .48 .54 .50 .47 .40 .33 .26 .12; 300 years bare to .4, .37 .38 .33 .27 .23 .09. apical sets the young crown's width."
+    },
+    "generator.params.branch_reach": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (2 trees) .07 .47 .61 .63 .60 .56 .43 .36 .21 .07; mature (5) .00 .38 .50 .60 .54 .54 .40 .34 .24 .07; old (1) bare to .30, .17 .23 .23 .23 .20 .18 .07; drawn 60 years .22 .29 .48 .54 .50 .47 .40 .33 .26 .12; 300 years bare to .4, .37 .38 .33 .27 .23 .09. branch_reach, the wood at which a limb's yearly shoot is halved, sets how far old limbs spread."
+    },
+    "generator.params.bole": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of an old tree's height cleared of limbs, cleared in step with height so saplings keep limbs to the ground: the old open-grown tree photographed is bare to .30 of its height, mature ones to .10."
+    },
+    "generator.params.side_years": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Old conifers (pinidae revision 13): a limb's side shoots live 20 years and are replaced from its dormant buds, so the old crown's living wood stays within the program's module limit at 300 years; without it the crown fitted to the photographs (inaturalist-crowns-2026-10) passed the limit before 300 years."
     },
     "generator.params": {
       "evidence": "Authored",
