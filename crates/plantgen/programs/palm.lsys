@@ -244,9 +244,29 @@
 # A cycad's flush (emerge_spread near 0) still stands as one band, and a
 # crownshaft's fronds still stand at its top.
 #
+# Revision 15 (worn stubs and the root mass):
+# - A boot wears shorter as it ages: a years old it is
+#   boot_length (1 - boot_wear (1 - exp(-a / boot_wear_years))) long,
+#   times a draw from 1 ± boot_spread of its own, so an old trunk's lower
+#   stubs are short and its outline ragged. A Phoenix trunk is covered
+#   with leaf-sheath bases when young and later becomes smooth (Flora of
+#   Tropical East Africa, via Colplanta), the pattern of scars showing
+#   where the bases have gone (University of Arizona Campus Arboretum).
+# - The foot puts out `roots`: adventitious roots from the root
+#   initiation zone at the trunk's base, root_rate a year from root_age,
+#   from heights up to root_zone, the zone rising over root_zone_years.
+#   Each runs from the trunk's surface root_angle degrees from straight
+#   down to the ground; a share 1 - root_reach of them are arrested in
+#   the air, a short stub (University of Florida IFAS EP344: all palm
+#   roots are adventitious; above-ground root initials stop growing in
+#   dry air; on some Phoenix the visible zone reaches several feet up the
+#   trunk).
+#
+# boot_wear, boot_spread and roots 0 draw as revision 14.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 14;
+lsystem palm 15;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -357,6 +377,17 @@ param boot_life;              # years a boot stays
 param boot_length;            # a boot, metres
 param boot_angle;             # degrees a boot stands from the trunk
 param boot_area;
+param boot_wear;              # share of a boot's length it wears away as it ages
+param boot_wear_years;        # years over which it does
+param boot_spread;            # boots are l (1 ± boot_spread) long
+param roots;                  # roots the foot puts out above ground; 0 none
+param root_rate;              # roots a year
+param root_age;               # the year the first shows
+param root_zone;              # highest a root leaves the trunk, metres
+param root_zone_years;        # years over which the root zone rises to root_zone
+param root_angle;             # degrees a root runs from straight down
+param root_radius;
+param root_reach;             # share of the roots that reach the ground; the rest stop short in the air
 # Cones by sex.
 param dioecious;              # 1: each plant is male or female; 0: every plant bears both
 param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
@@ -420,7 +451,9 @@ module Pl(i, m, z);           # leaflet pairs i to i + m - 1 along a pinna z lon
 module Ds(s, r);              # where a frond s long will hang dead, on a trunk r in radius
 module Dh(s, r);              # a dead frond hanging, on a trunk r in radius
 module Bs(r);                 # where a frond's boot will stand, on a trunk r in radius
-module Bt(r);                 # a boot, on a trunk r in radius
+module Bt(r, v);              # a boot v of its length, on a trunk r in radius
+module Rq(i, m);              # roots i to i + m - 1 of this year's
+module Ro(z, q);              # a root leaving the trunk z up, q of the way to the ground
 module Cn(k, r);              # this year's cones, k 1 in a coning year, round a crown r in radius
 module Cf(z);                 # a seed cone z long, on its stalk
 module Cm(z);                 # a pollen cone z long, on its stalk
@@ -525,10 +558,10 @@ interpret Ds(s, r) -> ;
 rule Dh(s, r) : age + dt >= dead_life -> ;
 # The boot's seat at the frond's foot, on a trunk r in radius, turns to
 # the boot when the frond (and its dead frond) is gone.
-rule Bs(r) : age + dt >= frond_life + (skirt > 0 ? dead_life : 0) && boots > 0 -> Bt(r);
-rule Bs(r) : age + dt >= frond_life + (skirt > 0 ? dead_life : 0) -> ;
+rule Bs(r) : age + dt >= frond_life + (skirt > 0 ? dead_life : 0) && boots > 0 && boot_spread <= 0 -> Bt(r, 1);
+rule Bs(r) : age + dt >= frond_life + (skirt > 0 ? dead_life : 0) && boots <= 0 -> ;
 interpret Bs(r) -> ;
-rule Bt(r) : age + dt >= boot_life -> ;
+rule Bt(r, v) : age + dt >= boot_life -> ;
 # The frond holds its dead frond and boot until they go: a generous bound,
 # since what is gone leaves nothing within it.
 rule frond : age >= frond_life + dead_life + boot_life + 4 * dt -> ;
@@ -545,13 +578,14 @@ interpret Dh(s, r) ->
     ^(180 - lerp(min(old_angle + hang, dead_angle), dead_angle,
                  clamp(age / max(dead_fold_years, 0.001), 0, 1))) dead(s);
 # A boot starts at the trunk's surface beside the frond's foot, which
-# formed with the frond, then stands boot_angle from the trunk.
-interpret Bt(r) ->
+# formed with the frond, then stands boot_angle from the trunk, worn
+# shorter with its age.
+interpret Bt(r, v) ->
     &(90)
     f(r * (1 + thicken * (1 - exp(-(age + frond_life + (skirt > 0 ? dead_life : 0))
                                    / max(thicken_years, 0.001)))))
     ^(90 - boot_angle)
-    boot(boot_length);
+    boot(boot_length * v * (1 - boot_wear * (1 - exp(-age / max(boot_wear_years, 0.001)))));
 
 # A frond: its petiole, then its rachis piece by piece, and a fan frond's
 # rays at the end. The rays share the frond's birth, so they die with it.
@@ -890,3 +924,28 @@ interpret Sc(z) -> !(trunk_radius * 0.97) F(z);
 decompose Sk(n) ->
     /(uniform(0, 360)) &(90) f(sucker_distance * uniform(0.6, 1.4)) ^(90)
     /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), n);
+
+# Revision 15's draws stand last, so the draws above keep their sites.
+# A boot's own length draw, from 1 ± boot_spread, when its frond is gone
+# (the rules above leave a boot with boot_spread to this one).
+rule Bs(r) : age + dt >= frond_life + (skirt > 0 ? dead_life : 0) && boots > 0 && boot_spread > 0
+    -> Bt(r, uniform(1 - boot_spread, 1 + boot_spread));
+
+# The foot puts out roots above the ground, root_rate a year from
+# root_age until it has put out `roots`, each from a height in the root
+# zone as high as it has risen (in a year it sends up a sucker, none).
+rule Sb(n) : roots > 0 && t >= root_age && t < root_age + roots / max(root_rate, 0.001) ->
+    Rq(0, max(1, round(root_rate))) Sb(n);
+# Roots stand round the foot a golden angle apart in the order they come
+# out; each one's draws are keyed by its place in the year's, so no two
+# of a year's roots fall alike.
+decompose Rq(i, m) : m > 1 -> Rq(i, floor(m / 2)) Rq(i + floor(m / 2), m - floor(m / 2));
+decompose Rq(i, m) : m == 1 ->
+    [ /(137.508 * (i + max(1, round(root_rate)) * floor(t - root_age))) Ro(root_zone * rand(4 * i + 1) * smoothstep(0, max(root_zone_years, 0.001), t),
+                              rand(4 * i + 2) < root_reach ? 1 : 0.05 + 0.25 * rand(4 * i + 3)) ];
+decompose Rq(i, m) -> ;
+# A root leaves the trunk's surface z up and runs root_angle from
+# straight down to the ground, or q of the way when it stopped short.
+interpret Ro(z, q) ->
+    f(z) &(90) f(trunk_radius * (1 + flare) * 0.9) &(90 - root_angle)
+    !(root_radius) F(q * (z / cos(rad(root_angle)) + root_radius * 2));

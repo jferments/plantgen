@@ -1000,4 +1000,9 @@ pub mod venation;
 /// below the crown; its living fronds' brown sheaths clasp the stem below
 /// each frond's foot (`sheath_length`), hiding the stem's top (143 is
 /// cactus spines and flowers, #239).
-pub const GENERATOR_REVISION: u32 = 144;
+/// 145: palm 15. A boot wears shorter as it ages (`boot_wear`,
+/// `boot_wear_years`) and each is a little longer or shorter
+/// (`boot_spread`), so a Phoenix trunk's lower stubs are short and its
+/// outline ragged; the foot puts out a mass of adventitious roots from a
+/// root zone that rises with age, most stopping short in the air (`roots`).
+pub const GENERATOR_REVISION: u32 = 145;
