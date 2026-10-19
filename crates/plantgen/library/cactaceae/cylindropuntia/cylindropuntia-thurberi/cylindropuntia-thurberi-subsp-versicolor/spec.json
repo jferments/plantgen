@@ -31,7 +31,7 @@
       "joint_flowers": 1,
       "flower_angle": 30,
       "flower_size": 0.04,
-      "chains": 0.25,
+      "chains": 0,
       "chain_max": 4,
       "bud_rate": 0.55
     }
@@ -423,7 +423,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for staghorn cholla from Flora of North America vol. 4 and Anderson (2001 p. 215): a tree or shrub to 2 m, openly branching at acute angles (branch_angle 40) on a short trunk (trunk_joints 8), whorled segments, fruits often proliferating into short chains (chains 0.25, chain_max 4). The joints' size comes from the traits through the subfamily's rules; daughters, generations, sag and swell are set by eye against the template, a tree cholla."
+      "note": "Set by hand for staghorn cholla from Flora of North America vol. 4 and Anderson (2001 p. 215): a tree or shrub to 2 m, openly branching at acute angles (branch_angle 40) on a short trunk (trunk_joints 8), whorled segments, fruits sometimes proliferating into short chains, not drawn (chains 0): a chain holds its fruit from year to year, which would draw the fruit all year against the June to December it states. The joints' size comes from the traits through the subfamily's rules; daughters, generations, sag and swell are set by eye against the template, a tree cholla."
     },
     "appearance": {
       "evidence": "Authored",

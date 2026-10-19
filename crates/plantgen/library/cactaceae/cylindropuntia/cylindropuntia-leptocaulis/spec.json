@@ -17,9 +17,9 @@
       "daughters_low": 1.0,
       "daughters_high": 2.4,
       "generations": 16,
-      "branch_angle": 65,
+      "branch_angle": 35,
       "twist": 20,
-      "trunk_joints": 3,
+      "trunk_joints": 8,
       "leader_lean": 10,
       "sag": 0.1,
       "swell": 0.4,
@@ -28,7 +28,8 @@
       "joint_flowers": 1,
       "flower_angle": 40,
       "flower_size": 0.02,
-      "bud_rate": 0.6
+      "bud_rate": 0.8,
+      "joint_length": 0.065
     }
   },
   "growth": {
@@ -416,7 +417,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for Christmas cholla from Flora of North America vol. 4: a shrub 0.5-1.8 m of pencil-thin segments 2-8 cm long, with short branchlets at right angles along the major axes (branch_angle 65, many generations of small joints). The joints' size comes from the traits through the subfamily's rules; daughters, generations, sag and swell are set by eye against the template."
+      "note": "Set by hand for Christmas cholla from Flora of North America vol. 4: a shrub 0.5-1.8 m of pencil-thin segments 2-8 cm long, with short branchlets at right angles along the major axes (many generations of small joints), drawn rising from a trunk of 8 joints at branch_angle 35 and 6.5 cm joints (within the 2-8 cm) so the shrub stands 0.7-0.8 m, in its typical 0.5-1.2 m. The joints' width comes from the traits through the subfamily's rules; daughters, generations, sag and swell are set by eye against the template."
     },
     "allometry": {
       "evidence": "Authored",
