@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Asimina",
+  "traits": {
+    "branch_orientation": "plagiotropic"
+  },
+  "evidence": {
+    "traits.branch_orientation": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Open-grown Asimina triloba photos read blind for branching (imagekit, 2026-10-18, analyzer 8fa3d015242e50ca; plantgen-claude project-files/image-data/woody-forms-2026-10-19/README.md): side branches plagiotropic in 4 of 4 observations that showed them (few, but all one way), its leaves two-ranked along level shoots."
+    }
+  }
+}

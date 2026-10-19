@@ -995,11 +995,20 @@ pub mod venation;
 /// pericarpel shortened to the ovary's swelling; a column stem's sink follows
 /// its height curve, so a seedling's top shows (142 is palm
 /// trunks, #240).
-/// 144: a depressed cactus top sinks to a pit at its centre, with its
+/// 144: branching form (broadleaf 23): a shoot without a terminal bud
+/// dies back each year and its topmost lateral carries it on, sometimes
+/// as a fork (`tip_abort`, from `terminal_bud`); a plagiotropic plant's
+/// limbs carry flat sprays (`plagio`, from `branch_orientation`); a
+/// tree's dead branches stand until they fall (`dead_keep`); a
+/// small-leaved tree's or shrub's long shoots set their leaves no farther
+/// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
+/// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
+/// cactus genera, #239).
+/// 145: a depressed cactus top sinks to a pit at its centre, with its
 /// crown's flowers and fruit set down into it (`stem_apex` depressed,
 /// body and program `pit`: Lophophora); an apex's woolly cap reaches only
 /// the apical region, three fifths of the tip's radius, not the whole top
 /// of a rounded or broad stem; twisted centrals turn about their length
-/// (new trait `central_spines_twisted`, spine `twist`) (143 is the new
-/// cactus genera, #239).
-pub const GENERATOR_REVISION: u32 = 144;
+/// (new trait `central_spines_twisted`, spine `twist`) (144 is branching
+/// form, #244).
+pub const GENERATOR_REVISION: u32 = 145;
