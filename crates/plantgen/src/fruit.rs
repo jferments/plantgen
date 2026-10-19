@@ -830,6 +830,24 @@ impl One {
     /// prickles, bristles or hooked bristles over it, drawn only at the
     /// finer steps.
     fn dress(&self, fruit: &Fruit, body: [f32; 3], accent: [f32; 3], part: Part, mesh: &mut Mesh) {
+        // A poppy's stigmatic disc: a low dome capping the fruit, its rays
+        // radiating to a lobed rim a little wider than the dome, darker
+        // than the fruit.
+        if fruit.disc > 0 {
+            let colour = blooms::shade(body, 0.7);
+            let top = self.at(0.97);
+            blooms::dome(
+                top,
+                self.direction,
+                self.across,
+                self.width * 0.25,
+                self.width * 0.05,
+                colour,
+                part,
+                mesh,
+            );
+            self.calyx(0.98, fruit.disc, 0.3, 0.005, colour, part, mesh);
+        }
         if fruit.kept_calyx > 0.0 {
             let lobes = if fruit.kept_lobes == 0 {
                 5

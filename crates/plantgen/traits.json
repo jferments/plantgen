@@ -1761,9 +1761,9 @@
       "group": "flowers",
       "organ": "petal",
       "type": "enum",
-      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular"],
+      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular", "flabellate"],
       "optional": true,
-      "why": "a petal's outline, or a tepal's: from a narrow strap (linear) to as broad as long (orbicular)"
+      "why": "a petal's outline, or a tepal's: from a narrow strap (linear) to as broad as long (orbicular), or fan-shaped, widest across its broad blunt tip from a wedge base (flabellate, obcuneate: a poppy's)"
     },
     "petal_apex": {
       "group": "flowers",
@@ -1822,6 +1822,13 @@
       "optional": true,
       "why": "the sepals' colour where it is not leaf green, and a hypanthium's that bears them: a fuchsia's red sepals and floral tube"
     },
+    "calyx_caducous": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the calyx falls as the flower opens (caducous): a poppy's two sepals, pushed off as a cap by the swelling petals, so an open flower shows none"
+    },
     "pedicel_length_m": {
       "group": "flowers",
       "organ": "flower",
@@ -1841,8 +1848,8 @@
       "group": "flowers",
       "organ": "flower",
       "type": "enum",
-      "values": ["actinomorphic", "zygomorphic", "asymmetric"],
-      "why": "a flower's symmetry: radial, one plane, or none"
+      "values": ["actinomorphic", "disymmetric", "zygomorphic", "asymmetric"],
+      "why": "a flower's symmetry: radial, two planes at right angles (disymmetric: a bleeding heart's two pouched outer petals and two inner), one plane, or none"
     },
     "perianth": {
       "group": "flowers",
@@ -1899,6 +1906,23 @@
       "values": ["erect", "ascending", "spreading", "nodding", "pendent"],
       "optional": true,
       "why": "how an open flower holds itself on its stalk: facing up, rising at a slant, held out level, bent over to face down and out (a belladonna's bell, a pepper's star), or hanging (an angel's trumpet)"
+    },
+    "bud_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.3],
+      "optional": true,
+      "why": "a flower bud from its base to its tip just before it opens (an opium poppy's 1.5-3.5 cm)"
+    },
+    "bud_posture": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["erect", "nodding"],
+      "optional": true,
+      "why": "how a flower bud holds itself before it opens: upright, or hanging from a stalk hooked just below it (a poppy's), turning up as it opens"
     },
     "perianth_reflexion": {
       "group": "flowers",
@@ -2486,6 +2510,20 @@
       "organ": "fruit",
       "type": "colour",
       "why": "a ripe fruit"
+    },
+    "fruit_colour_unripe": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "colour",
+      "optional": true,
+      "why": "a fruit before it ripens, where it is not the leaves' green: an opium poppy's glaucous blue-green capsule"
+    },
+    "stigmatic_disc": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the stigmas radiate on a flat, lobed disc crowning the ovary and kept on the capsule, one ray a carpel (poppies)"
     },
     "fruit_colour_ripening": {
       "group": "fruit_and_cones",

@@ -1064,12 +1064,37 @@ pub mod venation;
 /// broad brown wedge along its petiole's base, so the crown's centre is
 /// clothed in leaf bases where the bare stem showed as a flat-topped
 /// cylinder (148 is cacti, #248).
-/// 150: broadleaf 24. A stalkless pendent bloom turns toward straight down
+/// 150: poppies. A corolla of merosity 2 in two whorls draws its four
+/// petals (a poppy's 2 + 2), where the petals rule clamped the merosity to
+/// 3 and drew six; a caducous calyx (`calyx_caducous`, Papaveraceae)
+/// falls as its flower opens, so a bud wears its sepals and an open flower
+/// shows none (`calyx_shed` on the flower card). California poppy grows
+/// leafy branched stems with larger flowers and a capsule beside them;
+/// opium poppy is new; Pacific bleeding heart's leaves are ternate and
+/// dissected, glaucous, held over the clump.
+/// Round 2: two crossed pairs of petals open as one cup; a disymmetric
+/// corolla (`flower_symmetry: disymmetric`, Dicentra) draws two pouched
+/// outer petals with turned-out tips around two narrow inner ones, a
+/// heart; a pendent or nodding flower of a cluster hangs from its pedicel
+/// (`nod`, from `flower_posture`); a capsule with a stigmatic disc
+/// (`stigmatic_disc`, Papaver) wears a dark rayed dome, one ray per
+/// carpel; a fruit's unripe share takes `fruit_colour_unripe` before the
+/// leaves' green. Round 3: a herb's flowering side branches flower after
+/// its stem, each a share of a raceme younger (`branch_lag`, herb
+/// revision 16; Papaveraceae a third); a nodding bud (`bud_posture`)
+/// hangs from a stalk hooked in its top quarter, as long as floras
+/// measure it (`bud_length_m`); a caducous calyx closed over a regular
+/// corolla's bud is drawn as an ovoid of its sepals; a heart's petal
+/// parts have curved sides. A herb that flowers on for months while its
+/// first fruit ripen, bearing fruit below its flowers (`fruit_below`),
+/// shows its earlier flowers' fruit from its first fruiting month and
+/// keeps flowering to its last (149 is palms, #250).
+/// 151: broadleaf 24. A stalkless pendent bloom turns toward straight down
 /// (`bloom_hang`); a trunk that forks at a stated height grows no long shoot
 /// from below the fork (`fork_clear`) and blooms only above it
 /// (`bloom_floor`), as an angel's trumpet does. A once-pinnate leaf may
 /// carry small interjected leaflets between its pairs (`interjected`), as
 /// a tomato's does. A kept calyx is sized from its stated fruiting length
 /// (`kept_calyx`), and an armed one carries prickles up its lobes
-/// (`kept_prickles`), as an eggplant's cap does.
-pub const GENERATOR_REVISION: u32 = 150;
+/// (`kept_prickles`), as an eggplant's cap does (150 is poppies, #242).
+pub const GENERATOR_REVISION: u32 = 151;
