@@ -2517,7 +2517,7 @@ fn seasonal_looks(
             outcomes.insert(path, (file, None));
         }
         if organ == "flower" {
-            stage_seasons(spec, origins, &at, kept(traits));
+            stage_seasons(spec, origins, &at, kept(traits), first_fruit(traits));
         }
     }
     let why = (!set_any).then(|| why.unwrap_or_else(|| "it draws no flowering look".to_string()));
@@ -2549,11 +2549,33 @@ fn kept(traits: &BTreeMap<String, (Value, usize)>) -> bool {
         })
 }
 
+/// The day a plant's first fruit show, where its flowering and fruiting
+/// months are stated: as the first month it is in fruit begins (in the
+/// next year where that month comes before its first flowers'), its year
+/// counted as the season rules count it (from the December before, for a
+/// plant that flowers from January).
+fn first_fruit(traits: &BTreeMap<String, (Value, usize)>) -> Option<f64> {
+    let first = |name: &str| {
+        traits
+            .get(name)
+            .and_then(|(value, _)| value.as_array())
+            .and_then(|months| months.iter().filter_map(Value::as_f64).reduce(f64::min))
+    };
+    let (flowers, fruits) = (first("flowering_months")?, first("fruiting_months")?);
+    let wrap = if fruits < flowers { 12.0 } else { 0.0 };
+    let january = if flowers == 1.0 { 365.0 } else { 0.0 };
+    Some(crate::formula::month_start(fruits + wrap) + january)
+}
+
 /// Give the program's `bud` and `fruit` organs, which stand for a
 /// herb's `flower` (at `at`) before it opens and once it has set fruit,
 /// its season, each showing only in its own stage: the bud, its flower's
 /// look closed ([`closed_flower`]), from the flower's bud day to its fruit
-/// day; the fruit from its fruit day to its fall. A look a file set by
+/// day; the fruit from its fruit day to its fall, or from the day its
+/// first fruit show (`first_fruit`) where that comes earlier, though not
+/// before its first flowers open: a plant that flowers on for months
+/// while its first fruit ripen (a California poppy's) bears its earlier
+/// flowers' fruit beside its later ones. A look a file set by
 /// hand keeps its own year. Where the fruit is `kept` for years (a
 /// chain-fruit cholla's, whose chains hang and flower again), the fruit
 /// organ, the fruit of earlier years, keeps no season: it is on the plant
@@ -2563,6 +2585,7 @@ fn stage_seasons(
     origins: &mut BTreeMap<String, Origin>,
     at: &str,
     kept: bool,
+    first: Option<f64>,
 ) {
     let day = |spec: &Map<String, Value>, name: &str| {
         find(spec, &format!("{at}.season.{name}")).and_then(Value::as_f64)
@@ -2575,15 +2598,16 @@ fn stage_seasons(
     ) else {
         return;
     };
+    let shows = first.map_or(fruit, |day| day.max(flower + 1.0).min(fruit));
     for (organ, draws, days) in [
         (BUD, "flower", [bud, flower, fruit, fruit, fruit]),
         (
             "fruit",
             "fruit",
             [
-                fruit,
-                fruit,
-                fruit,
+                shows,
+                shows,
+                shows,
                 fruit.max(day(spec, "ripe").unwrap_or(fruit)),
                 fall,
             ],
