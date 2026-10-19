@@ -1,0 +1,548 @@
+{
+  "schema": 1,
+  "id": "basella-alba",
+  "taxon": {
+    "scientific_name": "Basella alba",
+    "common_name": "Malabar spinach",
+    "family": "Basellaceae",
+    "genus": "Basella",
+    "plant_name_id": 360840
+  },
+  "growth_form": "vine",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 2,
+    "step": 1,
+    "keyframes": [
+      1,
+      2
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "host": {
+    "species": "holodiscus-discolor",
+    "age": 6,
+    "environment": "open",
+    "seed": 1
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "climber_epiphyte",
+    "life_span": {
+      "annual": "usually",
+      "perennial": "often"
+    },
+    "woodiness": "herbaceous",
+    "stem_length_m": {
+      "min": 3,
+      "max": 10
+    },
+    "height_typical_m": {
+      "min": 1,
+      "max": 3
+    },
+    "stem_clump": "few",
+    "stem_cross_section": "terete",
+    "stem_hairs": "glabrous",
+    "stem_colour": [
+      92,
+      146,
+      60
+    ],
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.03
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.09
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.08
+    },
+    "leaf_shape": {
+      "ovate": "usually",
+      "orbicular": "often",
+      "cordate": "sometimes"
+    },
+    "leaf_apex": "acuminate",
+    "leaf_base_shape": "rounded",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "leaf_colour": [
+      56,
+      120,
+      44
+    ],
+    "inflorescence": "spike",
+    "inflorescence_unit": "flower",
+    "flowering_position": "lateral",
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.15,
+      "high": 0.2
+    },
+    "pedicel_length_m": 0,
+    "perianth": "tepals",
+    "perianth_parts": 5,
+    "perianth_fused": true,
+    "corolla_shape": "urceolate",
+    "tepal_length_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "flower_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "flower_colour": [
+      192,
+      84,
+      132
+    ],
+    "perianth_base_colour": [
+      238,
+      226,
+      230
+    ],
+    "flower_merosity": 5,
+    "stamens": 5,
+    "stamen_exsertion": "included",
+    "filament_colour": [
+      244,
+      242,
+      236
+    ],
+    "anther_colour": [
+      236,
+      214,
+      120
+    ],
+    "carpels": 3,
+    "ovary_position": "superior",
+    "fruit_type": "achene",
+    "fruit_size_m": {
+      "min": 0.005,
+      "max": 0.006
+    },
+    "fruit_width_m": {
+      "min": 0.005,
+      "max": 0.006
+    },
+    "fruit_shape": "globose",
+    "fruit_colour_ripe": [
+      44,
+      18,
+      40
+    ],
+    "fruit_colour_ripening": [
+      170,
+      26,
+      48
+    ],
+    "calyx_in_fruit": "accrescent",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "mesic"
+    ],
+    "habitat_notes": "Native to the Indian subcontinent, Southeast Asia and New Guinea; cultivated pantropically as a leaf vegetable and naturalised widely (south China, tropical Africa, the Americas). Best in full sun, hot humid lowlands below about 500 m.",
+    "habit_notes": "A soft, fleshy, mucilaginous twining vine climbing by its stems over supports; leaves thick and semi-succulent, older ones turning purple from the base; red-stemmed form 'Rubra' has red-purple stems and leaf veins. Flowers in thick axillary spikes barely open; fruits look like small dark berries full of violet juice.",
+    "leaf_succulence": "fleshy",
+    "shoot_leaves": {
+      "min": 15,
+      "max": 30,
+      "typical": 20
+    },
+    "juvenile_period_years": 1
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a soft, fleshy twining vine with thick glossy ovate leaves and axillary spikes of small pink flowers and dark fruit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.0 m tall at 1 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a soft, fleshy twining vine with thick glossy ovate leaves and axillary spikes of small pink flowers and dark fruit."
+    },
+    "host": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Malabar spinach twines over hedges and fences a few metres high (Wikipedia, Flora of China: twining to several metres), so it climbs a 6-year oceanspray shrub, not the vine form's 30-year maple."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): a twining herb with stems to 10 m."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): herbs annual; Wikipedia: a perennial vine."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): stems fleshy."
+    },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): stems to 10 m; Wikipedia: a vine reaching 10 m. The 3 m low end is an estimate."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: in a garden it climbs a trellis or fence to 1-3 m; its height is set by its support."
+    },
+    "traits.stem_clump": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a few twining stems from the base."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: round, fleshy stems; no source gives the section."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): stems fleshy, glabrous."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): stems green or red (Wikipedia: green in the type, red-purple in 'Rubra'). sRGB by eye for the word."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): leaves alternate."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: alternate leaves on a spiral along the twining stem."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): flat blades."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): leaves simple."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): petiole 1-3 cm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): blade 3-9 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): blade 2-8 cm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): blade ovate or rotund, base shallowly cordate or rounded; Wikipedia: heart-shaped."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): apex acuminate."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): base shallowly cordate or rounded (cordate kept in leaf_shape)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): margin entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): plants glabrous."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Basella alba (read 2026-10-19; lower trust): green leaves (older ones develop purple from the base). sRGB by eye for the word."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): spikes."
+    },
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): single sessile flowers."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): spikes axillary."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): spikes 3-15(-20) cm."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): flowers sessile."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): 5 perianth segments with 2 bracteoles (FNA calls them petals and sepals)."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): perianth segments 5."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): urceolate perianth."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): urceolate perianth, hardly opening at anthesis."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): perianth ovate-oblong, 3-4 mm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a barely opened urn about as wide as its 3-4 mm length (FOC)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): perianth reddish or purplish. sRGB by eye for the word."
+    },
+    "traits.perianth_base_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): perianth base pale. sRGB by eye for the word."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): perianth segments 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): stamens 5."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): stamens included."
+    },
+    "traits.filament_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): filaments white. sRGB by eye for the word."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): anthers yellowish. sRGB by eye for the word."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): pistil of 3 carpels; FOC genus: styles 3."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basellaceae (eFloras, read 2026-10-19): ovary superior."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): utricle, wrapped in the fleshy perianth; achene stands for utricle."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): utricle 5-6 mm across, globose."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): 5-6 mm in diameter."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): utricle globose."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): utricle red to dark red or black, with violet juice; ripe ones dark purple-black. sRGB by eye for the word."
+    },
+    "traits.fruit_colour_ripening": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): red, before dark red or black. sRGB by eye for the word."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): perianth and bracteoles turn fleshy and enclose the fruit."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): flowering May-September (China; flowering is induced by short days, Wikipedia)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (eFloras, read 2026-10-19): fruiting July-October."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Basella alba (read 2026-10-19; lower trust): grows well under full sunlight in hot, humid climates."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Basella alba (read 2026-10-19; lower trust): well-drained loamy soils rich in organic matter."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Basella alba (read 2026-10-19; lower trust): native to the Indian subcontinent, Southeast Asia and New Guinea; naturalised in China, tropical Africa, Brazil and elsewhere; best below 500 m. FOC: widely cultivated, naturalised in south China."
+    },
+    "traits.habit_notes": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Basella alba (read 2026-10-19; lower trust): fast-growing, soft-stemmed vine; thick semi-succulent heart-shaped mucilaginous leaves; green and red ('Rubra') forms; older leaves purple from the base. FOC genus: perianth hardly opening; utricle fleshy."
+    },
+    "traits.leaf_succulence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella alba (read 2026-10-19): leaves fleshy, ovate to nearly round; Wikipedia: thick, semi-succulent."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a twining stem to several metres with alternate leaves a hand's width apart."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: grown as an annual leaf crop, it flowers and fruits in its first season (Flora of China: flowering May-Sep, fruiting Jul-Oct)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

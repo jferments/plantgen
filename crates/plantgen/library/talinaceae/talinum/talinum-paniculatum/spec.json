@@ -1,0 +1,616 @@
+{
+  "schema": 1,
+  "id": "talinum-paniculatum",
+  "taxon": {
+    "scientific_name": "Talinum paniculatum",
+    "common_name": "jewels of Opar",
+    "family": "Talinaceae",
+    "genus": "Talinum",
+    "plant_name_id": 2513509
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 3,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      3
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "sometimes"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "perennation": "tuber",
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1.0
+    },
+    "height_max_m": 1.5,
+    "stem_posture": "erect",
+    "stem_clump": "few",
+    "stem_cross_section": "terete",
+    "stem_colour": [
+      120,
+      110,
+      70
+    ],
+    "stem_hairs": "glabrous",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "phyllotaxis_pattern": "spiral",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "obovate": "usually",
+      "elliptic": "sometimes",
+      "oblanceolate": "sometimes"
+    },
+    "leaf_apex": {
+      "acute": "usually",
+      "retuse": "sometimes"
+    },
+    "leaf_base_shape": "attenuate",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.1,
+      "high": 0.12
+    },
+    "leaf_width_m": {
+      "min": 0.025,
+      "max": 0.05
+    },
+    "petiole_length_m": {
+      "min": 0,
+      "max": 0.01
+    },
+    "leaf_colour": [
+      88,
+      150,
+      60
+    ],
+    "stipules": false,
+    "inflorescence": "panicle",
+    "flowering_position": "both",
+    "inflorescence_posture": {
+      "erect": "usually",
+      "nodding": "sometimes"
+    },
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "peduncle_length_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "units_per_inflorescence": {
+      "min": 30,
+      "max": 150
+    },
+    "inflorescence_branches": {
+      "min": 5,
+      "max": 20
+    },
+    "pedicel_length_m": {
+      "min": 0.005,
+      "max": 0.01,
+      "high": 0.02
+    },
+    "flower_size_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "petal_length_m": {
+      "min": 0.003,
+      "max": 0.006,
+      "high": 0.012
+    },
+    "petal_shape": {
+      "obovate": "often",
+      "ovate": "often",
+      "orbicular": "sometimes",
+      "elliptic": "sometimes"
+    },
+    "petal_apex": "rounded",
+    "flower_colour": [
+      232,
+      84,
+      150
+    ],
+    "sepal_length_m": {
+      "min": 0.0025,
+      "max": 0.004
+    },
+    "sepal_posture": {
+      "spreading": "usually",
+      "reflexed": "sometimes"
+    },
+    "calyx_colour": [
+      150,
+      40,
+      85
+    ],
+    "stamens": {
+      "min": 15,
+      "max": 20,
+      "low": 10
+    },
+    "stamen_exsertion": "included",
+    "carpels": 3,
+    "style_length_m": 0.002,
+    "ovary_position": "superior",
+    "fruit_type": "capsule",
+    "capsule_valves": 3,
+    "fruit_shape": "globose",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "fruit_colour_ripe": [
+      168,
+      120,
+      80
+    ],
+    "fruit_colour_ripening": [
+      205,
+      60,
+      50
+    ],
+    "calyx_in_fruit": "falling",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 2200,
+    "light": [
+      "sun",
+      "part"
+    ],
+    "moisture": [
+      "mesic",
+      "dry"
+    ],
+    "soil_texture": [
+      "sand",
+      "clay",
+      "rock"
+    ],
+    "habitat_notes": "Moist to dry woodlands and savannas, desert scrub, grasslands and beaches, on flats, slopes and ledges, in sand, clay, limestone, sandstone or igneous, often rocky soils and crevices, 0-2200 m, southern United States through Mexico, the West Indies and Central America to South America; introduced and weedy in southern Africa and Asia (in China in shaded wet places).",
+    "leaf_succulence": "fleshy",
+    "shoot_leaves": {
+      "min": 8,
+      "max": 20,
+      "typical": 12
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: an erect, fleshy herb with glossy obovate leaves crowded low and a long bare stalk carrying an airy panicle of tiny pink flowers and round red fruit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.6 m tall at 2 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: an erect, fleshy herb with glossy obovate leaves crowded low and a long bare stalk carrying an airy panicle of tiny pink flowers and round red fruit."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): stems branched at the base, semiwoody; FNA genus: herbs, stems sometimes suffrutescent."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): herbs annual or perennial; FNA genus perennial."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): root few-branched, obconic, thick, skin black-brown, flesh milky white; Wikipedia: tuberous roots."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): herbs 30-100 cm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): plants to 15 dm; Wikipedia: almost 2 m."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): stems erect."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): stems branched basally: a few stems from the tuber."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: slender, round stems; no source read says."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): stems sometimes reddish, slender; a green with a reddish cast, sRGB by eye for the words."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): glabrous."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): leaves alternate or subopposite."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: alternate leaves spirally set along the stem, crowded below; no source read says."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): blade broadly planate, succulent or semisucculent."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum (eFloras flora_id=2 taxon_id=132245, read 2026-10-19): leaves flat, simple."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): leaf blade obovate or obovate-lanceolate; FNA: elliptic to obovate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): apex acute, sometimes retuse, mucronate."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): base attenuate (Flora of China: narrowly cuneate)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): margins entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): glabrous."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): blade 5-10 cm; FNA: leaves to 12 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): blade 2.5-5 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): leaves short-petiolate or subsessile; the 1 cm upper bound is our estimate."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a fresh, slightly glossy mid green, somewhat fleshy; no source read names a colour (cultivars 'Kingwood Gold' and 'Limón' are yellow-green)."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum (eFloras flora_id=2 taxon_id=132245, read 2026-10-19): axils naked."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): inflorescences paniculate; Flora of China: panicle terminal or axillary, large, often dichotomous, long peduncled."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): panicle terminal or axillary."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): inflorescences paniculate, sometimes nodding."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: the open, branched panicle above the long peduncle about 10-30 cm; Flora of China says large but gives no length."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: Flora of China says long-peduncled, with leaves reduced abruptly beneath the inflorescence (FNA); 10-30 cm is our estimate."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a large, repeatedly forking panicle carries dozens to over a hundred small flowers and fruits; no source read counts them."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a large, often dichotomous panicle (Flora of China); 5-20 branches is our estimate."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): pedicel 5-10 mm; FNA: terete, ± uniformly slender, to 20 mm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): flowers small, 6-10 mm wide."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): sepals (two, by the family) and petals."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): petals 5."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinum' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): flowers radially symmetric."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): petals 3-6 mm; Flora of China 6-12 mm."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): petals ovate to suborbiculate; Flora of China: obovate or elliptic."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): apex rounded, rarely retuse."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): petals red or pink, sometimes orangish, yellowish or purplish; Flora of China: pink or reddish purple. A hot pink; sRGB by eye for the words."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): sepals ovate to suborbiculate, 2.5-4 mm."
+    },
+    "traits.sepal_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): sepals deciduous, sometimes reflexed."
+    },
+    "traits.calyx_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): sepals purple-red; sRGB by eye for the word."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): stamens ca. 15-20; Flora of China (10-)15-20."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): stamens shorter than petals."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): stigmas 3, linear (the genus: 3-carpellate)."
+    },
+    "traits.style_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): style ca. 2 mm; stigma 3-lobed."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): ovary superior."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): capsules."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): 3-valved."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): capsules subglobose, sometimes obtusely trigonous."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): capsules 3-5 mm; Flora of China ca. 4 mm, papery."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: the papery capsule turns tan to brown as it dries and opens; no source read names the colour."
+    },
+    "traits.fruit_colour_ripening": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: the young capsules are red to orange-red, the 'jewels' of the common name (Wikipedia: tiny, jewel-like fruits); no source read names the colour."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): sepals deciduous; Flora of China: caducous."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): flowering and fruiting Jun-Nov, year-round in s Florida; Flora of China: Jun-Aug."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): flowering and fruiting Jun-Nov."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): 0-2200 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): 0-2200 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): woodlands and savannas as well as desert scrub and beaches; Flora of China: escaping to shaded wet places."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): moist to dry woodlands and savannas, also desert scrub."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): in sand, clay, limestone, sandstone, igneous, often rocky soils and crevices."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum paniculatum (eFloras flora_id=1 taxon_id=200007021, read 2026-10-19): habitats and range as given; thought native west of the Mississippi and adventive and weedy to the east."
+    },
+    "traits.leaf_succulence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Talinum paniculatum (read 2026-10-19): leaves semisucculent, flat."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: Flora of China: leaves crowded on the lower stem below a long bare stalk."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

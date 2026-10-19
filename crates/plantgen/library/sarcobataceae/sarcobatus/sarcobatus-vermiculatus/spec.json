@@ -1,0 +1,517 @@
+{
+  "schema": 1,
+  "id": "sarcobatus-vermiculatus",
+  "taxon": {
+    "scientific_name": "Sarcobatus vermiculatus",
+    "common_name": "greasewood",
+    "family": "Sarcobataceae",
+    "genus": "Sarcobatus",
+    "plant_name_id": 2484118
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [
+      4,
+      10,
+      20
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "woodiness": "woody",
+    "life_span": "perennial",
+    "leaf_habit": "deciduous",
+    "height_typical_m": {
+      "min": 1.0,
+      "max": 2.0,
+      "low": 0.5
+    },
+    "height_max_m": 5.0,
+    "crown_width_max_m": 1.8,
+    "stem_posture": "erect",
+    "stem_clump": "few",
+    "clonal": true,
+    "crown_form": "irregular",
+    "spines": "thorns",
+    "short_shoots": true,
+    "bark_colour": [
+      150,
+      140,
+      125
+    ],
+    "twig_colour": [
+      222,
+      214,
+      196
+    ],
+    "stem_hairs": {
+      "glabrous": "usually",
+      "puberulent": "sometimes"
+    },
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_form": "blade",
+    "leaf_shape": "linear",
+    "leaf_apex": "obtuse",
+    "leaf_margin": "entire",
+    "leaf_hairs": {
+      "glabrous": "usually",
+      "puberulent": "sometimes"
+    },
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.04,
+      "low": 0.003,
+      "high": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "petiole_length_m": 0,
+    "leaf_colour": [
+      128,
+      178,
+      62
+    ],
+    "leaf_posture": "spreading",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "rarely"
+    },
+    "inflorescence": {
+      "catkin": "usually",
+      "solitary": "often"
+    },
+    "inflorescence_length_m": {
+      "min": 0.011,
+      "max": 0.04
+    },
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 40
+    },
+    "flowering_position": "both",
+    "stamens": {
+      "min": 2,
+      "max": 4,
+      "low": 1,
+      "high": 5
+    },
+    "carpels": 2,
+    "fruit_type": "achene",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "fruit_width_m": {
+      "min": 0.007,
+      "max": 0.014
+    },
+    "fruit_colour_ripe": [
+      196,
+      176,
+      128
+    ],
+    "fruit_colour_ripening": [
+      150,
+      175,
+      90
+    ],
+    "calyx_in_fruit": "accrescent",
+    "fruit_persistence": "persistent",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "leaf_out_months": [
+      3,
+      4
+    ],
+    "leaf_fall_months": [
+      10,
+      11,
+      12
+    ],
+    "root_depth_max_m": 6.0,
+    "elevation_min_m": 600,
+    "elevation_max_m": 2400,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry",
+      "xeric"
+    ],
+    "soil_texture": [
+      "clay",
+      "loam"
+    ],
+    "habitat_notes": "Alkaline or saline soils of semiarid and arid plains, alkali flats and playa margins, dry washes and desert-shrub and sagebrush communities, often in pure stands where the water table is shallow (a phreatophyte), western North America from Alberta and Saskatchewan to Sonora, 600-2400 m.",
+    "leaf_succulence": "succulent",
+    "leaf_cross_section": "terete"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a stiff, thorny desert shrub with pale branches standing out at wide angles and fleshy linear leaves."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.6 m tall at 20 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a stiff, thorny desert shrub with pale branches standing out at wide angles and fleshy linear leaves."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): shrubs; Wikipedia: the wood is yellow, very hard and tough."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): a native flowering perennial."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): deciduous leaves; drops its leaves in fall and early winter."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): plants 1-2(-5) m; Wikipedia 0.5-3 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): to 5 m at the extreme; FEIS says to 3 m."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): 3 to 6 feet (0.9-1.8 m) across."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): stems erect; FEIS: erect to low and spreading."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): multiple brittle branches; may have several major stems arising from one large clump. 'Few' is our reading."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): clonal, with major stem clones arising from one large clump, sprouting from the root crown and lateral roots (though one Montana study found no vegetative reproduction)."
+    },
+    "traits.crown_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): divaricating shrubs, with elongate lateral branches and thorns from the main stems at more or less right angles, making a tangle of branches and thorns in mature plants; species: loosely and irregularly branched, proximal branches rarely touching the ground."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): branches spinescent; the ends of smaller branches taper to sharp thorns. FNA: thorns 1(-2) per node."
+    },
+    "traits.short_shoots": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): short shoots clustered, budlike, cushionlike, in the position of leaf scars."
+    },
+    "traits.bark_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: grey to grey-brown older bark; FNA uses bark colour to tell the two species apart but does not state it; no source read names it."
+    },
+    "traits.twig_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: young stems whitish to pale straw, as greasewood is usually pictured; no source read names it."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): shrubs glabrous or pubescent; species leaves usually glabrous or slightly pubescent."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): leaves mostly solitary on elongate shoots of current season."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: solitary alternate leaves on long shoots in a spiral; FNA calls the staminate flowers spirally arranged but says nothing of leaves."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): blade somewhat flattened."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): blade linear."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): apex obtuse (mucronate)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): margins entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): usually glabrous or slightly pubescent."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): blade (0.3-)1.5-4(-5) cm; FEIS 1-4 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Sarcobatus' (read 2026-10-19, lower trust): leaves 10-40 mm long and 1-2 mm broad."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): leaves sessile."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): blade bright green to yellowish green; Wikipedia: green, against the grey-green of the shrubs around it. sRGB by eye for the words."
+    },
+    "traits.leaf_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fleshy linear leaves spreading from the stem; no source read says."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Sarcobatus' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): no stipules."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): some authors say monoecious, others generally monoecious but occasionally dioecious; FNA genus: monoecious."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): staminate flowers in catkin-like spikes, small conelike structures at the ends of the smaller branches; pistillate flowers singly in leaf axils below them."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): staminate spikes typically 11-40 mm."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): staminate spike of 10-40 spirally arranged flowers."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): pistillate flowers and staminate spikes mostly on long lateral branches with 3-9 readily visible internodes."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): anthers (1-)2-4(-5)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): stigmas 2."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): fruits achenes."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): fruits 3-5 mm, tapered at ends; FEIS 4-5 mm long."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): wing 0.7-1.4 cm diam; FEIS: about 1 cm wide including the wing."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a dry, papery, veiny wing, pale tan when ripe; FNA says the wing is sometimes red-tinged but names no base colour."
+    },
+    "traits.fruit_colour_ripening": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: green, fleshy perianth-wing while young, sometimes red-tinged (FNA); no source names the base colour."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): perianth accrescent, flaring to form a wing in fruit."
+    },
+    "traits.fruit_persistence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): maturation may extend over winter, with a few fruits left on the plant in early summer of the following year; dispersal late fall to early winter."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): flowering as early as May and as late as August; staminate flowers form mid-May, shed pollen early June, pistillate flowers evident early to mid-July. FNA: spring-summer."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): seed set mid-August, matures September to November; FNA: fruiting summer-early fall."
+    },
+    "traits.leaf_out_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): bud burst generally late March to early April, as early as late February."
+    },
+    "traits.leaf_fall_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): drops its leaves in fall and early winter."
+    },
+    "traits.root_depth_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): roots reported to 20 feet (6 m) deep; an excavated 1.8 m shrub had roots 5.5 m deep. FNA repeats a claim of taproots to 57 feet (17 m), not used."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): 600-2400 m; FEIS 152-2438 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): 600-2400 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Sarcobatus' (read 2026-10-19, lower trust): usually found in sunny, flat areas around playas."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): semiarid or arid plains, alkali flats, dry washes; a phreatophyte over shallow groundwater."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Sarcobatus' (read 2026-10-19, lower trust): most common on fine-grained soils in areas with a relatively high water table; FEIS adds sandy soil in the northeast of its range."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): alkaline or saline soils in semiarid or arid plains, alkali flats, slopes, desert-shrub communities, sagebrush, saltflats, roadsides, dry washes, 600-2400 m; often in pure stands, especially in the Great Basin."
+    },
+    "traits.leaf_succulence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (read 2026-10-19): leaves sessile, succulent, linear."
+    },
+    "traits.leaf_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (read 2026-10-19): leaves nearly round to somewhat flattened in section."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

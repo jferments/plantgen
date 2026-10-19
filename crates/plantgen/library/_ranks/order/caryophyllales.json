@@ -127,6 +127,50 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA (read 2026-10-16): Caryophyllaceae dichasial cymes; Chenopodiaceae and Aizoaceae cymose; Amaranthaceae spikes or heads."
+    },
+    "rules.appearance.organs.basal.shape.petiole": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a rosette leaf's stalk (Caryophyllales families, 2026-10-19), the stem leaf's rule (kingdom Plantae) for the rosette's: the forb's rosette card is already sized to blade and petiole together (basal_length), but no rule gave the petiole its share, so round-leaved sundew's 0.7 cm blade was drawn 4 cm long and 5 cm wide. Stated for the order first; 18 built-in rosette species with a stated petiole would change if it moved to Plantae."
+    }
+  },
+  "forms": {
+    "forb": {
+      "rules": {
+        "generator.defaults.nodes": {
+          "map": {
+            "leaf_arrangement": {
+              "alternate": {
+                "rule": "clamp(round(shoot_leaves), 2, 40)"
+              },
+              "opposite": {
+                "rule": "clamp(round(shoot_leaves / 2), 2, 40)"
+              },
+              "whorled": {
+                "rule": "clamp(round(shoot_leaves / leaves_per_whorl), 2, 40)"
+              }
+            }
+          },
+          "why": "A herb's stem bears as many leafy nodes as its year's leaves fill: one leaf to a node where they alternate, a pair where they are opposite, a whorl's count where they are whorled; a campion's or a four o'clock's stem carries eight to twelve pairs, not the herb program's five nodes."
+        }
+      },
+      "evidence": {
+        "rules.generator.defaults.nodes": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "How PlantGen counts a Caryophyllales herb's leafy nodes from the leaves its stem bears (Caryophyllales families, 2026-10-19), a choice of the model's: first renders of 12 herbs of the order drawn on the herb program's 5 nodes looked bare beside the floras' leafy stems (Silene vulgaris, Mirabilis jalapa, Phytolacca americana, FNA vol. 4-5). Stated for the order's herbs first; the rule holds for any herb and could move to the forb form."
+        }
+      }
+    }
+  },
+  "rules": {
+    "appearance.organs.basal.shape.petiole": {
+      "template": "simple",
+      "needs": [
+        "petiole_length_m"
+      ],
+      "rule": "petiole_length_m / (leaf_length_m + petiole_length_m)",
+      "why": "A rosette leaf's card holds the blade and its stalk end to end, as a stem leaf's does: a sundew's small round blade at the end of a stalk four times its length."
     }
   }
 }

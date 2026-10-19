@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Drosera",
+  "traits": {
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "leaf_habit": "deciduous",
+    "inflorescence": "scorpioid",
+    "flowering_position": "lateral",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 5
+    },
+    "perianth": "sepals_and_petals",
+    "calyx_in_fruit": "persistent",
+    "fruit_type": "capsule",
+    "fruit_shape": "obovoid",
+    "capsule_valves": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 6
+    },
+    "leaf_division": "simple",
+    "leaf_incision": "none"
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): plants annual or perennial; FOC herbs perennial or annual."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): plants deciduous, usually forming over-wintering buds (hibernaculae)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): Drosera: lateral circinate or scorpioid cymes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): Drosera's inflorescences lateral."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera (eFloras, read 2026-10-19): sepals (4 or) 5 (or 6-12); petals 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): stamens 5, usually joined at the base; FOC as many as the petals."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): gynoecium 3-carpellate; FOC 2-5-carpellate."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera (eFloras, read 2026-10-19): sepals and petals 5, free or joined at the base."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera (eFloras, read 2026-10-19): sepals persistent; petals too persistent, closing and twisting after flowering."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): capsules splitting between the placentae."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): capsules obovoid."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera (eFloras, read 2026-10-19): capsule dehiscent, 2-6-valved; FNA 3 carpels."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): blades unlobed."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): blades unlobed: suborbiculate, orbiculate, spatulate, obovate, cuneate to linear."
+    }
+  }
+}

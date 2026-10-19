@@ -3655,7 +3655,9 @@ impl Shape {
                 count("parallel", s.parallel, 0, 12)?;
                 check("praemorse", s.praemorse, 0.0, 0.3)?;
                 check("midrib", s.midrib, 0.0, 1.0)?;
-                check("petiole", s.petiole, 0.0, 0.7)
+                // A sundew's or a violet's small blade sits on a petiole
+                // four to five times its length.
+                check("petiole", s.petiole, 0.0, 0.9)
             }
             Self::Lobed(s) => {
                 check("width", s.width, 0.1, 1.5)?;

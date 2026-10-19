@@ -1,0 +1,502 @@
+{
+  "schema": 1,
+  "id": "portulacaria-afra",
+  "taxon": {
+    "scientific_name": "Portulacaria afra",
+    "common_name": "elephant bush, spekboom",
+    "family": "Didiereaceae",
+    "genus": "Portulacaria",
+    "plant_name_id": 337506
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 2.5,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "woodiness": "woody",
+    "life_span": "perennial",
+    "leaf_habit": {
+      "evergreen": "usually",
+      "semi": "sometimes"
+    },
+    "height_typical_m": {
+      "min": 2.0,
+      "max": 4.5
+    },
+    "height_max_m": 4.5,
+    "crown_width_max_m": 3.0,
+    "stem_diameter_max_m": 0.3,
+    "stem_posture": "erect",
+    "stem_clump": "few",
+    "crown_form": "rounded",
+    "bark_texture": "smooth",
+    "bark_colour": [
+      140,
+      72,
+      58
+    ],
+    "twig_colour": [
+      150,
+      60,
+      55
+    ],
+    "spines": "none",
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "leaf_shape": "obovate",
+    "leaf_apex": "mucronate",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "leaf_length_m": {
+      "min": 0.013,
+      "max": 0.026
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.021
+    },
+    "petiole_length_m": {
+      "min": 0,
+      "max": 0.002
+    },
+    "leaf_colour": [
+      86,
+      140,
+      62
+    ],
+    "leaf_posture": "spreading",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "sometimes"
+    },
+    "inflorescence": "panicle",
+    "flowering_position": "terminal",
+    "units_per_inflorescence": {
+      "min": 20,
+      "max": 100
+    },
+    "pedicel_length_m": {
+      "min": 0.002,
+      "max": 0.005
+    },
+    "flower_size_m": 0.003,
+    "flower_colour": [
+      238,
+      160,
+      190
+    ],
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 5,
+    "sepal_length_m": 0.0005,
+    "petal_length_m": 0.0015,
+    "stamens": {
+      "min": 5,
+      "max": 10
+    },
+    "anther_colour": [
+      150,
+      30,
+      90
+    ],
+    "carpels": 3,
+    "ovary_position": "superior",
+    "fruit_type": "samara",
+    "fruit_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "fruit_colour_ripe": [
+      214,
+      170,
+      160
+    ],
+    "calyx_in_fruit": "persistent",
+    "flowering_months": [
+      9,
+      10,
+      11
+    ],
+    "fruiting_months": [
+      11,
+      12,
+      1
+    ],
+    "light": [
+      "sun",
+      "part"
+    ],
+    "moisture": [
+      "dry",
+      "xeric"
+    ],
+    "soil_texture": [
+      "rock",
+      "sand"
+    ],
+    "habitat_notes": "Dry rocky outcrops and slopes in the east of South Africa and Eswatini (also Mozambique); in dense stands in the Albany thicket (spekboomveld) of the Eastern Cape and the Little Karoo; browsed by elephants and black rhinoceros.",
+    "leaf_succulence": "succulent",
+    "leaf_cross_section": "plano_convex"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a dense, much-branched succulent shrub with reddish-brown stems and crossing pairs of small fleshy round leaves."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.5 m tall at 15 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a dense, much-branched succulent shrub with reddish-brown stems and crossing pairs of small fleshy round leaves."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): soft-wooded shrub or small tree."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): a long-lived shrub or small tree (perennial)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): an evergreen, much-branched shrub (immergrün); English Wikipedia says semi-evergreen, so semi as the lesser state."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): 2 to over 4 m tall; English Wikipedia: usually 2.5-4.5 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): usually 2.5-4.5 m tall."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: an open-grown plant spreads about as wide as it is tall or less; Wikipedia says it grows dense enough to cover itself and forms thicket, but gives no width."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): the smooth, reddish-brown trunk reaches up to 30 cm across."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): an upright shrub; the cultivar 'Prostrata' is the decumbent exception."
+    },
+    "traits.stem_clump": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a much-branched shrub (German Wikipedia: stark verzweigt) with a short trunk or a few stems from the base."
+    },
+    "traits.crown_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: dense, much-branched, rounded shrub crown with limber, tapering branches (Wikipedia: more loosely branched than Crassula, with limber tapering branches)."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): the trunk is smooth (glatt); the genus account adds that the bark peels."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): trunk reddish-brown (rötlichbraun); sRGB by eye for the word."
+    },
+    "traits.twig_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): commonly has a reddish stem; sRGB by eye for the word."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): Portulacarioideae are unarmed."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): small leaves crosswise opposite (kreuzgegenständig) on shoots 3-6 mm thick with internodes 2-3 cm."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves kreuzgegenständig, decussate."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): simple, somewhat fleshy, thickish leaf blades."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves simple (einfach)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves obovate (verkehrt-eiförmig); English Wikipedia: small, round pads."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves with a fine short point (feinstachelspitzig), mucronate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves entire (ganzrandig)."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves hairless (kahl)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves 13-26 mm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves 10-21 mm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves sessile to short-stalked (sitzend bis kurz gestielt); the 2 mm upper bound is our estimate for 'short' on a 13-26 mm leaf."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): leaves green (reddish stem, green leaves); sRGB by eye for the word, a mid succulent green."
+    },
+    "traits.leaf_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves held spreading from the stem in opposite pairs, as photographs of the plant generally show."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): stipules absent (Die Nebenblätter fehlen)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): plants bisexual or female, that is gynodioecious (citing Venter et al. 1993); female flowers have staminodes. The vocabulary has no gynodioecious state; polygamous stands for the female plants."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): terminal inflorescences of very many small flowers, stalked, in tufts of 1-10; the species account: stalked flowers in clusters at the branch tips. Read as a panicle of small clusters."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): flowers clustered at the branch ends (an den Zweigenden)."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: the genus account says 'very many' flowers per terminal inflorescence, in tufts of 1-10; 20-100 is our reading of that."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: German Wikipedia says the flowers are stalked; 2-5 mm on a 3 mm flower is our estimate."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): small flowers reaching 3 mm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): flowers pink or white (rosa oder weiß); pink taken; sRGB by eye for the word."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): two persistent, joined sepals (or bracts, by another reading) and five fleeting petals (or tepals)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): five petals."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): the two persistent, joined sepals are 0.5 mm long."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): the five fleeting petals are 1.5 mm long."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): 5 to 10 stamens."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): anthers red to purple (rote bis purpurfarbene Staubbeutel); sRGB by eye for the words."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): the superior ovary is three-angled and one-chambered with three almost sessile stigma branches."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): ovary superior (oberständig)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): small, three-winged, one-seeded fruits that do not open (Flügelnüsse)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: German Wikipedia says only 'small' three-winged fruits; 4-6 mm across the wings is our estimate for a 3 mm flower."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: dry, papery three-winged fruits, pale pinkish when ripe; no source read names a colour."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria afra' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): the two sepals are persistent (beständig); the family account says they wrap the fruit."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: southern-hemisphere spring flowering (about September to November in the Eastern Cape) is our recollection of South African accounts; SANBI PlantZAfrica, which states it, was blocked."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a month or two after flowering, about November to January; no source read gives it."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): an easy house plant for a sunny place; endures desert sun once established."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): drought-tolerant; favours drier rocky outcrops and slopes; most abundant in the dry southern Cape."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): favours drier rocky outcrops and slopes; adds organic matter to sandy soil."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): widespread in the east of South Africa and Eswatini, on drier rocky outcrops; densest in the Albany thickets of the Eastern Cape and the Little Karoo; eaten by elephant and black rhinoceros. German Wikipedia adds Mozambique and KwaZulu-Natal."
+    },
+    "traits.leaf_succulence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia and Flora of Southern Africa as summarised there, Portulacaria afra (read 2026-10-19): leaves small round pads, somewhat fleshy and thick, succulent."
+    },
+    "traits.leaf_cross_section": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a round pad thick and fleshy, flat above and rounded beneath, as photographs show."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}
