@@ -995,4 +995,9 @@ pub mod venation;
 /// pericarpel shortened to the ovary's swelling; a column stem's sink follows
 /// its height curve, so a seedling's top shows (142 is palm
 /// trunks, #240).
-pub const GENERATOR_REVISION: u32 = 143;
+/// 144: a Phoenix's dead frond hangs limp, its leaflets folded up along the
+/// rachis and the rachis drooping, in place of a flat plank standing out
+/// below the crown; its living fronds' brown sheaths clasp the stem below
+/// each frond's foot (`sheath_length`), hiding the stem's top (143 is
+/// cactus spines and flowers, #239).
+pub const GENERATOR_REVISION: u32 = 144;
