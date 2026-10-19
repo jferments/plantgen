@@ -3963,7 +3963,9 @@ impl Shape {
                 check("stalk", s.stalk, 0.0, 0.6)
             }
             Self::Fruit(s) => {
-                check("aspect", s.aspect, 0.1, 2.0)?;
+                // As slender as the fruit rule draws a pod (a California
+                // poppy's, a twentieth as wide as long).
+                check("aspect", s.aspect, 0.05, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
                 check("kept_calyx", s.kept_calyx, 0.0, 2.0)?;
                 check("hang", s.hang, -1.0, 1.0)?;

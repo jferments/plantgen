@@ -998,5 +998,11 @@ pub mod venation;
 /// (`nod`, from `flower_posture`); a capsule with a stigmatic disc
 /// (`stigmatic_disc`, Papaver) wears a dark rayed dome, one ray per
 /// carpel; a fruit's unripe share takes `fruit_colour_unripe` before the
-/// leaves' green (142 is palm trunks, #240).
+/// leaves' green. Round 3: a herb's flowering side branches flower after
+/// its stem, each a share of a raceme younger (`branch_lag`, herb
+/// revision 16; Papaveraceae a third); a nodding bud (`bud_posture`)
+/// hangs from a stalk hooked in its top quarter, as long as floras
+/// measure it (`bud_length_m`); a caducous calyx closed over a regular
+/// corolla's bud is drawn as an ovoid of its sepals; a heart's petal
+/// parts have curved sides (142 is palm trunks, #240).
 pub const GENERATOR_REVISION: u32 = 143;

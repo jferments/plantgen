@@ -35,7 +35,7 @@
 //! `w`) and the card its point (`x`, `y`) and parameter `u`.
 #![allow(clippy::many_single_char_names)]
 
-use std::f64::consts::{PI, TAU};
+use std::f64::consts::{FRAC_PI_2, PI, TAU};
 
 use crate::blooms::{self, FlowerForm, Part};
 use crate::capitula::Painted;
@@ -74,6 +74,11 @@ const NAKED_REACH: f64 = 0.9;
 /// The way across a disymmetric corolla's outer petal part heading
 /// `heading` from the foot at `radial`: square to its heading in the plane
 /// of the heading and the axis, the heart's plane.
+/// Where along a heart's petal part its sides are drawn, as shares of its
+/// length, and where it is widest.
+const HEART_STATIONS: [f64; 8] = [0.0, 0.15, 0.3, 0.45, 0.55, 0.7, 0.85, 1.0];
+const HEART_WIDEST: f64 = 0.55;
+
 fn in_heart_plane(heading: Vec3, radial: Vec3) -> Vec3 {
     let tangent = heading.cross(radial);
     heading.cross(tangent).normalize_or(radial)
@@ -367,11 +372,21 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     // Sepals, between the petals, unless they fell as it opened.
     let mut pieces = Vec::new();
     let mut calyx_tube = None;
-    if flower.perianth == Perianth::Corolla
+    let calyx = flower.perianth == Perianth::Corolla
         && flower.sepals > 0
         && open <= flower.calyx_shed
-        && flower.corolla != Corolla::Labellate
-    {
+        && flower.corolla != Corolla::Labellate;
+    // A caducous calyx closed over its bud (a poppy's two sepals, shed as
+    // a cap when the petals swell) is the bud's whole outside: an ovoid
+    // as long as the bud is stated and two thirds as wide (an opium
+    // poppy's 1.5-3.5 by 1-3 cm), hiding all within it.
+    // A disymmetric corolla's bud is its heart already, its two small
+    // sepals at its foot (a bleeding heart's).
+    let enclosing = calyx
+        && open <= 0.0
+        && flower.calyx_shed < 1.0
+        && flower.corolla == Corolla::Regular;
+    if calyx {
         let m = f64::from(flower.sepals);
         let sepal = flower.sepal_length * length;
         let fused = flower.sepals_fused;
@@ -393,7 +408,22 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             (seat, foot)
         };
         let tooth = (1.0 - fused) * sepal;
-        for j in 0..flower.sepals {
+        if enclosing {
+            // As long as the flower's size, the bud's stated length.
+            let long = 2.0 * r;
+            calyx_tube = Some(Tube {
+                height: seat,
+                length: long,
+                foot,
+                mouth: foot * 0.2,
+                belly: (0.33 * long - foot * 0.6).max(0.0),
+                // Round: enough vertices that two sepals' seam is smooth.
+                lobes: flower.sepals * 6,
+                turn: psi + PI / m,
+                calyx: 1.0,
+            });
+        }
+        for j in (0..flower.sepals).filter(|_| !enclosing) {
             pieces.push(Piece {
                 term: Term::Sepal,
                 role: None,
@@ -923,6 +953,11 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let mut stamens = stamens;
     let mut pistil = pistil;
     let mut c = c;
+    if enclosing {
+        pieces.retain(|piece| piece.term == Term::Sepal);
+        stamens.clear();
+        pistil = Pistil::None;
+    }
     if pieces.is_empty() && tube.is_none() && calyx_tube.is_none() && cup.is_none() {
         let reach = stamens
             .iter()
@@ -1596,20 +1631,23 @@ pub(crate) fn draw_reduced(
             left = in_heart_plane(heading, radial) * (piece.width * 0.5);
         }
         if let Some(end) = joined {
-            let widest = foot + heading * (piece.length * 0.55);
-            let tip = foot + heading * piece.length;
-            both(
-                &[
-                    foot - left * piece.base,
-                    foot + left * piece.base,
-                    widest + left,
-                    tip + left * end,
-                    tip - left * end,
-                    widest - left,
-                ],
-                colour,
-                mesh,
-            );
+            // Its sides swell round from its foot to its widest, past the
+            // middle, and round in again to its end, so the heart's
+            // outline curves where the parts meet.
+            let side = |t: f64| {
+                if t < HEART_WIDEST {
+                    piece.base + (1.0 - piece.base) * math::sin(FRAC_PI_2 * t / HEART_WIDEST)
+                } else {
+                    end + (1.0 - end) * math::cos(FRAC_PI_2 * (t - HEART_WIDEST) / (1.0 - HEART_WIDEST))
+                }
+            };
+            let at = |t: f64| foot + heading * (piece.length * t);
+            let mut outline: Vec<Vec3> = HEART_STATIONS
+                .iter()
+                .map(|&t| at(t) + left * side(t))
+                .collect();
+            outline.extend(HEART_STATIONS.iter().rev().map(|&t| at(t) - left * side(t)));
+            both(&outline, colour, mesh);
         } else if part.coarse == 0 && piece.taper < 1.0 {
             // A blunt petal (obovate, orbicular) keeps its full shoulders
             // toward a rounded tip, as its solid narrows ([`SolidLeaf`]).

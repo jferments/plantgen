@@ -1694,6 +1694,23 @@
       "optional": true,
       "why": "how an open flower holds itself on its stalk: facing up, rising at a slant, held out level, bent over to face down and out (a belladonna's bell, a pepper's star), or hanging (an angel's trumpet)"
     },
+    "bud_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.3],
+      "optional": true,
+      "why": "a flower bud from its base to its tip just before it opens (an opium poppy's 1.5-3.5 cm)"
+    },
+    "bud_posture": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["erect", "nodding"],
+      "optional": true,
+      "why": "how a flower bud holds itself before it opens: upright, or hanging from a stalk hooked just below it (a poppy's), turning up as it opens"
+    },
     "perianth_reflexion": {
       "group": "flowers",
       "organ": "flower",

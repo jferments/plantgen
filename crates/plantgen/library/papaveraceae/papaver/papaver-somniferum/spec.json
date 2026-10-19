@@ -39,8 +39,7 @@
       "pedicel": 0.01,
       "flower_angle": 0,
       "fruit_below": 0,
-      "buds_above": 1,
-      "nod": 0
+      "buds_above": 0.8
     }
   },
   "growth": {
@@ -87,6 +86,8 @@
     "leaf_hairs": "glabrous",
     "rosette": "basal",
     "inflorescence": "solitary",
+    "bud_posture": "nodding",
+    "bud_length_m": {"min": 0.015, "max": 0.035},
     "flower_posture": "erect",
     "flower_size_m": {"min": 0.05, "max": 0.12},
     "petal_length_m": {"min": 0.04, "max": 0.07},
@@ -144,7 +145,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "From California poppy's, changed for an opium poppy's form: one erect stout stem (Flora of China vol. 7, Papaver somniferum: stems erect; Flora of North America vol. 3: stems simple or branching), 9 stem leaves 20 cm at the largest (FoC: blade 7-25 cm), the largest low on the stem and the upper ones half as long (FoC: leaves below shortly petiolate, above sessile and amplexicaul), over 3 basal leaves (FNA Papaver: basal leaves rosulate); the top two leaves each bear a flowering side branch with one leaf (FNA Papaver: flowers in 1s, 2s or 3s on long peduncles), and each flowering axis ends in a long bare peduncle, its top 30 percent (FoC: pedicel to 25 cm); its flower turns to a capsule over the season, by the flowering and fruiting months. Stem radius 5 mm for its stout stem. Not fitted to measurements."
+      "note": "From California poppy's, changed for an opium poppy's form: one erect stout stem (Flora of China vol. 7, Papaver somniferum: stems erect; Flora of North America vol. 3: stems simple or branching), 9 stem leaves 20 cm at the largest (FoC: blade 7-25 cm), the largest low on the stem and the upper ones half as long (FoC: leaves below shortly petiolate, above sessile and amplexicaul), over 3 basal leaves (FNA Papaver: basal leaves rosulate); the top two leaves each bear a flowering side branch with one leaf (FNA Papaver: flowers in 1s, 2s or 3s on long peduncles), and each flowering axis ends in a long bare peduncle, its top 30 percent (FoC: pedicel to 25 cm); its flower turns to a capsule over the season, by the flowering and fruiting months; the stem's flower opens while its branches' are still buds (buds_above 0.8 with the family's branch_lag), as photographs show an open flower over nodding buds (FoC: flower buds nutant at first). Stem radius 5 mm for its stout stem. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
@@ -168,6 +169,8 @@
     "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: blade 7-25 cm; FNA gives leaves to 30 cm."},
     "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: both surfaces glabrous, glaucous and rather waxy."},
     "traits.rosette": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaver (read on eFloras, 2026-10-19): leaves basal rosulate, petiolate; cauline alternate."},
+    "traits.bud_length_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum (efloras.org, read 2026-10-19): flower buds oval-oblong or broadly ovoid, 1.5-3.5 x 1-3 cm, glabrous."},
+    "traits.bud_posture": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flower buds nutant at first, erect at anthesis."},
     "traits.inflorescence": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flowers solitary."},
     "traits.flower_posture": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flower buds nutant at first, erect at anthesis."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: flowers deeply cup-shaped, 5-12 cm in diameter."},
