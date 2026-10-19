@@ -199,6 +199,8 @@ class Detect(unittest.TestCase):
         self.assertAlmostEqual(w / 320, 0.5 * 1.08, delta=0.08)  # the box plus its margin
         everything = json.loads(self.cli("crops", "--out", str(self.tmp / "all"), "--triage", "none"))
         self.assertEqual(everything["crops"], 5)
+        tall = self.cli("crops", "--triage", "none", "--organ", "leaf", "--min-height", "0.5", "--list").split()
+        self.assertEqual(sorted(tall), sorted([self.sha["a.jpg"], self.sha["b.jpg"]]))  # d's leaf is not usable
 
     @unittest.skipUnless(HAVE_NUMPY and importlib.util.find_spec("pyarrow") is not None, "needs numpy and pyarrow")
     def test_compact_merges_into_a_snapshot(self):

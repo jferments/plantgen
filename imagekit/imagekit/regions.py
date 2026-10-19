@@ -83,7 +83,11 @@ def register(sub) -> None:
     p.add_argument("--min-score", type=float, default=0.0)
     p.add_argument("--pad", type=float, default=0.08, help="margin around each box, as a share of its long side")
     p.add_argument("--px", type=int, default=1024, help="long side of each crop at most (default %(default)s)")
-    p.add_argument("--out", required=True)
+    p.add_argument("--min-height", type=float, default=0.0,
+                   help="only boxes at least this share of the image's height (whole plants: 0.5)")
+    p.add_argument("--out", help="folder to write the crops to")
+    p.add_argument("--list", action="store_true", help="print the sha256 of each image with a kept region instead "
+                                                       "(for `imagekit run ... --images`)")
     p.set_defaults(func=cmd_crops)
 
 
@@ -362,6 +366,14 @@ def cmd_crops(args, store: Store) -> None:
         raise SystemExit("no detections on these images: run `imagekit detect` first")
     tri, answers = triage_answers(store, rows, args.triage)
     found = regions(store, det, rows, answers if tri else None, set(args.organ or []), args.min_score)
+    if args.min_height:
+        found = {s: k for s, k in ((s, [r for r in regs if r["box"][3] - r["box"][1] >= args.min_height])
+                                   for s, regs in found.items()) if k}
+    if args.list:
+        print("\n".join(sorted(found)))
+        return
+    if not args.out:
+        raise SystemExit("give --out FOLDER, or --list")
     out = Path(args.out).expanduser()
     out.mkdir(parents=True, exist_ok=True)
     lines, n = [], 0

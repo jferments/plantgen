@@ -48,6 +48,7 @@ def register(sub) -> None:
         p.add_argument("--rules", help="the photo-rules folder (default $IMAGEKIT_RULES, or the plantgen checkout you are in)")
         p.add_argument("--batch", nargs="*", help="only images from these fetch batches")
         p.add_argument("--taxon", help="only images of this taxon (name as fetched, or accepted name)")
+        p.add_argument("--images", help="only the images whose sha256 this file lists, one a line")
         p.add_argument("--limit", type=int)
         p.add_argument("--image-px", type=int, help="long side sent to the model (default: triage 512, observe 1536, describe 1024)")
         p.add_argument("--triage", help="observe, branching: the triage analyzer whose views to use (default: the one with most answers)")
@@ -110,6 +111,9 @@ class Job:
         if args.taxon:
             rows = {s: r for s, r in rows.items()
                     if args.taxon in (r["taxon"].get("name_as_given"), r["taxon"].get("accepted_name"))}
+        if getattr(args, "images", None):
+            keep = {line.strip() for line in Path(args.images).expanduser().read_text().splitlines() if line.strip()}
+            rows = {s: r for s, r in rows.items() if s in keep}
         self.rows = rows
         self.views = {}
         params = {"image_px": self.px}
