@@ -34,8 +34,7 @@
       "extinction": 0.45,
       "path_half": 6,
       "fork_stems": 1,
-      "bloom_size": 0.03,
-      "spur_leaf": 0.337
+      "bloom_size": 0.03
     }
   },
   "growth": {
@@ -91,6 +90,7 @@
   "tier": "procedural_proxy",
   "traits": {
     "limb_angle": "spreading",
+    "twig_colour": [130, 95, 75],
     "leaf_colour_autumn": [200, 160, 60],
     "height_max_m": {
       "min": 6,
@@ -154,6 +154,7 @@
   },
   "evidence": {
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 354): 'small spreading branches'."},
+    "traits.twig_colour": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Asimina triloba (read 2026-10-19): branchlets \"Light brown, tinged with red, marked by shallow grooves\". The colour is our reading of the words; iNaturalist photos read grey-brown, Lab L about 45 (imagekit pawpaw trial, 2026-10-18), where the bark's colour drew the twigs silver-grey (L about 82)."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Asimina triloba (read 2026-10-18): \"In autumn, the leaves are a rusty yellow\". Colour ours."},
     "taxon": {
       "evidence": "Authored",
@@ -273,7 +274,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red alder's crown values, changed by hand for a small understory tree: one slender trunk (FEIS: usually single), spreading-ascending branches (FNA), a narrower crown and shorter shoots, flowers drawn 3 cm across (FNA: 2-4 cm), path_half fitted so it reaches its height. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+      "note": "Red alder's crown values, changed by hand for a small understory tree: one slender trunk (FEIS: usually single), spreading-ascending branches (FNA), a narrower crown and shorter shoots, flowers drawn 3 cm across (FNA: 2-4 cm), path_half fitted so it reaches its height. Not fitted to measurements. Short-shoot leaves take the decurrent-tree rule's size (0.88 of leaf_size): the hand-set card of 0.337 m, from when leaf_size was 1.5 times the flora's blade, drew every leaf 33 cm long and its petiole 1 cm, past FNA's 15-30 cm and 5-10 mm."
     },
     "allometry": {
       "evidence": "Authored",
