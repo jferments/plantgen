@@ -880,7 +880,7 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 139,
+        checked, 151,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -901,7 +901,10 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
          harsh paintbrush's spikes and Pacific bleeding heart's racemes, and lamb\'s ear\'s spike \
          (hair practice), the tomato's, eggplant's and tobacco's cymes and panicle (nightshades), \
          western columbine's cymes, now that its genus states them, and the racemes of fringecup, \
-         blueblossom, spreading gooseberry and bush penstemon (phase A's first ten)"
+         blueblossom, spreading gooseberry and bush penstemon (phase A's first ten), \
+         and the twelve of the Caryophyllales families: bladder campion's and four o'clock's cymes, \
+         pigweed's and jewels of Opar's panicles, thrift's and purslane's heads, sundew's coil, \
+         carpetweed's umbels, the racemes of pokeweed, saltcedar and rougeplant, and greasewood's catkins"
     );
 }
 

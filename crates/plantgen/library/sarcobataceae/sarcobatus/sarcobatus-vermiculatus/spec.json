@@ -37,7 +37,7 @@
     {
       "age": 20,
       "environment": "open",
-      "height": 1.6,
+      "height": 2.58,
       "tolerance": 0.35
     }
   ],
@@ -182,6 +182,7 @@
       "loam"
     ],
     "habitat_notes": "Alkaline or saline soils of semiarid and arid plains, alkali flats and playa margins, dry washes and desert-shrub and sagebrush communities, often in pure stands where the water table is shallow (a phreatophyte), western North America from Alberta and Saskatchewan to Sonora, 600-2400 m.",
+    "perianth": "tepals",
     "leaf_succulence": "succulent",
     "leaf_cross_section": "terete"
   },
@@ -219,7 +220,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "1.6 m tall at 20 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+      "note": "2.58 m tall at 20 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
@@ -490,6 +491,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): alkaline or saline soils in semiarid or arid plains, alkali flats, slopes, desert-shrub communities, sagebrush, saltflats, roadsides, dry washes, 600-2400 m; often in pure stands, especially in the Great Basin."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (read 2026-10-19): staminate flowers without a perianth, pistillate ones with a cup-shaped perianth that grows into the fruit's wing; drawn as the pistillate flower's tepals, since a plant draws one perianth."
     },
     "traits.leaf_succulence": {
       "evidence": "SourceInferred",

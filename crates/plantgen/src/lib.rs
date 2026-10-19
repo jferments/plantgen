@@ -982,5 +982,6 @@ pub mod venation;
 /// scape in any flowering plant, and a compound inflorescence's branches
 /// take the kind its taxa name (`inflorescence_branch_kind`); smooth bark
 /// draws with a valid pattern; a shrub without short shoots has a short
-/// share (fifteen Caryophyllales species, #NNN).
+/// share; a fruit's clasping calyx takes fewer steps on its coarser part
+/// meshes (fifteen Caryophyllales species, #243).
 pub const GENERATOR_REVISION: u32 = 141;

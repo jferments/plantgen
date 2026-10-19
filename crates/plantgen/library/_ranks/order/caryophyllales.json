@@ -132,6 +132,26 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a rosette leaf's stalk (Caryophyllales families, 2026-10-19), the stem leaf's rule (kingdom Plantae) for the rosette's: the forb's rosette card is already sized to blade and petiole together (basal_length), but no rule gave the petiole its share, so round-leaved sundew's 0.7 cm blade was drawn 4 cm long and 5 cm wide. Stated for the order first; 18 built-in rosette species with a stated petiole would change if it moved to Plantae."
+    },
+    "rules.generator.params.leaf_length": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. A rosette leaf's card adds its stalk, as the forb's basal_length does."
+    },
+    "rules.generator.params.basal_length": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. A rosette leaf's card adds its stalk, as the forb's basal_length does."
+    },
+    "rules.generator.params.leaf_top": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. A rosette leaf's card adds its stalk, as the forb's basal_length does."
+    },
+    "rules.generator.params.leaf_base": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths (Caryophyllales families, 2026-10-19), the campanulids' rules (spec rework E1 and E3) stated for this order too: with the forb's 'longest leaf = the middle of the range' and its top leaf at 0.4, pokeweed's, four o'clock's, rougeplant's and jewels of Opar's upper leaves drew under half the floras' least. A rosette leaf's card adds its stalk, as the forb's basal_length does."
     }
   },
   "forms": {
@@ -152,6 +172,29 @@
             }
           },
           "why": "A herb's stem bears as many leafy nodes as its year's leaves fill: one leaf to a node where they alternate, a pair where they are opposite, a whorl's count where they are whorled; a campion's or a four o'clock's stem carries eight to twelve pairs, not the herb program's five nodes."
+        },
+        "generator.params.lie": {
+          "map": {
+            "stem_posture": {
+              "erect": 0,
+              "ascending": 0,
+              "decumbent": 0.5,
+              "prostrate": {
+                "rule": "clamp(1 - first(0.5 * height_typical_m / stem_length_m, 0.25), 0.75, 0.95)"
+              }
+            }
+          },
+          "why": "A prostrate or trailing stem lies along the ground but for its end, which rises about half as high as the plant stands, its leaves and flowers making up the rest: an ice plant's 2 m runner lifts its last 10 cm, not its last half metre."
+        },
+        "generator.params.raceme": {
+          "map": {
+            "inflorescence": {
+              "solitary": {
+                "rule": "clamp(first(peduncle_length_m, flower_size_m) / stem_height, 0.01, 0.12)"
+              }
+            }
+          },
+          "why": "A solitary flower stands above the last leaf on its own stalk, as long as its flora gives it or else about as long as the flower is wide, not on the herb program's raceme an eighth of the stem long: an ice plant's flower sits on a short thick stalk among its leaves."
         }
       },
       "evidence": {
@@ -159,6 +202,16 @@
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "How PlantGen counts a Caryophyllales herb's leafy nodes from the leaves its stem bears (Caryophyllales families, 2026-10-19), a choice of the model's: first renders of 12 herbs of the order drawn on the herb program's 5 nodes looked bare beside the floras' leafy stems (Silene vulgaris, Mirabilis jalapa, Phytolacca americana, FNA vol. 4-5). Stated for the order's herbs first; the rule holds for any herb and could move to the forb form."
+        },
+        "rules.generator.params.lie": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "How PlantGen lays a prostrate herb's stems (Caryophyllales families, 2026-10-19), a choice of the model's: the flowering-plant rule lays three quarters of every prostrate stem down, which stood ice plant's 1-3 m runners' ends 0.6 m tall against FNA's 10-30 cm; the raised end is now half the plant's usual height (its leaves and flowers stand above it), at least a twentieth and at most a quarter of the stem. Whipplea is the one other built-in prostrate herb; this could move to the flowering plants."
+        },
+        "rules.generator.params.raceme": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "How PlantGen holds a herb's solitary flower (Caryophyllales families, 2026-10-19), a choice of the model's: the herb program's default flowering part, 0.12 of a 1.75 m trailing stem, stood ice plant's flowers 0.2 m above its mat, where FNA gives the whole plant 10-30 cm tall."
         }
       }
     }
@@ -171,6 +224,22 @@
       ],
       "rule": "petiole_length_m / (leaf_length_m + petiole_length_m)",
       "why": "A rosette leaf's card holds the blade and its stalk end to end, as a stem leaf's does: a sundew's small round blade at the end of a stalk four times its length."
+    },
+    "generator.params.leaf_length": {
+      "rule": "max(leaf_length_m) * (1 + first(petiole_length_m / leaf_length_m, 0))",
+      "why": "A herb's longest stem leaf is as long as the longest blade its flora measures, its card longer by the stalk in proportion (the card's petiole share is the flora's petiole over blade and petiole); the leaves below and above it are shorter by the shares its program sets."
+    },
+    "generator.params.basal_length": {
+      "rule": "max(leaf_length_m) * (1 + first(petiole_length_m / leaf_length_m, 0))",
+      "why": "A herb's longest rosette leaf is as long as the longest blade its flora measures, its card longer by the stalk in proportion."
+    },
+    "generator.params.leaf_top": {
+      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
+      "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures."
+    },
+    "generator.params.leaf_base": {
+      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
+      "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures."
     }
   }
 }

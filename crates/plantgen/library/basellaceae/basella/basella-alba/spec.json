@@ -40,9 +40,9 @@
   },
   "allometry": [
     {
-      "age": 1,
+      "age": 2,
       "environment": "open",
-      "height": 2.0,
+      "height": 0.78,
       "tolerance": 0.35
     }
   ],
@@ -230,7 +230,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "2.0 m tall at 1 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+      "note": "0.78 m tall at 2 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",

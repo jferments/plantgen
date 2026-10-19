@@ -37,7 +37,7 @@
     {
       "age": 6,
       "environment": "open",
-      "height": 0.2,
+      "height": 0.3,
       "tolerance": 0.35
     }
   ],
@@ -192,9 +192,9 @@
     "leaf_succulence": "succulent",
     "leaf_cross_section": "trigonous",
     "shoot_leaves": {
-      "min": 10,
-      "max": 30,
-      "typical": 16
+      "min": 20,
+      "max": 40,
+      "typical": 30
     }
   },
   "evidence": {
@@ -231,7 +231,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "0.2 m tall at 6 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+      "note": "0.3 m tall at 6 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
@@ -521,7 +521,7 @@
     "traits.shoot_leaves": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read counts it: trailing stems to 3 m set with crossing pairs of leaves 4-13 cm long, crowded toward the tips."
+      "note": "A model estimate (confidence medium), as no source read counts it: trailing stems 1-3 m set with crossing pairs of leaves 4-13 cm long, the pairs about 10 cm apart and crowded toward the tips."
     }
   },
   "provenance": {
