@@ -731,16 +731,35 @@ impl Appearance {
 
     /// Its looks by organ name, with a look for each of `organs` that is a
     /// male plant's ([`MALE`]) and has none of its own: the look of the
-    /// organ it stands for, as [`male_look`] draws it.
+    /// organ it stands for, as [`male_look`] draws it. A thorn or prickle
+    /// whose look states no colour takes the bark's: the young stem's skin
+    /// it grows from (Rosaceae, 2026-10-19).
     fn with_male(
         &self,
         organs: &[(&str, OrganKind)],
     ) -> std::borrow::Cow<'_, BTreeMap<String, OrganLook>> {
         let males = self.males(organs.iter().map(|(name, _)| *name));
-        if males.is_empty() {
+        let bare: Vec<&String> = self
+            .organs
+            .iter()
+            .filter(|(_, look)| {
+                look.colour.is_none()
+                    && matches!(
+                        look.form,
+                        Some(crate::blooms::Form::Thorn | crate::blooms::Form::Prickles(_))
+                    )
+            })
+            .map(|(name, _)| name)
+            .collect();
+        if males.is_empty() && bare.is_empty() {
             return std::borrow::Cow::Borrowed(&self.organs);
         }
         let mut own = self.organs.clone();
+        for name in bare {
+            if let Some(look) = own.get_mut(name) {
+                look.colour = Some(self.bark);
+            }
+        }
         for (male, of) in males {
             if let Some(look) = self.organs.get(&of) {
                 own.insert(male, male_look(look));
@@ -1203,6 +1222,7 @@ impl PlantSpec {
     /// # Errors
     ///
     /// Describes the first problem found.
+    #[allow(clippy::too_many_lines)]
     pub fn validate_in(&self, library: &Library) -> Result<(), SpecError> {
         let fail = |message: String| Err(SpecError(format!("species `{}`: {message}", self.id)));
         if self.schema != SPEC_SCHEMA {

@@ -132,7 +132,14 @@
     "leaf_length_m": {"min": 0.1, "max": 0.25},
     "leaf_width_m": {"min": 0.1, "max": 0.2},
     "sexual_system": "hermaphrodite",
-    "inflorescence": "panicle"
+    "inflorescence": "panicle",
+    "spines": "prickles",
+    "spine_length_m": {"min": 0.004, "max": 0.01},
+    "spine_width_m": {"min": 0.003, "max": 0.007},
+    "spine_curve": "hooked",
+    "spine_angle": "declined",
+    "internodal_prickles": "moderate",
+    "aciculi": "none"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -226,7 +233,14 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.521)."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.521)."},
+    "traits.spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): shrubs armed; prickles moderately dense on the stems."},
+    "traits.spine_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): prickles stout, 4-10 mm."},
+    "traits.spine_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: two thirds of the prickle's length at its foot: the flora calls them stout, broad- or narrow-based, but gives no width; the blackberry's are broad-based in photographs."},
+    "traits.spine_curve": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): prickles hooked, retrorse, or erect."},
+    "traits.spine_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): prickles hooked, retrorse, or erect: drawn leaning back toward the stem's base."},
+    "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): prickles moderately dense."},
+    "traits.aciculi": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): no bristles described on the stems."}
   },
   "provenance": {
     "sources": [

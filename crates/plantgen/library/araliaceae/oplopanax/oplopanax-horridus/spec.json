@@ -184,7 +184,14 @@
     "leaf_width_m": {"min": 0.15, "max": 0.4},
     "leaf_margin": "serrate",
     "sexual_system": "hermaphrodite",
-    "inflorescence_length_m": {"min": 0.1, "max": 0.25}
+    "inflorescence_length_m": {"min": 0.1, "max": 0.25},
+    "spines": "prickles",
+    "spine_length_m": {"min": 0.005, "max": 0.01},
+    "spine_curve": "straight",
+    "spine_angle": "erect",
+    "internodal_prickles": "dense",
+    "aciculi": "sparse",
+    "spine_colour": [214, 190, 96]
   },
   "evidence": {
     "taxon": {
@@ -276,7 +283,14 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L141937), as no source read gives it."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L141937), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L141937), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L141937), as no source read gives it."}
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L141937), as no source read gives it."},
+    "traits.spines": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS (Oplopanax horridus, read 2026-10-19): sparsely branched, with sharp, dense prickles on the stems and the prominent leaf veins."},
+    "traits.spine_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence low), as no source read gives it: prickles 5-10 mm: the sources read call them long and dense but give no length; the hand value drawn before was 8 mm."},
+    "traits.spine_curve": {"evidence": "SourceInferred", "source": "gleason-cronquist-1991", "note": "Gleason and Cronquist (1991), Oplopanax horridus (read via NYBG, 2026-10-19): shrub densely prickly on the stem, petioles and leaf veins; OregonFlora (quoted by Friends of Silver Falls) has the prickles sticking straight out: straight."},
+    "traits.spine_angle": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: square to the stem: OregonFlora, as quoted by Friends of Silver Falls (read 2026-10-19), has the dense long prickles sticking straight out; Oregon State University's Landscape Plants calls them firm and erect."},
+    "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS (Oplopanax horridus, read 2026-10-19): sharp, dense prickles on the stems."},
+    "traits.aciculi": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence low), as no source read gives it: finer prickles among the long ones, as the stems' dense armature shows in photographs; no source read names them."},
+    "traits.spine_colour": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: yellow, as OregonFlora calls the prickles (quoted by Friends of Silver Falls, read 2026-10-19); sRGB by eye for the word."}
   },
   "provenance": {
     "sources": [

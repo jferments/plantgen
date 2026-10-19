@@ -69,6 +69,7 @@ pub mod organs;
 pub mod package;
 pub mod parts;
 pub mod preview;
+pub mod prickles;
 pub mod quality;
 pub mod raster;
 pub mod rng;
@@ -1106,6 +1107,10 @@ pub mod venation;
 /// Tracheophyta turn into its young, grown and old stages; an old stage
 /// shows up from the trunk's base, or on limbs' undersides, where stated,
 /// and each stage gives way to the next in mixed steps;
-/// `plantc export --bark-look spec` bakes it (151 is subalpine fir; the
-/// desk renumbers on landing).
+/// `plantc export --bark-look spec` bakes it; and a thorn or prickle
+/// stands on its stem's surface, a prickle as a flattened cone curving
+/// back as its flora says (`spine_curve`, `spine_angle`, `spine_width_m`)
+/// with more between the nodes (`internodal_prickles`, `aciculi`), by
+/// rules for all flowering plants (151 is subalpine fir; the desk
+/// renumbers on landing).
 pub const GENERATOR_REVISION: u32 = 152;

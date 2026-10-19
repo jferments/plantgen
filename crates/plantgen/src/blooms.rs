@@ -59,6 +59,10 @@ pub enum Form {
     /// A thorn (plant forms F5): a slender cone along the organ, as wide at
     /// its foot as the card's aspect allows, on the nearest level.
     Thorn,
+    /// Prickles (Rosaceae, 2026-10-19): a curved, flattened cone on the
+    /// stem's surface at each node, and more between the nodes
+    /// (`crate::prickles`), on the nearest level.
+    Prickles(crate::prickles::PrickleForm),
     /// A needle shoot (plant roadmap P4): the card's shoot, axes and
     /// needles, as a solid on the nearest level (`crate::shoots`).
     Shoot,
@@ -219,7 +223,7 @@ impl Form {
             Self::Fruit(_) => matches!(shape, Shape::Fruit(_)),
             Self::Spikelet(_) => matches!(shape, Shape::Spikelet(_)),
             Self::Shoot => matches!(shape, Shape::Needles(_)),
-            Self::Thorn | Self::Card => true,
+            Self::Thorn | Self::Prickles(_) | Self::Card => true,
         }
     }
 
@@ -235,7 +239,7 @@ impl Form {
                 Self::Flower(_) => ("flower", "a flower or a head"),
                 Self::Fruit(_) => ("fruit", "a fruit"),
                 Self::Spikelet(_) => ("spikelet", "a spikelet"),
-                Self::Shoot | Self::Thorn | Self::Card => ("shoot", "needles"),
+                Self::Shoot | Self::Thorn | Self::Prickles(_) | Self::Card => ("shoot", "needles"),
             };
             return Err(format!(
                 "form {form} draws only on {needs}, found {}",
@@ -267,6 +271,7 @@ impl Form {
             Self::Spikelet(form) => {
                 within("form spikelet levels", f64::from(form.levels), 0.0, 2.0)
             }
+            Self::Prickles(form) => form.validate(),
             Self::Thorn | Self::Shoot | Self::Card => Ok(()),
         }
     }
@@ -278,7 +283,7 @@ impl Form {
             Self::Flower(form) => form.levels,
             Self::Fruit(form) => form.levels,
             Self::Spikelet(form) => form.levels,
-            Self::Thorn | Self::Shoot => 1,
+            Self::Thorn | Self::Prickles(_) | Self::Shoot => 1,
             Self::Card => 0,
         };
         level < usize::from(levels.min(2))
@@ -310,9 +315,38 @@ fn triangles_per_organ(look: &Look, coarse: usize) -> usize {
         (Form::Fruit(_), _) => ELLIPSOID_TRIANGLES,
         (Form::Spikelet(_), Shape::Spikelet(spikelet)) => crate::spikelets::triangles(spikelet, 0),
         (Form::Thorn, _) => THORN_TRIANGLES,
+        (Form::Prickles(_), _) => crate::prickles::PRICKLE_TRIANGLES,
         (Form::Shoot, Shape::Needles(needles)) => crate::shoots::triangles(needles, 0),
         _ => 0,
     }
+}
+
+/// The share of the prickles and aciculi between the nodes that organs of
+/// type `index` draw so that, with one prickle at each organ, they fit
+/// [`crate::prickles::BUDGET`]: 1 where all fit.
+#[allow(clippy::cast_precision_loss)]
+fn prickle_share(graph: &PlantGraph, index: usize, form: &crate::prickles::PrickleForm) -> f64 {
+    let mut nodes = 0usize;
+    let mut between = 0.0;
+    for organ in graph
+        .organs
+        .iter()
+        .filter(|organ| usize::from(organ.organ) == index)
+    {
+        nodes += 1;
+        if let Some(segment) = organ
+            .segment
+            .and_then(|segment| graph.segments.get(segment as usize))
+        {
+            let (prickles, bristles) =
+                form.on((segment.end - segment.start).length(), segment.radius);
+            between += prickles * crate::prickles::BETWEEN_TRIANGLES as f64
+                + bristles * crate::prickles::NEEDLE_TRIANGLES as f64;
+        }
+    }
+    let room =
+        crate::prickles::BUDGET.saturating_sub(nodes * crate::prickles::PRICKLE_TRIANGLES) as f64;
+    if between <= room { 1.0 } else { room / between }
 }
 
 /// Triangles a thorn takes: a frustum's sides.
@@ -410,6 +444,7 @@ pub(crate) fn build_coarse(
     // Each organ's vertices are borne by its segment: marked when the
     // next organ starts, and after the last.
     let mut drawn: Option<(usize, u32)> = None;
+    let mut thinned: std::collections::BTreeMap<usize, f64> = std::collections::BTreeMap::new();
     for organ in &graph.organs {
         if let Some((first, segment)) = drawn.take() {
             mesh.bear(first, segment);
@@ -573,13 +608,43 @@ pub(crate) fn build_coarse(
                 let accent = with_shading(look.accent, look.colour, painted);
                 crate::shoots::draw(organ, look, needles, painted, accent, part, mesh);
             }
+            (Form::Prickles(form), shape) => {
+                let width = match shape {
+                    Shape::Blade(blade) => blade.aspect,
+                    _ => 0.3,
+                };
+                let segment = organ
+                    .segment
+                    .and_then(|segment| graph.segments.get(segment as usize));
+                let kept = *thinned
+                    .entry(index)
+                    .or_insert_with(|| prickle_share(graph, index, form));
+                let (between, bristles) = segment.map_or((0.0, 0.0), |segment| {
+                    form.on((segment.end - segment.start).length(), segment.radius)
+                });
+                crate::prickles::draw_organ(
+                    organ,
+                    segment,
+                    (width, look.bend.droop.to_radians()),
+                    (between * kept, bristles * kept),
+                    painted,
+                    part,
+                    mesh,
+                );
+            }
             (Form::Thorn, shape) => {
                 let width = match shape {
                     Shape::Blade(blade) => blade.aspect,
                     _ => 0.08,
                 };
+                // From the stem's surface, not its axis, so a thick
+                // stem does not bury it.
+                let segment = organ
+                    .segment
+                    .and_then(|segment| graph.segments.get(segment as usize));
+                let (_, _, foot) = crate::prickles::foot(organ, segment);
                 frustum(
-                    organ.position,
+                    foot,
                     axis,
                     side,
                     organ.size,

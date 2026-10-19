@@ -1120,8 +1120,58 @@
       "group": "stem_and_bark",
       "organ": "spine",
       "type": "colour",
-      "when": {"spines": ["areoles"]},
-      "why": "a grown spine's colour before it greys"
+      "when": {"spines": ["areoles", "thorns", "prickles"]},
+      "why": "a grown spine's colour before it greys: a cactus's spines, or a thorn's or prickle's"
+    },
+    "spine_length_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "the length of a thorn or prickle on the woody stems, base to tip, as floras measure it (a rose's prickles below the stipules, a hawthorn's thorns on its twigs)"
+    },
+    "spine_width_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.05],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "the width of a thorn's or prickle's foot along the stem, as floras give it after the length (a dog rose's prickles 6-7 x 4-9 mm: 4 to 9 mm); a broad-based prickle is nearly as wide as long, a subulate one a fraction of it"
+    },
+    "spine_curve": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["straight", "curved", "hooked"],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "how a thorn or prickle bends from its foot to its tip, back toward the stem's base: straight (a flora's erect, subulate or needle-like prickle), curved, or hooked, its tip turned back nearly square to where it began"
+    },
+    "spine_angle": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["ascending", "erect", "declined"],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "the angle a thorn or prickle leaves the stem at: ascending, leaning toward the shoot's tip; erect, standing square to the stem; or declined (retrorse), leaning back toward its base"
+    },
+    "internodal_prickles": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["none", "sparse", "moderate", "dense"],
+      "when": {"spines": ["prickles"]},
+      "why": "how thickly prickles stand on the stem between its nodes, besides the ones at the nodes (a rose's infrastipular prickles): none, sparse, moderate or dense, as floras say it"
+    },
+    "aciculi": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["none", "sparse", "dense"],
+      "when": {"spines": ["prickles"]},
+      "why": "needle-like prickles and stiff bristles mixed in among the prickles (a rose's aciculi, a raspberry's bristles): none, sparse, or dense, covering the stem's skin"
     },
     "glochid_colour": {
       "group": "stem_and_bark",
