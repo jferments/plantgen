@@ -74,7 +74,6 @@
         "dome": 0.25,
         "base": 0.6,
         "areoles": {
-          "spacing": 0.009,
           "felt_radius": 0.0003,
           "felt": [
             0.45,
@@ -292,7 +291,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Joint thickness, areole spacing and felt by eye for thin, flat, glossy joints with brown-woolled areoles in the notches."
+      "note": "Joint thickness and felt by eye for thin, flat, glossy joints with brown-woolled areoles in the notches (their spacing from the genus rule)."
     },
     "taxon": {
       "evidence": "Authored",

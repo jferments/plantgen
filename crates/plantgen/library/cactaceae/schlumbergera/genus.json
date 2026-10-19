@@ -14,7 +14,8 @@
     "central_spines": 0,
     "flowering_position": "terminal",
     "fruit_surface": "naked",
-    "perianth_reflexion": "reflexed"
+    "perianth_reflexion": "reflexed",
+    "areole_position": "margins"
   },
   "evidence": {
     "generator.program": {
@@ -25,7 +26,18 @@
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
-      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Flattened short joints, so flat joints without ribs or tubercles; flowers terminal ('irregular' is left unstated: the flower code draws a spiral perianth regular, so the family's usual actinomorphic stands until it can); the ovary smooth but for minute scales, so naked; spines none (the areoles carry wool and bristles only). The reflexed perianth from the type species, as Britton and Rose treat the genus as one species."
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Flattened short joints, so flat joints without ribs or tubercles; flowers terminal ('irregular' is left unstated: the flower code draws a spiral perianth regular, so the family's usual actinomorphic stands until it can); the ovary smooth but for minute scales, so naked; spines none (the areoles carry wool and bristles only). The reflexed perianth from the type species, as Britton and Rose treat the genus as one species. Areoles on the margins only (areole_position margins): Britton and Rose's Zygocactus truncatus places one at the truncate tip ('terminal areole broad and thin, filled with brown wool and bristles') and none on the faces of its 'sharply serrate' joints, so the rest are drawn in the notches between the teeth, by inference."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A toothed joint's areoles drawn a tooth's length apart down its margins, from the joint lengths and tooth counts its flora gives."
+    }
+  },
+  "rules": {
+    "appearance.bodies.stem.areoles.spacing": {
+      "rule": "(min(joint_length_m) + max(joint_length_m)) / 2 * 0.75 / ((min(joint_teeth) + max(joint_teeth)) / 2)",
+      "why": "An areole sits in each notch between a toothed joint's teeth, so they stand a tooth's length apart down each margin: the joint's toothed three quarters over its teeth a side."
     }
   }
 }

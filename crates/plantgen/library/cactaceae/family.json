@@ -255,6 +255,10 @@
       "rule": "areole_spacing_m",
       "why": "Areoles sit along a rib's crest, or over a joint, this far apart."
     },
+    "appearance.bodies.stem.areoles.margins": {
+      "map": {"areole_position": {"faces": 0, "margins": 1}},
+      "why": "A flat joint whose areoles sit only along its margins, in the notches of its teeth (Britton and Rose's Zygocactus and Schlumbergera), bears none on its faces."
+    },
     "appearance.bodies.stem.spines.radial.count": {
       "rule": [
         "min(radial_spines)",

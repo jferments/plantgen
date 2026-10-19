@@ -699,6 +699,15 @@
       "when": {"stem_form": ["flat_joints"]},
       "why": "saw teeth on each margin of a flat joint, the top pair included, as a Christmas cactus's 'sharply serrate' joints; 0 an entire pad"
     },
+    "areole_position": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "enum",
+      "values": ["faces", "margins"],
+      "optional": true,
+      "when": {"stem_form": ["flat_joints"]},
+      "why": "where a flat joint's areoles sit: over its faces, as a prickly pear's, or only along its margins, as a Christmas cactus's in the notches between its teeth"
+    },
     "areole_spacing_m": {
       "group": "stem_and_bark",
       "organ": "areole",
