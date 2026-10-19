@@ -1053,4 +1053,15 @@ pub mod venation;
 /// of a rounded or broad stem; twisted centrals turn about their length
 /// (new trait `central_spines_twisted`, spine `twist`) (147 is old
 /// conifers, #251).
-pub const GENERATOR_REVISION: u32 = 148;
+/// 149: palm 15 and Phoenix's details. A Phoenix's dead frond hangs limp,
+/// its leaflets folded up along the rachis and the rachis drooping, in
+/// place of a flat plank standing out below the crown. A boot wears shorter
+/// as it ages (`boot_wear`, `boot_wear_years`) and each is a little longer
+/// or shorter (`boot_spread`), so a Phoenix trunk's lower stubs are shorter
+/// and its outline ragged. The foot puts out a mass of adventitious roots
+/// from a root zone that rises with age, about half stopping short in the
+/// air (`roots`). An open sheath (`sheath_wedge`, Phoenix's) is drawn as a
+/// broad brown wedge along its petiole's base, so the crown's centre is
+/// clothed in leaf bases where the bare stem showed as a flat-topped
+/// cylinder (148 is cacti, #248).
+pub const GENERATOR_REVISION: u32 = 149;
