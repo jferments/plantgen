@@ -167,11 +167,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
     ),
     (
-        "drosera-anglica",
-        "crown_width_max_m",
-        "as round-leaved sundew: Droseraceae's perennation tie draws six scapes where great sundew states one, and they spread to 19 cm against 12 cm; #233 fixes the tie",
-    ),
-    (
         "drosera-filiformis",
         "crown_width_max_m",
         "as round-leaved sundew: Droseraceae's perennation tie draws six scapes, and they spread to 19 cm against 12 cm; #233 fixes the tie",
