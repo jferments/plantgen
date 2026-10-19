@@ -231,7 +231,9 @@
 # pendulous branchlets"), each off unless a rule turns it on.
 # - A branch (order 2 and up, carried by a limb) holds branch_set from
 #   upright and droops by branch_droop, its own tropism in its brackets,
-#   where the plant's set_point and droop held every shoot.
+#   where the plant's set_point and droop held every shoot. branch_hold
+#   is how hard it holds that angle: a pendulous branch's hold gives way,
+#   so its own weight arches it over.
 # - A tortuous limb (limb_turn) sets each year's shoot off at a chance
 #   angle that its held angle only partly takes back, so the wood bends in
 #   long irregular curves, not wiggle's fine jitter at every node.
@@ -367,6 +369,7 @@ param branch_set = -1;        # a branch's (order 2 and up) held angle from stra
 param limb_turn = 0;          # spread of the chance turn, degrees, each year's shoot on a limb or branch starts with: tortuous limbs
 param fork_set = 0;           # the angle from upright a fork's stems hold: 0, each a leader; above 0, spreading scaffold limbs (the leader lost)
 param branch_droop = -1;      # a branch's droop; below 0: droop's
+param branch_hold = -1;       # how far each node of a branch turns back toward its held angle; below 0: incline_rate
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -861,8 +864,8 @@ decompose Mp(n, u, l) : n <= 0 -> ;
 # pendulous branchlets"). Its tropism stays with it, and with all it
 # carries, in its brackets.
 decompose Cat(o) -> Ct(o) Cb(o);
-decompose Cb(o) : o >= 2 && (branch_set >= 0 || branch_droop >= 0) ->
-    incline(branch_set >= 0 ? branch_set : set_point, incline_rate)
+decompose Cb(o) : o >= 2 && (branch_set >= 0 || branch_droop >= 0 || branch_hold >= 0) ->
+    incline(branch_set >= 0 ? branch_set : set_point, branch_hold >= 0 ? branch_hold : incline_rate)
     T(wind, -1, 0, ((branch_droop >= 0 ? branch_droop : droop) + wind_bend * wind) / unit_nodes);
 decompose Cb(o) -> ;
 
