@@ -974,4 +974,12 @@ pub mod venation;
 /// `glochid_colour`, also the stem's glochids); and a round fruit with no
 /// stated width is as wide as long (137 is #234; 138 and 139 are #167's
 /// nodding leaders and old-conifer refit).
-pub const GENERATOR_REVISION: u32 = 140;
+/// 141: a cactus's central spine form draws its spines: curved and twisted
+/// centrals bend (`curve`), a hooked principal central turns back as a
+/// fishhook (`hook`), in place of hooks and curves set by hand; a woolly
+/// pericarpel and fruit (`fruit_surface` woolly: Homalocephala,
+/// Astrophytum); a flat stem top (`stem_apex` flat); white hair flecks
+/// between the areoles (new trait `stem_flecks`, body `flecks`); an
+/// apex's woolly cap closes over the tip; a reduced flower with more than
+/// 12 stamens draws a ring of anthers (140 is cactus pericarpels, #226).
+pub const GENERATOR_REVISION: u32 = 141;

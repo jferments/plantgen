@@ -1,0 +1,381 @@
+{
+  "schema": 1,
+  "id": "peniocereus-greggii",
+  "taxon": {
+    "scientific_name": "Peniocereus greggii",
+    "common_name": "desert night-blooming cereus",
+    "family": "Cactaceae",
+    "genus": "Peniocereus",
+    "plant_name_id": 2414630
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.15,
+      "lean": 25,
+      "stems": 3,
+      "stem_rate": 0.08,
+      "clump_radius": 0.03,
+      "stem_lean": 35,
+      "seedling": 0.03,
+      "height_max": 0.9,
+      "height_rate": 0.08,
+      "height_shape": 1.4,
+      "radius_min": 0.003,
+      "radius_height": 0.2,
+      "fill": 0.8,
+      "fill_years": 6,
+      "wiggle": 1.5,
+      "bend": 1.0,
+      "bloom_age": 4,
+      "flowers": 2,
+      "ring_angle": 60,
+      "flower_angle": 50
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [
+      2,
+      5,
+      10,
+      20
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "ribs": {
+          "spacing": 0.007,
+          "depth": 0.3,
+          "sharpness": 0.6
+        },
+        "areoles": {
+          "felt_radius": 0.0012,
+          "felt": [
+            0.6,
+            0.58,
+            0.55
+          ]
+        },
+        "spines": [
+          {
+            "role": "radial",
+            "angle": 10,
+            "width": 0.0003,
+            "angle_spread": 10,
+            "length_spread": 0.4,
+            "tip": [
+              0.08,
+              0.07,
+              0.06
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.6
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "ribs": {
+      "min": 4,
+      "max": 6
+    },
+    "stem_colour": [
+      105,
+      115,
+      95
+    ],
+    "stem_diameter_max_m": {
+      "min": 0.008,
+      "max": 0.02
+    },
+    "areole_spacing_m": {
+      "min": 0.012,
+      "max": 0.015,
+      "low": 0.0035
+    },
+    "radial_spines": {
+      "min": 11,
+      "max": 15,
+      "low": 9,
+      "high": 17
+    },
+    "radial_spine_length_m": 0.003,
+    "spine_colour": [
+      215,
+      205,
+      170
+    ],
+    "flower_colour": [
+      245,
+      242,
+      230
+    ],
+    "perianth_abaxial_colour": [
+      205,
+      200,
+      160
+    ],
+    "flower_size_m": {
+      "min": 0.05,
+      "max": 0.08
+    },
+    "tepal_length_m": {
+      "min": 0.04,
+      "max": 0.07
+    },
+    "hypanthium_length_m": {
+      "min": 0.1,
+      "max": 0.16
+    },
+    "anther_colour": [
+      235,
+      215,
+      140
+    ],
+    "stigma_colour": [
+      245,
+      245,
+      235
+    ],
+    "carpels": {
+      "min": 9,
+      "max": 11
+    },
+    "fruit_colour_ripe": [
+      205,
+      30,
+      40
+    ],
+    "fruit_shape": "ellipsoid",
+    "fruit_size_m": {
+      "min": 0.06,
+      "max": 0.09
+    },
+    "fruit_width_m": {
+      "min": 0.04,
+      "max": 0.05
+    },
+    "height_typical_m": {
+      "min": 0.4,
+      "max": 1.2
+    },
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "traits.ribs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.areole_spacing_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.radial_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.perianth_abaxial_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.hypanthium_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; stems gray-green to gray, simple or with 2-5 branches, 40-120(-300) cm, distally 8-20 mm in diameter, about 10 mm at midlength; ribs 4-6, prominent; areoles (3.5-)12(-15) mm apart. Spines (9-)11-15(-17) per areole, the abaxial 3-5 appressed, yellowish white throughout or only at the tips, to 3 mm; the adaxial black, subulate, to 1 mm. Flowers nocturnal, 15-25 cm; outer tepals greenish white with brown to reddish midstripes; inner tepals white or lightly tinged cream or pink, lanceolate-attenuate, 4-7 cm; anthers cream-yellow; style white, 10-14 cm; stigma lobes 9-11, white. Fruits bright red, ellipsoid, 60-90 × 40-50 mm. Var. greggii: flowers 15-17 × 5-6 cm, flowering late spring, fruiting summer; var. transmontanus: flowers 22-25 × 7-8 cm, flowering spring-summer, fruiting summer-early fall. Colours by hand from the words; the carpels as many as the stigma lobes; the months of both varieties, late spring to summer, and their fruit summer to early autumn; the floral tube the flower's 15-25 cm less its 4-7 cm tepals, rounded down to 10-16 cm."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from the flora's words: two to five thin grey stems from a buried tuber, leaning and sprawling up through a shrub, a white flower or two near their tips. Not fitted to measurements; the nurse shrub is not drawn."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A rough stem height: about 60 cm by 10 years. Wide tolerance."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rib depth and sharpness by eye for the flora's 4-6 prominent ribs on a 1 cm stem; the spines' black tips for its black adaxial spines."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific names as WCVP v16 accepts them, common names as the Flora of North America gives them, and the genus the scientific name is written in."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America, vol. 4 (Cactaceae), on eFloras",
+        "url": "http://www.efloras.org/flora_page.aspx?flora_id=1",
+        "licence": "quoted facts; the treatment's text is not copied"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Procedural proxy drawn from the Flora of North America's text (2026-10-19). Calibration against measurements and photographs comes later."
+  }
+}

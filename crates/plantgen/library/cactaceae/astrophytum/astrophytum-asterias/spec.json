@@ -1,0 +1,311 @@
+{
+  "schema": 1,
+  "id": "astrophytum-asterias",
+  "taxon": {
+    "scientific_name": "Astrophytum asterias",
+    "common_name": "star cactus",
+    "family": "Cactaceae",
+    "genus": "Astrophytum",
+    "plant_name_id": 2664164
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 1,
+      "sink": 0.015,
+      "seedling": 0.004,
+      "height_max": 0.06,
+      "height_rate": 0.05,
+      "height_shape": 1.5,
+      "radius_min": 0.006,
+      "radius_height": 0.03,
+      "fill": 0.95,
+      "fill_years": 6,
+      "wiggle": 0.1,
+      "bend": 0.2,
+      "bloom_age": 5,
+      "flowers": 3,
+      "ring_angle": 20,
+      "flower_angle": 15
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "ribs": {
+          "spacing": 0.03,
+          "depth": 0.07,
+          "sharpness": 0.15
+        },
+        "areoles": {
+          "felt_radius": 0.002
+        },
+        "flecks": {}
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 0.03,
+      "tolerance": 0.6
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "stem_apex": "flat",
+    "stem_flecks": "sparse",
+    "ribs": {
+      "min": 7,
+      "max": 9,
+      "typical": 8
+    },
+    "stem_colour": [
+      55,
+      85,
+      50
+    ],
+    "stem_diameter_max_m": {
+      "min": 0.06,
+      "max": 0.1
+    },
+    "areole_wool_colour": [
+      205,
+      195,
+      160
+    ],
+    "flower_colour": [
+      240,
+      205,
+      40
+    ],
+    "perianth_base_colour": [
+      190,
+      45,
+      30
+    ],
+    "perianth_base_length": 0.3,
+    "flower_size_m": {
+      "min": 0.038,
+      "max": 0.052
+    },
+    "stigma_colour": [
+      235,
+      205,
+      60
+    ],
+    "carpels": {
+      "min": 10,
+      "max": 12
+    },
+    "fruit_colour_ripe": [
+      205,
+      95,
+      110
+    ],
+    "fruit_shape": "ovoid",
+    "fruit_size_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "fruit_width_m": 0.012,
+    "height_typical_m": {
+      "min": 0.01,
+      "max": 0.04
+    },
+    "flowering_months": [
+      3,
+      4,
+      5
+    ]
+  },
+  "evidence": {
+    "traits.stem_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum asterias: plants flat-topped and usually flush with the soil surface, or at most the above-ground portion a low dome; stems shiny, sparsely speckled by bright white extra-areolar hair tufts 0.5-1 mm across; ribs usually 8, straight, very low, nearly flat or rounded; areoles 3-5 mm across, with yellow or gray wool. Flowers opening widely, externally long woolly; inner tepals lanceolate, acuminate. Flowering Mar-May and sporadically after summer rain."
+    },
+    "traits.stem_flecks": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum asterias: plants flat-topped and usually flush with the soil surface, or at most the above-ground portion a low dome; stems shiny, sparsely speckled by bright white extra-areolar hair tufts 0.5-1 mm across; ribs usually 8, straight, very low, nearly flat or rounded; areoles 3-5 mm across, with yellow or gray wool. Flowers opening widely, externally long woolly; inner tepals lanceolate, acuminate. Flowering Mar-May and sporadically after summer rain."
+    },
+    "traits.ribs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum asterias: plants flat-topped and usually flush with the soil surface, or at most the above-ground portion a low dome; stems shiny, sparsely speckled by bright white extra-areolar hair tufts 0.5-1 mm across; ribs usually 8, straight, very low, nearly flat or rounded; areoles 3-5 mm across, with yellow or gray wool. Flowers opening widely, externally long woolly; inner tepals lanceolate, acuminate. Flowering Mar-May and sporadically after summer rain."
+    },
+    "traits.areole_wool_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum asterias: plants flat-topped and usually flush with the soil surface, or at most the above-ground portion a low dome; stems shiny, sparsely speckled by bright white extra-areolar hair tufts 0.5-1 mm across; ribs usually 8, straight, very low, nearly flat or rounded; areoles 3-5 mm across, with yellow or gray wool. Flowers opening widely, externally long woolly; inner tepals lanceolate, acuminate. Flowering Mar-May and sporadically after summer rain."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum asterias: plants flat-topped and usually flush with the soil surface, or at most the above-ground portion a low dome; stems shiny, sparsely speckled by bright white extra-areolar hair tufts 0.5-1 mm across; ribs usually 8, straight, very low, nearly flat or rounded; areoles 3-5 mm across, with yellow or gray wool. Flowers opening widely, externally long woolly; inner tepals lanceolate, acuminate. Flowering Mar-May and sporadically after summer rain."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent. Stems of A. asterias shiny green (the species' note: 'hard, speckled, almost shiny, green stem surface'); a dull mid green by hand."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent. Stems of A. asterias shiny green (the species' note: 'hard, speckled, almost shiny, green stem surface'); a dull mid green by hand."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.perianth_base_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.perianth_base_length": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum asterias: plants flat-topped and usually flush with the soil surface, or at most the above-ground portion a low dome; stems shiny, sparsely speckled by bright white extra-areolar hair tufts 0.5-1 mm across; ribs usually 8, straight, very low, nearly flat or rounded; areoles 3-5 mm across, with yellow or gray wool. Flowers opening widely, externally long woolly; inner tepals lanceolate, acuminate. Flowering Mar-May and sporadically after summer rain. Its stem is 6-15 cm tall in the genus but mostly below ground, so it stands 1 to 4 cm above it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from the flora's words: one flat-topped stem sunk to its rim in the soil, a few yellow flowers at its centre in spring. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A rough height above ground: about 3 cm by 15 years. Wide tolerance."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rib depth and sharpness by eye for the flora's 'very low, nearly flat or rounded' ribs; the felt and flecks' size from its areoles 3-5 mm and tufts 0.5-1 mm."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific names as WCVP v16 accepts them, common names as the Flora of North America gives them, and the genus the scientific name is written in."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America, vol. 4 (Cactaceae), on eFloras",
+        "url": "http://www.efloras.org/flora_page.aspx?flora_id=1",
+        "licence": "quoted facts; the treatment's text is not copied"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Procedural proxy drawn from the Flora of North America's text (2026-10-19). Calibration against measurements and photographs comes later."
+  }
+}

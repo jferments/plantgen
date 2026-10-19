@@ -57,6 +57,10 @@ use crate::rng::{mix64, unit};
 /// The tan felt of a cactus fruit's areoles.
 const FELT: [f32; 3] = [0.74, 0.66, 0.52];
 
+/// The white of a woolly cactus fruit's hairs, where no wool colour is
+/// stated.
+const WOOL: [f32; 3] = [0.86, 0.84, 0.78];
+
 /// The straw of a cactus fruit's spines.
 const STRAW: [f32; 3] = [0.86, 0.8, 0.62];
 
@@ -398,8 +402,9 @@ pub(crate) struct Surface {
 /// toward its tip, or as many felted areoles, each with a star of
 /// `spines` and a third more short spines on a spiny one or a tuft of
 /// glochids on one with felted areoles alone, on a Fibonacci spiral from
-/// near its base to below its crown. Scales take `colour`, a little
-/// darker.
+/// near its base to below its crown; on a woolly one, narrow scales
+/// with a puff of wool in each axil, in the felt's colour. Scales take
+/// `colour`, a little darker.
 pub(crate) fn skin(
     surface: &Surface,
     kind: Skin,
@@ -432,6 +437,46 @@ pub(crate) fn skin(
         // Up the skin toward the tip, and across it.
         let up = (axis - normal * axis.dot(normal)).normalize_or(axis);
         let side = normal.cross(up);
+        if kind == Skin::Woolly {
+            // A narrow scale tipped with a spine, and a puff of wool in
+            // its axil standing well out from the skin, so the wool hides
+            // most of it.
+            let scale = wide * 0.4;
+            Spheroid {
+                centre: at + up * (scale * 0.35) + normal * (scale * 0.05),
+                a: scale * 0.1,
+                b: scale * 0.25,
+                c: scale * 0.55,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: Detail {
+                    around: 5,
+                    rings: 2,
+                    fine: None,
+                },
+            }
+            .draw(normal, side, blooms::shade(colour, 0.82), part, mesh);
+            let puff = wide * 0.55;
+            Spheroid {
+                centre: at + normal * (puff * 0.35) - up * (puff * 0.2),
+                a: puff * 0.7,
+                b: puff,
+                c: puff,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: Detail {
+                    around: 6,
+                    rings: 3,
+                    fine: None,
+                },
+            }
+            .draw(normal, side, dress.felt.unwrap_or(WOOL), part, mesh);
+            continue;
+        }
         if kind == Skin::Scaly {
             // Broad and rounded, pressed to the skin and reaching toward
             // the tip, a little darker.
@@ -635,7 +680,7 @@ impl One {
                 pod.draw(self.direction, self.across, body, part, mesh);
             }
             FruitKind::Capsule => self.capsule(body, part, mesh),
-            FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => {
+            FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny | FruitKind::Woolly => {
                 self.body()
                     .draw(self.direction, self.across, body, part, mesh);
                 self.areoles(
@@ -1607,6 +1652,7 @@ mod tests {
             FruitKind::Scaly,
             FruitKind::Areolate,
             FruitKind::Spiny,
+            FruitKind::Woolly,
             FruitKind::Follicles,
             FruitKind::Samaras,
             FruitKind::Berries,

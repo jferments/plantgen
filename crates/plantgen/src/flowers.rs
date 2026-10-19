@@ -1642,6 +1642,38 @@ pub(crate) fn draw_reduced(
                 both(&[foot - across, foot + across, tip], colour, mesh);
             }
         }
+        // More stamens than it draws one by one (a cactus's or a rose's
+        // hundred): their anthers as a starburst of 24 narrow spikes
+        // where their tips stand, in the anthers' colour, so the flower
+        // keeps the dense ring the full one shows.
+        if !naked && laid.stamens.len() > 12 {
+            #[allow(clippy::cast_precision_loss)]
+            let count = laid.stamens.len() as f64;
+            let (mut height, mut inner, mut outer) = (0.0, f64::MAX, 0.0_f64);
+            for stamen in &laid.stamens {
+                let (foot, direction) = frame.rod(&stamen.rod);
+                let tip = foot + direction * stamen.rod.length - frame.foot;
+                let up = tip.dot(axis);
+                let out = (tip - axis * up).length();
+                height += up / count;
+                inner = inner.min(out);
+                outer = outer.max(out);
+            }
+            let inner = inner.min(outer * 0.6);
+            for k in 0..24 {
+                let at = TAU * (f64::from(k) + 0.5) / 24.0;
+                let half = TAU / 24.0 * 0.3;
+                both(
+                    &[
+                        frame.point(at - half, inner, height),
+                        frame.point(at + half, inner, height),
+                        frame.point(at, outer, height),
+                    ],
+                    colours.anther,
+                    mesh,
+                );
+            }
+        }
     }
     leaves::smooth_normals(mesh, first, first_index);
 }

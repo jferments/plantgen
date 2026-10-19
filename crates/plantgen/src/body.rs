@@ -92,6 +92,9 @@ pub struct BodyLook {
     /// Old stems turn to bark from the ground up.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cork: Option<Cork>,
+    /// Tufts of white hairs dotted over the skin between the areoles.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub flecks: Option<Flecks>,
 }
 
 impl Default for BodyLook {
@@ -109,6 +112,7 @@ impl Default for BodyLook {
             spines: Vec::new(),
             greying: None,
             cork: None,
+            flecks: None,
         }
     }
 }
@@ -377,6 +381,36 @@ impl Default for Cork {
     }
 }
 
+/// A fleck's radius, metres: an Astrophytum's tufts are 0.5 to 1 mm
+/// across (Flora of North America).
+const FLECK_RADIUS: f64 = 0.0004;
+
+/// Most flecks one body draws.
+const MAX_FLECKS: usize = 6000;
+
+/// Tufts of short white hairs scattered over the skin between the
+/// areoles, as an Astrophytum's flecks (Flora of North America:
+/// "stem surfaces ... with white flecks, the flecks being tufts of
+/// hairs"). Drawn as specks on the skin.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Flecks {
+    /// The hairs' colour.
+    pub colour: [f32; 3],
+    /// Share of the skin they cover, 0 to 1: a sparse sprinkle to a
+    /// dense cover that greys the whole body.
+    pub share: f64,
+}
+
+impl Default for Flecks {
+    fn default() -> Self {
+        Self {
+            colour: [0.9, 0.89, 0.85],
+            share: 0.3,
+        }
+    }
+}
+
 /// Check that `value` lies in `low..=high`.
 fn within(what: &str, value: f64, low: f64, high: f64) -> Result<(), String> {
     if (low..=high).contains(&value) {
@@ -507,6 +541,10 @@ impl BodyLook {
             within("cork rate", cork.rate, 0.0, 5.0)?;
             within("cork height", cork.height, 0.0, 50.0)?;
             within("cork spines", cork.spines, 0.0, 1.0)?;
+        }
+        if let Some(flecks) = &self.flecks {
+            colour_ok("flecks colour", flecks.colour)?;
+            within("flecks share", flecks.share, 0.0, 1.0)?;
         }
         Ok(())
     }
@@ -1320,9 +1358,13 @@ impl Surface<'_> {
         }
         let swell = self.swell * self.line.cap(s);
         if self.wool > 0.0 {
-            // The cap fills the valleys and rounds over the crests.
+            // The cap fills the valleys and rounds over the crests, its
+            // thickness laid along the dome's outward slope: outward where
+            // the dome is steep, up over the tip (see `point`), so the cap
+            // closes over the apex instead of leaving a hole its
+            // thickness wide.
             let wool = apex_wool(self.line, s);
-            radius += (crest - radius) * wool + self.wool * wool;
+            radius += (crest - radius) * wool + self.wool * wool * self.line.cap(s);
             valley *= 1.0 - wool;
         }
         (radius + swell, valley)
@@ -1333,7 +1375,14 @@ impl Surface<'_> {
         let station = self.line.at(s);
         let (radius, _) = self.radius(s, t);
         let side = station.tangent.cross(station.across);
+        let lift = if self.wool > 0.0 {
+            let cap = self.line.cap(s);
+            self.wool * apex_wool(self.line, s) * (1.0 - cap * cap).max(0.0).sqrt()
+        } else {
+            0.0
+        };
         station.point
+            + station.tangent * lift
             + station.across * (radius * math::cos(t))
             + side * (radius * self.flatten * math::sin(t))
     }
@@ -2017,6 +2066,21 @@ impl Body<'_> {
             (tint, if tinted { cover } else { 0.0 }),
             out,
         );
+        if let Some(flecks) = look.flecks.as_ref().filter(|flecks| flecks.share > 0.0) {
+            if detail.spines == Spines::Tint {
+                // Too small to draw one by one: they pale the skin.
+                for colour in &mut out.wood.colors[first..] {
+                    let pale = mix(
+                        [colour[0], colour[1], colour[2]],
+                        flecks.colour,
+                        flecks.share,
+                    );
+                    colour[..3].copy_from_slice(&pale);
+                }
+            } else {
+                self.flecks(&surface, flecks, out);
+            }
+        }
         if detail.spines != Spines::Tint {
             self.spines(&surface, &sites, out);
         }
@@ -2114,6 +2178,79 @@ impl Body<'_> {
                 }
             }
             previous = Some(first);
+        }
+    }
+
+    /// The skin's flecks, each a low six-sided mound [`FLECK_RADIUS`]
+    /// across scattered at random over the skin, as many as cover its
+    /// share of it; at most [`MAX_FLECKS`], drawn larger to cover as much
+    /// where more would be needed.
+    #[allow(clippy::cast_precision_loss)]
+    fn flecks(&self, surface: &Surface<'_>, flecks: &Flecks, out: &mut PlantMesh) {
+        const STEPS: usize = 200;
+        let line = self.line;
+        // The skin's area by its crest's girth along the axis.
+        let ds = line.length / STEPS as f64;
+        let mut cumulative = Vec::with_capacity(STEPS + 1);
+        let mut area = 0.0;
+        cumulative.push(0.0);
+        for step in 0..STEPS {
+            let s = (step as f64 + 0.5) * ds;
+            area += 2.0 * PI * line.crest(s) * ds;
+            cumulative.push(area);
+        }
+        if area <= 0.0 {
+            return;
+        }
+        let one = PI * FLECK_RADIUS * FLECK_RADIUS;
+        let wanted = flecks.share * area / one;
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let count = wanted.min(MAX_FLECKS as f64) as usize;
+        let radius = if wanted > MAX_FLECKS as f64 {
+            (flecks.share * area / (PI * MAX_FLECKS as f64)).sqrt()
+        } else {
+            FLECK_RADIUS
+        };
+        let colour = [flecks.colour[0], flecks.colour[1], flecks.colour[2], 1.0];
+        let wood = &mut out.wood;
+        for index in 0..count {
+            let seed = mix64(self.axis.id ^ mix64(index as u64 ^ 0xF1EC));
+            // Even over the skin: an area share picks the ring.
+            let target = unit(seed) * area;
+            let step = cumulative.partition_point(|&a| a < target).clamp(1, STEPS);
+            let below = cumulative[step - 1];
+            let within = (target - below) / (cumulative[step] - below).max(1e-12);
+            let s = ((step - 1) as f64 + within) * ds;
+            let t = 2.0 * PI * unit(mix64(seed ^ 0x7));
+            let (position, normal, up) = surface.frame(s, t);
+            let side = normal.cross(up);
+            let station = line.at(s);
+            let vertex = |position: Vec3, normal: Vec3| Vertex {
+                position,
+                normal,
+                uv: [0.0, 0.0],
+                color: colour,
+                born: station.born,
+                shed: station.shed,
+                level: 0,
+                segment: crate::mesh::NO_SEGMENT,
+            };
+            let centre = wood.push(vertex(position + normal * (radius * 0.5), normal));
+            for corner in 0..6 {
+                let angle = PI / 3.0 * f64::from(corner);
+                let out = up * math::cos(angle) + side * math::sin(angle);
+                wood.push(vertex(
+                    position + out * radius - normal * (radius * 0.2),
+                    (out * 0.6 + normal).normalize_or(normal),
+                ));
+            }
+            for corner in 0..6 {
+                wood.indices.extend_from_slice(&[
+                    centre,
+                    centre + 1 + corner,
+                    centre + 1 + (corner + 1) % 6,
+                ]);
+            }
         }
     }
 
@@ -2494,6 +2631,46 @@ mod tests {
         assert!((tip(&capped) - woolly.areoles.felt[0]).abs() < 0.02);
         assert!((tip(&near) - woolly.areoles.felt[0]).abs() > 0.1);
         woolly.validate().unwrap();
+        // The cap closes over the apex: its highest skin lies on the axis,
+        // raised by the wool, with no hole the wool's thickness wide.
+        let highest = capped
+            .wood
+            .positions
+            .iter()
+            .max_by(|a, b| a[1].total_cmp(&b[1]))
+            .unwrap();
+        let off_axis = f64::from(highest[0]).hypot(f64::from(highest[2]));
+        assert!(
+            off_axis < 0.005,
+            "the cap's top is {off_axis} m off the axis"
+        );
+        assert!(f64::from(highest[1]) > 1.01, "the wool raises the tip");
+    }
+
+    #[test]
+    fn flecks_speckle_the_skin_as_thickly_as_their_share() {
+        let graph = column(1.0, 0.2, 2);
+        let look = ribbed();
+        let plain = mesh(&graph, &look, 0);
+        let white = [0.9, 0.9, 0.9];
+        let count = |share: f64| {
+            let flecked = BodyLook {
+                flecks: Some(Flecks {
+                    colour: white,
+                    share,
+                }),
+                ..look.clone()
+            };
+            flecked.validate().unwrap();
+            let out = mesh(&graph, &flecked, 0);
+            // Seven vertices a fleck, on top of the plain body's.
+            (out.wood.positions.len() - plain.wood.positions.len()) / 7
+        };
+        let (sparse, dense) = (count(5e-5), count(1e-4));
+        assert!(sparse > 100, "{sparse} flecks");
+        assert!(dense.abs_diff(2 * sparse) <= 2, "{sparse} then {dense}");
+        // A cover past what MAX_FLECKS can make draws the most, larger.
+        assert_eq!(count(0.9), MAX_FLECKS);
     }
 
     #[test]
