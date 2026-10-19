@@ -1029,12 +1029,44 @@ impl One {
     /// placenta up its middle, and over it flattened seeds `size` of the
     /// length long, packed in rings round the axis over the opened half,
     /// their faces outward. Drawn only at the finer steps.
+    ///
+    /// Seeds a third of the fruit's length or more are one to a valve, as
+    /// a spindle's are: each a plump seed in its aril, filling its cell
+    /// between two valves, with no placenta showing.
     fn seeds(&self, size: f64, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
         if self.detail.around < 8 {
             return;
         }
         let seed = self.length * size;
         let other = self.direction.cross(self.across);
+        if size >= 1.0 / 3.0 {
+            let first = mesh.positions.len();
+            let first_index = mesh.indices.len();
+            let count = self.valves.max(1);
+            for k in 0..count {
+                // Between valves k and k + 1, where its cell was.
+                let angle = std::f64::consts::TAU * (f64::from(k) + 0.5) / f64::from(count);
+                let radial = self.across * math::cos(angle) + other * math::sin(angle);
+                Spheroid {
+                    centre: self.at(0.55) + radial * (self.width * 0.22),
+                    a: seed * 0.5,
+                    b: seed * 0.42,
+                    c: seed * 0.38,
+                    ribs: 0,
+                    rib_depth: 0.0,
+                    waves: 0,
+                    wave_depth: 0.0,
+                    detail: Detail {
+                        around: 8,
+                        rings: 5,
+                        fine: None,
+                    },
+                }
+                .draw(self.direction, radial, colour, part, mesh);
+            }
+            leaves::smooth_normals(mesh, first, first_index);
+            return;
+        }
         let half = |along: f64| {
             let z = 2.0 * along - 1.0;
             self.width * 0.5 * math::sqrt((1.0 - z * z).max(0.0)) * (1.0 + self.flare * z)
