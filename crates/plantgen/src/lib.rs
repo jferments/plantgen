@@ -1089,4 +1089,8 @@ pub mod venation;
 /// first fruit ripen, bearing fruit below its flowers (`fruit_below`),
 /// shows its earlier flowers' fruit from its first fruiting month and
 /// keeps flowering to its last (149 is palms, #250).
-pub const GENERATOR_REVISION: u32 = 150;
+/// 151: a columnar Pinaceae crown stops widening once its height slows:
+/// its shoots' floor growth fades past `floor_reach` of the height out
+/// from the trunk, down to `floor_keep` (Pinaceae rule on `crown_form`;
+/// subalpine fir; 150 is poppies, #242).
+pub const GENERATOR_REVISION: u32 = 151;

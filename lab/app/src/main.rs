@@ -36,26 +36,36 @@ plantlab: grow PlantGen's plants and render them
 usage:
   plantlab open [SPECIES] [--age YEARS] [--live STEPS] [--no-grid] [--no-ruler]
                 [--out DIR] [--record] [--plant-only] [--window WxH]
-                [--panels NAMES] [--overlay] [--settings FILE]
-                [--capture FILE [--capture-after SECONDS]]
-      The window, in WorldLab's Studio layout: a top bar (the menus, the
-      species, Grow, Pause and Stop, the age and day, the view and the
-      tools, then search and settings), a rail of panels docked beside
-      the plant (Plant, Grow, View, Readings, Pictures, Spec, Bark and
-      Keys; --panels plant,readings opens some), a status bar, and the
-      command palette (Ctrl+P). O, or --overlay, shows the plant alone
-      with one panel floating over it. The plant is shown growing every
-      STEPS steps (default 10, 0 for none). --age grows the first plant
-      YEARS old (--years too). A grid under the plant and a ruler beside
-      it measure it (G and R). Snapshots (P), recorded growth (--record)
-      and GIFs (S), of the scene or of the plant alone on a clear
-      background (--plant-only), go to DIR (default plantlab-pictures).
-      Drag to turn, middle-drag or Shift-drag to pan, scroll to zoom, F to
-      frame the plant again. Settings are kept in
-      ~/.config/plantlab/settings.json (--settings FILE for another);
-      flags win over them. --window sets the window's size (default
-      1400x900). --capture saves a picture of the window once the plant
-      stands, or after SECONDS with --capture-after, then closes it.
+                [--page NAME] [--overlay] [--settings FILE] [--renders DIR]
+                [--generate] [--capture FILE [--capture-after SECONDS]]
+      The window: a top bar (the menus, the chosen species and its order
+      and family, search and settings), the library at the left (every
+      species by group, order, family and genus, with a search and a
+      filter by growth form; L), the plant in the middle with its view
+      and tools over it, and the inspector at the right (I) with its
+      pages: Render (age, site, variant, the day with each organ's year
+      drawn as a strip, detail Draft, Standard or Full, and Generate),
+      Readings, Pictures, Spec, Bark and Keys; --page readings opens one.
+      Choosing a species grows nothing: its last render shows until
+      Generate (Enter), or --generate for the first. The views (1-4) and
+      the looks change the plant on screen without growing it again; a
+      new day, detail or level draws the grown plant again. Each
+      species' last render (a picture and its settings) is kept in DIR
+      (default $XDG_CACHE_HOME/plantlab/renders, else
+      ~/.cache/plantlab/renders) and its settings come back with it.
+      The palette (Ctrl+K) finds any species or command; O, or
+      --overlay, shows the plant alone. The plant is shown growing every
+      STEPS steps (default 10, 0 for none). --age grows YEARS old. A
+      grid under the plant and a ruler beside it measure it (G and R).
+      Snapshots (P), recorded growth (--record) and GIFs (S), of the
+      scene or of the plant alone on a clear background (--plant-only),
+      go to DIR (default plantlab-pictures). Drag to turn, middle-drag or
+      Shift-drag to pan, scroll to zoom, F to frame the plant again.
+      Settings are kept in ~/.config/plantlab/settings.json (--settings
+      FILE for another); flags win over them. --window sets the window's
+      size (default 1400x900). --capture saves a picture of the window
+      once the plant stands, or after SECONDS with --capture-after, then
+      closes it.
   plantlab thumbs SPECIES... --out DIR [--size PX] [--height PX] [--clear]
                  [OPTIONS]
       A thumbnail of each species (a library id, or `all`): DIR/ID.png and
@@ -94,14 +104,15 @@ options:
                        foot with +Y up (`thumbs` and `batch`)
   --span METRES        how much of it the close-up shows, bottom to top
                        (default 0.5)
-  --quality draft|standard
-  --env open|edge|interior|suppressed
-                       where the plant grows (default its typical site)
-  --seed N             the variant (default the spec's first seed)
+  --quality draft|standard|full
+                       full is standard with part meshes (as --parts on)
+  --parts on|off       draw flowers, fruit, cones and needle shoots as their
+                       part meshes, as full-quality exports do near the camera
+  --env typical|open|edge|interior|suppressed
+                       the site it grows on (default: its typical site)
+  --seed N             the variant's seed (default: the spec's first)
   --lod 0-3            the level of detail, 0 the nearest
   --scale on|off       the 1.8 m figure or the rod beside it (default on)
-  --focus X,Y,Z[,SPAN] a close-up of the point X,Y,Z metres from the plant's
-                       foot (+Y up), SPAN metres tall (default 0.5)
   --look review|photo  review (default) is fixed so species compare fairly;
                        photo adds soft shadows, sky light, ambient occlusion,
                        a tone map and supersampling
@@ -192,7 +203,8 @@ fn parse(args: &[String]) -> Result<Request, String> {
             }
             "--force" => force = true,
             flag @ ("--day" | "--age" | "--view" | "--quality" | "--look" | "--cut-cards"
-            | "--env" | "--seed" | "--lod" | "--scale" | "--focus" | "--span") => {
+            | "--focus" | "--span" | "--parts" | "--env" | "--seed" | "--lod"
+            | "--scale") => {
                 apply(&mut shot, flag.trim_start_matches("--"), &value(flag)?)?;
             }
             flag if flag.starts_with("--") => return Err(format!("unknown flag `{flag}`")),
@@ -256,8 +268,36 @@ fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
             shot.view = View::from_name(value).ok_or_else(|| format!("unknown view `{value}`"))?;
         }
         "quality" => {
-            shot.quality = quality::profile(value)
-                .ok_or_else(|| format!("unknown quality `{value}`; use draft or standard"))?;
+            // Full is the standard meshes with part meshes, as full-quality
+            // exports draw them.
+            let (profile, parts) = match value {
+                "full" => (Some(quality::STANDARD), true),
+                other => (quality::profile(other), false),
+            };
+            shot.quality = profile
+                .ok_or_else(|| format!("unknown quality `{value}`; use draft, standard or full"))?;
+            shot.parts = parts;
+        }
+        "parts" => {
+            shot.parts = match value {
+                "on" | "true" => true,
+                "off" | "false" => false,
+                _ => return Err("`--parts` takes on or off".into()),
+            };
+        }
+        "env" => {
+            shot.environment = match value {
+                "typical" => None,
+                other => Some(Environment::from_name(other).ok_or_else(|| {
+                    format!(
+                        "unknown site `{other}`; use typical, open, edge, interior or \
+                             suppressed"
+                    )
+                })?),
+            };
+        }
+        "seed" => {
+            shot.seed = Some(value.parse().map_err(|_| "`--seed` takes a whole number")?);
         }
         "cut-cards" => {
             shot.cut_cards = value
@@ -270,18 +310,14 @@ fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
             shot.look = Look::from_name(value)
                 .ok_or_else(|| format!("unknown look `{value}`; use review or photo"))?;
         }
-        "env" => {
-            shot.environment = Some(Environment::from_name(value).ok_or_else(|| {
-                format!("unknown environment `{value}`; use open, edge, interior or suppressed")
-            })?);
-        }
-        "seed" => {
-            shot.seed = Some(
-                value
-                    .parse()
-                    .map_err(|_| "the seed must be a whole number")?,
-            );
-        }
+        other => return apply_framing(shot, other, value),
+    }
+    Ok(())
+}
+
+/// The options that frame a picture: its level of detail, a close-up and the scale figure.
+fn apply_framing(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
+    match name {
         "lod" => {
             shot.level = value
                 .parse()
@@ -531,6 +567,8 @@ fn open(args: &[String]) -> Result<(), String> {
         panels: Vec::new(),
         overlay: false,
         settings: None,
+        renders: None,
+        generate: false,
     };
     let mut capture = None;
     let mut after = None;
@@ -561,9 +599,15 @@ fn open(args: &[String]) -> Result<(), String> {
                     })
                     .ok_or("`--window` needs WIDTHxHEIGHT, such as 1500x900")?;
             }
-            "--panels" => {
-                let text = rest.next().ok_or("`--panels` needs panel names")?;
+            "--page" | "--panels" => {
+                let text = rest.next().ok_or("`--page` needs a page's name")?;
                 options.panels = text.split(',').map(str::to_owned).collect();
+            }
+            "--generate" => options.generate = true,
+            "--renders" => {
+                options.renders = Some(PathBuf::from(
+                    rest.next().ok_or("`--renders` needs a folder")?,
+                ));
             }
             "--overlay" => options.overlay = true,
             "--settings" => {
