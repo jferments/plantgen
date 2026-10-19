@@ -559,6 +559,25 @@
       "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
       "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
     },
+    "prickle_density": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["sparse", "scattered", "dense"],
+      "optional": true,
+      "when": {"spines": ["prickles"]},
+      "why": "how thickly prickles arm the young stems and stalks, as floras word it: sparse ('sparingly armed', 'a few prickles'), scattered ('prickly'), or dense ('densely prickly')"
+    },
+    "prickle_length_m": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.05],
+      "optional": true,
+      "when": {"spines": ["prickles"]},
+      "why": "a stem's prickle from its foot to its point"
+    },
     "stem_form": {
       "group": "form",
       "organ": "stem",
@@ -601,9 +620,9 @@
       "group": "stem_and_bark",
       "organ": "stem",
       "type": "enum",
-      "values": ["tapering", "rounded", "broad", "flat"],
+      "values": ["tapering", "rounded", "broad", "flat", "depressed"],
       "when": {"spines": ["areoles"]},
-      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, or flat, a low button or disc topped nearly level with its rim"
+      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, flat, a low button or disc topped nearly level with its rim, or depressed, a flat top sinking to a pit at its centre"
     },
     "stem_outline": {
       "group": "stem_and_bark",
@@ -702,6 +721,13 @@
       "values": ["straight", "curved", "hooked", "flattened", "twisted"],
       "when": {"spines": ["areoles"]},
       "why": "the main central spine's form: straight, curved, hooked at its tip (a fishhook's), flattened, or twisted"
+    },
+    "central_spines_twisted": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "bool",
+      "when": {"spines": ["areoles"]},
+      "why": "whether the central spines twist about their length like a wrung ribbon, as a flora's 'often twisted' centrals do, whatever their main form"
     },
     "spine_sheaths": {
       "group": "stem_and_bark",
@@ -1248,6 +1274,15 @@
       "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
       "why": "lobes on a lobed leaf"
     },
+    "leaf_lobe_apex": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["acute", "obtuse", "rounded"],
+      "optional": true,
+      "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
+      "why": "the tips of a lobed blade's lobes: pointed (a jimsonweed's 'lobes acute', Britton and Brown), blunt, or rounded (a white oak's)"
+    },
     "leaflets": {
       "group": "leaves",
       "organ": "leaflet",
@@ -1748,6 +1783,31 @@
       "values": ["erect", "spreading", "reflexed"],
       "optional": true,
       "why": "how the sepals stand from the flower: up against the corolla, out flat, or bent back toward the stalk (a fuchsia's)"
+    },
+    "calyx_lobe_length_m": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.2],
+      "optional": true,
+      "why": "a joined calyx's free lobes or teeth, from the sinus to the tip; the rest of `sepal_length_m` is its tube (a tobacco's 4-8 mm lobes on a 12-18 mm calyx)"
+    },
+    "calyx_section": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["terete", "angled"],
+      "optional": true,
+      "why": "a joined calyx's tube in cross-section: round, or angled with a ridge down each sepal's midrib (a jimsonweed's prismatic, 5-angled calyx)"
+    },
+    "calyx_base": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["even", "swollen"],
+      "optional": true,
+      "why": "a joined calyx's tube along its length: even, or swollen at its base (a jimsonweed's)"
     },
     "calyx_colour": {
       "group": "flowers",
@@ -2475,6 +2535,15 @@
       "optional": true,
       "why": "the seeds a ripe fruit shows where it opens on them, as they are seen: a magnolia's red seeds hanging from its split follicles"
     },
+    "fruit_seed_length_m": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.05],
+      "optional": true,
+      "why": "a ripe seed's longest measure, as an opened fruit shows its seeds: a jimsonweed's 3-4 mm black seeds between its valves"
+    },
     "fruit_seed_thread_m": {
       "group": "fruit_and_cones",
       "organ": "fruit",
@@ -2511,9 +2580,9 @@
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
-      "values": ["falling", "persistent", "accrescent"],
+      "values": ["falling", "persistent", "accrescent", "circumscissile"],
       "optional": true,
-      "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), or grows on into a large spreading star (a belladonna's)"
+      "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), grows on into a large spreading star (a belladonna's), or breaks off round its base, leaving the base as a rim or collar under it (circumscissile, a jimsonweed's)"
     },
     "fruiting_calyx_posture": {
       "group": "fruit_and_cones",

@@ -191,6 +191,13 @@ pub struct Hairs {
     /// in it and in `colour`, not clear over the organ's colour.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stalk: Option<[f32; 3]>,
+    /// Prickles standing among these on the young stems and stalks (an
+    /// eggplant's "stout recurved prickles", Flora of China): a stout
+    /// broad-footed cone of the skin, bent back toward the stem's foot,
+    /// in the stem's colour toward theirs, in their own density, length
+    /// and lie.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub prickles: Option<Box<Hairs>>,
 }
 
 /// The drop of secretion on a glandular hair's head: drawn as a clear
@@ -259,18 +266,20 @@ impl Default for Hairs {
             count: None,
             edge_length: None,
             stalk: None,
+            prickles: None,
         }
     }
 }
 
 impl Hairs {
     /// Whether there are any to draw: these, or glandular or stinging
-    /// hairs among them.
+    /// hairs or prickles among them.
     #[must_use]
     pub fn drawn(&self) -> bool {
         self.own_drawn()
             || self.glands.as_deref().is_some_and(Self::own_drawn)
             || self.stings.as_deref().is_some_and(Self::own_drawn)
+            || self.prickles.as_deref().is_some_and(Self::own_drawn)
     }
 
     /// Whether these hairs themselves, leaving out the glandular and
@@ -301,6 +310,7 @@ impl Hairs {
             count: self.count.map(|count| count * share),
             glands: thin(&self.glands),
             stings: thin(&self.stings),
+            prickles: thin(&self.prickles),
             ..self.clone()
         }
     }
@@ -1985,6 +1995,14 @@ pub struct Flower {
     /// Share of the sepals' length joined in a calyx cup.
     #[serde(skip_serializing_if = "is_zero")]
     pub sepals_fused: f64,
+    /// How sharply a joined calyx's tube is angled, 0 to 1: 0 round, 1 a
+    /// ridge down each sepal's midrib (a jimsonweed's prismatic calyx).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub calyx_angled: f64,
+    /// How much a joined calyx's tube swells low down, over its mouth's
+    /// radius, 0 to 0.5 (a jimsonweed's, swollen at its base).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub calyx_swell: f64,
     /// The sepals' colour, and a spiral's outer tepals'; a leaf green if
     /// absent. A labellate flower's sepals take the petals' colour.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2207,6 +2225,8 @@ impl Default for Flower {
             sepals: 0,
             sepal_length: SEPAL_LENGTH,
             sepals_fused: 0.0,
+            calyx_angled: 0.0,
+            calyx_swell: 0.0,
             calyx: None,
             filament: None,
             pistil: None,
@@ -2824,6 +2844,11 @@ pub struct Fruit {
     /// raspberry's felted drupelets are paler than a blackberry's.
     #[serde(skip_serializing_if = "is_zero")]
     pub hairs: f64,
+    /// A seed's length over the fruit's, for the seeds an opened capsule
+    /// shows packed inside its valves (a jimsonweed's black seeds); 0
+    /// for a twelfth of it.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub seed_size: f64,
 }
 
 impl Default for Fruit {
@@ -2859,6 +2884,7 @@ impl Default for Fruit {
             fruitlets: 0,
             loose: 0.0,
             hairs: 0.0,
+            seed_size: 0.0,
         }
     }
 }
@@ -3090,6 +3116,7 @@ struct FruitCard {
     fruitlets: u32,
     loose: f64,
     hairs: f64,
+    seed_size: f64,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -3130,6 +3157,7 @@ impl Default for FruitCard {
             fruitlets: 0,
             loose: 0.0,
             hairs: 0.0,
+            seed_size: 0.0,
             count: None,
             cluster: None,
             size: None,
@@ -3185,6 +3213,7 @@ impl TryFrom<FruitCard> for Fruit {
             fruitlets: card.fruitlets,
             loose: card.loose,
             hairs: card.hairs,
+            seed_size: card.seed_size,
         })
     }
 }
@@ -3841,6 +3870,8 @@ impl Shape {
                 count("sepals", s.sepals, 0, 12)?;
                 check("sepal_length", s.sepal_length, 0.1, 3.0)?;
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
+                check("calyx_angled", s.calyx_angled, 0.0, 1.0)?;
+                check("calyx_swell", s.calyx_swell, 0.0, 0.5)?;
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
                     check("filament", f64::from(channel), 0.0, 1.0)?;
@@ -4073,6 +4104,7 @@ impl Shape {
                 if s.fruitlets != 0 {
                     count("fruitlets", s.fruitlets, 1, 500)?;
                 }
+                check("seed_size", s.seed_size, 0.0, 0.5)?;
                 check("unripe", s.unripe, 0.0, 1.0)?;
                 check("apiculum", s.apiculum, 0.0, 0.3)?;
                 check("spine", s.spine, 0.0, 0.5)?;
