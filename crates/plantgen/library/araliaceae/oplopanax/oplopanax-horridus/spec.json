@@ -21,7 +21,6 @@
       "bud_break": 1.2,
       "branch_angle": 25,
       "apical_young": 0.75,
-      "apical": 0.7,
       "apical_years": 4,
       "flux": 4,
       "spur_light": 0.08,
@@ -30,9 +29,7 @@
       "droop": 0.02,
       "wiggle": 6,
       "fork_height": 0.03,
-      "fork_stems": 4,
       "fork_angle": 20,
-      "pipe_tip": 0.0015,
       "pipe_organ": 0.003,
       "pipe_rings": 3e-06,
       "space_reach": 1.02,
@@ -138,7 +135,8 @@
     "fruit_colour_ripe": [214, 30, 32],
     "flower_size_m": {"min": 0.004, "max": 0.007},
     "units_per_inflorescence": {"min": 100, "max": 300},
-    "inflorescence_branches": {"min": 8, "max": 20}
+    "inflorescence_branches": {"min": 8, "max": 20},
+    "stem_clump": "few"
   },
   "evidence": {
     "taxon": {
@@ -210,7 +208,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red-flowering currant's values, changed by hand for devil's club: few, thick, upright, sparsely branched stems (FEIS, Howard 1993: \"sparsely branched with sharp, dense prickles on stems\") with dense prickles, and huge palmate leaves held flat near the stem tips over a terminal panicle of red fruit. Not fitted to measurements."
+      "note": "Red-flowering currant's values, changed by hand for devil's club (its few, thick stems with their leaves at the top, their branching and their lean now come from the Oplopanax rules and its stated stem clump, Rosaceae review round 2, 2026-10-19): few, thick, upright, sparsely branched stems (FEIS, Howard 1993: \"sparsely branched with sharp, dense prickles on stems\") with dense prickles, and huge palmate leaves held flat near the stem tips over a terminal panicle of red fruit. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
@@ -227,7 +225,8 @@
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Oplopanax horridus (read 2026-10-19, citing Pojar and MacKinnon, Plants of the Pacific Northwest Coast): a small red drupe; sRGB by eye for the word."},
     "traits.flower_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: flowers 4-7 mm across: small, five-petalled (Wikipedia), up to 7 mm long (Lake Country Museum's wildflower page, read 2026-10-19)."},
     "traits.units_per_inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: 100-300 flowers: dense umbels gathered in a panicle 10-20 cm across (Wikipedia), each umbel of some ten to twenty flowers."},
-    "traits.inflorescence_branches": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: 8-20 branches, each ending in its umbels, in a pyramidal panicle as photographs show it."}
+    "traits.inflorescence_branches": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: 8-20 branches, each ending in its umbels, in a pyramidal panicle as photographs show it."},
+    "traits.stem_clump": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's devilsclub review (Howard 1993, read 2026-10-19): sparsely branched; it reproduces vegetatively by rhizomes and/or layering and may sprout from the root crown, so a plant stands on a few stems from its base."}
   },
   "provenance": {
     "sources": [

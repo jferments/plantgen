@@ -155,6 +155,16 @@
       "map": {"stem_clump": {"few": 0.1, "many": 0.2, "thicket": 0.6}},
       "why": "A clump's stems rise close round its crown at the ground, a few or many within a fifth of the crown's radius; a thicket's come up from roots and rhizomes running out under most of it."
     },
+    "generator.params.stem_life": {
+      "needs": ["stem_life_years"],
+      "rule": "max(stem_life_years)",
+      "why": "A clump's or thicket's stems that floras say live only a few years (biennial canes) die back whole at the longest age they give, a thimbleberry's most at two and some at three (FEIS, Gucker 2012), so the clump never holds a stem older than that."
+    },
+    "generator.params.sucker_rate": {
+      "needs": ["stem_life_years"],
+      "rule": "max(1, round(suckers / max(stem_life_years)))",
+      "why": "Where its stems die young the base goes on sending up new ones every year, as many a year as keep the clump at its stems: their number shared over the years each lives."
+    },
     "generator.params.fork_height": {
       "map": {"stem_clump": {"single": 0}},
       "why": "A single-stemmed woody plant stands on one trunk that never divides into equal stems."

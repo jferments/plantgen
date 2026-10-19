@@ -17,20 +17,19 @@
       "crown_rate": 0.22,
       "space_density": 276.3,
       "internode": 0.12,
-      "max_shoot": 4,
+      "max_shoot": 8,
       "bud_break": 1.2,
       "branch_angle": 35,
       "apical_young": 0.56,
       "apical": 0.5,
       "apical_years": 4,
-      "flux": 4,
+      "flux": 8,
       "spur_light": 0.08,
       "shade_death": 0.03,
       "steer_weight": 0.4,
       "droop": 0.02,
       "wiggle": 10,
       "fork_height": 0.03,
-      "fork_stems": 9,
       "fork_angle": 35,
       "pipe_tip": 0.0015,
       "pipe_organ": 0.003,
@@ -128,7 +127,9 @@
     "inflorescence_length_m": {"min": 0.04, "max": 0.1},
     "flower_size_m": {"min": 0.03, "max": 0.05},
     "flower_colour": [246, 246, 240],
-    "fruit_colour_ripe": [204, 36, 44]
+    "fruit_colour_ripe": [204, 36, 44],
+    "stem_clump": "thicket",
+    "stem_life_years": {"min": 2, "max": 3}
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -169,7 +170,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a thornless shrub of upright stems carrying big, soft, maple-like leaves and white flowers like crumpled tissue paper. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a thornless shrub of upright stems carrying big, soft, maple-like leaves and white flowers like crumpled tissue paper. Not fitted to measurements. Its stems now rise as a thicket of short-lived canes from the rules for its stated stem clump and stem life (Rosaceae review round 2, 2026-10-19), in place of the hand-set nine stems forking from one foot. Each cane's year's growth raised (max_shoot 4 to 8, flux 4 to 8) so a cane grows about 0.4 m a season and stands 1.2 m by its third summer, as FEIS (Gucker 2012) gives sprouts 0.3-0.6 m tall in their first season and growth of 0.6 cm a day for 60 days after a fire."
     },
     "allometry": {
       "evidence": "Authored",
@@ -233,7 +234,9 @@
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): petals white, broadly obovate, (10-)14-22(-28) mm, so an open flower of five spreading petals is about 3-5 cm across."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): petals white; sRGB by eye for the word."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruits red; sRGB by eye for the word."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.751)."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.751)."},
+    "traits.stem_clump": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's thimbleberry review (Gucker 2012, read 2026-10-19): strongly rhizomatous, its stems rising from the rhizomes to form clumps or dense thickets; a clone may live 45 years."},
+    "traits.stem_life_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's thimbleberry review (Gucker 2012, read 2026-10-19): the stems typically biennial, most living two years and some three, those that live longer growing large side branches; flowers come on the second-year stems."}
   },
   "provenance": {
     "sources": [

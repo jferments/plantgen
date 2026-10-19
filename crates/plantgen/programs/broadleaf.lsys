@@ -226,9 +226,21 @@
 # The draws these make are the last rules', so every draw above keeps
 # its site.
 #
+# Revision 24 (canes, Rosaceae 2026-10-19): a thicket's stems may live
+# only stem_life years (a thimbleberry's canes, "typically biennial", most
+# living 2 years and some 3: FEIS, Gucker 2012), each dying whole with
+# everything on it. Its base then goes on sending up sucker_rate new stems
+# every year for as long as the plant lives, so the clump holds about
+# sucker_rate * stem_life stems of every age up to stem_life, where it
+# stopped at suckers. Off (0) unless a rule sets it, and nothing it adds
+# is placed while it is off, so every other plant grows as it did.
+# And a stem ended by its flowers may grow on from one bud below them
+# (bloom_shoots 1) in place of forking, so it can flower every year and
+# stay unbranched; 2, the fork, as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 23;
+lsystem broadleaf 24;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -336,7 +348,7 @@ param bloom_pairs = 0;        # leaf pairs a shoot unfolds below its blooms in a
 param bloom_years = 0;        # years from its bud's forming that a short shoot flowers; 0: all its life
 # A many-stemmed shrub's or a thicket's stems (revision 20).
 param suckers = 0;            # stems the base sends up besides the first; 0: none, the first stem forks
-param sucker_rate = 2;        # new stems a year, until there are suckers
+param sucker_rate = 2;        # new stems a year, until there are suckers (every year, with stem_life)
 param sucker_spread = 0.2;    # share of the crown's radius out to which they rise
 param sucker_lean = 15;       # the most a new stem leans out from upright
 # Branching form (revision 23).
@@ -349,6 +361,9 @@ param breakup_age = 0;        # year from which the leader's hold on the crown r
 param apical_old = 0.5;       # Borchert-Honda lambda the crown relaxes toward once it breaks up
 param tip_loss = 0;           # chance a year a long shoot's tip is lost (frost, browsing, breakage)
 param dead_keep = 0;          # 1: a living tree's dead branches stand until they fall (snag_fall a year)
+# Canes (revision 24).
+param stem_life = 0;          # years each stem from the base lives, with the base renewing them; 0: as long as its buds
+param bloom_shoots = 2;        # shoots a stem ended by its flowers (terminal_bloom) grows on from: 2 a fork, 1 one shoot
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -371,6 +386,7 @@ module Mp(n, u, l);                       # a flat shoot's nodes still to form t
 module Ab(s, p);                          # a shoot's tip at the end of its year: lost, carried on by a lateral, or going on (p 1: a flat shoot)
 module Af(k);                             # k 1: the second of two lateral buds that carry a dead tip on, a fork; 0: none
 module Rs(m);                             # m stems still to send up this year
+module Sb;                                # a stem's foot: with stem_life, the stem dies at that age
 
 organ leaf leaf area leaf_area;
 organ bloom flower area bloom_area;
@@ -429,6 +445,7 @@ rule B : light < shade_death || age >= bud_years -> ;
 
 # A many-stemmed plant's first stem does not fork: its base sends up the
 # others (revision 20; the rules that place them go last).
+rule A(split) : suckers > 0 && split > 0 && stem_life > 0 -> R(suckers) Sb A(0);
 rule A(split) : suckers > 0 && split > 0 -> R(suckers) A(0);
 
 # Where the stem reaches its fork height it divides into equal stems; a
@@ -443,6 +460,17 @@ rule A(split) : split > 0 && (py >= split || (py <= 0 && split < internode / uni
 # below it (terminal flowering: the cluster ends the year's growth, so a
 # fork always stands on wood). Only lineages that set terminal_bloom
 # (revision 10; the maples' since G1).
+# With bloom_shoots 1 (revision 24) the stem grows on from the one bud
+# below its cluster, a little aside from it, without forking: a stem
+# that flowers every year and stays unbranched (devil's club).
+rule A(split) : bloom_shoots < 2 && terminal_bloom > 0 && blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1
+                && space > 0 && light >= spur_light && (life <= 0 || t < life)
+                && rand() < terminal_bloom ->
+    steer(sx, sy, sz, steer_weight)
+    M(min(floor(vigour), max_shoot) * unit_nodes,
+      min(floor(vigour), max_shoot) * unit_nodes,
+      internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1))
+    [ Bo(blooms) ] /(divergence) &(twin_angle / 2) S A(0);
 rule A(split) : terminal_bloom > 0 && blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1
                 && space > 0 && light >= spur_light && (life <= 0 || t < life)
                 && rand() < terminal_bloom ->
@@ -768,9 +796,18 @@ decompose Bt(n) -> ;
 # grows, leaning out a little, until it has sent up suckers: turned by
 # the golden angle stem by stem, their distances and leans spread by the
 # golden ratio's fractions.
+rule R(n) : n > 0 && stem_life > 0 && (life <= 0 || t < life) ->
+    Rs(min(n, max(1, round(sucker_rate)))) R(n);
 rule R(n) : n > 0 && (life <= 0 || t < life) ->
     Rs(min(n, max(1, round(sucker_rate)))) R(n - min(n, max(1, round(sucker_rate))));
 rule R(n) -> ;
+# A cane dies at its life, with everything on it (revision 24).
+rule Sb : stem_life > 0 && age + dt >= stem_life -> %;
+decompose Rs(m) : m > 0 && stem_life > 0 ->
+    [ /(137.5 * (m + 3 * t)) &(90)
+      f(sucker_spread * crown_radius * (1 - exp(-crown_rate * (t + 3))) * sqrt(0.05 + 0.95 * (0.618 * (m + 3 * t) - floor(0.618 * (m + 3 * t)))))
+      ^(90) &(sucker_lean * (0.382 * (m + 5 * t) - floor(0.382 * (m + 5 * t)))) S Sb A(0) ]
+    Rs(m - 1);
 decompose Rs(m) : m > 0 ->
     [ /(137.5 * (m + 3 * t)) &(90)
       f(sucker_spread * crown_radius * (1 - exp(-crown_rate * (t + 3))) * sqrt(0.05 + 0.95 * (0.618 * (m + 3 * t) - floor(0.618 * (m + 3 * t)))))
