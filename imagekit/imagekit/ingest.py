@@ -24,7 +24,7 @@ MAX_PX = 2048
 SOURCE_KEYS = ("source", "id", "key", "url", "page", "licence", "creator", "attribution", "observer",
                "observation", "observation_url", "observation_uuid", "date", "place", "country", "lat", "lon",
                "accuracy_m", "obscured", "quality", "captive", "annotations", "basis", "institution",
-               "catalogue_number", "title", "description", "name", "why", "original_sha256", "fetched")
+               "catalogue_number", "title", "description", "name", "why", "original_sha256", "fetched", "render")
 
 
 def dhash(im: Image.Image) -> str:

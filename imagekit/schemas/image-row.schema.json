@@ -45,7 +45,8 @@
         "accuracy_m": {"type": "number"},
         "annotations": {"type": "object"},
         "original_sha256": {"type": "string", "description": "SHA-256 of the bytes as downloaded"},
-        "fetched": {"type": "string"}
+        "fetched": {"type": "string"},
+        "render": {"type": "object", "description": "a PlantGen render (`imagekit render`): what made it, as photo-rules' render-set.json records it: commit, generator_revision, species, seed, age, day, env, view, focus or focus_on, span, size, quality, command"}
       }
     },
     "taxon": {

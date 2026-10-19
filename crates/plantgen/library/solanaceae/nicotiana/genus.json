@@ -6,7 +6,8 @@
     "sympodium": "none",
     "inflorescence": "panicle",
     "fruit_type": "capsule",
-    "leaf_division": "simple"
+    "leaf_division": "simple",
+    "capsule_valves": 2
   },
   "evidence": {
     "traits.sympodium": {
@@ -28,6 +29,11 @@
       "evidence": "SourceInferred",
       "source": "bailey-cyclopedia-1914",
       "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1914-17), Nicotiana (genus account), p. 2143 (read on the Internet Archive, 2026-10-17): leaves alternate, never compound, entire or wavy, mostly sessile or nearly so."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Nicotiana (genus account), p. 245 (read on the Internet Archive, 2026-10-17): capsule 2-celled, 2-valved to the middle; King's American Dispensatory (vol. 2, Tabacum): 2-valved, opening across the top."
     }
   }
 }

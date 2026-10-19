@@ -901,7 +901,35 @@ pub mod venation;
 /// flower may be drawn up to eight times its fruit's size, where it was
 /// four, so a mophead's sterile flowers reach their stated size (132 is
 /// lily leftovers, #218).
-/// 134: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
+/// 134: fan palms' blades, petiole teeth, skirts and fishtail palms (palm
+/// revision 13): a fan's segments part only over their outer share
+/// (`split_depth`, from `fan_split_depth`), inside it one piece drawn as
+/// wedges (`palman`), their free parts turning down where they part
+/// (`tip_droop`, from `segment_posture`) and bearing threads in the
+/// sinuses and along their margins (`filament`, from
+/// `segment_filaments`); a petiole's margins bear teeth (`tooth`) as long,
+/// far apart, leaning and shrinking toward the blade as stated
+/// (`petiole_armature` and the `petiole_tooth_*` words); a dead frond
+/// hangs from the trunk's surface, standing out at first and falling flat
+/// against it over a year (`dead_fold_years`), in the colour stated for
+/// dead leaves (`dead_leaf_colour`); a twice-pinnate frond bears pairs
+/// of pinnae with leaflets of their own (`pinnule`, from `pinnae` and
+/// `leaflets`), and a simple blade may end in a bitten, jagged tip
+/// (`Simple.praemorse`, from `leaflet_end`) and lack a midrib
+/// (`Simple.midrib`, from `leaflet_midrib`): Caryota's fishtail leaflets
+/// (133 is panicles and hydrangeas, #219).
+/// 135: a fruit's kept calyx lies as stated (`kept_posture`, from
+/// `fruiting_calyx_posture`: an eggplant's cap pressed over the fruit, a
+/// belladonna's flat star, or turned back); a ripe capsule opens from its
+/// tip into its valves (`valves`, from `capsule_valves`: a jimsonweed's
+/// four, a tobacco's two), each turned out from half way down and lined
+/// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
+/// `fruit_armature` `hooked`) (134 is palm details, #223).
+/// 136: black cottonwood and wild fig draw single leaves at their flora's
+/// size on its petiole length, and young twigs in its colour, in place of
+/// hand-sized sprig cards; the fig's path_half is refitted to its height
+/// (135 is nightshades round 4, #227).
+/// 137: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
 /// hemlocks) carries its year's needles in two sprays, one at the foot of
 /// each half of the shoot, so they follow the bend; the one spray at the
 /// shoot's foot had run on straight and left the nodding tip a bare
@@ -909,9 +937,9 @@ pub mod venation;
 /// several stems from one foot (`stems`, `stem_angle`), and a needle card
 /// may lean its needles forward (`lean`) and leave the foot of each axis
 /// bare (`bare`) so they crowd in a tuft near its end; both default to
-/// what was drawn before (133 is panicles and hydrangea
-/// heads, #219).
-/// 135: old conifers (`pinidae` revision 13): a limb whose tips catch too
+/// what was drawn before (136 is black cottonwood and
+/// wild fig, #225).
+/// 138: old conifers (`pinidae` revision 13): a limb whose tips catch too
 /// little light for the wood it carries is shed (`limb_light`, scaled by
 /// `shade_death`), so Douglas-fir, western hemlock and Sitka spruce grow
 /// past 150 years under the module limit; a shoot shorter than
@@ -929,6 +957,6 @@ pub mod venation;
 /// control (`apical_light`, scaled by shade tolerance), so a stand-grown
 /// Douglas-fir keeps a narrow crown and a trunk of its reference size;
 /// limb shedding and short shoots' fewer buds are set for Pinaceae, not
-/// the program, so yews and cypresses grow as before (134 is nodding
+/// the program, so yews and cypresses grow as before (137 is nodding
 /// leaders, #167).
-pub const GENERATOR_REVISION: u32 = 135;
+pub const GENERATOR_REVISION: u32 = 138;

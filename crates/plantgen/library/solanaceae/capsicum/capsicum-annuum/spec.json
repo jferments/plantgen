@@ -105,7 +105,8 @@
       95,
       140,
       70
-    ]
+    ],
+    "fruiting_calyx_posture": "clasping"
   },
   "provenance": {
     "sources": [
@@ -249,6 +250,11 @@
       "evidence": "SourceInferred",
       "source": "inaturalist-photos-2026-10",
       "note": "iNaturalist observation 19920820 (CC-licensed photograph, viewed 2026-10-17): bright, glossy mid green leaves (the leaf pixels of this and iNaturalist 88011298 average [127,154,107] and [141,184,109], lifted by gloss). No text read gives it."
+    },
+    "traits.fruiting_calyx_posture": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum annuum, p. 659 (read on the Internet Archive, 2026-10-17): the calyx obconical or cup-shaped, usually embracing the fruit's base (var. conoides); Flora of British India (p. 238): campanulate, much shorter than the fruit."
     }
   }
 }

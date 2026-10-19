@@ -23,8 +23,6 @@
       "apical_young": 0.75,
       "apical": 0.6,
       "apical_years": 25,
-      "leaf_size": 0.42,
-      "spur_leaf": 0.36,
       "spur_pairs": 2,
       "leaf_angle": 50,
       "droop": 0.01,
@@ -34,7 +32,6 @@
       "pipe_organ": 0.00465,
       "pipe_rings": 1.67e-07,
       "extinction": 0.45,
-      "leaf_area": 0.207,
       "bloom_area": 0.05,
       "path_half": 17.7
     }
@@ -50,6 +47,7 @@
   },
   "appearance": {
     "bark": [0.33, 0.32, 0.29],
+    "twig": [0.25, 0.09, 0.04],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.05,
@@ -67,16 +65,12 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 5,
-          "angle": 45,
-          "width": 0.7,
+          "template": "simple",
           "widest": 0.3,
           "tip": 0.5,
           "base": 0.9,
           "teeth": 18,
-          "tooth_depth": 0.01,
-          "petiole": 0.3
+          "tooth_depth": 0.01
         },
         "families": {
           "plasticity": 0.4
@@ -102,9 +96,16 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_length_m": {"min": 0.076, "max": 0.102},
+    "leaf_width_m": {"min": 0.051, "max": 0.064},
+    "petiole_length_m": {"min": 0.038, "max": 0.051},
     "shade_tolerance": "intolerant"
   },
   "evidence": {
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"slender branchlets ... marked by many orange-colored lenticels ... reddish brown during their first year, gradually becoming dark gray\". Colour chosen by eye for reddish brown."},
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"Leaves broad-ovate ... 3'-4' long, 2'-2½' wide; petioles slender ... 1½'-2' in length\"."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"Leaves broad-ovate ... 3'-4' long, 2'-2½' wide; petioles slender ... 1½'-2' in length\"."},
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"Leaves broad-ovate ... 3'-4' long, 2'-2½' wide; petioles slender ... 1½'-2' in length\"."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's black cottonwood review (Populus balsamifera subsp. trichocarpa, read 2026-10-16): \"Black cottonwood is very shade intolerant\"; it typically has \"a straight, branch-free trunk for more than half its length and a broad, open crown\"."},
     "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.639), and since 2026-10-16 its family's two carpels and its order's regular flowers (before, 0.031). Since 2026-10-16 its flowers, which have no perianth, are drawn by their stamens grown to the flower's size (before, 0.0138)."},
     "generator.params.path_half": {
