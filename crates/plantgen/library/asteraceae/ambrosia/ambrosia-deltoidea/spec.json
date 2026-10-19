@@ -13,7 +13,8 @@
     "params": {
       "fork_stems": 12,
       "branch_angle": 45,
-      "fork_angle": 45
+      "fork_angle": 45,
+      "crown_height": 0.42
     }
   },
   "growth": {
@@ -102,6 +103,11 @@
       "min": 0.02,
       "max": 0.06
     },
+    "disc_colour": [
+      170,
+      172,
+      110
+    ],
     "flowering_position": "terminal",
     "sexual_system": "monoecious",
     "fruit_type": "achene",
@@ -261,6 +267,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read gives it: staminate spikes 2 cm to 6 cm long, as in the photos."
+    },
+    "traits.disc_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Small heads greenish yellow; sRGB by eye, set by hand from iNaturalist photos (observations 212351627, 18473955, 157623372, 265471097, 158201416, 156980924, 202338997, 214504237): the sources read give no count or measure. Stated as the disc florets' colour, as its heads are discoid (it was flower_colour, which a capitulum does not have)."
     },
     "traits.flowering_position": {
       "evidence": "SourceInferred",

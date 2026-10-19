@@ -22,6 +22,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
+        "ambrosia-deltoidea",
+        "fruit_size_m",
+        "as bursage's: its bur, about 6 mm with its spines (Kearney and Peebles), is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
+    ),
+    (
         "ambrosia-dumosa",
         "fruit_size_m",
         "bursage first flowers with the family programs' blooms (revision 110): its bur, 4 to 6 mm with its hooked spines, is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
@@ -187,6 +192,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
     ),
     (
+        "krameria-erecta",
+        "flowering_months",
+        "a look flowers and fruits once a year, so range ratany's two flushes, March to May and August to September (Kearney and Peebles; Range Plant Handbook), are drawn as one flowering from March to July",
+    ),
+    (
+        "krameria-erecta",
+        "fruiting_months",
+        "a look flowers and fruits once a year, so the fruit of range ratany's two flushes, May to June and September to October, is drawn as one crop from July to October",
+    ),
+    (
         "larrea-tridentata",
         "leaf_division",
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
@@ -300,6 +315,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:herb",
         "shoot_leaves",
         "a stem grows all its nodes' leaves in its one year (2 on foamflower's, 36 on Columbia lily's, 45 on fireweed's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "program:lycopodiopsida",
+        "leaf_form",
+        "a spikemoss's or clubmoss's leaves are small scales (Mabberley 2017), but the lycophytes' herb-based program draws each on a blade card",
     ),
     (
         "program:pinidae",

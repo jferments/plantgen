@@ -2699,14 +2699,16 @@ fn unit_sizes(
             }
             // A head's fruit are its cypselae, ripe once most of its
             // florets are in seed (a head's phase is its drawn opening
-            // where its organ has none).
+            // where its organ has none). A cypsela is an achene from an
+            // inferior ovary, and many floras call it an achene, so it
+            // reads as either.
             let ripe = match phase {
                 None => head.open >= 1.5,
                 Some(_) => in_stage(phase, Stage::Ripe),
             };
             if ripe {
                 tally.add("fruit_size_m", organ, part, length * d.cypsela);
-                tally.kind("fruit_type", "cypsela");
+                tally.kind("fruit_type", "cypsela|achene");
             }
         }
         Shape::Spikelet(spikelet) if in_stage(phase, Stage::Open) => {
