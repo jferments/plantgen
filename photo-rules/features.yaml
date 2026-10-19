@@ -57,6 +57,7 @@ features:
     stem_succulent: thick green stem does the work of leaves (cacti)
     rosette_succulent: thick fleshy leaves in a rosette (agaves, aloes)
   reliability: good
+  notes: "Judge a tree by its trunk, not its crown's width. A leader that runs to the top is excurrent_tree, even under a broad or oval crown and on a broadleaved sapling. A trunk that is lost in several big limbs is decurrent_tree. Observers of the pawpaw trial left a single-leader oval tree as cannot tell."
 
 - id: habit.stems_from_base
   scale: habit
@@ -117,9 +118,10 @@ features:
   question: Which word best fits the crown's outline seen from the side?
   type: state
   views: [V1]
-  maps_to: {trait: crown_form}
+  maps_to: {trait: crown_form, extra_states: [oval]}
   states:
     rounded: a dome or globe, about as wide as tall
+    oval: an upright ellipse, clearly taller than wide (about 1.5 to 2.5 times), widest near mid-height, top rounded or bluntly pointed
     spreading: much wider than tall, broad and low
     umbrella: flat top on a bare trunk, foliage in a canopy layer
     vase: narrow at the base, widening upward, branches arching out
@@ -128,6 +130,7 @@ features:
     weeping: branch tips hang down like a curtain
     irregular: no regular shape; broken, flat-topped with age, or wind-shaped
   reliability: good
+  notes: "oval has no crown_form value yet: the comparison counts it as its own state, between rounded and columnar. Observers of the pawpaw trial split an upright oval between columnar, rounded, irregular and cannot tell."
 
 - id: habit.see_through
   scale: habit
