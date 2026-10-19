@@ -1151,6 +1151,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("width", Number),
                 ("divided", Number),
                 ("stipe", Number),
+                ("oblong", Number),
             ],
         ),
         (

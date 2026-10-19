@@ -1940,6 +1940,13 @@ pub struct Frond {
     pub divided: f64,
     /// Length of the bare stalk at the base.
     pub stipe: f64,
+    /// How oblong its pinnae are, 0 to 1: 0 lanceolate, pointed and
+    /// angled up along a lance-shaped outline; 1 oblong and blunt, set
+    /// nearly square to the rachis and crowded edge to edge along an
+    /// outline as broad to near its tip (a maidenhair's pinnules on its
+    /// pinna).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub oblong: f64,
 }
 
 impl Default for Frond {
@@ -1949,6 +1956,7 @@ impl Default for Frond {
             width: 0.32,
             divided: 0.0,
             stipe: 0.12,
+            oblong: 0.0,
         }
     }
 }
@@ -3848,7 +3856,8 @@ impl Shape {
                 count("pinnae", s.pinnae, 3, 40)?;
                 check("width", s.width, 0.05, 1.0)?;
                 check("divided", s.divided, 0.0, 1.0)?;
-                check("stipe", s.stipe, 0.0, 0.6)
+                check("stipe", s.stipe, 0.0, 0.6)?;
+                check("oblong", s.oblong, 0.0, 1.0)
             }
             Self::Flower(s) => {
                 count("petals", s.petals, 3, 60)?;

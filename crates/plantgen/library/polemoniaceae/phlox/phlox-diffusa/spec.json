@@ -86,6 +86,7 @@
     "life_span": "perennial",
     "rosette": "none",
     "stem_posture": "decumbent",
+    "trailing_branches": true,
     "leaf_arrangement": "opposite",
     "leaf_length_m": {
       "min": 0.01,
@@ -173,6 +174,7 @@
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: leaves along the spreading branches, with no basal rosette."
     },
+    "traits.trailing_branches": {"evidence": "SourceInferred", "source": "abrams-1951", "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: freely branching from a stout woody base, the branches spreading or prostrate."},
     "traits.stem_posture": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",

@@ -126,6 +126,16 @@
       60,
       70
     ],
+    "capsule_valves": 3,
+    "fruit_seed_colour": [
+      180,
+      35,
+      35
+    ],
+    "fruit_seed_length_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
     "flowering_months": [
       4,
       5
@@ -292,6 +302,9 @@
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: flowering April and May."
     },
+    "traits.capsule_valves": {"evidence": "SourceInferred", "source": "abrams-1951", "note": "Abrams vol. 3 (1951) p. 53, Euonymus occidentalis: capsule deeply 3-lobed; a lobe to each cell, so it opens in 3 valves, as the photographs (imagekit batch c3-gaps-2026-10-19, observation of an open capsule) show them bent back."},
+    "traits.fruit_seed_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Abrams (1951 p. 53, key to genera): seeds with a red aril. The deep red is our reading of the aril-covered seed hanging from an open capsule in the photographs (imagekit batch c3-gaps-2026-10-19)."},
+    "traits.fruit_seed_length_m": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "No flora read measures the seed. By eye against the capsule (1-1.5 cm) in the photographs (imagekit batch c3-gaps-2026-10-19): the aril-covered seed about half the capsule's length, 5-8 mm."},
     "traits.fruiting_months": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
