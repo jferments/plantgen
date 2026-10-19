@@ -352,6 +352,51 @@ pub fn gland_light(
     })
 }
 
+/// A drop of clear secretion's colour where it is seen with unit
+/// `normal` from `view`: what lies `behind` it through its `tint` as far
+/// as its `clarity` lets it, the rest of it lit as milky liquid; the sky
+/// (or ground) it mirrors at its rim, more as it is seen edge on
+/// (Schlick's Fresnel term for water, 2% head on); a hard glint of the sun
+/// and a softer halo round it; and the sun's light gathered on its far
+/// side, as a bead of water does.
+#[must_use]
+pub fn drop_light(
+    tint: [f64; 3],
+    behind: [f64; 3],
+    clarity: f64,
+    normal: Vec3,
+    view: Vec3,
+    lit: f64,
+    lighting: &Lighting,
+) -> [f64; 3] {
+    let (sun, sun_colour, sky, ground) = (
+        lighting.sun,
+        lighting.sun_color,
+        lighting.sky,
+        lighting.ground,
+    );
+    let facing = normal.dot(view).clamp(0.0, 1.0);
+    let fresnel = 0.02 + 0.98 * (1.0 - facing).powi(5);
+    let mirrored = normal * (2.0 * normal.dot(view)) - view;
+    let up = (0.5 + 0.5 * mirrored.y).clamp(0.0, 1.0);
+    let half = (sun + view).normalize_or(sun);
+    let along = normal.dot(half).max(0.0);
+    let glint = (6.0 * along.powi(600) + 0.35 * along.powi(40)) * lit;
+    let gathered = (-normal.dot(sun)).max(0.0).powi(6) * lit;
+    let diffuse = normal.dot(sun).max(0.0) * lit;
+    std::array::from_fn(|c| {
+        let tint = tint[c].clamp(0.0, 1.0);
+        let through = behind[c] * tint * clarity;
+        let milky = tint
+            * (1.0 - clarity)
+            * (f64::from(sun_colour[c]) * 0.6 * diffuse + 0.7 * f64::from(sky[c]));
+        let mirror = f64::from(sky[c]) * up * 1.6 + f64::from(ground[c]) * (1.0 - up);
+        (through + milky) * (1.0 - fresnel)
+            + mirror * fresnel
+            + f64::from(sun_colour[c]) * (glint + 0.5 * clarity * tint * gathered)
+    })
+}
+
 /// A bent card's point at `u` across (0 left, 1 right) and `v` along, and
 /// its unit normal on the face side: as [`PlantMesh::card_mesh`] lays it.
 fn card_point(card: &Card, u: f64, v: f64) -> (Vec3, Vec3) {
@@ -392,7 +437,9 @@ fn drawn_point(card: &Card, u: f64, v: f64) -> Vec3 {
 /// One strand, before it is meshed: its root, its two directions (the
 /// second for its far half), its length, its root's radius, the normal of
 /// the face or the wood it stands on, how far it is lifted off the face
-/// (zero for an edge's or a stalk's), and the kind of hair it draws.
+/// (zero for an edge's or a stalk's), the kind of hair it draws, and a
+/// glandular hair's head across (0 for the default share of its height)
+/// and its drop.
 struct Strand {
     root: Vec3,
     first: Vec3,
@@ -402,6 +449,8 @@ struct Strand {
     normal: Vec3,
     rest: Vec3,
     form: Form,
+    head: f64,
+    drop: Option<crate::looks::Drop>,
 }
 
 /// An edge texel: its `u`, `v` and its outward normal across and along
@@ -530,6 +579,10 @@ fn kinds(hairs: &Hairs) -> Vec<(&Hairs, Form)> {
 /// hide it all (`density` 1), one where they hide six tenths of it or
 /// less.
 fn hairs_on(hairs: &Hairs, form: Form, area: f64) -> f64 {
+    if let Some(count) = hairs.count {
+        // A count per square centimetre.
+        return count.max(0.0) * area * 1e4;
+    }
     // Wool lies along itself, its hairs a third of their length apart.
     let apart = if form == Form::Wool { 0.35 } else { 0.9 };
     let spacing = (hairs.length * apart).max(1e-4);
@@ -622,14 +675,16 @@ pub fn strand_mesh(
     templates: &crate::templates::Templates,
     pixel: &dyn Fn(Vec3) -> f64,
 ) -> Strands {
-    let bent = plant.bent_cards();
+    // Every card: a leaf's bent one, and a flower's or a cluster's flat one.
     let mut edge_lists: Vec<Option<Vec<Edge>>> = vec![None; templates.templates.len()];
     // Count first, to share the budget out.
     let mut vein_maps: Vec<Option<Vec<f32>>> = vec![None; templates.templates.len()];
+    let mut blade_fields: Vec<Option<Vec<(f64, f64, f64)>>> = vec![None; templates.templates.len()];
     let card_area = |card: &Card, template: &crate::templates::Template| {
         f64::from(card.length) * f64::from(card.length) * template.area()
     };
-    let wanted: Vec<(f64, f64)> = plant.cards[..bent]
+    let wanted: Vec<(f64, f64)> = plant
+        .cards
         .iter()
         .map(|card| {
             let Some(template) = templates.templates.get(usize::from(card.template)) else {
@@ -700,7 +755,7 @@ pub fn strand_mesh(
     let (card_shares, tube_shares) = shares.split_at(wanted.len());
     let mut out = Strands::default();
     let mut strands = Vec::new();
-    for (index, card) in plant.cards[..bent].iter().enumerate() {
+    for (index, card) in plant.cards.iter().enumerate() {
         let share = card_shares[index];
         if wanted[index].0 <= 0.0 || share <= 0.0 {
             continue;
@@ -750,6 +805,18 @@ pub fn strand_mesh(
                 };
                 let salt = (if lower { 0x42_454e_4541_5448 } else { 0 })
                     ^ (kind_index as u64).wrapping_mul(0x4b49_4e44_0000);
+                // Hairs graded from the face's middle to its edge stand on
+                // the blade, measured from its edge, not on its stalk.
+                let graded = hairs.edge_length.filter(|ratio| *ratio > 0.0);
+                let field = if graded.is_some() {
+                    Some(
+                        blade_fields[template]
+                            .get_or_insert_with(|| blade_field(templates, template))
+                            .as_slice(),
+                    )
+                } else {
+                    None
+                };
                 // Hairs on the face, at random points the template covers,
                 // gathered on the veins as much as they are said to be.
                 #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
@@ -765,6 +832,16 @@ pub fn strand_mesh(
                     if texel.coverage < 0.5 || texel.fringe {
                         continue;
                     }
+                    // How far in from the blade's edge, 0 at the edge to 1
+                    // at its middle, and the way out to the nearest edge
+                    // across and along the card.
+                    let inward = field.map(|field| {
+                        let at = texel_index(templates.size, u, v);
+                        field[at]
+                    });
+                    if inward.is_some_and(|(depth, _, _)| depth < 0.0) {
+                        continue;
+                    }
                     if let Some(veins) = veins {
                         let on_vein = f64::from(veins[texel_index(templates.size, u, v)]);
                         if hash(k, 10, seed) >= 1.0 - gathered * (1.0 - on_vein) {
@@ -778,16 +855,40 @@ pub fn strand_mesh(
                     let (ahead, _) = card_point(card, u, (v + 0.01).min(1.0));
                     let (behind, _) = card_point(card, u, (v - 0.01).max(0.0));
                     let tipward = (ahead - behind).normalize_or(math::any_perpendicular(normal));
-                    let (first, second) = lean(normal, tipward, lie, curl, &|salt| turn(k, salt));
+                    let (mut first, mut second) =
+                        lean(normal, tipward, lie, curl, &|salt| turn(k, salt));
+                    // Graded hairs vary less, their length set mostly by
+                    // where they stand.
+                    let spread_of = if graded.is_some() { 0.3 } else { 0.8 };
+                    let mut length =
+                        hairs.length * (1.0 - spread_of * 0.5 + spread_of * hash(k, 1, seed));
+                    if let (Some(ratio), Some((depth, du, dv))) = (graded, inward) {
+                        // Toward the edge they lengthen and lean out over
+                        // it, the outermost lying in the face's plane with
+                        // their tips turned up a little.
+                        let edgeward = 1.0 - depth;
+                        length *= 1.0 + (ratio - 1.0) * edgeward * edgeward;
+                        let (right, _) = card_point(card, (u + 0.01).min(1.0), v);
+                        let (left, _) = card_point(card, (u - 0.01).max(0.0), v);
+                        let rightward =
+                            (right - left).normalize_or(math::any_perpendicular(tipward));
+                        let out_of = (rightward * du + tipward * dv).normalize_or(first);
+                        let out_of = (out_of - normal * out_of.dot(normal)).normalize_or(first);
+                        let spread = edgeward.powf(1.5);
+                        first = (first * (1.0 - spread) + out_of * spread).normalize_or(first);
+                        second = (first + normal * (0.12 + 0.2 * spread)).normalize_or(first);
+                    }
                     strands.push(Strand {
                         root,
                         first,
                         second,
-                        length: hairs.length * (0.6 + 0.8 * hash(k, 1, seed)),
+                        length,
                         radius: 0.0,
                         normal,
                         rest: normal,
                         form,
+                        head: hairs.head.unwrap_or(0.0),
+                        drop: hairs.drop,
                     });
                 }
             }
@@ -833,6 +934,8 @@ pub fn strand_mesh(
                         normal,
                         rest: Vec3::ZERO,
                         form: Form::Plain,
+                        head: 0.0,
+                        drop: None,
                     });
                 }
             }
@@ -909,6 +1012,8 @@ pub fn strand_mesh(
                     normal,
                     rest: Vec3::ZERO,
                     form,
+                    head: hairs.head.unwrap_or(0.0),
+                    drop: hairs.drop,
                 };
                 push_hair(
                     &mut out,
@@ -931,6 +1036,10 @@ pub fn strand_mesh(
 pub struct Strands {
     pub hairs: Mesh,
     pub heads: Mesh,
+    /// The drops of secretion on glandular heads, clear beads
+    /// (`crate::raster::Material::Drop`), drawn after everything else
+    /// so what lies behind them shows through.
+    pub drops: Mesh,
 }
 
 /// How many hairs fringe the edge of a card of `template` with `area`
@@ -989,6 +1098,10 @@ fn colours_of(face: Option<&Hairs>, form: Form, organ: [f32; 3]) -> [[f32; 3]; 2
     let colour = of(kind);
     let organ = organ.map(|c| c.max(0.0));
     let mix = |weight: f32| std::array::from_fn(|c| weight * colour[c] + (1.0 - weight) * organ[c]);
+    // A pigmented stalk is its own colour, its head the hairs'.
+    if let (Form::Gland, Some(stalk)) = (form, kind.and_then(|kind| kind.stalk)) {
+        return [stalk, colour];
+    }
     match form {
         Form::Sting => [mix(0.55), organ.map(|c| c * 1.08)],
         Form::Gland => [mix(0.45), mix(0.7)],
@@ -1152,16 +1265,60 @@ fn push_hair(
             let half = strand.length * 0.5;
             let tip = strand.root + strand.first * half + strand.second * half;
             // A tomato's capitate heads are about a fifth of their hair's
-            // height across (Bergau et al. 2015: 57 µm on 0.2-0.3 mm).
-            let radius = (strand.length * 0.11).max(strand.radius * 1.8);
-            push_head(
-                &mut out.heads,
-                tip + strand.second * radius * 0.8,
-                radius,
-                other,
-                lifetime,
-                segment,
-            );
+            // height across (Bergau et al. 2015: 57 µm on 0.2-0.3 mm),
+            // unless measured.
+            let across = if strand.head > 0.0 {
+                strand.head
+            } else {
+                strand.length * 0.22
+            };
+            let radius = (across * 0.5).max(strand.radius * 1.8);
+            let centre = tip + strand.second * radius * 0.8;
+            match strand.drop {
+                // The head is itself the drop: resin seen through.
+                Some(drop) if drop.size <= 1.0 => {
+                    push_sphere(
+                        &mut out.drops,
+                        centre,
+                        radius,
+                        drop_colour(&drop, other),
+                        lifetime,
+                        segment,
+                        DROP_FACETS,
+                    );
+                }
+                Some(drop) => {
+                    push_sphere(
+                        &mut out.heads,
+                        centre,
+                        radius,
+                        other,
+                        lifetime,
+                        segment,
+                        HEAD_FACETS,
+                    );
+                    // The drop hangs round the head, a little out past it.
+                    let outer = radius * drop.size;
+                    push_sphere(
+                        &mut out.drops,
+                        centre + strand.second * (outer - radius) * 0.5,
+                        outer,
+                        drop_colour(&drop, drop.colour),
+                        lifetime,
+                        segment,
+                        DROP_FACETS,
+                    );
+                }
+                None => push_sphere(
+                    &mut out.heads,
+                    centre,
+                    radius,
+                    other,
+                    lifetime,
+                    segment,
+                    HEAD_FACETS,
+                ),
+            }
         }
         Form::Sting => {
             // A swollen green foot a quarter of its height (Ensikat et
@@ -1360,33 +1517,157 @@ fn push_profile(
 
 /// A glandular hair's head: a round drop `radius` across at `centre`,
 /// eight triangles, its vertex normals pointing out of it.
-fn push_head(
+/// Facets round and rings down a gland's head, and a drop's: enough that
+/// their glints and rims read round up close.
+const HEAD_FACETS: (u32, u32) = (8, 5);
+const DROP_FACETS: (u32, u32) = (12, 8);
+
+/// A drop's colour as its mesh carries it: `colour` (what tints what
+/// shows through it) and its clarity in alpha
+/// (`crate::raster::Material::Drop`).
+fn drop_colour(drop: &crate::looks::Drop, colour: [f32; 3]) -> [f32; 4] {
+    #[allow(clippy::cast_possible_truncation)]
+    let clarity = drop.clarity.clamp(0.0, 1.0) as f32;
+    [colour[0], colour[1], colour[2], clarity]
+}
+
+/// A round head or drop at `centre`: `facets` round its axis and rings
+/// from pole to pole, each vertex's normal pointing out of its middle.
+fn push_sphere(
     mesh: &mut Mesh,
     centre: Vec3,
     radius: f64,
-    colour: [f32; 3],
+    colour: impl Into<Rgba>,
     (born, shed): (f64, Option<f64>),
     segment: u32,
+    (around, rings): (u32, u32),
 ) {
+    let Rgba(color) = colour.into();
     let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
-    for direction in [Vec3::X, -Vec3::X, Vec3::Y, -Vec3::Y, Vec3::Z, -Vec3::Z] {
-        mesh.push(Vertex {
-            position: centre + direction * radius,
-            normal: direction,
-            uv: [0.0, 0.0],
-            color: [colour[0], colour[1], colour[2], 1.0],
-            born,
-            shed,
-            level: 3,
-            segment,
-        });
+    for ring in 0..=rings {
+        let polar = math::PI * f64::from(ring) / f64::from(rings);
+        for step in 0..=around {
+            let azimuth = 2.0 * math::PI * f64::from(step) / f64::from(around);
+            let direction = Vec3::new(
+                math::sin(polar) * math::cos(azimuth),
+                math::cos(polar),
+                math::sin(polar) * math::sin(azimuth),
+            );
+            mesh.push(Vertex {
+                position: centre + direction * radius,
+                normal: direction,
+                uv: [0.0, 0.0],
+                color,
+                born,
+                shed,
+                level: 3,
+                segment,
+            });
+        }
     }
-    for (a, b) in [(0, 2), (2, 1), (1, 3), (3, 0)] {
-        mesh.indices
-            .extend_from_slice(&[first + a, first + b, first + 4]);
-        mesh.indices
-            .extend_from_slice(&[first + b, first + a, first + 5]);
+    let row = around + 1;
+    for ring in 0..rings {
+        for step in 0..around {
+            let a = first + ring * row + step;
+            let b = a + row;
+            mesh.indices
+                .extend_from_slice(&[a, b, a + 1, a + 1, b, b + 1]);
+        }
     }
+}
+
+/// A colour with its alpha: an opaque head's, or a drop's with its
+/// clarity ([`drop_colour`]).
+struct Rgba([f32; 4]);
+
+impl From<[f32; 3]> for Rgba {
+    fn from(colour: [f32; 3]) -> Self {
+        Self([colour[0], colour[1], colour[2], 1.0])
+    }
+}
+
+impl From<[f32; 4]> for Rgba {
+    fn from(colour: [f32; 4]) -> Self {
+        Self(colour)
+    }
+}
+
+/// For each texel of `template`'s blade (covered, not fringe, not its
+/// stalk: the accent a petiole is painted in), how far in from the
+/// blade's edge it lies, 0 at the edge to 1 at its deepest point, and
+/// the unit way out to the nearest edge across (`u`) and along (`v`) the
+/// card; a depth of -1 off the blade. Distances are in card lengths, a
+/// texel across a card being its aspect as long as one along it.
+fn blade_field(templates: &crate::templates::Templates, template: usize) -> Vec<(f64, f64, f64)> {
+    let size = templates.size;
+    let Some(drawn) = templates.templates.get(template) else {
+        return Vec::new();
+    };
+    let on = |at: usize| {
+        drawn.coverage[at] >= 0.5
+            && drawn.fringe.get(at).copied().unwrap_or(0.0) <= 0.0
+            && drawn.accent.get(at).copied().unwrap_or(0.0) < 0.5
+    };
+    let across = drawn.aspect.max(1e-3);
+    let diagonal = (across * across + 1.0).sqrt();
+    let mut distance = vec![f64::INFINITY; size * size];
+    for at in 0..size * size {
+        if !on(at) {
+            distance[at] = 0.0;
+        }
+    }
+    // Two chamfer passes, forward and back.
+    let steps = [
+        (-1_isize, 0_isize, across),
+        (0, -1, 1.0),
+        (-1, -1, diagonal),
+        (1, -1, diagonal),
+    ];
+    let pass = |distance: &mut Vec<f64>, reverse: bool| {
+        for i in 0..size * size {
+            let at = if reverse { size * size - 1 - i } else { i };
+            let (x, y) = ((at % size) as isize, (at / size) as isize);
+            for &(dx, dy, cost) in &steps {
+                let (dx, dy) = if reverse { (-dx, -dy) } else { (dx, dy) };
+                let (nx, ny) = (x + dx, y + dy);
+                // Off the template counts as off the blade.
+                let there = if nx < 0 || ny < 0 || nx >= size as isize || ny >= size as isize {
+                    0.0
+                } else {
+                    distance[ny as usize * size + nx as usize]
+                };
+                if there + cost < distance[at] {
+                    distance[at] = there + cost;
+                }
+            }
+        }
+    };
+    pass(&mut distance, false);
+    pass(&mut distance, true);
+    let deepest = distance
+        .iter()
+        .copied()
+        .filter(|d| d.is_finite())
+        .fold(0.0_f64, f64::max)
+        .max(1e-9);
+    let read = |x: isize, y: isize| -> f64 {
+        let x = x.clamp(0, size as isize - 1) as usize;
+        let y = y.clamp(0, size as isize - 1) as usize;
+        distance[y * size + x]
+    };
+    (0..size * size)
+        .map(|at| {
+            if !on(at) {
+                return (-1.0, 0.0, 0.0);
+            }
+            let (x, y) = ((at % size) as isize, (at / size) as isize);
+            // Downhill, toward the edge, in card lengths.
+            let gu = (read(x - 1, y) - read(x + 1, y)) / across;
+            let gv = read(x, y - 1) - read(x, y + 1);
+            let norm = (gu * gu + gv * gv).sqrt().max(1e-9);
+            (distance[at] / deepest, gu / norm, gv / norm)
+        })
+        .collect()
 }
 
 #[cfg(test)]

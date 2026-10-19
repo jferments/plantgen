@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Armeria",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "rosette": "basal",
+    "cauline_leaves": "none",
+    "petiole_length_m": 0,
+    "leaf_shape": {
+      "linear": "usually",
+      "spatulate": "sometimes",
+      "lanceolate": "rarely"
+    },
+    "leaf_margin": "entire",
+    "inflorescence": "head",
+    "flowering_position": "terminal",
+    "bract_form": "scale",
+    "pedicel_length_m": {
+      "min": 0,
+      "max": 0.002
+    },
+    "fruit_type": "capsule",
+    "calyx_in_fruit": "persistent",
+    "stamen_exsertion": "included",
+    "perianth_fused": true,
+    "carpels": 5
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): plants herbs, perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): herbs, scapose, acaulescent, from a branched woody rootstock (herbaceous above ground)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): leaves in basal rosettes."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): scapes leafless, enclosed at the apex by a tubular sheath."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): leaves sessile."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): blade linear to linear-spatulate (lanceolate outside the flora)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): margins entire."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): inflorescences solitary, apical, dense hemispheric heads of scorpioid cymes, each surrounded by an involucre of scarious bracts."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): one head at the apex of each scape."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): involucre of scarious (dry, papery) bracts."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): pedicels absent or present (short); 2 mm is an estimate for 'short'."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): fruits dry, enclosed in the persistent calyx, opening transversely (a lid): read as capsule, as FOC calls the family's fruits."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): fruits enclosed in persistent calyces."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): anthers included."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): petals slightly connate at the base."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Armeria (Lefebvre & Vekemans) (eFloras, read 2026-10-19): styles 5, free, hairy below."
+    }
+  }
+}

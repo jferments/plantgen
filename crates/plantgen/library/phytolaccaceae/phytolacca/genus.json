@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Phytolacca",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_shape": {
+      "ovate": "often",
+      "elliptic": "often",
+      "lanceolate": "often"
+    },
+    "stem_cross_section": {
+      "terete": "usually",
+      "angled": "sometimes"
+    },
+    "inflorescence": {
+      "raceme": "usually",
+      "spike": "sometimes"
+    },
+    "units_per_inflorescence": {
+      "min": 5,
+      "max": 100
+    },
+    "sympodium": "monochasial",
+    "perianth": "tepals",
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "high": 8
+    },
+    "stamens": {
+      "min": 8,
+      "max": 25,
+      "low": 6,
+      "high": 33
+    },
+    "carpels": {
+      "min": 6,
+      "max": 12,
+      "low": 5,
+      "high": 30
+    },
+    "fruit_type": {
+      "berry": "usually",
+      "achene": "rarely"
+    },
+    "fruit_shape": "globose"
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): herbs perennial (shrubs or trees outside the flora)."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca (eFloras, read 2026-10-19): herbs or shrubs, rarely trees (P. dioica, the ombu, a tree to 25 m, FNA)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): leaves alternate."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: alternate leaves on a spiral, as across Caryophyllales' alternate-leaved families."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca (eFloras, read 2026-10-19): blade ovate, elliptic or lanceolate, apex acute or obtuse."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca (eFloras, read 2026-10-19): stems and branches terete, sulcate or angular."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): racemes or spikes, axillary, terminal or leaf-opposed; FOC adds cymose panicles."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): 5-100-flowered."
+    },
+    "traits.sympodium": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: FNA and FOC put the racemes leaf-opposed or terminal: the stem ends in a raceme and grows on from the bud below, leaving it opposite a leaf, as a monochasial sympodium."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca (eFloras, read 2026-10-19): tepals 5, persistent, spreading or reflexed."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): sepals 5-8; FOC tepals 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): stamens (7-)8-25(-30); FOC: 6-33."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): carpels 6-12(-30); FOC: 5-16."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): oblate berries with the styles persisting in a ring, or (P. acinosa) a group of lenticular achenes."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca (eFloras, read 2026-10-19): berry oblate; the vocabulary's nearest state is globose."
+    }
+  }
+}

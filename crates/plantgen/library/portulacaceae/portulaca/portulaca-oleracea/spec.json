@@ -1,0 +1,609 @@
+{
+  "schema": 1,
+  "id": "portulaca-oleracea",
+  "taxon": {
+    "scientific_name": "Portulaca oleracea",
+    "common_name": "common purslane",
+    "family": "Portulacaceae",
+    "genus": "Portulaca",
+    "plant_name_id": 2566490
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 1,
+    "step": 1,
+    "keyframes": [
+      1
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.1,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "forb",
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.15,
+      "high": 0.4
+    },
+    "height_max_m": 0.4,
+    "stem_length_m": {
+      "min": 0.1,
+      "max": 0.4,
+      "high": 0.56
+    },
+    "crown_width_max_m": 1.1,
+    "stem_clump": "many",
+    "stem_posture": {
+      "prostrate": "usually",
+      "decumbent": "often",
+      "erect": "rarely"
+    },
+    "stem_cross_section": "terete",
+    "stem_hairs": "glabrous",
+    "stem_colour": [
+      168,
+      62,
+      58
+    ],
+    "rosette": "terminal",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "petiole_length_m": {
+      "min": 0.0005,
+      "max": 0.002
+    },
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.028,
+      "low": 0.004,
+      "high": 0.03
+    },
+    "leaf_width_m": {
+      "min": 0.005,
+      "max": 0.013,
+      "low": 0.002,
+      "high": 0.015
+    },
+    "leaf_shape": {
+      "obovate": "usually",
+      "spatulate": "often"
+    },
+    "leaf_apex": {
+      "rounded": "usually",
+      "retuse": "often",
+      "truncate": "sometimes",
+      "obtuse": "sometimes"
+    },
+    "leaf_base_shape": "cuneate",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "leaf_colour": [
+      72,
+      118,
+      52
+    ],
+    "stipules": false,
+    "inflorescence": {
+      "head": "usually",
+      "solitary": "sometimes"
+    },
+    "inflorescence_unit": "flower",
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 5,
+      "low": 1
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "bract_form": "leafy",
+    "inflorescence_bracts": {
+      "min": 2,
+      "max": 6,
+      "low": 1
+    },
+    "pedicel_length_m": 0,
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.006,
+      "low": 0.003,
+      "high": 0.01
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 5,
+    "petal_length_m": {
+      "min": 0.003,
+      "max": 0.0046,
+      "high": 0.005
+    },
+    "petal_shape": {
+      "obovate": "usually",
+      "oblong": "often"
+    },
+    "petal_apex": "emarginate",
+    "flower_colour": [
+      246,
+      206,
+      32
+    ],
+    "sepal_length_m": 0.004,
+    "calyx_colour": [
+      104,
+      140,
+      62
+    ],
+    "flower_posture": "erect",
+    "stamens": {
+      "min": 7,
+      "max": 12,
+      "low": 6,
+      "high": 20
+    },
+    "anther_colour": [
+      240,
+      200,
+      40
+    ],
+    "carpels": {
+      "min": 4,
+      "max": 6,
+      "low": 3
+    },
+    "ovary_position": "half_inferior",
+    "fruit_type": "capsule",
+    "fruit_size_m": 0.005,
+    "fruit_width_m": {
+      "min": 0.004,
+      "max": 0.009
+    },
+    "fruit_shape": "ovoid",
+    "capsule_valves": 2,
+    "calyx_in_fruit": "falling",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "root_depth_max_m": 0.1,
+    "elevation_min_m": 0,
+    "elevation_max_m": 2800,
+    "light": [
+      "sun"
+    ],
+    "habitat_notes": "A cosmopolitan weed of fields, gardens, pavement cracks and waste places in warm and temperate regions, 0-2800 m; introduced in North America (perhaps pre-Columbian).",
+    "habit_notes": "A low, succulent mat: many fleshy, glabrous, reddish stems radiate from a short taproot and lie flat on the ground, branching freely, their tips rising a little. Leaves thick and fleshy, spoon-shaped, crowded toward the stem ends and under the flower clusters. A few inconspicuous stiff bristles in the leaf axils. Flowers open singly for a few hours on sunny mornings. Capsule opens by a lid (circumscissile), showing many glossy black seeds 0.6-1.1 mm.",
+    "leaf_succulence": "fleshy",
+    "leaf_cross_section": "flat",
+    "shoot_leaves": {
+      "min": 10,
+      "max": 30,
+      "typical": 16
+    },
+    "flowering_branches": 3,
+    "inflorescence_length_m": {
+      "min": 0.008,
+      "max": 0.015
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a flat mat of fleshy reddish stems radiating from a taproot, with crowded fleshy obovate leaves and small yellow flowers at the tips."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.1 m tall at 1 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a flat mat of fleshy reddish stems radiating from a taproot, with crowded fleshy obovate leaves and small yellow flowers at the tips."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): an annual succulent herb; forb is used, as the library's succulent class is for stem and rosette succulents."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): plants annual; FOC: herbs annual (Wikipedia: perennial in frost-free tropics)."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): herbs."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a prostrate mat whose rising tips stand 5-15 cm; Wikipedia's 40 cm is the most it reaches."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Portulaca oleracea (read 2026-10-19; lower trust): may reach 40 cm in height."
+    },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): branches to 56 cm; the 10-40 cm span is an estimate below that maximum."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: branches to 56 cm radiating from one root (FNA) make a mat up to about 1.1 m across."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): diffuse, much branched from the base."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): stems prostrate; FOC: prostrate or decumbent, less often more or less erect."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: round, fleshy stems; no source gives the section."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): plants glabrous; nodal trichomes absent or inconspicuous."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): stems sometimes flushed red or purple; Wikipedia: smooth, reddish. sRGB by eye for the word."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Portulaca oleracea (read 2026-10-19; lower trust): leaves clustered at stem joints and ends; FNA: 1-4 involucre-like leaves under the flowers."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): leaves alternate or occasionally subopposite."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): blades flattened."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulacaceae (eFloras, read 2026-10-19): leaf blade simple."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): petiole short; the 0.5-2 mm span is an estimate of 'short'."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): blade 10-30 mm long; FNA: 4-28 mm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): blade 5-15 mm wide; FNA: 2-13 mm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): blades obovate or spatulate, flattened; FOC: obovate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): apex round to retuse or nearly truncate; FOC: obtuse, rounded, truncate or retuse."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): base cuneate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulacaceae (eFloras, read 2026-10-19): margin entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): plants glabrous."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: plain mid green, often edged or flushed red like the stems; no source names the leaf colour; sRGB by eye."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): leaf axils with a few inconspicuous stiff bristles, not true stipules (FOC family)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): flowers in clusters of 3-5 surrounded by an involucre of 2-6 bracts; Wikipedia: flowers open singly at the centre of the leaf cluster."
+    },
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): single flowers."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): flowers in clusters of 3-5."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): terminal clusters, or axillary on short branches."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): involucre-like leaves 1-4; FOC: involucre of 2-6 bracts."
+    },
+    "traits.inflorescence_bracts": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): involucre of 2-6 bracts; FNA: involucre-like leaves 1-4."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): flowers sessile."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): flowers 4-5 mm across; FNA: 3-10 mm; Wikipedia: up to 6 mm."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): sepals 2 (green, keeled), petals 5."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): petals 5."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): petals 3-4.6 x 1.8-3 mm; FOC: 3-5 mm."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): petals obovate; FNA: oblong."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): apex retuse (a shallow notch); emarginate is the nearest state."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): petals yellow; FOC the same. sRGB by eye for the word."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): sepals about 4 mm, helmet-shaped, keeled, acute."
+    },
+    "traits.calyx_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): sepals green. sRGB by eye for the word."
+    },
+    "traits.flower_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: sessile flowers face up from the centre of the leaf cluster at the stem tip."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): stamens 7-12; FNA: 6-12(-20)."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): anthers yellow. sRGB by eye for the word."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): stigma 4-6-lobed; FNA: stigmas 3-6; one per carpel."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): ovary half-inferior."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): capsules."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): capsule ovoid, about 5 mm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): capsules 4-9 mm across."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): capsules ovoid."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): capsule circumscissile, opening by a lid (two parts; see genus note)."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): sepals fall from the top of the capsule."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): flowering late spring to early fall in North America; FOC: May-August."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca oleracea (eFloras, read 2026-10-19): fruiting June-September."
+    },
+    "traits.root_depth_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): taproot 2-10 cm; Wikipedia: fibrous secondary roots from it."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): 0-2800 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): 0-2800 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Portulaca oleracea (read 2026-10-19; lower trust): flowers open only on sunny mornings; FNA genus: open only in sunshine. Plants of open ground."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): fields, waste places, 0-2800 m; introduced; FOC: cultivation and disturbed urban sites."
+    },
+    "traits.habit_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca oleracea (eFloras, read 2026-10-19): stems prostrate, succulent, branches to 56 cm; seeds black, 0.6-1.1 mm; FOC: leaf axils with a few stiff bristles; Wikipedia: flowers open singly for a few hours on sunny mornings."
+    },
+    "traits.leaf_succulence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Portulaca (read 2026-10-19): leaves usually fleshy; P. oleracea's blade flat."
+    },
+    "traits.leaf_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Portulaca oleracea (read 2026-10-19): blade flat, obovate or spoon-shaped."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: stems to 50 cm, leaves crowded at the joints and stem ends."
+    },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: flowers at the stem tips and in the forks."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: a cluster of 3-5 stalkless flowers ringed by leaves, about a flower's width."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

@@ -1,0 +1,561 @@
+{
+  "schema": 1,
+  "id": "phytolacca-americana",
+  "taxon": {
+    "scientific_name": "Phytolacca americana",
+    "common_name": "American pokeweed",
+    "family": "Phytolaccaceae",
+    "genus": "Phytolacca",
+    "plant_name_id": 2562777
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "forb",
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 1.2,
+      "max": 2.0,
+      "low": 1.0,
+      "high": 3.0
+    },
+    "height_max_m": 3.0,
+    "crown_width_max_m": 2.0,
+    "stem_clump": "few",
+    "stem_posture": "erect",
+    "stem_cross_section": "terete",
+    "stem_hairs": "glabrous",
+    "stem_colour": [
+      138,
+      38,
+      84
+    ],
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.06
+    },
+    "leaf_length_m": {
+      "min": 0.09,
+      "max": 0.18,
+      "high": 0.35
+    },
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.1,
+      "high": 0.18
+    },
+    "leaf_shape": {
+      "ovate": "usually",
+      "lanceolate": "often",
+      "elliptic": "sometimes"
+    },
+    "leaf_apex": {
+      "acuminate": "usually",
+      "acute": "often"
+    },
+    "leaf_base_shape": {
+      "rounded": "often",
+      "cuneate": "often"
+    },
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "leaf_colour": [
+      66,
+      118,
+      50
+    ],
+    "inflorescence": "raceme",
+    "inflorescence_unit": "flower",
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "sympodium": "monochasial",
+    "inflorescence_length_m": {
+      "min": 0.12,
+      "max": 0.3,
+      "low": 0.06
+    },
+    "inflorescence_posture": {
+      "pendent": "usually",
+      "erect": "sometimes"
+    },
+    "peduncle_length_m": {
+      "min": 0.03,
+      "max": 0.15
+    },
+    "pedicel_length_m": {
+      "min": 0.006,
+      "max": 0.008,
+      "low": 0.003,
+      "high": 0.013
+    },
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.006
+    },
+    "perianth": "tepals",
+    "perianth_parts": 5,
+    "flower_merosity": 5,
+    "tepal_length_m": {
+      "min": 0.0025,
+      "max": 0.0033
+    },
+    "flower_colour": [
+      236,
+      240,
+      222
+    ],
+    "flower_symmetry": "actinomorphic",
+    "stamens": {
+      "min": 10,
+      "max": 10,
+      "low": 9,
+      "high": 12
+    },
+    "carpels": {
+      "min": 6,
+      "max": 12
+    },
+    "ovary_position": "superior",
+    "fruit_type": "berry",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.011
+    },
+    "fruit_width_m": {
+      "min": 0.006,
+      "max": 0.011
+    },
+    "fruit_shape": "globose",
+    "fruit_colour_ripe": [
+      48,
+      20,
+      46
+    ],
+    "fruit_colour_ripening": [
+      150,
+      34,
+      70
+    ],
+    "fruit_posture": "pendent",
+    "calyx_in_fruit": "persistent",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 1400,
+    "light": [
+      "sun",
+      "part"
+    ],
+    "habitat_notes": "Native to eastern and central North America: disturbed ground, pastures, clearings, thickets, woodland borders and roadsides, 0-1400 m; naturalised in Europe and Asia.",
+    "habit_notes": "Dies back each winter to a thick, white, fleshy taproot; one to several stout stems from the crown, green turning red or purple late in the season, pith chambered. Upright early in the season, spreading and leaning later under the weight of fruit. Racemes stand opposite the leaves and droop; berries ripen from green through red to purple-black on pink stalks, flowers and fruit together on one raceme.",
+    "shoot_leaves": {
+      "min": 15,
+      "max": 30,
+      "typical": 20
+    },
+    "flowering_branches": 3
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a tall, coarse herb with stout red-purple stems, large alternate leaves and drooping racemes of white flowers and dark purple berries."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.6 m tall at 3 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a tall, coarse herb with stout red-purple stems, large alternate leaves and drooping racemes of white flowers and dark purple berries."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): herbs perennial."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): herbs perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): herbaceous, dying back to the root each winter."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): usually 1.2-2 m, up to 3 m; FOC vol. 5: 1-2 m tall."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): plants to 3 m (exceptionally 7 m)."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: the stems spread outward late in the season under the fruit, making a clump about as wide as tall, to about 2 m."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): one to several branches grow from the crown of the taproot."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): stems erect; Wikipedia: upright early, spreading later under the fruit."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): stems terete."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): branches stout, smooth; FOC genus: glabrous."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): stems sometimes reddish purple; Wikipedia: green to red or purplish, usually red late in the season. sRGB by eye for the word."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): leaves alternate along leafy stems; no rosette described."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca (eFloras, read 2026-10-19): leaves alternate."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: alternate leaves on a spiral."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): flat blades."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): leaves simple."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): petiole 1-6 cm; FOC: 1-4 cm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): blade 9-18 cm long; FNA: to 35 cm; Wikipedia: to 41 cm (not followed)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): blade 5-10 cm wide; FNA: to 18 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): blade lanceolate to ovate; FOC: elliptic-ovate or ovate-lanceolate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): apex acuminate; FOC: acute."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): base rounded to cordate; FOC: cuneate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): leaves simple, entire; FNA family: often undulate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): leaves smooth."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): leaves medium green. sRGB by eye for the word."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): racemes open, the lowest pedicels sometimes bearing 2 to few flowers."
+    },
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): single flowers."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): racemes terminal or lateral; FNA genus: axillary, terminal or leaf-opposed."
+    },
+    "traits.sympodium": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaf-opposed racemes (FNA genus) mark a monochasial sympodium."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana var. americana (eFloras, read 2026-10-19): racemes (10-)12-30 cm without the peduncle; the species 6-30 cm (var. rigida 6-9 cm); FOC: 5-20 cm."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana var. americana (eFloras, read 2026-10-19): racemes divergent or usually drooping (var. rigida erect); FOC: infructescence pendent."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): peduncle to 15 cm; the low end an estimate."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): pedicel 6-8 mm; FNA: 3-13 mm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): flowers about 6 mm across; Wikipedia: up to 5 mm wide."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): sepals 5, petal-like (no petals)."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): sepals 5; FOC: tepals 5."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): sepals 5."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): sepals 2.5-3.3 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): sepals white or greenish white to pinkish or purplish; FOC: white, slightly red. sRGB by eye for the word."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): flowers actinomorphic."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): stamens (9-)10(-12) in 1 whorl; FOC: 10."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): carpels 6-12, connate at least in the lower half; FOC: 10."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): ovary superior."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): berries."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): berries 6-11 mm across; oblate, so the width is the longest measure."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): berries 6-11 mm in diameter."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): berry oblate (flattened top and bottom, Wikipedia); globose is the nearest state."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): berries purple-black; FOC: purple-black when mature. sRGB by eye for the word."
+    },
+    "traits.fruit_colour_ripening": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): berries ripen through red to purple to almost black (also green, then white). sRGB by eye for the word."
+    },
+    "traits.fruit_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): infructescence pendent."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): the rounded five-part calyx stays on the pedicel; FNA family: sepals usually persistent."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): blooms first appear in early summer and continue into early fall; FNA var. americana: spring-fall northward, year-round southward; FOC (China): June-August."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolacca americana (eFloras, read 2026-10-19): fruiting August-October."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana var. americana (eFloras, read 2026-10-19): 0-1400 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana var. americana (eFloras, read 2026-10-19): 0-1400 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): pastures, recent clearings, woodland openings and edges."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana var. americana (eFloras, read 2026-10-19): disturbed areas, pastures, clearings, thickets, woodland borders, roadsides; 0-1400 m."
+    },
+    "traits.habit_notes": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Phytolacca americana (read 2026-10-19; lower trust): dies back to a large white taproot each winter; stem red late in the season, chambered pith; upright then spreading with the weight of berries; pink pedicels and peduncle in fruit."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a stem 1-3 m with alternate leaves 10-35 cm long."
+    },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: stems branched above, racemes opposite the leaves on the branches."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

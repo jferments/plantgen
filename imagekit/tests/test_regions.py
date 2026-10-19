@@ -202,6 +202,17 @@ class Detect(unittest.TestCase):
         tall = self.cli("crops", "--triage", "none", "--organ", "leaf", "--min-height", "0.5", "--list").split()
         self.assertEqual(sorted(tall), sorted([self.sha["a.jpg"], self.sha["b.jpg"]]))  # d's leaf is not usable
 
+    def test_photos_detected_with_all_keep_nothing_the_triage_did_not_pass(self):
+        self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--all", "--run", "det")
+        self.assertIn(self.sha["d.jpg"], self.detections())  # --all looked at the unusable photo
+        with Store(self.store_dir) as store:  # answers are read from the run file: drop a's triage there
+            tri = store.run_dir("tri") / "analyses.jsonl"
+            tri.write_text("".join(x for x in tri.read_text().splitlines(True) if self.sha["a.jpg"] not in x))
+        listed = self.cli("crops", "--list").split()
+        self.assertEqual(listed, [self.sha["b.jpg"]])  # a has no triage now and d is unusable: neither is kept
+        everything = self.cli("crops", "--triage", "none", "--list").split()
+        self.assertIn(self.sha["d.jpg"], everything)
+
     @unittest.skipUnless(HAVE_NUMPY and importlib.util.find_spec("pyarrow") is not None, "needs numpy and pyarrow")
     def test_compact_merges_into_a_snapshot(self):
         import pyarrow.parquet as pq

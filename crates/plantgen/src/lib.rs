@@ -1004,11 +1004,24 @@ pub mod venation;
 /// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
 /// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
 /// cactus genera, #239).
-/// 145: a depressed cactus top sinks to a pit at its centre, with its
+/// 145: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
+/// blade on a stalk four times its length); fleshy and succulent blades
+/// are drawn solid (`leaf_succulence`, `leaf_cross_section`); a herb's
+/// rosette and flowering stems are as many as its taxa count
+/// (`rosette_leaves`, `flowering_stems`), a leafless flowering stem is a
+/// scape in any flowering plant, and a compound inflorescence's branches
+/// take the kind its taxa name (`inflorescence_branch_kind`); smooth bark
+/// draws with a valid pattern; a shrub without short shoots has a short
+/// share; a glandular hair has a head, a count per square centimetre,
+/// a margin length that grades it from short and upright to long and
+/// spreading, a stalk colour and a drop of clear, milky or amber secretion,
+/// and strands draw on flower and cluster cards (fifteen Caryophyllales
+/// species, two more sundews and hemp, #243; 144 is #244).
+/// 146: a depressed cactus top sinks to a pit at its centre, with its
 /// crown's flowers and fruit set down into it (`stem_apex` depressed,
 /// body and program `pit`: Lophophora); an apex's woolly cap reaches only
 /// the apical region, three fifths of the tip's radius, not the whole top
 /// of a rounded or broad stem; twisted centrals turn about their length
-/// (new trait `central_spines_twisted`, spine `twist`) (144 is branching
-/// form, #244).
-pub const GENERATOR_REVISION: u32 = 145;
+/// (new trait `central_spines_twisted`, spine `twist`) (145 is Caryophyllales
+/// families, #243).
+pub const GENERATOR_REVISION: u32 = 146;
