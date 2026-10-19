@@ -202,15 +202,24 @@ pub fn measure(graph: &PlantGraph, types: &[OrganType]) -> Option<Form> {
     })
 }
 
-/// A side view: cells in rows from the top, `true` where drawn.
-struct Grid {
-    width: usize,
-    height: usize,
-    cells: Vec<bool>,
+/// A side view: cells in rows from the top, `true` where drawn. A
+/// grown plant's side view is drawn from its leaves and wood; a
+/// photograph's or a render's comes from its plant mask
+/// ([`mask_from_png`]), so both are measured by the same steps.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Mask {
+    /// Cells across.
+    pub width: usize,
+    /// Rows, the top first.
+    pub height: usize,
+    /// `width * height` cells, row by row.
+    pub cells: Vec<bool>,
 }
 
-impl Grid {
-    fn new(width: usize, height: usize) -> Self {
+impl Mask {
+    /// An empty mask.
+    #[must_use]
+    pub fn new(width: usize, height: usize) -> Self {
         Self {
             width,
             height,
@@ -321,6 +330,45 @@ impl Grid {
         }
     }
 
+    /// The sizes of its patches of drawn cells joined side to side.
+    fn patches(&self) -> Vec<usize> {
+        let mut seen = vec![false; self.cells.len()];
+        let mut sizes = Vec::new();
+        let mut stack = Vec::new();
+        for start in 0..self.cells.len() {
+            if seen[start] || !self.cells[start] {
+                continue;
+            }
+            seen[start] = true;
+            stack.push(start);
+            let mut size = 0;
+            while let Some(at) = stack.pop() {
+                size += 1;
+                let (row, column) = (at / self.width, at % self.width);
+                let mut visit = |next: usize| {
+                    if !seen[next] && self.cells[next] {
+                        seen[next] = true;
+                        stack.push(next);
+                    }
+                };
+                if row > 0 {
+                    visit(at - self.width);
+                }
+                if row + 1 < self.height {
+                    visit(at + self.width);
+                }
+                if column > 0 {
+                    visit(at - 1);
+                }
+                if column + 1 < self.width {
+                    visit(at + 1);
+                }
+            }
+            sizes.push(size);
+        }
+        sizes
+    }
+
     /// Intersection over union with the ellipse of the same area and
     /// second moments.
     #[allow(clippy::cast_precision_loss)]
@@ -421,7 +469,7 @@ fn side_views(graph: &PlantGraph, types: &[OrganType]) -> Option<(f64, f64)> {
         let width = ((most + margin - left) / cell).ceil() as usize + 1;
         let height = ((top + margin - foot) / cell).ceil() as usize + 1;
         let to_grid = |at: math::Vec3| ((across(at) - left) / cell, (top + margin - at.y) / cell);
-        let mut leafy = Grid::new(width, height);
+        let mut leafy = Mask::new(width, height);
         for (at, area, normal) in &leaves {
             if at.y < foot {
                 continue;
@@ -430,7 +478,7 @@ fn side_views(graph: &PlantGraph, types: &[OrganType]) -> Option<(f64, f64)> {
             let (u, v) = to_grid(*at);
             leafy.disc(u, v, math::sqrt(shown / std::f64::consts::PI) / cell);
         }
-        let mut drawn = Grid {
+        let mut drawn = Mask {
             width,
             height,
             cells: leafy.cells.clone(),
@@ -449,18 +497,255 @@ fn side_views(graph: &PlantGraph, types: &[OrganType]) -> Option<(f64, f64)> {
                 }
             }
         }
-        let outline = leafy.spread(reach, true).spread(reach, false).filled();
-        let inside = outline.count().max(1) as f64;
-        let covered = outline
-            .cells
-            .iter()
-            .zip(&drawn.cells)
-            .filter(|(out, cell)| **out && **cell)
-            .count() as f64;
-        fits += outline.ellipse_fit();
-        throughs += 1.0 - covered / inside;
+        let side = side_measures(&leafy, &drawn, reach);
+        fits += side.outline_fit;
+        throughs += side.see_through;
     }
     Some((fits / 2.0, throughs / 2.0))
+}
+
+/// Share of the outline's area a gap must cover to count as large.
+pub const LARGE_GAP: f64 = 0.01;
+
+/// Share of the widest row's width a mask's row must reach, counting up
+/// from its foot, to belong to the crown: below it is the bare stem.
+pub const CROWN_ROW: f64 = 0.25;
+
+/// What a side view shows of a crown's outline and the sky through it.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct SideMeasures {
+    /// The outline's fit to the ellipse of the same area and second
+    /// moments, their intersection over their union: 1 for an ellipse.
+    pub outline_fit: f64,
+    /// The share of the outline the sky shows through.
+    pub see_through: f64,
+    /// The outline's width over its height.
+    pub width_to_height: f64,
+    /// Where the outline is widest, as a share of its height from its
+    /// foot (the middle of the widest rows).
+    pub widest_at: f64,
+    /// The outline's area over its convex hull's: 1 for a smooth dome,
+    /// lower where the crown's edge is lobed or ragged.
+    pub solidity: f64,
+    /// Of the sky inside the outline, the share in gaps of at least
+    /// [`LARGE_GAP`] of its area: near 0 where leaves are spread evenly,
+    /// high where they clump round large holes.
+    pub large_gaps: f64,
+    /// Cells inside the outline.
+    pub cells: usize,
+}
+
+/// The side measures of a view whose outline closes `leafy` by a square
+/// of `reach` cells and fills its holes, with `drawn` (the leaves and
+/// the wood) what covers the sky inside it.
+// Cell counts are far below 2^52.
+#[allow(clippy::cast_precision_loss)]
+#[must_use]
+pub fn side_measures(leafy: &Mask, drawn: &Mask, reach: usize) -> SideMeasures {
+    let outline = leafy.spread(reach, true).spread(reach, false).filled();
+    let inside = outline.count().max(1) as f64;
+    let covered = outline
+        .cells
+        .iter()
+        .zip(&drawn.cells)
+        .filter(|(out, cell)| **out && **cell)
+        .count() as f64;
+    // Each row's first and last cell inside the outline.
+    let rows: Vec<Option<(usize, usize)>> = (0..outline.height)
+        .map(|row| {
+            let line = &outline.cells[row * outline.width..(row + 1) * outline.width];
+            let first = line.iter().position(|&cell| cell)?;
+            let last = line.iter().rposition(|&cell| cell)?;
+            Some((first, last))
+        })
+        .collect();
+    let top = rows.iter().position(Option::is_some);
+    let foot = rows.iter().rposition(Option::is_some);
+    let (mut width_to_height, mut widest_at) = (0.0, 0.0);
+    if let (Some(top), Some(foot)) = (top, foot) {
+        let left = rows.iter().flatten().map(|(a, _)| *a).min().unwrap_or(0);
+        let right = rows.iter().flatten().map(|(_, b)| *b).max().unwrap_or(0);
+        width_to_height = (right + 1 - left) as f64 / (foot + 1 - top) as f64;
+        let span = |row: usize| rows[row].map_or(0, |(a, b)| b + 1 - a);
+        let most = (top..=foot).map(span).max().unwrap_or(0);
+        let widest: Vec<usize> = (top..=foot).filter(|&row| span(row) == most).collect();
+        let middle = (widest[0] + widest[widest.len() - 1]) as f64 / 2.0;
+        widest_at = (foot as f64 + 0.5 - middle) / (foot + 1 - top) as f64;
+    }
+    let hull = hull_area(&rows);
+    let sky: Vec<bool> = outline
+        .cells
+        .iter()
+        .zip(&drawn.cells)
+        .map(|(out, cell)| *out && !*cell)
+        .collect();
+    let gaps = Mask {
+        width: outline.width,
+        height: outline.height,
+        cells: sky,
+    }
+    .patches();
+    let open: usize = gaps.iter().sum();
+    let large: usize = gaps
+        .iter()
+        .filter(|&&size| size as f64 >= LARGE_GAP * inside)
+        .sum();
+    SideMeasures {
+        outline_fit: outline.ellipse_fit(),
+        see_through: 1.0 - covered / inside,
+        width_to_height,
+        widest_at,
+        solidity: if hull > 0.0 {
+            (inside / hull).min(1.0)
+        } else {
+            0.0
+        },
+        large_gaps: if open > 0 {
+            large as f64 / open as f64
+        } else {
+            0.0
+        },
+        cells: outline.count(),
+    }
+}
+
+/// The side measures of a plant mask, a photograph's or a render's: the
+/// mask padded so its closing does not touch the border, cut to its
+/// crown (the rows from the lowest that reaches [`CROWN_ROW`] of the
+/// widest row up), closed by [`OUTLINE_CLOSING`] of the crown's width as
+/// a grown plant's leaves are. What covers the sky inside it is `cover`
+/// where given (the photograph's own pixels that are not sky, the same
+/// size as the mask), else the mask itself: a mask's outline is reliable
+/// where its holes may not be. `None` for an empty mask, or a cover of
+/// another size.
+// Cell counts are far below 2^52; the reach is a few cells.
+#[allow(
+    clippy::cast_possible_truncation,
+    clippy::cast_sign_loss,
+    clippy::cast_precision_loss
+)]
+#[must_use]
+pub fn measure_mask(mask: &Mask, cover: Option<&Mask>) -> Option<SideMeasures> {
+    if cover.is_some_and(|cover| (cover.width, cover.height) != (mask.width, mask.height)) {
+        return None;
+    }
+    let spans: Vec<usize> = (0..mask.height)
+        .map(|row| {
+            let line = &mask.cells[row * mask.width..(row + 1) * mask.width];
+            match (
+                line.iter().position(|&cell| cell),
+                line.iter().rposition(|&cell| cell),
+            ) {
+                (Some(a), Some(b)) => b + 1 - a,
+                _ => 0,
+            }
+        })
+        .collect();
+    let most = spans.iter().copied().max().filter(|&most| most > 0)?;
+    let foot = spans
+        .iter()
+        .rposition(|&span| span as f64 >= CROWN_ROW * most as f64)?;
+    let left = (0..mask.width)
+        .find(|&column| (0..=foot).any(|row| mask.cells[row * mask.width + column]))?;
+    let right = (0..mask.width)
+        .rev()
+        .find(|&column| (0..=foot).any(|row| mask.cells[row * mask.width + column]))?;
+    let reach = ((OUTLINE_CLOSING * (right + 1 - left) as f64).round() as usize).max(1);
+    let pad = reach + 2;
+    let padded = |source: &Mask| {
+        let mut crown = Mask::new(mask.width + 2 * pad, foot + 1 + 2 * pad);
+        for row in 0..=foot {
+            for column in 0..mask.width {
+                crown.cells[(row + pad) * crown.width + column + pad] =
+                    source.cells[row * mask.width + column];
+            }
+        }
+        crown
+    };
+    let crown = padded(mask);
+    let covered = padded(cover.unwrap_or(mask));
+    Some(side_measures(&crown, &covered, reach))
+}
+
+/// A plant mask from a PNG: a cell is the plant's where its alpha is at
+/// least half, or, in an image without alpha, where its brightness is.
+///
+/// # Errors
+///
+/// When the bytes are not a PNG the decoder reads.
+pub fn mask_from_png(bytes: &[u8]) -> Result<Mask, String> {
+    let mut decoder = png::Decoder::new(std::io::Cursor::new(bytes));
+    decoder.set_transformations(png::Transformations::normalize_to_color8());
+    let mut reader = decoder.read_info().map_err(|error| error.to_string())?;
+    let size = reader
+        .output_buffer_size()
+        .ok_or("the PNG is too large to read")?;
+    let mut buffer = vec![0; size];
+    let info = reader
+        .next_frame(&mut buffer)
+        .map_err(|error| error.to_string())?;
+    let (width, height) = (info.width as usize, info.height as usize);
+    let channels = info.color_type.samples();
+    let mut mask = Mask::new(width, height);
+    for row in 0..height {
+        let line = &buffer[row * info.line_size..];
+        for column in 0..width {
+            let pixel = &line[column * channels..(column + 1) * channels];
+            let on = match channels {
+                2 | 4 => pixel[channels - 1] >= 128,
+                _ => pixel.iter().map(|&v| usize::from(v)).sum::<usize>() >= 128 * channels,
+            };
+            mask.cells[row * width + column] = on;
+        }
+    }
+    Ok(mask)
+}
+
+/// Twice the area of the convex hull of the rows' end cells, halved: the
+/// hull of the outline's cells as unit squares.
+// Cell indices are far below 2^52.
+#[allow(clippy::cast_precision_loss)]
+fn hull_area(rows: &[Option<(usize, usize)>]) -> f64 {
+    let mut points: Vec<(f64, f64)> = Vec::new();
+    for (row, span) in rows.iter().enumerate() {
+        if let Some((a, b)) = span {
+            let (y0, y1) = (row as f64, row as f64 + 1.0);
+            let (x0, x1) = (*a as f64, *b as f64 + 1.0);
+            points.extend([(x0, y0), (x0, y1), (x1, y0), (x1, y1)]);
+        }
+    }
+    points.sort_by(|p, q| p.0.total_cmp(&q.0).then(p.1.total_cmp(&q.1)));
+    points.dedup();
+    if points.len() < 3 {
+        return 0.0;
+    }
+    let cross = |o: (f64, f64), a: (f64, f64), b: (f64, f64)| {
+        (a.0 - o.0) * (b.1 - o.1) - (a.1 - o.1) * (b.0 - o.0)
+    };
+    let mut hull: Vec<(f64, f64)> = Vec::new();
+    for pass in 0..2 {
+        let start = hull.len();
+        let ordered: Box<dyn Iterator<Item = &(f64, f64)>> = if pass == 0 {
+            Box::new(points.iter())
+        } else {
+            Box::new(points.iter().rev())
+        };
+        for &p in ordered {
+            while hull.len() >= start + 2
+                && cross(hull[hull.len() - 2], hull[hull.len() - 1], p) <= 0.0
+            {
+                hull.pop();
+            }
+            hull.push(p);
+        }
+        hull.pop();
+    }
+    let mut twice = 0.0;
+    for (k, p) in hull.iter().enumerate() {
+        let q = hull[(k + 1) % hull.len()];
+        twice += p.0 * q.1 - q.0 * p.1;
+    }
+    twice.abs() / 2.0
 }
 
 /// The [`OUTLINE_SHARE`] quantile of `values` (sorted in place), or `None`
@@ -622,5 +907,50 @@ mod tests {
         assert!(orb.lobing < 0.01);
         assert_eq!(orb.leaves, 3200);
         assert!((orb.leaf_length.unwrap() - 0.2).abs() < 1e-12);
+    }
+
+    /// A mask of an upright ellipse on a stem, with a square hole of
+    /// `hole` cells a side in its middle, as a PNG whose alpha is the
+    /// plant.
+    #[allow(clippy::cast_precision_loss)]
+    fn ellipse_png(hole: usize) -> Vec<u8> {
+        let (width, height) = (200_usize, 260_usize);
+        let mut rgba = vec![0_u8; width * height * 4];
+        for row in 0..height {
+            for column in 0..width {
+                let (u, v) = ((column as f64 - 100.0) / 80.0, (row as f64 - 110.0) / 100.0);
+                let stem = row >= 200 && (95..105).contains(&column);
+                let gap = row.abs_diff(110) < hole / 2 && column.abs_diff(100) < hole / 2;
+                if (u * u + v * v <= 1.0 || stem) && !gap {
+                    rgba[(row * width + column) * 4 + 3] = 255;
+                }
+            }
+        }
+        crate::raster::encode_png(width, height, &rgba).expect("encodes")
+    }
+
+    #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn a_mask_is_measured_as_a_side_view() {
+        let mask = mask_from_png(&ellipse_png(0)).expect("reads");
+        let side = measure_mask(&mask, None).expect("measures");
+        assert!(side.outline_fit > 0.97, "{side:?}");
+        assert!(side.solidity > 0.97, "{side:?}");
+        assert!(side.see_through < 1e-9, "{side:?}");
+        // The stem below the crown is left out: 160 wide by 200 tall.
+        assert!((side.width_to_height - 0.8).abs() < 0.03, "{side:?}");
+        assert!((side.widest_at - 0.5).abs() < 0.03, "{side:?}");
+        let holed = mask_from_png(&ellipse_png(40)).expect("reads");
+        // A mask whose outline holds no hole, with the hole in its cover.
+        let outline_only = measure_mask(&mask, Some(&holed)).expect("measures");
+        let holed = measure_mask(&holed, None).expect("measures");
+        assert_eq!(outline_only, holed);
+        assert!(
+            (holed.see_through - 1600.0 / holed.cells as f64).abs() < 0.01,
+            "{holed:?}"
+        );
+        assert!((holed.large_gaps - 1.0).abs() < 1e-9, "{holed:?}");
+        assert!(measure_mask(&Mask::new(10, 10), None).is_none());
+        assert!(measure_mask(&mask, Some(&Mask::new(10, 10))).is_none());
     }
 }

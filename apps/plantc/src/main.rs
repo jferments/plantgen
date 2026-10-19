@@ -125,6 +125,7 @@ fn run() -> Result<(), Failure> {
         "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
         "measure" => measure_command(&args),
+        "measure-mask" => measure_mask_command(&args),
         "mechanics" => mechanics_command(&args),
         "validate" => validate_command(&args),
         "ground" => ground_command(&args),
@@ -270,6 +271,17 @@ Usage:
       over dbh, the median leaf card length, and from the side its
       outline's fit to an ellipse (1 an ellipse) and the share of its
       outline the sky shows through.
+  plantc measure-mask <mask.png> [--cover COVER.png] [--view side]
+      Measure a plant mask (a photograph's or a render's: alpha, or
+      brightness without alpha, at least half is the plant) as a grown
+      plant's side view is measured, and print one JSON object: the
+      outline's fit to an ellipse, the share of it the sky shows through,
+      its width over height, where it is widest, its solidity (area over
+      convex hull) and the share of its sky in large gaps. Rows below the
+      lowest that reaches a quarter of the widest are the bare stem and
+      are left out. --cover, the same size, is what hides the sky (the
+      photograph's pixels that are not sky); without it, the mask. Only
+      the side view is measured so far.
   plantc validate [<species>...] [--seeds N]
                   [--group sizes|counts|kinds|months]
       Check each species (default every one that states a character a
@@ -1483,6 +1495,56 @@ fn grouped(n: u64) -> String {
         out.push(digit);
     }
     out
+}
+
+fn measure_mask_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["view", "cover"])?;
+    let [path] = options.positional.as_slice() else {
+        return Err(
+            "usage: plantc measure-mask <mask.png> [--cover COVER.png] [--view side]".into(),
+        );
+    };
+    let view = options.flags.get("view").map_or("side", String::as_str);
+    if view != "side" {
+        return Err(format!("unknown view `{view}`: only `side` is measured so far").into());
+    }
+    let bytes = fs::read(path).map_err(|error| format!("cannot read {path}: {error}"))?;
+    let mask = plantgen::form::mask_from_png(&bytes).map_err(|error| format!("{path}: {error}"))?;
+    let cover = match options.flags.get("cover") {
+        Some(cover_path) => {
+            let bytes = fs::read(cover_path)
+                .map_err(|error| format!("cannot read {cover_path}: {error}"))?;
+            let cover = plantgen::form::mask_from_png(&bytes)
+                .map_err(|error| format!("{cover_path}: {error}"))?;
+            if (cover.width, cover.height) != (mask.width, mask.height) {
+                return Err(format!(
+                    "{cover_path} is {}x{}, the mask {}x{}",
+                    cover.width, cover.height, mask.width, mask.height
+                )
+                .into());
+            }
+            Some(cover)
+        }
+        None => None,
+    };
+    let Some(side) = plantgen::form::measure_mask(&mask, cover.as_ref()) else {
+        return Err(format!("{path}: the mask is empty").into());
+    };
+    let json = serde_json::json!({
+        "view": view,
+        "cover": cover.is_some(),
+        "width": mask.width,
+        "height": mask.height,
+        "outline_cells": side.cells,
+        "outline_fit": side.outline_fit,
+        "see_through": side.see_through,
+        "width_to_height": side.width_to_height,
+        "widest_at": side.widest_at,
+        "solidity": side.solidity,
+        "large_gaps": side.large_gaps,
+    });
+    out!("{json}");
+    Ok(())
 }
 
 fn measure_command(args: &[String]) -> Result<(), Failure> {
