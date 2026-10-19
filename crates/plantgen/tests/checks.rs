@@ -77,6 +77,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the smaller leaf of each geminate pair is drawn half the larger and the sympodium's leaves shrink to three quarters upward, so the least draw about 1.2 cm wide, against the 2 to 6.4 cm Bailey gives the leaves of its varieties",
     ),
     (
+        "castilleja-parviflora",
+        "leaf_shape",
+        "its blades, lanceolate with a pair or two of narrow lobes (Abrams vol. 3 p. 841, as C. oreopola), are drawn on lobed cards whose outline, lobes and all, reads elliptic or oblanceolate against the lanceolate it states",
+    ),
+    (
         "celastrus-scandens",
         "shoot_leaves",
         "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18, from maples' long shoots; the climber program grows few leaves on a shoot (as on aristolochia-macrophylla)",
@@ -245,6 +250,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "parkinsonia-microphylla",
         "leaf_length_m",
         "a short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, so the crown keeps within the module limit, against Abrams's pinnae 1 to 3 cm",
+    ),
+    (
+        "pedicularis-bracteosa",
+        "leaf_width_m",
+        "a pinnate card spaces its leaflets along the rachis and draws none longer than their spacing allows, about a fifth of the rachis for its 25, so its pinnules, 3 to 7 cm on a blade 10 to 20 cm (Abrams vol. 3 p. 805), draw the blade 4 to 6 cm wide against the 8 to 15 cm stated",
     ),
     (
         "piper-nigrum",

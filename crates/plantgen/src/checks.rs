@@ -2792,7 +2792,9 @@ fn unit_sizes(
 /// wing a samara, or the pair of them a maple's schizocarp splits into;
 /// a nut in a cup or a husk a nut; a pod a legume or another pod; a
 /// ribbed fruit a capsule, a follicle or a schizocarp of ribbed mericarps;
-/// a cactus fruit with scales or areoles on its skin a berry.
+/// a cactus fruit with scales or areoles on its skin a berry; a head of
+/// follicles an aggregate, or the follicles a flora names it by (Abrams
+/// gives Caltha's fruit as follicles); a spindle of samaras an aggregate.
 fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
     use crate::looks::FruitKind;
     match kind {
@@ -2806,7 +2808,8 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
         FruitKind::Pod => "legume|pod",
         FruitKind::Capsule => "capsule|follicle|schizocarp",
         FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => "berry",
-        FruitKind::Follicles | FruitKind::Samaras => "aggregate",
+        FruitKind::Follicles => "aggregate|follicle",
+        FruitKind::Samaras => "aggregate",
         FruitKind::Berries => "berry|aggregate",
     }
 }
