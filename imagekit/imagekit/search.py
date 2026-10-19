@@ -29,6 +29,8 @@ def register(subparsers) -> None:
     q.add_argument("--text", help=f"words; needs a model with a text encoder ({', '.join(vectors.text_models())})")
     q.add_argument("--image", help="a photo to find look-alikes of")
     p.add_argument("--box", help="with --image: search with this part of it, x0,y0,x1,y1 as fractions")
+    p.add_argument("--organ", help="search organ crops of this organ (from `imagekit embed --regions`), not whole "
+                                   "images; give --image a photo of just that organ, or --box round it")
     p.add_argument("--k", type=int, default=20, help="results to show (images, or species with --by-species)")
     p.add_argument("--by-species", action="store_true", help="rank species by the mean of their best 3 images")
     p.add_argument("--exclude-genus", action="append", default=[], help="leave out this genus (repeatable)")
@@ -51,7 +53,7 @@ def cmd_search(args, store: Store) -> None:
     models = [m.strip() for m in args.model.split(",") if m.strip()]
     res = search(store, models, text=args.text, image=args.image, box=parse_box(args.box), k=args.k,
                  by_species=args.by_species, exclude_genus=args.exclude_genus, template=args.template,
-                 device=args.device)
+                 device=args.device, organ=args.organ)
     print(format_text(res))
     if args.html:
         Path(args.html).write_text(contact_sheet(store, res), encoding="utf-8")
@@ -79,8 +81,9 @@ def image_info(store: Store) -> dict:
 # --- search -----------------------------------------------------------------------------------------------------
 
 def search(store: Store, models, *, text=None, image=None, box=None, k=20, by_species=False, exclude_genus=(),
-           template=None, device="auto", embedders=None) -> dict:
-    """Rank the store's images for one query. embedders: {model: Embedder} to reuse loaded encoders."""
+           template=None, device="auto", embedders=None, organ=None) -> dict:
+    """Rank the store's images for one query (with organ, its organ crops). embedders: {model: Embedder} to
+    reuse loaded encoders."""
     import numpy as np
     from . import vectors
     if (text is None) == (image is None):
@@ -95,11 +98,12 @@ def search(store: Store, models, *, text=None, image=None, box=None, k=20, by_sp
         query_sha = _sha256(Path(image).read_bytes()).hexdigest()
     info = image_info(store)
     skip_genus = {g.lower() for g in exclude_genus}
-    notes, per_model = [], {}
+    notes, per_model, region_info = [], {}, {}
     for name in models:
-        vs = vectors.load(store, name)
+        vs = vectors.load(store, name, region_kind="organ" if organ else "whole")
         if not len(vs):
-            raise SystemExit(f"no vectors for {name} in this store: run `imagekit embed --model {name}` first")
+            raise SystemExit(f"no {'organ ' if organ else ''}vectors for {name} in this store: run `imagekit embed "
+                             f"--model {name}{' --regions' if organ else ''}` first")
         for aid, n in vs.others.items():
             notes.append(f"{name}: also {n} vectors under analyzer {aid}, not used")
         q = None
@@ -117,6 +121,10 @@ def search(store: Store, models, *, text=None, image=None, box=None, k=20, by_sp
         scores = vs.scores(q)
         keep = np.array([sha != query_sha and info.get(sha, {}).get("genus", "").lower() not in skip_genus
                          for sha, _ in vs.ids], dtype=bool)
+        if organ:
+            regs = organ_regions(store, vs)
+            keep &= np.array([(regs.get(key) or {}).get("organ") == organ for key in vs.ids], dtype=bool)
+            region_info.update(regs)
         per_model[name] = (vs, scores, keep)
     if query_sha and any((query_sha, 0) in vs.pos for vs, _, _ in per_model.values()):
         notes.append("the query photo itself is in the store and is left out")
@@ -129,7 +137,8 @@ def search(store: Store, models, *, text=None, image=None, box=None, k=20, by_sp
     else:
         ranked, cos = fuse(per_model)
     hits = sorted(ranked.items(), key=lambda kv: -kv[1])
-    images = [{"sha256": key[0], "region": key[1], "score": s, "cosine": cos[key], **info.get(key[0], {})}
+    images = [{"sha256": key[0], "region": key[1], "score": s, "cosine": cos[key], **info.get(key[0], {}),
+               **({"organ": region_info[key]["organ"], "box": region_info[key]["box"]} if key in region_info else {})}
               for key, s in hits]
     res = {"query": text if text is not None else f"image {image}" + (f" box {box}" if box else ""),
            "models": models, "fused": len(models) > 1, "by_species": by_species, "notes": notes}
@@ -138,6 +147,15 @@ def search(store: Store, models, *, text=None, image=None, box=None, k=20, by_sp
     else:
         res["images"] = images[:k]
     return res
+
+
+def organ_regions(store: Store, vs) -> dict:
+    """(sha256, region) -> the region (organ, box) under the detector the organ vectors were cut by."""
+    from .run import outputs
+    det = ((vs.definition.get("params") or {}).get("regions") or {}).get("detector")
+    if not det:
+        return {}
+    return {(sha, r["region"]): r for sha, ans in outputs(store, det).items() for r in ans.get("regions") or []}
 
 
 def fuse(per_model: dict, k: int = RRF_K):
@@ -187,12 +205,16 @@ def format_text(res: dict) -> str:
     return "\n".join(lines)
 
 
-def thumbnail(store: Store, sha: str, px: int = 256) -> str:
+def thumbnail(store: Store, sha: str, px: int = 256, box=None) -> str:
     from PIL import Image
-    im = Image.open(store.blob(sha))
-    im.draft("RGB", (px, px))
-    im = im.convert("RGB")
-    im.thumbnail((px, px))
+    if box:
+        from .regions import crop
+        im = crop(store, sha, box, 0.08, px)
+    else:
+        im = Image.open(store.blob(sha))
+        im.draft("RGB", (px, px))
+        im = im.convert("RGB")
+        im.thumbnail((px, px))
     out = io.BytesIO()
     im.save(out, "JPEG", quality=78)
     return "data:image/jpeg;base64," + base64.b64encode(out.getvalue()).decode()
@@ -202,7 +224,7 @@ def _card(store, res, im, rank=None) -> str:
     e = html.escape
     cos = ", ".join(f"{m} {v:.3f}" for m, v in (im.get("cosine") or {}).items())
     page = im.get("page") or ""
-    return (f'<figure><a href="{e(page)}" rel="noopener"><img src="{thumbnail(store, im["sha256"])}" alt="{e(im.get("taxon", ""))}"></a>'
+    return (f'<figure><a href="{e(page)}" rel="noopener"><img src="{thumbnail(store, im["sha256"], box=im.get("box"))}" alt="{e(im.get("taxon", ""))}"></a>'
             f'<figcaption>{f"<b>{rank}.</b> " if rank else ""}<i>{e(im.get("taxon", ""))}</i>'
             f'<br><span class="s">score {_score(res, im["score"])}{" (" + e(cos) + ")" if res["fused"] else ""}</span>'
             f'<br><span class="c">{e(im.get("creator") or "unknown")}, {e(im.get("licence") or "?")}</span>'
