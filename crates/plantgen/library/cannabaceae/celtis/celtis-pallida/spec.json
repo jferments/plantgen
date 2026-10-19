@@ -80,10 +80,7 @@
       "min": 1,
       "max": 3
     },
-    "height_max_m": {
-      "min": 3,
-      "max": 5
-    },
+    "height_max_m": 3,
     "life_span": "perennial",
     "woodiness": "woody",
     "leaf_habit": "evergreen",
@@ -100,15 +97,15 @@
     "leaf_incision": "none",
     "leaf_length_m": {
       "min": 0.015,
-      "max": 0.04
+      "max": 0.03
     },
     "leaf_width_m": {
-      "min": 0.008,
+      "min": 0.01,
       "max": 0.02
     },
     "leaf_shape": {
-      "elliptic": "often",
-      "ovate": "often"
+      "ovate": "usually",
+      "oblong": "sometimes"
     },
     "leaf_apex": {
       "rounded": "often",
@@ -127,10 +124,10 @@
     ],
     "sexual_system": "polygamous",
     "fruit_type": "drupe",
-    "fruit_shape": "globose",
+    "fruit_shape": "ovoid",
     "fruit_size_m": {
-      "min": 0.005,
-      "max": 0.008
+      "min": 0.006,
+      "max": 0.007
     },
     "fruit_colour_ripe": [
       235,
@@ -156,7 +153,11 @@
     ],
     "moisture": [
       "dry"
-    ]
+    ],
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 5
+    }
   },
   "evidence": {
     "taxon": {
@@ -195,9 +196,9 @@
       "note": "A model estimate (confidence medium), as no source read gives it: a shrub 1 m to 3 m high, as in the photos and on the bajada."
     },
     "traits.height_max_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: up to 3 m to 5 m on good sites."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Celtis pallida: \"Shrubs, to 3 m; crowns rounded.\""
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
@@ -250,19 +251,19 @@
       "note": "Kearney and Peebles (1942, p. 228), Celtis pallida: blades entire or sparingly crenate-dentate."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: blades 1.5 cm to 4 cm long, about twice as long as wide."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Celtis pallida: \"Leaf blade ovate to ovate-oblong, to 2-3 x 1.5-2 cm\"; the shortest blades about 1.5 cm, as in the photos."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 228), Celtis pallida: leaf blades not more than 2 cm wide."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Celtis pallida: leaf blade \"to 2-3 x 1.5-2 cm\"; Kearney and Peebles (1942, p. 228): \"not more than 2 cm wide\"."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 228), Celtis pallida: leaf blades elliptic to oblong-ovate."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Celtis pallida: \"Leaf blade ovate to ovate-oblong\"."
     },
     "traits.leaf_apex": {
       "evidence": "SourceInferred",
@@ -301,13 +302,13 @@
     },
     "traits.fruit_shape": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 228), Celtis: fruit a globular drupe."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Celtis pallida: \"Drupes orange, yellow, or red, ovoid, 6-7 mm\"."
     },
     "traits.fruit_size_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: drupes 5 mm to 8 mm across."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Celtis pallida: \"Drupes orange, yellow, or red, ovoid, 6-7 mm\"."
     },
     "traits.fruit_colour_ripe": {
       "evidence": "Authored",
@@ -315,9 +316,9 @@
       "note": "Drupes ripen bright orange, within the genus's 'yellow to dull red' (Kearney and Peebles 1942 p. 228); sRGB by eye, set by hand from iNaturalist photos (observations 96189411, 173845672, 101245394, 164622541, 394991184, 297384024, 258393089, 138338468): the sources read give no count or measure."
     },
     "traits.flowering_months": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: flowers in spring, March to May."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Celtis pallida: \"Flowering late winter-spring (Mar-May)\"."
     },
     "traits.fruiting_months": {
       "evidence": "Authored",
@@ -358,6 +359,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "2.0 m tall at 15 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Celtis pallida: \"Inflorescences cymes, 3-5-flowered, longer than petiole\"."
     }
   },
   "provenance": {

@@ -135,24 +135,26 @@
     "culm_length_m": {
       "min": 0.05,
       "max": 0.2,
-      "typical": 0.12
+      "typical": 0.12,
+      "high": 0.3
     },
     "height_typical_m": {
       "min": 0.05,
       "max": 0.2
     },
-    "height_max_m": 0.2,
+    "height_max_m": 0.3,
     "life_span": "perennial",
     "perennation": "rhizome",
-    "rhizome_habit": "long_creeping",
+    "rhizome_habit": "short_creeping",
     "clonal": true,
     "leaf_length_m": {
       "min": 0.04,
       "max": 0.1
     },
     "leaf_width_m": {
-      "min": 0.0015,
-      "max": 0.003
+      "min": 0.002,
+      "max": 0.004,
+      "low": 0.0015
     },
     "inflorescence": "spike",
     "inflorescence_length_m": {
@@ -198,8 +200,8 @@
     },
     "traits.culm_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: \"the culms 5-20 cm. high, stiff, firm, smooth, exceeding leaves\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 23 p. 529 (eFloras, read 2026-10-19), Carex nigricans: \"Culms 5-30 cm\"; Abrams (1923 p. 290): \"the culms 5-20 cm. high\", kept as the usual range, FNA's 30 cm as the high."
     },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
@@ -208,8 +210,8 @@
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: culms \"5-20 cm. high\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 23 p. 529 (eFloras, read 2026-10-19), Carex nigricans: \"Culms 5-30 cm\", the culms exceeding the leaves (Abrams 1923 p. 290)."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
@@ -223,8 +225,8 @@
     },
     "traits.rhizome_habit": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: \"Rootstocks stout, lignescent, creeping\"; the photos show close turf rather than separate tufts."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 23 p. 529 (eFloras, read 2026-10-19), Carex nigricans: \"Plants loosely cespitose, mat-forming; rhizomes short, stout.\" Abrams (1923 p. 290): \"Rootstocks stout, lignescent, creeping\"."
     },
     "traits.clonal": {
       "evidence": "SourceInferred",
@@ -238,8 +240,8 @@
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: blades \"1.5-3 mm. wide, flat or channeled at base, attenuate at apex\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 23 p. 529 (eFloras, read 2026-10-19), Carex nigricans: \"Leaves flat to the tip, (1.5-)2-4 mm wide\"; Abrams (1923 p. 290): \"1.5-3 mm. wide\"."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",

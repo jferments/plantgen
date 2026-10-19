@@ -72,7 +72,7 @@
       "leaf": {
         "shape": {
           "template": "scales",
-          "branchlets": 2
+          "branchlets": 1
         }
       },
       "bloom": {
@@ -154,15 +154,18 @@
     "leaf_arrangement": "opposite",
     "phyllotaxis_pattern": "decussate",
     "leaf_posture": "erect",
-    "leaf_shape": "ovate",
+    "leaf_shape": {
+      "ovate": "usually",
+      "lanceolate": "sometimes"
+    },
     "leaf_apex": "obtuse",
     "leaf_length_m": {
       "min": 0.003,
       "max": 0.006
     },
     "leaf_width_m": {
-      "min": 0.0015,
-      "max": 0.002
+      "min": 0.001,
+      "max": 0.0015
     },
     "inflorescence": "solitary",
     "flowering_position": "lateral",
@@ -182,7 +185,7 @@
       "max": 10
     },
     "flower_size_m": {
-      "min": 0.006,
+      "min": 0.005,
       "max": 0.008
     },
     "sepal_length_m": {
@@ -202,7 +205,9 @@
     "fruit_type": "capsule",
     "fruit_size_m": {
       "min": 0.0025,
-      "max": 0.0035
+      "max": 0.0035,
+      "low": 0.0015,
+      "high": 0.004
     },
     "flowering_months": [
       7,
@@ -211,7 +216,8 @@
     "fruiting_months": [
       8,
       9
-    ]
+    ],
+    "stem_clump": "many"
   },
   "evidence": {
     "taxon": {
@@ -295,9 +301,9 @@
       "note": "Abrams vol. 3 (1951) p. 303, Cassiope: leaves \"closely imbricate\", pressed against the stem, so each shoot looks like a four-angled cord."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: scale leaves ovate to lance-ovate, as in the photos; Abrams gives only their apex and keel."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 443, 446, 447 (eFloras, read 2026-10-19), Cassiope mertensiana: \"blade ovate-lanceolate\"; drawn between ovate and lanceolate."
     },
     "traits.leaf_apex": {
       "evidence": "SourceInferred",
@@ -310,9 +316,9 @@
       "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"Leaves 3-6 mm. long\"."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: scale leaves 1.5 mm to 2 mm wide, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 443, 446, 447 (eFloras, read 2026-10-19), Cassiope mertensiana: \"blade ovate-lanceolate, abaxial groove absent, 3-4.5 x 1-1.5 mm\"."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
@@ -350,9 +356,9 @@
       "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Stamens 8 or 10, included\"."
     },
     "traits.flower_size_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: bells 6 mm to 8 mm long, as in the photos; Abrams gives 4-6 mm for C. tetragona (1951 p. 305) and none for this species."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 443, 446, 447 (eFloras, read 2026-10-19), Cassiope mertensiana: \"corolla white, campanulate, 5-8 mm\"."
     },
     "traits.sepal_length_m": {
       "evidence": "SourceInferred",
@@ -376,8 +382,8 @@
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"capsule subglobose or ovoid, 2.5-3.5 mm. long\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 443, 446, 447 (eFloras, read 2026-10-19), Cassiope mertensiana: \"Capsules 1.5-4 mm\"; Abrams (1951 p. 305): \"capsule subglobose or ovoid, 2.5-3.5 mm. long\", kept as the usual range."
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",
@@ -408,6 +414,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.18 m tall at 10 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 443, 446, 447 (eFloras, read 2026-10-19), Cassiope mertensiana: \"Stems spreading or ascending to erect, forming dense mats\"; Abrams (1951 p. 303), Cassiope: \"Prostrate or creeping shrubs with ascending branches\"."
+    },
+    "appearance.organs.leaf": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 443, 446, 447 (eFloras, read 2026-10-19), Cassiope mertensiana: \"Leaves imbricate, somewhat appressed to leaf above, usually 4-ranked\": each shoot a scale-covered cord, not a branched spray, so the scales card takes the fewest branchlets it allows (1; the card has no unbranched form)."
     }
   },
   "provenance": {

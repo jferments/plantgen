@@ -55,7 +55,6 @@
     "organs": {
       "leaf": {
         "shape": {
-          "leaflet_width": 0.16,
           "teeth": 0,
           "lowest": 0.6,
           "widest": 0.6,
@@ -67,7 +66,6 @@
       "basal": {
         "shape": {
           "template": "compound",
-          "leaflet_width": 0.16,
           "teeth": 0,
           "lowest": 0.6,
           "widest": 0.6,
@@ -83,8 +81,6 @@
         },
         "inflorescence": {
           "flowers": 30,
-          "per_node": 4,
-          "divergence": 45,
           "size": 0.135,
           "spread": 65,
           "pedicel": 0.018,
@@ -420,7 +416,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a branched annual with stout hollow stems, bright green palmate leaves of narrow leaflets, and loose spikes of lilac-pink pea flowers. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+      "note": "By eye, from the photos the traits cite: a branched annual with stout hollow stems, bright green palmate leaves, and loose spikes of lilac-pink pea flowers. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19). The hand-set leaflet width (0.16) and whorled flowers (four to a node) were dropped 2026-10-19: Kearney and Peebles (1942 p. 435) give \"leaflets broadly oblanceolate, 5 to 12 mm. wide\" and \"Flowers not verticillate\", so the leaflets follow leaflet_width_m by rule and the flowers stand singly along the raceme."
     },
     "generator.params": {
       "evidence": "Authored",

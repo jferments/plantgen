@@ -72,7 +72,7 @@
       "min": 0.35,
       "max": 1.2
     },
-    "height_max_m": 1.5,
+    "height_max_m": 1.2,
     "life_span": "perennial",
     "woodiness": "herbaceous",
     "leaf_habit": "deciduous",
@@ -188,8 +188,8 @@
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
-      "source": "usfs-range-plant-handbook-1937",
-      "note": "Range Plant Handbook (1937) p. W200, Valeriana scouleri (the handbook's name, with V. sitchensis as its synonym): stem usually 1 to 2 (sometimes up to 5) ft. tall; set to 1.5 m, a little above Abrams' 12 dm."
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: \"Stems robust from a rather stout rhizome, 3.5-12.0 dm. tall\". The Range Plant Handbook figure (to 5 ft) is for Valeriana scouleri, which Abrams and Ferris keep apart as V. capitata subsp. pubicarpa (\"plants slender, to 7 dm. tall; leaves mostly basal\")."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
@@ -213,8 +213,8 @@
     },
     "traits.rhizome_habit": {
       "evidence": "SourceInferred",
-      "source": "usfs-range-plant-handbook-1937",
-      "note": "Range Plant Handbook (1937) p. W200, Valeriana scouleri: reproduces by seed and rootstocks; stout rootstocks with an intertwining mass of fibrous roots: read as a short, creeping rhizome."
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: \"Stems robust from a rather stout rhizome\": a short, stout rhizome under a clump of stems."
     },
     "traits.rosette": {
       "evidence": "SourceInferred",

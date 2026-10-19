@@ -40,7 +40,7 @@
       "leaf_angle": 50,
       "blooms": 2,
       "adult_age": 4,
-      "bloom_size": 0.0085,
+      "bloom_size": 0.011,
       "bloom_angle": 120,
       "path_half": 0.8,
       "crown_height": 0.85
@@ -107,7 +107,7 @@
               0.3801,
               0.2633
             ],
-            "size": 0.55
+            "size": 0.4
           }
         }
       }
@@ -165,8 +165,10 @@
       "high": 0.07
     },
     "leaf_width_m": {
-      "min": 0.01,
-      "max": 0.03
+      "min": 0.011,
+      "max": 0.023,
+      "low": 0.01,
+      "high": 0.03
     },
     "petiole_length_m": {
       "min": 0.001,
@@ -193,8 +195,9 @@
     "fruit_type": "berry",
     "fruit_shape": "globose",
     "fruit_size_m": {
-      "min": 0.007,
-      "max": 0.01
+      "min": 0.009,
+      "max": 0.013,
+      "low": 0.007
     },
     "fruit_colour_ripe": [
       60,
@@ -208,6 +211,12 @@
     "fruiting_months": [
       8,
       9
+    ],
+    "stem_clump": "many",
+    "twig_colour": [
+      150,
+      165,
+      85
     ]
   },
   "evidence": {
@@ -302,9 +311,9 @@
       "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: leaves \"2-6 cm. long\"; FEIS (Simonin 2000): \"ranging from 0.7 to 2.75 inches (1.8-7 cm) long\", kept as the rare extremes."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: leaves 1 cm to 3 cm wide, about half as wide as long as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Leaf blades usually green, broadly elliptic to ovate, 25-50 x 11-23 mm, margins sharply serrate\"."
     },
     "traits.petiole_length_m": {
       "evidence": "SourceInferred",
@@ -358,8 +367,8 @@
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: berry \"globose, 7-10 mm. in diameter\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Berries shiny or dull black or deep purple, rarely red or white, 9-13 mm diam.\"; Abrams (1951 p. 328): \"7-10 mm. in diameter\", kept as the low."
     },
     "traits.fruit_colour_ripe": {
       "evidence": "SourceInferred",
@@ -384,7 +393,7 @@
     "appearance.organs.bloom": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"flowers solitary in the axils; pedicels recurved in flower\"; \"corolla yellowish, depressed-globose or globose-urceolate, 4-5 mm. in diameter\"; \"berry dark wine-colored or purplish black, without bloom, globose, 7-10 mm.\". Drawn as a creamy urn about half the dark berry's size."
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"flowers solitary in the axils; pedicels recurved in flower\"; \"corolla yellowish, depressed-globose or globose-urceolate, 4-5 mm. in diameter\"; \"berry dark wine-colored or purplish black, without bloom, globose, 7-10 mm.\". Drawn as a creamy urn about half the dark berry's size. Resized 2026-10-19 to Flora of North America vol. 8 p. 516 (eFloras): berries \"9-13 mm diam.\", corolla \"3-5 x 5-7 mm\": the urn is 0.4 of the 11 mm berry."
     },
     "appearance": {
       "evidence": "Authored",
@@ -395,6 +404,21 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.8 m tall at 12 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Plants forming small to extensive clumps, rarely crown-forming, 2-30 dm\"."
+    },
+    "traits.twig_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"twigs of current season yellow-green or reddish green, terete to slightly angled\"; sRGB a model estimate (confidence medium) of a yellow-green."
+    },
+    "generator.params.bloom_size": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Berries ... 9-13 mm diam.\": the bloom card is drawn as the ripe berry, 11 mm across, its flower look 0.4 of that (corolla \"3-5 x 5-7 mm\"; Abrams 1951 p. 328: \"4-5 mm. in diameter\")."
     }
   },
   "provenance": {

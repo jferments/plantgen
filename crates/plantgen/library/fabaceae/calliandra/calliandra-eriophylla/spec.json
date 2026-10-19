@@ -36,11 +36,6 @@
   "appearance": {
     "variation": 0.2,
     "organs": {},
-    "bark": [
-      0.5,
-      0.48,
-      0.45
-    ],
     "foliage": [
       0.0732,
       0.1329,
@@ -159,7 +154,12 @@
     ],
     "soil_texture": [
       "rock"
-    ]
+    ],
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "stem_clump": "few"
   },
   "evidence": {
     "taxon": {
@@ -391,6 +391,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.4 m tall at 10 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 475, Calliandra eriophylla: \"flowers sparingly strigose, reddish purple; calyx 1-1.5 mm. long; corolla 4-6 mm. long; stamens about 2 cm. long\": the flower without its stamens is the 4-6 mm corolla."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 475, Calliandra eriophylla: \"Low much branched shrub, commonly about 30 cm. high, two or more main branches usually arising from the same root\"."
     }
   },
   "provenance": {

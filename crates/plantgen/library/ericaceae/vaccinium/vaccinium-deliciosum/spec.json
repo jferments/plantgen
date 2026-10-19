@@ -40,10 +40,10 @@
       "leaf_angle": 50,
       "blooms": 1,
       "adult_age": 3,
-      "bloom_size": 0.0065,
       "bloom_angle": 120,
       "path_half": 0.3,
-      "crown_height": 0.2
+      "crown_height": 0.2,
+      "bloom_size": 0.011
     }
   },
   "growth": {
@@ -107,7 +107,7 @@
               0.214,
               0.233
             ],
-            "size": 0.85
+            "size": 0.45
           }
         }
       }
@@ -159,8 +159,8 @@
       "max": 0.035
     },
     "leaf_width_m": {
-      "min": 0.008,
-      "max": 0.02
+      "min": 0.009,
+      "max": 0.017
     },
     "leaf_colour": [
       125,
@@ -177,7 +177,7 @@
     "flower_posture": "nodding",
     "corolla_shape": "urceolate",
     "flower_size_m": {
-      "min": 0.005,
+      "min": 0.004,
       "max": 0.006
     },
     "flower_colour": [
@@ -189,8 +189,9 @@
     "fruit_type": "berry",
     "fruit_shape": "globose",
     "fruit_size_m": {
-      "min": 0.006,
-      "max": 0.007
+      "min": 0.009,
+      "max": 0.013,
+      "low": 0.006
     },
     "fruit_colour_ripe": [
       70,
@@ -203,6 +204,12 @@
     "fruiting_months": [
       8,
       9
+    ],
+    "stem_clump": "many",
+    "twig_colour": [
+      110,
+      145,
+      95
     ]
   },
   "evidence": {
@@ -292,9 +299,9 @@
       "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: leaves \"15-35 mm. long\"."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: leaves 8 mm to 20 mm wide, about half as wide as long as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium deliciosum: \"Leaf blades usually glaucous, obovate, oblanceolate, or, rarely, elliptic, 17-35 x 9-17 mm\"."
     },
     "traits.leaf_colour": {
       "evidence": "SourceInferred",
@@ -328,8 +335,8 @@
     },
     "traits.flower_size_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: corolla \"5-6 mm. long\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium deliciosum: \"corolla pink, creamy pink, or red, globose to globular-urceolate, 4-6 x 5-7 mm\"; Abrams (1951 p. 328): \"5-6 mm. long\"."
     },
     "traits.flower_colour": {
       "evidence": "SourceInferred",
@@ -353,8 +360,8 @@
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: berries \"6-7 mm. in diameter\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium deliciosum: \"Berries usually blue, glaucous ... 9-13 mm diam.\"; Abrams (1951 p. 328): \"6-7 mm. in diameter\", kept as the low."
     },
     "traits.fruit_colour_ripe": {
       "evidence": "SourceInferred",
@@ -379,7 +386,7 @@
     "appearance.organs.bloom": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"flowers solitary in the axils, nodding\"; \"corolla pinkish, 5-6 mm. long, subglobose\"; \"berries blue-black, with a bloom, globose to pyriform, 6-7 mm. in diameter\". Drawn as a pale pink urn a little smaller than the dusty blue berry."
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"flowers solitary in the axils, nodding\"; \"corolla pinkish, 5-6 mm. long, subglobose\"; \"berries blue-black, with a bloom, globose to pyriform, 6-7 mm. in diameter\". Drawn as a pale pink urn a little smaller than the dusty blue berry. Resized 2026-10-19 to Flora of North America vol. 8 p. 516 (eFloras): \"Berries usually blue, glaucous ... 9-13 mm diam.\" and corolla \"4-6 x 5-7 mm\": the urn is 0.45 of the 11 mm berry."
     },
     "appearance": {
       "evidence": "Authored",
@@ -390,6 +397,21 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.22 m tall at 10 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium deliciosum: \"Plants forming small clumps to extensive open colonies, 0.5-15 dm, rhizomatous\"."
+    },
+    "traits.twig_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium deliciosum: \"twigs green, sometimes glaucous, +/- terete\"; sRGB a model estimate (confidence medium) of a dull, slightly glaucous green."
+    },
+    "generator.params.bloom_size": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium deliciosum: \"Berries ... 9-13 mm diam.\": the bloom card is drawn as the ripe berry, 11 mm across, its flower look 0.45 of that (corolla \"4-6 x 5-7 mm\")."
     }
   },
   "provenance": {

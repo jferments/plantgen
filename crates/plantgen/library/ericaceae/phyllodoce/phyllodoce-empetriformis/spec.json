@@ -154,7 +154,8 @@
   "traits": {
     "height_typical_m": {
       "min": 0.1,
-      "max": 0.5
+      "max": 0.5,
+      "low": 0.05
     },
     "height_max_m": 0.5,
     "life_span": "perennial",
@@ -170,23 +171,31 @@
     "leaf_margin": "serrate",
     "leaf_length_m": {
       "min": 0.006,
-      "max": 0.015
+      "max": 0.015,
+      "low": 0.004
     },
     "leaf_width_m": {
       "min": 0.001,
-      "max": 0.002
+      "max": 0.0015,
+      "high": 0.002
     },
     "inflorescence": "umbel",
     "flowering_position": "terminal",
     "units_per_inflorescence": {
       "min": 3,
-      "max": 10
+      "max": 10,
+      "low": 1,
+      "high": 14
     },
     "pedicel_length_m": {
       "min": 0.012,
-      "max": 0.025
+      "max": 0.025,
+      "low": 0.005
     },
-    "flower_posture": "nodding",
+    "flower_posture": {
+      "erect": "usually",
+      "nodding": "sometimes"
+    },
     "corolla_shape": "campanulate",
     "flower_size_m": {
       "min": 0.005,
@@ -211,7 +220,8 @@
     "fruiting_months": [
       8,
       9
-    ]
+    ],
+    "stem_clump": "many"
   },
   "evidence": {
     "taxon": {
@@ -246,8 +256,8 @@
     },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 303, Phyllodoce empetriformis: \"Low much-branched matted shrub with erect branches, 1-5 dm. high\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 476 (eFloras, read 2026-10-19), Phyllodoce empetriformis: \"Plants prostrate to erect, diffusely branched, 0.5-5 dm\"; Abrams (1951 p. 303): \"1-5 dm. high\", kept as the usual range."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
@@ -296,13 +306,13 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 303, Phyllodoce empetriformis: leaves \"6-15 mm. long\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 476 (eFloras, read 2026-10-19), Phyllodoce empetriformis: \"blade linear, 4-15 x 1-1.5(-2) mm\"; Abrams (1951 p. 303): \"6-15 mm. long\", kept as the usual range."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: needle-like leaves 1 mm to 2 mm wide, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 476 (eFloras, read 2026-10-19), Phyllodoce empetriformis: \"blade linear, 4-15 x 1-1.5(-2) mm\"."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
@@ -315,19 +325,19 @@
       "note": "Abrams vol. 3 (1951) p. 302, Phyllodoce: \"Flowers in umbel-like terminal clusters\"."
     },
     "traits.units_per_inflorescence": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Three to ten flowers to a cluster; Abrams (1951 p. 303): \"flowers few to many\", set by hand from iNaturalist photos (observations 132374449, 196818488, 392044, 294001220, 375524, 175397586, 233409314, 3747411): the sources read give no count or measure."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 476 (eFloras, read 2026-10-19), Phyllodoce empetriformis: \"Inflorescences corymbiform, 1-14-flowered\"; three to ten in most of the photos, kept as the usual range."
     },
     "traits.pedicel_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 303, Phyllodoce empetriformis: \"pedicels 12-25 mm. long, puberulent and glandular\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 476 (eFloras, read 2026-10-19), Phyllodoce empetriformis: \"Pedicels 5-25 mm, glandular\"; Abrams (1951 p. 303): \"pedicels 12-25 mm. long\", kept as the usual range."
     },
     "traits.flower_posture": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 302, Phyllodoce: flowers \"long-pedicelled and nodding or suberect\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 476 (eFloras, read 2026-10-19), Phyllodoce empetriformis: \"Flowers usually erect\"; Abrams (1951 p. 302) for the genus: \"long-pedicelled and nodding or suberect\"."
     },
     "traits.corolla_shape": {
       "evidence": "SourceInferred",
@@ -393,6 +403,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.25 m tall at 10 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 476 (eFloras, read 2026-10-19), Phyllodoce empetriformis: \"Plants prostrate to erect, diffusely branched, 0.5-5 dm\"; Abrams (1951 p. 303): \"Low much-branched matted shrub with erect branches\"."
     }
   },
   "provenance": {

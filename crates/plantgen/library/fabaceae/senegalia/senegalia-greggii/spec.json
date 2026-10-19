@@ -55,7 +55,7 @@
       },
       "bloom": {
         "inflorescence": {
-          "unit": 0.05
+          "unit": 0.032
         }
       }
     },
@@ -182,7 +182,20 @@
     "moisture": [
       "dry",
       "xeric"
-    ]
+    ],
+    "stem_clump": "thicket",
+    "flower_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "petal_length_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "stamen_length_m": {
+      "min": 0.004,
+      "max": 0.006
+    }
   },
   "evidence": {
     "taxon": {
@@ -409,6 +422,31 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "2.5 m tall at 25 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 415), Acacia greggii: \"4,500 feet or lower, often forming thickets along streams and washes\"; FEIS (Gucker 2005): \"a native, long-lived, deciduous, spreading shrub or small tree\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives a measure: Abrams (1944 p. 475) for Acacia: \"Flowers small ... in heads or spikes\"; a corolla 2 mm to 3 mm long, the spike 3-5 cm long and fuzzy with its stamens."
+    },
+    "traits.petal_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives a measure: petals 2 mm to 3 mm, the corolla small (Abrams 1944 p. 475: \"Flowers small\")."
+    },
+    "traits.stamen_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives a measure: stamens 4 mm to 6 mm, about twice the corolla, standing out of it (Abrams 1944 p. 475, Acacia: \"Stamens many, exserted; filaments filiform, distinct\")."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives a measure: the spike's flowers drawn at the stated 2-3 mm corolla (flower_size_m), so the unit is 0.032 of the 8 cm bloom card (it was 0.05, drawing 4 mm flowers). Left by hand because the unit rule reads fruit_size_m, the 5-12 cm pod, and would draw the spike too long."
     }
   },
   "provenance": {
