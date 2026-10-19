@@ -91,6 +91,8 @@ pub struct Spine {
     pub radius: f32,
     /// Thickness over width of the cross-section.
     pub flat: f32,
+    /// How far the cross-section turns from base to tip, degrees.
+    pub twist: f32,
     pub colour: [f32; 3],
     pub tip: [f32; 3],
 }
@@ -377,6 +379,7 @@ pub fn expand(tuft: &Tuft, look: &BodyLook, out: &mut Vec<Spine>) {
                 across: axis,
                 radius: single(set.width) * 0.5,
                 flat: single(set.flat),
+                twist: single(set.twist),
                 colour,
                 tip: tip_colour,
             });
@@ -408,9 +411,10 @@ pub fn solid_vertex(spine: &Spine, vertex: usize) -> ([f32; 3], [f32; 3], [f32; 
     let across = spine.across;
     let inward = normalize(cross(heading, across), v(spine.across));
     // Corners at a third of a turn from each other, one facing along the
-    // bend plane.
+    // bend plane at the base, turned by the twist so far along.
+    let along = [0.0, JOINTS[0], JOINTS[1]][ring];
     #[allow(clippy::cast_precision_loss)]
-    let angle = TAU * corner as f32 / 3.0;
+    let angle = TAU * corner as f32 / 3.0 + radians(spine.twist * along);
     let (c, s) = (libm::cosf(angle), libm::sinf(angle));
     let out = add(scale(inward, c), scale(across, s));
     let radius = spine.radius * TAPER[ring];
@@ -418,7 +422,6 @@ pub fn solid_vertex(spine: &Spine, vertex: usize) -> ([f32; 3], [f32; 3], [f32; 
         scale(inward, c * radius * spine.flat),
         scale(across, s * radius),
     );
-    let along = [0.0, JOINTS[0], JOINTS[1]][ring];
     (
         add(spine.points[ring], offset),
         normalize(out, heading),
@@ -962,6 +965,43 @@ mod tests {
         look.spines[0].distal = 0.0;
         assert_eq!(at(&look, 0.0), 6, "an even set is whole at the base");
         assert!((kept(&look, 0.0) - 1.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn a_twisted_spine_turns_its_cross_section() {
+        let flat = look(vec![SpineSet {
+            count: [1, 1],
+            angle_spread: 0.0,
+            arc: 0.0,
+            length_spread: 0.0,
+            flat: 0.3,
+            ..SpineSet::default()
+        }]);
+        let mut twisted = flat.clone();
+        twisted.spines[0].twist = 180.0;
+        let (mut a, mut b) = (Vec::new(), Vec::new());
+        expand(&sample_tuft(9), &flat, &mut a);
+        expand(&sample_tuft(9), &twisted, &mut b);
+        // The wide corner's offset from the spine's axis at each ring.
+        let wide = |spine: &Spine, ring: usize| {
+            normalize(
+                sub(solid_vertex(spine, ring * 3 + 1).0, spine.points[ring]),
+                [0.0; 3],
+            )
+        };
+        assert!(
+            dot(wide(&a[0], 0), wide(&a[0], 2)) > 0.99,
+            "an untwisted spine keeps its face"
+        );
+        assert!(
+            (dot(wide(&b[0], 0), wide(&a[0], 0)) - 1.0).abs() < 1e-5,
+            "the base is as before"
+        );
+        // Half a turn over the spine reaches 0.8 × 180° = 144° at the last ring.
+        assert!(
+            dot(wide(&b[0], 0), wide(&b[0], 2)) < -0.5,
+            "the ribbon turns"
+        );
     }
 
     #[test]

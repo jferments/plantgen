@@ -168,18 +168,8 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "drosera-filiformis",
-        "crown_width_max_m",
-        "as round-leaved sundew: Droseraceae's perennation tie draws six scapes, and they spread to 19 cm against 12 cm; #233 fixes the tie",
-    ),
-    (
-        "drosera-filiformis",
         "leaf_width_m",
         "its thread leaves, 1 mm wide and up to 25 cm long (FNA vol. 6), are drawn on cards no narrower than 0.03 of their length, so they draw 5 to 7.7 mm wide",
-    ),
-    (
-        "drosera-rotundifolia",
-        "crown_width_max_m",
-        "Droseraceae's perennation is a tie (rhizome or tuber, often), and on a tie the forb's stems rule takes its else without reading `flowering_stems`, so sundew draws six scapes where it states one or two and spreads to 19 cm against 15 cm; #233 fixes the tie",
     ),
     (
         "ferocactus-acanthodes-subsp-acanthodes",
@@ -375,11 +365,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:pinidae",
         "cone_retention_years",
         "western white and ponderosa pines' cones fall as they ripen, but drawn ripe in their first season they read held a year (the late cut fixed by the conifer lives, #96)",
-    ),
-    (
-        "program:pinidae",
-        "leaf_life_years",
-        "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 85; the shed limbs carry them)",
     ),
     (
         "program:polypodiidae",

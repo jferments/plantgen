@@ -611,9 +611,9 @@
       "group": "stem_and_bark",
       "organ": "stem",
       "type": "enum",
-      "values": ["tapering", "rounded", "broad", "flat"],
+      "values": ["tapering", "rounded", "broad", "flat", "depressed"],
       "when": {"spines": ["areoles"]},
-      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, or flat, a low button or disc topped nearly level with its rim"
+      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, flat, a low button or disc topped nearly level with its rim, or depressed, a flat top sinking to a pit at its centre"
     },
     "stem_outline": {
       "group": "stem_and_bark",
@@ -712,6 +712,13 @@
       "values": ["straight", "curved", "hooked", "flattened", "twisted"],
       "when": {"spines": ["areoles"]},
       "why": "the main central spine's form: straight, curved, hooked at its tip (a fishhook's), flattened, or twisted"
+    },
+    "central_spines_twisted": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "bool",
+      "when": {"spines": ["areoles"]},
+      "why": "whether the central spines twist about their length like a wrung ribbon, as a flora's 'often twisted' centrals do, whatever their main form"
     },
     "spine_sheaths": {
       "group": "stem_and_bark",
