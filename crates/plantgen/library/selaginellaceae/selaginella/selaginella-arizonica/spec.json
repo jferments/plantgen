@@ -58,13 +58,6 @@
     ],
     "variation": 0.15,
     "organs": {
-      "leaf": {
-        "shape": {
-          "template": "blade",
-          "taper": 1,
-          "aspect": 0.25
-        }
-      },
       "flower": {
         "shape": {
           "template": "blade",
