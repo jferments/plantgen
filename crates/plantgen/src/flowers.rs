@@ -2885,6 +2885,8 @@ mod tests {
             back_base_length: 0.4,
             tube: None,
             stigma: [0.5, 0.7, 0.3],
+            pericarpel: CALYX,
+            dress: crate::fruit::Dress::default(),
         };
         let has = |mesh: &Mesh, colour: [f32; 3]| {
             mesh.colors

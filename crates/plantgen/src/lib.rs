@@ -929,7 +929,7 @@ pub mod venation;
 /// size on its petiole length, and young twigs in its colour, in place of
 /// hand-sized sprig cards; the fig's path_half is refitted to its height
 /// (135 is nightshades round 4, #227).
-/// 137: a cactus's pericarpel is drawn in its stem's colour
+/// 140: a cactus's pericarpel is drawn in its stem's colour
 /// (`pericarpel_colour`, from `stem_colour`), and a reduced flower mesh
 /// wears its skin (scales, felted areoles or spines) as the full one does;
 /// a spiny fruit whose spine clusters fall (`fruit_spine_fall` deciduous:
@@ -937,5 +937,6 @@ pub mod venation;
 /// pericarpel's and a cactus fruit's areoles take the stem's wool colour
 /// and their glochids or spines the colours floras give them (new trait
 /// `glochid_colour`, also the stem's glochids); and a round fruit with no
-/// stated width is as wide as long (136 is single true-size leaves, #225).
-pub const GENERATOR_REVISION: u32 = 137;
+/// stated width is as wide as long (137 is #234; 138 and 139 are #167's
+/// nodding leaders and old-conifer refit).
+pub const GENERATOR_REVISION: u32 = 140;
