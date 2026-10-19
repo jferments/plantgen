@@ -36,7 +36,8 @@
       "flower_angle": 110,
       "fruit_below": 0,
       "buds_above": 1,
-      "nod": 0
+      "nod": 0,
+      "basal_length": 0.135
     }
   },
   "growth": {

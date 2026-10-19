@@ -14,15 +14,19 @@
       "stems": 4,
       "clump_radius": 0.08,
       "stem_lean": 12,
-      "nodes": 0,
-      "bare": 0,
-      "scape": 1,
+      "nodes": 1,
+      "bare": 0.75,
+      "scape": 0,
       "basal_leaves": 7,
       "basal_angle": 50,
       "raceme": 0.15,
       "flowers": 2,
       "flower_angle": 25,
-      "pedicel": 0.04
+      "pedicel": 0.04,
+      "leaf_length": 0.025,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_peak": 0.5
     }
   },
   "growth": {

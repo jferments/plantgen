@@ -19,11 +19,12 @@
       "basal_angle": 55,
       "bare": 0.3,
       "leaf_peak": 0.0,
-      "leaf_top": 0.5,
+      "leaf_top": 0.7,
       "raceme": 0.15,
       "flowers": 3,
       "flower_angle": 35,
-      "pedicel": 0.03
+      "pedicel": 0.03,
+      "leaf_length": 0.035
     }
   },
   "growth": {
@@ -53,7 +54,7 @@
       },
       "basal": {
         "shape": {
-          "petiole": 0.6
+          "petiole": 0.52
         }
       }
     },

@@ -18,13 +18,14 @@
       "basal_leaves": 0,
       "bare": 0.1,
       "leaf_peak": 0.2,
-      "leaf_top": 0.4,
-      "leaf_base": 0.9,
+      "leaf_top": 0.75,
+      "leaf_base": 1.0,
       "leaf_angle": 45,
       "raceme": 0.03,
       "flowers": 1,
       "flower_angle": 0,
-      "pedicel": 0
+      "pedicel": 0,
+      "leaf_length": 0.19
     }
   },
   "growth": {
@@ -46,7 +47,20 @@
   },
   "appearance": {
     "variation": 0.2,
-    "organs": {},
+    "organs": {
+      "leaf": {
+        "shape": {
+          "confluent": 0.2,
+          "angle": 75
+        }
+      },
+      "basal": {
+        "shape": {
+          "confluent": 0.2,
+          "angle": 75
+        }
+      }
+    },
     "foliage": [
       0.12,
       0.25,

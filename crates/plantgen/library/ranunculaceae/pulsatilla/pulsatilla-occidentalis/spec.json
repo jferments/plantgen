@@ -51,7 +51,15 @@
     "organs": {
       "basal": {
         "shape": {
-          "petiole": 0.45
+          "petiole": 0.45,
+          "pinnules": 9,
+          "confluent": 0.3
+        }
+      },
+      "leaf": {
+        "shape": {
+          "pinnules": 9,
+          "confluent": 0.3
         }
       }
     },

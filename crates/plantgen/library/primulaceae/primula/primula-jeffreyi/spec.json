@@ -49,6 +49,17 @@
         "shape": {
           "petiole": 0.3
         }
+      },
+      "flower": {
+        "season": {
+          "flower_look": {
+            "shape": {
+              "fused": 0.1,
+              "throat": 0.3,
+              "template": "flower"
+            }
+          }
+        }
       }
     },
     "foliage": [

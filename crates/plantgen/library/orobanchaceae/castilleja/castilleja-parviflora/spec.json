@@ -45,7 +45,16 @@
   },
   "appearance": {
     "variation": 0.2,
-    "organs": {},
+    "organs": {
+      "leaf": {
+        "shape": {
+          "width": 0.25,
+          "lobes": 1,
+          "depth": 0.5,
+          "round": 0.0
+        }
+      }
+    },
     "foliage": [
       0.13,
       0.25,
