@@ -1098,4 +1098,12 @@ pub mod venation;
 /// sucker has a root zone of its own; the root zone widens the foot into a
 /// collar that grows as the zone rises (`root_flare`)
 /// (151 is subalpine fir, #261).
-pub const GENERATOR_REVISION: u32 = 152;
+/// 153: broadleaf 24. A stalkless pendent bloom turns toward straight down
+/// (`bloom_hang`); a trunk that forks at a stated height grows no long shoot
+/// from below the fork (`fork_clear`) and blooms only above it
+/// (`bloom_floor`), as an angel's trumpet does. A once-pinnate leaf may
+/// carry small interjected leaflets between its pairs (`interjected`), as
+/// a tomato's does. A kept calyx is sized from its stated fruiting length
+/// (`kept_calyx`), and an armed one carries prickles up its lobes
+/// (`kept_prickles`), as an eggplant's cap does (152 is the date palm's foot, #263).
+pub const GENERATOR_REVISION: u32 = 153;

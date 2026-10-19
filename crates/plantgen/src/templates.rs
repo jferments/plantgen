@@ -1315,6 +1315,7 @@ fn shape_seed(shape: &Shape) -> u64 {
         "largest",
         "lowest",
         "terminal_size",
+        "interjected",
         "outline",
         "widest",
         "tip",
