@@ -77,7 +77,7 @@
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem column 4;
+lsystem column 5;
 
 # The plant.
 param vigour_spread;          # an individual grows exp(gauss() * vigour_spread) times as fast
