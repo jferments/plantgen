@@ -17,16 +17,17 @@
       "wiggle": 20,
       "thorns": 1,
       "thorn_length": 0.01,
-      "thorn_angle": 60
+      "thorn_angle": 60,
+      "bloom_size": 0.0065
     }
   },
   "growth": {
-    "years": 12,
+    "years": 15,
     "step": 1,
     "keyframes": [
       3,
-      6,
-      12
+      8,
+      15
     ]
   },
   "variants": {

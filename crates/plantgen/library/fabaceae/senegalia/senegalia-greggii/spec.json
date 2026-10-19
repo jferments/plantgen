@@ -16,16 +16,17 @@
       "fork_angle": 35,
       "thorns": 1,
       "thorn_length": 0.006,
-      "thorn_angle": 75
+      "thorn_angle": 75,
+      "crown_height": 2.6
     }
   },
   "growth": {
-    "years": 12,
+    "years": 25,
     "step": 1,
     "keyframes": [
       3,
-      6,
-      12
+      10,
+      25
     ]
   },
   "variants": {
@@ -51,6 +52,11 @@
           0.24
         ],
         "form": "thorn"
+      },
+      "bloom": {
+        "inflorescence": {
+          "unit": 0.05
+        }
       }
     },
     "bark": [

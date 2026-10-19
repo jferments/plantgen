@@ -19,16 +19,24 @@
       "fork_angle": 35,
       "thorns": 1,
       "thorn_length": 0.01,
-      "thorn_angle": 50
+      "thorn_angle": 50,
+      "space_kill": 0.3,
+      "space_reach": 1.2,
+      "light_cell": 0.25,
+      "internode": 0.2,
+      "crown_height": 5.0,
+      "spur_leaf": 0.074,
+      "leaf_size": 0.084,
+      "crown_radius": 1.8
     }
   },
   "growth": {
-    "years": 60,
+    "years": 40,
     "step": 1,
     "keyframes": [
       5,
       20,
-      60
+      40
     ]
   },
   "variants": {
@@ -49,10 +57,7 @@
           "leaflet_width": 0.6,
           "petiole": 0.2,
           "angle": 22,
-          "pinnule_angle": 60,
-          "widest": 0.4,
-          "tip": 0.2,
-          "base": 0.6
+          "pinnule_angle": 60
         }
       },
       "thorn": {

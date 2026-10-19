@@ -21,12 +21,12 @@
     }
   },
   "growth": {
-    "years": 12,
+    "years": 15,
     "step": 1,
     "keyframes": [
       3,
-      6,
-      12
+      8,
+      15
     ]
   },
   "variants": {
