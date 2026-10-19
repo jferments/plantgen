@@ -2216,7 +2216,7 @@ fn metadata(
 /// quality's level whose features it draws, the dial
 /// ([`crate::budget`]), the thinnest wood it keeps (stems are always
 /// kept), its tubes' ring spacing and most sides, the size of its leaf
-/// clusters (0 for a card per organ), the share of their caps its part
+/// clusters (0 for a card per organ), the share of their finest triangles its part
 /// meshes hold and of their spines its solid areoles keep, the share of
 /// its organs and areoles drawn as solids, the share of its areoles drawn
 /// as cards that keep them and the share of its bent cards drawn flat.
