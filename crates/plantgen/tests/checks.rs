@@ -112,11 +112,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its drupes are drawn about 1.6 cm across against the 6 to 8 mm Dendrology (2019) p. 196 gives (seen since the book's sizes joined the spec)",
     ),
     (
-        "crataegus-monogyna",
-        "leaf_shape",
-        "its deeply lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate to deltate blades FNA gives",
-    ),
-    (
         "cyperus-papyrus",
         "culm_length_m",
         "its umbel's rays are lateral axes, and the measure stops at the first lateral axis below an inflorescence, so it reads a ray, not the culm",

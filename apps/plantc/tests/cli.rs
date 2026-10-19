@@ -88,7 +88,7 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.inflorescence.pedicel  {flowering}\n  appearance.organs.*.inflorescence.peduncle  {flowering}\n  appearance.organs.*.inflorescence.unit  {flowering}\n  appearance.organs.*.season  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
         ),
         format!(
-            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.armed on `fruit` cards  {flowering}\n  appearance.organs.*.shape.back_base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
+            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.armed on `fruit` cards  {flowering}\n  appearance.organs.*.shape.aspect on `fruit` cards  {flowering}\n  appearance.organs.*.shape.back_base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
         ),
         format!(
             "\n  appearance.organs.*.shape.carpels on `flower` cards  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
@@ -159,11 +159,11 @@ fn rules_and_traits_say_where_they_come_from() {
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
     }
-    // Leaf outlines from shape words, at the kingdom, on three cards; a
+    // Leaf outlines from shape words, at the kingdom, on four cards; a
     // compound leaf's word is its leaflets'.
     assert!(
         built_in.contains(
-            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobe_depth on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobes on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
+            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobe_depth on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobes on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` or `lobed` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
         ),
         "{built_in}"
     );
