@@ -42,11 +42,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
-        "aristolochia-macrophylla",
-        "shoot_leaves",
-        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18 (3 before its blades took their stated breadth, 10 to 35 cm, which drops one more on some shoots); the climber program grows few leaves on a shoot",
-    ),
-    (
         "ascarina-lucida",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -75,11 +70,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "capsicum-annuum",
         "leaf_width_m",
         "the smaller leaf of each geminate pair is drawn half the larger and the sympodium's leaves shrink to three quarters upward, so the least draw about 1.2 cm wide, against the 2 to 6.4 cm Bailey gives the leaves of its varieties",
-    ),
-    (
-        "celastrus-scandens",
-        "shoot_leaves",
-        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18, from maples' long shoots; the climber program grows few leaves on a shoot (as on aristolochia-macrophylla)",
     ),
     (
         "chloranthus-serratus",
