@@ -26,12 +26,12 @@
 //! variety `v`; a renderer picks one per organ. Its colours are the look's
 //! own, and the renderer shades them as the card's colour is shaded.
 //!
-//! A part mesh holds at most [`TRIANGLES`] triangles ([`SHOOT_TRIANGLES`]
-//! for a needle shoot, `crate::shoots`, and [`CLUSTER_TRIANGLES`] for a
-//! cluster, `crate::clusters`, or a flower head, `crate::capitula`, a
-//! cluster of florets): a cluster, a head or a shoot that would take more
-//! is drawn up to [`coarsest`] steps coarser, and a type that still does
-//! not fit keeps its cards.
+//! A part mesh is the organ at its finest, as `plantc render` draws it
+//! solid: no cap on its triangles, however many units a cluster or
+//! needles a shoot has. Drawing it coarser is the caller's choice: an
+//! export drawn to a budget (`crate::export`) draws its parts up to
+//! [`coarsest`] steps coarser to fit its share ([`part_meshes_within`]),
+//! and a renderer may draw the coarser steps below at a distance.
 //!
 //! Each type has a span ([`PartMesh::span`]): the share of its card's
 //! length whose projection must cover the renderer's least pixels for the
@@ -60,17 +60,6 @@ use crate::rng::mix64;
 
 /// Variants of each part mesh.
 pub const VARIANTS: usize = 4;
-
-/// Most triangles a part mesh holds.
-pub const TRIANGLES: usize = 1024;
-
-/// Most triangles a needle shoot's part mesh holds: a shoot has hundreds
-/// of needles.
-pub const SHOOT_TRIANGLES: usize = 8192;
-
-/// Most triangles a cluster's or a flower head's part mesh holds: a
-/// cluster has dozens to hundreds of units, a head as many florets.
-pub const CLUSTER_TRIANGLES: usize = 8192;
 
 /// A needle shoot's span over its needles' width (see the module).
 pub const SHOOT_SPAN: f64 = 4.0;
@@ -101,55 +90,26 @@ impl PartMesh {
 }
 
 /// The part meshes of `looks`: one for each organ type whose look draws a
-/// solid that fits its [`cap`], in the types' order.
+/// solid, each at its finest, in the types' order.
 #[must_use]
 pub fn part_meshes(looks: &[Look]) -> Vec<PartMesh> {
     part_meshes_within(looks, 1.0)
 }
 
-/// [`part_meshes`] with each type's cap ([`cap`]) times `share`, at most
-/// 1: an export drawn to a budget (`crate::export`) draws its parts
-/// coarser, and a type whose coarsest part mesh no longer fits keeps its
-/// cards.
+/// [`part_meshes`] with each type within `share` of its finest part
+/// mesh's triangles, drawn up to [`coarsest`] steps coarser to fit: an
+/// export drawn to a budget (`crate::export`) draws its parts coarser, and
+/// a type whose coarsest part mesh does not fit keeps its cards. At
+/// `share` 1 or more, every type at its finest.
 #[must_use]
 pub fn part_meshes_within(looks: &[Look], share: f64) -> Vec<PartMesh> {
     (0..looks.len())
-        .filter_map(|index| {
-            let cap = cap(&looks[index]);
-            #[allow(
-                clippy::cast_possible_truncation,
-                clippy::cast_sign_loss,
-                clippy::cast_precision_loss
-            )]
-            let cap = if share >= 1.0 {
-                cap
-            } else {
-                (cap as f64 * share.max(0.0)) as usize
-            };
-            part_mesh(looks, index, cap)
-        })
+        .filter_map(|index| part_mesh(looks, index, share))
         .collect()
 }
 
-/// The most triangles a part mesh of `look` may hold.
-#[must_use]
-pub fn cap(look: &Look) -> usize {
-    match look.form {
-        Form::Shoot => SHOOT_TRIANGLES,
-        _ if look.inflorescence.is_some()
-            || matches!(look.shape, Shape::Head(_) | Shape::Spikelet(_)) =>
-        {
-            CLUSTER_TRIANGLES
-        }
-        // An aggregate of counted drupelets is a cluster of its own: a
-        // raspberry's 60 rounded drupelets.
-        _ if matches!(&look.shape, Shape::Fruit(fruit) if fruit.fruitlets > 0) => CLUSTER_TRIANGLES,
-        _ => TRIANGLES,
-    }
-}
-
 /// The most steps coarser a part mesh of `look` is drawn to fit its
-/// [`cap`]: `crate::fruit::COARSER`, or fewer for a cluster whose coarsest
+/// share: `crate::fruit::COARSER`, or fewer for a cluster whose coarsest
 /// steps would draw it worse than its card (`crate::clusters::coarsest`).
 #[must_use]
 pub fn coarsest(look: &Look) -> usize {
@@ -192,15 +152,29 @@ pub fn types(looks: &[Look], parts: &[PartMesh]) -> Vec<bool> {
     types
 }
 
-fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
-    let coarsest = coarsest(looks.get(index)?);
-    (0..=coarsest).find_map(|coarse| {
+fn part_mesh(looks: &[Look], index: usize, share: f64) -> Option<PartMesh> {
+    let finest = variants_at(looks, index, 0)?;
+    let part = |variants: Vec<Mesh>| PartMesh {
+        template: index,
+        variants,
+        span: span(&looks[index]),
+    };
+    let most = finest.iter().map(Mesh::triangle_count).max().unwrap_or(0);
+    if share >= 1.0 {
+        return fits(&finest, most).then(|| part(finest));
+    }
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    let cap = (most as f64 * share.max(0.0)) as usize;
+    if fits(&finest, cap) {
+        return Some(part(finest));
+    }
+    (1..=coarsest(&looks[index])).find_map(|coarse| {
         let variants = variants_at(looks, index, coarse)?;
-        fits(&variants, cap).then(|| PartMesh {
-            template: index,
-            variants,
-            span: span(&looks[index]),
-        })
+        fits(&variants, cap).then(|| part(variants))
     })
 }
 
@@ -901,11 +875,6 @@ mod tests {
         );
         for part in &parts {
             assert_eq!(part.variants.len(), VARIANTS);
-            assert!(
-                part.triangles() <= cap(&looks[part.template]),
-                "{}",
-                part.triangles()
-            );
             for mesh in &part.variants {
                 for p in &mesh.positions {
                     let length = (p[0] * p[0] + p[1] * p[1] + p[2] * p[2]).sqrt();
@@ -938,12 +907,7 @@ mod tests {
             clustered(Shape::Flower(Flower::default()), ClusterKind::Umbel, 4),
             clustered(Shape::Flower(Flower::default()), ClusterKind::Cyme, 3),
         ] {
-            // Drawn whole: a part mesh at its finest.
-            assert!(
-                shown.inflorescence.is_none() || crate::clusters::triangles(&shown) <= cap(&shown),
-                "{}",
-                crate::clusters::triangles(&shown)
-            );
+            // Drawn whole: a part mesh is at its finest.
             let looks = vec![shown];
             let parts = part_meshes(&looks);
             let organ = GraphOrgan {
@@ -992,46 +956,54 @@ mod tests {
     }
 
     #[test]
-    fn a_large_cluster_is_drawn_coarser_to_fit() {
-        // A cluster takes more than a single fruit may.
-        let fruit = Fruit {
-            kind: FruitKind::Drupelets,
-            ..Fruit::default()
-        };
-        let small = clustered(Shape::Fruit(fruit.clone()), ClusterKind::Raceme, 8);
-        assert!(crate::clusters::triangles(&small) > TRIANGLES);
-        let parts = part_meshes(&[small]);
-        assert_eq!(parts.len(), 1);
-        assert!(parts[0].triangles() > TRIANGLES);
-        // One that takes more than a cluster may is drawn coarser, each of
-        // its flowers still drawn.
+    fn a_large_cluster_is_drawn_whole_and_coarser_only_within_a_share() {
+        // A cluster of 200 flowers is drawn whole, every flower at its
+        // finest, as a render draws it solid.
         let flower = Flower {
             petals: 10,
             ..Flower::default()
         };
         let large = clustered(Shape::Flower(flower), ClusterKind::Raceme, 200);
-        assert!(
-            crate::clusters::triangles(&large) > CLUSTER_TRIANGLES,
-            "this cluster needs coarsening: {}",
-            crate::clusters::triangles(&large)
-        );
-        let parts = part_meshes(&[large]);
+        let whole = crate::clusters::triangles(&large);
+        let parts = part_meshes(std::slice::from_ref(&large));
         assert_eq!(parts.len(), 1);
-        assert!(parts[0].triangles() <= CLUSTER_TRIANGLES);
-        assert!(parts[0].triangles() >= 200 * 8, "{}", parts[0].triangles());
+        assert!(
+            parts[0].triangles() * 10 >= whole * 9,
+            "{} of {whole}",
+            parts[0].triangles()
+        );
+        // Within a share of that, as a budget asks, it is drawn coarser,
+        // each of its flowers still drawn.
+        let finest = parts[0].triangles();
+        assert!(finest > 8192, "{finest}");
+        let within = part_meshes_within(&[large], 8192.0 / finest as f64);
+        assert_eq!(within.len(), 1);
+        assert!(
+            within[0].triangles() <= 8192,
+            "{} of {finest}",
+            within[0].triangles()
+        );
+        assert!(
+            within[0].triangles() >= 200 * 8,
+            "{}",
+            within[0].triangles()
+        );
     }
 
     #[test]
-    fn only_a_compound_cluster_is_merged_to_fit() {
-        // Too many drupelets to draw one by one: as a raceme the cluster
+    fn only_a_compound_cluster_is_merged_to_fit_a_share() {
+        // Too many drupelets for a small share: as a raceme the cluster
         // keeps its cards rather than become one solid; as a panicle each
-        // of its racemes is merged into one.
+        // of its racemes is merged into one. At its finest each is whole.
         let fruit = Shape::Fruit(Fruit {
             kind: FruitKind::Drupelets,
             ..Fruit::default()
         });
         let raceme = clustered(fruit.clone(), ClusterKind::Raceme, 200);
-        assert!(part_meshes(&[raceme]).is_empty());
+        let whole = part_meshes(std::slice::from_ref(&raceme));
+        assert_eq!(whole.len(), 1);
+        let share = 8192.0 / whole[0].triangles() as f64;
+        assert!(part_meshes_within(&[raceme], share).is_empty());
         let mut panicle = look(fruit);
         let spec = Inflorescence {
             kind: Some(ClusterKind::Panicle),
@@ -1040,9 +1012,10 @@ mod tests {
             ..Inflorescence::default()
         };
         panicle.inflorescence = ClusterLook::new(Cluster::of(&spec), &panicle.shape, &[]);
-        let parts = part_meshes(&[panicle]);
+        let finest = part_meshes(std::slice::from_ref(&panicle))[0].triangles();
+        let parts = part_meshes_within(&[panicle], 8192.0 / finest as f64);
         assert_eq!(parts.len(), 1);
-        assert!(parts[0].triangles() <= CLUSTER_TRIANGLES);
+        assert!(parts[0].triangles() <= 8192);
     }
 
     #[test]
@@ -1060,8 +1033,7 @@ mod tests {
         let width = needles.width * needles.needle;
         assert!((parts[0].span - SHOOT_SPAN * width).abs() < 1e-12);
         assert!((parts[1].span - 1.0).abs() < 1e-12);
-        assert!(parts[0].triangles() <= SHOOT_TRIANGLES);
-        // A dense spray of short needles takes more than a fruit may.
+        // A dense spray of short needles is drawn whole.
         let dense = Needles {
             needle: 0.035,
             twigs: 5,
@@ -1070,8 +1042,7 @@ mod tests {
         };
         let parts_dense = part_meshes(&[look(Shape::Needles(dense))]);
         assert_eq!(parts_dense.len(), 1);
-        assert!(parts_dense[0].triangles() > TRIANGLES);
-        assert!(parts_dense[0].triangles() <= SHOOT_TRIANGLES);
+        assert!(parts_dense[0].triangles() > 1024);
         // The variants differ out of the card's plane alone.
         assert_ne!(
             parts[0].variants[0].positions,

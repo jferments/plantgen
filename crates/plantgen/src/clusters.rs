@@ -1989,6 +1989,12 @@ impl Shown<'_> {
     }
 }
 
+/// The most triangles a cluster's flowers may take together and still be
+/// drawn whole on its finest step, whorl by whorl (Rosaceae, 2026-10-19):
+/// half the 8,192 a cluster's part mesh held before part meshes were
+/// drawn at full quality.
+const WHOLE_FLOWERS: usize = 4096;
+
 /// Draw `laid`, a layout of `cluster`, on `organ` (see [`draw`]).
 #[allow(clippy::too_many_arguments, clippy::too_many_lines, clippy::float_cmp)]
 fn draw_laid(
@@ -2101,8 +2107,8 @@ fn draw_laid(
     );
     // On the finest step, a cluster of few flowers draws each whorl by
     // whorl as a lone flower's first coarse step does, while all of them
-    // together take no more than half a cluster's part mesh: a rose's or
-    // a bramble's few big flowers, not kites. Many small ones are reduced.
+    // together take no more than `WHOLE_FLOWERS` triangles: a rose's or a
+    // bramble's few big flowers, not kites. Many small ones are reduced.
     let flowering = shown
         .iter()
         .flatten()
@@ -2159,8 +2165,7 @@ fn draw_laid(
                 let whole = part.coarse == 0
                     && !thinned
                     && *whole.get_or_insert_with(|| {
-                        flowering * crate::flowers::triangles(flower, form, 1)
-                            <= crate::parts::CLUSTER_TRIANGLES / 2
+                        flowering * crate::flowers::triangles(flower, form, 1) <= WHOLE_FLOWERS
                     });
                 let draw = if whole {
                     crate::flowers::draw
