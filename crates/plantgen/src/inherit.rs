@@ -2903,26 +2903,15 @@ impl Ruled<'_> {
                             picked_reads(key, table, &picks)?
                         }
                         // Its states tie for the most usual, or none says
-                        // how often: a map with an `else` gives that.
-                        Err(_) if self.rule.contains_key("else") => Vec::new(),
+                        // how often: a map with an `else` gives that, and
+                        // reads what its `else` reads.
+                        Err(_) if self.rule.contains_key("else") => else_reads(self.rule),
                         Err(why) => return Err(why),
                     }
                 }
                 // Its trait unstated, a map with an `else` gives that, or
                 // what the map its `else` holds reads.
-                Err(_) if self.rule.contains_key("else") => self
-                    .rule
-                    .get("else")
-                    .map(
-                        |otherwise| match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
-                            Some(inner) => reads(inner),
-                            None => map_formula(otherwise)
-                                .and_then(|formula| Formula::parse(formula).ok())
-                                .map(|formula| formula.names().into_iter().collect())
-                                .unwrap_or_default(),
-                        },
-                    )
-                    .unwrap_or_default(),
+                Err(_) if self.rule.contains_key("else") => else_reads(self.rule),
                 Err(why) => return Err(why),
             }
         } else {
@@ -3392,6 +3381,22 @@ fn picked_reads(
 fn map_of(rule: &Map<String, Value>) -> Option<(&String, &Map<String, Value>)> {
     let (key, table) = rule.get("map")?.as_object()?.iter().next()?;
     Some((key, table.as_object()?))
+}
+
+/// What a map's `else` reads: the names of its formula, or what the map or
+/// colour it holds reads.
+fn else_reads(rule: &Map<String, Value>) -> Vec<String> {
+    rule.get("else")
+        .map(
+            |otherwise| match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
+                Some(inner) => reads(inner),
+                None => map_formula(otherwise)
+                    .and_then(|formula| Formula::parse(formula).ok())
+                    .map(|formula| formula.names().into_iter().collect())
+                    .unwrap_or_default(),
+            },
+        )
+        .unwrap_or_default()
 }
 
 /// A map's value that is a formula, `{"rule": formula}`, worked out only
