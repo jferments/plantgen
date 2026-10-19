@@ -245,10 +245,25 @@
 # And a stem ended by its flowers may grow on from one bud below them
 # (bloom_shoots 1) in place of forking, so it can flower every year and
 # stay unbranched; 2, the fork, as before.
+# Revision 26 (growth-form language): a tree's axes behave by their kind,
+# as floras describe them apart ("stout ascending branches ... slender
+# pendulous branchlets"), each off unless a rule turns it on.
+# - A branch (order 2 and up, carried by a limb) holds branch_set from
+#   upright and droops by branch_droop, its own tropism in its brackets,
+#   where the plant's set_point and droop held every shoot. branch_hold
+#   is how hard it holds that angle: a pendulous branch's hold gives way,
+#   so its own weight arches it over.
+# - A tortuous limb (limb_turn) sets each year's shoot off at a chance
+#   angle that its held angle only partly takes back, so the wood bends in
+#   long irregular curves, not wiggle's fine jitter at every node.
+# - Where the leader is lost, the stems a fork divides the trunk into hold
+#   fork_set from upright as spreading scaffold limbs, where each was held
+#   upright as a leader of its own.
+# Their draws are the program's last.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 25;
+lsystem broadleaf 26;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -376,6 +391,11 @@ param dead_keep = 0;          # 1: a living tree's dead branches stand until the
 # Canes (revision 25).
 param stem_life = 0;          # years each stem from the base lives, with the base renewing them; 0: as long as its buds
 param bloom_shoots = 2;        # shoots a stem ended by its flowers grows on from: 2 a fork, 1 one shoot (with terminal_bloom 1)
+param branch_set = -1;        # a branch's (order 2 and up) held angle from straight up; below 0: set_point's
+param limb_turn = 0;          # spread of the chance turn, degrees, each year's shoot on a limb or branch starts with: tortuous limbs
+param fork_set = 0;           # the angle from upright a fork's stems hold: 0, each a leader; above 0, spreading scaffold limbs (the leader lost)
+param branch_droop = -1;      # a branch's droop; below 0: droop's
+param branch_hold = -1;       # how far each node of a branch turns back toward its held angle; below 0: incline_rate
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -396,6 +416,9 @@ module D queries light, space;            # a dormant bud
 module R(n);                              # the base of a many-stemmed plant: n stems still to send up
 module Mp(n, u, l);                       # a flat shoot's nodes still to form this year, as M's
 module Ab(s, p);                          # a shoot's tip at the end of its year: lost, carried on by a lateral, or going on (p 1: a flat shoot)
+module Ct(o);                             # a limb's yearly turn (limb_turn)
+module Cb(o);                             # a branch's held angle and droop
+module Cat(o);                            # a shoot of order o takes its axis category's held angle and droop
 module Af(k);                             # k 1: the second of two lateral buds that carry a dead tip on, a fork; 0: none
 module Rs(m);                             # m stems still to send up this year
 module Sb;                                # a stem's foot: with stem_life, the stem dies at that age
@@ -486,7 +509,7 @@ rule A(split) : bloom_shoots < 2 && terminal_bloom >= 1 && blooms > 0 && t >= ad
 rule A(split) : terminal_bloom > 0 && blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1 && (bloom_floor <= 0 || py >= bloom_floor)
                 && space > 0 && light >= spur_light && (life <= 0 || t < life)
                 && rand() < terminal_bloom ->
-    steer(sx, sy, sz, steer_weight)
+    steer(sx, sy, sz, steer_weight) Cat(order)
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1))
@@ -514,12 +537,12 @@ rule A(split) : plagio > 0 && limb > 0 && order >= 2 && vigour >= 1 && space > 0
        internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 1);
 rule A(split) : (tip_abort > 0 || tip_loss > 0) && limb_arch > 0 && limb > 0 && vigour >= 1 && space > 0 ->
     incline(min(set_point + limb_arch * limb, limb_set_max), incline_rate)
-    steer(sx, sy, sz, steer_weight)
+    steer(sx, sy, sz, steer_weight) Cat(order)
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 0);
 rule A(split) : (tip_abort > 0 || tip_loss > 0) && vigour >= 1 && space > 0 ->
-    steer(sx, sy, sz, steer_weight)
+    steer(sx, sy, sz, steer_weight) Cat(order)
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 0);
@@ -528,7 +551,7 @@ rule A(split) : (tip_abort > 0 || tip_loss > 0) && vigour >= 1 && space > 0 ->
 # (limb_arch, revision 16), so limbs rise from the stem and arch outward.
 rule A(split) : limb_arch > 0 && limb > 0 && vigour >= 1 && space > 0 ->
     incline(min(set_point + limb_arch * limb, limb_set_max), incline_rate)
-    steer(sx, sy, sz, steer_weight)
+    steer(sx, sy, sz, steer_weight) Cat(order)
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) A(split);
@@ -536,7 +559,7 @@ rule A(split) : limb_arch > 0 && limb > 0 && vigour >= 1 && space > 0 ->
 # An active bud with vigour and free space ahead grows a shoot; far out
 # along the wood its nodes are shorter (path_half, revision 11).
 rule A(split) : vigour >= 1 && space > 0 ->
-    steer(sx, sy, sz, steer_weight)
+    steer(sx, sy, sz, steer_weight) Cat(order)
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) A(split);
@@ -562,7 +585,7 @@ decompose M(n, u, l) : n <= 0 -> ;
 # The new stems of a fork, spread evenly round the old one; each is a branch
 # of its own, so a stem that dies is shed.
 decompose Fk(n) : n > 0 ->
-    [ /(360 * n / fork_stems + uniform(-25, 25)) &(fork_angle + uniform(-8, 8)) S A(0) ]
+    [ /(360 * n / fork_stems + uniform(-25, 25)) &(fork_angle + uniform(-8, 8)) incline(fork_set, leader_rate) S A(0) ]
     Fk(n - 1);
 decompose Fk(n) -> ;
 
@@ -891,3 +914,21 @@ decompose Mp(n, u, l) : n <= 0 -> ;
 # A living tree's dead branch (dead_keep) stands until it falls, with the
 # chance snag_fall a year, as a dead tree's do (the dead plant's rule
 # above takes it).
+
+# Revision 26 (axis categories). A branch (order 2 and up: carried by a
+# limb) holds its own angle and droop, as floras describe a tree's limbs
+# and its branchlets apart ("stout ascending branches ... slender
+# pendulous branchlets"). Its tropism stays with it, and with all it
+# carries, in its brackets.
+decompose Cat(o) -> Ct(o) Cb(o);
+decompose Cb(o) : o >= 2 && (branch_set >= 0 || branch_droop >= 0 || branch_hold >= 0) ->
+    incline(branch_set >= 0 ? branch_set : set_point, branch_hold >= 0 ? branch_hold : incline_rate)
+    T(wind, -1, 0, ((branch_droop >= 0 ? branch_droop : droop) + wind_bend * wind) / unit_nodes);
+decompose Cb(o) -> ;
+
+# A tortuous limb (limb_turn) turns its own way each year: every year's
+# shoot on a limb or branch starts off turned by a chance angle, which its
+# held angle then only partly takes back, so the wood bends in long
+# irregular curves rather than the fine jitter of wiggle.
+decompose Ct(o) : o >= 1 && limb_turn > 0 -> ^(gauss() * limb_turn) +(gauss() * limb_turn);
+decompose Ct(o) -> ;
