@@ -395,6 +395,10 @@ decompose G(o, l, k, w, n) : o == 0 && nod > 0 ->
 decompose G(o, l, k, w, n) : o == 0 ->
     [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.6) ]
     N F(l * 0.5) I(interwhorl) N F(l * 0.5);
+# A shoot laid down from two or more held years (seg_min) draws its foliage
+# at two places along it, each spray as large as half its years', so its
+# needles stay near one year's length: a card draws its needles a share of
+# its own length, and one card for all the years drew them past the floras'.
 # One year's branch shoot: a spray along it and a twig spray to each side,
 # hanging by spray_droop, each with its own turn; a dormant bud at its
 # foot, which watches the ground; possible side shoots at its end. A shaded shoot is short, but its twigs
@@ -411,9 +415,23 @@ decompose G(o, l, k, w, n) : o > 0 && spur_years > 0 ->
 # spray of the three's area (sqrt(1 + 2 * 0.75^2) = 1.458 times as long),
 # and no bud: a third of the modules, so a fully branched crown fits the
 # string to 300 years.
+decompose G(o, l, k, w, n) : o > side_order && twig_years > 0 && n >= 2 ->
+    [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 1.458, uniform(-25, 25), spray_droop * 0.5, 1) ]
+    F(l * 0.5)
+    [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 1.458, uniform(-25, 25), spray_droop * 0.5, 1) ]
+    F(l * 0.5);
 decompose G(o, l, k, w, n) : o > side_order && twig_years > 0 ->
     [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n)) * 1.458, uniform(-25, 25), spray_droop * 0.5, 1) ]
     F(l);
+decompose G(o, l, k, w, n) : n >= 2 ->
+    [ Y(k) spray(spray_base + spray_length * l * 0.5, uniform(-25, 25), spray_droop * 0.5, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
+    F(l * 0.5)
+    [ Y(k) spray(spray_base + spray_length * l * 0.5, uniform(-25, 25), spray_droop * 0.5, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
+    E(o, w) F(l * 0.5) L(o, w + l, l) R(o, w + l, l);
 decompose G(o, l, k, w, n) ->
     [ Y(k) spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
       spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
