@@ -986,5 +986,9 @@ pub mod venation;
 /// scape in any flowering plant, and a compound inflorescence's branches
 /// take the kind its taxa name (`inflorescence_branch_kind`); smooth bark
 /// draws with a valid pattern; a shrub without short shoots has a short
-/// share (fifteen Caryophyllales species, #243; 141 is #237).
+/// share; a glandular hair has a head, a count per square centimetre,
+/// a margin length that grades it from short and upright to long and
+/// spreading, a stalk colour and a drop of clear, milky or amber secretion,
+/// and strands draw on flower and cluster cards (fifteen Caryophyllales
+/// species, two more sundews and hemp, #243; 141 is #237).
 pub const GENERATOR_REVISION: u32 = 142;
