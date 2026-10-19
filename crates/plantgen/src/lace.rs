@@ -354,6 +354,7 @@ impl<'a> Lace<'a> {
                     division,
                     within: Some(within),
                     segment: None,
+                    interjected: false,
                 };
                 if let Some(turn) = self.secondary(layout, &leaflet, first) {
                     from = turn.apply(from);

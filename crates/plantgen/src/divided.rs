@@ -76,6 +76,9 @@ pub struct Leaflet {
     pub division: u32,
     pub within: Option<u32>,
     pub segment: Option<u32>,
+    /// One of the small leaflets interjected between a pinnate leaf's
+    /// pairs, which are not counted among its leaflets.
+    pub interjected: bool,
 }
 
 /// A compound leaf laid out: its form, its axes, its leaflets in the order
@@ -106,6 +109,7 @@ pub struct Form {
     pub largest: f64,
     pub lowest: f64,
     pub terminal_size: f64,
+    pub interjected: f64,
     pub width: f64,
     pub widest: f64,
     pub tip: f64,
@@ -169,6 +173,7 @@ impl Form {
             largest: c.largest.unwrap_or(1.0),
             lowest: c.lowest.unwrap_or(0.82),
             terminal_size: c.terminal_size.unwrap_or(0.98),
+            interjected: c.interjected.unwrap_or(0.0).clamp(0.0, 0.8),
             width: c.leaflet_width,
             widest,
             tip,
@@ -459,6 +464,15 @@ pub fn layout(c: &Compound) -> Layout {
             }
         }
     }
+    if once && form.pattern == Pattern::Pinnate && form.interjected > 0.0 {
+        let first = u32::try_from(leaflets.len()).unwrap_or(u32::MAX);
+        for (k, placed) in (first..).zip(interjected(&form, &leaflets)) {
+            leaflets.push(Leaflet {
+                interjected: true,
+                ..leaflet(placed, k, None, None)
+            });
+        }
+    }
     let mut laid = Layout {
         form,
         axes,
@@ -467,6 +481,35 @@ pub fn layout(c: &Compound) -> Layout {
     };
     laid.fit(about);
     laid
+}
+
+/// The small leaflets interjected between a once-pinnate leaf's pairs: a
+/// pair halfway between each two pairs, and between the top pair and the
+/// terminal leaflet, each `interjected` as long as the shorter of the two
+/// pairs, set at their angle. Drawn after the rest, so under them.
+fn interjected(form: &Form, leaflets: &[Leaflet]) -> Vec<Placed> {
+    // The pairs' places up the rachis, each with its length and angle.
+    let mut pairs: Vec<(f64, f64, Point)> = leaflets
+        .iter()
+        .filter(|l| l.direction.0 > 0.0)
+        .map(|l| (l.base.1, l.length, l.direction))
+        .collect();
+    pairs.sort_by(|a, b| a.0.total_cmp(&b.0));
+    if let Some(top) = leaflets.iter().find(|l| l.direction.0 == 0.0) {
+        if let Some(&(_, length, direction)) = pairs.last() {
+            pairs.push((top.base.1, length, direction));
+        }
+    }
+    let mut placed = Vec::new();
+    for pair in pairs.windows(2) {
+        let (lower, upper) = (pair[0], pair[1]);
+        let at = 0.5 * (lower.0 + upper.0);
+        let length = form.interjected * lower.1.min(upper.1);
+        for side in [1.0, -1.0] {
+            placed.push(((0.0, at), (side * lower.2.0, lower.2.1), length));
+        }
+    }
+    placed
 }
 
 fn leaflet(
@@ -482,6 +525,7 @@ fn leaflet(
         division,
         within,
         segment,
+        interjected: false,
     }
 }
 
@@ -648,7 +692,8 @@ pub fn counts(c: &Compound) -> Counts {
     let once = laid.form.pinnules == 0;
     let thrice = laid.form.segments > 0;
     let leaflets = if once {
-        vec![u32::try_from(laid.leaflets.len()).unwrap_or(u32::MAX)]
+        let counted = laid.leaflets.iter().filter(|l| !l.interjected).count();
+        vec![u32::try_from(counted).unwrap_or(u32::MAX)]
     } else {
         per_group.values().copied().collect()
     };
