@@ -42,6 +42,7 @@ class FakeServer(BaseHTTPRequestHandler):
     no_schema = False    # answer 400 to response_format json_schema, as some servers do
     bad_first = False    # the first answer per image misses a required key
     upstream_grammar = False  # answer a json_schema request with an error inside HTTP 200
+    cut_first = 0        # cut off this many replies mid-body, as a dropped connection does
 
     def log_message(self, *_):
         pass
@@ -59,6 +60,15 @@ class FakeServer(BaseHTTPRequestHandler):
         if self.bad_first and "previous answer was not valid" not in user:
             ans.pop("overall", None)
             ans.pop("usable", None)
+        if FakeServer.cut_first > 0:
+            FakeServer.cut_first -= 1
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", "5000")
+            self.end_headers()
+            self.wfile.write(b'{"model": "vlm-8b", "choices": [{"mess')
+            self.close_connection = True
+            return
         usage = {"prompt_tokens": 1000, "completion_tokens": 200}
         if self.cost is not None:
             usage["cost"] = self.cost
@@ -78,7 +88,7 @@ class RunBase(Base):
     def setUp(self):
         super().setUp()
         FakeServer.requests, FakeServer.cost, FakeServer.no_schema, FakeServer.bad_first = [], None, False, False
-        FakeServer.upstream_grammar = False
+        FakeServer.upstream_grammar, FakeServer.cut_first = False, 0
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), FakeServer)
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
         self.url = f"http://127.0.0.1:{self.server.server_port}/v1"
@@ -172,6 +182,14 @@ class TestOpenAICompat(RunBase):
         self.assertTrue(all(r["status"] == "ok" for r in self.analyses("t1")))
         self.assertEqual(len(FakeServer.requests), 3)  # one refused, then plain JSON for both
 
+    def test_a_cut_off_reply_is_one_image_left_for_the_next_pass(self):
+        FakeServer.cut_first = 1
+        self.backends.write_text(self.backends.read_text().replace("parallel = 2", "parallel = 1"))
+        self.go("run", "triage", "--backend", "box", "--run", "t1")
+        self.assertEqual(len(self.analyses("t1")), 3)  # the run went on past the cut-off reply
+        self.go("run", "triage", "--backend", "box", "--run", "t1")
+        self.assertEqual(len(self.analyses("t1")), 4)  # and the next pass sent that image again
+
     def test_spend_cap_and_confirmation(self):
         FakeServer.cost = 0.5
         self.backends.write_text(self.backends.read_text().replace("parallel = 2", "parallel = 1"))
@@ -192,6 +210,7 @@ class TestChat(RunBase):
         prompts = sorted(d.glob("*.prompt.md"))
         self.assertEqual((len(prompts), len(list(d.glob("*.jpg")))), (4, 4))
         self.assertTrue((d / "00-system.md").exists())
+        self.assertIn("You do not need to open them", (d / "00-system.md").read_text())
         pid = prompts[0].name.split(".")[0]
         (d / f"{pid}.json").write_text(json.dumps({"photo_id": pid, **DESCRIBE}))
         self.quiet("run", "describe", "--backend", "chat", "--model", "my chat", "--chat-dir", str(d), "--run", "c1")

@@ -314,6 +314,15 @@ class RenderFrames(unittest.TestCase):
         self.assertEqual((span(0.9, "shoot"), span(0.9, "bloom")), ("0.36", "0.23"))  # a lily
         self.assertEqual((span(12, "shoot"), span(12, "bloom")), ("1.00", "0.30"))  # a tree, as before
 
+    def test_cactus_close_ups_scale_with_the_plant(self):
+        from imagekit.render import shots
+        def spans(h, r):
+            got = {v: e[e.index("--span") + 1] for v, e, _ in shots("x", True, {"height": h, "radius": r},
+                                                                   {"closeups"}, []) if "--span" in e}
+            return got["ribs"], got["bloom"], got["apex"]
+        self.assertEqual(spans(0.06, 0.05), ("0.13", "0.13", "0.13"))  # a 6 cm Ariocarpus fills its frames
+        self.assertEqual(spans(1.5, 0.3), ("0.30", "0.30", "0.30"))     # a barrel cactus, as before
+
     def test_bloom_focus_takes_the_height_with_most_flower(self):
         import stat
         from imagekit.render import bloom_focus
