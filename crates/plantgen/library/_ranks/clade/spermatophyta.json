@@ -146,6 +146,14 @@
         "axis_growth": {"sympodial": 0.1, "monopodial": 0}
       },
       "why": "A sympodial axis is carried on by a lateral when its tip dies or stops, so where a shoot's tip has no free space left it may die and leave the buds below it to fork."
+    },
+    "generator.params.tip_abort": {
+      "map": {"terminal_bud": {"true": 0, "false": 1}},
+      "why": "Where a shoot has no true terminal bud its tip dies at the end of every season and the topmost lateral bud carries it on, turned toward its own side, sometimes with the next bud down beside it: its twigs zigzag and its limbs wander and fork, where a terminal bud's run straight on."
+    },
+    "generator.params.plagio": {
+      "map": {"branch_orientation": {"plagiotropic": 1, "orthotropic": 0}},
+      "why": "Where a plant's side shoots lie flat, every shoot a limb bears holds itself near level and sets its buds and leaves to either side, so the limb carries level sprays."
     }
   },
   "evidence": {
@@ -255,6 +263,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A choice of the model's: a sympodial axis is carried on by a lateral when its tip stops, so a tip with no free space left aborts with the maple program's chance, 0.1 a year."
+    },
+    "rules.generator.params.tip_abort": {
+      "evidence": "SourceInferred",
+      "source": "halle-oldeman-tomlinson-1978",
+      "note": "Hall\u00e9, Oldeman and Tomlinson (1978): a sympodial axis is built of modules, each ending when its apex dies or stops and continued by a lateral. The winter keys state it as a genus character: Sargent's Manual (sargent-1922, analytical key to the genera, pp. xxiii-xxiv) divides the genera with 'Terminal buds wanting; branchlets prolonged by an upper axillary bud' (Morus, Tilia, Ulmus, Celtis, Ceanothus, Carpinus, Ostrya, Betula) from those with terminal buds present. That the tip dies every year (1) is that statement; the turn of the bud that takes over (abort_angle 25) and the share of years two buds take over together (abort_fork 0.3) are the model's choices (branching form, 2026-10-19), against open-grown photos in which Betula, Alnus and Corylus twigs zigzag and leaders are lost or multiple (inaturalist-photos-2026-10, imagekit runs branching-chat-woody-forms-2026-10-19)."
+    },
+    "rules.generator.params.plagio": {
+      "evidence": "SourceInferred",
+      "source": "halle-oldeman-tomlinson-1978",
+      "note": "Hall\u00e9, Oldeman and Tomlinson (1978): orthotropic axes grow upright with their leaves and buds all round them, plagiotropic ones near horizontal with leaves and buds in one plane, and a tree's architecture is told largely by which of its axes are which (Troll's, Roux's and Massart's models among them). Drawing every shoot a limb bears as flat (plagio_set 80 from upright, buds and leaves to either side in turn) while the limb's own axis rises and arches is the model's choice (branching form, 2026-10-19)."
     },
     "rules.generator.params.short_share": {
       "evidence": "SourceInferred",

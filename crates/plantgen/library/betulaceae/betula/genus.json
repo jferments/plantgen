@@ -3,6 +3,7 @@
   "rank": "genus",
   "name": "Betula",
   "traits": {
+    "terminal_bud": false,
     "short_shoots": true
   },
   "appearance": {
@@ -93,6 +94,7 @@
     "appearance.bark_look.stages.young": {"evidence": "SourceInferred", "source": "fna-online", "note": "The genus's young stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): stage: text: 'young trunks and branches dark reddish brown, smooth ... lenticels pale, horizontal' (FNA); until_diameter_m: inferred (photo): white at ~3 y (Wikipedia) or 10-12 y (Silvics)"},
     "appearance.bark_look.stages.white": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's white stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): exfoliation: text: 'readily exfoliating in paper-thin sheets' (FNA); 'fine horizontal strips' (Wikipedia); inner 'pale orange color when first exposed' (Sargent); sizes inferred; lenticels: text: 'in maturity dark, much expanded, horizontal' (FNA); 'long narrow ... raised' (Sargent); sizes inferred; until_diameter_m: inferred (photo)"},
     "appearance.bark_look.stages.black base": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's black base stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): stage: text: 'on old trunks for a few feet above the ground ... dull brown or nearly black, sharply and irregularly furrowed and broken on the surface into thick closely appressed scales' (Sargent)"},
+    "traits.terminal_bud": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, analytical key to the genera, pp. xxiii-xxiv): 'Terminal buds wanting; branchlets prolonged by an upper axillary bud' leads, with Carpinus and Ostrya, to Betula (p. 205)."},
     "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: Acer, Betula, Corylus, Fagus and rosaceous fruit trees such as Pyrus have a well-developed short-shoot system, whose short shoots fill most of the crown and bear most of its leaves (Wilson's red maple)."}
   }
 }

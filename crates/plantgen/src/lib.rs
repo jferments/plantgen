@@ -996,12 +996,34 @@ pub mod venation;
 /// pericarpel shortened to the ovary's swelling; a column stem's sink follows
 /// its height curve, so a seedling's top shows (142 is palm
 /// trunks, #240).
-/// 145: a species' spec states its bark in the bark language
+/// 144: branching form (broadleaf 23): a shoot without a terminal bud
+/// dies back each year and its topmost lateral carries it on, sometimes
+/// as a fork (`tip_abort`, from `terminal_bud`); a plagiotropic plant's
+/// limbs carry flat sprays (`plagio`, from `branch_orientation`); a
+/// tree's dead branches stand until they fall (`dead_keep`); a
+/// small-leaved tree's or shrub's long shoots set their leaves no farther
+/// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
+/// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
+/// cactus genera, #239).
+/// 145: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
+/// blade on a stalk four times its length); fleshy and succulent blades
+/// are drawn solid (`leaf_succulence`, `leaf_cross_section`); a herb's
+/// rosette and flowering stems are as many as its taxa count
+/// (`rosette_leaves`, `flowering_stems`), a leafless flowering stem is a
+/// scape in any flowering plant, and a compound inflorescence's branches
+/// take the kind its taxa name (`inflorescence_branch_kind`); smooth bark
+/// draws with a valid pattern; a shrub without short shoots has a short
+/// share; a glandular hair has a head, a count per square centimetre,
+/// a margin length that grades it from short and upright to long and
+/// spreading, a stalk colour and a drop of clear, milky or amber secretion,
+/// and strands draw on flower and cluster cards (fifteen Caryophyllales
+/// species, two more sundews and hemp, #243; 144 is #244).
+/// 146: a species' spec states its bark in the bark language
 /// (`appearance.bark_look`, `crate::bark_look`): stages by stem diameter,
 /// keyed by name so a genus states how its bark breaks up and its species
 /// add their colours; eleven reference genera state theirs (Acer, Alnus,
 /// Arbutus, Betula, Pinus, Populus, Prunus, Pseudotsuga, Quercus, Rosa,
 /// Thuja), and every other species with a bark pattern draws a look made
-/// from it; `plantc export --bark-look spec` bakes it (144 is growth forms,
-/// #244).
-pub const GENERATOR_REVISION: u32 = 145;
+/// from it; `plantc export --bark-look spec` bakes it (145 is
+/// Caryophyllales, #243).
+pub const GENERATOR_REVISION: u32 = 146;

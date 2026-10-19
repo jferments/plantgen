@@ -15,10 +15,7 @@
       "linear": "often",
       "oblong": "often"
     },
-    "stipules": {
-      "true": "often",
-      "false": "often"
-    },
+    "stipules": false,
     "rosette": {
       "basal": "often",
       "none": "often"
@@ -46,7 +43,23 @@
     "flower_merosity": 5,
     "stamens": 5,
     "carpels": 5,
-    "phyllotaxis_pattern": "spiral"
+    "phyllotaxis_pattern": "spiral",
+    "leaf_margin": {
+      "entire": "usually"
+    },
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "rarely"
+    },
+    "perianth_fused": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "calyx_in_fruit": "persistent",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "rarely"
+    }
   },
   "evidence": {
     "traits": {
@@ -56,8 +69,8 @@
     },
     "traits.phyllotaxis_pattern": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 381, 382, family Plumbaginaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): leaves spiralled."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
@@ -68,6 +81,86 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia Limonium (read 2026-10-17): fruit a small one-seeded capsule held in the persistent calyx; Limonium (~600 spp) is over half the family. Acantholimon's page (321 spp) does not give the fruit, so it is not counted; capsule leads on Limonium alone. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): leaves often basal, alternate, spiralled; FOC alternate or basal."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 15 (1996), Plumbaginaceae family account (eFloras, read 2026-10-19): leaves simple."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): stipules absent; FOC stipules absent."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): margins entire or lobed; FOC entire or rarely pinnately lobed."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 15 (1996), Plumbaginaceae family account (eFloras, read 2026-10-19): leaf blade entire or rarely pinnately lobed."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): flowers radially symmetric."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): sepals 5 joined into a 5- or 10-ribbed tube; petals 5."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): petals nearly distinct, joined at the base or for most of their length (Plumbago's corolla salverform); FOC petals connate but sometimes only at the base."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): sepals 5, petals 5, stamens 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): stamens 5, opposite the petals (FOC)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 15 (1996), Plumbaginaceae family account (eFloras, read 2026-10-19): styles 5, free or connate; stigmas 5; ovary 1-locular with 1 ovule."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): ovary superior."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): perianth and androecium hypogynous."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): sepals persistent in mature fruits; FOC capsules usually enclosed in the calyx."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): flowers bisexual."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Plumbaginaceae family account (Morin) (eFloras, read 2026-10-19): herbs or shrubs, perennial or rarely annual."
     }
   }
 }

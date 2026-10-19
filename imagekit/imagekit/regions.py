@@ -15,9 +15,10 @@ from two detectors are never mixed. The detector's analyzer is the model,
 its revision, the organ phrases and the thresholds; a rerun detects only
 the images that lack it.
 
-Crops keep only the organs the image's triage saw (`organs_visible`) when
-the triage answered it, so fingers holding a flower are not kept as
-leaves. Renders are always detected and need no triage.
+Crops keep only the organs the image's triage saw (`organs_visible`), so
+fingers holding a flower are not kept as leaves, and a photo the triage
+did not answer or found unusable keeps none (`detect --all` may still have
+looked at it). Renders are always detected and need no triage.
 """
 from __future__ import annotations
 
@@ -142,13 +143,16 @@ def default_detector(store: Store, shas=None) -> str | None:
 
 def regions(store: Store, detector: str, rows: dict, triage: dict | None = None, organs=None,
             min_score: float = 0.0) -> dict:
-    """sha256 -> its regions under a detector, keeping organs the triage saw (all, for an image it did not answer)."""
+    """sha256 -> its regions under a detector, keeping organs the triage saw. With a triage, a photo it did not
+    answer or found unusable keeps nothing (`detect --all` may have looked at it); a render keeps every region."""
     from .run import outputs
     out = {}
     for sha, ans in outputs(store, detector).items():
         if sha not in rows:
             continue
         seen = None
+        if triage is not None and not is_render(rows[sha]) and not (triage.get(sha) or {}).get("usable"):
+            continue
         if triage and sha in triage:
             seen = set(triage[sha].get("organs_visible") or [])
             if WHOLE_VIEWS & set(triage[sha].get("views") or []):

@@ -23,39 +23,116 @@
       "woody": "sometimes"
     },
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often",
-      "raceme": "often",
+      "raceme": "usually",
       "spike": "often",
-      "panicle": "often"
+      "panicle": "sometimes"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": "tepals",
     "fruit_type": {
-      "capsule": "often",
       "berry": "often",
-      "samara": "often",
-      "nut": "often",
-      "aggregate": "often",
-      "schizocarp": "often",
-      "drupe": "often"
+      "achene": "often",
+      "samara": "sometimes"
     },
     "stamens": {
       "min": 4,
-      "max": 50
+      "max": 13,
+      "high": 50
     },
-    "carpels": {
-      "min": 4,
-      "max": 12,
-      "low": 1,
-      "high": 16
-    }
+    "carpels": 1,
+    "perianth_parts": 4,
+    "calyx_in_fruit": "persistent"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Phytolaccaceae, which takes in Petiveriaceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules usually absent, rarely present; plants usually hermaphrodite, sometimes dioecious; ovary superior; floral cup absent; stems usually herbaceous, sometimes woody; flowers solitary, in cymes, in racemes, in spikes or in panicles; flowers actinomorphic; perianth tepals; fruit capsule, berry, samara, nut, aggregate, schizocarp or drupe; stamens 4 to 50; carpels (1-) 4 to 12 (-16). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (s.l., with Petiveriaceae) (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): leaves alternate, opposite or appearing whorled across the broad family; the Petiveriaceae genera in the flora (Petiveria, Rivina, Trichostigma) all alternate (the key's opposite leaves belong to Gisekia). Flora of China Phytolaccaceae: leaves alternate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Phytolaccaceae (eFloras flora_id=2 taxon_id=10687, read 2026-10-19): leaves simple."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): blade margins entire, often undulate."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): blade pinnately veined."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): stipules minute or absent (Flora of China: absent or tiny). File kept."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Phytolaccaceae (eFloras flora_id=2 taxon_id=10687, read 2026-10-19): flowers bisexual or rarely unisexual; rarely dioecious. File kept."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): ovaries superior (inferior only in Agdestis, not of this family)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): flowers hypogynous. File kept."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): herbs, subshrubs, shrubs, trees or vines; File kept (Rivina and Petiveria herbs or subshrubs woody at the base)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): key: Petiveria in virgate spikelike racemes, Rivina and Trichostigma in racemes; the family's compound dichasia belong to Gisekia and the panicles to Agdestis, neither in Petiveriaceae. Panicle kept as sometimes from the file for genera outside the flora."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): flowers radially symmetric."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): sepals usually persistent, petals absent: one whorl, read as tepals (Flora of China: tepals 4 or 5)."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): key: Rivina and Trichostigma sepals 4; Flora of China key: Rivina tepals 4. Five belongs to Phytolacca, not this family. Petiveria is 4 as well in other accounts; inferred for the family from its flora genera."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): key: Petiveria achenes; Rivina and Trichostigma berries. Samara kept as sometimes from the file (DELTA's Phytolaccaceae s.l., covering Gallesia and Seguieria, genera not in the floras read)."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): key: Rivina stamens 4, Trichostigma 8-13; the family file's 50 kept as the high extreme from DELTA."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): key: Petiveria ovary 1-carpellate; Rivina and Trichostigma carpel 1. The many-carpellate ovaries (6-12) are Phytolacca's."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): sepals usually persistent; Flora of China: tepals persistent."
     }
   }
 }

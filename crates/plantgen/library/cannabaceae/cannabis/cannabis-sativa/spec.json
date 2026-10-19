@@ -1,0 +1,522 @@
+{
+  "schema": 1,
+  "id": "cannabis-sativa",
+  "taxon": {
+    "scientific_name": "Cannabis sativa",
+    "common_name": "hemp",
+    "family": "Cannabaceae",
+    "genus": "Cannabis",
+    "plant_name_id": 2696480
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 1,
+    "step": 1,
+    "keyframes": [
+      1
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 1.77,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "forb",
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "stem_posture": "erect",
+    "height_typical_m": {
+      "min": 1.0,
+      "max": 3.0,
+      "low": 0.2
+    },
+    "height_max_m": 6.0,
+    "stem_cross_section": "angled",
+    "stem_hairs": "pubescent",
+    "rosette": "none",
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "often"
+    },
+    "phyllotaxis_pattern": "decussate",
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": {
+      "min": 3,
+      "max": 9,
+      "high": 13
+    },
+    "leaf_length_m": {
+      "min": 0.07,
+      "max": 0.15,
+      "low": 0.03
+    },
+    "leaflet_length_m": {
+      "min": 0.07,
+      "max": 0.15,
+      "low": 0.03
+    },
+    "leaflet_width_m": {
+      "min": 0.005,
+      "max": 0.015,
+      "low": 0.002,
+      "high": 0.02
+    },
+    "petiole_length_m": {
+      "min": 0.02,
+      "max": 0.07
+    },
+    "leaf_shape": {
+      "lanceolate": "usually",
+      "linear": "often"
+    },
+    "leaf_apex": "acuminate",
+    "leaf_margin": "serrate",
+    "leaf_hairs": "strigose",
+    "leaf_hairs_beneath": "pubescent",
+    "leaf_hair_length_m": {
+      "min": 0.0001,
+      "max": 0.0002
+    },
+    "leaf_colour": [
+      50,
+      90,
+      40
+    ],
+    "leaf_underside_colour": [
+      125,
+      150,
+      105
+    ],
+    "glandular_hairs": "sparse",
+    "glandular_hair_length_m": {
+      "min": 0.0003,
+      "max": 0.0005,
+      "low": 2e-05,
+      "high": 0.0011
+    },
+    "gland_head_diameter_m": {
+      "min": 7e-05,
+      "max": 9e-05,
+      "low": 4e-05,
+      "high": 0.00015
+    },
+    "gland_secretion": "clear",
+    "bract_glandular_hairs_per_cm2": {
+      "min": 1200,
+      "max": 3000
+    },
+    "sexual_system": "dioecious",
+    "inflorescence": "spike",
+    "inflorescence_posture": "erect",
+    "flowering_position": "both",
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 50
+    },
+    "shoot_leaves": {
+      "min": 18,
+      "max": 40,
+      "low": 10
+    },
+    "flowering_stems": 1,
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.08
+    },
+    "flowering_branches": 10,
+    "flowering_branch_orders": 2,
+    "flower_size_m": {
+      "min": 0.0025,
+      "max": 0.004
+    },
+    "flower_colour": [
+      120,
+      150,
+      80
+    ],
+    "stigma_colour": [
+      235,
+      230,
+      200
+    ],
+    "fruit_type": "achene",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.005
+    },
+    "fruit_colour_ripe": [
+      150,
+      140,
+      110
+    ],
+    "flowering_months": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "mesic"
+    ],
+    "soil_texture": [
+      "loam",
+      "sand"
+    ],
+    "habitat_notes": "Fields, roadsides, waste places, river banks; escaped from cultivation (FNA)."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a tall, erect annual herb with opposite, then alternate, palmately compound leaves of narrow coarsely toothed leaflets, and crowded spikes of pistillate flowers in leafy bracts frosted with resin glands."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.77 m tall at 1 year in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a tall, erect annual herb with opposite, then alternate, palmately compound leaves of narrow coarsely toothed leaflets, and crowded spikes of pistillate flowers in leafy bracts frosted with resin glands."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): herbs, annual, erect: a forb."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): herbs annual."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): herbs."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): stems erect."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): plants 1-3 m tall; FNA 0.2-6 m (the low end)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): stems 0.2-6 m."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabaceae (eFloras, read 2026-10-19): stems ridged or furrowed; FOC branchlets longitudinally grooved."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): branchlets densely white pubescent."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): leafy erect stems, no basal rosette."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaves alternate, or opposite basally; FNA (family): leaves decussate proximally, often alternate distally. Opposite first: most of a plant's leafy nodes are below its inflorescences (inferred)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabaceae (eFloras, read 2026-10-19): leaves decussate proximally."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis (eFloras, read 2026-10-19): leaves palmately compound."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis (eFloras, read 2026-10-19): leaves palmately compound."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis (eFloras, read 2026-10-19): leaves palmately compound, once."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaflets 3-11, 5-11 low on the plant, 1-3 near the top; FNA leaflets 3-9, to about 13. The single leaflet of the top leaves is left out: a compound leaf has two or more."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaflets 7-15 cm (the leaf as long as its longest, middle leaflet), the smallest near the top 3 cm."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaflets lanceolate to linear-lanceolate, 7-15 x 0.5-2 cm."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaflets 0.5-2 cm wide; FNA 0.2-2 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): petiole 3-15 cm; FNA 2-7 cm, the usual range."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaflets lanceolate to linear-lanceolate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaflet apex acuminate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): leaflet margins coarsely serrate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "zvirin-2025",
+      "note": "Zvirin et al. 2025: the upper face of a hemp leaf bears cystolith hairs, unicellular, rigid, curved, with a slender pointed apex; FNA (family): large stiff bulbous-based conic hairs. Short, stiff and lying close: strigose (the model's word)."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis (eFloras, read 2026-10-19): blade abaxially sparsely to densely pubescent."
+    },
+    "traits.leaf_hair_length_m": {
+      "evidence": "SourceInferred",
+      "source": "betancourt-2026",
+      "note": "Romero Betancourt et al. 2026: cystolith hairs conical, about 150 µm in height."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaflets dark green adaxially."
+    },
+    "traits.leaf_underside_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): leaflets whitish green abaxially, with scattered resinous dots."
+    },
+    "traits.glandular_hairs": {
+      "evidence": "SourceInferred",
+      "source": "betancourt-2026",
+      "note": "Romero Betancourt et al. 2026 and Punja et al. 2023: capitate-stalked glands dense on the pistillate bracts and bracteoles, sparse on vegetative leaves and stems."
+    },
+    "traits.glandular_hair_length_m": {
+      "evidence": "SourceInferred",
+      "source": "punja-2023",
+      "note": "Punja et al. 2023: stalks of capitate-stalked glands 20-1100 µm, means 300 and 500 µm at six weeks of flowering in two cultivars."
+    },
+    "traits.gland_head_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "punja-2023",
+      "note": "Punja et al. 2023: heads 40-110 µm across, means 75-90 µm; to about 150 µm (Romero Betancourt et al. 2026)."
+    },
+    "traits.gland_secretion": {
+      "evidence": "SourceInferred",
+      "source": "punja-2023",
+      "note": "Punja et al. 2023: the heads go from clear to cloudy to amber as they mature (one bract about week 7: 83 clear, 96 milky, 52 brown); Romero Betancourt et al. 2026: clear heads with a 'bright' cuticle. Drawn clear, as on a flowering day before the heads cloud."
+    },
+    "traits.bract_glandular_hairs_per_cm2": {
+      "evidence": "SourceInferred",
+      "source": "punja-2023",
+      "note": "Punja et al. 2023: 12-30 capitate glands per square millimetre on dried bracts of four cultivars (1,200-3,000 to the square centimetre); 20-70 across genotypes (Romero Betancourt et al. 2026)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): plants dioecious, sometimes monoecious."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis (eFloras, read 2026-10-19): pistillate inflorescences pseudospikes, congested; the pistillate plant, the one drawn for its resin, as a spike."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis (eFloras, read 2026-10-19): pistillate pseudospikes erect to spreading."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis (eFloras, read 2026-10-19): female inflorescences axillary, and crowded at the stem tips."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabaceae (eFloras, read 2026-10-19): pistillate flowers 10-50."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "hesami-2023",
+      "note": "Hesami et al. 2023: one indoor cultivar 0.81 m tall at its 12th leaf pair (24 leaves); McPartland & Small 2020: main-stem internodes often over 10-12 cm in tall forms, 5-11 cm in compact ones, so a plant 1-3 m tall (FOC) bears about 9 to 20 leaf pairs (18-40 leaves); the 24 of a short indoor plant is the low end's neighbour, 10 a small field plant's."
+    },
+    "traits.flowering_stems": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): herbs annual, erect, taprooted; stems simple to well branched: one main stem from the taproot, its branches drawn as flowering side branches."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "A model estimate: no flora read gives a pistillate cluster's length. FNA: pistillate flowers 10-50 to an inflorescence, in pairs, each in a bracteole 2.5-4 mm, in congested pseudospikes; 5-25 pairs a few millimetres apart make a spike 2-8 cm long. FOC gives the lax male panicle about 25 cm."
+    },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "flora-of-china",
+      "note": "A model estimate: female inflorescences axillary, crowded among leaflike bracts in the upper leaf axils (FOC), on 'complexly branched compound racemes' (Hesami et al. 2023), and broad forms branch from close to the ground (McPartland & Small 2020): flowering side branches from the top ten leaf nodes, about the upper half of a 20-node stem."
+    },
+    "traits.flowering_branch_orders": {
+      "evidence": "SourceInferred",
+      "source": "hesami-2023",
+      "note": "Hesami et al. 2023: the pistillate flowers sit on condensed branchlets in the axils of the flowering branches' own leaves, together 'complexly branched compound racemes': the side branches branch again, twice in all."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): pistillate flowers each enclosed in a bracteole 2.5-4 mm (the flower drawn as its bracteole)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis sativa (eFloras, read 2026-10-19): bracteoles leaflike, green."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): stigmas 2, long, filiform, whitish-yellow turning reddish-brown."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): achenes."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): achenes 2-5 mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): achenes white or greenish, mottled with purple: drawn a mottled greyish brown."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): flowering summer-fall."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "A model estimate: flowering summer to fall (FNA), achenes a month after."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): fields, roadsides: open ground."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): fields, roadsides, river banks."
+    },
+    "traits.soil_texture": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "A model estimate: fields, roadsides, waste places and river banks (FNA): loam and sand."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): fields, roadsides, waste places; escaped from cultivation."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19) on Joshi's ask for sundews' and hemp's glistening glandular hairs: characters from Flora of North America, Flora of China, Darwin 1875 and trichome studies read that day (project-files/glands/research in plantgen-claude)."
+  }
+}
