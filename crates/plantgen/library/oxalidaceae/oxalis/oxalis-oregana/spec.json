@@ -35,8 +35,8 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.387,
-      "basal_area": 0.305,
+      "leaf_area": 0.536,
+      "basal_area": 0.593,
       "basal_piece_area": 0.235,
       "flower_area": 0.317,
       "bud_area": 0.117,
@@ -112,7 +112,7 @@
       "source": "plantgen-authors",
       "note": "The leaf area its `flower` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: since 2026-10-16 the flower is its family's funnel of clawed petals, where before it opened flat (before, 0.689)."
     },
-    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its compound leaf, where before they drew the generic simple card (0.235); 0.381 until Oxalidaceae stated its obovate leaflets (2026-10-17)."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its compound leaf, where before they drew the generic simple card (0.235); 0.381 until Oxalidaceae stated its obovate leaflets (2026-10-17); 0.305 until the compound card stopped shrinking leaves whose leaflets hang back below their junction (2026-10-19), when leaf_area went from 0.387 to 0.536 too."},
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
