@@ -165,8 +165,8 @@ pub fn looks_of(spec: &PlantSpec, growth: &Growth, day: f64) -> (Vec<Look>, Vec<
 /// `graph` as drawn with its organ types' `sizes` on a day: organs gone
 /// left out, the others at their stage's size (`looks::staged`).
 #[must_use]
-pub fn drawn<'a>(graph: &'a PlantGraph, sizes: &[f64]) -> Cow<'a, PlantGraph> {
-    looks::staged(graph, sizes).map_or(Cow::Borrowed(graph), Cow::Owned)
+pub fn drawn<'a>(graph: &'a PlantGraph, sizes: &[f64], looks: &[Look]) -> Cow<'a, PlantGraph> {
+    looks::staged(graph, sizes, looks).map_or(Cow::Borrowed(graph), Cow::Owned)
 }
 
 /// One body look per body type of a grown plant.
@@ -340,7 +340,7 @@ pub fn dress(request: &Request<'_>, growth: Growth) -> Result<Drawing, String> {
     let library = request.library;
     let lod = &request.quality.lods[request.level];
     let (mut looks, sizes) = looks_of(spec, &growth, request.day);
-    let graph = drawn(&growth.keyframes[0], &sizes).into_owned();
+    let graph = drawn(&growth.keyframes[0], &sizes, &looks).into_owned();
     let bodies = bodies_of(spec, &growth);
     let mut plant = if request.parts {
         let parts = crate::parts::part_meshes(&looks);
@@ -384,7 +384,7 @@ pub fn dress(request: &Request<'_>, growth: Growth) -> Result<Drawing, String> {
             host.age,
         )?;
         let (host_looks, host_sizes) = looks_of(&host_spec, &host_growth, request.day);
-        let host_graph = &*drawn(&host_growth.keyframes[0], &host_sizes);
+        let host_graph = &*drawn(&host_growth.keyframes[0], &host_sizes, &host_looks);
         let host_plant = mesh::build(
             host_graph,
             &host_looks,

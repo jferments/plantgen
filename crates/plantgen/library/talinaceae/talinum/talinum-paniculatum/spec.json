@@ -232,7 +232,13 @@
       "min": 8,
       "max": 20,
       "typical": 12
-    }
+    },
+    "fruit_seed_length_m": 0.001,
+    "fruit_seed_colour": [
+      25,
+      22,
+      20
+    ]
   },
   "evidence": {
     "taxon": {
@@ -599,6 +605,16 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read counts it: Flora of China: leaves crowded on the lower stem below a long bare stalk."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Talinum paniculatum (eFloras flora_id=2 taxon_id=200007021, read 2026-10-19): seeds oblate, ca. 1 mm."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): seeds black, lustrous (Wikipedia: brown seeds); sRGB by eye for the word."
     }
   },
   "provenance": {

@@ -226,12 +226,12 @@
       "why": "A herb's longest stem leaf is as long as the longest blade its flora measures, its card longer by the stalk in proportion (the card's petiole share is the flora's petiole over blade and petiole); the leaves below and above it are shorter by the shares its program sets. Where the herb has a basal rosette, the flora's leaves and petioles are mostly the rosette's (a bistort's or a spring beauty's few stem leaves are smaller and sessile), so its longest stem leaf is the middle of the flora's lengths, with no stalk added, as the forbs' rule draws it."
     },
     "generator.params.leaf_top": {
-      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
-      "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures."
+      "rule": "clamp(first(min(leaf_width_m) < max(leaf_width_m) ? max(min(leaf_length_m) / max(leaf_length_m), min(leaf_width_m) / max(leaf_width_m)) : min(leaf_length_m) / max(leaf_length_m), min(leaf_length_m) / max(leaf_length_m)), 0.05, 1)",
+      "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures, but no narrower, for the widest, than the narrowest it measures: a leaf is drawn smaller as a whole, so an ice plant's leaves, 5 to 11 cm long but only 1 to 1.5 cm wide, shrink by no more than a third."
     },
     "generator.params.leaf_base": {
-      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
-      "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures."
+      "rule": "clamp(first(min(leaf_width_m) < max(leaf_width_m) ? max(min(leaf_length_m) / max(leaf_length_m), min(leaf_width_m) / max(leaf_width_m)) : min(leaf_length_m) / max(leaf_length_m), min(leaf_length_m) / max(leaf_length_m)), 0.05, 1)",
+      "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures, but no narrower, for the widest, than the narrowest it measures: a leaf is drawn smaller as a whole, so an ice plant's leaves, 5 to 11 cm long but only 1 to 1.5 cm wide, shrink by no more than a third."
     }
   }
 }

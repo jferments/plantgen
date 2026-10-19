@@ -726,7 +726,7 @@ fn budgeted(
     file: &dyn Fn(usize) -> String,
 ) -> Result<Vec<Level>, PackageError> {
     let budget = settings.budget;
-    let staged = crate::looks::staged(&plant.graph, &inputs.sizes);
+    let staged = crate::looks::staged(&plant.graph, &inputs.sizes, &inputs.looks);
     let mut trials = Trials {
         inputs,
         plant,

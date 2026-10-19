@@ -1,7 +1,7 @@
 //! Stem armature in the broadleaf program (revision 27): thorns on a
 //! share of the nodes, one beside each bud where they are shoots, falling
 //! from older stems, and at the tips of shoots that end in one; and in the
-//! herb program (revision 19), prickles at an armed herb's leafy nodes.
+//! herb program (revision 20), prickles at an armed herb's leafy nodes.
 
 use plantgen::export;
 use plantgen::library::Library;

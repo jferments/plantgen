@@ -842,6 +842,7 @@ mod tests {
             forms: crate::looks::Forms::default(),
             inflorescence: None,
             varieties: Vec::new(),
+            variety_sizes: Vec::new(),
         }
     }
 
