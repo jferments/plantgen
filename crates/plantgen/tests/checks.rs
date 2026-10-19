@@ -127,11 +127,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
-        "circaea-lutetiana",
-        "leaf_length_m",
-        "its stem leaves shrink upward to 0.4 of the longest (the forb's default), so the topmost blades draw about 2.3 cm against the 2.5 cm least Hooker gives",
-    ),
-    (
         "cirsium-vulgare",
         "leaf_shape",
         "its pinnatifid blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate as well as oblanceolate, against the lanceolate to oblong blades Abrams and Ferris give",
@@ -172,24 +167,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
     ),
     (
-        "drosera-anglica",
-        "crown_width_max_m",
-        "as round-leaved sundew: Droseraceae's perennation tie draws six scapes where great sundew states one, and they spread to 19 cm against 12 cm; #233 fixes the tie",
-    ),
-    (
-        "drosera-filiformis",
-        "crown_width_max_m",
-        "as round-leaved sundew: Droseraceae's perennation tie draws six scapes, and they spread to 19 cm against 12 cm; #233 fixes the tie",
-    ),
-    (
         "drosera-filiformis",
         "leaf_width_m",
         "its thread leaves, 1 mm wide and up to 25 cm long (FNA vol. 6), are drawn on cards no narrower than 0.03 of their length, so they draw 5 to 7.7 mm wide",
-    ),
-    (
-        "drosera-rotundifolia",
-        "crown_width_max_m",
-        "Droseraceae's perennation is a tie (rhizome or tuber, often), and on a tie the forb's stems rule takes its else without reading `flowering_stems`, so sundew draws six scapes where it states one or two and spreads to 19 cm against 15 cm; #233 fixes the tie",
     ),
     (
         "ferocactus-acanthodes-subsp-acanthodes",
@@ -365,11 +345,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:grass",
         "shoot_leaves",
         "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
-    ),
-    (
-        "program:herb",
-        "petiole_length_m",
-        "a leaf card's petiole is the card's own share of the leaf (0.15 of a simple card's length), not read from petiole_length_m, so jimsonweed's and enchanter's nightshade's long petioles draw under a centimetre and tobacco's sessile leaves draw one",
     ),
     (
         "program:herb",
