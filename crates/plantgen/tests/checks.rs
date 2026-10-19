@@ -309,7 +309,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "circaea-lutetiana",
         "petiole_length_m",
-        "enchanter's nightshade's shortest petioles sat at 1.7 cm against the 2 to 5 cm read from Hooker's \"almost as long as the blade\" (a warning); with herb revision 16's new leaf rules the same three plants draw other random sizes and the shortest is 1.5 cm",
+        "enchanter's nightshade's shortest petioles sat at 1.7 cm against the 2 to 5 cm read from Hooker's \"almost as long as the blade\" (a warning); with herb revision 17's new leaf rules the same three plants draw other random sizes and the shortest is 1.5 cm",
     ),
     (
         "sarcobatus-vermiculatus",
