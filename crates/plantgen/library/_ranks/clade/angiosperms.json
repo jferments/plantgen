@@ -612,7 +612,7 @@
       "why": "A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
     },
     "generator.params.thorns": {
-      "map": {"spines": {"none": 0, "thorns": {"map": {"thorn_position": {"terminal": 0}}, "else": 1}, "prickles": 1}},
+      "map": {"spines": {"none": 0, "thorns": {"map": {"thorn_position": {"lateral": 1, "terminal": 0, "both": 1}}, "else": 1}, "prickles": 1}},
       "why": "An armed tree or shrub carries its prickles or thorns at the nodes, beside each bud: a rose's below its stipules, a bramble's on its canes, a hawthorn's thorns in the leaf axils; one whose thorns only tip its twigs bears none there; programs that grow no thorns leave it unread."
     },
     "generator.params.thorn_length": {
@@ -649,8 +649,8 @@
       "why": "A thorn, a shoot turned spine (a hawthorn's, a mesquite's), is drawn as a straight slender cone standing from the stem's surface beside its bud."
     },
     "appearance.organs.thorn.form.prickles.between": {
-      "map": {"spines": {"prickles": {"map": {"internodal_prickles": {"none": 0, "sparse": 15, "moderate": 50, "dense": 150}}, "else": 0}}},
-      "why": "A prickle grows from the stem's skin (a rose's, a bramble's, a devil's club's), so it is drawn as a flattened cone on the stem's surface at each node and, as thickly as its flora says, between the nodes: on a stem 1 cm across about one every 7 cm where sparse, one every 2 cm where moderate, one every 7 mm where dense (by eye from photographs of roses and brambles), and more on a stouter stem, as a flora's density is of the stem's skin."
+      "map": {"spines": {"prickles": {"map": {"internodal_prickles": {"none": 0, "sparse": 15, "moderate": 50, "dense": 400}}, "else": 0}}},
+      "why": "A prickle grows from the stem's skin (a rose's, a bramble's, a devil's club's), so it is drawn as a flattened cone on the stem's surface at each node and, as thickly as its flora says, between the nodes: on a stem 1 cm across about one every 7 cm where sparse, one every 2 cm where moderate, about four a centimetre where dense (sparse and moderate by eye from photographs of roses and brambles; dense counted on devil's club's older stems, about 430 a metre at 1 cm, imagekit run devils-club-prickles-by-eye-2026-10-19, the young tips bearing three times that), and more on a stouter stem, as a flora's density is of the stem's skin."
     },
     "appearance.organs.thorn.form.prickles.bristles": {
       "map": {"spines": {"prickles": {"map": {"aciculi": {"none": 0, "sparse": 40, "dense": 300}}, "else": 0}}},

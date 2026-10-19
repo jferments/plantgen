@@ -151,9 +151,9 @@
 # prickly stems) carries two prickles at each leafy node, thorn_length
 # long at thorn_angle to its stem, on either side of its leaves; the
 # prickles' look draws those between the nodes (a flora's "scattered").
-# They draw nothing at random, so every herb's draws keep their sites;
-# with thorns 0, as every lineage gives it unless its words arm it, a
-# herb grows as before.
+# They draw nothing at random and come last at the node, so every herb's
+# draws and modules keep their sites; with thorns 0, as every lineage
+# gives it unless its words arm it, a herb grows as before.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -384,7 +384,7 @@ decompose Nd(i, m, h, r) : m == 1 && lie_branch == 0 ->
 decompose Nd(i, m, h, r) : m < 1 -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
-    Th ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
+    ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ] Th;
 
 # A flowering stem's top flower_branches nodes each bear a side branch in
 # the axil of their leaf, shorter toward the top, ending in a raceme. A

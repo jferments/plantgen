@@ -40,10 +40,7 @@
       "leaf_angle": 70,
       "blooms": 1,
       "bloom_angle": 10,
-      "path_half": 1.42,
-      "thorns": 6,
-      "thorn_length": 0.008,
-      "thorn_angle": 60
+      "path_half": 1.42
     }
   },
   "growth": {
@@ -142,7 +139,7 @@
     "spine_curve": "straight",
     "spine_angle": "erect",
     "internodal_prickles": "dense",
-    "aciculi": "sparse",
+    "aciculi": "dense",
     "spine_colour": [214, 190, 96]
   },
   "evidence": {
@@ -239,7 +236,7 @@
     "traits.spine_curve": {"evidence": "SourceInferred", "source": "gleason-cronquist-1991", "note": "Gleason and Cronquist (1991), Oplopanax horridus (read via NYBG, 2026-10-19): shrub densely prickly on the stem, petioles and leaf veins; OregonFlora (quoted by Friends of Silver Falls) has the prickles sticking straight out: straight."},
     "traits.spine_angle": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: square to the stem: OregonFlora, as quoted by Friends of Silver Falls (read 2026-10-19), has the dense long prickles sticking straight out; Oregon State University's Landscape Plants calls them firm and erect."},
     "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS (Oplopanax horridus, read 2026-10-19): sharp, dense prickles on the stems."},
-    "traits.aciculi": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence low), as no source read gives it: finer prickles among the long ones, as the stems' dense armature shows in photographs; no source read names them."},
+    "traits.aciculi": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Counted by eye on iNaturalist photographs (imagekit batch inat-devils-club-stems-2026-10-19, run devils-club-prickles-by-eye-2026-10-19, 2026-10-19): long yellow prickles stand among many short fine ones, about 1400 a metre on a young tip and 430 on older stems normalised to a 1 cm stem, so the fine ones are dense. FEIS: sharp, dense prickles."},
     "traits.spine_colour": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: yellow, as OregonFlora calls the prickles (quoted by Friends of Silver Falls, read 2026-10-19); sRGB by eye for the word."}
   },
   "provenance": {
