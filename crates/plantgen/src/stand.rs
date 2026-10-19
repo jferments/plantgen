@@ -152,9 +152,12 @@ fn neighbours(
             if other == index && *east == 0.0 && *north == 0.0 {
                 continue;
             }
+            // The two plants' offset first, then the tile's: the middle
+            // plant's own images then stand exactly a tile away, as a
+            // layout's neighbours do.
             let centre = [
-                member.at_m[0] + east * width - here[0],
-                member.at_m[1] + north * depth - here[1],
+                (member.at_m[0] - here[0]) + east * width,
+                (member.at_m[1] - here[1]) + north * depth,
             ];
             if crown.reaches(centre, reach) {
                 envelopes.push(crown.envelope(centre));
