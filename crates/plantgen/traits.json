@@ -372,6 +372,14 @@
       "values": ["erect", "ascending", "decumbent", "prostrate"],
       "why": "how a plant's leafy stems hold themselves, as floras word it: upright, curving up from a leaning foot, lying on the ground below and rising toward their tips, or lying flat along the ground (trailing or creeping) with only their flowering tips raised"
     },
+    "trailing_branches": {
+      "group": "form",
+      "organ": "stem",
+      "type": "bool",
+      "when": {"stem_posture": ["decumbent", "prostrate"]},
+      "optional": true,
+      "why": "whether a plant's lying stems branch along the ground, each branch lying and rising as the stem does, so it spreads into a mat (floras: 'freely branching', 'forming mats', 'trailing with slender branches')"
+    },
     "stem_length_m": {
       "group": "size",
       "organ": "stem",

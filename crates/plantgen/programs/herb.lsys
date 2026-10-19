@@ -141,9 +141,13 @@
 # Revision 17: a hooked bud's neck narrows over its three bends, from half
 # the stem's width to a fifth, as a poppy's peduncle thins below its bud.
 #
+# Revision 18: a lying stem may branch along the ground (lie_branch), each
+# branch lying and rising as the rest of the stem does, so a trailing
+# plant spreads into a mat. With lie_branch 0 a herb grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 17;
+lsystem herb 18;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -233,6 +237,7 @@ param fruit_area;
 param light_cell;             # light voxel edge
 param lie = 0;                # share of a stem's leafy nodes lying along the ground; 0: none
 param rise = 80;              # degrees a lying stem turns up over its other nodes
+param lie_branch = 0;         # share of a lying stem's nodes that put out a lying branch; 0: none
 
 module Y;                     # the crown: sends up a cohort each year
 module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
@@ -244,6 +249,9 @@ module Pc(k, s, a);           # piece k of a basal leaf, s long
 module St(h, r);              # a stem h tall with a raceme r long
 module Sv(h, r);              # the same stem, past where it leaves its basal leaves
 module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
+module Nn(i, h, r);           # leaf node i of a stem: its internode, leaves and side branch
+module Lb(i, h, r);           # the lying branch, if any, at leaf node i of a stem
+module Ln(i, m, h, r);        # leaf nodes i to i + m - 1 of a lying branch, which branches no further
 module Rc(i, m, h, r, g);     # raceme nodes i to i + m - 1, g of a raceme younger
 module Lf(s);                 # the leaves at one node
 module Br(a);                 # a floral bract, a degrees from the axis
@@ -339,7 +347,21 @@ decompose Nd(i, m, h, r) : m > 1 ->
     Nd(i, floor(m / 2), h, r) Nd(i + floor(m / 2), m - floor(m / 2), h, r);
 # One node: an internode, then its leaves, sized by where the node sits
 # between the foot and the top of the leafy part.
-decompose Nd(i, m, h, r) : m == 1 ->
+decompose Nd(i, m, h, r) : m == 1 -> Nn(i, h, r) Lb(i, h, r);
+decompose Nd(i, m, h, r) -> ;
+# A lying stem's lie_branch of its lying nodes, from its second, each put
+# out a branch to alternate sides that lies and rises as the stem's
+# remaining nodes do, so the plant spreads into a mat; a branch's nodes
+# branch no further.
+decompose Lb(i, h, r) : lie_branch > 0 && i >= 1 && i < round(lie * nodes) - 1
+                        && floor((i + 1) * lie_branch) > floor(i * lie_branch) ->
+    [ +((floor(i * lie_branch) - 2 * floor(i * lie_branch / 2) == 0 ? 1 : -1) * 55) Ln(i + 1, nodes - i - 1, h, r) ];
+decompose Lb(i, h, r) -> ;
+decompose Ln(i, m, h, r) : m > 1 ->
+    Ln(i, floor(m / 2), h, r) Ln(i + floor(m / 2), m - floor(m / 2), h, r);
+decompose Ln(i, m, h, r) : m == 1 -> Nn(i, h, r);
+decompose Ln(i, m, h, r) -> ;
+decompose Nn(i, h, r) ->
     /(lie > 0 && i >= round(lie * nodes) ? -(round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
     ^(lie > 0 && i >= round(lie * nodes) ? rise / max(1, nodes - round(lie * nodes)) : 0)
     /(lie > 0 && i >= round(lie * nodes) ? (round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
@@ -357,7 +379,6 @@ decompose Nd(i, m, h, r) : m == 1 ->
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
     /(lie > 0 && i < round(lie * nodes) ? (leaves_per_node == 2 ? -90 : 90) : divergence);
-decompose Nd(i, m, h, r) -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
     ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];

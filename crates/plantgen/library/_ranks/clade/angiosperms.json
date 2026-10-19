@@ -168,6 +168,10 @@
       "map": {"stem_posture": {"erect": 0, "ascending": 0, "decumbent": 0.5, "prostrate": 0.75}},
       "why": "A decumbent stem lies on the ground for its lower half and rises over the rest; a prostrate or trailing stem lies along the ground for most of its length, only its last quarter, which bears the flowers, raised."
     },
+    "generator.params.lie_branch": {
+      "map": {"trailing_branches": {"true": 0.35, "false": 0}},
+      "why": "A lying stem that floras call freely branching puts out a branch at about every third of its lying nodes, each lying and rising as the stem does, so the plant spreads into a mat; one they do not call so lies unbranched."
+    },
     "appearance.organs.flower.colour": {
       "colour": "flower_colour",
       "why": "An open flower is drawn in the colour its showiest part is stated in."
@@ -599,6 +603,7 @@
     }
   },
   "evidence": {
+    "rules.generator.params.lie_branch": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a mat of trailing branches, a choice of the model's (2026-10-19): floras say only that lying stems branch freely (Abrams 1951 p. 412, Phlox diffusa: freely branching, the branches spreading or prostrate), so a branch at about a third of the lying nodes, to alternate sides at 55 degrees."},
     "rules.appearance.organs.*.inflorescence.pedicel": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's stalk in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): as long as floras measure the pedicel, for the cluster's length."},
     "rules.appearance.organs.flower.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.bloom.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
