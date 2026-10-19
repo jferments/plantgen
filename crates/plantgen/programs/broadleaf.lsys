@@ -363,7 +363,7 @@ param tip_loss = 0;           # chance a year a long shoot's tip is lost (frost,
 param dead_keep = 0;          # 1: a living tree's dead branches stand until they fall (snag_fall a year)
 # Canes (revision 24).
 param stem_life = 0;          # years each stem from the base lives, with the base renewing them; 0: as long as its buds
-param bloom_shoots = 2;        # shoots a stem ended by its flowers (terminal_bloom) grows on from: 2 a fork, 1 one shoot
+param bloom_shoots = 2;        # shoots a stem ended by its flowers grows on from: 2 a fork, 1 one shoot (with terminal_bloom 1)
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -460,12 +460,12 @@ rule A(split) : split > 0 && (py >= split || (py <= 0 && split < internode / uni
 # below it (terminal flowering: the cluster ends the year's growth, so a
 # fork always stands on wood). Only lineages that set terminal_bloom
 # (revision 10; the maples' since G1).
-# With bloom_shoots 1 (revision 24) the stem grows on from the one bud
-# below its cluster, a little aside from it, without forking: a stem
-# that flowers every year and stays unbranched (devil's club).
-rule A(split) : bloom_shoots < 2 && terminal_bloom > 0 && blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1
-                && space > 0 && light >= spur_light && (life <= 0 || t < life)
-                && rand() < terminal_bloom ->
+# With bloom_shoots 1 (revision 24) a stem that flowers every year
+# (terminal_bloom 1) grows on from the one bud below its cluster, a little
+# aside from it, without forking, and stays unbranched (devil's club). It
+# makes no draw, so every draw after it keeps its site.
+rule A(split) : bloom_shoots < 2 && terminal_bloom >= 1 && blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1
+                && space > 0 && light >= spur_light && (life <= 0 || t < life) ->
     steer(sx, sy, sz, steer_weight)
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
