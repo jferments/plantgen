@@ -106,7 +106,11 @@
     ],
     "fruiting_months": [
       8
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 12,
+      "max": 36
+    }
   },
   "provenance": {
     "sources": [
@@ -255,6 +259,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 24, Lilium martagon var. pilosiusculum (efloras.org, read 2026-10-18): fruit Aug."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Derived: the stem's leaves are its 2-4 whorls times 6-9 leaves in each, 12-36, from the counts quoted for leaf_whorls (Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): usually in 2-4 whorls; var. dalmaticum 5-7.) and leaves_per_whorl (Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium Martagon, p. 1873 (read on the Internet Archive, 2026-10-18): whorls of 6-9 leaves each. The typical value is our pick of a usual plant inside that range.)."
     }
   }
 }

@@ -131,6 +131,16 @@
       },
       "why": "Where flowers end the shoots, a shoot that has stopped growing at the crown's edge still ends each year in them, so they stand on the crown's surface, not inside it."
     },
+    "generator.params.bloom_pairs": {
+      "rule": "max(1, round(flowering_shoot_leaves / 2))",
+      "why": "A shoot that ends in its flowers unfolds its year's leaves below them: as many pairs as the taxon's flowering shoot bears leaves, two to a pair (or two single leaves on a spiral)."
+    },
+    "generator.params.bloom_years": {
+      "map": {
+        "flowering_shoots": {"renewed": 1, "spurs": 0}
+      },
+      "why": "Where flowers come on new shoots, a shoot that has ended in its cluster flowers no more and next year's come on the shoots beyond it, so a short shoot or a stopped tip flowers in its first year only; spurs flower year after year."
+    },
     "generator.params.apex_death": {
       "map": {
         "axis_growth": {"sympodial": 0.1, "monopodial": 0}
@@ -225,6 +235,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A choice of the model's: a shoot that ends in flowers is carried on by the buds below them, so the crown forks; the chance a year, 0.35, is the maple program's, fitted to bigleaf maple, and half that where flowers may also sit beside the leaves."
+    },
+    "rules.generator.params.bloom_pairs": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 22): the program unfolds a short shoot's leaves in pairs (two single leaves on a spiral), so a flowering shoot's stated leaves become half as many pairs, at least one."
+    },
+    "rules.generator.params.bloom_years": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 22): an inflorescence that ends a shoot ends that axis, so it flowers once; the model's short shoots and stopped tips stand for those flowering shoots and flower only in their first year where the taxon flowers on new shoots."
     },
     "rules.generator.params.tip_bloom": {
       "evidence": "Authored",

@@ -487,6 +487,16 @@ pub(crate) fn build_coarse(
                         star: flower
                             .star_colour
                             .map(|star| with_shading(star, look.colour, painted)),
+                        stripe: flower
+                            .stripe_colour
+                            .map(|stripe| with_shading(stripe, look.colour, painted)),
+                        back: flower
+                            .back_colour
+                            .map(|back| with_shading(back, look.colour, painted)),
+                        back_base: flower
+                            .back_base_colour
+                            .map(|back| with_shading(back, look.colour, painted)),
+                        back_base_length: flower.back_base_length,
                         tube: flower
                             .tube_colour
                             .map(|tube| with_shading(tube, look.colour, painted)),
