@@ -302,7 +302,11 @@ fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
             let (point, span) = match numbers[..] {
                 [x, y, z] => ([x, y, z], span),
                 [x, y, z, span] if span > 0.0 => ([x, y, z], span),
-                _ => return Err("`--focus` takes X,Y,Z in metres, then optionally a span above 0".into()),
+                _ => {
+                    return Err(
+                        "`--focus` takes X,Y,Z in metres, then optionally a span above 0".into(),
+                    );
+                }
             };
             shot.focus = Some((point, span));
         }
