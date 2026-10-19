@@ -147,19 +147,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
-        "heracleum-maximum",
-        "leaf_length_m",
-        "its stem leaves shrink upward in proportion, so the topmost draw about 15 cm against the 2 to 5 dm Abrams gives, which he measures on the main leaves",
-    ),
-    (
         "holodiscus-discolor",
         "flower_size_m",
         "its flowers are drawn about 5.8 mm across against the 3 to 3.5 mm Dendrology (2019) p. 318 gives",
-    ),
-    (
-        "houttuynia-cordata",
-        "inflorescence_bracts",
-        "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
     ),
     (
         "larrea-tridentata",
@@ -297,29 +287,14 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a short shoot of an alternate-leaved plant unfolds its two leaves a year at one point (broadleaf's Q), so where short shoots bear most of the leaves, as on beach rose's crowded laterals, the measure counts two leaves at most nodes and reads them opposite",
     ),
     (
-        "rubus-pedatus",
-        "phyllotaxis_pattern",
-        "its creeping stems are drawn lying on the ground, and the measure reads their leaves in two ranks where Rosaceae state a spiral (why the herb program ranks them so is not yet traced); FNA gives its leaves no arrangement",
-    ),
-    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
-        "celastrus-scandens",
-        "shoot_leaves",
-        "a vine's shoot grows its year's internodes and stops, so American bittersweet's shoots hold 2 to 3 leaves against the 4 to 18 the angiosperms state, from maples' long shoots; on main they held 3 (a warning), and since its fruiting nodes bear blooms (climber revision 8) one shoot in three plants holds 2",
-    ),
-    (
         "circaea-lutetiana",
         "petiole_length_m",
         "enchanter's nightshade's shortest petioles sat at 1.7 cm against the 2 to 5 cm read from Hooker's \"almost as long as the blade\" (a warning); with herb revision 19's new leaf rules the same three plants draw other random sizes and the shortest is 1.5 cm",
-    ),
-    (
-        "sarcobatus-vermiculatus",
-        "crown_width_max_m",
-        "a shrub's crown is now sized from its flora's greatest width, but greasewood, grown 20 years, overshoots its usual height (below) and spreads with it, 1.6 to 2.2 m across against FNA's 1.8 m",
     ),
     (
         "sarcobatus-vermiculatus",
