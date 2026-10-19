@@ -62,7 +62,7 @@
     {
       "age": 4,
       "environment": "open",
-      "height": 0.6,
+      "height": 0.85,
       "tolerance": 0.35
     }
   ],
@@ -369,7 +369,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "0.6 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+      "note": "0.85 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {

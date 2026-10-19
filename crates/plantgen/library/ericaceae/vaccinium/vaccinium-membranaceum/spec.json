@@ -43,7 +43,7 @@
       "bloom_size": 0.0085,
       "bloom_angle": 120,
       "path_half": 0.8,
-      "crown_height": 1.0
+      "crown_height": 0.85
     }
   },
   "growth": {

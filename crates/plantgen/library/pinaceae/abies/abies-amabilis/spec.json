@@ -13,7 +13,7 @@
     "params": {
       "apical": 0.9,
       "cone_chance": 0.12,
-      "height_rate": 0.02,
+      "height_rate": 0.0115,
       "height_shape": 1.5,
       "whorl": 5,
       "interwhorl": 2,
@@ -22,9 +22,9 @@
       "spray_droop": 10,
       "shade_death": 0.05,
       "shade_years": 4,
-      "pipe_organ": 0.009,
-      "pipe_rings": 6.6e-06,
-      "branch_reach": 4.5,
+      "pipe_organ": 0.004,
+      "pipe_rings": 1.2e-06,
+      "branch_reach": 3,
       "bole": 0.05
     }
   },

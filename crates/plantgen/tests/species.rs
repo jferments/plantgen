@@ -520,8 +520,8 @@ fn growth_history_is_consistent_between_keyframes() {
 fn woody_species_bear_their_fruit_when_old() {
     // Plant roadmap P4: every tree and shrub whose blooms are fruit (as in
     // mid-July) carries them at its oldest keyframe, at sizes from a small
-    // berry to a long raceme of samaras, unless its stated months put it
-    // out of flower and fruit then.
+    // capsule (white mountain-heather's, 2.5 to 3.5 mm) to a long raceme of
+    // samaras, unless its stated months put it out of flower and fruit then.
     let mut checked = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
@@ -569,7 +569,7 @@ fn woody_species_bear_their_fruit_when_old() {
             .collect();
         assert!(!sizes.is_empty(), "{id}: no fruit at {oldest} years");
         assert!(
-            sizes.iter().all(|&size| size > 0.005 && size < 0.25),
+            sizes.iter().all(|&size| size > 0.002 && size < 0.25),
             "{id}: fruit sizes {:?}",
             &sizes[..sizes.len().min(5)]
         );
@@ -662,8 +662,8 @@ fn conifers_bear_cones_once_old() {
         );
     }
     assert_eq!(
-        checked, 17,
-        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir and western larch"
+        checked, 19,
+        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir, western larch, Pacific silver fir and common juniper"
     );
 }
 
@@ -747,8 +747,8 @@ fn open_conifers_keep_their_lower_crowns() {
         );
     }
     assert_eq!(
-        checked, 12,
-        "the open-grown conifers that are not pines, Alaska and incense cedars, mountain hemlock, subalpine fir and western larch among them"
+        checked, 14,
+        "the open-grown conifers that are not pines, Alaska and incense cedars, mountain hemlock, subalpine fir, western larch, Pacific silver fir and common juniper among them"
     );
 }
 
@@ -786,8 +786,8 @@ fn conifers_keep_above_the_ground() {
         }
     }
     assert_eq!(
-        checked, 17,
-        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir and western larch"
+        checked, 19,
+        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir, western larch, Pacific silver fir and common juniper"
     );
 }
 
@@ -826,8 +826,8 @@ fn needled_species_grow_solid_shoots() {
         }
     }
     assert_eq!(
-        checked, 14,
-        "the needled conifers (whitebark pine, mountain hemlock, subalpine fir and western larch among them), the bald cypress and the juniper's juvenile needles"
+        checked, 16,
+        "the needled conifers (whitebark pine, mountain hemlock, subalpine fir, western larch and Pacific silver fir among them), the bald cypress and the junipers' needles (Rocky Mountain juniper's juvenile ones, common juniper's)"
     );
 }
 
@@ -870,7 +870,7 @@ fn builtin_clusters_draw_as_part_meshes() {
         }
     }
     assert_eq!(
-        checked, 139,
+        checked, 153,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -891,7 +891,8 @@ fn builtin_clusters_draw_as_part_meshes() {
          harsh paintbrush's spikes and Pacific bleeding heart's racemes, and lamb\'s ear\'s spike \
          (hair practice), the tomato's, eggplant's and tobacco's cymes and panicle (nightshades), \
          western columbine's cymes, now that its genus states them, and the racemes of fringecup, \
-         blueblossom, spreading gooseberry and bush penstemon (phase A's first ten)"
+         blueblossom, spreading gooseberry and bush penstemon (phase A's first ten), and the \
+         fourteen of the Mount Rainier subalpine batch"
     );
 }
 

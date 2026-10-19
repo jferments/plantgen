@@ -2630,7 +2630,7 @@ mod tests {
         assert_eq!(home.home.as_deref(), Some("pinaceae/family.json"));
         assert_eq!(home.extends.as_deref(), Some("conifer"));
         assert_eq!(home.named_by, ["pinaceae/family.json"]);
-        assert_eq!(home.species.len(), 11);
+        assert_eq!(home.species.len(), 12);
         let base = homes.iter().find(|home| home.name == "conifer").unwrap();
         assert_eq!(base.home, None);
         assert_eq!(base.species.len(), 0);
@@ -2639,7 +2639,7 @@ mod tests {
             pinidae.home.as_deref(),
             Some("_ranks/subclass/pinidae.json")
         );
-        assert_eq!(pinidae.species.len(), 6);
+        assert_eq!(pinidae.species.len(), 7);
 
         let refused = |files: &[(&str, &str)], expected: &str| {
             let folder = Folder::new("taxon-programs-refused");
