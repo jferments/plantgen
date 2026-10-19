@@ -12,7 +12,7 @@
   "generator": {
     "params": {
       "shoots": 4,
-      "internode": 0.08,
+      "internode": 0.077,
       "max_shoot": 2,
       "cling": 0.2,
       "hug": 0.5,
@@ -260,7 +260,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "English ivy's values (a woody climber holding on by roots at its nodes, as Flora of China says pepper does), with fewer shoots and shorter yearly growth, so it climbs to the model's height, and its leaf card set by hand at 0.15 m (the rule's 0.19 m draws the climber's larger leaves past Flora of China's 10-15 cm). Not fitted to measurements. Its host, a 30-year bigleaf maple, stands in for the trees and posts pepper is grown on."
+      "note": "English ivy's values (a woody climber holding on by roots at its nodes, as Flora of China says pepper does), with fewer shoots and shorter yearly growth, so it climbs to the model's height, and its leaf card set by hand at 0.15 m (the rule's 0.19 m draws the climber's larger leaves past Flora of China's 10-15 cm). Not fitted to measurements. Internode 0.077 (was 0.08) since the growth-form language (revision 145), when its host maple's drooping branches let it climb past the 6 m it is typical to. Its host, a 30-year bigleaf maple, stands in for the trees and posts pepper is grown on."
     },
     "host": {
       "evidence": "Authored",

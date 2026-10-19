@@ -1121,4 +1121,12 @@ pub mod venation;
 /// that flowers every year and grows on from one bud (devil's club);
 /// hawthorn's inferior ovary, round petals and oval haws in twos and
 /// threes (154 is poppies round 4, #254).
-pub const GENERATOR_REVISION: u32 = 155;
+/// 156: growth-form language (broadleaf 26): limbs hold the angle floras
+/// give them (`set_point`, from `limb_angle`), a tree's branches droop
+/// apart from its limbs and hold their angle more or less firmly
+/// (`branch_droop`, `branch_hold`, from `branch_posture`), tortuous limbs
+/// bend year by year (`limb_turn`, from `limb_course`), where the leader
+/// is lost the trunk's fork stems spread as scaffold limbs (`fork_set`,
+/// from `leader`), and a flat-topped crown is flattened (`crown_form`
+/// `flat_topped`) (155 is Rosaceae, #236).
+pub const GENERATOR_REVISION: u32 = 156;
