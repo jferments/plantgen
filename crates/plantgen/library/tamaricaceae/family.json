@@ -12,20 +12,36 @@
     "perianth": "sepals_and_petals",
     "flower_merosity": {
       "min": 4,
-      "max": 6
+      "max": 5,
+      "high": 6
     },
     "stamens": {
       "min": 5,
-      "max": 10
+      "max": 10,
+      "low": 4
     },
     "inflorescence": {
-      "spike": "often",
-      "raceme": "sometimes",
-      "solitary": "sometimes"
+      "raceme": "usually",
+      "panicle": "often",
+      "solitary": "rarely"
     },
     "ovary_position": "superior",
     "fruit_type": "capsule",
-    "leaf_incision": "none"
+    "leaf_incision": "none",
+    "life_span": "perennial",
+    "growth_form": "shrub",
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    },
+    "perianth_fused": false,
+    "carpels": {
+      "min": 3,
+      "max": 4,
+      "low": 2,
+      "high": 5
+    },
+    "calyx_in_fruit": "persistent"
   },
   "evidence": {
     "traits": {
@@ -36,12 +52,133 @@
     "traits.leaf_incision": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
-      "note": "DELTA, Tamaricaceae (read 2026-10-17): lamina undivided, leaves tiny, awl-like or scale-like."
+      "note": "Family file kept: tiny undivided scale or awl leaves (FNA and FOC read read 2026-10-19 agree)."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
-      "source": "wikipedia",
-      "note": "Wikipedia Tamarix (read 2026-10-17): 50-60 spp, flowers dense on spikes 5-10 cm long at branch tips. Tamarix is most of the family; Myricaria's racemes and Reaumuria's single flowers (Hutchinson) are the minority."
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): flowers usually in racemes or panicles, rarely solitary (Reaumuria); FNA vol. 6: simple or compound racemes."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): shrubs, subshrubs or trees; FNA vol. 6: shrubs or trees (subshrubs outside the flora)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): woody shrubs and trees."
+    },
+    "traits.growth_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (eFloras, read 2026-10-19): shrubs or trees, usually halophytes, rheophytes or xerophytes; shrub as the usual form."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (eFloras, read 2026-10-19): leaves alternate; FOC: alternate."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (eFloras, read 2026-10-19): leaves scale-like (subulate outside the flora), small; FOC: small, mostly scale-like, mostly with salt-secreting glands."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (eFloras, read 2026-10-19): stipules absent; FOC: estipulate."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): flowers usually hermaphroditic; FOC Tamarix: rarely unisexual."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): flowers regular."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): calyx 4- or 5-fid, persistent; petals 4 or 5, free."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): petals free."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): flowers 4- or 5(or 6)-merous; family: calyx 4-5-fid, petals 4 or 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): stamens 4, 5 or more, inserted on the disk; Hutchinson's 5-10 kept as the span."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (eFloras, read 2026-10-19): pistil (2-)3-4(-5)-carpellate; FOC: 2-5 carpels."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): ovary superior, 1-loculed."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (eFloras, read 2026-10-19): fruits capsular, loculicidal; FOC: capsule conic."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): calyx persistent."
+    },
+    "rules.appearance.organs.leaf.shape.template": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (read 2026-10-19): leaves alternate, scale-like, sessile, on slender green branchlets, many of which fall with the leaves in autumn. Drawing them as branchlet cards is the model's choice, as cedars' sprays are."
+    },
+    "rules.appearance.organs.leaf.shape.angle": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix (read 2026-10-19): leaves scale-like, clasping or sheathing at the base. The 20 degrees, the least a sprig card allows, is the model's."
+    },
+    "rules.generator.defaults.leaf_size": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen sizes a scale-leaved shrub's card (Caryophyllales families, 2026-10-19): as one deciduous branchlet. With a 3.5 mm card, saltcedar's first render grew over 2,000,000 attraction points and stopped."
+    }
+  },
+  "rules": {
+    "appearance.organs.leaf.shape.template": {
+      "map": {
+        "leaf_form": {
+          "scale": "sprig"
+        }
+      },
+      "why": "A tamarisk's scale leaves stand close along slender branchlets that fall whole, so a leaf card holds a branchlet, not one scale."
+    },
+    "appearance.organs.leaf.shape.angle": {
+      "template": "sprig",
+      "map": {
+        "leaf_form": {
+          "scale": 20
+        }
+      },
+      "why": "Scale leaves clasp the branchlet, their tips only a little free of it, at the least angle a sprig card draws."
+    },
+    "generator.defaults.leaf_size": {
+      "needs": [
+        "branchlet_length_m"
+      ],
+      "rule": "branchlet_length_m",
+      "why": "A card is one branchlet, as long as the branchlets are; a 3 mm scale on its own card spaced the shoots 2 cm apart and the crown never finished growing."
     }
   }
 }

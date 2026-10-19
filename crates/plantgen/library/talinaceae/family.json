@@ -5,8 +5,8 @@
   "parent": "order/caryophyllales",
   "traits": {
     "leaf_arrangement": {
-      "alternate": "often",
-      "opposite": "often"
+      "alternate": "usually",
+      "opposite": "sometimes"
     },
     "leaf_division": "simple",
     "leaf_margin": "entire",
@@ -21,15 +21,12 @@
       "ovate": "often",
       "obovate": "often"
     },
-    "stipules": {
-      "true": "usually",
-      "false": "rarely"
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
     },
-    "sexual_system": "hermaphrodite",
-    "ovary_position": {
-      "superior": "usually",
-      "half_inferior": "rarely"
-    },
+    "ovary_position": "superior",
     "hypanthium": {
       "true": "often",
       "false": "often"
@@ -39,34 +36,118 @@
       "herbaceous": "often"
     },
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often"
+      "panicle": "often",
+      "cyme": "often",
+      "solitary": "sometimes"
     },
-    "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "rarely"
     },
-    "perianth": {
-      "sepals_and_petals": "often",
-      "tepals": "often"
-    },
-    "fruit_type": "capsule",
     "stamens": {
-      "min": 3,
-      "max": 50
+      "min": 15,
+      "max": 35,
+      "low": 5
     },
     "carpels": {
       "min": 3,
       "max": 3,
-      "low": 2,
-      "high": 9
-    }
+      "high": 5
+    },
+    "flower_merosity": 5
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Portulacaceae, which takes in Talinaceae: leaves alternate or opposite; leaves simple; margins entire; veins pinnate or single; blades linear, lanceolate, oblanceolate, ovate or obovate; stipules usually present, rarely absent; plants hermaphrodite; ovary usually superior, rarely half inferior; floral cup present or absent; stems woody or herbaceous; flowers solitary or in cymes; flowers actinomorphic or zygomorphic; perianth sepals and petals or tepals; fruit capsule; stamens 3 to 50; carpels (2-) 3 (-9). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves alternate (wechselständig), often somewhat fleshy; FNA Talinum: alternate or subopposite; Flora of China Talinum: alternate or partly opposite."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): simple blades."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): margins entire (and the Portulacaceae family account: mostly entire)."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Kept from the library family file (Watson and Dallwitz DELTA data): veins pinnate or single (Portulacaceae s.l.); not checked in the sources read."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Kept from the library family file (Watson and Dallwitz DELTA data): blades linear to obovate (Portulacaceae s.l.); German Wikipedia: blades very variable, sometimes asymmetric. Not narrowed."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinum' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): true stipules absent, but small inconspicuous scales present that fall early (Talinaceae: two scales in the leaf axils). Flora of China Talinum: axils naked. FNA Portulacaceae: exstipulate except Portulaca and Talinopsis."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): species can be dioecious, but mostly the flowers are bisexual."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): three to five carpels united into a superior, one-chambered ovary; FNA Talinum: ovary superior."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Kept from the library family file (Watson and Dallwitz DELTA data): floral cup present or absent (Portulacaceae s.l.); not checked."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): shrubs, some subshrubs, annual or perennial herbs, rarely small caudiciform trees; Talinella climbing shrubs. File kept."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinum' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): flowers single in the leaf axils or several in terminal panicles; FNA Talinum: paniculate, racemose or cymose; Flora of China Talinum: a thyrse or panicle, very rarely solitary."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): flowers radially symmetric (radiärsymmetrisch); also German Wikipedia 'Talinum'."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): a double perianth: only two sepals, early-falling or kept into fruit, and two to five petals."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Talinum (eFloras flora_id=1 taxon_id=132245, read 2026-10-19): petals 5 or rarely more; Flora of China 5(-10); German Wikipedia Talinum usually five, rarely to seven."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): fruit a berry or a loculicidal, many-seeded capsule; FNA and Flora of China Talinum: capsule 3-valved."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): 15 to 35 stamens; Flora of China Talinum 5-30, German Wikipedia Talinum 10-30."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Talinaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): three to five carpels; FNA Talinum 3[-5]."
     }
   }
 }

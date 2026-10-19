@@ -129,9 +129,27 @@
 # divergence has rolled it to since.
 # With lie 0, as every lineage gives it, a herb grows as before.
 #
+# Revision 16 (flowers in succession): a flowering side branch's raceme
+# is younger than the stem's by branch_lag of a raceme for each branch
+# down from the top, so where a stem's own flower is open its branches
+# still bear buds, as on a poppy whose flowers open one after another
+# from the stem's tip down; and a bud-tipped end may bend over only in
+# its top share hook (a poppy's peduncle hooked just below its bud), not
+# from the raceme's foot. With branch_lag 0 and hook 0, as every program
+# gives them unless it says otherwise, a herb grows as before.
+#
+# Revision 17: a hooked bud's neck narrows over its three bends, from half
+# the stem's width to a fifth, as a poppy's peduncle thins below its bud.
+#
+# Revision 18: a lying stem may branch along the ground (lie_branch), each
+# branch lying and rising as the rest of the stem does, so a trailing
+# plant spreads into a mat. With lie_branch 0 a herb grows as before:
+# the rules for it come after all others, as a herb's random draws
+# follow the order of the rules it uses.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 15;
+lsystem herb 18;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -187,6 +205,8 @@ param bud_spacing;            # a bud's internode as a share of a flower's: belo
 param bud_lean;               # a bud's stalk angle as a share of flower_angle: near 0 the buds stand pressed to the axis
 param bud_stalk;              # a bud's stalk as a share of pedicel
 param nod;                    # degrees the bud-tipped end bends over
+param hook = 0;               # share at the top of a lone bud's stalk where it bends over by nod; 0: from its foot
+param branch_lag = 0;         # share of a raceme by which each flowering side branch, from the top down, is younger
 param bract_length = 0;       # a floral bract's length below each stalk of the raceme; 0: none
 param bract_lean = 1.1;       # a bract's angle to the axis as a share of its stalk's
 param bract_area = 0.235;     # leaf area of a bract 1 m long, m² (the default leaf card's)
@@ -219,6 +239,7 @@ param fruit_area;
 param light_cell;             # light voxel edge
 param lie = 0;                # share of a stem's leafy nodes lying along the ground; 0: none
 param rise = 80;              # degrees a lying stem turns up over its other nodes
+param lie_branch = 0;         # share of a lying stem's nodes that put out a lying branch; 0: none
 
 module Y;                     # the crown: sends up a cohort each year
 module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
@@ -230,13 +251,16 @@ module Pc(k, s, a);           # piece k of a basal leaf, s long
 module St(h, r);              # a stem h tall with a raceme r long
 module Sv(h, r);              # the same stem, past where it leaves its basal leaves
 module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
-module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
+module Nn(i, h, r);           # leaf node i of a stem: its internode, leaves and side branch
+module Lb(i, h, r);           # the lying branch, if any, at leaf node i of a stem
+module Ln(i, m, h, r);        # leaf nodes i to i + m - 1 of a lying branch, which branches no further
+module Rc(i, m, h, r, g);     # raceme nodes i to i + m - 1, g of a raceme younger
 module Lf(s);                 # the leaves at one node
 module Br(a);                 # a floral bract, a degrees from the axis
 module Bx(i, h, r, s);        # the side branch, if any, at leaf node i of a stem, whose leaf is s long
-module Bh(len, o, s);         # a flowering side branch len long, o orders of branching to it, leaves s long
-module Bn(j, len, o, s);      # leaf node j of a side branch len long
-module Bk(len, o, s);         # the branch, if any, at a side branch's leaf node
+module Bh(len, o, s, g);      # a flowering side branch len long, o orders of branching to it, leaves s long, its raceme g younger
+module Bn(j, len, o, s, g);   # leaf node j of a side branch len long, its raceme g younger
+module Bk(len, o, s, g);      # the branch, if any, at a side branch's leaf node
 module Mn(i, m, len, h);         # main-stem nodes i to i + m - 1, each len long, of a stem h tall
 module Un(d, q, len, wd, h);    # sympodial unit of order d from the height share q, len long
 module Uk(i, m, len, q, h);      # its nodes i to i + m - 1
@@ -311,21 +335,21 @@ decompose St(h, r) : units > 0 ->
 decompose St(h, r) : leaf_years > 1 -> Sw(r) Sv(h, r);
 decompose Sv(h, r) : arch > 0 ->
     T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
-    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r, 0);
 decompose Sv(h, r) ->
     !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
-    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r, 0);
 decompose St(h, r) : arch > 0 ->
     T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
-    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r, 0);
 decompose St(h, r) ->
     !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
-    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r, 0);
 decompose Nd(i, m, h, r) : m > 1 ->
     Nd(i, floor(m / 2), h, r) Nd(i + floor(m / 2), m - floor(m / 2), h, r);
 # One node: an internode, then its leaves, sized by where the node sits
 # between the foot and the top of the leafy part.
-decompose Nd(i, m, h, r) : m == 1 ->
+decompose Nd(i, m, h, r) : m == 1 && lie_branch == 0 ->
     /(lie > 0 && i >= round(lie * nodes) ? -(round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
     ^(lie > 0 && i >= round(lie * nodes) ? rise / max(1, nodes - round(lie * nodes)) : 0)
     /(lie > 0 && i >= round(lie * nodes) ? (round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
@@ -343,7 +367,7 @@ decompose Nd(i, m, h, r) : m == 1 ->
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
     /(lie > 0 && i < round(lie * nodes) ? (leaves_per_node == 2 ? -90 : 90) : divergence);
-decompose Nd(i, m, h, r) -> ;
+decompose Nd(i, m, h, r) : m < 1 -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
     ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
@@ -358,41 +382,55 @@ decompose Bx(i, h, r, s) : r > 0 && flower_branches > 0 && i >= nodes - flower_b
     [ &(branch_angle)
       Bh(h * branch_length
          * lerp(1, 0.5, (i - max(0, nodes - flower_branches)) / max(1, min(nodes, flower_branches) - 1)),
-         branch_orders, s * branch_leaf) ];
+         branch_orders, s * branch_leaf, branch_lag * (nodes - i)) ];
 decompose Bx(i, h, r, s) -> ;
 # A side branch: its leaf nodes evenly up the part below the raceme, then
-# the raceme. Each node bears a leaf and, while orders remain, a branch
-# of its own, half as long.
-decompose Bh(len, o, s) ->
-    !(stem_radius * 0.5) Bn(0, len, o, s)
-    F(len * (1 - raceme) / (branch_nodes + 1)) Rc(0, flowers, len, raceme);
-decompose Bn(j, len, o, s) : j < branch_nodes ->
+# the raceme, g of a raceme younger than the stem's. Each node bears a
+# leaf and, while orders remain, a branch of its own, half as long and
+# younger again by branch_lag.
+decompose Bh(len, o, s, g) ->
+    !(stem_radius * 0.5) Bn(0, len, o, s, g)
+    F(len * (1 - raceme) / (branch_nodes + 1)) Rc(0, flowers, len, raceme, g);
+decompose Bn(j, len, o, s, g) : j < branch_nodes ->
     F(len * (1 - raceme) / (branch_nodes + 1))
-    Lf(s) Bk(len, o, s) /(divergence) Bn(j + 1, len, o, s);
-decompose Bn(j, len, o, s) -> ;
-decompose Bk(len, o, s) : o > 1 -> [ &(branch_angle) Bh(len * 0.5, o - 1, s) ];
-decompose Bk(len, o, s) -> ;
+    Lf(s) Bk(len, o, s, g) /(divergence) Bn(j + 1, len, o, s, g);
+decompose Bn(j, len, o, s, g) -> ;
+decompose Bk(len, o, s, g) : o > 1 -> [ &(branch_angle) Bh(len * 0.5, o - 1, s, g + branch_lag) ];
+decompose Bk(len, o, s, g) -> ;
 
 # The raceme: fruit, then open flowers, then buds, the buds' part bending
-# over toward its tip. A male plant's fruit are open flowers.
-decompose Rc(i, m, h, r) : m > 1 ->
-    Rc(i, floor(m / 2), h, r) Rc(i + floor(m / 2), m - floor(m / 2), h, r);
-decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < fruit_below
+# over toward its tip. A male plant's fruit are open flowers. A raceme g
+# younger is drawn as its nodes g further up would be.
+decompose Rc(i, m, h, r, g) : m > 1 ->
+    Rc(i, floor(m / 2), h, r, g) Rc(i + floor(m / 2), m - floor(m / 2), h, r, g);
+decompose Rc(i, m, h, r, g) : m == 1 && (i + 0.5) / flowers + g < fruit_below
                           && (dioecious < 0.5 || sex >= 0.5) ->
     !(stem_radius * 0.5) F(h * r / flowers)
     [ &(fruit_angle * uniform(0.8, 1.2)) fruit(fruit_length * uniform(0.85, 1.1)) ] Br(fruit_angle)
     /(flower_divergence);
-decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < buds_above ->
+decompose Rc(i, m, h, r, g) : m == 1 && (i + 0.5) / flowers + g < buds_above ->
     !(stem_radius * 0.5) F(h * r / flowers)
     [ &(flower_angle * uniform(0.8, 1.2)) !(stem_radius * 0.2) Pd(pedicel)
       flower(flower_size * uniform(0.9, 1.1)) ] Br(flower_angle)
     /(flower_divergence);
-decompose Rc(i, m, h, r) : m == 1 ->
+# A hooked bud bends over only at the top of its stalk, in a short arc
+# of three bends, narrowing as a bud's neck does, and hangs as its stalk leaves it, not turned up to face
+# as an open flower does (flower_tilt). A bud a lagging branch bears is as large as its place
+# on the raceme makes it, not shrunk for the lag.
+decompose Rc(i, m, h, r, g) : m == 1 && hook > 0 ->
+    !(stem_radius * 0.5) F(h * r / flowers * bud_spacing * (1 - hook))
+    &(nod / 3 / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.4) F(h * r / flowers * bud_spacing * hook / 3)
+    &(nod / 3 / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.32) F(h * r / flowers * bud_spacing * hook / 3)
+    &(nod / 3 / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.25) F(h * r / flowers * bud_spacing * hook / 3)
+    [ &(flower_angle * bud_lean) !(stem_radius * 0.2) F(pedicel * bud_stalk)
+      bud(bud_size * lerp(1, 0.5, max(0, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above)))) ]
+    Br(flower_angle * bud_lean) /(flower_divergence);
+decompose Rc(i, m, h, r, g) : m == 1 ->
     &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers * bud_spacing)
     [ &(flower_angle * bud_lean) !(stem_radius * 0.2) Pd(pedicel * bud_stalk)
-      bud(bud_size * lerp(1, 0.5, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above))) ]
+      bud(bud_size * lerp(1, 0.5, max(0, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above)))) ]
     Br(flower_angle * bud_lean) /(flower_divergence);
-decompose Rc(i, m, h, r) -> ;
+decompose Rc(i, m, h, r, g) -> ;
 # A floral bract beside the stalk before it, on the same side. It comes
 # after the stalk so the stalk's own draws are as they were.
 decompose Br(a) : bract_length > 0 ->
@@ -473,3 +511,39 @@ decompose Sd(i, h) : t >= adult_age && i >= first_leaves - side_shoots ->
            * pow(unit_shrink, max(0, units - side_units)) / cos(rad(forks > 1.5 ? fork_angle : 0)),
          stem_radius * 0.55, h) ];
 decompose Sd(i, h) -> ;
+
+# A node of a stem that branches along the ground (lie_branch > 0): the
+# same node, then its lying branch, if any. These rules come last so a
+# herb that does not branch grows exactly as before.
+decompose Nd(i, m, h, r) : m == 1 -> Nn(i, h, r) Lb(i, h, r);
+decompose Nd(i, m, h, r) -> ;
+# A lying stem's lie_branch of its lying nodes, from its second, each put
+# out a branch to alternate sides that lies and rises as the stem's
+# remaining nodes do, so the plant spreads into a mat; a branch's nodes
+# branch no further.
+decompose Lb(i, h, r) : lie_branch > 0 && i >= 1 && i < round(lie * nodes) - 1
+                        && floor((i + 1) * lie_branch) > floor(i * lie_branch) ->
+    [ +((floor(i * lie_branch) - 2 * floor(i * lie_branch / 2) == 0 ? 1 : -1) * 55) Ln(i + 1, nodes - i - 1, h, r) ];
+decompose Lb(i, h, r) -> ;
+decompose Ln(i, m, h, r) : m > 1 ->
+    Ln(i, floor(m / 2), h, r) Ln(i + floor(m / 2), m - floor(m / 2), h, r);
+decompose Ln(i, m, h, r) : m == 1 -> Nn(i, h, r);
+decompose Ln(i, m, h, r) -> ;
+decompose Nn(i, h, r) ->
+    /(lie > 0 && i >= round(lie * nodes) ? -(round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
+    ^(lie > 0 && i >= round(lie * nodes) ? rise / max(1, nodes - round(lie * nodes)) : 0)
+    /(lie > 0 && i >= round(lie * nodes) ? (round(lie * nodes) * (leaves_per_node == 2 ? 0 : 180) + (i - round(lie * nodes)) * divergence) : 0)
+    ^(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 0 : 1)) +(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 3 : 1))
+    !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
+    F(h * (1 - r) * (1 - bare) / nodes)
+    /(lie > 0 && i < round(lie * nodes) ? 90 : 0)
+    Lf(leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    Bx(i, h, r,
+       leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    /(lie > 0 && i < round(lie * nodes) ? (leaves_per_node == 2 ? -90 : 90) : divergence);

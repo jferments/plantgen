@@ -1170,24 +1170,30 @@ fn simple_width(s: &Simple, length: f64, t: f64, margin: Option<&Margin>) -> f64
 }
 
 /// How far a lobe's margin falls back along its flank, from its tip (0)
-/// to its sinus (1): pointed lobes (`round` 0) narrow straight, rounded
-/// ones swell (`round` 1).
+/// to its sinus (1): pointed lobes (`round` 0) narrow fast from a sharp
+/// tip into an open sinus (a jimsonweed's "lobes acute"), rounded ones
+/// swell to a full tip over a narrow sinus (`round` 1).
 fn lobe_flank(share: f64, round: f64) -> f64 {
     let pointed = 1.0 - share;
     let rounded = math::cos(0.5 * PI * share);
-    1.0 - math::pow((pointed + (rounded - pointed) * round).max(0.0), 0.7)
+    let pointedness = (1.0 - round.clamp(0.0, 1.0)).powi(2);
+    1.0 - math::pow(
+        (pointed + (rounded - pointed) * round).max(0.0),
+        0.7 + 0.9 * pointedness,
+    )
 }
 
 /// A pinnately lobed leaf's outline over its lobes' tips, at `t` along
-/// its blade: its half-width as a share of its widest.
-pub(crate) fn lobed_envelope(t: f64) -> f64 {
-    blade_profile(t, 0.55, 0.35, 0.3)
+/// its blade: its half-width as a share of its widest; `outline` where its
+/// look draws one ([`Lobed::outline`]).
+pub(crate) fn lobed_envelope(outline: Option<&[[f64; 2]]>, t: f64) -> f64 {
+    outline_profile(outline, t, 0.55, 0.35, 0.3)
 }
 
 /// A pinnately lobed leaf's half-width at `t` along its blade of `length`
 /// card units, with the lobes of its side's `margin` if given.
 fn lobed_width(s: &Lobed, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
-    let envelope = lobed_envelope(t);
+    let envelope = lobed_envelope(s.outline.as_deref(), t);
     let mut sinus = 1.0;
     if let Some(margin) = margin
         && (LOBES.0..LOBES.1).contains(&t)
@@ -1310,6 +1316,7 @@ fn shape_seed(shape: &Shape) -> u64 {
         "largest",
         "lowest",
         "terminal_size",
+        "interjected",
         "outline",
         "widest",
         "tip",
@@ -2429,7 +2436,12 @@ fn blade(s: &Blade, x: f64, y: f64) -> Paint {
 pub(crate) fn frond_pinna(s: &Frond, k: u32, left: bool) -> (f64, f64) {
     let offset = if left { 0.3 } else { 0.0 };
     let tk = (f64::from(k) + 0.5 + offset) / (f64::from(s.pinnae) + 0.3);
-    let reach = s.width * 0.5 * math::pow(math::sin(PI * math::pow(tk, 0.75)), 0.7);
+    let lance = math::pow(math::sin(PI * math::pow(tk, 0.75)), 0.7);
+    // An oblong outline keeps its breadth to its last fifth, narrowing
+    // only a little at its foot.
+    let oblong = (0.85 + 0.15 * (tk / 0.2).min(1.0)) * math::pow(((1.0 - tk) / 0.2).min(1.0), 0.7);
+    let o = s.oblong.clamp(0.0, 1.0);
+    let reach = s.width * 0.5 * (lance + o * (oblong - lance));
     (tk, reach)
 }
 
@@ -2454,7 +2466,8 @@ fn frond(s: &Frond, x: f64, y: f64, fine: f64) -> Paint {
     let side = if x < 0.0 { -1.0 } else { 1.0 };
     for k in 0..s.pinnae {
         let (tk, reach) = frond_pinna(s, k, side < 0.0);
-        let angle = math::radians(74.0 - 32.0 * tk);
+        let o = s.oblong.clamp(0.0, 1.0);
+        let angle = math::radians(74.0 - 32.0 * tk + o * (12.0 + 22.0 * tk));
         let pinna = reach / math::sin(angle);
         if pinna < 0.004 {
             continue;
@@ -2466,8 +2479,10 @@ fn frond(s: &Frond, x: f64, y: f64, fine: f64) -> Paint {
         if !(0.0..=1.0).contains(&u) {
             continue;
         }
-        let mut width =
-            (0.3 * pinna).min(0.5 * spacing * math::sin(angle)) * blade_profile(u, 0.25, 0.8, 0.6);
+        // Oblong pinnae are widest midway, square at the foot and blunt,
+        // and reach their neighbours.
+        let mut width = (0.3 * pinna).min((0.5 + 0.1 * o) * spacing * math::sin(angle))
+            * blade_profile(u, 0.25 + 0.25 * o, 0.8 + 0.2 * o, 0.6 * (1.0 - o));
         if s.divided > 0.0 && (0.04..0.92).contains(&u) {
             let bump = math::pow(math::sin(PI * frac(u * 7.0)), 0.5);
             width *= 1.0 - 0.75 * s.divided * (1.0 - bump);
@@ -3606,6 +3621,21 @@ fn one_fruit(
                 return Paint::EMPTY;
             }
             Paint::solid(0.5 + 0.55 * bump + 0.25 * math::sqrt(1.0 - d), 0.0)
+        }
+        FruitKind::Achenes => {
+            // Achenes in offset rows, small dark flecks on the flesh.
+            let d = ellipse(0.5, 0.5, 1.0);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            let cell = 0.16;
+            let row = (t * 0.5 / cell * (length / half_width)).floor();
+            let offset = if row % 2.0 == 0.0 { 0.0 } else { 0.5 };
+            let fu = frac(t * 0.5 / cell * (length / half_width));
+            let fv = frac(v / (2.0 * cell) + offset);
+            let fleck = (fu - 0.5).powi(2) + (fv - 0.5).powi(2) < 0.04 && t > 0.1;
+            let shade = ball(d, 0.5, 0.5);
+            Paint::solid(if fleck { shade * 0.55 } else { shade }, 0.0)
         }
         FruitKind::Hip => {
             let d = ellipse(0.4, 0.4, 1.0);

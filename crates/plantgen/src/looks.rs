@@ -163,6 +163,69 @@ pub struct Hairs {
     /// the soft hairs, in their own density, length and lie.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stings: Option<Box<Hairs>>,
+    /// A glandular hair's head across, metres, where a source measures it:
+    /// a sundew's oval gland, a hemp's resin head of 50 to 100 µm. Unstated,
+    /// about a fifth of the hair's height (a tomato's).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub head: Option<f64>,
+    /// The drop of secretion each head holds ([`Drop`]): the clear, sticky
+    /// mucilage round a sundew's gland that glitters in the sun, or the
+    /// resin a hemp's head is full of. Without one a head is drawn as
+    /// resin, glossy but not clear.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub drop: Option<Drop>,
+    /// How many stand on a square centimetre of the face, where a count is
+    /// known (Darwin's 192 tentacles on a sundew's leaf): then they stand
+    /// so many whatever `density` says, which still sets the card's cast.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub count: Option<f64>,
+    /// How many times as long they stand at the face's edge as at its
+    /// middle, grading between, and leaning out over the edge as they
+    /// lengthen, the outermost in the face's own plane: a sundew's short
+    /// upright central tentacles and long spreading marginal ones (Darwin
+    /// 1875). Absent, one length over the face.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub edge_length: Option<f64>,
+    /// The colour of each hair's own stalk, linear RGB, where it is
+    /// pigmented (a sundew's red tentacles): then it and the head are drawn
+    /// in it and in `colour`, not clear over the organ's colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stalk: Option<[f32; 3]>,
+    /// Prickles standing among these on the young stems and stalks (an
+    /// eggplant's "stout recurved prickles", Flora of China): a stout
+    /// broad-footed cone of the skin, bent back toward the stem's foot,
+    /// in the stem's colour toward theirs, in their own density, length
+    /// and lie.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub prickles: Option<Box<Hairs>>,
+}
+
+/// The drop of secretion on a glandular hair's head: drawn as a clear
+/// liquid bead, showing what lies behind it through its own colour,
+/// mirroring the sky at its rim and glinting where it mirrors the sun.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Drop {
+    /// Its width as a multiple of the head's: above 1 a bead round the
+    /// head, the head seen through it; 1 or less the head is itself the
+    /// drop (a resin head with no other cover).
+    pub size: f64,
+    /// The liquid's colour, linear RGB: near white for water-clear
+    /// mucilage, milky or amber for aging resin.
+    pub colour: [f32; 3],
+    /// How much of what lies behind shows through it, 0 (milky, opaque)
+    /// to 1 (water-clear).
+    pub clarity: f64,
+}
+
+impl Default for Drop {
+    fn default() -> Self {
+        Self {
+            size: 1.0,
+            colour: [0.95, 0.95, 0.92],
+            clarity: 0.9,
+        }
+    }
 }
 
 /// How a hair branches (Harris and Harris): a plain hair, a star of
@@ -198,25 +261,35 @@ impl Default for Hairs {
             branching: Branching::Simple,
             glands: None,
             stings: None,
+            head: None,
+            drop: None,
+            count: None,
+            edge_length: None,
+            stalk: None,
+            prickles: None,
         }
     }
 }
 
 impl Hairs {
     /// Whether there are any to draw: these, or glandular or stinging
-    /// hairs among them.
+    /// hairs or prickles among them.
     #[must_use]
     pub fn drawn(&self) -> bool {
         self.own_drawn()
             || self.glands.as_deref().is_some_and(Self::own_drawn)
             || self.stings.as_deref().is_some_and(Self::own_drawn)
+            || self.prickles.as_deref().is_some_and(Self::own_drawn)
     }
 
     /// Whether these hairs themselves, leaving out the glandular and
     /// stinging hairs among them, are any to draw.
     #[must_use]
     pub fn own_drawn(&self) -> bool {
-        (self.density > 0.0 || self.edge.is_some_and(|edge| edge > 0.0)) && self.length > 0.0
+        (self.density > 0.0
+            || self.edge.is_some_and(|edge| edge > 0.0)
+            || self.count.is_some_and(|count| count > 0.0))
+            && self.length > 0.0
     }
 
     /// These hairs with `share` of each kind kept: young wood's, worn by
@@ -227,14 +300,17 @@ impl Hairs {
             hairs.as_ref().map(|hairs| {
                 Box::new(Self {
                     density: hairs.density * share,
+                    count: hairs.count.map(|count| count * share),
                     ..(**hairs).clone()
                 })
             })
         };
         Self {
             density: self.density * share,
+            count: self.count.map(|count| count * share),
             glands: thin(&self.glands),
             stings: thin(&self.stings),
+            prickles: thin(&self.prickles),
             ..self.clone()
         }
     }
@@ -1574,6 +1650,12 @@ pub struct Lobed {
     /// 1 for rounded lobes, 0 for pointed ones.
     pub round: f64,
     pub petiole: f64,
+    /// The outline over its lobes' tips, as [`Simple::outline`]: an ovate
+    /// hawthorn's widest low on the blade, a deltate one's near its base
+    /// (Rosaceae, 2026-10-19). Unset, it is widest a little above the
+    /// middle, as an oak's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub outline: Option<Vec<[f64; 2]>>,
 }
 
 impl Default for Lobed {
@@ -1584,6 +1666,7 @@ impl Default for Lobed {
             depth: 0.5,
             round: 1.0,
             petiole: 0.08,
+            outline: None,
         }
     }
 }
@@ -1660,6 +1743,12 @@ pub struct Compound {
     /// The terminal leaflet's length as a share of the longest lateral's.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub terminal_size: Option<f64>,
+    /// Small leaflets interjected between a once-pinnate leaf's pairs, as
+    /// a share of the length of the pairs they stand between: a tomato's
+    /// leaf "interspersed with smaller interjected leaflets"; unset or 0
+    /// for none. They are not counted among its leaflets.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub interjected: Option<f64>,
     /// Each leaflet's blade, as in [`Simple`]: its outline, or where it is
     /// widest, its tip and its base.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1730,6 +1819,7 @@ impl Default for Compound {
             largest: None,
             lowest: None,
             terminal_size: None,
+            interjected: None,
             outline: None,
             widest: None,
             tip: None,
@@ -1857,6 +1947,13 @@ pub struct Frond {
     pub divided: f64,
     /// Length of the bare stalk at the base.
     pub stipe: f64,
+    /// How oblong its pinnae are, 0 to 1: 0 lanceolate, pointed and
+    /// angled up along a lance-shaped outline; 1 oblong and blunt, set
+    /// nearly square to the rachis and crowded edge to edge along an
+    /// outline as broad to near its tip (a maidenhair's pinnules on its
+    /// pinna).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub oblong: f64,
 }
 
 impl Default for Frond {
@@ -1866,6 +1963,7 @@ impl Default for Frond {
             width: 0.32,
             divided: 0.0,
             stipe: 0.12,
+            oblong: 0.0,
         }
     }
 }
@@ -1912,6 +2010,24 @@ pub struct Flower {
     /// Share of the sepals' length joined in a calyx cup.
     #[serde(skip_serializing_if = "is_zero")]
     pub sepals_fused: f64,
+    /// How sharply a joined calyx's tube is angled, 0 to 1: 0 round, 1 a
+    /// ridge down each sepal's midrib (a jimsonweed's prismatic calyx).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub calyx_angled: f64,
+    /// How much a joined calyx's tube swells low down, over its mouth's
+    /// radius, 0 to 0.5 (a jimsonweed's, swollen at its base).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub calyx_swell: f64,
+    /// How far the flower has opened when its calyx falls: a poppy's
+    /// sepals, pushed off as a cap when its petals begin to spread, fall at
+    /// 0.1; at 1 the calyx stays.
+    #[serde(skip_serializing_if = "is_one")]
+    pub calyx_shed: f64,
+    /// How an open flower of a cluster holds itself, as a fruit's `hang`:
+    /// 0 along its pedicel, 1 hanging straight down from it (a bleeding
+    /// heart's), between them turned that share of the way.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub nod: f64,
     /// The sepals' colour, and a spiral's outer tepals'; a leaf green if
     /// absent. A labellate flower's sepals take the petals' colour.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2134,6 +2250,10 @@ impl Default for Flower {
             sepals: 0,
             sepal_length: SEPAL_LENGTH,
             sepals_fused: 0.0,
+            calyx_angled: 0.0,
+            calyx_swell: 0.0,
+            calyx_shed: 1.0,
+            nod: 0.0,
             calyx: None,
             filament: None,
             pistil: None,
@@ -2355,6 +2475,11 @@ pub enum Corolla {
     /// banner of a palo verde, which is not a pea flower's; of tepals, the
     /// outer one toward the axis.
     Unequal,
+    /// Symmetric about two planes (disymmetric), as a bleeding heart's: two
+    /// outer petals pouched at the base into a heart, their tips meeting
+    /// below, and two narrow inner petals joined at their tips between
+    /// them (4 petals).
+    Disymmetric,
 }
 
 impl Corolla {
@@ -2735,6 +2860,36 @@ pub struct Fruit {
     /// threads, as a share of the fruit's length; 0 for seeds held in it.
     #[serde(skip_serializing_if = "is_zero")]
     pub threads: f64,
+    /// The drupelets of one aggregate fruit (a cloudberry's 5 to 20, a
+    /// raspberry's 20 to 60), drawn as many as its detail holds, each as
+    /// large as covers the fruit; 0 for as many as its detail draws.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub fruitlets: u32,
+    /// How far an aggregate's drupelets stand apart, 0 to 1: 0 packed
+    /// into one strongly coherent fruit (a blackberry's), 1 barely held
+    /// together, each a separate bead round a small core (a strawberryleaf
+    /// raspberry's few).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub loose: f64,
+    /// How hairy the fruit's skin is, 0 (glabrous) to 1 (densely
+    /// tomentose): fine pale hairs over it dull and pale its colour, as a
+    /// raspberry's felted drupelets are paler than a blackberry's.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub hairs: f64,
+    /// A seed's length over the fruit's, for the seeds an opened capsule
+    /// shows packed inside its valves (a jimsonweed's black seeds); 0
+    /// for a twelfth of it.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub seed_size: f64,
+    /// Rays of a stigmatic disc crowning the fruit (a poppy's capsule, its
+    /// stigmas radiating on a flat lobed disc): 0 for none.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub disc: u32,
+    /// Prickles on a kept calyx pressed to the fruit, each as long as
+    /// this share of the fruit's width, a few down each lobe's middle (an
+    /// eggplant's cap); 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub kept_prickles: f64,
 }
 
 impl Default for Fruit {
@@ -2767,6 +2922,12 @@ impl Default for Fruit {
             cup: None,
             ripening: None,
             threads: 0.0,
+            fruitlets: 0,
+            loose: 0.0,
+            hairs: 0.0,
+            seed_size: 0.0,
+            disc: 0,
+            kept_prickles: 0.0,
         }
     }
 }
@@ -2991,10 +3152,17 @@ struct FruitCard {
     spines_fall: f64,
     felt: Option<[f32; 3]>,
     bristles: Option<[f32; 3]>,
+    #[serde(default)]
+    disc: u32,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
     ripening: Option<[f32; 3]>,
     threads: f64,
+    fruitlets: u32,
+    loose: f64,
+    hairs: f64,
+    seed_size: f64,
+    kept_prickles: f64,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -3032,6 +3200,12 @@ impl Default for FruitCard {
             cup: None,
             ripening: None,
             threads: 0.0,
+            fruitlets: 0,
+            loose: 0.0,
+            hairs: 0.0,
+            seed_size: 0.0,
+            disc: fruit.disc,
+            kept_prickles: 0.0,
             count: None,
             cluster: None,
             size: None,
@@ -3084,6 +3258,12 @@ impl TryFrom<FruitCard> for Fruit {
             cup: card.cup,
             ripening: card.ripening,
             threads: card.threads,
+            fruitlets: card.fruitlets,
+            loose: card.loose,
+            hairs: card.hairs,
+            seed_size: card.seed_size,
+            disc: card.disc,
+            kept_prickles: card.kept_prickles,
         })
     }
 }
@@ -3138,6 +3318,9 @@ pub enum FruitKind {
     /// Several berries from one flower, splayed from one stalk (the
     /// pawpaw's), each as wide as `aspect` makes it.
     Berries,
+    /// A fleshy receptacle with dry achenes set on its surface (a
+    /// strawberry's): `fruitlets` of them, or as many as its detail holds.
+    Achenes,
 }
 
 impl FruitKind {
@@ -3663,10 +3846,13 @@ impl Shape {
                 count("parallel", s.parallel, 0, 12)?;
                 check("praemorse", s.praemorse, 0.0, 0.3)?;
                 check("midrib", s.midrib, 0.0, 1.0)?;
-                check("petiole", s.petiole, 0.0, 0.7)
+                // A sundew's or a violet's small blade sits on a petiole
+                // four to five times its length.
+                check("petiole", s.petiole, 0.0, 0.9)
             }
             Self::Lobed(s) => {
                 check("width", s.width, 0.1, 1.5)?;
+                outline(self.name(), s.outline.as_deref(), [("", 0.0, 0.0); 3])?;
                 count("lobes", s.lobes, 1, 10)?;
                 check("depth", s.depth, 0.0, 0.9)?;
                 check("round", s.round, 0.0, 1.0)?;
@@ -3709,7 +3895,8 @@ impl Shape {
                 count("pinnae", s.pinnae, 3, 40)?;
                 check("width", s.width, 0.05, 1.0)?;
                 check("divided", s.divided, 0.0, 1.0)?;
-                check("stipe", s.stipe, 0.0, 0.6)
+                check("stipe", s.stipe, 0.0, 0.6)?;
+                check("oblong", s.oblong, 0.0, 1.0)
             }
             Self::Flower(s) => {
                 count("petals", s.petals, 3, 60)?;
@@ -3734,6 +3921,10 @@ impl Shape {
                 count("sepals", s.sepals, 0, 12)?;
                 check("sepal_length", s.sepal_length, 0.1, 3.0)?;
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
+                check("calyx_angled", s.calyx_angled, 0.0, 1.0)?;
+                check("calyx_swell", s.calyx_swell, 0.0, 0.5)?;
+                check("calyx_shed", s.calyx_shed, 0.0, 1.0)?;
+                check("nod", s.nod, 0.0, 1.0)?;
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
                     check("filament", f64::from(channel), 0.0, 1.0)?;
@@ -3798,13 +3989,14 @@ impl Shape {
                 check("open", s.open, 0.0, 1.0)?;
                 if s.petal_whorls == 2
                     && (s.perianth != Perianth::Corolla
-                        || s.corolla != Corolla::Regular
+                        || !matches!(s.corolla, Corolla::Regular | Corolla::Disymmetric)
+                        || (s.corolla == Corolla::Disymmetric && s.petals != 4)
                         || s.petals % 2 != 0
                         || s.petals < 4)
                 {
                     return Err(format!(
                         "petals in two whorls are a regular corolla of an even number, \
-                         at least 4: found {} {:?} {:?}",
+                         at least 4, or a disymmetric one of 4: found {} {:?} {:?}",
                         s.petals, s.perianth, s.corolla
                     ));
                 }
@@ -3942,7 +4134,9 @@ impl Shape {
                 check("stalk", s.stalk, 0.0, 0.6)
             }
             Self::Fruit(s) => {
-                check("aspect", s.aspect, 0.1, 2.0)?;
+                // As slender as the fruit rule draws a pod (a California
+                // poppy's, a twentieth as wide as long).
+                check("aspect", s.aspect, 0.05, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
                 check("kept_calyx", s.kept_calyx, 0.0, 2.0)?;
                 check("hang", s.hang, -1.0, 1.0)?;
@@ -3961,6 +4155,16 @@ impl Shape {
                     )?;
                 }
                 check("threads", s.threads, 0.0, 1.0)?;
+                check("loose", s.loose, 0.0, 1.0)?;
+                check("hairs", s.hairs, 0.0, 1.0)?;
+                if s.fruitlets != 0 {
+                    count("fruitlets", s.fruitlets, 1, 500)?;
+                }
+                check("seed_size", s.seed_size, 0.0, 0.5)?;
+                if s.disc > 24 {
+                    return Err(format!("disc has 0 to 24 rays, found {}", s.disc));
+                }
+                check("kept_prickles", s.kept_prickles, 0.0, 0.5)?;
                 check("unripe", s.unripe, 0.0, 1.0)?;
                 check("apiculum", s.apiculum, 0.0, 0.3)?;
                 check("spine", s.spine, 0.0, 0.5)?;
@@ -4201,6 +4405,7 @@ impl Compound {
             ("largest", self.largest, 0.0, 1.0),
             ("lowest", self.lowest, 0.2, 1.0),
             ("terminal_size", self.terminal_size, 0.3, 2.0),
+            ("interjected", self.interjected, 0.0, 0.8),
             ("widest", self.widest, 0.15, 0.85),
             ("tip", self.tip, 0.0, 1.0),
             ("base", self.base, 0.0, 1.0),
@@ -6184,9 +6389,12 @@ mod tests {
         let (look, size) = on(clustered(ClusterKind::Umbel, 6, cherry()), 120.0);
         assert_eq!(size, 1.0);
         assert!(stages_of(&look).iter().all(|&(_, stage)| stage == Some(1)));
-        // The card's colours are the flower's.
+        // The card's colours are the flower's, and, where its accent is
+        // its colour, its stalks'.
         assert_eq!(look.colour, [0.95, 0.95, 0.9]);
-        assert_eq!(look.accent, [0.95, 0.95, 0.9]);
+        let cluster = look.inflorescence.as_ref().expect("its cluster");
+        assert_eq!(look.accent, cluster.layout(0.0, 0).units[0].stalk);
+        assert_ne!(look.accent, look.colour);
         // In fruit every unit is its own look, as before units had stages.
         let (look, size) = on(clustered(ClusterKind::Umbel, 6, cherry()), 185.0);
         assert_eq!(size, 1.0);

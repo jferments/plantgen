@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Mollugo",
+  "traits": {
+    "growth_form": "forb",
+    "woodiness": "herbaceous",
+    "life_span": {
+      "annual": "usually",
+      "perennial": "sometimes"
+    },
+    "stem_hairs": "glabrous",
+    "leaf_hairs": "glabrous",
+    "stipules": false,
+    "cauline_leaves": "reduced",
+    "inflorescence": {
+      "umbel": "often",
+      "cyme": "often"
+    },
+    "perianth": "tepals",
+    "perianth_parts": 5,
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 3,
+      "max": 5
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5
+    },
+    "fruit_type": "capsule",
+    "capsule_valves": 3,
+    "calyx_in_fruit": "persistent"
+  },
+  "evidence": {
+    "traits.growth_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): herbs, stems prostrate to erect, branching from the base."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): herbs."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): herbs annual [perennial] (perennial outside the flora area); Flora of China: annual or perennial."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): plants glabrous."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): plants glabrous."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): stipules absent or rudimentary."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): basal leaves usually largest, cauline leaves gradually reduced distally."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): inflorescences axillary or terminal, reduced umbellate or cymose; Flora of China: terminal or seemingly leaf-opposed cymes or umbels."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): sepals persistent, 5, distinct; petals absent (Flora of China: tepals 5, rarely 4)."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): sepals 5; Flora of China: tepals 5, rarely 4."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): sepals 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): stamens 3-5; Flora of China: usually 3(-5), rarely 6-10."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): pistils 3-5-locular, styles 3-5; Flora of China carpels 3(-5), connate."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): fruits capsular, 3-valved."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Mollugo (eFloras flora_id=1 taxon_id=120942, read 2026-10-19): capsules 3-valved (Flora of China 3(-5)-valved, loculicidal)."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Mollugo (eFloras flora_id=2 taxon_id=120942, read 2026-10-19): capsule with persistent tepals; FNA: sepals persistent."
+    }
+  }
+}

@@ -47,7 +47,22 @@
     "inflorescence": {"cyme": "usually", "solitary": "often"},
     "sexual_system": "hermaphrodite"
   },
+  "rules": {
+    "appearance.stem_hairs.prickles.density": {
+      "map": {"spines": {"prickles": {"map": {"prickle_density": {"sparse": 0.01, "scattered": 0.03, "dense": 0.1}}, "else": 0.03}}},
+      "why": "A nightshade armed with prickles bears them on its young stems and leaf stalks among its hairs, as thickly as its flora says: one every few centimetres up a stem where sparse, closer where it is called prickly, crowded where densely prickly."
+    },
+    "appearance.stem_hairs.prickles.length": {
+      "map": {"spines": {"prickles": {"rule": "first(prickle_length_m, 0.004)"}}},
+      "why": "A stem's prickles are as long as its flora states, or four millimetres where it states none."
+    },
+    "appearance.stem_hairs.prickles.lie": {
+      "map": {"spines": {"prickles": 0.9}},
+      "why": "A prickle stands out from the stem, its point bent back toward the stem's foot."
+    }
+  },
   "evidence": {
+    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "How a nightshade's stem prickles are drawn among its stem hairs (nightshades round 5, 2026-10-18/19), choices of the model's: about one prickle per few square centimetres where sparse (Flora of China's eggplant, sparingly armed), more where prickly or densely so; four millimetres long where no length is stated, near Flora of China's 3 mm calyx prickles; each bent back toward the stem's foot, as floras' recurved prickles are. Homed at the family, not at all plants: roses' and brambles' prickles wait for a shared armature module (Joshi, 2026-10-19 06:14Z)."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "Lucid family key, Solanaceae (read 2026-10-17): leaves sometimes deeply lobed (pinnatifid to tripinnatifid); DELTA, Solanaceae (read 2026-10-17): lamina entire or dissected, pinnatifid when cut; Flora of China (read 2026-10-17): some Solanum much divided or lobed."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China, Solanaceae (read 2026-10-17): blade entire, dentate, lobed or divided; berry-fruited groups entire. Lucid family key (read 2026-10-17): entire, dentate, serrate, sinuate or spiny. Weighted by genus: most Solanum, Cestrum, Lycium blades are entire or wavy; coarse teeth in Physalis, Datura, Nicotiana parts."},
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "Lucid family key, Solanaceae (read 2026-10-17): blade or lobe outlines filiform to linear, lanceolate, ovate, elliptic, oblanceolate, oblong, orbicular. Ranking ours, weighted by genus: Solanum (c. 1,500 species per Wikipedia Solanum (read 2026-10-17); most of the family per Wikipedia Solanaceae) has mostly ovate to elliptic blades, as do Cestrum and Physalis; narrow in Lycium."},

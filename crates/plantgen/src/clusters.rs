@@ -784,11 +784,29 @@ impl Opening {
     /// in one stage, that stage's colour and accent; else the colour most
     /// of their area shows, unripe fruit their accent, and the next. Each
     /// unit's colours are then matched as nearly as these two make them
-    /// ([`blend`]).
+    /// ([`blend`]). Where that leaves the two the same (white flowers
+    /// with no accent of their own), the second is the stalks' colour, so
+    /// the card draws its stalks green rather than as a grey made of the
+    /// flowers' white.
     #[must_use]
     // Colours are told apart exactly: one stage's, or another's.
     #[allow(clippy::float_cmp)]
     pub fn slots(&self, laid: &Layout) -> ([f32; 3], [f32; 3]) {
+        let (colour, accent) = self.unit_slots(laid);
+        if colour != accent {
+            return (colour, accent);
+        }
+        let stalk = laid
+            .units
+            .first()
+            .map(|p| p.stalk)
+            .or_else(|| laid.stalks.first().map(|stalk| stalk.colour));
+        (colour, stalk.unwrap_or(accent))
+    }
+
+    /// The two colours the units alone ask of a card ([`Self::slots`]).
+    #[allow(clippy::float_cmp)]
+    fn unit_slots(&self, laid: &Layout) -> ([f32; 3], [f32; 3]) {
         let mut stages = [false; 3];
         let mut areas: Vec<([f32; 3], f64)> = Vec::new();
         for p in &laid.units {
@@ -1971,6 +1989,12 @@ impl Shown<'_> {
     }
 }
 
+/// The most triangles a cluster's flowers may take together and still be
+/// drawn whole on its finest step, whorl by whorl (Rosaceae, 2026-10-19):
+/// half the 8,192 a cluster's part mesh held before part meshes were
+/// drawn at full quality.
+const WHOLE_FLOWERS: usize = 4096;
+
 /// Draw `laid`, a layout of `cluster`, on `organ` (see [`draw`]).
 #[allow(clippy::too_many_arguments, clippy::too_many_lines, clippy::float_cmp)]
 fn draw_laid(
@@ -2081,6 +2105,16 @@ fn draw_laid(
         u32::try_from(laid.units.len()).unwrap_or(u32::MAX),
         part.coarse,
     );
+    // On the finest step, a cluster of few flowers draws each whorl by
+    // whorl as a lone flower's first coarse step does, while all of them
+    // together take no more than `WHOLE_FLOWERS` triangles: a rose's or a
+    // bramble's few big flowers, not kites. Many small ones are reduced.
+    let flowering = shown
+        .iter()
+        .flatten()
+        .filter(|shown| matches!(shown.shape, Shape::Flower(flower) if !flower.is_plain()))
+        .count();
+    let mut whole: Option<bool> = None;
     for (index, (p, shown)) in laid.units.iter().zip(&shown).enumerate() {
         if thinned && !kept(organ, index) {
             continue;
@@ -2128,13 +2162,28 @@ fn draw_laid(
                 // axis that bears it where it is zygomorphic.
                 let first = mesh.positions.len();
                 let first_index = mesh.indices.len();
-                crate::flowers::draw_reduced(
+                let whole = part.coarse == 0
+                    && !thinned
+                    && *whole.get_or_insert_with(|| {
+                        flowering * crate::flowers::triangles(flower, form, 1) <= WHOLE_FLOWERS
+                    });
+                let draw = if whole {
+                    crate::flowers::draw
+                } else {
+                    crate::flowers::draw_reduced
+                };
+                let part = if whole {
+                    Part { coarse: 1, ..part }
+                } else {
+                    part
+                };
+                draw(
                     &crate::flowers::layout(flower, form, unit_length * 0.5, spin),
                     crate::flowers::Frame::new(
                         base,
-                        direction,
+                        fruit::hung(direction, flower.nod),
                         to_direction(p.bearing),
-                        any_perpendicular(direction),
+                        any_perpendicular(fruit::hung(direction, flower.nod)),
                         flower.is_zygomorphic(),
                     ),
                     crate::flowers::Colours {

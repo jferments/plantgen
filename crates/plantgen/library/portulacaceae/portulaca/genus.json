@@ -3,9 +3,65 @@
   "rank": "genus",
   "name": "Portulaca",
   "traits": {
-    "leaf_arrangement": {"alternate": "usually", "opposite": "sometimes"}
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "stem_posture": {
+      "prostrate": "often",
+      "decumbent": "often",
+      "erect": "sometimes"
+    },
+    "rosette": "terminal",
+    "pedicel_length_m": 0,
+    "petal_shape": {
+      "obovate": "often",
+      "oblong": "sometimes"
+    },
+    "perianth_fused": false,
+    "capsule_valves": 2,
+    "fruit_shape": "globose"
   },
   "evidence": {
-    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "nz-flora", "note": "NZ Flora Portulaca genus account (read 2026-10-17): leaves mostly spiralled to near-opposite, at times opposite, uppermost whorled beneath the flowers."}
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "nz-flora",
+      "note": "NZ Flora Portulaca genus account (read 2026-10-17): leaves mostly spiralled to near-opposite, at times opposite, uppermost whorled beneath the flowers."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): stems prostrate or decumbent; FNA: erect to prostrate."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): leaves congested and involucre-like immediately below the inflorescence at the stem tips; FOC: an involucre of leaves round the terminal head. Read as leaves crowded at the stem tips."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): flowers sessile or subsessile; FOC: sessile."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): petals ephemeral, 5-7, usually distinct, margins usually entire (shape from P. oleracea and the key: obovate in most)."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): petals free or shortly connate at the base."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Portulaca (eFloras, read 2026-10-19): capsule circumscissile: it opens round its middle into a lid and a cup, two parts, read as 2 valves (the vocabulary's valves split from the tip, so this is approximate)."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Portulaca (eFloras, read 2026-10-19): capsule globose or nearly so."
+    }
   }
 }

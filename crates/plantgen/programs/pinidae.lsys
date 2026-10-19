@@ -177,11 +177,34 @@
 # sprays' area (a third of the modules), and spent buds more than 2 m above
 # ground_watch go. Branching once, an old crown was a fishbone of bare
 # whips; with all three a fully branched Sitka spruce grows to 300 years
-# within the limit. Branch shoots lengthen over top_ramp metres below the
-# treetop (Cannell et al. 1976), so young tops are pointed, not blunt. And
+# within the limit. Branch shoots lengthen over the leader's last top_ramp
+# years' growth below the treetop (Cannell et al. 1976), so young tops are pointed, not blunt. And
 # bole clears a tree's foot of limbs in step with its height: saplings keep
 # limbs to the ground, old trees show the clean trunk photographs and
 # Strieby's (2017) Sitka spruce plate show.
+# Grown on past 150 years, those crowns still lost half to nine tenths of
+# their foliage by 300 (Douglas-fir 1819 to 195 m², western larch 105 to
+# 7): not to shade, as their crowns grew brighter, but because they stopped
+# renewing their twigs. Every order's shoot was a share of the leader's
+# rise, so once the leader stopped, side shoots grew a centimetre a year
+# and, shorter than bud_length, set a tenth of their twigs. With apical, a
+# side shoot (order 2 and up) now grows at least side_floor before
+# side_growth,
+# coming in over the top floor_ramp share of the height so the top stays
+# narrow; dormant buds may be kept only up to epi_order (on a limb's
+# main axis, where old Douglas-fir's epicormic shoots stand, Ishii & Ford
+# 2001), so they can wait the limb's life within the module limit; and a
+# limb whose tips' mean light falls under limb_tip times shade_death is
+# shed, so a lineage can ease limb_light, which sheds a limb for the
+# segments it carries and so, in the end, for its age. And with seg_min an
+# apex holds its growth until it reaches seg_min and lays it down as one
+# shoot, its sprays as large in area as the years' it holds (below the
+# leader's last top_ramp years' growth, whose short shoots lay down every year so
+# a young top is not a bare stick), so an old
+# limb's slow shoots cost a segment, a bud and a spray every few years, not
+# every year: a fully branched old Douglas-fir or western hemlock then fits
+# the module and segment limits without shedding its inner side shoots.
+# All four are off by default.
 # Limb shedding (limb_light) and short shoots' fewer buds (bud_length) are
 # off by default, set by the families fitted with them, so a yew or a
 # cypress grows as before. And shade strengthens apical control
@@ -211,6 +234,7 @@ param interwhorl = 2;          # smaller branches along each year's leader shoot
 param interwhorl_vigour = 0.5; # their growth relative to whorl branches
 param limb_age = 20;           # years before a limb may be shed for want of light (revision 13)
 param limb_light = 0;          # a limb older than limb_age is shed when its tips' light, qsum, falls under this per segment it carries, times shade_death / 0.1; 0: never
+param limb_tip = 0;            # a limb older than limb_age is shed when its tips' mean light falls under this times shade_death; 0: never
 param bud_length = 0;          # a shoot shorter than this sets proportionally fewer side buds, a leader fewer whorl branches; 0: all
 param stems = 1;               # stems from one foot, as a clump grows from a bird's seed cache
 param stem_angle = 15;         # degrees each stem of a clump leans out
@@ -220,8 +244,13 @@ param branch_growth = 0.3;     # yearly shoot of a first-order branch in full li
 param branch_reach = 6;        # wood from the stem at which a branch's yearly shoot is half as long
 param apical = 0;              # a first-order branch's yearly shoot in full light is this share of the leader's that year (apical control); 0: branch_growth, slowed by branch_reach
 param branch_floor = 0.02;     # with apical, the least yearly shoot of a first-order branch in full light, once the leader slows
+param side_floor = 0;          # with apical, the least yearly shoot of a side shoot (order 2 and up) in full light, before side_growth, once the leader slows; 0: branch_floor
+param seg_min = 0;             # an apex holds its growth until it reaches this many metres and lays it down as one shoot, its sprays as large in area as the years' it holds, so slow old shoots cost a segment every few years; 0: every year
+param floor_ramp = 0;          # side_floor comes in over this share of the tree's height below the treetop, so the top stays pointed; 0: in full at once
+param floor_reach = 0;         # a shoot's floor growth (branch_floor, side_floor) fades with its distance from the trunk past this share of the tree's height, so a crown that has stopped rising widens no more than its limbs' shoots reach; 0: no fade
+param floor_keep = 0.3;        # the least share of the floor growth a shoot past floor_reach keeps, so it still renews its foliage
 param apical_light = 0;        # with apical, a branch whose light is under this, times min(1, shade_death / 0.1)^6, takes a proportionally smaller share of the leader's shoot (shade strengthens apical control, less in a shade-tolerant species); 0: off
-param top_ramp = 0;            # depth below the treetop, m, over which branch shoots lengthen to full (Cannell et al. 1976: lateral shoots are shortest in the top whorls), so the top is pointed; 0: off
+param top_ramp = 0;            # years of the leader's growth below the treetop over which branch shoots lengthen to full (Cannell et al. 1976: lateral shoots are shortest in the top whorls), so the top is pointed; 0: off
 param side_growth = 0.55;      # side shoots grow this fraction as fast
 param side_chance = 0.75;      # chance of a side shoot on each side each year
 param side_angle = 50;         # angle between a branch and its side shoots
@@ -244,6 +273,7 @@ param epi_delay = 5;           # years a branch's dormant bud waits before it ma
 param epi_light = 0.3;         # light a dormant bud needs to sprout
 param epi_chance = 0.03;       # chance a year that a waiting bud in the light sprouts
 param epi_years = 300;         # years a dormant bud lives
+param epi_order = 0;           # highest branch order whose shoots keep a dormant bud; 0: side_order
 param spray_base = 0.2;        # foliage spray length on the shortest shoot
 param spray_length = 1.3;      # and how much longer per metre of shoot
 param twig_angle = 42;         # angle of the twig sprays beside each shoot
@@ -255,6 +285,8 @@ param spur_share = 1;          # a short-shoot year's foliage spray, as a share 
 param pipe_tip = 0.003;        # radius of the twig behind one living apex
 param pipe_organ = 0.012;      # pipe radius per metre of spray bearing 0.25 m² a metre squared (revision 11)
 param pipe_rings = 0.000016;   # ring area laid down per m² of foliage a year
+param ring_share = 0;          # once the leader passes this share of height_max, each m² of foliage lays down less ring area, as (ring_share × height_max / height)^ring_power (taller trees grow less stem per leaf); 0: off
+param ring_power = 2;
 param adult_age = 20;          # the first year it is adult and bears cones
 param cone_chance = 0.1;       # chance a year a well-lit branch apex bears one
 param cone_light = 0.4;        # least light at an apex that bears
@@ -274,12 +306,12 @@ param reaction = 0.1;          # how far a year's ring turns a limb back up (ben
 
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
-module C(order, vigour, starved, wood) queries light, position, substrate;  # a branch apex, wood metres from the stem
+module C(order, vigour, starved, wood, held, years) queries light, position, substrate;  # a branch apex, wood metres from the stem, holding held metres grown over years years not yet laid down (seg_min)
 module S queries vigour, substrate, position;  # the base of a living branch
 module K;                               # the base of a dead branch
 module W(n, m);                         # whorl branches still to be formed, of m
 module I(n);                            # interwhorl branches still to be formed
-module G(order, length, keep, wood);    # this year's shoot, its foliage kept keep years, wood metres from the stem
+module G(order, length, keep, wood, years);  # this year's shoot, grown over years years, its foliage kept keep years, wood metres from the stem
 module L(order, wood, l);               # a possible side shoot on the left, after a shoot l long
 module R(order, wood, l);               # and on the right
 module Z(light);                        # a cone, perhaps, at a branch apex
@@ -295,7 +327,7 @@ organ cone cone area cone_area;
 
 tool light@1 { cell = 0.4, extinction = 0.35, bud = 0.01 };
 tool vigour@1 { lambda = 0.7, alpha = 2 };
-tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip, organ = pipe_organ * pow(spray_area / 0.25, 1 / pipe_exponent), rings = pipe_rings };
+tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip, organ = pipe_organ * pow(spray_area / 0.25, 1 / pipe_exponent), rings = pipe_rings * (ring_share > 0 ? min(1, pow(ring_share * height_max / max(0.1, richards(t, height_max, height_rate, height_shape)), ring_power)) : 1) };
 tool substrate@1 {};
 tool bend@1 {
     density = wood_density,
@@ -314,7 +346,7 @@ axiom !(0.003) A B(stems - 1);
 # The leader: this year's height growth with its foliage, then a whorl.
 rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
-               * (leader_shade + (1 - leader_shade) * light), needle_years * 2 / (1 + needle_low), 0)
+               * (leader_shade + (1 - leader_shade) * light), needle_years * 2 / (1 + needle_low), 0, 1)
           W((bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
                * (leader_shade + (1 - leader_shade) * light) / bud_length)) : whorl), (bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
@@ -323,12 +355,12 @@ rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
 
 decompose W(n, m) : n > 0 ->
     [ /(360 * n / m + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
-      T(0, 1, 0, upturn) S C(1, 1, 0, 0) ]
+      T(0, 1, 0, upturn) S C(1, 1, 0, 0, 0, 0) ]
     W(n - 1, m);
 decompose W(n, m) -> ;
 decompose I(n) : n > 0 ->
     [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8))
-      T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0, 0) ]
+      T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0, 0, 0, 0) ]
     I(n - 1);
 decompose I(n) -> ;
 
@@ -339,20 +371,19 @@ interpret N -> &(0.5 * nod * max(0, 1 - age / nod_years));
 # would be too short, on a side shoot after side_years if set, or when its
 # drooping branch reaches the ground. Its shoot shortens with the wood
 # between it and the stem (revision 5).
-rule C(o, v, s, w) : sd < ground_gap + 0.05 -> ;
-rule C(o, v, s, w) : light < shade_death && s + 1 >= shade_years -> ;
-rule C(o, v, s, w) : o > 1 && side_years > 0 && age >= side_years -> ;
-rule C(o, v, s, w) : o > side_order && twig_years > 0 && age >= twig_years -> ;
-rule C(o, v, s, w) : v * pow(side_growth, o - 1) * (apical > 0 ? max(branch_floor, apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2))
+rule C(o, v, s, w, a, n) : sd < ground_gap + 0.05 -> ;
+rule C(o, v, s, w, a, n) : light < shade_death && s + 1 >= shade_years -> ;
+rule C(o, v, s, w, a, n) : o > 1 && side_years > 0 && age >= side_years -> ;
+rule C(o, v, s, w, a, n) : o > side_order && twig_years > 0 && age >= twig_years -> ;
+rule C(o, v, s, w, a, n) : v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1)) : branch_floor), apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2))
                      * (0.3 + 0.7 * light) < min_shoot -> ;
-rule C(o, v, s, w) -> G(o, v * pow(side_growth, o - 1) * (apical > 0 ? max(branch_floor, apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / top_ramp)) : 1)
-                           * (0.3 + 0.7 * light),
+rule C(o, v, s, w, a, n) : seg_min > 0 && height - py > (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)) && a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1)) : branch_floor), apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light) < seg_min ->
+    C(o, v, light < shade_death ? s + 1 : 0, w + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1)) : branch_floor), apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1)) : branch_floor), apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), n + 1);
+rule C(o, v, s, w, a, n) -> G(o, a + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1)) : branch_floor), apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light),
                         needle_years * 2 / (1 + needle_low) * (1 + (needle_low - 1) * max(0, 1 - py / max(height, 0.1))),
-                        w)
+                        w - a, n + 1)
                       Z(light)
-                      C(o, v, light < shade_death ? s + 1 : 0,
-                        w + v * pow(side_growth, o - 1) * (apical > 0 ? max(branch_floor, apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / top_ramp)) : 1)
-                            * (0.3 + 0.7 * light));
+                      C(o, v, light < shade_death ? s + 1 : 0, w + v * pow(side_growth, o - 1) * (apical > 0 ? max((floor_reach > 0 ? max(floor_keep, 1 - w / (floor_reach * height)) : 1) * (o > 1 ? max(branch_floor, side_floor * (floor_ramp > 0 ? min(1, (height - py) / (floor_ramp * height)) : 1)) : branch_floor), apical * (apical_light > 0 ? min(1, light / (apical_light * pow(min(1, shade_death / 0.1), 6))) : 1) * (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape))) : branch_growth) / (1 + pow(w / branch_reach, 2)) * (top_ramp > 0 ? min(1, max(0.1, (height - py) / (top_ramp * max(0.05, (richards(t + dt, height_max, height_rate, height_shape) - richards(t, height_max, height_rate, height_shape)) / dt)))) : 1) * (0.3 + 0.7 * light), 0, 0);
 
 # One year's leader shoot: its foliage, with the interwhorl branches halfway.
 # A nodding leader (revision 12) carries its foliage in two sprays, one at
@@ -360,39 +391,59 @@ rule C(o, v, s, w) -> G(o, v * pow(side_growth, o - 1) * (apical > 0 ? max(branc
 # the foot ran on straight past it and left the nodding tip a bare stick.
 # Each is 1/sqrt(2) of the one spray's size, so the leader's foliage area
 # is unchanged.
-decompose G(o, l, k, w) : o == 0 && nod > 0 ->
-    N [ Y(k) spray((spray_base + spray_length * l) * 0.6 / sqrt(2)) ] F(l * 0.5) I(interwhorl)
-    N [ Y(k) spray((spray_base + spray_length * l) * 0.6 / sqrt(2)) ] F(l * 0.5);
-decompose G(o, l, k, w) : o == 0 ->
-    [ Y(k) spray((spray_base + spray_length * l) * 0.6) ]
+decompose G(o, l, k, w, n) : o == 0 && nod > 0 ->
+    N [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.6 / sqrt(2)) ] F(l * 0.5) I(interwhorl)
+    N [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.6 / sqrt(2)) ] F(l * 0.5);
+decompose G(o, l, k, w, n) : o == 0 ->
+    [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.6) ]
     N F(l * 0.5) I(interwhorl) N F(l * 0.5);
+# A shoot laid down from two or more held years (seg_min) draws its foliage
+# at two places along it, each spray as large as half its years', so its
+# needles stay near one year's length: a card draws its needles a share of
+# its own length, and one card for all the years drew them past the floras'.
+# Both stand in the one bracket, the second a move (f) up the shoot, so the
+# split costs a few modules, not a second bracket and segment: drawn as two
+# brackets, a western hemlock passed 4 million modules before 300 years.
 # One year's branch shoot: a spray along it and a twig spray to each side,
 # hanging by spray_droop, each with its own turn; a dormant bud at its
 # foot, which watches the ground; possible side shoots at its end. A shaded shoot is short, but its twigs
 # and needles are not much smaller.
 # With short shoots (revision 11) the shoot's sprays keep fixed turns, so
 # the draws below keep their sites, and it leaves its short shoots (Q).
-decompose G(o, l, k, w) : o > 0 && spur_years > 0 ->
+decompose G(o, l, k, w, n) : o > 0 && spur_years > 0 ->
     [ Y(k) spray(spray_base + spray_length * l, 0, spray_droop * 0.5, 1)
-      spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6, twig_angle, 1)
-      spray((spray_base + spray_length * l) * 0.75, -90 - spray_droop * 0.6, twig_angle, 1) ]
-    E(o, w) Q(spur_years, (spray_base + spray_length * l) * spur_share) F(l) L(o, w + l, l) R(o, w + l, l);
+      spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, 90 + spray_droop * 0.6, twig_angle, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, -90 - spray_droop * 0.6, twig_angle, 1) ]
+    E(o, w) Q(spur_years, ((spray_base + spray_length * l / n) * sqrt(n)) * spur_share) F(l) L(o, w + l, l) R(o, w + l, l);
 # With twig_years, a twig (a shoot above side_order, which sets no side
 # shoots and no dormant bud worth keeping) carries its year's foliage in one
 # spray of the three's area (sqrt(1 + 2 * 0.75^2) = 1.458 times as long),
 # and no bud: a third of the modules, so a fully branched crown fits the
 # string to 300 years.
-decompose G(o, l, k, w) : o > side_order && twig_years > 0 ->
-    [ Y(k) spray((spray_base + spray_length * l) * 1.458, uniform(-25, 25), spray_droop * 0.5, 1) ]
+decompose G(o, l, k, w, n) : o > side_order && twig_years > 0 && n >= 2 ->
+    [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 1.458, uniform(-25, 25), spray_droop * 0.5, 1)
+      f(l * 0.5) spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 1.458, uniform(-25, 25), spray_droop * 0.5, 1) ]
     F(l);
-decompose G(o, l, k, w) ->
-    [ Y(k) spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
-      spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
-      spray((spray_base + spray_length * l) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
+decompose G(o, l, k, w, n) : o > side_order && twig_years > 0 ->
+    [ Y(k) spray(((spray_base + spray_length * l / n) * sqrt(n)) * 1.458, uniform(-25, 25), spray_droop * 0.5, 1) ]
+    F(l);
+decompose G(o, l, k, w, n) : n >= 2 ->
+    [ Y(k) spray(spray_base + spray_length * l * 0.5, uniform(-25, 25), spray_droop * 0.5, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+      f(l * 0.5)
+      spray(spray_base + spray_length * l * 0.5, uniform(-25, 25), spray_droop * 0.5, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n / 2)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
     E(o, w) F(l) L(o, w + l, l) R(o, w + l, l);
-decompose L(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ +(side_angle) S C(o + 1, 1, 0, w) ];
+decompose G(o, l, k, w, n) ->
+    [ Y(k) spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+      spray(((spray_base + spray_length * l / n) * sqrt(n)) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
+    E(o, w) F(l) L(o, w + l, l) R(o, w + l, l);
+decompose L(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ +(side_angle) S C(o + 1, 1, 0, w, 0, 0) ];
 decompose L(o, w, l) : apex_whorl <= 0 -> ;
-decompose R(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ -(side_angle) S C(o + 1, 1, 0, w) ];
+decompose R(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ -(side_angle) S C(o + 1, 1, 0, w, 0, 0) ];
 decompose R(o, w, l) : apex_whorl <= 0 -> ;
 
 # Foliage falls after its shoot's keep years: needle_years on average,
@@ -426,12 +477,12 @@ rule H : sd < ground_gap -> %;
 # branch's foot, on the stem, never sprouts.
 # A spent bud more than 2 m above ground_watch goes too (revision 13):
 # kept on every limb, spent buds filled the module string of old trees.
-rule E(o, w) : o > side_order && py > ground_watch -> ;
+rule E(o, w) : o > (epi_order > 0 ? epi_order : side_order) && py > ground_watch -> ;
 rule E(o, w) : sd < ground_gap -> %;
-rule E(o, w) : (epi_delay <= 0 || age >= epi_years || o > side_order) && py > ground_watch + 2 -> ;
-rule E(o, w) : epi_delay <= 0 || age >= epi_years || o > side_order -> H;
+rule E(o, w) : (epi_delay <= 0 || age >= epi_years || o > (epi_order > 0 ? epi_order : side_order)) && py > ground_watch + 2 -> ;
+rule E(o, w) : epi_delay <= 0 || age >= epi_years || o > (epi_order > 0 ? epi_order : side_order) -> H;
 rule E(o, w) : w > 0 && age >= epi_delay && light >= epi_light && rand() < epi_chance ->
-    [ /(uniform(0, 360)) &(side_angle) S C(o + 1, 1, 0, w) ] H;
+    [ /(uniform(0, 360)) &(side_angle) S C(o + 1, 1, 0, w, 0, 0) ] H;
 
 # Revision 10: with apex_whorl, a branch apex spreads its side shoots
 # round itself, as the trunk spreads a whorl, each turning up toward the
@@ -442,7 +493,7 @@ decompose L(o, w, l) -> ;
 decompose R(o, w, l) -> ;
 decompose V(o, w, n, l) : n > 0 && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) ->
     [ /(360 * n / max(apex_whorl, 1) + uniform(-30, 30)) &(side_angle + uniform(-8, 8))
-      T(0, 1, 0, upturn) S C(o + 1, 1, 0, w) ]
+      T(0, 1, 0, upturn) S C(o + 1, 1, 0, w, 0, 0) ]
     V(o, w, n - 1, l);
 decompose V(o, w, n, l) : n > 0 -> V(o, w, n - 1, l);
 decompose V(o, w, n, l) -> ;
@@ -470,3 +521,4 @@ decompose B(n) -> ;
 # crown keeps its dim limbs longer. This rule goes last so the draws above
 # keep their sites.
 rule S : limb_light > 0 && age > limb_age && qsum < limb_light * shade_death / 0.1 * nseg -> K;
+rule S : limb_tip > 0 && age > limb_age && qsum < limb_tip * shade_death * ntip -> K;

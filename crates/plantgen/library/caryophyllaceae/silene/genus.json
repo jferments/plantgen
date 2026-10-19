@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Silene",
+  "traits": {
+    "life_span": {
+      "perennial": "often",
+      "annual": "often",
+      "biennial": "sometimes"
+    },
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "rarely"
+    },
+    "stem_cross_section": {
+      "terete": "usually",
+      "angled": "sometimes"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "rarely"
+    },
+    "leaf_shape": {
+      "lanceolate": "often",
+      "linear": "often",
+      "oblanceolate": "often",
+      "obovate": "sometimes",
+      "spatulate": "sometimes",
+      "ovate": "sometimes",
+      "elliptic": "sometimes"
+    },
+    "leaf_apex": {
+      "acute": "often",
+      "obtuse": "often"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "solitary": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "flower_merosity": 5,
+    "stamens": 10,
+    "carpels": {
+      "min": 3,
+      "max": 5
+    },
+    "petal_apex": {
+      "bilobed": "usually",
+      "truncate": "rarely"
+    },
+    "fruit_type": "capsule",
+    "capsule_valves": {
+      "min": 6,
+      "max": 10,
+      "low": 3
+    },
+    "calyx_in_fruit": {
+      "persistent": "usually",
+      "accrescent": "often"
+    }
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): herbs annual, biennial or perennial; FOC the same, rarely suffrutescent."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 6 (2001), Silene (eFloras, read 2026-10-19): rarely plants suffrutescent; FNA: herbs, often with a branched caudex."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): stems simple or branched, terete or sometimes angular."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): leaves opposite or occasionally whorled, joined at the base."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): blade linear to obovate or spatulate; FOC subulate, linear or lanceolate to ovate-lanceolate or elliptic. No usual state named, so the common shapes read as often."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): apex acute to obtuse."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): inflorescences terminal or sometimes axillary, simple or branched, sometimes condensed cymes, frequently few-flowered or solitary; FOC monochasium, dichasium, thyrse or flower solitary."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): inflorescences terminal or sometimes axillary."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): calyx of 5 joined sepals (lobes) and petals 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): stamens 10, rarely fewer or absent; FOC stamens 10."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): styles 3 or 5, occasionally 4; FOC styles 3 or 5 (one style per carpel)."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): limb apex 2-lobed, sometimes dissected into 1-4 linear lobes or fimbriate, rarely entire. 'Entire' read as truncate, rarely, the nearest state."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): capsules ovoid to globose, opening along sutures."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): capsules open into 3-5 valves, frequently splitting into 6-10 equal teeth; FOC 6 or 10, rarely 5, teeth."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene (Morton) (eFloras, read 2026-10-19): calyx tube frequently inflated; the family's sepals persist in fruit. In the inflated-calyx species the tube enlarges round the capsule (accrescent), as in S. vulgaris."
+    }
+  }
+}

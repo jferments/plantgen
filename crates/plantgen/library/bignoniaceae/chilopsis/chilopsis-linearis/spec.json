@@ -113,6 +113,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "limb_angle": "erect",
     "leaf_width_m": {
       "min": 0.002,
       "max": 0.006
@@ -137,6 +138,7 @@
     "fruiting_months": [8, 9, 10, 11]
   },
   "evidence": {
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 869): 'slender upright branches forming a narrow head'."},
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",

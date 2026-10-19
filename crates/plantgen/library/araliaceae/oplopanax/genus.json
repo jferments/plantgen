@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Oplopanax",
+  "traits": {
+    "rosette": "terminal"
+  },
+  "rules": {
+    "generator.params.short_share": {
+      "rule": "0",
+      "why": "A devil's club stem bears its huge leaves only in a tuft at its top, round the year's growth and the flowers, and none along the bare, prickly stem below (Wikipedia's photograph: large leaves on the top of stems), so no bud behind the tip grows a leafy short shoot."
+    },
+    "generator.params.long_share": {
+      "rule": "0",
+      "why": "Its stems are sparsely branched (FEIS, Howard 1993): a stem grows on from its tip year after year and forks only where it has flowered, not into a spreading crown of side shoots."
+    },
+    "generator.params.terminal_bloom": {
+      "rule": "1",
+      "why": "Its flower clusters end the stems (a terminal panicle or raceme of umbels, Flora of China's Oplopanax) every year a stem is old enough to flower."
+    },
+    "generator.params.bloom_shoots": {
+      "rule": "1",
+      "why": "A sparsely branched stem (FEIS, Howard 1993) grows on after flowering from the one bud below its cluster, not forking into two, so it flowers year after year and stays a single stem."
+    },
+    "generator.params.sucker_lean": {
+      "rule": "35",
+      "why": "Its stems stand erect to slightly spreading (FEIS, Howard 1993), the outer ones of a clump leaning out farther than a shrub's usual 15 degrees, as the clump's stems do where they rise from layered and sprouting bases."
+    },
+    "generator.params.pipe_tip": {
+      "rule": "0.008",
+      "why": "Its few stems are stout for their height, thick as a walking stick (its other name, devil's walking stick), as Corner's rules tie large leaves to thick, little-branched axes; each tip about 8 mm thick is ours, by eye from photographs, until a flora measures the stems."
+    }
+  },
+  "evidence": {
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Devil's club (read 2026-10-19): its photograph of the plant's form is captioned 'large leaves on the top of stems'; the leaves spirally arranged on the stems, 20-40 cm across (citing Pojar and MacKinnon 1994)."
+    },
+    "rules": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's devilsclub review (Howard 1993, read 2026-10-19): an erect to slightly spreading deciduous shrub 1-3 m tall, sparsely branched, with sharp dense prickles on the stems; it reproduces by rhizomes and/or layering and may sprout from the root crown. Wikipedia, Devil's club (read 2026-10-19): large leaves on the top of stems. The stems' 8 mm tip thickness is ours, by eye. Flora of China vol. 13 (2007), Oplopanax (eFloras, read 2026-10-19): shrubs armed with numerous prickles; the inflorescence a terminal panicle or raceme of umbels."
+    }
+  }
+}

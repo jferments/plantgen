@@ -93,7 +93,21 @@
     "fruiting_months": [
       9,
       10
-    ]
+    ],
+    "trunk_fork_height_m": {
+      "min": 0.8,
+      "max": 1.5
+    },
+    "flowers_above_fork": true,
+    "sepal_length_m": {
+      "min": 0.08,
+      "max": 0.12
+    },
+    "calyx_lobe_length_m": {
+      "min": 0.005,
+      "max": 0.012
+    },
+    "calyx_section": "angled"
   },
   "provenance": {
     "sources": [
@@ -242,6 +256,31 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence low), as no source read gives it: fruit set after the first flowers, from September; in cultivation it seldom fruits."
+    },
+    "traits.trunk_fork_height_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-19): in the initial vegetative stage the young seedling grows straight up on usually a single stalk, until it reaches its first main fork at 80-150 cm high."
+    },
+    "traits.flowers_above_fork": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-19): it will not flower until after it has reached this fork, and then only on new growth above the fork."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-nz-iv-1988",
+      "note": "Flora of New Zealand vol. 4 (Webb, Sykes and Garnock-Jones, 1988), Brugmansia suaveolens, as a web search quoted it on 2026-10-19 (the site is blocked from the cloud): calyx 8-12 cm long; lobes 5, subequal, not spathaceous, not splitting, acute; flowers pendent or inclined obliquely downwards. Bailey (vol. 2, p. 971, as Datura suaveolens): calyx inflated, angled and glabrous, with 5 obscure teeth."
+    },
+    "traits.calyx_lobe_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: teeth 5-12 mm: Bailey (vol. 2, p. 971) has 5 obscure teeth, Flora of New Zealand 5 acute subequal lobes; neither measures them, and photograph iNaturalist 115056374 shows them about a tenth of the calyx."
+    },
+    "traits.calyx_section": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Datura suaveolens, p. 971 (read on the Internet Archive, 2026-10-17): calyx inflated, angled, glabrous. Photograph iNaturalist 115056374 shows the ridges."
     }
   }
 }

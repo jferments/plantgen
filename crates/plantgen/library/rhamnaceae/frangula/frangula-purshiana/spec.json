@@ -121,6 +121,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
+    "limb_angle": "ascending",
     "leaf_colour_autumn": [215, 185, 60],
     "height_max_m": {
       "min": 3,
@@ -145,6 +147,8 @@
     "leaf_apex": {"obtuse": "usually", "truncate": "sometimes"}
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 725): 'a slender trunk ... separating 10°—15° from the ground into numerous stout upright or sometimes nearly horizontal branches'."},
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 725): 'numerous stout upright or sometimes nearly horizontal branches'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Frangula purshiana (read 2026-10-18): \"The leaves turn yellow in autumn\". Colour ours."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",

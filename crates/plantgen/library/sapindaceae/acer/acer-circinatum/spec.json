@@ -130,6 +130,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "limb_course": "tortuous",
     "leaf_colour_autumn": [225, 120, 40],
     "height_max_m": {
       "min": 10,
@@ -149,6 +150,7 @@
     "fruit_size_m": {"min": 0.02, "max": 0.04}
   },
   "evidence": {
+    "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 685): 'forming impenetrable thickets of contorted and interlaced trunks'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Acer circinatum (read 2026-10-18): \"the leaves turn bright yellow to orange red\". Colour ours, between the two."},
     "generator.params.spur_leaf": {
       "evidence": "Authored",

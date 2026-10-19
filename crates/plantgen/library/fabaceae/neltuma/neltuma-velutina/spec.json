@@ -124,6 +124,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
+    "limb_course": "tortuous",
     "wood_density_basic_kg_m3": 700,
     "inflorescence": "raceme",
     "leaf_division": "compound",
@@ -152,6 +154,8 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, pp. 600-601, P. juliflora): 'divided a short distance above the ground into many irregularly arranged crooked branches forming a loose straggling head'."},
+    "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 602): 'heavy irregularly arranged usually crooked branches'."},
     "generator.params.bud_break": {
       "evidence": "Authored",
       "source": "plantgen-authors",

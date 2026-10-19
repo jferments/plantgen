@@ -122,7 +122,15 @@
     "fruit_width_m": {
       "min": 0.025,
       "max": 0.12
-    }
+    },
+    "stem_hairs": "pubescent",
+    "glandular_hairs": "dense",
+    "leaf_hairs": "pilose",
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.25
+    },
+    "interjected_leaflets": true
   },
   "provenance": {
     "sources": [
@@ -311,6 +319,31 @@
       "evidence": "SourceInferred",
       "source": "bailey-cyclopedia-1914",
       "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1914-17), Lycopersicon esculentum, p. 1931 (read on the Internet Archive, 2026-10-17): fruit flattened endwise and furrowed on the sides; the cherry tomato small and globular. So a little wider than long: the width is our reading of the 2-10 cm fruit."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Solanum lycopersicum (eFloras, read 2026-10-18): moderately to densely pubescent, hairs simple, glandular and eglandular; Flora of China: viscid pubescent; Wikipedia 'Tomato': stems covered in fine short hairs."
+    },
+    "traits.glandular_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Tomato' (read 2026-10-17): stem and leaves densely glandular-hairy; Flora of North America: hairs glandular and eglandular; Flora of China: viscid."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Lycopersicon esculentum (eFloras, read 2026-10-18): leaflets sparingly glandular pilose."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Solanum lycopersicum (eFloras, read 2026-10-19): blade compound, elliptic, 10-30+ x 5-25 cm."
+    },
+    "traits.interjected_leaflets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Solanum lycopersicum (eFloras, read 2026-10-19): blade compound, elliptic, 10-30+ x 5-25 cm, margins divided with 3(-5) pairs of leaflets, interspersed with smaller interjected leaflets; Flora of China (Lycopersicon esculentum): leaflets mostly 5-9, unequal."
     }
   }
 }

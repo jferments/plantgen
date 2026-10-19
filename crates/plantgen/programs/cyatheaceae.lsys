@@ -28,9 +28,16 @@
 # Revision 8: palm revision 14 stands a year's fronds up the year's
 # trunk as they emerge over emerge_spread of the year.
 #
+# Revision 9: gives palm revision 15's worn boots, root mass and open
+# sheaths none (boot_wear, boot_spread, roots, sheath_wedge 0), so it
+# draws as before.
+#
+# Revision 10: gives palm revision 16's bending roots and root collar
+# none (root_bend, root_flare 0).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cyatheaceae 8 extends palm;
+lsystem cyatheaceae 10 extends palm;
 
 param vigour_spread = 0.1;   # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;            # how strongly a leaning trunk turns back up, radians a metre
@@ -127,3 +134,17 @@ param pinnule_length = 0.2;
 param pinnule_angle = 45;
 param pinnule_area = 0.3;
 param dead_fold_years = 0;    # a dead frond hangs at once
+param boot_wear = 0;          # boots keep their length
+param boot_wear_years = 1;
+param boot_spread = 0;
+param roots = 0;              # no roots above the ground
+param root_rate = 1;
+param root_age = 0;
+param root_zone = 0;
+param root_zone_years = 1;
+param root_angle = 30;
+param root_radius = 0.01;
+param root_reach = 1;
+param sheath_wedge = 0;       # sheaths close round the stem
+param root_bend = 0;          # roots run straight
+param root_flare = 0;         # no collar at the foot

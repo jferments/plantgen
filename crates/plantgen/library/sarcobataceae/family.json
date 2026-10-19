@@ -9,30 +9,174 @@
     "leaf_shape": "linear",
     "stipules": false,
     "sexual_system": {
-      "monoecious": "often",
-      "dioecious": "often"
+      "monoecious": "usually",
+      "dioecious": "rarely"
     },
     "ovary_position": "half_inferior",
     "woodiness": "woody",
     "inflorescence": {
-      "solitary": "often",
-      "catkin": "often"
+      "catkin": "usually",
+      "solitary": "often"
     },
     "perianth": {
       "tepals": "often",
       "absent": "often"
     },
     "stamens": {
-      "min": 1,
-      "max": 4
+      "min": 2,
+      "max": 4,
+      "low": 1,
+      "high": 5
     },
-    "carpels": 2
+    "carpels": 2,
+    "growth_form": "shrub",
+    "life_span": "perennial",
+    "leaf_habit": "deciduous",
+    "stem_posture": "erect",
+    "spines": "thorns",
+    "short_shoots": true,
+    "leaf_form": "blade",
+    "leaf_apex": "obtuse",
+    "leaf_margin": "entire",
+    "petiole_length_m": 0,
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 40
+    },
+    "flowering_position": "both",
+    "fruit_type": "achene",
+    "calyx_in_fruit": "accrescent"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Sarcobataceae: leaves alternate; leaves simple; blades linear; stipules absent; plants monoecious or dioecious; ovary half inferior; stems woody; flowers solitary or in catkins; perianth tepals or absent; stamens 1 to 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.growth_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): shrubs, deciduous, much-branched (the family holds only Sarcobatus, so the genus account is the family's)."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): shrubs."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "Anderson, M. D. 2004, Sarcobatus vermiculatus, USFS Fire Effects Information System (read 2026-10-19): a native flowering perennial (phanerophyte)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): shrubs, deciduous."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): stems erect, much-branched, not jointed."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): long shoots bear leaves and axillary thorns, thorns 1(-2) per node."
+    },
+    "traits.short_shoots": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): stems dimorphic: long shoots elongate, short shoots clustered, budlike, bearing leaves."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): leaves mostly alternate on long shoots (sometimes opposite proximally) or clustered on short shoots."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Kept from the library family file (Watson and Dallwitz DELTA data): leaves simple; FNA's blade description agrees."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): blade linear, nearly terete to somewhat flattened, succulent."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): blade linear."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): apex obtuse (mucronate)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): margins entire."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): leaves sessile."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Sarcobatus' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): no stipules (Nebenblätter sind keine vorhanden). File kept."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): shrubs monoecious. German Wikipedia: mostly monoecious, rarely dioecious; FEIS: some say monoecious, others generally monoecious but occasionally dioecious."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Sarcobatus' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): two carpels united into a partly inferior (teilweise unterständig) ovary. File kept."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): staminate inflorescence a terminal, pedunculate, cylindric spike of 10-40 spirally arranged flowers (German Wikipedia: catkin-like); pistillate flowers solitary or paired in leaf axils."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): staminate spike of 10-40 flowers."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): staminate spikes terminal, distal to the axillary pistillate flowers."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): pistillate 'perianth' accrescent, adnate, cuplike; staminate flowers: perianth absent. File kept."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): anthers caducous, (1-)2-4(-5), almost sessile, under a peltate rhombic scarious scale; German Wikipedia: mostly two to four, rarely one or five."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): stigmas 2; German Wikipedia: two carpels. File kept."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): fruits achenes, with a broad wing from the flaring perianth."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus (eFloras flora_id=1 taxon_id=129190, read 2026-10-19): perianth accrescent, flaring to form a wing in fruit; wing sometimes red-tinged, veiny, broad, margins lobed and undulate."
     }
   }
 }

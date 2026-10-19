@@ -56,18 +56,97 @@
         "generator.params.boot_area": {
           "rule": "0.554",
           "why": "A leaf base shades with the area its broad card draws: 0.554 of its length squared."
+        },
+        "generator.params.sheath_length": {
+          "rule": "0.06 * leaf_length_m",
+          "why": "Each living frond's sheath reaches past the stem's surface along its petiole's base, so the crown's leaf bases hide the stem's top; about a sixteenth of the leaf's length, as Caryota's (set by eye: no flora gives the sheath's length)."
+        },
+        "generator.params.root_bend": {
+          "rule": "30",
+          "why": "A root leaves the foot 30 degrees further out than its mean angle and turns down by as much along its length, so the roots arch and cross as in photographs of date palms' feet (set by eye)."
+        },
+        "generator.params.root_flare": {
+          "rule": "0.35",
+          "why": "As the root zone rises, new root initials push the trunk's foot outward: a date palm's foot is about a third wider at the ground than the trunk once the zone has risen (the share set by eye from photographs)."
+        },
+        "generator.params.sheath_area": {
+          "rule": "0.554",
+          "why": "An open sheath shades with the area its broad wedge draws: 0.554 of its length squared, as the leaf base it leaves (boot)."
+        },
+        "generator.params.sheath_wedge": {
+          "rule": "1",
+          "why": "Phoenix's sheath is open: it splits down the side away from the petiole and does not close round the stem, so it is drawn as one broad wedge along the petiole's base rather than a tube of cards (a tube read as a bare cylinder at the crown's centre)."
+        },
+        "generator.params.boot_wear": {
+          "rule": "0.25",
+          "why": "An old leaf base wears down toward its scar: the trunk is covered in leaf bases when young and later becomes smooth, showing the pattern of leaf scars. How far a base wears set by eye from photographs: the lowest stubs three quarters of a fresh base's length, so they still overlap (worn further, the lattice opened into bare trunk between small plates, which photographs of unpruned palms do not show)."
+        },
+        "generator.params.boot_wear_years": {
+          "rule": "30",
+          "why": "Years over which a leaf base wears down, set by eye: a 60-year date palm's lowest stubs are worn, its upper ones still whole."
+        },
+        "generator.params.boot_spread": {
+          "rule": "0.3",
+          "why": "Leaf bases break off and weather unevenly, so the stubs differ in length and the trunk's outline is ragged (set by eye from photographs)."
+        },
+        "generator.params.roots": {
+          "rule": "400",
+          "why": "The foot puts out a mass of adventitious roots above the ground, as every palm root comes from a root initiation zone at the trunk's base; how many set by eye from photographs."
+        },
+        "generator.params.root_rate": {
+          "rule": "12",
+          "why": "Roots a year once the zone shows, set by eye."
+        },
+        "generator.params.root_age": {
+          "rule": "8",
+          "why": "The root zone shows once the trunk is established (set by eye)."
+        },
+        "generator.params.root_zone": {
+          "rule": "0.8",
+          "why": "On some Phoenix the visible root zone reaches several feet up the trunk; 0.8 m (set by eye)."
+        },
+        "generator.params.root_zone_years": {
+          "rule": "40",
+          "why": "The zone rises as the palm ages, its new roots pushing out the trunk's foot."
+        },
+        "generator.params.root_angle": {
+          "rule": "20",
+          "why": "A root runs steeply down to the ground, 20 degrees from straight down, so the roots crowd the foot as a mat (set by eye)."
+        },
+        "generator.params.root_radius": {
+          "rule": "0.0075",
+          "why": "A date palm's main roots about 1.5 cm across (set by eye)."
+        },
+        "generator.params.root_reach": {
+          "rule": "0.5",
+          "why": "Root initials above the ground stop growing in dry air, so about half stay short stubs on the trunk (the share set by eye)."
         }
       },
       "evidence": {
+        "rules.generator.params.boot_wear": {
+          "evidence": "SourceInferred",
+          "source": "dransfield-1986-ftea-palmae",
+          "note": "Flora of Tropical East Africa (via Colplanta, read through a search summary; the page was blocked here): the trunk covered with leaf-sheath bases when young, later becoming smooth. University of Arizona Campus Arboretum (also through a search summary): a rough grey trunk to half a metre across, its diamond pattern the leaf scars, most noticeable where the overlapping woody leaf bases have been pruned. How far and how fast a base wears, and how unevenly, set by eye."
+        },
+        "rules.generator.params.root_flare": {
+          "evidence": "SourceInferred",
+          "source": "broschat-elliott-2007",
+          "note": "Broschat and Elliott (2007, University of Florida IFAS EP344, read through a search summary): as the root initiation zone rises on older palms, new root initials push the trunk's foot outward, a normal part of maturing that varies by palm. How much wider, set by eye."
+        },
+        "rules.generator.params.roots": {
+          "evidence": "SourceInferred",
+          "source": "broschat-elliott-2007",
+          "note": "Broschat and Elliott (2007, University of Florida IFAS EP344, read through a search summary; the page was blocked here): every palm root is adventitious and comes from a root initiation zone at the trunk's base; root initials that come out above the ground stop growing in dry air but may resume when moist; on most palms the visible zone is short, on some date palms (Phoenix) it reaches several feet up the trunk, and as it rises the new roots push the trunk's foot outward. Counts, angles and the share reaching the ground set by eye."
+        },
         "rules": {
           "evidence": "SourceInferred",
           "source": "genera-palmarum-2008",
-          "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its dead leaves stay on the stem (marcescent) rather than falling cleanly. The proximal leaflets are modified as spines, acanthophylls, by which the genus is instantly recognised (p. 242); how many and how long set by eye from photographs. The stem is clothed in spirally arranged leaf bases (p. 242); how steeply they stand set by eye from photographs."
+          "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its dead leaves stay on the stem (marcescent) rather than falling cleanly. The proximal leaflets are modified as spines, acanthophylls, by which the genus is instantly recognised (p. 242); how many and how long set by eye from photographs. The stem is clothed in spirally arranged leaf bases (p. 242); how steeply they stand set by eye from photographs. Every palm leaf's sheath wholly encircles the stem (pp. 12-13), Phoenix's an open sheath whose front erodes without much fibre (p. 13); its length set by eye."
         },
         "appearance": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "A dead frond drawn as the built-in palms draw theirs: a brown fan for a fan palm, a brown feather frond for a feather palm. Dead fronds a mid brown (linear [0.2, 0.15, 0.1]; they drew near white at [0.5, 0.42, 0.3]); spines stiff, narrow and tapering to a point, yellowish green as in photographs; a leaf base (boot) broad and rhombic, near three quarters as wide as long, so the bases close up into the criss-cross lattice of photographs."
+          "note": "A dead frond drawn as the built-in palms draw theirs: a brown fan for a fan palm, a brown feather frond for a feather palm. Dead fronds a mid brown (linear [0.2, 0.15, 0.1]; they drew near white at [0.5, 0.42, 0.3]); spines stiff, narrow and tapering to a point, yellowish green as in photographs; a leaf base (boot) broad and rhombic, near three quarters as wide as long, so the bases close up into the criss-cross lattice of photographs. A dead frond hangs limp: its leaflets fold up toward each other along the rachis (55 degrees) and the rachis droops 70 degrees from base to tip, as photographs of unpruned date palms show, instead of standing out as a flat plank. A living frond's sheath brown and drawn as the leaf base it will leave: a broad wedge, near three quarters as wide as long, along the petiole's base."
         }
       },
       "appearance": {
@@ -80,7 +159,16 @@
               "divided": 0,
               "stipe": 0.2
             },
+            "bend": {"fold": 55, "cup": 0, "droop": 70, "twist": 0},
             "colour": [0.2, 0.15, 0.1]
+          },
+          "sheath": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.3,
+              "aspect": 0.7
+            },
+            "colour": [0.22, 0.16, 0.1]
           },
           "spine": {
             "shape": {

@@ -176,6 +176,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
+    "limb_angle": "spreading",
     "height_max_m": {
       "min": 20,
       "max": 24,
@@ -212,6 +214,8 @@
     "inflorescence_length_m": {"min": 0.05, "max": 0.1}
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 237): open-grown, 'stout branches ... spreading horizontally and forming a broad dense symmetrical round-topped crown' (the leader lost is inferred from the broad round crown)."},
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 237): 'stout branches ascending in the forest and forming a narrow spire-like head, or in open positions spreading horizontally and forming a broad dense symmetrical round-topped crown'."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

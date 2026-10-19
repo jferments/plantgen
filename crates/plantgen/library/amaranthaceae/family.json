@@ -4,10 +4,29 @@
   "name": "Amaranthaceae",
   "parent": "order/caryophyllales",
   "traits": {
-    "leaf_incision": {"none": "usually", "lobed": "rarely"},
-    "flower_merosity": {"min": 3, "max": 5, "typical": 5, "high": 8},
-    "stamens": {"min": 3, "max": 5, "typical": 5, "low": 1, "high": 9},
-    "carpels": {"min": 2, "max": 3, "low": 1, "high": 6},
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "rarely"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 5,
+      "typical": 5,
+      "high": 8
+    },
+    "stamens": {
+      "min": 3,
+      "max": 5,
+      "typical": 5,
+      "low": 1,
+      "high": 9
+    },
+    "carpels": {
+      "min": 2,
+      "max": 3,
+      "low": 1,
+      "high": 6
+    },
     "hypanthium": false,
     "woodiness": {
       "herbaceous": "usually",
@@ -21,34 +40,72 @@
     "leaf_division": "simple",
     "stipules": false,
     "flower_symmetry": "actinomorphic",
-    "perianth": "tepals",
-    "inflorescence": {"spike": "often", "head": "sometimes", "panicle": "sometimes", "raceme": "sometimes"},
+    "perianth": {
+      "tepals": "usually",
+      "absent": "rarely"
+    },
+    "inflorescence": {
+      "spike": "often",
+      "head": "sometimes",
+      "panicle": "sometimes",
+      "raceme": "sometimes"
+    },
     "ovary_position": "superior",
     "fruit_type": {
       "achene": "usually",
       "capsule": "sometimes",
-      "berry": "sometimes"
+      "berry": "rarely"
     },
     "rosette": {
       "basal": "rarely",
       "none": "usually"
     },
     "leaf_margin": {
-      "entire": "usually"
+      "entire": "usually",
+      "serrate": "rarely"
     },
-    "sexual_system": {"hermaphrodite": "usually", "monoecious": "sometimes", "dioecious": "sometimes", "polygamous": "sometimes"},
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "sometimes",
+      "dioecious": "sometimes",
+      "polygamous": "sometimes"
+    },
     "life_span": {
       "annual": "often",
       "perennial": "often"
     }
   },
   "evidence": {
-    "traits.inflorescence": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Amaranthaceae (read 2026-10-17): flowers in cymes, spikes or heads; Wikipedia (read 2026-10-17) adds panicles. Weighting by genus size: the chenopod genera (Atriplex ~300, Salsola s.l., Suaeda, Chenopodium s.l., Salicornia), over half the ~2,000+ spp, bear glomerules in spikes or spiciform panicles, as do Achyranthes and Amaranthus; heads mainly in Gomphrena and Alternanthera (~250-300). Genus sizes are approximate, not from the pages."},
-    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Amaranthaceae (read 2026-10-17): lamina simple and undivided, margins entire. Wikipedia Amaranthus (read 2026-10-17): leaves whole and simple. Wikipedia Atriplex: blade entire, toothed or lobed, so lobing occurs in that large genus."},
-    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 181: Ronse De Craene (Amaranthaceae incl. Chenopodiaceae): tepals mostly 3 to 5, rarely 1 or none; Simpson p. 371 gives 3-5 for Amaranthaceae s.s. and 5 (1, 6-8) for Chenopodiaceae. The rare 1-tepal flowers are left out because merosity starts at 2."},
-    "traits.stamens": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 181: stamens as many as the tepals and opposite them, rarely fewer; general formula 5, rarely 1 or up to 8-9."},
-    "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 181, 182: ovary of 2 to 3 carpels, unilocular (general formula up to 6). Simpson p. 371 calls Amaranthaceae s.s. unicarpellous and Chenopodiaceae 2-3 (rarely 5)."},
-    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 371, 505: Simpson calls both Amaranthaceae s.s. and Chenopodiaceae hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Amaranthaceae (read 2026-10-17): flowers in cymes, spikes or heads; Wikipedia (read 2026-10-17) adds panicles. Weighting by genus size: the chenopod genera (Atriplex ~300, Salsola s.l., Suaeda, Chenopodium s.l., Salicornia), over half the ~2,000+ spp, bear glomerules in spikes or spiciform panicles, as do Achyranthes and Amaranthus; heads mainly in Gomphrena and Alternanthera (~250-300). Genus sizes are approximate, not from the pages."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Amaranthaceae (read 2026-10-17): lamina simple and undivided, margins entire. Wikipedia Amaranthus (read 2026-10-17): leaves whole and simple. Wikipedia Atriplex: blade entire, toothed or lobed, so lobing occurs in that large genus."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 181: Ronse De Craene (Amaranthaceae incl. Chenopodiaceae): tepals mostly 3 to 5, rarely 1 or none; Simpson p. 371 gives 3-5 for Amaranthaceae s.s. and 5 (1, 6-8) for Chenopodiaceae. The rare 1-tepal flowers are left out because merosity starts at 2."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 181: stamens as many as the tepals and opposite them, rarely fewer; general formula 5, rarely 1 or up to 8-9."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 181, 182: ovary of 2 to 3 carpels, unilocular (general formula up to 6). Simpson p. 371 calls Amaranthaceae s.s. unicarpellous and Chenopodiaceae 2-3 (rarely 5)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthaceae family account (Robertson & Clemants; Amaranthaceae in the narrow sense) (eFloras, read 2026-10-19): flowers hypogynous."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
@@ -61,15 +118,58 @@
     },
     "traits.leaf_margin": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 371, family Amaranthaceae: leaf margin entire, usually; read as {\"entire\": \"usually\"}."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthaceae family account (Robertson & Clemants; Amaranthaceae in the narrow sense) (eFloras, read 2026-10-19): blade margins entire (entire or serrulate in Iresine; entire, crispate or erose in Amaranthus). FNA Chenopodiaceae: margins entire to serrate, serrate-dentate or lobed. Serrate added as rare."
     },
-    "traits.sexual_system": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Amaranthaceae (read 2026-10-17) codes the plants as hermaphrodite (usually), with monoecy, dioecy and mixed states as less common; Wikipedia Amaranthaceae (read 2026-10-17, ~2,000-2,500 spp with the chenopods) also says most flowers are bisexual. Unisexual groups (Atriplex, Amaranthus, Iresine) are a minority. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Amaranthaceae (read 2026-10-17) codes the plants as hermaphrodite (usually), with monoecy, dioecy and mixed states as less common; Wikipedia Amaranthaceae (read 2026-10-17, ~2,000-2,500 spp with the chenopods) also says most flowers are bisexual. Unisexual groups (Atriplex, Amaranthus, Iresine) are a minority. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."
+    },
     "traits.life_span": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 371, family Amaranthaceae: life span annual or perennial; read as {\"annual\": \"often\", \"perennial\": \"often\"}."
     },
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add berry (sometimes): Simpson, Plant Systematics (2019) p. 371: capsule (irregularly dehiscent) or berry."}
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthaceae family account (Robertson & Clemants; Amaranthaceae in the narrow sense) (eFloras, read 2026-10-19): fruits utricles, dry, dehiscent or not; FNA Chenopodiaceae: achenes or utricles; FOC Amaranthaceae: a dry utricle or a fleshy capsule, indehiscent, bursting or circumscissile. A utricle that stays shut reads as an achene; one opening by a lid as a capsule. The family file's berry (Simpson) is not named by FNA or FOC, lowered to rarely."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthaceae family account (Robertson & Clemants; Amaranthaceae in the narrow sense) (eFloras, read 2026-10-19): leaves alternate or opposite, exstipulate; FNA Chenopodiaceae: leaves usually alternate, occasionally opposite. FOC Amaranthaceae: alternate or opposite. Agrees with the family file."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Chenopodiaceae family account (Welsh, Crompton & Clemants) (eFloras, read 2026-10-19): leaves simple; FNA Amaranthaceae and FOC: entire."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthaceae family account (Robertson & Clemants; Amaranthaceae in the narrow sense) (eFloras, read 2026-10-19): leaves exstipulate; FNA Chenopodiaceae: lacking stipules."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Chenopodiaceae family account (Welsh, Crompton & Clemants) (eFloras, read 2026-10-19): flowers radially or rarely bilaterally symmetric; Amaranthaceae s.s. regular."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthaceae family account (Robertson & Clemants; Amaranthaceae in the narrow sense) (eFloras, read 2026-10-19): one whorl of tepals, mostly (1-)4-5, or absent; FNA Chenopodiaceae: perianth segments 5, sometimes 1 or absent, petals absent. Read as tepals, rarely none."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthaceae family account (Robertson & Clemants; Amaranthaceae in the narrow sense) (eFloras, read 2026-10-19): ovary superior; FNA Chenopodiaceae: usually superior (half-inferior in Sarcobatus, inferior in Beta)."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthaceae family account (eFloras, read 2026-10-19): herbs, clambering subshrubs, shrubs or lianas; FNA Chenopodiaceae: herbs, shrubs, rarely small trees. Agrees with the family file."
+    }
   }
 }
