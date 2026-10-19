@@ -1,0 +1,236 @@
+{
+  "schema": 1,
+  "id": "eschscholzia-californica",
+  "taxon": {
+    "scientific_name": "Eschscholzia californica",
+    "common_name": "California poppy",
+    "usda_symbol": "ESCA2",
+    "family": "Papaveraceae",
+    "genus": "Eschscholzia",
+    "plant_name_id": 2801972
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 6,
+      "stem_rate": 0.5,
+      "clump_radius": 0.12,
+      "stem_lean": 20,
+      "maturity": 1.2,
+      "adult_age": 1,
+      "stem_radius": 0.002,
+      "wiggle": 2,
+      "arch": 0,
+      "nodes": 3,
+      "bare": 0.15,
+      "leaf_length": 0.08,
+      "basal_leaves": 3,
+      "basal_length": 0.15,
+      "basal_angle": 50,
+      "raceme": 0.3,
+      "flowers": 1,
+      "pedicel": 0.01,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "bud_spacing": 0.5,
+      "nod": 0,
+      "bud_size": 0.015,
+      "leaf_area": 0.054,
+      "basal_area": 0.041,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.420,
+      "bud_area": 0.063,
+      "fruit_area": 0.150
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.38, 0.32],
+    "foliage": [0.12, 0.2, 0.15],
+    "foliage_shade": [0.036, 0.06, 0.045],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": { "template": "compound", "leaflets": 9, "pinnules": 3, "leaflet_width": 0.25, "teeth": 0, "angle": 50, "pinnule_angle": 40, "largest": 0.45, "lowest": 0.4, "widest": 0.4, "tip": 0.5, "base": 0.5, "petiole": 0.2 }
+      },
+      "basal": {
+        "shape": { "template": "compound", "leaflets": 9, "pinnules": 3, "leaflet_width": 0.25, "teeth": 0, "angle": 50, "pinnule_angle": 40, "largest": 0.45, "lowest": 0.4, "widest": 0.4, "tip": 0.5, "base": 0.5, "petiole": 0.35 }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 1.2,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.2
+        },
+        "colour": [0.96, 0.55, 0.1],
+        "accent": [0.9, 0.4, 0.05]
+      },
+      "fruit": {
+        "shape": { "template": "fruit", "aspect": 0.1 }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {"min": 0.05, "max": 0.6, "typical": 0.3},
+    "height_max_m": 0.6,
+    "life_span": {"perennial": "often", "annual": "often"},
+    "woodiness": "herbaceous",
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_incision": "dissected",
+    "division_pattern": "pinnate",
+    "division_order": {"min": 1, "max": 4},
+    "leaf_length_m": {"min": 0.05, "max": 0.15},
+    "leaf_width_m": {"min": 0.03, "max": 0.08},
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "solitary",
+    "flower_posture": "erect",
+    "flower_size_m": {"min": 0.03, "max": 0.07},
+    "petal_length_m": {"min": 0.02, "max": 0.06},
+    "petal_shape": "obovate",
+    "flower_colour": [245, 140, 25],
+    "perianth_base_colour": [230, 100, 15],
+    "flower_symmetry": "actinomorphic",
+    "petal_whorls": 2,
+    "hypanthium": true,
+    "stamens": {"min": 12, "max": 22},
+    "carpels": 2,
+    "fruit_type": "capsule",
+    "fruit_size_m": {"min": 0.03, "max": 0.09},
+    "fruit_colour_ripe": [150, 120, 80],
+    "calyx_in_fruit": "falling",
+    "flowering_months": [2, 3, 4, 5, 6, 7, 8, 9],
+    "fruiting_months": [4, 5, 6, 7, 8, 9]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "From the template, Dicentra formosa, changed for a poppy's form: leafy stems (Flora of North America vol. 3, Eschscholzia: stems leafy; leaves basal and sometimes cauline), so 3 stem leaves 8 cm long over a short bare foot beside 3 basal leaves 15 cm long, inside the model estimate's 5-15 cm leaves, spread at 50 degrees; no arching (arch 0) and the stems leaning out to 20 degrees, for 'erect or spreading'; one flower ending each stem on the stem's top 30 percent, bare, standing for the long peduncle, its stalk 1 cm; flowering from the first year (adult_age 1), as the annual forms do; a bud 1.5 cm. No raceme cluster: the flower is solitary. flower_size is left to the rule from flower_size_m, and stem_height to the rule from height_typical_m. The shading areas are the template's, for the shading test to correct. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 4 years in the open, inside Flora of North America's 5-60 cm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours from Flora of North America vol. 3, Eschscholzia californica (read on eFloras, 2026-10-18): plants 'glabrous, sometimes glaucous', so a grey blue-green for leaves and stems; petals 'yellow to orange, usually with orange spot at base', a bright orange, its accent a deeper orange."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): blade 1-4× pinnately deeply lobed, lobes of each order usually 3; ultimate lobes narrow. Drawn on a twice-divided card of narrow lobes (9 primary lobes, each in 3), as yarrow's dissected blades are, since the kingdom's rule would draw a dissected blade on a once-lobed card; the counts and stalk share by hand."
+    },
+    "appearance.organs.basal.shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): leaves basal and sometimes cauline, petiolate; blade 1-4× pinnately deeply lobed, lobes of each order usually 3. The template's frond card, pinnae 4 a side, its stalk 0.3 of the leaf as the template had it; counts by hand."
+    },
+    "appearance.organs.flower.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The template's broad petals (petal_width 1.2), now without its raceme cluster, as the flower is solitary. Petal count and whorls are left to the rules from flower_merosity 2 (the family's) and petal_whorls 2, stamens and carpels to theirs."
+    },
+    "appearance.organs.fruit.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): fruits capsular, cylindric; E. californica capsules 3-9 cm. No source read gives the width, so drawn by hand as slender as a fruit look draws (aspect 0.1, a tenth as wide as long), a slender pod; a real one is narrower still."
+    },
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): plants perennial or annual, caulescent, erect or spreading, 5-60 cm. The typical 30 cm is inside the model estimate's usual 15-50 cm (species-facts-2026-10-15, record L2801972)."},
+    "traits.height_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): 5-60 cm."},
+    "traits.life_span": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): plants perennial or annual; taproot heavy in perennial forms."},
+    "traits.woodiness": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): herbs, annual or perennial."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): leaves alternate, basal and sometimes cauline, petiolate."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): blade 1-4× pinnately deeply lobed (one blade, lobed, not of separate leaflets)."},
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): blade 1-4× pinnately deeply lobed, lobes of each order usually 3; ultimate lobes narrow."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): blade 1-4× pinnately deeply lobed."},
+    "traits.division_order": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): blade 1-4× pinnately deeply lobed."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972), as no source read gives it; the ultimate lobes' edges."},
+    "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): plants glabrous, sometimes glaucous."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): inflorescences cymose or 1-flowered; the model estimate (species-facts-2026-10-15, record L2801972) gives solitary. Drawn one flower to a stem; Floral Diagrams (ref floral-2026-10-15#510) draws the cymose form, a central flower flanked by lateral ones."},
+    "traits.flower_posture": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972), as no source read gives the open flower's; Flora of North America says buds erect."},
+    "traits.flower_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972), as no source read gives it."},
+    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): petals 20-60 mm."},
+    "traits.petal_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): petals 4, rarely more (doubled flowers), obovate to obcuneate, with satin sheen."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): petals yellow to orange. The colour is our reading of the words."},
+    "traits.perianth_base_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): petals yellow to orange, usually with orange spot at base. The colour is our reading of the words."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010), Eschscholzia californica (ref floral-2026-10-15#510): flower disymmetric, two planes of symmetry, read as actinomorphic (the model estimate, record L2801972, agrees)."},
+    "traits.petal_whorls": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010), Eschscholzia californica (ref floral-2026-10-15#510): petals 4 (2+2), imbricate; with the family's merosity 2, two whorls of two."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): receptacle dilated, forming cup beneath calyx, sometimes with free rim; perianth and androecium perigynous. E. californica: receptacle obconic, cup with spreading free rim."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): stamens 12-many; Floral Diagrams (ref floral-2026-10-15#510): 4-22, sometimes more, so 22 is the upper bound kept."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): pistil 2-carpellate; Floral Diagrams (ref floral-2026-10-15#510): carpels 2, fused, parietal placentae."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): fruits capsular, cylindric, 2-valved, dehiscing from base along placentas, often explosively."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia californica (read on eFloras, 2026-10-18): capsules 3-9 cm."},
+    "traits.fruit_colour_ripe": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972: brown), as no source read gives it."},
+    "traits.calyx_in_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Eschscholzia (read on eFloras, 2026-10-18): sepals 2, connate, calyptrate, deciduous as unit."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2801972), as no source read gives it."}
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (core expansion batch A1, 2026-10-18) from the Dicentra formosa template, its traits from Flora of North America vol. 3 (species and genus) and Floral Diagrams, and, where no source read gives them, the model estimates of species-facts-2026-10-15. Calibration against measurements and photographs is milestone P4."
+  }
+}

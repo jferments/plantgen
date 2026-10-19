@@ -1,0 +1,375 @@
+{
+  "schema": 1,
+  "id": "ceanothus-thyrsiflorus",
+  "taxon": {
+    "scientific_name": "Ceanothus thyrsiflorus",
+    "common_name": "blueblossom",
+    "usda_symbol": "CETH",
+    "family": "Rhamnaceae",
+    "genus": "Ceanothus",
+    "plant_name_id": 2706903
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 220,
+      "internode": 0.08,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 45,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 8,
+      "fork_height": 0.03,
+      "fork_stems": 6,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.02,
+      "space_kill": 0.252,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "blooms": 1,
+      "bloom_angle": 30,
+      "leaf_years": 2
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.32,
+      0.24
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple"
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.8,
+          "unripe": 0.4
+        },
+        "inflorescence": {
+          "flowers": 40,
+          "size": 0.06,
+          "spread": 40
+        },
+        "colour": [
+          0.021,
+          0.017,
+          0.013
+        ],
+        "accent": [
+          0.45,
+          0.5,
+          0.25
+        ],
+        "season": {
+          "ripening": 30,
+          "opening": 14,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petal_width": 0.8,
+              "point": 0.2,
+              "notch": 0.0,
+              "centre": 0.3,
+              "stamen_length": 0.5
+            },
+            "colour": [
+              0.127,
+              0.223,
+              0.644
+            ],
+            "accent": [
+              0.402,
+              0.515,
+              0.831
+            ],
+            "size": 0.6
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 2.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 0.5,
+      "max": 6,
+      "high": 8
+    },
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.04,
+      "high": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.005,
+      "max": 0.015,
+      "high": 0.02
+    },
+    "petiole_length_m": {
+      "min": 0.003,
+      "max": 0.01
+    },
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": "alternate",
+    "inflorescence": {
+      "raceme": "usually",
+      "panicle": "rarely"
+    },
+    "inflorescence_length_m": {
+      "min": 0.025,
+      "max": 0.09
+    },
+    "flowering_position": "terminal",
+    "flower_colour": [
+      100,
+      130,
+      210
+    ],
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.0025,
+      "max": 0.004
+    },
+    "fruit_width_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      40,
+      35,
+      30
+    ],
+    "fruit_armature": "smooth",
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      6,
+      7
+    ],
+    "height_typical_m": {"min": 1, "max": 6},
+    "life_span": "perennial",
+    "rosette": "none",
+    "leaf_shape": {"elliptic": "usually", "ovate": "often"},
+    "leaf_margin": "serrate",
+    "leaf_apex": "obtuse",
+    "leaf_base_shape": {"obtuse": "usually", "rounded": "often"},
+    "leaf_venation": "palmate",
+    "leaf_colour": [40, 80, 35],
+    "stem_posture": {"ascending": "usually", "erect": "often", "prostrate": "rarely"},
+    "stem_cross_section": "angled",
+    "twig_colour": [95, 135, 70],
+    "spines": "none"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a shrub, sometimes arborescent (Flora of North America vol. 12)."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"Shrubs, sometimes arborescent, evergreen, 0.5-6 m.\" The rare top of 8 m is the model estimate's greatest height (species-facts-2026-10-15, confidence high, record L2706903)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"blade flat to cupped, elliptic to ovate, 10-40(-50) x 5-15(-20) mm\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): blade \"10-40(-50) x 5-15(-20) mm\"."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"petiole 3-10 mm\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"Shrubs, sometimes arborescent, evergreen\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2706903), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"Inflorescences terminal, usually racemelike, rarely paniclelike\"."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): inflorescences \"2.5-9 cm\". Idžojtić, Dendrology (2019), Ceanothus thyrsiflorus (dendrology-2026-10-14#931): 3.5-7.5 cm, inside it."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"Inflorescences terminal\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"sepals, petals, and nectary usually pale to deep blue, rarely white\"; Dendrology (dendrology-2026-10-14#931): pale to dark blue, rarely near white. The colour is our reading of the words, a middle blue."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2706903), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"Capsules 3-4 mm wide, weakly lobed\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019), Ceanothus thyrsiflorus (dendrology-2026-10-14#931): fruit 2.5-4 mm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"Capsules 3-4 mm wide\"."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019), Ceanothus thyrsiflorus (dendrology-2026-10-14#931): fruit black when ripe. The colour is our reading of the word."
+    },
+    "traits.fruit_armature": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"valves smooth, viscid, not crested\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"Flowering Mar-Jun.\" Dendrology (dendrology-2026-10-14#931): March-June (July)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2706903), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Snowbrush ceanothus's values, changed for blueblossom: fewer stems from the base and slightly longer internodes for a taller shrub, sometimes arborescent (FNA vol. 12: 0.5-6 m); crown_radius, path_half, leaf_size, spur_leaf and bloom_size left to the rules from the traits (height, leaf and petiole length, inflorescence length); leaf_years 2 for an evergreen. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.5 m at 12 years in the open, within FNA's 0.5-6 m. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "After FNA vol. 12 and Dendrology: the flowers' colour is the trait's \"pale to deep blue\" as linear light, the accent a paler blue for the blue nectary and stamens; the capsule's colour is Dendrology's \"black\"; the leaf card's outline, petiole, teeth and veins are left to the rules from the traits. Bark brown by eye, as snowbrush's. Foliage colour comes from leaf_colour by the rule. The cluster's fruit share (inflorescence size 0.06) is the fruit's 2.5 to 4 mm (Dendrology) over the cluster drawn about 6 cm long, as the fruit-unit rule works it for an organ named fruit, which a broadleaf bloom is not."
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2706903), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2706903), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2706903), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): blade \"elliptic to ovate\"."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"margins denticulate to serrulate ... teeth glandular, 23-48\"."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"apex obtuse\"."},
+    "traits.leaf_base_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"base obtuse to rounded\"."},
+    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"3-veined from base\", \"veins prominently raised\"; read as palmate."},
+    "traits.leaf_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"adaxial surface dark green, glabrate\". The colour is our reading of the words."},
+    "traits.stem_posture": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"Stems erect, usually ascending to arcuate, rarely prostrate\"."},
+    "traits.stem_cross_section": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"branchlets green, not thorn-tipped, angled in cross section\"."},
+    "traits.twig_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): \"branchlets green\". The colour is our reading of the word."},
+    "traits.spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 12 (2016), Ceanothus thyrsiflorus (read on eFloras, 2026-10-18): branchlets \"not thorn-tipped\"."}
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with core-expansion batch A1 (2026-10-18): sizes from Flora of North America vol. 12 and Dendrology, gaps from model estimates, drawing values from snowbrush ceanothus's."
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "id": "polypodium-glycyrrhiza",
+  "taxon": {
+    "scientific_name": "Polypodium glycyrrhiza",
+    "common_name": "licorice fern",
+    "usda_symbol": "POGL8",
+    "family": "Polypodiaceae",
+    "genus": "Polypodium",
+    "plant_name_id": 3154788
+  },
+  "growth_form": "fern",
+  "generator": {
+    "params": {
+      "frond_seed": 0.2,
+      "size_years": 2,
+      "open_years": 0.5,
+      "angle_spread": 12,
+      "frond_radius": 0.0006,
+      "frond_length": 0.45,
+      "stipe": 0.3,
+      "pieces": 14,
+      "pinna_angle": 75,
+      "pinna_lift": 5,
+      "season": 0.5,
+      "emerge_spread": 0.35,
+      "unroll": 0.3,
+      "droop_years": 1,
+      "crown_age": 2
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [2, 4, 8]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "foliage": [0.07, 0.17, 0.04],
+    "foliage_shade": [0.022, 0.052, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "pinna": {
+        "shape": {
+          "template": "simple",
+          "teeth": 7,
+          "tooth_depth": 0.015,
+          "petiole": 0.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "rhizome_habit": {"short_creeping": "usually", "long_creeping": "often"},
+    "clonal": true,
+    "leaf_habit": "evergreen",
+    "leaf_division": "simple",
+    "leaf_incision": "parted",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaf_shape": {"lanceolate": "usually", "ovate": "often", "oblong": "often"},
+    "leaf_margin": "serrate",
+    "leaf_length_m": {"min": 0.1, "max": 0.5},
+    "leaf_width_m": {"min": 0.03, "max": 0.16},
+    "stipe_colour": [205, 185, 125],
+    "frond_dimorphism": "monomorphic",
+    "sorus_shape": "round",
+    "sorus_position": "medial",
+    "indusium": "none",
+    "height_typical_m": {"min": 0.1, "max": 0.5},
+    "height_max_m": 0.8,
+    "woodiness": "herbaceous",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "leaf_arrangement": "alternate"
+  },
+  "evidence": {
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001), Polypodium glycyrrhiza (fern-2026-10-15#1718): rhizome short- to medium-creeping. Flora of North America vol. 2 (1993), Polypodium (read on eFloras, 2026-10-18): \"Stems creeping, usually branched\"; \"Leaves monomorphic, closely spaced to distant\". Read as short-creeping usually, long-creeping often, the range spanning both (owner's rule, 2026-10-15)."},
+    "traits.clonal": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium (read on eFloras, 2026-10-18): \"Stems creeping, usually branched\". A branching creeping stem spreads into a patch; read as true."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3154788), as no source read gives it. Flora of North America gives only \"Sporulating late fall--spring\"; the fronds' summer withering in drought is not stated by any source read, so it is not stated here."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): \"Blade lanceolate-ovate to oblong, pinnatifid\". Hoshizaki and Moran, Fern Grower's Manual (2001) (fern-2026-10-15#1745): simple, pinnatisect. A blade cut deeply but not into free pinnae; read as simple."},
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): \"pinnatifid\"; Hoshizaki and Moran (fern-2026-10-15#1745): pinnatisect. Read as parted."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): \"pinnatifid\". Cut along a midrib; read as pinnate."},
+    "traits.division_order": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): \"pinnatifid\"; \"Segments linear to oblong, less than 12 mm wide; margins serrate\". Cut once; read as 1."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): \"Blade lanceolate-ovate to oblong, pinnatifid, widest near middle or just below\". Read as lanceolate usually, ovate and oblong often."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): segments' \"margins serrate; apex acute to attenuate\"."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3154788), as no source read gives the blade's length. Flora of North America vol. 2 gives the whole leaf \"to 75 cm\"."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): blade \"to 16 cm wide\". The upper bound is the flora's; the lower, 3 cm, the species-facts estimate's (record L3154788)."},
+    "traits.stipe_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium (read on eFloras, 2026-10-18): \"Petiole articulate to stem, straw-colored\". Read as a pale straw."},
+    "traits.frond_dimorphism": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium (read on eFloras, 2026-10-18): \"Leaves monomorphic\"."},
+    "traits.sorus_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): sori \"usually less than 3 mm diam., circular to oval when immature\"; Hoshizaki and Moran (fern-2026-10-15#1745): round to oval. Read as round."},
+    "traits.sorus_position": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium glycyrrhiza (read on eFloras, 2026-10-18): \"Sori midway between margin and midrib or slightly closer to midrib\". Read as medial."},
+    "traits.indusium": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Polypodium (read on eFloras, 2026-10-18): sori with \"indument absent or of modified sporangia (sporangiasters)\"; the species: \"Sporangiasters absent\". Read as none."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3154788), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3154788), as no source read gives it; Flora of North America's leaves \"to 75 cm\" bound it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3154788), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3154788), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3154788), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3154788), as no source read gives it."},
+    "generator.params": {"evidence": "Authored", "source": "plantgen-authors", "note": "Sword fern's values (polystichum-munitum), for a small creeping fern: fronds full size sooner (size_years 2, from 4; crown_age 2, from 4; droop_years 1, from 2.5), a thin rachis (frond_radius 0.0006, half the middle of Flora of North America's \"Petiole usually slender, 0.5--2 mm diam.\"). No source read gives the petiole's length, so the class rules cannot size the frond: frond_length 0.45 (the species-facts blade's middle, 0.3 m, and a stipe of about half that) and stipe 0.3 are hand-set, within the flora's \"Leaves to 75 cm\". As the blade is stated simple and pinnatifid, the pinnae trait cannot hold its count, so pieces 14 is hand-set for about 20 pairs of segments (Flora of North America, Polypodium: \"usually with fewer than 25 pairs of pinnae\"). Not fitted to measurements."},
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "0.3 m tall at 8 years in the open, within the species-facts estimate of 10 to 50 cm. Replace with measured data before calling this species calibrated."},
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye: the fern form's mid-green, as no source read gives the blade's colour (Flora of North America: \"herbaceous, rarely slightly leathery\"). Its stipes take their stated colour (stipe_colour). The simple card keeps sword fern's fine teeth, for the flora's \"margins serrate\"."},
+    "taxon": {"evidence": "Authored", "source": "plantgen-authors", "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."},
+    "growth_form": {"evidence": "Authored", "source": "plantgen-authors", "note": "The growth form the spec's authors chose from the plant's habit."},
+    "growth": {"evidence": "Authored", "source": "plantgen-authors", "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."},
+    "variants": {"evidence": "Authored", "source": "plantgen-authors", "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."},
+    "taxon.family": {"evidence": "SourceInferred", "source": "wcvp-v16", "note": "WCVP v16's family for the accepted name."},
+    "taxon.plant_name_id": {"evidence": "SourceInferred", "source": "wcvp-v16", "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."}
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy added with core-expansion batch A1 (2026-10-18): characters from Flora of North America vol. 2, rhizome from the Fern Grower's Manual, sizes partly from the species-facts estimate, drawing values from sword fern's."
+  }
+}
