@@ -1907,6 +1907,11 @@ pub struct Flower {
     /// 0.1; at 1 the calyx stays.
     #[serde(skip_serializing_if = "is_one")]
     pub calyx_shed: f64,
+    /// How an open flower of a cluster holds itself, as a fruit's `hang`:
+    /// 0 along its pedicel, 1 hanging straight down from it (a bleeding
+    /// heart's), between them turned that share of the way.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub nod: f64,
     /// The sepals' colour, and a spiral's outer tepals'; a leaf green if
     /// absent. A labellate flower's sepals take the petals' colour.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2120,6 +2125,7 @@ impl Default for Flower {
             sepal_length: SEPAL_LENGTH,
             sepals_fused: 0.0,
             calyx_shed: 1.0,
+            nod: 0.0,
             calyx: None,
             filament: None,
             pistil: None,
@@ -2338,6 +2344,11 @@ pub enum Corolla {
     /// banner of a palo verde, which is not a pea flower's; of tepals, the
     /// outer one toward the axis.
     Unequal,
+    /// Symmetric about two planes (disymmetric), as a bleeding heart's: two
+    /// outer petals pouched at the base into a heart, their tips meeting
+    /// below, and two narrow inner petals joined at their tips between
+    /// them (4 petals).
+    Disymmetric,
 }
 
 impl Corolla {
@@ -2707,6 +2718,10 @@ pub struct Fruit {
     /// threads, as a share of the fruit's length; 0 for seeds held in it.
     #[serde(skip_serializing_if = "is_zero")]
     pub threads: f64,
+    /// Rays of a stigmatic disc crowning the fruit (a poppy's capsule, its
+    /// stigmas radiating on a flat lobed disc): 0 for none.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub disc: u32,
 }
 
 impl Default for Fruit {
@@ -2736,6 +2751,7 @@ impl Default for Fruit {
             cup: None,
             ripening: None,
             threads: 0.0,
+            disc: 0,
         }
     }
 }
@@ -2957,6 +2973,8 @@ struct FruitCard {
     armed: Armed,
     hang: f64,
     flare: f64,
+    #[serde(default)]
+    disc: u32,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
     ripening: Option<[f32; 3]>,
@@ -2995,6 +3013,7 @@ impl Default for FruitCard {
             cup: None,
             ripening: None,
             threads: 0.0,
+            disc: fruit.disc,
             count: None,
             cluster: None,
             size: None,
@@ -3044,6 +3063,7 @@ impl TryFrom<FruitCard> for Fruit {
             cup: card.cup,
             ripening: card.ripening,
             threads: card.threads,
+            disc: card.disc,
         })
     }
 }
@@ -3685,6 +3705,7 @@ impl Shape {
                 check("sepal_length", s.sepal_length, 0.1, 3.0)?;
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
                 check("calyx_shed", s.calyx_shed, 0.0, 1.0)?;
+                check("nod", s.nod, 0.0, 1.0)?;
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
                     check("filament", f64::from(channel), 0.0, 1.0)?;
@@ -3749,13 +3770,14 @@ impl Shape {
                 check("open", s.open, 0.0, 1.0)?;
                 if s.petal_whorls == 2
                     && (s.perianth != Perianth::Corolla
-                        || s.corolla != Corolla::Regular
+                        || !matches!(s.corolla, Corolla::Regular | Corolla::Disymmetric)
+                        || (s.corolla == Corolla::Disymmetric && s.petals != 4)
                         || s.petals % 2 != 0
                         || s.petals < 4)
                 {
                     return Err(format!(
                         "petals in two whorls are a regular corolla of an even number, \
-                         at least 4: found {} {:?} {:?}",
+                         at least 4, or a disymmetric one of 4: found {} {:?} {:?}",
                         s.petals, s.perianth, s.corolla
                     ));
                 }
@@ -3912,6 +3934,9 @@ impl Shape {
                     )?;
                 }
                 check("threads", s.threads, 0.0, 1.0)?;
+                if s.disc > 24 {
+                    return Err(format!("disc has 0 to 24 rays, found {}", s.disc));
+                }
                 check("unripe", s.unripe, 0.0, 1.0)?;
                 check("apiculum", s.apiculum, 0.0, 0.3)?;
                 check("spine", s.spine, 0.0, 0.5)?;

@@ -54,8 +54,6 @@
   },
   "appearance": {
     "bark": [0.42, 0.52, 0.45],
-    "foliage": [0.2, 0.3, 0.26],
-    "foliage_shade": [0.06, 0.09, 0.078],
     "variation": 0.15,
     "organs": {
       "leaf": {
@@ -108,7 +106,9 @@
     "fruit_colour_ripe": [165, 135, 95],
     "calyx_in_fruit": "falling",
     "flowering_months": [5, 6, 7, 8],
-    "fruiting_months": [6, 7, 8, 9]
+    "fruiting_months": [6, 7, 8, 9],
+    "leaf_colour": [140, 170, 150],
+    "fruit_colour_unripe": [145, 178, 160]
   },
   "evidence": {
     "taxon": {
@@ -188,7 +188,9 @@
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 7 (2008), Papaver somniferum: capsule brown when mature; Simpson figures it tan-brown. The colour is our reading of the words."},
     "traits.calyx_in_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaveraceae: sepals caducous, so none stays under the fruit."},
     "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Papaver somniferum: flowering spring-summer, read as May to August for the flora's range; Flora of China gives March to August."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "plantgen-authors", "note": "A month after each flowering month, as no source read gives fruiting months: the capsule ripens after the petals fall."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "plantgen-authors", "note": "A month after each flowering month, as no source read gives fruiting months: the capsule ripens after the petals fall."},
+    "traits.leaf_colour": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 3, Papaver somniferum (read 2026-10-19): plants glabrate, glaucous; Flora of China vol. 7: glaucous, waxy. The glaucous grey-green is our reading of 40 iNaturalist photos (imagekit batch poppies-2026-10-19): the wax bloom drawn as the leaves' colour."},
+    "traits.fruit_colour_unripe": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 3, Papaver somniferum (read 2026-10-19): capsules glaucous. The blue-green is our reading of the unripe capsules in the iNaturalist photos (imagekit batch poppies-2026-10-19)."}
   },
   "provenance": {
     "sources": [

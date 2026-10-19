@@ -1566,9 +1566,9 @@
       "group": "flowers",
       "organ": "petal",
       "type": "enum",
-      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular"],
+      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular", "flabellate"],
       "optional": true,
-      "why": "a petal's outline, or a tepal's: from a narrow strap (linear) to as broad as long (orbicular)"
+      "why": "a petal's outline, or a tepal's: from a narrow strap (linear) to as broad as long (orbicular), or fan-shaped, widest across its broad blunt tip from a wedge base (flabellate, obcuneate: a poppy's)"
     },
     "petal_apex": {
       "group": "flowers",
@@ -1628,8 +1628,8 @@
       "group": "flowers",
       "organ": "flower",
       "type": "enum",
-      "values": ["actinomorphic", "zygomorphic", "asymmetric"],
-      "why": "a flower's symmetry: radial, one plane, or none"
+      "values": ["actinomorphic", "disymmetric", "zygomorphic", "asymmetric"],
+      "why": "a flower's symmetry: radial, two planes at right angles (disymmetric: a bleeding heart's two pouched outer petals and two inner), one plane, or none"
     },
     "perianth": {
       "group": "flowers",
@@ -2273,6 +2273,20 @@
       "organ": "fruit",
       "type": "colour",
       "why": "a ripe fruit"
+    },
+    "fruit_colour_unripe": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "colour",
+      "optional": true,
+      "why": "a fruit before it ripens, where it is not the leaves' green: an opium poppy's glaucous blue-green capsule"
+    },
+    "stigmatic_disc": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the stigmas radiate on a flat, lobed disc crowning the ovary and kept on the capsule, one ray a carpel (poppies)"
     },
     "fruit_colour_ripening": {
       "group": "fruit_and_cones",

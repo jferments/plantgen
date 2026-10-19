@@ -71,6 +71,14 @@ const NAKED_REACH: f64 = 0.9;
 
 /// Whether any perianth part keeps its foot straight and curls from part
 /// way along, so it needs more stations.
+/// The way across a disymmetric corolla's outer petal part heading
+/// `heading` from the foot at `radial`: square to its heading in the plane
+/// of the heading and the axis, the heart's plane.
+fn in_heart_plane(heading: Vec3, radial: Vec3) -> Vec3 {
+    let tangent = heading.cross(radial);
+    heading.cross(tangent).normalize_or(radial)
+}
+
 fn form_bends(laid: &Floral) -> bool {
     laid.pieces
         .iter()
@@ -544,13 +552,69 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 ));
             }
         }
+        (Perianth::Corolla, Corolla::Disymmetric) => {
+            // A bleeding heart's: each outer petal pouched at its foot,
+            // bowing out from the receptacle (its pouch), then running back
+            // in (its blade) to meet the other in the heart's point, where
+            // its tip turns out (FNA: reflexed portion 2-5 mm of 16-19); the
+            // two narrow inner petals hang straight between them and stand
+            // out beyond the point. Each outer petal is drawn as these
+            // three parts end to end.
+            let foot = 0.1 * r;
+            let g = grown;
+            // The heart's plane square to the bearing axis, so a raceme
+            // seen from the side shows its hearts face on.
+            for angle in [PI / 2.0, 1.5 * PI] {
+                let part = |role, (radius, height): (f64, f64), cup: f64, length: f64, wide: f64| {
+                    Piece {
+                        radius,
+                        height,
+                        length: length * g,
+                        width: wide * r,
+                        curl: 0.0,
+                        base: 0.7,
+                        taper: 0.6,
+                        ..piece(Term::Petal, Some(role), angle, cup, (1.0, 1.0))
+                    }
+                };
+                let end = |p: &Piece| {
+                    let cup = degrees(p.cup);
+                    (
+                        p.radius + p.length * math::cos(cup),
+                        p.height + p.length * math::sin(cup),
+                    )
+                };
+                // The pouch runs out nearly square to the axis, a lobe of
+                // the heart either side of the pedicel; the blade runs back
+                // in to the point, the heart about half as wide as long.
+                let pouch = part("pouch", (foot, lobe_height), -10.0, 0.5 * r, 0.7);
+                let blade = part("blade", end(&pouch), 108.0, 1.35 * r, 0.6);
+                let tip = part("tip", end(&blade), 20.0, 0.25 * r, 0.2);
+                pieces.extend([pouch, blade, tip]);
+            }
+            for angle in [0.0, PI] {
+                let inner = piece(Term::Petal, Some("inner petal"), angle, 86.0, (1.0, 1.0));
+                pieces.push(Piece {
+                    radius: 0.5 * foot,
+                    length: 1.65 * r * g,
+                    width: 0.22 * r,
+                    curl: 0.0,
+                    base: 0.5,
+                    taper: 1.3,
+                    ..inner
+                });
+            }
+        }
         (Perianth::Corolla, Corolla::Regular) if flower.petal_whorls == 2 => {
             // Two like whorls, as tepals stand, the inner turned half a
-            // petal and a little narrower and more upright.
+            // petal and a little narrower and more upright. Two crossed
+            // pairs (a poppy's 2 + 2) open together as one cup, the outer
+            // pair as upright as the inner it wrapped in bud.
             let h = f64::from((n / 2).max(1));
+            let outer = if n / 2 <= 2 { form.cup } else { form.cup * 0.85 };
             for k in 0..(n / 2).max(1) {
                 let angle = TAU * f64::from(k) / h;
-                pieces.push(piece(Term::Petal, None, angle, form.cup * 0.85, (1.0, 1.0)));
+                pieces.push(piece(Term::Petal, None, angle, outer, (1.0, 1.0)));
             }
             for k in 0..(n / 2).max(1) {
                 let angle = TAU * f64::from(k) / h + PI / h;
@@ -671,7 +735,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             Corolla::Regular => p.term != Term::Sepal,
             Corolla::Bilabiate => p.role == Some("lower lip") && (p.angle - psi - PI).abs() < 1e-9,
             Corolla::Labellate => p.role == Some("lip"),
-            Corolla::Papilionaceous => false,
+            Corolla::Papilionaceous | Corolla::Disymmetric => false,
             Corolla::Unequal => matches!(p.role, Some("upper petal" | "upper tepal")),
         };
         let spur_length = flower.spur * r;
@@ -1147,6 +1211,9 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
         if heading.cross(left).dot(axis) < 0.0 {
             left = -left;
         }
+        if matches!(piece.role, Some("pouch" | "blade" | "tip")) {
+            left = in_heart_plane(heading, radial);
+        }
         let solid = SolidLeaf {
             section: Section::Flat,
             thickness: 0.05,
@@ -1490,10 +1557,39 @@ pub(crate) fn draw_reduced(
     for piece in &laid.pieces {
         let radial = frame.radial(piece.angle);
         let heading = frame.rising(piece.angle, piece.cup);
-        let left = axis.cross(radial).normalize_or(frame.side) * (piece.width * 0.5);
+        let mut left = axis.cross(radial).normalize_or(frame.side) * (piece.width * 0.5);
         let foot = frame.point(piece.angle, piece.radius, piece.height);
         let colour = colours.toward_calyx(piece.calyx);
-        if part.coarse == 0 && piece.taper < 1.0 {
+        // A disymmetric corolla's outer petal, drawn in parts end to end
+        // (pouch, blade, tip): each part broad at its foot and, but the
+        // tip, at its end, so they join along an edge, not a point, and
+        // flat in the heart's plane, so the two outer petals show the heart
+        // face on.
+        let joined = match piece.role {
+            Some("pouch") => Some(0.9),
+            Some("blade") => Some(0.5),
+            Some("tip") => Some(0.0),
+            _ => None,
+        };
+        if joined.is_some() {
+            left = in_heart_plane(heading, radial) * (piece.width * 0.5);
+        }
+        if let Some(end) = joined {
+            let widest = foot + heading * (piece.length * 0.55);
+            let tip = foot + heading * piece.length;
+            both(
+                &[
+                    foot - left * piece.base,
+                    foot + left * piece.base,
+                    widest + left,
+                    tip + left * end,
+                    tip - left * end,
+                    widest - left,
+                ],
+                colour,
+                mesh,
+            );
+        } else if part.coarse == 0 && piece.taper < 1.0 {
             // A blunt petal (obovate, orbicular) keeps its full shoulders
             // toward a rounded tip, as its solid narrows ([`SolidLeaf`]).
             let widest = foot + heading * (piece.length * 0.55);
@@ -2898,4 +2994,5 @@ mod tests {
             "no wider than 3/5 of its length"
         );
     }
+
 }

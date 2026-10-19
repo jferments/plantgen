@@ -2885,11 +2885,11 @@ fn flower_parts(
     // A zygomorphic corolla's kind; a regular flower has none, so a genus
     // whose family states a kind its own flowers lack (mimosoid Vachellia
     // under the pea family's papilionaceous) is not judged by it.
-    if flower.is_zygomorphic() {
+    if flower.is_zygomorphic() && flower.corolla != Corolla::Disymmetric {
         tally.kind(
             "zygomorphy",
             match flower.corolla {
-                Corolla::Regular | Corolla::Unequal => "other",
+                Corolla::Regular | Corolla::Unequal | Corolla::Disymmetric => "other",
                 Corolla::Papilionaceous => "papilionaceous",
                 Corolla::Bilabiate => "bilabiate",
                 Corolla::Labellate => "labellate",
@@ -2898,7 +2898,9 @@ fn flower_parts(
     }
     tally.kind(
         "flower_symmetry",
-        if flower.is_zygomorphic() {
+        if flower.corolla == Corolla::Disymmetric {
+            "disymmetric"
+        } else if flower.is_zygomorphic() {
             "zygomorphic"
         } else {
             "actinomorphic"
