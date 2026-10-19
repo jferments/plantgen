@@ -322,11 +322,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "ribes-divaricatum",
-        "inflorescence_length_m",
-        "its pendent raceme's axis bends over by half a turn to hang (the angiosperms' posture rule), and the length is read along its organ's axis, not along the bent axis, so FNA's 2 to 4 cm reads about 1 cm until the measure follows a drooping axis",
-    ),
-    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
