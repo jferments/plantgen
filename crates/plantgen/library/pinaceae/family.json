@@ -32,8 +32,12 @@
       "why": "The twigs on a limb's side shoots live about as long as their needles and are replaced from below; kept for ever, the fully branched crown passed the program's module limit before 200 years."
     },
     "generator.params.epi_years": {
-      "rule": "80",
-      "why": "A branch's dormant buds live for decades and resprout a thinning limb (the reiteration that keeps old crowns full); at 20 years old crowns thinned to a fishbone, kept for ever their buds passed the module limit."
+      "rule": "300",
+      "why": "A limb's dormant buds wait as long as the limb lives and resprout it where light reaches them: old Douglas-fir crowns keep their foliage by such epicormic shoots (Ishii & Ford 2001), as old firs, spruces and hemlocks reiterate theirs. Living 80 years, the buds were spent before the crown aged, and old crowns lost three quarters of their foliage between 150 and 300 years."
+    },
+    "generator.params.epi_order": {
+      "rule": "1",
+      "why": "The dormant buds that resprout an old limb wait along its main axis, where its epicormic shoots stand (Ishii & Ford 2001); buds kept on every side shoot as well filled the program's module limit before 300 years."
     },
     "generator.params.branch_floor": {
       "rule": "0.06",
@@ -43,17 +47,37 @@
       "rule": "0.5",
       "why": "Shade strengthens apical control: a shaded branch takes a smaller share of the leader's shoot than a lit one, so a tree grown in a stand keeps a narrow crown while its leader races up (forest-grown Douglas-fir about 3 m across its crown at 30 years, its trunk about 25 cm through). Taking the full share in any light, the shaded limbs of a stand-grown Douglas-fir spread 4 m and carried four times the needles, and its trunk grew twice as thick as stand-grown trees'."
     },
+    "generator.params.side_floor": {
+      "rule": "0.15",
+      "why": "Once the leader stops rising, a limb's side shoots still grow a few centimetres a year and set twigs, renewing the foliage along it. Held to the leader's dwindling growth with the limb's own tip, they shrank to millimetres and set almost no twigs, and old crowns lost their foliage after 150 years (grand fir, Douglas-fir, western hemlock)."
+    },
+    "generator.params.floor_ramp": {
+      "rule": "0.15",
+      "why": "The side shoots' floor comes in over the top 15% of an old tree's height (in metres, 10 m left a 20 m subalpine fir's top half as bare limbs carrying sprays only at their tips), so its top stays narrow: in full to the treetop, the short limbs of an old tree's top whorls carried side shoots longer than themselves, and the tops of 300-year Douglas-fir, Sitka spruce and subalpine fir were domes two to four times as wide as photographed ones (inaturalist-crowns-2026-10: the top tenth .06 to .12 of the height)."
+    },
     "generator.params.limb_light": {
-      "rule": "0.01",
-      "why": "A limb older than limb_age whose tips catch too little light for the wood it carries is shed, so Douglas-fir, western hemlock and Sitka spruce grow past 150 years under the program's module limit (pinidae revision 13); set for the family, as the yews and cypresses it was not fitted on keep their limbs as before."
+      "rule": "0.003",
+      "why": "An old limb is shed for want of light only when its tips catch little light for the wood they carry, a third as readily as the pines' 0.01: a fully branched old limb carries many segments, and at 0.01 limbs whose foliage was well lit were shed for their size, so subalpine fir and western larch lost four fifths of their foliage between 150 and 300 years."
+    },
+    "generator.params.limb_tip": {
+      "rule": "1",
+      "why": "A limb older than limb_age whose tips' mean light has fallen to the starving point is shed whatever its size, as a shaded limb dies once its foliage no longer pays for it (branch autonomy): with the per-segment rule eased, shaded limbs would otherwise linger and fill the program's module limit."
+    },
+    "generator.params.seg_min": {
+      "rule": "0.04",
+      "why": "An old limb's slow shoots, a centimetre or two a year, are laid down as one shoot every few years with the same needle area, so a fully branched old crown keeps its side shoots within the program's module and segment limits: laid down every year, old Douglas-fir and western hemlock passed them unless their inner side shoots were shed or cut short (side_years), which left their lower limbs bare whips. Young shoots, longer than 4 cm a year, grow as before. Not 8 cm: a held shoot's spray is as large as its years' together and a spray draws its needles a share of its length, so at 8 cm the median drawn needle passed the floras' extremes (Douglas-fir 4.0 cm against 2 to 3, grand fir 6.4 against 3.5 to 5); at 4 cm, with a held shoot's foliage drawn at two places along it (pinidae), Douglas-fir draws 3.4 cm over three plants."
     },
     "generator.params.bud_length": {
       "rule": "0.1",
       "why": "A shoot shorter than 10 cm sets proportionally fewer side buds, so a slow old crown no longer smothers itself in buds (pinidae revision 13); set for the family, as the yews and cypresses it was not fitted on branch as before."
     },
     "generator.params.top_ramp": {
-      "rule": "2",
-      "why": "Branch shoots are shortest in the top whorls and lengthen over the first metres below the treetop (Cannell et al. 1976, Sitka spruce), so the top is a point: at full length from the first year, young treetops were three to five times as wide as photographed ones."
+      "rule": "4",
+      "why": "Branch shoots are shortest in the top whorls and lengthen over the first few whorls below the treetop (Cannell et al. 1976, Sitka spruce), so the top is a point: at full length from the first year, young treetops were three to five times as wide as photographed ones. Counted in years of the leader's growth, not metres: over a fixed 2 m, a 16 m subalpine fir's whorls born as its leader slowed to about 15 cm a year stayed stubs for a decade, leaving a bare stretch of leader under a tuft (widths at 0.85 and 0.95 of the height .06 and .04 at 60 years, photographed young trees .12 and .05); over 4 years they draw .14 and .06, and mountain hemlock's lollipop top goes too. Fitted on the seven Pinaceae with photographs at 15 and 60 years: 4 years matched as well as or better than 2 m for all but Sitka spruce at 15 (profile error .12 to .15); 6 years widened young tops."
+    },
+    "generator.params.ring_share": {
+      "rule": "0.5",
+      "why": "Once the leader passes half its full height, each square metre of foliage lays down less trunk wood, as (half the full height / height) squared, as taller trees grow less stem for their leaf area (Ryan and Yoder 1997, hydraulic limitation): with the same ring area per leaf at every height, 300-year open-grown trees drew trunks two to three times the floras' (Douglas-fir 5.2 m against Abrams' 1 to 3.5 m and FEIS's 1.5 to 1.8 m common in old growth; grand fir 3.0 m against 1 to 1.5 m, up to 2). Tried at 0.45 and 0.6, 300-year Douglas-fir drew 3.1 and 3.8 m, grand fir 1.7 and 2.1 m, Sitka spruce 2.1 and 2.7 m (to 5 m, Abrams), and the 60-year sizes stayed within 4% of before; 0.5 is between them."
     }
   },
   "evidence": {

@@ -1033,4 +1033,17 @@ pub mod venation;
 /// stand among its stem hairs (`prickles`, from `spines` `prickles` and
 /// `prickle_density`) (145 is the
 /// Caryophyllales families, #243).
-pub const GENERATOR_REVISION: u32 = 146;
+/// 147: old conifers keep their foliage from 150 to 300 years: a side
+/// shoot keeps growing at least `side_floor` once the leader stops rising
+/// (coming in over the top `floor_ramp` share of the height), the family's
+/// dormant buds wait on the limbs' main axes for 300 years (`epi_order`),
+/// a limb is shed for the mean light of its tips (`limb_tip`) more than
+/// for its size, and slow shoots are laid down every few years
+/// (`seg_min`) so the fully branched old crowns fit the module limit,
+/// each drawing its foliage at two places along it so its needles stay
+/// near one year's length; a
+/// tall tree lays down less trunk wood per square metre of foliage once
+/// its leader passes `ring_share` of its full height; and the top whorls'
+/// branch shoots lengthen over `top_ramp` years of the leader's growth in
+/// place of a fixed depth (146 is nightshades round 5, #233).
+pub const GENERATOR_REVISION: u32 = 147;
