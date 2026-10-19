@@ -9,7 +9,7 @@
     "fruit_surface": "spiny",
     "fruit_spine_fall": "deciduous",
     "corolla_shape": "funnelform",
-    "flower_zone": "upper_half",
+    "flower_zone": "crown_and_flanks",
     "stem_form": "columnar",
     "tubercles": false
   },
@@ -18,7 +18,7 @@
     "traits.stem_apex": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 233 to 252, Echinocereus: the stems of E. bristolii, chisoensis, dasyacanthus, palmeri, parkeri, pensilis, polyacanthus, scheeri, spinigemmatus and viereckii are cylindrical and taper to their tips; E. engelmannii (pp. 235 to 236) states no tip of its own."},
     "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 31, 33 and 231, Echinocereus: areoles with spines, bristles and sometimes wool on the pericarpel and floral tube; the fruit usually spiny, the spines sometimes shed, the dried perianth on top."},
     "traits.fruit_spine_fall": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (eFloras), Echinocereus: fruit areoles spiny, \"spine clusters usually deciduous at maturity\"."},
-    "traits.flower_zone": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001), Echinocereus: flowers lateral, from areoles below the stem apex, or bursting through the epidermis above them; E. engelmannii (pp. 235 to 236): flowers on the upper half of the stem."},
+    "traits.flower_zone": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocereus: flowers diurnal, \u00b1 lateral on stem from year-old areoles (rarely terminal), so near the apex and down the newest growth of the flanks. Anderson, The Cactus Family (2001) gives the genus's flowers lateral, from areoles below the stem apex, and E. engelmannii's (pp. 235 to 236) on the upper half of the stem, which stood here until round 5 and drew them down the last fifteen years' growth, to the ground on young stems."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 231, Echinocereus: flowers funnelform, with a green stigma, on a spiny pericarpel."},
     "traits": {
       "evidence": "SourceInferred",

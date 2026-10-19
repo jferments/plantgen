@@ -110,6 +110,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "basal_stems": {"min": 3, "max": 10},
+    "limb_angle": "ascending",
     "fruit_shape": "obconic",
     "lower_areole_spines": "fewer",
     "tubercle_relief": "prominent",
@@ -136,6 +138,8 @@
     "flower_size_m": {"min": 0.04, "max": 0.06}
   },
   "evidence": {
+    "traits.basal_stems": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Cylindropuntia acanthocarpa: trees or shrubs, sparsely to densely branched, 1-2(-4) m; its key: var. acanthocarpa shrubs with few, ascending branches, vars. coloradensis and major shrubs with few to many, spreading branches. The flora counts no stems; read with photographs (imagekit batch inat-cacti-2026-10-19, Gemma 4 observe run: 8 of 13 many stems from the base, 2 of 13 four to ten) as three to ten from the base, so the family's rule draws five. Until round 5 the plant stood on one trunk."},
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Cylindropuntia acanthocarpa: its key gives var. acanthocarpa few, ascending branches, var. coloradensis branches usually at acute angles, var. major usually at obtuse angles; read as ascending, the middle of these, for the stems from its base (photographs, the same batch: limb angle about 45 degrees)."},
     "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: fruit dry, obconical to ellipsoidal (the first named here), tan at maturity."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: tubercles prominent."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: spines yellow to tan to deep reddish brown, greying; tan here."},

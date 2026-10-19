@@ -53,7 +53,6 @@
     "bodies": {
       "stem": {
         "ribs": {
-          "spacing": 0.02,
           "depth": 0.18,
           "sharpness": 0.5
         },
@@ -125,7 +124,9 @@
     "fruit_colour_ripe": [170, 30, 35],
     "fruit_size_m": 0.025,
     "carpels": {"min": 10, "max": 13},
-    "ribs": {"min": 11, "max": 14},
+    "ribs": {"min": 10, "max": 13},
+    "tepal_length_m": {"min": 0.037, "max": 0.075},
+    "tepal_width_m": {"min": 0.014, "max": 0.025, "low": 0.008},
     "stem_diameter_max_m": {"min": 0.05, "max": 0.06},
     "radial_spines": 10,
     "radial_spine_length_m": 0.01,
@@ -147,11 +148,9 @@
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},
     "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},
-    "traits.ribs": {
-      "evidence": "SourceInferred",
-      "source": "britton-rose-1919",
-      "note": "Britton and Rose's The Cactaceae (vol. 3, 1922, p. 38): stems 5 to 6 cm thick, 10 to 30 cm long, in large clumps, with 11 to 14 low, blunt ribs; about 10 stiff radial spines, pressed flat, about 1 cm long; 5 or 6 very stout centrals, curved and twisted, up to 7 cm long; none hooked (the genus's key)."
-    },
+    "traits.ribs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocereus engelmannii: stems mostly erect, cylindric or somewhat tapering distally, (5-)14-45(-70) \u00d7 3-9 cm; ribs 10-13, crests slightly undulate. Britton and Rose (vol. 3, 1922, p. 38) gave 11 to 14, which stood here until round 5; the family's rule now spaces them so a grown stem bears the middle of the count, where until then a spacing of 2 cm set by hand fitted the count's least round every stem."},
+    "traits.tepal_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocereus engelmannii: flowers 6-9 \u00d7 5-9 cm; inner tepals bright rose-pink to magenta, proximally darker, 37-75 \u00d7 (8-)14-25 mm, tips relatively thin, delicate."},
+    "traits.tepal_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocereus engelmannii: inner tepals 37-75 \u00d7 (8-)14-25 mm, so 14 to 25 mm wide, 8 at the least; drawn by the family's rule as broad for their length as that, where until round 5 the funnel's share of the gap between thirty tepals drew them about an eighth as wide as long."},
     "traits.stem_diameter_max_m": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",

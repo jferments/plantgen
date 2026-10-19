@@ -18,8 +18,6 @@
       "height_rate": 0.016,
       "height_shape": 1.8,
       "radius_min": 0.012,
-      "radius_max": 0.2,
-      "radius_height": 0.5,
       "fill": 0.95,
       "fill_years": 20,
       "pinch": 0.02,
@@ -36,9 +34,9 @@
     }
   },
   "growth": {
-    "years": 110,
+    "years": 50,
     "step": 1,
-    "keyframes": [10, 30, 60, 110]
+    "keyframes": [8, 20, 35, 50]
   },
   "variants": {
     "environments": ["open"],
@@ -102,16 +100,10 @@
   },
   "allometry": [
     {
-      "age": 60,
+      "age": 50,
       "environment": "open",
-      "height": 0.9,
+      "height": 0.85,
       "tolerance": 0.45
-    },
-    {
-      "age": 110,
-      "environment": "open",
-      "height": 1.7,
-      "tolerance": 0.4
     }
   ],
   "tier": "procedural_proxy",
@@ -126,6 +118,8 @@
       "min": 2,
       "max": 2.5
     },
+    "height_typical_m": {"min": 0.45, "max": 1.5, "low": 0.2},
+    "stem_diameter_max_m": {"min": 0.25, "max": 0.4, "low": 0.2, "high": 0.5},
     "central_spine_length_m": {"min": 0.1, "max": 0.12},
     "central_spine_form": {"curved": "usually", "twisted": "often"},
     "ribs": {"min": 20, "max": 30},
@@ -181,7 +175,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110. Wide tolerances."
+      "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110, so about 0.85 m by 50, the age the growth plan ends at since round 5. Wide tolerances."
     },
     "generator.params.flowers": {
       "evidence": "SourceInferred",
@@ -223,7 +217,7 @@
     "growth": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact. Since round 5 (2026-10-19) it ends at the age the plant reaches the middle of the flora's usual height (Flora of North America's 45-150 cm, so about 0.97 m, at 50 years on its height curve), so its oldest keyframe, the one rendered and checked, is a typical plant rather than one of 110 years and 1.9 m, which stood as a slender column against photographs of typical barrels."
     },
     "variants": {
       "evidence": "Authored",
@@ -253,6 +247,8 @@
     "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4, Ferocactus cylindraceus (read on eFloras, 2026-10-18): flowering early spring to early summer, now and then again in late summer and early fall; stated as March to June, the main season. Abrams vol. 3 (1951) and Kearney and Peebles (1942, Yuma County) give April to June; iNaturalist research-grade records annotated as flowering (counted 2026-10-18) are most in March and April."},
     "traits.fruiting_months": {"evidence": "SourceInferred", "source": "usa-npn", "note": "USA-NPN Nature's Notebook phenometrics for Ferocactus cylindraceus (species 2133, fetched 2026-10-18; the method of the phenology work of 2026-10-14 without its Pacific Northwest filter): 652 individual-year spans with ripe fruit, from 27 plants at 3 main sites near Scottsdale, Arizona, 2023 to 2026; the months with at least a third of the busiest month's days, June to November. Fewer sites than the 5 that method asks for, and no flora read gives the months; the Flora of North America says Ferocactus fruit is long persistent."},
     "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Ferocactus cylindraceus: fruit bright yellow, 30 to 40 (to 50) by 15 to 20 mm."},
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus cylindraceus: stems straight, erect or nearly so (or leaning), cylindric, (20-)45-150(-300) \u00d7 (20-)25-40(-50) cm; the usual heights 45 to 150 cm, the short tail to 20 cm."},
+    "traits.stem_diameter_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus cylindraceus: stems (20-)45-150(-300) \u00d7 (20-)25-40(-50) cm, so 25 to 40 cm thick, 20 to 50 at the extremes. Until round 5 the stem's radius was set by hand at 20 cm and its widening over 50 cm of height, a slender column; the Cactoideae's rule now gives the radius from this, and the family's rule on its globose genus the widening."},
     "traits.stigma_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Ferocactus cylindraceus: stigma lobes yellow (to red)."}
   },
   "provenance": {

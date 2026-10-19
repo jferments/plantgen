@@ -308,6 +308,38 @@
     "appearance.bodies.stem.spines.main.length": {
       "rule": "max(central_spine_length_m) / 1.25",
       "why": "The main central is the longest a flora gives, about a quarter above its set's length."
+    },
+    "generator.params.radius_height": {
+      "map": {"stem_form": {"globose": {"rule": "stem_diameter_max_m / 3"}}},
+      "why": "A barrel is globular while young (Abrams 1951's Ferocactus acanthodes, 'globular when young, becoming cylindric'; Flora of North America's Ferocactus, Astrophytum and Mammillaria, stems spheric or depressed-spheric before they lengthen): its tip widens to nearly its full width by the time it stands as tall as it is wide, so over about a third of that width of height."
+    },
+    "generator.params.sink": {
+      "map": {"stem_buried": {"none": 0, "partly": {"rule": "0.3 * height_max"}, "mostly": {"rule": "0.6 * height_max"}, "flush": {"rule": "0.85 * height_max"}}},
+      "why": "A cactus whose contractile roots draw it down sits as deep as its flora says: not at all, a third of its stem, most of it ('mostly low and deep-seated in substrate', Flora of North America's Astrophytum), or so deep only its top shows, level with the ground ('flush with soil surface', its Astrophytum asterias)."
+    },
+    "generator.params.stems": {
+      "map": {"stem_clump": {"single": 1, "few": 3, "many": {"rule": "first(round(sqrt(min(basal_stems) * max(basal_stems))), 12)"}, "thicket": 30}},
+      "else": {"rule": "round(sqrt(min(basal_stems) * max(basal_stems)))"},
+      "why": "A cactus clump stands on as many stems from its base as its flora counts: the geometric middle of a count as skewed as Flora of North America's '3-60-branched' (a usual clump of about a dozen, not thirty), or a few or many where it only words them; one stem where it is single."
+    },
+    "generator.params.stem_lean": {
+      "map": {"limb_angle": {"fastigiate": 8, "erect": 18, "ascending": 35, "spreading": 55, "horizontal": 75, "descending": 85}},
+      "why": "The stems of a clump fan out from its base, the outermost leaning from upright at about the angle its floras' words give the stems ('stems erect', 'ascending', 'spreading'), the inner ones less: a vase of columns."
+    },
+    "generator.params.bend": {
+      "map": {"limb_angle": {"fastigiate": 0.3, "erect": 0.06, "ascending": 0.06, "spreading": 0.06, "horizontal": 0.06, "descending": 0.06}},
+      "why": "A clump's stems hold the angle they leave the base at and turn up only a little as they grow, so an organ pipe's columns spread into a vase rather than standing as a bundle; only fastigiate stems close up toward upright."
+    },
+    "appearance.bodies.stem.ribs.spacing": {
+      "needs": ["ribs", "stem_diameter_max_m"],
+      "rule": "3.1416 * stem_diameter_max_m / ribs",
+      "why": "A grown stem bears its flora's usual count of ribs round its stated thickness (the middle of the count where no usual one is given), so they stand that far apart; a thinner, younger stem fits fewer, down to the count's least."
+    },
+    "appearance.organs.*.shape.petal_ratio": {
+      "template": "flower",
+      "needs": ["tepal_width_m", "tepal_length_m"],
+      "rule": "clamp(tepal_width_m / tepal_length_m, 0.08, 1)",
+      "why": "A cactus's inner tepals are as broad for their length as its flora measures them ('inner tepals 37-75 x (8-)14-25 mm', Flora of North America's Echinocereus engelmannii), drawn among as many tepals as the flower bears."
     }
   },
   "evidence": {
@@ -368,6 +400,41 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 374, 375, 376, family Cactaceae: fruit type berry (rarely dry and indehiscent), usually; read as {\"berry\": \"usually\"}."
+    },
+    "rules.generator.params.radius_height": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen widens a barrel (thread Cactus flowering seasons, round 5, 2026-10-19): at 1 - exp(-h / radius_height) of its width at height h, so 95% of it once as tall as wide; the floras' words (globular when young) give the shape, the third is the model's choice."
+    },
+    "rules.generator.params.sink": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen sinks a stem (round 5, 2026-10-19): the column program's sink is how deep the foot of a full-grown stem lies; shares of 0.3, 0.6 and 0.85 of the stem's height for the floras' partly, mostly and flush are the model's choice, the last leaving the top sixth and the dome above ground."
+    },
+    "rules.generator.params.stems": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen counts a clump's stems (round 5, 2026-10-19): the geometric mean of a stated count's least and most, as floras' counts of branches run long-tailed; 3 for few, 12 for many and 30 for a thicket where no count is given are the model's choice."
+    },
+    "rules.generator.params.stem_lean": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen fans a clump (round 5, 2026-10-19): the outermost stem's lean at its foot for each word of limb_angle, about the middle of the angle the seed plants' rule gives a limb, the inner stems leaning less (column program)."
+    },
+    "rules.generator.params.bend": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen holds a clump's stems (round 5, 2026-10-19): a turn up of 0.06 radians a metre leaves a 3 m stem within about ten degrees of the angle it set off at; the model's choice."
+    },
+    "rules.appearance.bodies.stem.ribs.spacing": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen fits ribs (round 5, 2026-10-19): the body fits round(2 pi r / spacing) ribs within the stated count, so a spacing of pi times the stated diameter over the stated (usual or middle) count gives that count on a grown stem."
+    },
+    "rules.appearance.organs.*.shape.petal_ratio": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a tepal's breadth (round 5, 2026-10-19): the stated width over the stated length of the inner tepals, as the seed plants' rule does from a petal's outline word."
     }
   }
 }

@@ -656,6 +656,24 @@
       "when": {"spines": ["areoles"]},
       "why": "a cactus column's outline from its foot up: cylindrical, as wide at its foot as higher up, or club-shaped, narrower at its foot, where it grew while the plant was young, than above"
     },
+    "stem_buried": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["none", "partly", "mostly", "flush"],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "how much of a cactus's stem sits below the soil, its contractile roots drawing it down, as floras word it: none ('not deep-seated in substrate'), partly, mostly ('mostly low and deep-seated in substrate', Flora of North America's Astrophytum), or flush, its top level with the ground ('flat-topped and usually flush with soil surface', its Astrophytum asterias)"
+    },
+    "basal_stems": {
+      "group": "form",
+      "organ": "plant",
+      "type": "count",
+      "range": [1, 500],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "the stems a grown cactus clump stands on, from its base, where its flora counts them ('3-60-branched, ultimately forming somewhat open clumps', Flora of North America's Echinocereus engelmannii; 'simple or with 2-5 branches', its Peniocereus greggii)"
+    },
     "lower_areole_spines": {
       "group": "stem_and_bark",
       "organ": "stem",
@@ -2108,6 +2126,15 @@
       "range": [0.0005, 0.5],
       "optional": true,
       "why": "a tepal from its base to its tip; for a perianth whose outer and inner tepals differ (a lily's 'sepals' and 'petals'), the longer"
+    },
+    "tepal_width_m": {
+      "group": "flowers",
+      "organ": "tepal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.3],
+      "optional": true,
+      "why": "a tepal across at its widest; for a perianth whose outer and inner tepals differ, the inner ones' (a flora's 'inner tepals 37-75 x (8-)14-25 mm' gives 14-25 mm)"
     },
     "stamen_exsertion": {
       "group": "flowers",

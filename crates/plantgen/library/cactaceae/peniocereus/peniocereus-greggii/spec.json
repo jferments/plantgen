@@ -13,10 +13,8 @@
     "params": {
       "vigour_spread": 0.15,
       "lean": 25,
-      "stems": 3,
       "stem_rate": 0.08,
       "clump_radius": 0.03,
-      "stem_lean": 35,
       "seedling": 0.03,
       "height_max": 0.9,
       "height_rate": 0.08,
@@ -25,7 +23,6 @@
       "radius_height": 0.2,
       "fill_years": 6,
       "wiggle": 1.5,
-      "bend": 1.0,
       "bloom_age": 4,
       "flowers": 2,
       "ring_angle": 60,
@@ -112,6 +109,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "basal_stems": {"min": 1, "max": 5},
+    "limb_angle": "ascending",
     "ribs": {
       "min": 4,
       "max": 6
@@ -209,6 +208,8 @@
     ]
   },
   "evidence": {
+    "traits.basal_stems": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Peniocereus greggii: shrubs, erect to sprawling, usually inconspicuous; roots turnip-shaped; stems simple or with 2-5 branches; the genus: low, sparingly branched. Read as one to five stems from the root's crown, so the family's rule draws two, where three were set by hand until round 5; photographs (imagekit batch inat-cacti-2026-10-19, Gemma 4 observe run: 5 of 8 one stem, 2 of 8 two or three) show the branches from the base."},
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Peniocereus greggii: shrubs, erect to sprawling; the genus: erect to sprawling, arching, or scrambling. Read as ascending: its stems rise at a slant and hold it, where until round 5 they leaned out by hand 35 degrees and turned upright fast (bend 1.0)."},
     "traits.ribs": {
       "evidence": "SourceInferred",
       "source": "fna-online",
