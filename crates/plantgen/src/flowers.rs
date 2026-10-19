@@ -1026,6 +1026,11 @@ pub struct Colours {
     pub tube: Option<[f32; 3]>,
     /// Its stigma lobes.
     pub stigma: [f32; 3],
+    /// An inferior ovary's skin: the calyx's unless the flower states a
+    /// pericarpel colour.
+    pub pericarpel: [f32; 3],
+    /// A cactus pericarpel's areoles' felt and spines or glochids.
+    pub dress: crate::fruit::Dress,
 }
 
 impl Colours {
@@ -1092,7 +1097,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             side,
             a,
             b,
-            colours.calyx,
+            colours.pericarpel,
             part,
             mesh,
         );
@@ -1108,7 +1113,8 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             },
             laid.pericarpel,
             if fine { (21, 3) } else { (8, 0) },
-            colours.calyx,
+            colours.pericarpel,
+            colours.dress,
             part,
             mesh,
         );
@@ -1459,7 +1465,22 @@ pub(crate) fn draw_reduced(
             frame.side,
             a,
             b,
-            colours.calyx,
+            colours.pericarpel,
+            part,
+            mesh,
+        );
+        crate::fruit::skin(
+            &crate::fruit::Surface {
+                centre: frame.foot + axis * height,
+                axis,
+                across: frame.side,
+                long: a,
+                wide: b,
+            },
+            laid.pericarpel,
+            (8, 0),
+            colours.pericarpel,
+            colours.dress,
             part,
             mesh,
         );
@@ -1998,6 +2019,8 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             back_base_length: 0.4,
             tube: None,
             stigma: [1.0; 3],
+            pericarpel: CALYX,
+            dress: crate::fruit::Dress::default(),
         },
         Part {
             born: 0.0,
@@ -2652,6 +2675,8 @@ mod tests {
                         back_base_length: 0.4,
                         tube: None,
                         stigma: [0.9, 0.7, 0.1],
+                        pericarpel: CALYX,
+                        dress: crate::fruit::Dress::default(),
                     },
                     Part {
                         born: 1.0,
@@ -2706,6 +2731,8 @@ mod tests {
                     back_base_length: 0.4,
                     tube: None,
                     stigma: [0.1, 0.5, 0.1],
+                    pericarpel: CALYX,
+                    dress: crate::fruit::Dress::default(),
                 },
                 Part {
                     born: 1.0,
@@ -2788,6 +2815,8 @@ mod tests {
                     back_base_length: 0.4,
                     tube: None,
                     stigma: [0.5, 0.7, 0.3],
+                    pericarpel: CALYX,
+                    dress: crate::fruit::Dress::default(),
                 },
                 Part {
                     born: 1.0,
@@ -2856,6 +2885,8 @@ mod tests {
             back_base_length: 0.4,
             tube: None,
             stigma: [0.5, 0.7, 0.3],
+            pericarpel: CALYX,
+            dress: crate::fruit::Dress::default(),
         };
         let has = |mesh: &Mesh, colour: [f32; 3]| {
             mesh.colors

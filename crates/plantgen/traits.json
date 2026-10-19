@@ -747,6 +747,13 @@
       "when": {"spines": ["thorns", "prickles"]},
       "why": "the length of a thorn or prickle on the woody stems, base to tip, as floras measure it (a rose's prickles below the stipules, a hawthorn's thorns on its twigs)"
     },
+    "glochid_colour": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of an areole's glochids, its tuft of fine barbed bristles"
+    },
     "wood_density_basic_kg_m3": {
       "group": "stem_and_bark",
       "organ": "stem",
@@ -2401,6 +2408,14 @@
       "values": ["falling", "persistent"],
       "optional": true,
       "why": "whether a ripe fruit falls within the year it ripens in or stays on the plant for years after (a chain-fruit cholla's fruit, which hang in chains and flower again)"
+    },
+    "fruit_spine_fall": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["persistent", "deciduous"],
+      "optional": true,
+      "why": "whether a spiny cactus fruit keeps its spine clusters when ripe or sheds them as it ripens (Stenocereus, Echinocereus)"
     },
     "cone_length_m": {
       "group": "fruit_and_cones",
