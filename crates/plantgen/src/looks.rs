@@ -1377,6 +1377,14 @@ pub struct Needles {
     /// place on it: 2, 3 or 5 for a pine; 1 for needles borne singly; up
     /// to 45 for a short shoot's tuft, a larch's. Only all round a shoot.
     pub bundle: u32,
+    /// Degrees a needle leans out from its shoot: about 58 where needles
+    /// spread, less where they point forward along it, as a whitebark
+    /// pine's do, curved forward against the shoot (Farjon 2017).
+    pub lean: f64,
+    /// Share of each axis, from its foot, that bears no needles: 0 where
+    /// they clothe the whole shoot, more where they crowd in a tuft near
+    /// its end.
+    pub bare: f64,
 }
 
 impl Default for Needles {
@@ -1389,6 +1397,8 @@ impl Default for Needles {
             aspect: 0.85,
             width: 0.06,
             bundle: 1,
+            lean: 58.0,
+            bare: 0.0,
         }
     }
 }
@@ -3555,6 +3565,8 @@ impl Shape {
                         "needles in bundles stand all round the shoot: ranks must be 0".to_string(),
                     );
                 }
+                check("lean", s.lean, 10.0, 80.0)?;
+                check("bare", s.bare, 0.0, 0.8)?;
                 check("aspect", s.aspect, 0.1, 2.0)
             }
             Self::Scales(s) => {

@@ -1029,6 +1029,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("aspect", Number),
                 ("width", Number),
                 ("bundle", Count),
+                ("lean", Number),
+                ("bare", Number),
             ],
         ),
         (

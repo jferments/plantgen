@@ -1613,7 +1613,8 @@ fn card_low(card: &Card, base: Vec3, heading: Vec3, left: Vec3) -> f64 {
 /// turned up about its base by the least angle that lifts it clear, as a
 /// leaf comes to rest on the ground; one that no turn clears (its base at
 /// the ground, or it already points up) is raised until it stands on it.
-/// Cards clear of the ground keep their bytes.
+/// Cards clear of the ground keep their bytes; a raised card's seed is its
+/// new base's ([`crate::templates::card_seed`]).
 fn grounded(cards: &mut [Card]) {
     let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
     for card in cards.iter_mut() {
@@ -1660,7 +1661,11 @@ fn grounded(cards: &mut [Card]) {
             let (h, l) = turned(enough);
             (h, l, base)
         } else {
-            (heading, left, base + Vec3::Y * (GROUND - low))
+            let raised = base + Vec3::Y * (GROUND - low);
+            // A package keeps no seeds but works each card's out from its
+            // base, so a raised card takes its new base's.
+            card.seed = crate::templates::card_seed(raised.to_f32());
+            (heading, left, raised)
         };
         card.base = base.to_f32();
         card.heading = heading.to_f32();
