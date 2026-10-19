@@ -25,6 +25,7 @@
 //! ([`math`]).
 
 pub mod bark;
+pub mod bark_look;
 pub mod bend;
 pub mod blooms;
 pub mod body;

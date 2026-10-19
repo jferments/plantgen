@@ -129,6 +129,7 @@ fn run() -> Result<(), Failure> {
         "mechanics" => mechanics_command(&args),
         "validate" => validate_command(&args),
         "ground" => ground_command(&args),
+        "bark" => bark_command(&args),
         "build" => build_command(&args),
         "export" => export_command(&args),
         "inspect" => inspect_command(&args),
@@ -312,6 +313,12 @@ Usage:
       twigs, moss, sphagnum, grass, tussock and cushion), seven to a row,
       or with `--looks litter` the 23 canopy species' litters: each look's
       colour above its relief.
+  plantc bark --look FILE.json --out DIR [--size N] [--period M] [--seed N]
+      Draw a bark look (the bark language's drawing record) stage by
+      stage, each at a diameter typical of it, as tiles repeating every
+      M metres (default 0.5) of N texels a side (default 512): base
+      colour, normal, occlusion-roughness-metallic and height maps, and a
+      sheet with each stage's tile lit and a trunk wearing it.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
                [--threads N] [--profile static|motion]
       Build a .afterplant package in DIR (default `plants`) and print its
@@ -3114,6 +3121,127 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
                 .join(", ")
         );
     }
+    Ok(())
+}
+
+#[allow(clippy::too_many_lines)]
+fn bark_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::bark_look::{self, BarkLook};
+    let options = Options::parse(args, &["look", "out", "size", "period", "seed"])?;
+    let path = options
+        .flags
+        .get("look")
+        .ok_or("missing `--look FILE.json`")?;
+    let out = Path::new(options.flags.get("out").ok_or("missing `--out DIR`")?);
+    let size = options.number::<usize>("size")?.unwrap_or(512);
+    if !(16..=4096).contains(&size) || !size.is_power_of_two() {
+        return Err("`--size` is a power of two from 16 to 4096".into());
+    }
+    let period = options.number::<f64>("period")?.unwrap_or(0.5);
+    let seed = options.number::<u64>("seed")?.unwrap_or(1);
+    let text = fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
+    let look = BarkLook::from_json(&text).map_err(|error| error.to_string())?;
+    fs::create_dir_all(out).map_err(|error| format!("cannot make {}: {error}", out.display()))?;
+    let write = |name: String, width: usize, height: usize, rgba: &[u8]| -> Result<(), Failure> {
+        let file = out.join(name);
+        let png = raster::encode_png(width, height, rgba)
+            .map_err(|error| format!("cannot encode PNG: {error}"))?;
+        fs::write(&file, png)
+            .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+        Ok(())
+    };
+    // The sheet: a row a stage, the lit tile, a trunk wearing it, and its
+    // base colour above its normal map at half size.
+    let half = size / 2;
+    let (width, row_height) = (size * 2 + half, size);
+    let mut sheet = vec![255_u8; width * row_height * look.stages.len() * 4];
+    let place = |sheet: &mut Vec<u8>,
+                 rgba: &[u8],
+                 w: usize,
+                 h: usize,
+                 left: usize,
+                 top: usize,
+                 step: usize| {
+        for y in 0..h {
+            for x in 0..w {
+                let from = ((y * step) * (w * step) + x * step) * 4;
+                let to = ((top + y) * width + left + x) * 4;
+                sheet[to..to + 4].copy_from_slice(&rgba[from..from + 4]);
+            }
+        }
+    };
+    out!(
+        "{} ({} stages), tiles of {size} texels over {period} m, seed {seed}:",
+        look.id,
+        look.stages.len()
+    );
+    for (index, (stage, diameter)) in look.stages.iter().zip(look.typical_diameters()).enumerate() {
+        let tile = bark_look::bake(&look, stage, diameter, size, period, seed);
+        let stem = format!("{}-{index}-{}", look.id, stage.name);
+        write(
+            format!("{stem}-basecolor.png"),
+            size,
+            size,
+            &tile.base_colour_rgba(),
+        )?;
+        write(
+            format!("{stem}-normal.png"),
+            size,
+            size,
+            &tile.normal_rgba(),
+        )?;
+        write(format!("{stem}-orm.png"), size, size, &tile.orm_rgba())?;
+        write(
+            format!("{stem}-height.png"),
+            size,
+            size,
+            &tile.height_rgba(),
+        )?;
+        let top = index * row_height;
+        place(&mut sheet, &tile.lit_rgba(), size, size, 0, top, 1);
+        // The trunk: as tall as the sheet's row shows, about 1.6 diameters
+        // of it, at least 0.25 m.
+        let span = (diameter * 1.6).max(0.25);
+        let trunk = tile.trunk_rgba(diameter, span, size, size);
+        place(&mut sheet, &trunk, size, size, size, top, 1);
+        place(
+            &mut sheet,
+            &tile.base_colour_rgba(),
+            half,
+            half,
+            2 * size,
+            top,
+            2,
+        );
+        place(
+            &mut sheet,
+            &tile.normal_rgba(),
+            half,
+            half,
+            2 * size,
+            top + half,
+            2,
+        );
+        let (low, high) = tile.relief();
+        let [r, g, b] = tile.mean_albedo().map(plantgen::texture::linear_to_srgb);
+        out!(
+            "  {index} {:<14} at {:>5.0} cm: bark {:>5.1} mm thick, relief {:>5.1} mm, mean colour sRGB {r} {g} {b}",
+            stage.name,
+            diameter * 100.0,
+            tile.thickness_m * 1000.0,
+            (high - low) * 1000.0
+        );
+    }
+    write(
+        format!("{}-sheet.png", look.id),
+        width,
+        row_height * look.stages.len(),
+        &sheet,
+    )?;
+    out!(
+        "wrote {}: a row a stage: lit tile, trunk, base colour over normal",
+        out.join(format!("{}-sheet.png", look.id)).display()
+    );
     Ok(())
 }
 
