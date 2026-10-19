@@ -71,11 +71,11 @@
       "why": "An evergreen of the family (a loquat, a Catalina ironwood, a toyon) keeps each leaf into a second year, as the flowering plants' rule has it; the family's own program otherwise sheds every leaf in its first autumn."
     },
     "generator.params.leaf_length": {
-      "rule": "max(max(leaf_length_m), first(max(leaf_width_m), 0)) + first(petiole_length_m, 0.15 * max(leaf_length_m))",
-      "why": "A herb of the family (a meadowsweet, a strawberry, a cloudberry) bears its longest stem leaf as long as the longest blade its flora measures, or as wide where it is wider than long (a cloudberry's kidney-shaped blade), with its stalk, or about a sixth more where its flora gives none, as a shrub's leaf card is drawn; the leaves below and above it are shorter by the shares below, as the campanulids' herbs are drawn."
+      "map": {"leaf_division": {"compound": {"rule": "max(leaf_length_m) + first(petiole_length_m, 0.15 * max(leaf_length_m))"}, "simple": {"rule": "max(max(leaf_length_m), first(max(leaf_width_m), 0)) + first(petiole_length_m, 0.15 * max(leaf_length_m))"}}}, "else": {"rule": "max(max(leaf_length_m), first(max(leaf_width_m), 0)) + first(petiole_length_m, 0.15 * max(leaf_length_m))"},
+      "why": "A herb of the family (a meadowsweet, a strawberry, a cloudberry) bears its longest stem leaf as long as the longest blade its flora measures, or as wide where a simple blade is wider than long (a cloudberry's kidney-shaped blade; a compound leaf's leaflets spread to their own width, as a dwarf bramble's do), with its stalk, or about a sixth more where its flora gives none, as a shrub's leaf card is drawn; the leaves below and above it are shorter by the shares below, as the campanulids' herbs are drawn."
     },
     "generator.params.basal_length": {
-      "rule": "max(max(leaf_length_m), first(max(leaf_width_m), 0)) + first(petiole_length_m, 0.15 * max(leaf_length_m))",
+      "map": {"leaf_division": {"compound": {"rule": "max(leaf_length_m) + first(petiole_length_m, 0.15 * max(leaf_length_m))"}, "simple": {"rule": "max(max(leaf_length_m), first(max(leaf_width_m), 0)) + first(petiole_length_m, 0.15 * max(leaf_length_m))"}}}, "else": {"rule": "max(max(leaf_length_m), first(max(leaf_width_m), 0)) + first(petiole_length_m, 0.15 * max(leaf_length_m))"},
       "why": "A herb's longest basal leaf is as long as the longest blade its flora measures, with its stalk (a sixth more where none is given), as the stem's longest is."
     },
     "generator.params.leaf_top": {

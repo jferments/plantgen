@@ -1121,4 +1121,10 @@ pub mod venation;
 /// that flowers every year and grows on from one bud (devil's club);
 /// hawthorn's inferior ovary, round petals and oval haws in twos and
 /// threes (154 is poppies round 4, #254).
-pub const GENERATOR_REVISION: u32 = 155;
+/// 156: a compound leaf whose lowest leaflets hang back below its
+/// junction is lifted on a longer petiole and shrunk only as much as its
+/// whole height needs, so its blade keeps its flora's size (brambles);
+/// a Rosaceae herb's compound leaf card is as long as its blade, not its
+/// width (155 is Rosaceae, #236). The merge desk renumbers it in landing
+/// order.
+pub const GENERATOR_REVISION: u32 = 156;
