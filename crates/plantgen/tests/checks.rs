@@ -273,11 +273,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:herb",
-        "petiole_length_m",
-        "a leaf card's petiole is the card's own share of the leaf (0.15 of a simple card's length), not read from petiole_length_m, so jimsonweed's and enchanter's nightshade's long petioles draw under a centimetre and tobacco's sessile leaves draw one",
-    ),
-    (
-        "program:herb",
         "phyllotaxis_pattern",
         "each basal leaf's roll is jittered ±30°, so a fan of two ranks (irises, blue-eyed grass) turns about 140° to 150° from one leaf to the next",
     ),
