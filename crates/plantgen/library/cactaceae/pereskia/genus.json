@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Pereskia",
+  "parent": "subfamily/pereskioideae",
+  "generator": {
+    "program": "pereskia"
+  },
+  "traits": {
+    "ribs": 0,
+    "flowering_position": "terminal",
+    "radial_spine_texture": "needlelike",
+    "petal_shape": "obovate"
+  },
+  "rules": {
+    "generator.params.thorns": {
+      "rule": "1",
+      "why": "Every bud of a leafy cactus sits in an areole of spines, in its leaf's axil."
+    },
+    "generator.params.areole_spines": {
+      "rule": "max(radial_spines)",
+      "why": "An old areole carries as many spines as its flora counts at most."
+    },
+    "generator.params.areole_first": {
+      "rule": "first((min(young_areole_spines) + max(young_areole_spines)) / 2, min(radial_spines))",
+      "why": "A new areole on a young branch carries as many spines as its flora counts there, on the average, or the fewest it counts."
+    },
+    "generator.params.thorn_length": {
+      "rule": "max(radial_spine_length_m) / 1.2",
+      "why": "Floras give the longest spines; the program draws each spine 0.6 to 1.2 times thorn_length."
+    }
+  },
+  "evidence": {
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The genus's own program, on the broadleaf base: a leafy shrub or tree whose buds sit in areoles of spines."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leafy cacti's areoles drawn from the spine counts and lengths their floras give."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13 (read on eFloras 2026-10-19), Pereskia aculeata: 'Petaloids white to pale yellow, obovate to spatulate, 15-20 × 6-8 mm, margin entire, apex acute to truncate.' Britton and Rose (1919, p. 20) give P. zinniaeflora's petals as 'entire, obtuse or retuse'. Broad obovate petals taken for the genus, by inference from these two."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Pereskia: Stems straight or zig-zag. Spines 1-12 per areole. Flowers from areoles of new growth; outer tepals often greenish, colored near margins; inner tepals white, yellow, orange-red, red, pink to purplish; stamens 50-100 in small-flowered species, to 300 in large-flowered species; stigma lobes 3-20. Flowers from the areoles of new growth, so at the tips of the season's shoots; the stems woody and unribbed (Flora of China: 'Branches terete')."
+    }
+  }
+}

@@ -757,10 +757,10 @@ fn in_body(spec: &Map<String, Value>, at: &str) -> Result<(), String> {
         && find(spec, within).is_none()
     {
         let body = inside.split('.').next().unwrap_or_default();
-        return Err(format!(
-            "its `{body}` body has no `{}`",
-            &within[BODIES.len() + body.len() + 1..]
-        ));
+        return Err(match within.get(BODIES.len() + body.len() + 1..) {
+            Some(part) => format!("its `{body}` body has no `{part}`"),
+            None => format!("it has no `{body}` body"),
+        });
     }
     Ok(())
 }

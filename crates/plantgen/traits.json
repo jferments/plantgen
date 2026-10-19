@@ -679,6 +679,15 @@
       "when": {"spines": ["areoles"]},
       "why": "spines round an areole's edge, spreading flat or nearly so; where a flora does not tell radials from centrals, all of them"
     },
+    "young_areole_spines": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "count",
+      "range": [0, 100],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "the spines of a new areole on a young branch, where a flora counts them apart from an old stem's, whose areoles go on making spines (a leafy cactus's twigs against its very spiny trunk)"
+    },
     "central_spines": {
       "group": "stem_and_bark",
       "organ": "spine",
