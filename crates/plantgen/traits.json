@@ -635,9 +635,9 @@
       "group": "stem_and_bark",
       "organ": "stem",
       "type": "enum",
-      "values": ["rounded", "conical", "cylindrical", "elongate", "broad"],
+      "values": ["rounded", "conical", "cylindrical", "elongate", "broad", "deltoid"],
       "when": {"spines": ["areoles"]},
-      "why": "a tubercle's shape: rounded (ovoid), conical, cylindrical (standing out as a steep-sided nipple), elongate along the stem, or broad (broadly oval)"
+      "why": "a tubercle's shape: rounded (ovoid), conical, cylindrical (standing out as a steep-sided nipple), elongate along the stem, broad (broadly oval), or deltoid: a flat-faced triangular plate, its tip pointing down and out, its face sharply set off from its sides (a living-rock cactus's)"
     },
     "joint_length_m": {
       "group": "size",
@@ -719,6 +719,14 @@
       "type": "bool",
       "when": {"spines": ["areoles"]},
       "why": "whether the central spines twist about their length like a wrung ribbon, as a flora's 'often twisted' centrals do, whatever their main form"
+    },
+    "tubercle_face": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["smooth", "wrinkled", "fissured"],
+      "when": {"spines": ["areoles"]},
+      "why": "the surface of a flat-faced tubercle's exposed face: nearly smooth, wrinkled or roughened, or deeply fissured on either side of its areole's groove (Flora of North America's Ariocarpus, 'prominently fissured [wrinkled, roughened, or nearly smooth]')"
     },
     "radial_spine_texture": {
       "group": "stem_and_bark",
@@ -1755,6 +1763,15 @@
       "unit": "m",
       "range": [0.0005, 1.5],
       "why": "an open flower across"
+    },
+    "flower_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.5],
+      "optional": true,
+      "why": "an open flower's length from its foot to its tepals' tips, where a flora gives it with the width (a cactus flora's 'flowers 1.9-3.8 × 1.5-3 cm', length by width)"
     },
     "petal_length_m": {
       "group": "flowers",

@@ -39,9 +39,9 @@
     },
     "appearance.organs.*.shape.tube": {
       "template": "flower",
-      "map": {"corolla_shape": {"rotate": 0.1, "cupped": 0.2, "campanulate": 0.5, "funnelform": 0.8, "tubular": 1.4, "salverform": 1.6, "urceolate": 0.6}}, "between": true,
-      "else": 0.4,
-      "why": "A cactus's tepals stand on the rim of a floral tube, the hypanthium grown up round the ovary: barely any in a wheel or a cup, as Opuntia's flowers have none above the pericarpel, short in a bell, longer in a funnel, longest in a tube or under a salver's limb; in flower radii."
+      "map": {"corolla_shape": {"rotate": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.1)"}, "cupped": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.2)"}, "campanulate": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.5)"}, "funnelform": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.8)"}, "tubular": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 1.4)"}, "salverform": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 1.6)"}, "urceolate": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.6)"}}}, "between": true,
+      "else": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.4)"},
+      "why": "A cactus's tepals stand on the rim of a floral tube, the hypanthium grown up round the ovary: barely any in a wheel or a cup, as Opuntia's flowers have none above the pericarpel, short in a bell, longer in a funnel, longest in a tube or under a salver's limb; in flower radii. Where the flora gives the flower's length as well as its width (its 'flowers 1.5-5 × 1.5-5 cm', length by width), the tube is what the length leaves beyond the tepals' rise, so a flower 'two times wider than long' (Flora of North America's Ariocarpus fissuratus) sits low in its wool."
     },
     "appearance.organs.*.shape.petal_width": {
       "template": "flower",
@@ -132,11 +132,11 @@
       "why": "A tubercle stands from the stem as far as a flora's word for it says, as a share of the stem's radius: barely a swelling under each areole of a ribbed barrel (Anderson's Ferocactus wislizeni), low knobs along undulate ribs (F. cylindraceus), distinct knobs, or the prominent ones a cholla's joint is knobbly with."
     },
     "appearance.bodies.stem.tubercles.stretch": {
-      "map": {"tubercle_shape": {"rounded": 1.2, "conical": 1.0, "cylindrical": 1.0, "elongate": 2.2, "broad": 1.5}},
+      "map": {"tubercle_shape": {"rounded": 1.2, "conical": 1.0, "cylindrical": 1.0, "elongate": 2.2, "broad": 1.5, "deltoid": 0.75}},
       "why": "A tubercle is as long along the stem, for its width, as its shape says: an ovoid one a little longer, an elongate one two to three times, a broadly oval one half as long again."
     },
     "appearance.bodies.stem.tubercles.point": {
-      "map": {"tubercle_shape": {"rounded": 0.9, "conical": 1.6, "cylindrical": 1.3, "elongate": 0.9, "broad": 0.8}},
+      "map": {"tubercle_shape": {"rounded": 0.9, "conical": 1.6, "cylindrical": 1.3, "elongate": 0.9, "broad": 0.8, "deltoid": 0.8}},
       "why": "A conical tubercle comes to a point, a cylindrical one stands steep-sided, and rounded, elongate and broad ones are low mounds."
     },
     "appearance.bodies.stem.spines.radial.distal": {
@@ -166,6 +166,14 @@
     "generator.params.ring_step": {
       "map": {"flower_zone": {"ring_below_apex": 15}},
       "why": "Each older ring sits a year's growth farther down the dome."
+    },
+    "appearance.bodies.stem.tubercles.face": {
+      "map": {"tubercle_shape": {"rounded": 0, "conical": 0, "cylindrical": 0, "elongate": 0, "broad": 0, "deltoid": 1}},
+      "why": "A deltoid tubercle is a flat-faced triangular plate, its tip pointing down and out, with its areole's woolly groove down the middle of its face (Flora of North America's Ariocarpus: 'tubercles arranged in rosettes or mosaics, ± triangular', 'exposed faces of tubercles strongly differentiated from sides', 'areoles elongate, forming a wide woolly groove on each tubercle'); it is wider than long ('8-20 × 11-25 mm')."
+    },
+    "appearance.bodies.stem.tubercles.fissures": {
+      "map": {"tubercle_face": {"smooth": 0, "wrinkled": 0.3, "fissured": 0.8}},
+      "why": "A plate's face is nearly smooth, wrinkled, or 'deeply fissured on either side of central areolar groove, coarsely rugose' (Flora of North America's Ariocarpus fissuratus var. fissuratus)."
     },
     "appearance.bodies.stem.spines.radial.crinkle": {
       "map": {"radial_spine_texture": {"needlelike": 0, "bristlelike": 12, "hairlike": 70}},

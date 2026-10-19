@@ -185,6 +185,15 @@ pub struct Tubercles {
     /// How many times longer than wide a tubercle is along the stem: a
     /// buckhorn cholla's 2 to 3.
     pub stretch: f64,
+    /// 0 for a rounded knob; toward 1 a flat-faced, triangular plate
+    /// pointing down and out, with a woolly groove down its middle (a
+    /// living-rock cactus's).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub face: f64,
+    /// How deeply a plate's face is fissured on either side of its
+    /// groove, 0 to 1.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub fissures: f64,
 }
 
 impl Default for Tubercles {
@@ -194,6 +203,8 @@ impl Default for Tubercles {
             width: 0.6,
             point: 1.0,
             stretch: 1.0,
+            face: 0.0,
+            fissures: 0.0,
         }
     }
 }
@@ -456,6 +467,13 @@ impl Default for Axils {
     }
 }
 
+/// How near the tip, as a share of the body's radius, its tubercles are
+/// young and small.
+const YOUNG_TUBERCLES: f64 = 0.35;
+
+/// Most rings over a dome.
+const MAX_DOME_RINGS: u32 = 400;
+
 /// Most bristles in one axil.
 const MAX_AXIL_BRISTLES: u32 = 24;
 
@@ -538,6 +556,8 @@ impl BodyLook {
             within("tubercles width", tubercles.width, 0.2, 2.0)?;
             within("tubercles point", tubercles.point, 0.2, 5.0)?;
             within("tubercles stretch", tubercles.stretch, 0.3, 4.0)?;
+            within("tubercles face", tubercles.face, 0.0, 1.0)?;
+            within("tubercles fissures", tubercles.fissures, 0.0, 1.0)?;
         }
         let areoles = &self.areoles;
         if areoles.spacing != 0.0 {
@@ -1214,7 +1234,11 @@ impl Centreline {
     /// apart; when one breaks a limit the ring goes on the last that kept
     /// it, so no two rings turn more than the most, however sharp an
     /// elbow.
-    fn rings(&self, detail: &Detail, step: f64) -> Vec<f64> {
+    ///
+    /// With `dome_step` above 0 the dome's rings stand at most that far
+    /// apart along the skin, at equal lengths of it, so tubercles over a
+    /// broad flat top have rings enough to show.
+    fn rings(&self, detail: &Detail, step: f64, dome_step: f64) -> Vec<f64> {
         let quarter = PI * 0.5;
         let caps = f64::from(detail.cap_rings.max(1));
         let mut out = Vec::new();
@@ -1270,11 +1294,51 @@ impl Centreline {
             }
             out.push(end);
         }
-        for ring in 1..=detail.cap_rings.max(1) {
-            let angle = quarter * f64::from(ring) / caps;
-            out.push(end + self.dome * math::sin(angle));
+        let arc = if dome_step > 0.0 && self.dome > 0.0 {
+            self.dome_arc(end)
+        } else {
+            Vec::new()
+        };
+        let total = arc.last().map_or(0.0, |&(_, length)| length);
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let fine_rings = if total > 0.0 {
+            ((total / dome_step).ceil() as u32).min(MAX_DOME_RINGS)
+        } else {
+            0
+        };
+        if fine_rings > detail.cap_rings.max(1) {
+            for ring in 1..=fine_rings {
+                let wanted = total * f64::from(ring) / f64::from(fine_rings);
+                let at = arc.partition_point(|&(_, length)| length < wanted).min(arc.len() - 1);
+                let (s1, l1) = arc[at];
+                let (s0, l0) = if at > 0 { arc[at - 1] } else { (end, 0.0) };
+                let share = if l1 > l0 { (wanted - l0) / (l1 - l0) } else { 1.0 };
+                out.push(s0 + (s1 - s0) * share);
+            }
+        } else {
+            for ring in 1..=detail.cap_rings.max(1) {
+                let angle = quarter * f64::from(ring) / caps;
+                out.push(end + self.dome * math::sin(angle));
+            }
         }
         out.dedup_by(|later, earlier| (*later - *earlier).abs() < 1e-9);
+        out
+    }
+
+    /// Distances over the dome from `end` to the tip, each with the
+    /// skin's length to it from `end`.
+    fn dome_arc(&self, end: f64) -> Vec<(f64, f64)> {
+        const SAMPLES: u32 = 400;
+        let mut out = Vec::with_capacity(SAMPLES as usize);
+        let (mut previous, mut radius, mut length) = (end, self.crest(end), 0.0);
+        for sample in 1..=SAMPLES {
+            let s = end + self.dome * f64::from(sample) / f64::from(SAMPLES);
+            let here = self.crest(s);
+            let (ds, dr) = (s - previous, here - radius);
+            length += math::sqrt(ds * ds + dr * dr);
+            out.push((s, length));
+            (previous, radius) = (s, here);
+        }
         out
     }
 
@@ -1378,6 +1442,60 @@ struct Site {
     ordinal: u32,
 }
 
+/// A flat-faced tubercle's height at `(y, x)`, 0 to 1, and how far into
+/// its woolly groove the point lies: a living-rock cactus's deltoid
+/// plate. `y` runs along the axis in tubercle lengths from the areole, up
+/// toward the apex; `x` across it in tubercle widths. The plate is a
+/// triangle with its broad base toward the apex and its tip pointing down
+/// and out, its face nearly flat, keeled a little down its middle, with
+/// steep sides; a groove runs down the middle from the areole to the
+/// base, and with `fissures` the face is cut by furrows slanting out from
+/// the groove on either side and roughened between them.
+fn face_profile(y: f64, x: f64, fissures: f64, ordinal: u32) -> (f64, f64, f64) {
+    const BASE: f64 = 0.55;
+    const TIP: f64 = -1.0;
+    if !(TIP..=BASE).contains(&y) {
+        return (0.0, 0.0, 0.0);
+    }
+    let half = (y - TIP) / (BASE - TIP);
+    let x = x.abs();
+    if x >= half {
+        return (0.0, 0.0, 0.0);
+    }
+    // How far in from the nearest edge, as a share of the half width.
+    let edge = ((half - x) / half.max(1e-9))
+        .min((BASE - y) / 0.25)
+        .min(1.0);
+    let wall = math::smoothstep(0.0, 0.45, edge);
+    let keel = 0.85 + 0.15 * (1.0 - x / half.max(1e-9));
+    let mut height = wall * keel;
+    // The groove: from the areole up to the plate's base, a third of its
+    // width there.
+    let groove = if y > -0.15 {
+        math::smoothstep(-0.15, 0.05, y) * (1.0 - math::smoothstep(0.05, 0.18, x))
+    } else {
+        0.0
+    };
+    height *= 1.0 - 0.3 * groove;
+    // Fissures run down the face on either side of the groove, near
+    // parallel to its sides, two to a side, crossed by low wrinkles; each
+    // plate's own phase, so neighbours differ. They are cut shallow and
+    // shaded dark, finer than the skin's rings could carve.
+    let mut fissure = 0.0;
+    if fissures > 0.0 {
+        let phase = f64::from(ordinal % 97) * 0.618_034;
+        let across = x / half.max(1e-9);
+        let furrow =
+            (2.0 * across + 0.35 * math::sin(5.0 * y + 6.0 * phase) + 0.5).rem_euclid(1.0);
+        let cut = math::smoothstep(0.75, 1.0, (furrow - 0.5).abs() * 2.0);
+        let wrinkle = 0.5 + 0.5 * math::sin(9.0 * y + 3.0 * across + 6.0 * phase);
+        let out = math::smoothstep(0.1, 0.25, across) * wall;
+        fissure = fissures * out * (0.8 * cut + 0.2 * wrinkle);
+        height *= 1.0 - 0.15 * fissure;
+    }
+    (height, groove, fissure)
+}
+
 /// The fold of a rib at `u` (0 at a crest, 0.5 in a valley): 1 on the
 /// crest, 0 at the valley's bottom. `sharpness` blends a rounded crest over
 /// a V-shaped fold into a sharp crest over a rounded valley.
@@ -1412,6 +1530,10 @@ struct Surface<'a> {
     bump_point: f64,
     /// A tubercle's length along the axis over its width.
     bump_stretch: f64,
+    /// How far the tubercles are flat-faced plates, 0 to 1, and how
+    /// deeply their faces are fissured.
+    bump_face: f64,
+    bump_fissures: f64,
     /// Metres added to the radius: the spines' reach on far levels.
     swell: f64,
     /// Thickness of the woolly cap over the apex, metres.
@@ -1430,10 +1552,13 @@ impl Surface<'_> {
         rib_profile(u, self.sharpness)
     }
 
-    /// The tubercles' sum at `(s, t)`, 0 between them and 1 on a peak.
-    fn bump(&self, s: f64, t: f64, radius: f64) -> f64 {
+    /// The tubercles' sum at `(s, t)`, 0 between them and 1 on a peak;
+    /// how far into a flat-faced tubercle's woolly groove the point lies
+    /// (0 outside it, 1 down its middle); and how deep in one of its
+    /// fissures.
+    fn bump(&self, s: f64, t: f64, radius: f64) -> (f64, f64, f64) {
         if self.bumps.is_empty() || self.bump_width <= 0.0 {
-            return 0.0;
+            return (0.0, 0.0, 0.0);
         }
         let width = self.bump_width;
         let length = width * self.bump_stretch;
@@ -1446,6 +1571,8 @@ impl Surface<'_> {
         let (sin, cos) = (math::sin(t), math::cos(t));
         let around = radius * math::sqrt(sin * sin + self.flatten * self.flatten * cos * cos);
         let mut sum: f64 = 0.0;
+        let mut groove: f64 = 0.0;
+        let mut fissure: f64 = 0.0;
         for site in &self.bumps[first..] {
             let ds = site.s - s;
             if ds > length {
@@ -1454,12 +1581,25 @@ impl Surface<'_> {
             let ds = ds * metric;
             let arc = wrap(site.t - t) * around;
             let d2 = (ds * ds) / (length * length) + (arc * arc) / (width * width);
-            if d2 < 1.0 {
-                let q = (1.0 - d2) * (1.0 - d2);
-                sum = sum.max(math::pow(q, self.bump_point));
+            let round = if d2 < 1.0 {
+                math::pow((1.0 - d2) * (1.0 - d2), self.bump_point)
+            } else {
+                0.0
+            };
+            if self.bump_face > 0.0 {
+                let (plate, inside, cut) =
+                    face_profile(-ds / length, arc / width, self.bump_fissures, site.ordinal);
+                let height = round + (plate - round) * self.bump_face;
+                if height > sum {
+                    sum = height;
+                    groove = inside * self.bump_face;
+                    fissure = cut * self.bump_face;
+                }
+            } else {
+                sum = sum.max(round);
             }
         }
-        sum
+        (sum, groove, fissure)
     }
 
     /// Radius of the surface at `(s, t)` and how deep in a valley it lies
@@ -1470,8 +1610,9 @@ impl Surface<'_> {
         let mut radius = crest * (1.0 - self.depth * (1.0 - fold));
         let mut valley = if self.folded { 1.0 - fold } else { 0.0 };
         if !self.bumps.is_empty() {
-            let bump = self.bump(s, t, crest);
-            radius += crest * self.bump_height * bump;
+            // The tubercles themselves stand out along the skin's normal
+            // (see `point`).
+            let (bump, _, _) = self.bump(s, t, crest);
             valley = valley.max(1.0 - bump);
         }
         let swell = self.swell * self.line.cap(s);
@@ -1496,11 +1637,13 @@ impl Surface<'_> {
         }
         // A tubercle's height is a share of the body's radius, not of
         // the dome's shrinking crest, so the tubercles on a flat top
-        // stand nearly as tall as those round its rim; the young ones
-        // nearest the apex stand lower, down to nothing at the tip.
+        // stand as tall as those round its rim; the young ones within a
+        // third of the radius of the tip stand lower, down to nothing at
+        // the tip itself.
         let crest = self.line.crest(s);
-        let size = self.line.at(s).radius * self.line.cap(s).sqrt();
-        let mut rise = size * self.bump_height * self.bump(s, t, crest);
+        let radius = self.line.at(s).radius;
+        let size = radius * (crest / (radius * YOUNG_TUBERCLES).max(1e-12)).min(1.0).sqrt();
+        let mut rise = size * self.bump_height * self.bump(s, t, crest).0;
         if self.wool > 0.0 {
             rise *= 1.0 - apex_wool(self.line, s);
         }
@@ -1517,7 +1660,7 @@ impl Surface<'_> {
         let rise = self.tubercle_rise(s, t);
         let up = if rise > 0.0 {
             let (out, up) = self.line.skin_normal(s);
-            radius += rise * (out - 1.0);
+            radius += rise * out;
             rise * up
         } else {
             0.0
@@ -2097,6 +2240,9 @@ impl Body<'_> {
             .as_ref()
             .filter(|_| detail.per_tubercle > 0.0 && spacing > 0.0);
         let bump_width = tubercles.map_or(0.0, |tubercles| tubercles.width * spacing);
+        // A flat-faced plate needs finer skin to show its edges.
+        let per_tubercle = detail.per_tubercle
+            * tubercles.map_or(1.0, |tubercles| 1.0 + 3.0 * tubercles.face);
 
         let sides = if folded {
             ribs * per_rib
@@ -2106,7 +2252,7 @@ impl Body<'_> {
                 sides *= 1.5;
             }
             if bump_width > 0.0 {
-                sides = sides.max(2.0 * PI * widest / (bump_width / detail.per_tubercle));
+                sides = sides.max(2.0 * PI * widest / (bump_width / per_tubercle));
             }
             // A small whole number of sides.
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
@@ -2116,7 +2262,7 @@ impl Body<'_> {
         let mut step = detail.ring_step * mean.max(1e-3);
         if bump_width > 0.0 {
             let stretch = tubercles.map_or(1.0, |tubercles| tubercles.stretch);
-            step = step.min(bump_width * stretch / detail.per_tubercle);
+            step = step.min(bump_width * stretch / per_tubercle);
         }
         Layout {
             ribs,
@@ -2131,7 +2277,8 @@ impl Body<'_> {
     /// The triangles of the axis's skin at this level.
     fn triangles(&self) -> usize {
         let layout = self.layout();
-        let rings = self.line.rings(&self.detail, layout.step).len();
+        let dome_step = if layout.bump_width > 0.0 { layout.step } else { 0.0 };
+        let rings = self.line.rings(&self.detail, layout.step, dome_step).len();
         2 * layout.sides as usize * rings.saturating_sub(1)
     }
 
@@ -2172,6 +2319,8 @@ impl Body<'_> {
             bump_height: tubercles.map_or(0.0, |tubercles| tubercles.height),
             bump_point: tubercles.map_or(1.0, |tubercles| tubercles.point),
             bump_stretch: tubercles.map_or(1.0, |tubercles| tubercles.stretch),
+            bump_face: tubercles.map_or(0.0, |tubercles| tubercles.face),
+            bump_fissures: tubercles.map_or(0.0, |tubercles| tubercles.fissures),
             swell: 0.0,
             wool: look.areoles.apex_wool,
         };
@@ -2265,7 +2414,8 @@ impl Body<'_> {
         out: &mut PlantMesh,
     ) {
         let look = self.look;
-        let rings = self.line.rings(&self.detail, step);
+        let dome_step = if surface.bump_width > 0.0 { step } else { 0.0 };
+        let rings = self.line.rings(&self.detail, step, dome_step);
         let valley = look.valley_colour();
         // Ribs too fine for this level still shade the skin.
         let skin = if look.ribs.is_some() && !surface.folded {
@@ -2294,6 +2444,12 @@ impl Body<'_> {
                 let (position, normal, _) = surface.frame(s, t);
                 let (_, deep) = surface.radius(s, t);
                 let mut colour = mix(skin, valley, deep);
+                if surface.bump_face > 0.0 && !surface.bumps.is_empty() {
+                    // A plate's groove is filled with the areole's wool.
+                    let (_, groove, fissure) = surface.bump(s, t, self.line.crest(s));
+                    colour = mix(colour, look.areoles.felt, groove);
+                    colour = mix(colour, valley, fissure);
+                }
                 if let Some(cork) = cork
                     && cork_line > 0.0
                 {
@@ -2625,6 +2781,8 @@ impl Surface<'_> {
             bump_height: 0.0,
             bump_point: 1.0,
             bump_stretch: 1.0,
+            bump_face: 0.0,
+            bump_fissures: 0.0,
             swell: 0.0,
             wool: 0.0,
         }
@@ -3129,7 +3287,7 @@ mod tests {
         assert_eq!(axes(&graph).len(), 2);
         // The arm's rings turn by less than the level's most.
         let line = Centreline::new(&graph, &axes(&graph)[1], &look, 0.0).unwrap();
-        let rings = line.rings(&DETAIL[0], 0.05);
+        let rings = line.rings(&DETAIL[0], 0.05, 0.0);
         for pair in rings.windows(2) {
             let (a, b) = (line.at(pair[0]).tangent, line.at(pair[1]).tangent);
             assert!(a.dot(b) > math::cos(math::radians(6.0)), "{pair:?}");
