@@ -98,7 +98,7 @@
           "per_node": 1,
           "size": 0.25,
           "spread": 20,
-          "taper": 0.5,
+          "taper": 0.2,
           "peduncle": 0.05,
           "stalk": [
             0.4,
@@ -110,14 +110,14 @@
             "flowers": 3,
             "pedicel": 0.1,
             "peduncle": 0.3,
-            "size": 0.3,
+            "size": 0.38,
             "spread": 20
           }
         },
         "colour": [
-          0.4,
-          0.25,
-          0.3
+          0.305,
+          0.1144,
+          0.1878
         ],
         "accent": [
           0.5,
@@ -166,10 +166,7 @@
     },
     "florets_per_spikelet": 1,
     "glumes": 2,
-    "spikelet_length_m": {
-      "min": 0.012,
-      "max": 0.016
-    },
+    "spikelet_length_m": 0.01,
     "lower_glume_length_m": {
       "min": 0.006,
       "max": 0.008
@@ -236,7 +233,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye from the photos (observations 328863686, 328863685, 119740253, 322187012, 328863688, 400045236, 154588978, 44034826): a dense tuft of fine, rolled blades and slender culms with narrow, nodding, purplish tan panicles, each spikelet trailing three long spreading awns. The panicle's colour comes from flower_colour through the family's rule, its spikelets from the order's."
+      "note": "By eye from the photos (observations 328863686, 328863685, 119740253, 322187012, 328863688, 400045236, 154588978, 44034826): a dense tuft of fine, rolled blades and slender culms with narrow, nodding, purplish tan panicles, each spikelet trailing three long spreading awns. The panicle's colour is set by hand (Hitchcock, Manual of the Grasses of the United States (1935) p. 452: panicle usually purplish; purplish tan in the photos; sRGB 150, 95, 120 by eye), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
@@ -306,7 +303,7 @@
     "traits.spikelet_length_m": {
       "evidence": "SourceInferred",
       "source": "hitchcock-1935",
-      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: the second glume about twice as long as the 6-8 mm first, so the spikelet about 12-16 mm without its awns."
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: one floret, its lemma about 1 cm long, so the spikelet about 1 cm from its base to the tip of its floret, awns left out (the glumes, the second 12 to 16 mm, reach past it)."
     },
     "traits.lower_glume_length_m": {
       "evidence": "SourceInferred",

@@ -92,7 +92,8 @@
       },
       "panicle": {
         "shape": {
-          "template": "spikelet"
+          "template": "spikelet",
+          "awn": 1.2
         },
         "inflorescence": {
           "branches": 11,
@@ -116,9 +117,9 @@
           }
         },
         "colour": [
-          0.6,
-          0.56,
-          0.4
+          0.5776,
+          0.5457,
+          0.305
         ],
         "accent": [
           0.5,
@@ -219,7 +220,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye from the photos (observations 33236284, 133248955, 324238842, 238154280, 238508458, 143912946, 7484484, 17786628): a small, loosely branched annual tuft of few short blades and slender culms, each ending in a zigzag axis of pale straw, needle-like spikes that hang down and fall whole. The panicle's colour comes from flower_colour through the family's rule, its spikelets from the order's."
+      "note": "By eye from the photos (observations 33236284, 133248955, 324238842, 238154280, 238508458, 143912946, 7484484, 17786628): a small, loosely branched annual tuft of few short blades and slender culms, each ending in a zigzag axis of pale straw, needle-like spikes that hang down and fall whole. The panicle's colour is set by hand (spikes pale straw, sRGB 200, 195, 150 by eye from the photos (the sources read give no colour)), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

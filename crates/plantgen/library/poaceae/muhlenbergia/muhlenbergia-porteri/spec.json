@@ -111,14 +111,14 @@
             "flowers": 4,
             "pedicel": 0.3,
             "peduncle": 0.3,
-            "size": 0.3,
+            "size": 0.118,
             "spread": 40
           }
         },
         "colour": [
-          0.45,
-          0.25,
-          0.35
+          0.2623,
+          0.0802,
+          0.1878
         ],
         "accent": [
           0.5,
@@ -226,7 +226,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye from the photos (observations 18973867, 4706451, 192934618, 184760982, 19983391, 111591905, 184599582, 253321042): a wiry, much-branched mound of thin culms, woody at the base, few tiny blades, and airy, widely spreading pinkish-purple panicles. The panicle's colour comes from flower_colour through the family's rule, its spikelets from the order's."
+      "note": "By eye from the photos (observations 18973867, 4706451, 192934618, 184760982, 19983391, 111591905, 184599582, 253321042): a wiry, much-branched mound of thin culms, woody at the base, few tiny blades, and airy, widely spreading pinkish-purple panicles. The panicle's colour is set by hand (Hitchcock (1935) p. 380, 381: lemma purple; pinkish purple in the photos; sRGB 140, 80, 120 by eye), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

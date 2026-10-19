@@ -24,7 +24,8 @@
       "culm_radius": 0.0015,
       "culm_leaves": 3,
       "culm_lean": 10,
-      "panicle_nod": 5
+      "panicle_nod": 5,
+      "leaf_length": 0.04
     }
   },
   "growth": {
@@ -65,13 +66,15 @@
       "blade": {
         "shape": {
           "template": "blade",
-          "taper": 0
+          "taper": 0,
+          "aspect": 0.25
         }
       },
       "blade_tip": {
         "shape": {
           "template": "blade",
-          "taper": 1
+          "taper": 1,
+          "aspect": 0.25
         }
       },
       "thatch": {
@@ -108,9 +111,9 @@
           ]
         },
         "colour": [
-          0.6,
-          0.55,
-          0.42
+          0.6795,
+          0.6105,
+          0.402
         ],
         "accent": [
           0.55,
@@ -212,7 +215,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye from the photos (observations 3770337, 148080836, 328974622, 69283601, 10776079, 346930362, 21148131, 45087852): a coarse, bushy clump of stiff, felty grey-green culms, short rigid blades, and narrow straw-coloured spikes of bearded spikelet groups. The panicle's colour comes from flower_colour through the family's rule, its spikelets from the order's."
+      "note": "By eye from the photos (observations 3770337, 148080836, 328974622, 69283601, 10776079, 346930362, 21148131, 45087852): a coarse, bushy clump of stiff, felty grey-green culms, short rigid blades, and narrow straw-coloured spikes of bearded spikelet groups. The panicle's colour is set by hand (spikes pale straw, sRGB 215, 205, 170 by eye from the photos (the sources read give no colour)), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
