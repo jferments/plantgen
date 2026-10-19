@@ -54,6 +54,18 @@
     "generator.params.bend_set": {
       "rule": "0.1",
       "why": "A pine's limbs keep a tenth of each year's sag, as a broadleaf tree's do, not the half other conifers keep: Farjon gives first-order pine branches as spreading and assurgent or ascending, and keeping half drew old ponderosa and whitebark pines' limbs hanging to the ground."
+    },
+    "generator.params.limb_light": {
+      "rule": "0.01",
+      "why": "Pines keep the Pinidae program's limb shedding until their old crowns are fitted, against the family's eased 0.003."
+    },
+    "generator.params.limb_tip": {
+      "rule": "0",
+      "why": "Pines keep the Pinidae program's limb shedding until their old crowns are fitted."
+    },
+    "generator.params.seg_min": {
+      "rule": "0",
+      "why": "Pines lay down every year's shoot, as the Pinidae program does, until their old crowns are fitted."
     }
   },
   "evidence": {

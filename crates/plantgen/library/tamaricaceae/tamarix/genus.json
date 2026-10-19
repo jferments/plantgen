@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Tamarix",
+  "traits": {
+    "growth_form": "shrub",
+    "stem_clump": "many",
+    "leaf_habit": {
+      "deciduous": "usually",
+      "evergreen": "rarely"
+    },
+    "short_shoots": false,
+    "leaf_hairs": {
+      "glabrous": "usually",
+      "puberulent": "rarely"
+    },
+    "inflorescence": "raceme",
+    "flowering_position": {
+      "lateral": "often",
+      "terminal": "often"
+    },
+    "bract_form": "scale",
+    "inflorescence_bracts": 1,
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 6
+    },
+    "stamens": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 10
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "high": 4
+    },
+    "capsule_valves": 3,
+    "fruit_shape": "ovoid"
+  },
+  "evidence": {
+    "traits.growth_form": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): shrubs or shrub-like trees with numerous large basal branches."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): numerous large basal branches; multi-stemmed."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): the foliage is deciduous (athel tamarisk, T. aphylla, is evergreen). FOC vol. 13: green vegetative branchlets fall in winter."
+    },
+    "traits.short_shoots": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): two kinds of branch: woody long growing branches that stay through winter, and green leafy vegetative branchlets that fall in winter (deciduous twigs, not spur-like short shoots)."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): leaves glabrous, rarely hairy."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): racemes lateral on the growing branches of the previous or current year, often clustered in terminal panicles; flowers usually pedicellate, bract 1."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): spring racemes rise laterally from old wood, summer panicles end the young shoots of the season (FOC vol. 13 the same)."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): bract 1 per flower, small."
+    },
+    "traits.inflorescence_bracts": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): bract 1 (under each flower)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): 4- or 5(or 6)-merous; FNA vol. 6 key: 5-merous in all but T. parviflora."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): stamens 4 or 5 opposite the calyx lobes, or numerous (T. tenuissima's reported 10)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): pistil of 3 or 4 carpels; styles 3 or 4 (FNA: 3, or 4)."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): capsule conic, opening in 3 from the back."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): capsule conic; ovoid is the nearest state (the vocabulary has no cone shape for a fruit)."
+    }
+  }
+}

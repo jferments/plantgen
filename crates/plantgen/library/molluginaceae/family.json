@@ -21,31 +21,40 @@
     "ovary_position": "superior",
     "hypanthium": false,
     "woodiness": {
-      "herbaceous": "often",
-      "woody": "often"
+      "herbaceous": "usually",
+      "woody": "sometimes"
     },
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often"
+      "cyme": "usually",
+      "umbel": "often",
+      "solitary": "sometimes"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": {
-      "sepals_and_petals": "usually",
-      "tepals": "rarely"
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes"
     },
-    "fruit_type": "capsule",
+    "fruit_type": {
+      "capsule": "usually",
+      "achene": "sometimes"
+    },
     "flower_merosity": 5,
     "stamens": {
-      "min": 5,
-      "max": 10,
+      "min": 3,
+      "max": 5,
       "low": 2,
       "high": 25
     },
     "carpels": {
-      "min": 2,
+      "min": 3,
       "max": 5,
       "low": 1,
       "high": 10
+    },
+    "leaf_margin": "entire",
+    "life_span": {
+      "annual": "often",
+      "perennial": "often"
     }
   },
   "evidence": {
@@ -53,6 +62,86 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Molluginaceae with Corbichoniaceae, Kewaceae, Macarthuriaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or whorled, sometimes opposite; leaves simple; stipules present or absent; plants usually hermaphrodite, sometimes monoecious; ovary superior; floral cup absent; stems herbaceous or woody; flowers solitary or in cymes; flowers actinomorphic; perianth usually sepals and petals, rarely tepals; fruit capsule; parts of each whorl 5; stamens (2-) 5 to 10 (-25); carpels (1-) 2 to 5 (-10). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): leaves alternate, opposite, or whorled. Flora of China (Molluginaceae): leaves alternate, rarely opposite, often in a basal rosette or in false whorls. Family file kept."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Molluginaceae (eFloras flora_id=2 taxon_id=20193, read 2026-10-19): leaves simple."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): blade margins entire."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): stipules present or absent (Flora of China: absent or membranous). File kept."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): flowers usually bisexual; Flora of China: rarely unisexual or dioecious. File kept."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Molluginaceae (eFloras flora_id=2 taxon_id=20193, read 2026-10-19): ovary superior; FNA: perianth hypogynous."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): perianth hypogynous (no floral cup); Flora of China: rarely perigynous. File kept."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): herbs [shrubs]; shrubs only outside North America. Flora of China: herbs, subshrubs or shrubs."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): herbs annual or perennial."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): inflorescences axillary or terminal, cymose or umbellate, or flowers solitary. German Wikipedia: flowers single or often many in terminal cymes."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Molluginaceae (eFloras flora_id=2 taxon_id=20193, read 2026-10-19): flowers actinomorphic."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): sepals 4-5; petals absent, or small and of staminodial origin. Flora of China: tepals 5, rarely 4; petals absent or few to many (Glinus staminodes). A single whorl is the common state, so tepals usually."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): fruits achenes or 3-5-valved loculicidal capsules; Flora of China: usually a loculicidal capsule."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): sepals 4-5 (Flora of China: tepals 5, rarely 4). File kept."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): stamens 2-25, in 1-2 series. Flora of China: 3-5 or many. German Wikipedia: mostly 5-10 (2-20). Typical 3-5 taken from the floras."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Molluginaceae (eFloras flora_id=1 taxon_id=20193, read 2026-10-19): pistils of 1-5 connate carpels. Flora of China: 2-5 or many. German Wikipedia: rarely one, mostly two to five, rarely many."
     }
   }
 }

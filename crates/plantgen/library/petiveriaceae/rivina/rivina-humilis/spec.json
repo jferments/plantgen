@@ -1,0 +1,592 @@
+{
+  "schema": 1,
+  "id": "rivina-humilis",
+  "taxon": {
+    "scientific_name": "Rivina humilis",
+    "common_name": "rougeplant",
+    "family": "Petiveriaceae",
+    "genus": "Rivina",
+    "plant_name_id": 2425661
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 3,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      3
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "woodiness": "semi",
+    "life_span": "perennial",
+    "leaf_habit": "evergreen",
+    "height_typical_m": {
+      "min": 0.4,
+      "max": 1.0,
+      "low": 0.3
+    },
+    "height_max_m": 2.0,
+    "stem_posture": {
+      "erect": "usually",
+      "decumbent": "sometimes"
+    },
+    "stem_cross_section": "angled",
+    "stem_hairs": {
+      "glabrous": "often",
+      "pubescent": "often"
+    },
+    "stem_colour": [
+      100,
+      140,
+      70
+    ],
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "ovate": "usually",
+      "lanceolate": "sometimes",
+      "elliptic": "sometimes",
+      "oblong": "sometimes",
+      "deltate": "sometimes"
+    },
+    "leaf_apex": {
+      "acuminate": "usually",
+      "acute": "sometimes",
+      "obtuse": "sometimes",
+      "emarginate": "rarely"
+    },
+    "leaf_base_shape": {
+      "rounded": "often",
+      "cuneate": "often",
+      "truncate": "sometimes",
+      "attenuate": "sometimes"
+    },
+    "leaf_margin": {
+      "entire": "usually",
+      "serrate": "sometimes"
+    },
+    "leaf_hairs": {
+      "glabrous": "often",
+      "pubescent": "often"
+    },
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.12,
+      "low": 0.025,
+      "high": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.05,
+      "high": 0.09
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.035,
+      "high": 0.11
+    },
+    "leaf_colour": [
+      62,
+      118,
+      52
+    ],
+    "stipules": false,
+    "inflorescence": "raceme",
+    "inflorescence_length_m": {
+      "min": 0.04,
+      "max": 0.15
+    },
+    "peduncle_length_m": {
+      "min": 0.01,
+      "max": 0.05
+    },
+    "inflorescence_posture": {
+      "erect": "usually",
+      "nodding": "sometimes"
+    },
+    "units_per_inflorescence": {
+      "min": 5,
+      "max": 50
+    },
+    "flowering_position": "both",
+    "pedicel_length_m": {
+      "min": 0.002,
+      "max": 0.008
+    },
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "perianth": "tepals",
+    "perianth_parts": 4,
+    "flower_merosity": 4,
+    "tepal_length_m": {
+      "min": 0.0015,
+      "max": 0.0035
+    },
+    "flower_colour": [
+      248,
+      228,
+      236
+    ],
+    "bud_colour": [
+      140,
+      175,
+      100
+    ],
+    "stamens": 4,
+    "stamen_exsertion": "included",
+    "carpels": 1,
+    "sexual_system": "hermaphrodite",
+    "flower_symmetry": "actinomorphic",
+    "fruit_type": "berry",
+    "fruit_shape": "globose",
+    "fruit_size_m": {
+      "min": 0.0025,
+      "max": 0.005
+    },
+    "fruit_colour_ripe": [
+      214,
+      30,
+      38
+    ],
+    "fruit_colour_ripening": [
+      120,
+      165,
+      80
+    ],
+    "fruits_per_inflorescence": {
+      "min": 5,
+      "max": 50
+    },
+    "calyx_in_fruit": "persistent",
+    "flowering_months": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "fruiting_months": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 1700,
+    "light": [
+      "shade",
+      "part"
+    ],
+    "moisture": [
+      "mesic"
+    ],
+    "soil_texture": [
+      "loam",
+      "sand"
+    ],
+    "habitat_notes": "Woods, hammocks, thickets, shell ridges and middens, roadsides and disturbed ground, 0-1700 m, from the southern United States through Mexico, the West Indies and Central America to South America; naturalised and weedy in tropical Asia, Africa, Australia and the Pacific; shade tolerant and tolerant of salt spray.",
+    "shoot_leaves": {
+      "min": 10,
+      "max": 20,
+      "typical": 14
+    },
+    "flowering_branches": 2
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a soft herb, woody at the base, with forking stems, thin ovate leaves and slender racemes of tiny pink-white flowers and scarlet berries."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.7 m tall at 2 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a soft herb, woody at the base, with forking stems, thin ovate leaves and slender racemes of tiny pink-white flowers and scarlet berries."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): herbs or subshrubs, woody at base; German Wikipedia: perennial herb to subshrub, the stem woody at its base."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): perennial."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Rivina humilis' (read 2026-10-19, lower trust): 'this evergreen perennial'. German Wikipedia instead calls it deciduous (laubwerfend); the evergreen reading is kept for a plant of frost-free warm regions that flowers all year (FNA)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): plants 30-100 cm tall; FNA 0.4-2 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): plants 0.4-2 m."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): plants erect, straggling, or vinelike; German Wikipedia: stem upright on its own or clambering."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina (eFloras flora_id=2 taxon_id=128629, read 2026-10-19): stems angulate; German Wikipedia: ribbed (gerippt)."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): ± glabrous or densely pubescent; Flora of China: branches spreading, pubescent when young."
+    },
+    "traits.stem_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: green stems; no source read names a colour."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): leaves alternate."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: alternate leaves in a spiral, as in Phytolaccaceae generally; no source read says."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): leaf blade."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Phytolaccaceae (eFloras flora_id=2 taxon_id=10687, read 2026-10-19): leaves simple."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): blade pinnately veined."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): blade lanceolate, elliptic, or oblong to deltate or ovate; Flora of China: ovate or ovate-lanceolate, genus: ovate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): apex acuminate or acute to obtuse or emarginate; Flora of China: long acuminate."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): base cuneate or rounded to truncate or cordate (cordate is not a base state here); Flora of China: attenuate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): margin slightly serrulate; FNA family: margins entire, often undulate. Entire usual, finely serrate sometimes."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): pubescent beneath along the midvein, glabrous above; FNA: plants ± glabrous or densely pubescent."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): blade 4-12 cm; FNA: to 15 cm; German Wikipedia 2.5-15 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): blade 1.5-4 cm wide; FNA to 9 cm; German Wikipedia 1.5-9 cm. Upper typical 5 cm is our midpoint between them."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): petiole 1-3.5 cm, pubescent; FNA 1-11 cm."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: plain mid-green, rather thin leaves; no source read names a colour."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Phytolaccaceae (eFloras flora_id=1 taxon_id=10687, read 2026-10-19): stipules minute or absent; none described for Rivina."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): racemes."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): racemes 4-15 cm; Flora of China 4-10 cm including the peduncle."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): peduncle 1-5 cm."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina (eFloras flora_id=2 taxon_id=128629, read 2026-10-19): racemes erect or curved, slender."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Rivina humilis' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): racemes of five to fifty flowers; FNA genus 5-50-flowered."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Rivina humilis' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): racemes terminal or lateral (end- oder seitenständig)."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): pedicel 2-8 mm; German Wikipedia: 2 mm at flowering, lengthening to 8 mm in fruit."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: four spreading tepals 1.5-3.5 mm long make a flower about 4-6 mm across."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): sepals 4, no petals: one whorl."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): sepals 4."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): sepals 4, stamens 4."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): sepals 1.5-3.5 mm; Flora of China tepals 2-2.5 mm, 3-3.5 mm in fruit."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): sepals white or green to pink or purplish; Flora of China: white or pink; German Wikipedia: green in bud, turning white and pink during flowering. White flushed pink; sRGB by eye for the words."
+    },
+    "traits.bud_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Rivina humilis' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): tepals green in the bud; sRGB by eye for the word."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): stamens 4."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): stamens shorter than and alternate with the tepals."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): carpel 1; style present, often curved (species); stigma capitate."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Rivina humilis' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): flowers bisexual (zwittrig)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Rivina humilis' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): flowers radially symmetric and four-parted."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina (eFloras flora_id=1 taxon_id=128629, read 2026-10-19): fruits berries."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): berry globose or pyriform; FNA genus: subglobose."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): berries 2.5-5 mm diam; Flora of China 3-4 mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Rivina humilis' (read 2026-10-19, lower trust): glossy, bright red berry; FNA genus: red to orange or yellow. sRGB by eye for the word."
+    },
+    "traits.fruit_colour_ripening": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: berries green before they colour, as in most fleshy fruits; no source read says."
+    },
+    "traits.fruits_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: about as many berries as flowers (5-50); FNA says the plant is more attractive in fruit than in flower."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Rivina humilis (eFloras flora_id=2 taxon_id=220011674, read 2026-10-19): tepals persistent, 3-3.5 mm in fruit, green, reflexed."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): flowering year-round. A look has one season a year that begins with its buds, so year-round flowering is drawn as February to December, buds showing in late January (a library gap: no season yet runs all year)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: flowers all year (FNA), so ripe berries are on the plant all year; drawn March to December, a month after the drawn flowering begins."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): 0-1700 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): 0-1700 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Rivina humilis' (read 2026-10-19, lower trust): requires less than partial sun and tolerates full shade; valued as a shade-tolerant groundcover."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): woods, hammocks, thickets: moderately moist habitats (our reading)."
+    },
+    "traits.soil_texture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: woodland and disturbed soils, shell ridges (calcareous sand); no source read names a texture."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): woods, hammocks, thickets, shell ridges, roadsides, disturbed areas, 0-1700 m; Wikipedia: tolerant of salt spray and saline soils, naturalised widely in the tropics."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a stem 0.3-1 m with alternate leaves several cm apart."
+    },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: racemes terminal and from the upper axils."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

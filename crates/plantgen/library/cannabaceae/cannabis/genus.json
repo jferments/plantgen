@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cannabis",
+  "traits": {},
+  "evidence": {
+    "rules.appearance.organs.leaf.shape.petiole": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The vascular plants' petiole rule for a simple leaf (kingdom Plantae), stated for hemp's palmately compound leaf, which no rule gave a stalk share: its petioles drew 0.7-1.7 cm against the 2-7 cm FNA gives."
+    }
+  },
+  "forms": {
+    "forb": {
+      "rules": {
+        "generator.defaults.nodes": {
+          "map": {
+            "leaf_arrangement": {
+              "alternate": {
+                "rule": "clamp(round(shoot_leaves), 2, 40)"
+              },
+              "opposite": {
+                "rule": "clamp(round(shoot_leaves / 2), 2, 40)"
+              }
+            }
+          },
+          "why": "A hemp stem bears as many leafy nodes as its leaves fill: a pair to a node where they are opposite, as most are below the flowers, one where they alternate; a tall field plant's 9 to 20 pairs, not the herb program's five nodes."
+        },
+        "generator.params.leaf_length": {
+          "rule": "max(leaf_length_m) * (1 + first(petiole_length_m / leaf_length_m, 0))",
+          "why": "A hemp plant's largest leaves, low on the stem, are as long as its longest leaflet, the card longer by the stalk in proportion; the leaves above and below are shorter by the shares its program sets."
+        },
+        "generator.params.leaf_top": {
+          "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
+          "why": "Hemp's top leaves, among its flowers, are as short, for the longest, as the shortest leaflets its floras measure."
+        },
+        "generator.params.leaf_base": {
+          "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
+          "why": "Hemp's first leaves, a seedling's, are as short, for the longest, as the shortest leaflets its floras measure."
+        }
+      },
+      "evidence": {
+        "rules.generator.params.leaf_length": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The Caryophyllales order's and the campanulids' leaf rules (2026-10-19), stated for Cannabis: with the forbs' middle length and top leaf at 0.4, hemp's leaves drew 3.5-7.4 cm, under the 7-15 cm leaflets the Flora of China gives."
+        },
+        "rules.generator.params.leaf_top": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "As the leaf length rule: FOC's leaflets 3 cm at the top (1-3 leaflets there) and 15 cm below."
+        },
+        "rules.generator.params.leaf_base": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "As the leaf length rule: a seedling's first leaves are its smallest (Hesami et al. 2023: leaflets 1, 3, 5 up the seedling)."
+        },
+        "rules.generator.defaults.nodes": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The Caryophyllales order's rule for a herb's leafy nodes (2026-10-19), stated for Cannabis: with the herb program's five nodes a 2 m hemp plant drew ten leaves on a bare stem, where floras and growers count a pair of leaves every 5-12 cm (McPartland & Small 2020; Hesami et al. 2023)."
+        }
+      }
+    }
+  },
+  "rules": {
+    "appearance.organs.leaf.shape.petiole": {
+      "template": "compound",
+      "needs": [
+        "petiole_length_m"
+      ],
+      "rule": "petiole_length_m / (leaf_length_m + petiole_length_m)",
+      "why": "A hemp leaf's card holds its palm of leaflets and its stalk end to end, so the stalk's share of the card is the flora's petiole over the two lengths together, as a simple leaf's is."
+    }
+  }
+}

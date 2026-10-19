@@ -114,7 +114,18 @@
       8,
       9,
       10
-    ]
+    ],
+    "sepal_length_m": {
+      "min": 0.012,
+      "max": 0.025
+    },
+    "calyx_lobe_length_m": {
+      "min": 0.004,
+      "max": 0.008
+    },
+    "stem_hairs": "pubescent",
+    "glandular_hairs": "dense",
+    "leaf_hairs": "pubescent"
   },
   "provenance": {
     "sources": [
@@ -273,6 +284,31 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read gives it: capsules ripening from August into October, after the July to September flowers."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Nicotiana tabacum (eFloras, read 2026-10-18): calyx 1.2-2.5 cm; Flora of China: tubular or tubular-campanulate, 2-2.5 cm; Wikipedia 'Nicotiana tabacum': 12-18 mm."
+    },
+    "traits.calyx_lobe_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Nicotiana tabacum' (read 2026-10-18): narrow pointed calyx lobes 4-8 mm, shorter than the calyx tube; Flora of North America: lobes long-triangular, equalling or shorter than the tube, unequal; Flora of China: lobes deltate, acuminate, unequal."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Nicotiana tabacum (eFloras, read 2026-10-18): stems viscid-pubescent; Flora of China: glandular hairy overall; King's (vol. 2, p. 1907): stem hairy and viscid."
+    },
+    "traits.glandular_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Nicotiana tabacum (eFloras, read 2026-10-18): herbs viscid, glandular hairy overall, the leaves glandular hairy; Flora of North America: stems and leaf surfaces viscid-pubescent."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Nicotiana tabacum (eFloras, read 2026-10-18): leaf surfaces viscid-pubescent; Flora of China: leaf blade glandular hairy."
     }
   }
 }
