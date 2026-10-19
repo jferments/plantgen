@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Crataegus",
+  "traits": {
+    "ovary_position": "inferior",
+    "petal_shape": "orbicular",
+    "petal_apex": "rounded"
+  },
+  "evidence": {
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Crataegus by J. B. Phipps (eFloras, read 2026-10-19): perianth and androecium epigynous; carpels partially adnate to the hypanthium, which persists on the pome."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Crataegus by J. B. Phipps (eFloras, read 2026-10-19): petals 5, white, more or less circular (elliptic in a few series), the base barely clawed, margins more or less entire."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Crataegus by J. B. Phipps (eFloras, read 2026-10-19): petals more or less circular, so their tips are rounded."
+    }
+  }
+}

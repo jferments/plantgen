@@ -123,7 +123,7 @@
       20,
       24
     ],
-    "fruit_shape": "globose",
+    "fruit_shape": "ellipsoid",
     "flowering_months": [
       4,
       5
@@ -131,7 +131,8 @@
     "fruiting_months": [
       9,
       10
-    ]
+    ],
+    "fruits_per_inflorescence": {"min": 2, "max": 3}
   },
   "evidence": {
     "taxon": {
@@ -304,11 +305,7 @@
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): pomes usually dark red, sometimes bright; sRGB by eye."
     },
-    "traits.fruit_shape": {
-      "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): pomes orbicular to somewhat cylindric."
-    },
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): pomes orbicular to somewhat cylindric, 6-11 mm across; Wikipedia, Crataegus monogyna (read 2026-10-19): the haw small, oval, about 10 mm long. Between round and cylindric: ellipsoid."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "fna-online",
@@ -328,7 +325,8 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "9.0 m tall at 25 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
-    }
+    },
+    "traits.fruits_per_inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Crataegus monogyna (read 2026-10-19): the haws develop in groups of two or three along the smaller branches, from corymbs of 5-15 flowers (FNA)."}
   },
   "provenance": {
     "sources": [
