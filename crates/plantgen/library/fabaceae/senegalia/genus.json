@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Senegalia",
+  "traits": {"flower_symmetry": "actinomorphic", "stamens": {"min": 35, "max": 215}, "stamen_exsertion": "exserted"},
+  "evidence": {
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 475), Mimosaceae: small regular mostly perfect flowers; Acacia, which then held Senegalia: flowers small, in heads or spikes, stamens many, exserted, filaments filiform, distinct. Kearney and Peebles (1942): stamens many more than 10."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 49), Acacia in the old wide sense that held Senegalia: stamens many, 35 to about 215 in the East African species; Abrams (vol. 2, 1944, p. 475): stamens many, exserted. No figure for Senegalia alone."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 475), Acacia (then holding Senegalia): stamens many, exserted; filaments filiform, distinct."
+    }
+  }
+}
