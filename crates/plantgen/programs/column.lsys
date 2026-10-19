@@ -77,12 +77,12 @@
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem column 4;
+lsystem column 5;
 
 # The plant.
 param vigour_spread;          # an individual grows exp(gauss() * vigour_spread) times as fast
 param lean;                   # most degrees a lone stem leans at its foot, in a random direction
-param sink;                   # how deep the stems' feet sit below the ground
+param sink;                   # how deep a filled-out stem's foot sits below the ground
 # A clump of stems from the ground.
 param stems;                  # stems in an old clump
 param stem_rate;              # stems by age t: 1 + (stems - 1) * (1 - exp(-stem_rate * t))
@@ -181,6 +181,7 @@ module P(len, r0, rf, v, b, kind, armed, at, dr, e) queries position;
 module Ri(k, m, r, d);                  # places k to k + m - 1 of a crown's rings
 module Fk(n, len, r);                   # n flowers on the side of a piece len long and r in radius
 module Fo;                              # one place in this year's ring: a bud, a flower or a fruit
+module Sk;                              # a stem's foot, sinking as it grows
 # A joint: its length and radius, its place (a trunk joint's number up
 # the trunk, a lateral's depth in its branch), vigour, whether it has
 # sprouted its daughters, and whether it is a lateral.
@@ -216,13 +217,13 @@ decompose Ss(k, m, v, b) : m > 1 ->
 # leaning out the more the farther out it stands.
 decompose Ss(k, m, v, b) : m == 1 && joints > 0 ->
     [ /(k == 0 ? uniform(0, 360) : k * 137.508 + uniform(-25, 25)) &(90)
-      f(clump_radius * sqrt((k + uniform(0.2, 0.8)) / stems)) ^(90) f(-sink)
+      f(clump_radius * sqrt((k + uniform(0.2, 0.8)) / stems)) ^(90) Sk
       &(k == 0 ? lean * rand() : stem_lean * sqrt((k + 0.5) / stems) * uniform(0.7, 1.3))
       J(joint_length * uniform(1 - joint_spread, 1 + joint_spread),
         joint_radius * uniform(0.9, 1.1), 0, v * uniform(0.85, 1.15), 0, 0) ];
 decompose Ss(k, m, v, b) : m == 1 ->
     [ /(k == 0 ? uniform(0, 360) : k * 137.508 + uniform(-25, 25)) &(90)
-      f(clump_radius * sqrt((k + uniform(0.2, 0.8)) / stems)) ^(90) f(-sink)
+      f(clump_radius * sqrt((k + uniform(0.2, 0.8)) / stems)) ^(90) Sk
       &(k == 0 ? lean * rand() : stem_lean * sqrt((k + 0.5) / stems) * uniform(0.7, 1.3))
       A(v * uniform(0.85, 1.15), b, 0, 0, 0, 1) ];
 decompose Ss(k, m, v, b) -> ;
@@ -296,6 +297,14 @@ interpret Fk(n, len, r) : n >= 1 ->
       ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ]
     Fk(n - 1, len, r);
 interpret Fk(n, len, r) -> ;
+# A stem's foot sinks as its contractile roots pull it down, in step
+# with its height curve, the whole depth when full grown, so a seedling
+# sits on the ground and its top always shows (Anderson, The Cactus
+# Family: contractile roots draw Lophophora and many small cacti down
+# until only their tops show).
+interpret Sk ->
+    f(-sink * (seedling * (1 - exp(-age)) + richards(age, height_max, height_rate, height_shape))
+      / (seedling + height_max));
 interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) ->
     ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
     T(0, at < dr ? -1 : 1, 0, elbow * e * len)

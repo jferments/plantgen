@@ -38,7 +38,7 @@
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 10 extends column;
+lsystem cactaceae 11 extends column;
 
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
 param lean = 3;               # most degrees a lone stem leans at its foot, in a random direction

@@ -51,7 +51,7 @@
     },
     "appearance.organs.*.shape.pericarpel": {
       "template": "flower",
-      "map": {"fruit_surface": {"naked": "naked", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny"}},
+      "map": {"fruit_surface": {"naked": "naked", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny", "woolly": "woolly"}},
       "why": "A cactus's ovary is sunk in its stem tissue, the pericarpel, which wears on the flower and on the bud below the closed tepals what it will wear as a fruit: nothing on a pincushion's, broad scales on a barrel's or the saguaro's, felted areoles on a prickly pear's, spiny areoles on a hedgehog's (Anderson, The Cactus Family pp. 27 to 33, 139, 231, 328 and 486)."
     },
     "appearance.organs.*.shape.spines_fall": {
@@ -86,7 +86,7 @@
     },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
-      "map": {"fruit_surface": {"naked": "crowned", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny"}},
+      "map": {"fruit_surface": {"naked": "crowned", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny", "woolly": "woolly"}},
       "why": "A cactus's fruit is its pericarpel grown on, crowned by the dried perianth: naked in a pincushion's, under broad scales in a barrel's or the saguaro's, studded with felted areoles in a prickly pear's, and with spines on those areoles in a hedgehog's, the organ pipe's or a spiny cholla's (Anderson, The Cactus Family pp. 31 to 33)."
     },
     "generator.params.bud_size": {
@@ -104,15 +104,15 @@
       "why": "Nor is any place drawn as fruit all year: this year's flowers become its fruit, and older fruit hang below them in older rings or chains where the species keeps them."
     },
     "appearance.bodies.stem.dome": {
-      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8}},
-      "why": "A cactus stem closes over as many of its tip's radii as its tip's shape says: over a length and a half where it tapers to its apex, a half sphere where it is rounded, and a short shoulder under a broad top."
+      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8, "flat": 0.35}},
+      "why": "A cactus stem closes over as many of its tip's radii as its tip's shape says: over a length and a half where it tapers to its apex, a half sphere where it is rounded, a short shoulder under a broad top, and a low rim round a flat top nearly level with it (Flora of North America's flat-topped Astrophytum asterias and Lophophora)."
     },
     "appearance.bodies.stem.shoulder": {
-      "map": {"stem_apex": {"tapering": 1.4, "rounded": 2.0, "broad": 2.8}},
-      "why": "A tapering tip narrows steadily toward its apex, a rounded one follows a quarter circle, and a broad one keeps its width into a full shoulder before turning in under its flattish top."
+      "map": {"stem_apex": {"tapering": 1.4, "rounded": 2.0, "broad": 2.8, "flat": 3.5}},
+      "why": "A tapering tip narrows steadily toward its apex, a rounded one follows a quarter circle, a broad one keeps its width into a full shoulder before turning in under its flattish top, and a flat one keeps it nearly to the rim of its level top."
     },
     "generator.params.dome": {
-      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8}},
+      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8, "flat": 0.35}},
       "why": "The program sets the crown's ring of flowers on the shoulder of the dome the body draws, so it takes the same length."
     },
     "generator.params.fill": {
@@ -207,6 +207,22 @@
     "appearance.bodies.stem.spines.central.length": {
       "rule": "max(central_spine_length_m) / 1.25",
       "why": "As for the radials: the longest central stands about a quarter above the set's length."
+    },
+    "appearance.bodies.stem.flecks.share": {
+      "map": {"stem_flecks": {"sparse": 0.12, "numerous": 0.3, "covering": 0.85}},
+      "why": "Tufts of white hairs speckle the skin between the areoles as thickly as the flora says: a sparse sprinkle (Flora of North America's Astrophytum asterias, 'sparsely speckled'), numerous specks (its Astrophytum, 'speckled by numerous tufts'), or a cover that hides the skin."
+    },
+    "appearance.bodies.stem.spines.central.curve": {
+      "map": {"central_spine_form": {"straight": 0, "curved": 40, "hooked": 0, "flattened": 0, "twisted": 25}},
+      "why": "A curved central bends back about 40° over its length, as the floras' 'curved' and 'curving' spines of a barrel or a hedgehog do; a twisted one, not drawn twisted, wanders about 25°. A hook is the principal central's (a fishhook's), so the other centrals stay unhooked where the form is hooked."
+    },
+    "appearance.bodies.stem.spines.main.curve": {
+      "map": {"central_spine_form": {"straight": 0, "curved": 40, "hooked": 0, "flattened": 0, "twisted": 25}},
+      "why": "The main central bends as the floras' central spine form says, as the other centrals do."
+    },
+    "appearance.bodies.stem.spines.main.hook": {
+      "map": {"central_spine_form": {"straight": 0, "curved": 0, "hooked": 150, "flattened": 0, "twisted": 0}},
+      "why": "A hooked principal central turns back at its tip as a fishhook does, 120° to 180° (Anderson's Ferocactus wislizeni and Cochemiea), drawn at the middle of that span."
     },
     "appearance.bodies.stem.spines.main.length": {
       "rule": "max(central_spine_length_m) / 1.25",
