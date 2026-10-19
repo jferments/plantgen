@@ -43,6 +43,39 @@
     "seeds": [1]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "twig": {
+          "colour": [128, 72, 52]
+        },
+        "white": {
+          "until_diameter_m": 0.45,
+          "architecture": "stretched",
+          "colour": [198, 201, 182],
+          "roughness": 0.8,
+          "bloom": 0.25,
+          "mottle": {
+            "scale_m": 0.15,
+            "amount": 0.3,
+            "colour": [172, 176, 140]
+          },
+          "warts": {
+            "per_m2": 400,
+            "diameter_m": [0.002, 0.005],
+            "height_m": 0.0008,
+            "colour": [150, 140, 122],
+            "rows": true
+          }
+        },
+        "furrowed": {
+          "on": "base",
+          "colour": [62, 60, 56],
+          "fissures": {
+            "floor_colour": [30, 28, 26]
+          }
+        }
+      }
+    },
     "bark": [0.62, 0.62, 0.55],
     "twig": [0.26,  0.06,  0.026],
     "bark_pattern": {
@@ -109,6 +142,8 @@
     "leaf_apex": {"acuminate": "usually", "acute": "often"}
   },
   "evidence": {
+    "appearance.bark_look.stages.white": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "stage: text: 'greenish or yellowish white to gray and smooth' (FNA); 'roughened by horizontal bands of circular wart-like excrescences' (Sargent); white powder (summary of Rabinowitz & Tripp 2015). Branch-scar eyes come from the mesh, not the tile; until_diameter_m: inferred (photo)"},
+    "appearance.bark_look.stages.furrowed": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "stage: text: 'near the base of old trees nearly black ... deeply divided into broad flat ridges broken on the surface into small appressed plate-like scales' (Sargent); 'shallowly furrowed only basally' (FNA)"},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Populus tremuloides (read 2026-10-18): the leaves \"become golden to yellow, rarely red, in autumn\". Colour ours."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Populus tremuloides: \"slender branchlets covered with scattered oblong orange-colored lenticels, bright red-brown and very lustrous during their first season, gradually turning light gray tinged with red, ultimately dark gray\". Colour chosen by eye for bright red-brown."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's quaking aspen review (Populus tremuloides, read 2026-10-16): \"Quaking aspen is shade intolerant and cannot reproduce beneath its own canopy.\""},

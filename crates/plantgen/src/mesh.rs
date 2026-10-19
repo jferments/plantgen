@@ -3326,6 +3326,7 @@ mod tests {
             bottle: None,
             roots: None,
             bark_pattern: None,
+            bark_look: None,
             leaf_axis: None,
             young_axis: None,
             stem_hairs: None,

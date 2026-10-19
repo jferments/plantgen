@@ -38,6 +38,20 @@
     "seeds": [1, 2]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "young": {
+          "colour": [128, 118, 108]
+        },
+        "mature": {
+          "colour": [74, 52, 40],
+          "fissures": {
+            "floor_colour": [122, 58, 38],
+            "ridge_top_colour": [92, 72, 58]
+          }
+        }
+      }
+    },
     "bark": [0.11, 0.065, 0.045],
     "bark_pattern": {
       "kind": "furrowed",
@@ -126,6 +140,10 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "appearance.bark_look.stages.young.colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "word: 'thin, smooth, gray' (FEIS), 'ashy brown' (Sudworth); sRGB by eye"},
+    "appearance.bark_look.stages.mature.fissures.floor_colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'clear red-brown within' (Sudworth); sRGB by eye"},
+    "appearance.bark_look.stages.mature.fissures.ridge_top_colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'dark brown on the outside' (Sudworth), 'lighter colored with a cork-like texture' (Wikipedia); sRGB by eye"},
+    "appearance.bark_look.stages.mature.colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'dark brown on the outside' (Sudworth)"},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

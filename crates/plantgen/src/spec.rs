@@ -579,6 +579,11 @@ pub struct Appearance {
     /// pixel by pixel on the wood (plant roadmap P4, `crate::bark`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bark_pattern: Option<crate::bark::BarkPattern>,
+    /// The bark in the bark language (`crate::bark_look`): its stages by
+    /// stem diameter, each baked to a tile for export. Where none is
+    /// stated, the bark pattern's ([`Appearance::bark_look`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bark_look: Option<crate::bark_look::BarkSpec>,
     /// How each fleshy body of the program looks, by body name: ribs,
     /// areoles, spines (see [`crate::body`]). Bodies not listed get the
     /// default look.
@@ -600,6 +605,25 @@ impl Appearance {
         self.bark_pattern
             .as_ref()
             .map(|pattern| pattern.params(self.bark))
+    }
+
+    /// The bark look species `id` draws: the one it states, else the one
+    /// made from its bark pattern ([`crate::bark_look::from_pattern`]);
+    /// none for a plant with neither, or a palm's ringed stem.
+    ///
+    /// # Errors
+    ///
+    /// When the stated look's stages do not make a record
+    /// ([`crate::bark_look::BarkSpec::look`]).
+    pub fn bark_look(
+        &self,
+        id: &str,
+    ) -> Result<Option<crate::bark_look::BarkLook>, crate::bark_look::BarkLookError> {
+        match (&self.bark_look, &self.bark_pattern) {
+            (Some(stated), _) => stated.look(id, self.bark).map(Some),
+            (None, Some(pattern)) => Ok(crate::bark_look::from_pattern(id, pattern, self.bark)),
+            (None, None) => Ok(None),
+        }
     }
 
     /// The look of each of a program's organ types, in its declaration
@@ -798,6 +822,10 @@ impl Appearance {
             pattern
                 .validate()
                 .map_err(|message| format!("appearance: {message}"))?;
+        }
+        if let Some(look) = &self.bark_look {
+            look.look("bark_look", self.bark)
+                .map_err(|error| format!("appearance: {error}"))?;
         }
         if let Some(bottle) = &self.bottle {
             bottle

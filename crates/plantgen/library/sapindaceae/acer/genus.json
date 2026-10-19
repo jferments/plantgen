@@ -19,7 +19,43 @@
     "fruit_type": "samara",
     "phyllotaxis_pattern": "decussate"
   },
+  "appearance": {
+    "bark_look": {
+      "thickness": {
+        "coefficient": 0.024
+      },
+      "stages": {
+        "young": {
+          "until_diameter_m": 0.15,
+          "architecture": "stretched",
+          "roughness": 0.75
+        },
+        "mature": {
+          "architecture": "furrowed",
+          "roughness": 0.9,
+          "fissures": {
+            "network": "interlacing",
+            "spacing_m": 0.035,
+            "elongation": 4,
+            "width_share": 0.3,
+            "depth_share": 0.75,
+            "profile": "rounded"
+          },
+          "scales": {
+            "size_m": 0.012,
+            "aspect": 1.0,
+            "depth_m": 0.002,
+            "variation": 0.15,
+            "on_ridges": true
+          }
+        }
+      }
+    }
+  },
   "evidence": {
+    "appearance.bark_look.thickness": {"evidence": "SourceInferred", "source": "ffe-fvs-guide", "note": "The genus's bark thickness as its reference species', acer-macrophyllum (plantgen-claude project-files/bark/records/acer-macrophyllum.json): text: FOFEM 0.024; 'rarely more than 0.5 inch' (FEIS)"},
+    "appearance.bark_look.stages.young": {"evidence": "Authored", "source": "plantgen-authors", "note": "The genus's young stage as its reference species, acer-macrophyllum, shows it (plantgen-claude project-files/bark/records/acer-macrophyllum.json): stage: text: 'smooth and gray-brown on young stems' (USDA, search excerpt); until_diameter_m: inferred (photo)"},
+    "appearance.bark_look.stages.mature": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's mature stage as its reference species, acer-macrophyllum, shows it (plantgen-claude project-files/bark/records/acer-macrophyllum.json): stage: text: 'deeply furrowed and broken on the surface into small square plate-like scales', 'brown faintly tinged with red or bright reddish brown' (Sargent); 'interlacing ridges and furrows' (VT, search excerpt)"},
     "traits.division_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Maple (read 2026-10-16): most maples have palmately veined leaves with three to nine lobes, one per main vein; a few are pinnately compound (box-elder) or pinnately veined. Stated here so maples do not take Sapindales' pinnate."},
     "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, green: the range of the 5 Acer species it tests (bigleaf, black, red, silver, sugar), median typical. A species with its own row states its own."},
     "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, green modulus of rupture: the range of the 5 Acer species it tests (bigleaf, black, red, silver, sugar), median typical. A species with its own row states its own."},

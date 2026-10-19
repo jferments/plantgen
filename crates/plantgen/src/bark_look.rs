@@ -21,9 +21,11 @@
 //! the transcendental functions go through `libm`, so the same record
 //! draws the same bytes on every machine.
 //!
-//! The record is not yet read from species' specs: `plantc bark` draws it
-//! from a file, so the language can be reviewed before it changes any
-//! plant (the bark plan's order).
+//! A species' spec states its bark as a [`BarkSpec`]
+//! (`appearance.bark_look`), its stages keyed by name so a genus can state
+//! them and its species add their colours; a species that states only an
+//! older bark pattern draws one made from it ([`from_pattern`]). `plantc
+//! bark` also draws a record from a file, for review.
 
 use serde::{Deserialize, Serialize};
 
@@ -105,6 +107,8 @@ pub enum Architecture {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Stage {
+    /// Its name; in a spec, its key in [`BarkSpec::stages`].
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     pub name: String,
     /// The stem diameter where the next stage takes over, metres.
     #[serde(default)]
@@ -112,8 +116,10 @@ pub struct Stage {
     #[serde(default)]
     pub on: On,
     pub architecture: Architecture,
-    /// The outer surface's colour, sRGB.
-    pub colour: [u8; 3],
+    /// The outer surface's colour, sRGB. A record states it; a spec may
+    /// leave it to the species' bark colour ([`BarkSpec::look`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub colour: Option<[u8; 3]>,
     /// PBR roughness of the surface.
     #[serde(default = "matte")]
     pub roughness: f64,
@@ -134,6 +140,15 @@ pub struct Stage {
     pub warts: Option<Bumps>,
     #[serde(default)]
     pub blisters: Option<Bumps>,
+}
+
+impl Stage {
+    /// The outer surface's colour, sRGB (mid grey where a record that
+    /// failed its check left it out).
+    #[must_use]
+    pub fn surface(&self) -> [u8; 3] {
+        self.colour.unwrap_or([128, 128, 128])
+    }
 }
 
 const fn matte() -> f64 {
@@ -362,6 +377,12 @@ impl BarkLook {
         let mut last = 0.0;
         for (index, stage) in self.stages.iter().enumerate() {
             let final_stage = index + 1 == self.stages.len();
+            if stage.name.is_empty() {
+                return fail(format!("stage {index} has no name"));
+            }
+            if stage.colour.is_none() {
+                return fail(format!("stage {} has no colour", stage.name));
+            }
             match (stage.until_diameter_m, final_stage) {
                 (Some(_), true) => return fail(format!("the last stage, {}, ends", stage.name)),
                 (None, false) => return fail(format!("stage {} has no end", stage.name)),
@@ -428,6 +449,263 @@ impl BarkLook {
             })
             .collect()
     }
+}
+
+/// A species' bark as its spec states it (`appearance.bark_look`): the
+/// record without its id, schema and evidence, its stages keyed by name so
+/// that the files of a species' chain merge stage by stage ([`crate::inherit`]):
+/// a genus states the stages its species pass through and how each breaks
+/// up, and a species adds its colours, a stage of its own, or `null` for
+/// one it lacks. A stage with no colour is the species' bark colour.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BarkSpec {
+    pub thickness: Thickness,
+    pub stages: std::collections::BTreeMap<String, Stage>,
+}
+
+impl BarkSpec {
+    /// The record it states for species `id` whose bark is `bark` (linear
+    /// RGB): its stages in order of where they end, the one that never
+    /// ends last, each named by its key, checked.
+    ///
+    /// # Errors
+    ///
+    /// When two stages end at the same diameter, more than one never ends,
+    /// or a value is out of range.
+    pub fn look(&self, id: &str, bark: [f32; 3]) -> Result<BarkLook, BarkLookError> {
+        let colour = srgb8(bark);
+        let mut stages: Vec<Stage> = self
+            .stages
+            .iter()
+            .map(|(name, stage)| Stage {
+                name: name.clone(),
+                colour: stage.colour.or(Some(colour)),
+                ..stage.clone()
+            })
+            .collect();
+        stages.sort_by(|a, b| {
+            let end = |stage: &Stage| stage.until_diameter_m.unwrap_or(f64::INFINITY);
+            end(a).total_cmp(&end(b))
+        });
+        if let [.., before, last] = stages.as_slice()
+            && before.until_diameter_m.is_none()
+        {
+            return Err(BarkLookError(format!(
+                "{id}: stages {} and {} both never end",
+                before.name, last.name
+            )));
+        }
+        if stages.windows(2).any(|pair| {
+            pair[0].until_diameter_m.is_some()
+                && pair[0].until_diameter_m == pair[1].until_diameter_m
+        }) {
+            return Err(BarkLookError(format!(
+                "{id}: two stages end at one diameter"
+            )));
+        }
+        let look = BarkLook {
+            schema: BARK_LOOK_SCHEMA,
+            id: id.to_owned(),
+            thickness: self.thickness.clone(),
+            stages,
+            evidence: std::collections::BTreeMap::new(),
+        };
+        look.check()?;
+        Ok(look)
+    }
+
+    /// The spec form of a record: its stages keyed by name.
+    #[must_use]
+    pub fn of(look: &BarkLook) -> Self {
+        Self {
+            thickness: look.thickness.clone(),
+            stages: look
+                .stages
+                .iter()
+                .map(|stage| {
+                    (
+                        stage.name.clone(),
+                        Stage {
+                            name: String::new(),
+                            ..stage.clone()
+                        },
+                    )
+                })
+                .collect(),
+        }
+    }
+}
+
+/// An sRGB colour from a linear one.
+fn srgb8(colour: [f32; 3]) -> [u8; 3] {
+    colour.map(|c| crate::texture::linear_to_srgb(f64::from(c)))
+}
+
+/// A linear colour `amount` of the way to `to` (linear), as sRGB.
+fn toward(colour: [f32; 3], to: [f64; 3], amount: f64) -> [u8; 3] {
+    let mut out = [0; 3];
+    for (k, channel) in out.iter_mut().enumerate() {
+        let c = f64::from(colour[k]);
+        *channel = crate::texture::linear_to_srgb(c + (to[k] - c) * amount);
+    }
+    out
+}
+
+/// The library's bark look for a species whose spec states a bark pattern
+/// ([`crate::bark::BarkPattern`]) and no bark look: the drawing rule that
+/// turns the six pattern kinds into the bark language, so every woody
+/// species draws baked bark until its genus states its own. A pattern smooth
+/// below a radius is smooth (`young`) on stems thinner than three times
+/// it, halfway through the pattern's own grow-in; the pattern's cells are
+/// the ridges, plates, scales or strips, its fissure share their floors,
+/// its depth their share of the bark's thickness (FOFEM's middle
+/// coefficient, 0.03 of the diameter), its contrast how much darker the
+/// floors are, its variation a mottle three cells across, and its lenticels
+/// horizontal dashes on the smooth bark. Ringed bark (a palm's leaf scars)
+/// has none: its rings are the stem's nodes, not a tile.
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn from_pattern(
+    id: &str,
+    pattern: &crate::bark::BarkPattern,
+    bark: [f32; 3],
+) -> Option<BarkLook> {
+    use crate::bark::BarkKind;
+    let colour = srgb8(bark);
+    let floor = toward(bark, [0.0; 3], 0.7 * pattern.contrast);
+    let paler = toward(bark, [0.8, 0.75, 0.65], 0.45);
+    let mottle = (pattern.variation > 0.0).then_some(Mottle {
+        scale_m: 3.0 * pattern.scale,
+        amount: pattern.variation,
+        colour: None,
+    });
+    let lenticels = (pattern.lenticels > 0.0).then(|| Lenticels {
+        shape: LenticelShape::Dash,
+        horizontal: true,
+        length_m: [0.002, 0.006],
+        width_ratio: 0.25,
+        per_m2: pattern.lenticels,
+        relief_m: 0.0002,
+        colour: paler,
+        stretch: false,
+        formed_diameter_m: formed(),
+        rows: false,
+    });
+    let fissures = |network: Network, profile: Profile| Fissures {
+        network,
+        spacing_m: pattern.scale,
+        elongation: pattern.elongation.max(0.5),
+        width_share: pattern.fissure.clamp(0.02, 0.6),
+        depth_share: pattern.depth.clamp(0.0, 1.0),
+        profile,
+        cross_ridges: 0.0,
+        floor_colour: Some(floor),
+        ridge_top_colour: None,
+        grain: if pattern.roughness > 0.0 {
+            pattern.roughness
+        } else {
+            grain()
+        },
+    };
+    let inner = pattern
+        .inner
+        .map_or(toward(bark, [0.55, 0.25, 0.12], 0.5), srgb8);
+    let stage = |name: &str, architecture: Architecture| Stage {
+        name: name.to_owned(),
+        until_diameter_m: None,
+        on: On::All,
+        architecture,
+        colour: Some(colour),
+        roughness: matte(),
+        bloom: 0.0,
+        mottle: mottle.clone(),
+        fissures: None,
+        scales: None,
+        exfoliation: None,
+        lenticels: None,
+        warts: None,
+        blisters: None,
+    };
+    let grown = match pattern.kind {
+        BarkKind::Ringed => return None,
+        BarkKind::Smooth => Stage {
+            roughness: 0.6,
+            lenticels: lenticels.clone(),
+            ..stage("smooth", Architecture::Stretched)
+        },
+        BarkKind::Furrowed => Stage {
+            fissures: Some(fissures(Network::Interlacing, Profile::Rounded)),
+            ..stage("furrowed", Architecture::Furrowed)
+        },
+        BarkKind::Plated => Stage {
+            fissures: Some(fissures(Network::Tessellated, Profile::FlatTopped)),
+            ..stage("plated", Architecture::Furrowed)
+        },
+        BarkKind::Scaly => Stage {
+            fissures: Some(Fissures {
+                depth_share: (0.5 * pattern.depth).clamp(0.0, 1.0),
+                ..fissures(Network::Reticulate, Profile::Rounded)
+            }),
+            scales: Some(Scales {
+                size_m: 0.5 * pattern.scale,
+                aspect: pattern.elongation.clamp(0.5, 3.0),
+                depth_m: 0.002,
+                variation: scale_variation(),
+                on_ridges: false,
+            }),
+            ..stage("scaly", Architecture::Peeling)
+        },
+        BarkKind::Fibrous => Stage {
+            fissures: Some(fissures(Network::Longitudinal, Profile::FlatTopped)),
+            exfoliation: Some(Exfoliation {
+                mode: Mode::FibrousStrips,
+                piece_m: pattern.scale * pattern.elongation,
+                aspect: pattern.elongation.max(1.0),
+                cover: 0.25,
+                curl_m: 0.0015,
+                inner_colour: inner,
+                aged: Vec::new(),
+            }),
+            ..stage("fibrous", Architecture::Peeling)
+        },
+        BarkKind::Peeling => Stage {
+            roughness: 0.5,
+            exfoliation: Some(Exfoliation {
+                mode: Mode::Patches,
+                piece_m: pattern.scale * pattern.elongation.max(1.0),
+                aspect: pattern.elongation.clamp(1.0, 6.0),
+                cover: pattern.peeled.clamp(0.0, 1.0),
+                curl_m: 0.0008,
+                inner_colour: inner,
+                aged: Vec::new(),
+            }),
+            ..stage("peeling", Architecture::Exfoliating)
+        },
+    };
+    let mut stages = Vec::new();
+    if pattern.smooth_below > 0.0 && pattern.kind != BarkKind::Smooth {
+        stages.push(Stage {
+            until_diameter_m: Some(3.0 * pattern.smooth_below),
+            roughness: 0.7,
+            lenticels,
+            ..stage("young", Architecture::Stretched)
+        });
+    }
+    stages.push(grown);
+    let look = BarkLook {
+        schema: BARK_LOOK_SCHEMA,
+        id: id.to_owned(),
+        thickness: Thickness {
+            coefficient: Some(0.03),
+            power: None,
+            min_m: 0.0,
+            max_m: None,
+        },
+        stages,
+        evidence: std::collections::BTreeMap::new(),
+    };
+    look.check().ok().map(|()| look)
 }
 
 /// One stage drawn as a square tile.
@@ -660,7 +938,7 @@ pub fn bake(
 ) -> Tile {
     let draws = Draws(hash_words(&[seed, 0x6261_726b]));
     let thickness = look.thickness.at(diameter);
-    let surface = linear(stage.colour);
+    let surface = linear(stage.surface());
     let texel_m = period / crate::texture::to_f64(size);
     let mut texels = Vec::with_capacity(size * size);
     for row in 0..size {
@@ -1503,7 +1781,7 @@ mod tests {
         let stage = &look.stages[1];
         let draws = Draws(5);
         let period = 0.5;
-        let surface = linear(stage.colour);
+        let surface = linear(stage.surface());
         for k in 0..40 {
             let (x, y) = (0.0123 * f64::from(k), 0.0371 * f64::from(k) % period);
             let at = |x, y| draw(stage, draws, 0.05, 0.8, period, surface, x, y);
@@ -1553,5 +1831,85 @@ mod tests {
         assert_eq!(width, 2);
         let most = uvs.chunks(2).map(|uv| uv[0]).fold(0.0, f64::max);
         assert!((most - 6.0).abs() < 1.0e-6, "{most}");
+    }
+
+    #[test]
+    fn a_spec_s_stages_are_ordered_by_where_they_end() {
+        let spec: BarkSpec = serde_json::from_str(
+            r#"{"thickness": {"coefficient": 0.05},
+                "stages": {"old": {"architecture": "furrowed",
+                                   "fissures": {"network": "interlacing", "spacing_m": 0.05,
+                                                "elongation": 4, "width_share": 0.3,
+                                                "depth_share": 0.6, "profile": "rounded"}},
+                           "twig": {"until_diameter_m": 0.01, "architecture": "stretched",
+                                    "colour": [10, 20, 30]},
+                           "young": {"until_diameter_m": 0.2, "architecture": "stretched"}}}"#,
+        )
+        .unwrap();
+        let look = spec.look("x", [0.2, 0.1, 0.05]).unwrap();
+        let names: Vec<&str> = look
+            .stages
+            .iter()
+            .map(|stage| stage.name.as_str())
+            .collect();
+        assert_eq!(names, ["twig", "young", "old"]);
+        // A stage with no colour is the bark's.
+        assert_eq!(look.stages[0].colour, Some([10, 20, 30]));
+        let bark = [0.2_f32, 0.1, 0.05].map(|c| crate::texture::linear_to_srgb(f64::from(c)));
+        assert_eq!(look.stages[2].colour, Some(bark));
+        assert_eq!(BarkSpec::of(&look).look("x", [0.0; 3]).unwrap(), look);
+        // Two stages that never end, or end together, are no record.
+        let mut two = spec.clone();
+        two.stages.get_mut("young").unwrap().until_diameter_m = None;
+        assert!(two.look("x", [0.5; 3]).unwrap_err().0.contains("never end"));
+        let mut together = spec;
+        together.stages.get_mut("young").unwrap().until_diameter_m = Some(0.01);
+        assert!(
+            together
+                .look("x", [0.5; 3])
+                .unwrap_err()
+                .0
+                .contains("one diameter")
+        );
+    }
+
+    #[test]
+    fn every_bark_pattern_makes_a_look() {
+        use crate::bark::{BarkKind, BarkPattern};
+        let kinds = [
+            BarkKind::Furrowed,
+            BarkKind::Plated,
+            BarkKind::Fibrous,
+            BarkKind::Scaly,
+            BarkKind::Smooth,
+            BarkKind::Peeling,
+        ];
+        for kind in kinds {
+            let pattern = BarkPattern {
+                kind,
+                lenticels: 200.0,
+                peeled: 0.4,
+                ..BarkPattern::default()
+            };
+            let look = from_pattern("x", &pattern, [0.3, 0.2, 0.15]).unwrap();
+            // Smooth below 2 cm across a little over 6 cm, then the pattern.
+            let last = look.stages.last().unwrap();
+            if kind == BarkKind::Smooth {
+                assert_eq!(look.stages.len(), 1);
+                assert!(last.lenticels.is_some());
+            } else {
+                assert_eq!(look.stages.len(), 2, "{kind:?}");
+                assert!((look.stages[0].until_diameter_m.unwrap() - 0.06).abs() < 1.0e-12);
+                assert!(look.stages[0].lenticels.is_some());
+            }
+            let tile = bake(&look, last, 0.4, 32, period_for(0.4, 0.3), 1);
+            let (low, high) = tile.relief();
+            assert!(high >= low, "{kind:?}");
+        }
+        let ringed = BarkPattern {
+            kind: BarkKind::Ringed,
+            ..BarkPattern::default()
+        };
+        assert!(from_pattern("x", &ringed, [0.3; 3]).is_none());
     }
 }

@@ -7,7 +7,63 @@
     "sexual_system": "monoecious",
     "cone_maturation_years": 1
   },
+  "appearance": {
+    "bark_look": {
+      "thickness": {
+        "coefficient": 0.035,
+        "min_m": 0.004,
+        "max_m": 0.025
+      },
+      "stages": {
+        "young": {
+          "until_diameter_m": 0.6,
+          "architecture": "peeling",
+          "roughness": 0.9,
+          "fissures": {
+            "network": "longitudinal",
+            "spacing_m": 0.035,
+            "elongation": 12,
+            "width_share": 0.15,
+            "depth_share": 0.3,
+            "profile": "flat_topped"
+          },
+          "exfoliation": {
+            "mode": "fibrous_strips",
+            "piece_m": 0.6,
+            "aspect": 40,
+            "cover": 0.3,
+            "curl_m": 0.002,
+            "inner_colour": [165, 92, 60]
+          }
+        },
+        "old": {
+          "architecture": "peeling",
+          "roughness": 0.9,
+          "fissures": {
+            "network": "interlacing",
+            "spacing_m": 0.05,
+            "elongation": 10,
+            "width_share": 0.2,
+            "depth_share": 0.3,
+            "profile": "rounded",
+            "cross_ridges": 0.6
+          },
+          "exfoliation": {
+            "mode": "fibrous_strips",
+            "piece_m": 0.15,
+            "aspect": 12,
+            "cover": 0.25,
+            "curl_m": 0.0015,
+            "inner_colour": [160, 90, 60]
+          }
+        }
+      }
+    }
+  },
   "evidence": {
+    "appearance.bark_look.thickness": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "The genus's bark thickness as its reference species', thuja-plicata (plantgen-claude project-files/bark/records/thuja-plicata.json): text: 10-25 mm (FNA); 'even on old trunks, is thin' (Sudworth); cap from the floras"},
+    "appearance.bark_look.stages.young": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "The genus's young stage as its reference species, thuja-plicata, shows it (plantgen-claude project-files/bark/records/thuja-plicata.json): until_diameter_m: inferred (photo): no source gives where flat ridges turn rounded; fissures: text: 'distinctly but shallowly seamed, with narrow ridges which ... on younger trees flat' (Sudworth); exfoliation: text: 'separated into long, thin strips on younger trees' (Sudworth)"},
+    "appearance.bark_look.stages.old": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "The genus's old stage as its reference species, thuja-plicata, shows it (plantgen-claude project-files/bark/records/thuja-plicata.json): fissures: text: 'in old trunks are rounded ... connected at short intervals by thinner diagonal ridges and fibers' (Sudworth); exfoliation: text: 'into shorter scales on old trunks' (Sudworth)"},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

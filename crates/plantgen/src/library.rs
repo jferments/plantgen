@@ -3313,13 +3313,12 @@ mod tests {
         // A nearer file may narrow a wider one: bark stated for the
         // genus, and a herbaceous species in it, has no bark.
         let folder = Folder::new("narrowed-ruled-out");
-        folder.write(
-            "library/sapindaceae/acer/genus.json",
-            r#"{"schema": 1, "rank": "genus", "name": "Acer",
-                "traits": {"bark_texture": "smooth"},
-                "evidence": {"traits": {"evidence": "Authored",
-                    "source": "plantgen-authors", "note": "Test."}}}"#,
-        );
+        // The genus as built in (its species state only what they add to
+        // its bark look), with bark stated.
+        let mut genus: serde_json::Value =
+            serde_json::from_str(include_str!("../library/sapindaceae/acer/genus.json")).unwrap();
+        genus["traits"]["bark_texture"] = serde_json::json!("smooth");
+        folder.write("library/sapindaceae/acer/genus.json", &genus.to_string());
         let mut own: serde_json::Value = serde_json::from_str(source("acer-circinatum")).unwrap();
         own["traits"] = serde_json::json!({"woodiness": "herbaceous"});
         own["evidence"]["traits"] = serde_json::json!({"evidence": "Authored",

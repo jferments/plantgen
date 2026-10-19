@@ -58,6 +58,19 @@
     "seeds": [1, 2]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "young": {
+          "colour": [122, 112, 96]
+        },
+        "mature": {
+          "colour": [112, 80, 62],
+          "fissures": {
+            "floor_colour": [56, 38, 30]
+          }
+        }
+      }
+    },
     "bark": [0.13, 0.11, 0.085],
     "bark_pattern": {
       "kind": "furrowed",

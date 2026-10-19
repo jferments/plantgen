@@ -61,6 +61,16 @@
     "seeds": [1]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "cane": {
+          "colour": [112, 50, 40]
+        },
+        "old wood": {
+          "colour": [130, 125, 118]
+        }
+      }
+    },
     "bark": [0.35, 0.15, 0.1],
     "foliage": [0.07, 0.15, 0.04],
     "foliage_shade": [0.022, 0.045, 0.012],

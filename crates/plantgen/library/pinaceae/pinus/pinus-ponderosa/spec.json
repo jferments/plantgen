@@ -43,6 +43,44 @@
     "seeds": [1]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "twig": {
+          "colour": [150, 85, 48]
+        },
+        "blackjack": {
+          "until_diameter_m": 0.6,
+          "architecture": "furrowed",
+          "colour": [56, 40, 34],
+          "roughness": 0.9,
+          "fissures": {
+            "network": "longitudinal",
+            "spacing_m": 0.03,
+            "elongation": 6,
+            "width_share": 0.2,
+            "depth_share": 0.6,
+            "profile": "rounded",
+            "floor_colour": [28, 21, 19]
+          }
+        },
+        "plates": {
+          "architecture": "peeling",
+          "colour": [178, 108, 62],
+          "fissures": {
+            "spacing_m": 0.15,
+            "elongation": 2.0,
+            "depth_share": 0.85,
+            "floor_colour": [24, 19, 17],
+            "ridge_top_colour": [192, 128, 78]
+          },
+          "scales": {
+            "size_m": 0.025,
+            "depth_m": 0.003,
+            "variation": 0.22
+          }
+        }
+      }
+    },
     "bark": [0.38, 0.2, 0.1],
     "bark_pattern": {
       "kind": "plated",
@@ -117,6 +155,10 @@
     "leaf_margin": "serrate"
   },
   "evidence": {
+    "appearance.bark_look.stages.blackjack": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "until_diameter_m: text: 'Younger trees, up to 2 feet in diameter ... blackish, narrowly furrowed' (Sudworth); fissures.width_share: word: 'narrowly furrowed'; fissures.spacing_m: inferred (photo)"},
+    "appearance.bark_look.stages.plates.fissures.floor_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "text: 'black crevices' (Wikipedia)"},
+    "appearance.bark_look.stages.plates.colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'yellow to orange-red', 'russet-red' (Wikipedia, Sudworth); sRGB by eye"},
+    "appearance.bark_look.stages.plates": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "fissures.network: text: 'cross-checked into broadly rectangular, scaly plates' (FNA); fissures.spacing_m: word: 'very broad, shield-like' plates (Sudworth); size inferred (photo); scales: text: 'made up of small, concave scales' (Sudworth); size inferred under Junikka's 7.5 cm"},
     "generator.params.pipe_tip": {
       "evidence": "SourceInferred",
       "source": "farjon-2017",

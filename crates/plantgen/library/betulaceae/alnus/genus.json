@@ -8,7 +8,55 @@
     "phyllotaxis_pattern": {"tristichous": "usually", "distichous": "sometimes"},
     "flowering_position": "lateral"
   },
+  "appearance": {
+    "bark_look": {
+      "thickness": {
+        "coefficient": 0.026,
+        "max_m": 0.012
+      },
+      "stages": {
+        "grey": {
+          "until_diameter_m": 0.4,
+          "architecture": "stretched",
+          "roughness": 0.8,
+          "mottle": {
+            "scale_m": 0.12,
+            "amount": 0.5,
+            "colour": [190, 190, 184]
+          },
+          "warts": {
+            "per_m2": 3000,
+            "diameter_m": [0.0008, 0.0016],
+            "height_m": 0.0003
+          },
+          "lenticels": {
+            "shape": "dash",
+            "length_m": [0.002, 0.004],
+            "width_ratio": 0.3,
+            "per_m2": 150,
+            "colour": [140, 138, 130]
+          }
+        },
+        "plated base": {
+          "on": "base",
+          "architecture": "furrowed",
+          "roughness": 0.9,
+          "fissures": {
+            "network": "tessellated",
+            "spacing_m": 0.06,
+            "elongation": 1.6,
+            "width_share": 0.1,
+            "depth_share": 0.3,
+            "profile": "flat_topped"
+          }
+        }
+      }
+    }
+  },
   "evidence": {
+    "appearance.bark_look.thickness": {"evidence": "SourceInferred", "source": "ffe-fvs-guide", "note": "The genus's bark thickness as its reference species', alnus-rubra (plantgen-claude project-files/bark/records/alnus-rubra.json): text: FOFEM 0.026; 'rarely more than 1/4 inch' (Sargent), <1.9 cm (FEIS)"},
+    "appearance.bark_look.stages.grey": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's grey stage as its reference species, alnus-rubra, shows it (plantgen-claude project-files/bark/records/alnus-rubra.json): stage: text: 'gray, smooth ... lenticels inconspicuous' (FNA); 'roughened by minute wart-like excrescences, pale gray or nearly white' (Sargent); mottled (FEIS). White lichen is habitat, not bark; until_diameter_m: inferred (photo)"},
+    "appearance.bark_look.stages.plated base": {"evidence": "SourceInferred", "source": "fna-online", "note": "The genus's plated base stage as its reference species, alnus-rubra, shows it (plantgen-claude project-files/bark/records/alnus-rubra.json): stage: text: 'darkening and breaking into shallow rectangular plates in age' (FNA)"},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Alnus (gwddagg_v2.2_genus.csv, read): specific gravity 0.47 (wsg_est, the hierarchical-model genus mean, from 567 records in 40 sources); trunks 0.47, branches 0.47. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",

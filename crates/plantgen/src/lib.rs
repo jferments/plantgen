@@ -996,4 +996,12 @@ pub mod venation;
 /// pericarpel shortened to the ovary's swelling; a column stem's sink follows
 /// its height curve, so a seedling's top shows (142 is palm
 /// trunks, #240).
-pub const GENERATOR_REVISION: u32 = 143;
+/// 145: a species' spec states its bark in the bark language
+/// (`appearance.bark_look`, `crate::bark_look`): stages by stem diameter,
+/// keyed by name so a genus states how its bark breaks up and its species
+/// add their colours; eleven reference genera state theirs (Acer, Alnus,
+/// Arbutus, Betula, Pinus, Populus, Prunus, Pseudotsuga, Quercus, Rosa,
+/// Thuja), and every other species with a bark pattern draws a look made
+/// from it; `plantc export --bark-look spec` bakes it (144 is growth forms,
+/// #244).
+pub const GENERATOR_REVISION: u32 = 145;

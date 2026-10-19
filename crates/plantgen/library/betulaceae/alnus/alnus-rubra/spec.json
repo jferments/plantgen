@@ -50,6 +50,19 @@
     "seeds": [1]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "grey": {
+          "colour": [150, 150, 145]
+        },
+        "plated base": {
+          "colour": [112, 110, 104],
+          "fissures": {
+            "floor_colour": [60, 58, 55]
+          }
+        }
+      }
+    },
     "bark": [0.38, 0.37, 0.33],
     "twig": [0.22,  0.06,  0.03],
     "bark_pattern": {
