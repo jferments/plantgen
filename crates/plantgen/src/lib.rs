@@ -1046,4 +1046,11 @@ pub mod venation;
 /// its leader passes `ring_share` of its full height; and the top whorls'
 /// branch shoots lengthen over `top_ramp` years of the leader's growth in
 /// place of a fixed depth (146 is nightshades round 5, #233).
-pub const GENERATOR_REVISION: u32 = 147;
+/// 148: a depressed cactus top sinks to a pit at its centre, with its
+/// crown's flowers and fruit set down into it (`stem_apex` depressed,
+/// body and program `pit`: Lophophora); an apex's woolly cap reaches only
+/// the apical region, three fifths of the tip's radius, not the whole top
+/// of a rounded or broad stem; twisted centrals turn about their length
+/// (new trait `central_spines_twisted`, spine `twist`) (147 is old
+/// conifers, #251).
+pub const GENERATOR_REVISION: u32 = 148;
