@@ -289,8 +289,6 @@ fit, see-through, width to height, where the crown is widest, solidity
 and large gaps. What covers the sky inside the outline is read from the
 image (`--cover sky`: bright bluish or colourless pixels are sky). The
 analyzer is plantc's commit, so a change to the measures measures again.
-`plantc measure-mask` arrives with #235; until it lands, build plantc from
-that branch.
 
 ## Render and compare
 
