@@ -4,13 +4,19 @@
   "name": "Dicentra",
   "traits": {
     "stamens": 6,
-    "carpels": 2
+    "carpels": 2,
+    "petal_whorls": 2
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, Fumariaceae: stamens 6, in 2 sets of 3 opposite the outer petals, the filaments of each set usually united; capsule 1-celled with 2 parietal placentae; corolla 2-spurred or 2-saccate at base, the petals of Dicentra formosa united to above the middle."
+    },
+    "traits.petal_whorls": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3, Fumariaceae (read 2026-10-19): petals 4, in 2 dissimilar pairs, the outer pair swollen or spurred at the base, the inner pair narrower, clawed and crested; drawn as two whorls of two."
     }
   }
 }
