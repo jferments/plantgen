@@ -1184,15 +1184,16 @@ fn lobe_flank(share: f64, round: f64) -> f64 {
 }
 
 /// A pinnately lobed leaf's outline over its lobes' tips, at `t` along
-/// its blade: its half-width as a share of its widest.
-pub(crate) fn lobed_envelope(t: f64) -> f64 {
-    blade_profile(t, 0.55, 0.35, 0.3)
+/// its blade: its half-width as a share of its widest; `outline` where its
+/// look draws one ([`Lobed::outline`]).
+pub(crate) fn lobed_envelope(outline: Option<&[[f64; 2]]>, t: f64) -> f64 {
+    outline_profile(outline, t, 0.55, 0.35, 0.3)
 }
 
 /// A pinnately lobed leaf's half-width at `t` along its blade of `length`
 /// card units, with the lobes of its side's `margin` if given.
 fn lobed_width(s: &Lobed, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
-    let envelope = lobed_envelope(t);
+    let envelope = lobed_envelope(s.outline.as_deref(), t);
     let mut sinus = 1.0;
     if let Some(margin) = margin
         && (LOBES.0..LOBES.1).contains(&t)
@@ -3620,6 +3621,21 @@ fn one_fruit(
                 return Paint::EMPTY;
             }
             Paint::solid(0.5 + 0.55 * bump + 0.25 * math::sqrt(1.0 - d), 0.0)
+        }
+        FruitKind::Achenes => {
+            // Achenes in offset rows, small dark flecks on the flesh.
+            let d = ellipse(0.5, 0.5, 1.0);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            let cell = 0.16;
+            let row = (t * 0.5 / cell * (length / half_width)).floor();
+            let offset = if row % 2.0 == 0.0 { 0.0 } else { 0.5 };
+            let fu = frac(t * 0.5 / cell * (length / half_width));
+            let fv = frac(v / (2.0 * cell) + offset);
+            let fleck = (fu - 0.5).powi(2) + (fv - 0.5).powi(2) < 0.04 && t > 0.1;
+            let shade = ball(d, 0.5, 0.5);
+            Paint::solid(if fleck { shade * 0.55 } else { shade }, 0.0)
         }
         FruitKind::Hip => {
             let d = ellipse(0.4, 0.4, 1.0);

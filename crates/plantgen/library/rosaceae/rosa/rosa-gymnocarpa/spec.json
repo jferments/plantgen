@@ -1,0 +1,366 @@
+{
+  "schema": 1,
+  "id": "rosa-gymnocarpa",
+  "taxon": {
+    "scientific_name": "Rosa gymnocarpa",
+    "common_name": "baldhip rose",
+    "family": "Rosaceae",
+    "genus": "Rosa",
+    "plant_name_id": 2970079
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 1.3,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1.5,
+      "high": 2.5
+    },
+    "height_max_m": 2.5,
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.1,
+      "low": 0.02,
+      "high": 0.17
+    },
+    "leaf_width_m": {
+      "min": 0.03,
+      "max": 0.06,
+      "low": 0.015,
+      "high": 0.08
+    },
+    "leaflets": {
+      "min": 7,
+      "max": 9,
+      "low": 5,
+      "high": 11
+    },
+    "leaflet_length_m": {
+      "min": 0.01,
+      "max": 0.04,
+      "low": 0.004,
+      "high": 0.06
+    },
+    "leaflet_width_m": {
+      "min": 0.01,
+      "max": 0.02,
+      "low": 0.004,
+      "high": 0.04
+    },
+    "leaf_shape": "elliptic",
+    "leaf_apex": "obtuse",
+    "leaf_margin": "serrate",
+    "inflorescence": "corymb",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 3
+    },
+    "pedicel_length_m": {
+      "min": 0.015,
+      "max": 0.025,
+      "low": 0.01,
+      "high": 0.035
+    },
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "petal_length_m": {
+      "min": 0.008,
+      "max": 0.015
+    },
+    "sepal_length_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "flower_colour": [
+      214,
+      70,
+      130
+    ],
+    "stamens": 57,
+    "carpels": {
+      "min": 3,
+      "max": 12,
+      "high": 16
+    },
+    "fruit_size_m": {
+      "min": 0.007,
+      "max": 0.015
+    },
+    "fruit_width_m": {
+      "min": 0.005,
+      "max": 0.013
+    },
+    "fruit_shape": "ellipsoid",
+    "fruit_colour_ripe": [
+      220,
+      36,
+      30
+    ],
+    "calyx_in_fruit": "falling",
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ],
+    "stem_clump": "few",
+    "spine_length_m": {
+      "min": 0.002,
+      "max": 0.008,
+      "high": 0.01
+    },
+    "bark_colour": [
+      128,
+      60,
+      44
+    ],
+    "leaf_colour": [
+      70,
+      120,
+      45
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): stems erect, slender, mostly 3-15 dm (1-25 dm at the extremes)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): stems to 25 dm at most."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): leaves 4-10 cm (2-17 cm at the extremes)."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): leaflets 5-9 (to 11); 7-9 in var. gymnocarpa."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa var. gymnocarpa (eFloras, read 2026-10-19): leaves 3-6 cm wide (1.5-8 at the extremes)."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): terminal leaflet blade 10-40 mm long (4-60 at the extremes)."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): terminal leaflet blade 10-20 mm wide (4-40 at the extremes)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): leaflet blades elliptic to obovate or ovate, membranous."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): leaflet apex obtuse, sometimes nearly acute."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): leaflet margins doubly serrate, 7-13 gland-tipped teeth a side."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): inflorescences corymbs, usually of 1-3 flowers."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): corymbs usually 1-3-flowered."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): pedicels slender, 15-25 mm (10-35)."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): flowers 1.5-3 cm across."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): petals 8-15 mm long."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): sepals lanceolate, 5-10 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): petals deep pink; sRGB by eye for the word."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): stamens about 57."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): carpels 3-12 (to 16)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): hips 7-15 mm long."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): hips 5-13 mm wide."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): hips irregularly ellipsoid to nearly globose."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): hips scarlet; sRGB by eye for the word."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): sepals, styles and the top of the receptacle fall together from the ripe hip along a clean ring (hence baldhip)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa var. gymnocarpa (eFloras, read 2026-10-19): flowering April to July (from February)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: hips ripe August to October."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): shrubs, usually loosely clustered: a few slender stems."
+    },
+    "traits.spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): prickles below the stipules 0-2, erect, slender, 2-8 (to 10) mm."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa (eFloras, read 2026-10-19): bark reddish brown with age; sRGB by eye for the words."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rosa gymnocarpa var. gymnocarpa (eFloras, read 2026-10-19): leaflets usually bright green, dull above; sRGB by eye for the words."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a slender, loosely branched shrub of the forest shade with reddish-brown stems, bright green leaves of small rounded leaflets, and small deep-pink single roses."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.3 m tall at 10 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Rosaceae thread (2026-10-19): characters from Flora of North America vol. 9 and Flora of China vol. 9; the drawing comes from the library's rules for those characters."
+  }
+}

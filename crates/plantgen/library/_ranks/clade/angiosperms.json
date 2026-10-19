@@ -155,6 +155,16 @@
       "map": {"stem_clump": {"few": 0.1, "many": 0.2, "thicket": 0.6}},
       "why": "A clump's stems rise close round its crown at the ground, a few or many within a fifth of the crown's radius; a thicket's come up from roots and rhizomes running out under most of it."
     },
+    "generator.params.stem_life": {
+      "needs": ["stem_life_years"],
+      "rule": "max(stem_life_years)",
+      "why": "A clump's or thicket's stems that floras say live only a few years (biennial canes) die back whole at the longest age they give, a thimbleberry's most at two and some at three (FEIS, Gucker 2012), so the clump never holds a stem older than that."
+    },
+    "generator.params.sucker_rate": {
+      "needs": ["stem_life_years"],
+      "rule": "max(1, round(suckers / max(stem_life_years)))",
+      "why": "Where its stems die young the base goes on sending up new ones every year, as many a year as keep the clump at its stems: their number shared over the years each lives."
+    },
     "generator.params.fork_height": {
       "map": {"stem_clump": {"single": 0}},
       "else": {"rule": "trunk_fork_height_m"},
@@ -203,15 +213,15 @@
       "colour": "fruit_colour_ripe",
       "why": "A fruit is drawn in the colour it is stated to ripen to; its unripe share keeps the look's accent."
     },
-    "appearance.organs.fruit.shape.aspect": {
+    "appearance.organs.*.shape.aspect": {
       "template": "fruit",
-      "map": {"fruit_shape": {"globose": {"rule": "clamp(first(fruit_width_m / fruit_size_m, 1), 0.05, 2)"}, "ellipsoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "ovoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "obovoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "obconic": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "club_shaped": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}}},
+      "map": {"fruit_shape": {"globose": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 1)"}, "ellipsoid": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.7)"}, "ovoid": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.75)"}, "obovoid": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.7)"}, "obconic": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.6)"}, "club_shaped": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.4)"}, "hemispheric": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 1.8)"}, "conic": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.85)"}, "cylindric": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.55)"}}},
       "else": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"},
-      "why": "A fruit is as wide for its length as its flora measures it, and a round one as wide as long where its flora gives no width."
+      "why": "A fruit is as wide for its length as its flora measures it; where it gives no width, as its outline's word makes it: as wide as long where globose, about twice as wide as tall where hemispheric, and narrower where ellipsoid, ovoid, obovoid, conic, cylindric, obconic or club-shaped."
     },
     "appearance.organs.*.shape.flare": {
       "template": "fruit",
-      "map": {"fruit_shape": {"globose": 0, "ellipsoid": 0, "ovoid": -0.25, "obovoid": 0.3, "obconic": 0.55, "club_shaped": 0.45}},
+      "map": {"fruit_shape": {"globose": 0, "ellipsoid": 0, "ovoid": -0.25, "obovoid": 0.3, "obconic": 0.55, "club_shaped": 0.45, "hemispheric": -0.2, "conic": -0.45, "cylindric": 0}},
       "why": "A fruit is as much wider toward its tip than its base as its outline is stated: even where round or ellipsoid, widest below its middle where ovoid, above it where obovoid, and drawn to a narrow base where obconic or club-shaped."
     },
     "appearance.organs.*.shape.stigma": {
@@ -265,8 +275,8 @@
       "why": "Each kind of inflorescence is laid out as the cluster of its name, and a spadix as a spike; a solitary flower is no cluster."
     },
     "appearance.organs.*.inflorescence.flowers": {
-      "map": {"inflorescence": {"raceme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spike": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "catkin": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "corymb": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "umbel": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "compound_umbel": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "panicle": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "cyme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "scorpioid": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "head": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spadix": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}}},
-      "why": "A cluster bears the inflorescence's units, up to the 200 an axis can hold; a compound one shares them among its primary branches, so it needs their count."
+      "map": {"inflorescence": {"raceme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spike": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "catkin": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "corymb": {"rule": "clamp(round(units_per_inflorescence / max(first(inflorescence_branches, 1), 1)), 1, 200)"}, "umbel": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "compound_umbel": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "panicle": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "cyme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "scorpioid": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "head": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spadix": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}}},
+      "why": "A cluster bears the inflorescence's units, up to the 200 an axis can hold; a compound one (a compound umbel, a panicle, a compound corymb) shares them among its primary branches, so it needs their count."
     },
     "appearance.organs.*.inflorescence.branches": {
       "rule": "clamp(round(inflorescence_branches), 0, 60)",
@@ -521,6 +531,22 @@
       "rule": "fruit_size_m",
       "why": "A fruit is as long as floras measure it at its longest."
     },
+    "appearance.organs.*.shape.fruitlets": {
+      "template": "fruit",
+      "needs": ["fruitlets_per_fruit"],
+      "rule": "clamp(round(fruitlets_per_fruit), 1, 500)",
+      "why": "An aggregate fruit is drawn with as many drupelets as floras count, each as large as that many need to cover it: a cloudberry's few large ones, a raspberry's many small ones."
+    },
+    "appearance.organs.*.shape.loose": {
+      "template": "fruit",
+      "map": {"fruitlet_coherence": {"strongly_coherent": 0, "coherent": 0.1, "moderately_coherent": 0.35, "weakly_coherent": 0.7}},
+      "why": "An aggregate's drupelets hold together as floras say: packed into one firm fruit where strongly coherent, each a separate bead round a small core where weakly coherent."
+    },
+    "appearance.organs.*.shape.hairs": {
+      "template": "fruit",
+      "map": {"fruit_hairs": {"glabrous": 0, "puberulent": 0.3, "pubescent": 0.6, "tomentose": 1}},
+      "why": "A hairy fruit's fine pale hairs dull and pale its colour, the more the denser they are: a little where puberulent, most where tomentose."
+    },
     "appearance.organs.*.shape.kept_calyx": {
       "template": "fruit",
       "map": {"calyx_in_fruit": {"falling": 0, "persistent": {"rule": "first(clamp(fruiting_calyx_length_m / first(fruit_width_m, fruit_size_m), 0.05, 2), 0.35)"}, "accrescent": {"rule": "first(clamp(fruiting_calyx_length_m / first(fruit_width_m, fruit_size_m), 0.05, 2), 0.9)"}, "circumscissile": 0.2}},
@@ -569,8 +595,8 @@
     },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
-      "map": {"fruitlets": {"drupelets": "drupelets", "follicles": "follicles", "samaras": "samaras", "berries": "berries", "hip": "hip"}}, "else": {"map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}}},
-      "why": "A fruit whose flora says what its free pistils make is drawn as that: drupelets, follicles on a cone-like axis, samaras up a spindle, separate berries from one stalk, or achenes in a hip. Otherwise a berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
+      "map": {"fruitlets": {"drupelets": "drupelets", "follicles": "follicles", "samaras": "samaras", "berries": "berries", "hip": "hip", "achenes": "achenes"}}, "else": {"map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}}},
+      "why": "A fruit whose flora says what its free pistils make is drawn as that: drupelets, follicles on a cone-like axis, samaras up a spindle, separate berries from one stalk, achenes in a hip, or achenes on a fleshy receptacle (a strawberry). Otherwise a berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
     },
     "appearance.organs.*.inflorescence.peduncle": {
       "rule": "clamp(first(peduncle_length_m, 0) / (first(peduncle_length_m, 0) + inflorescence_length_m), 0, 0.9)",
@@ -685,7 +711,10 @@
     "rules.appearance.organs.leaf.leafing.fall": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
     "rules.appearance.organs.leaf.leafing.autumn": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
     "rules.appearance.organs.fruit.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
-    "rules.appearance.organs.fruit.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect."},
+    "rules.appearance.organs.*.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect. Where no width is stated, the usual botanical sense of the outline words (Rosaceae, 2026-10-19): globose as wide as long, hemispheric a dome about half as tall as wide; the widths for ellipsoid, ovoid, obovoid, conic, cylindric, obconic and club-shaped are the model's choice. Every look drawn as fruit (a flower's organ in fruit too), not only an organ named fruit."},
+    "rules.appearance.organs.*.shape.fruitlets": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an aggregate fruit (Rosaceae, bramble fruits, 2026-10-19): as many drupelets as the stated count, as many as the solid's detail holds, each sized to cover the fruit. FNA vol. 9 (2014), genus Rubus (eFloras, read 2026-10-19), counts drupelets per fruit from (1-)5 to 100(-150) across the genus, the main difference between brambles up close."},
+    "rules.appearance.organs.*.shape.loose": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws the coherence floras give an aggregate's drupelets (FNA vol. 9 Rubus, 2014: strongly, moderately or weakly coherent; eFloras, read 2026-10-19); how far apart each word sets them is the model's choice."},
+    "rules.appearance.organs.*.shape.hairs": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a hairy fruit (Rosaceae, bramble fruits, 2026-10-19), a choice of the model's: fine pale hairs over the skin pale its colour by up to an eighth, glabrous none, puberulent 0.3 of that, pubescent 0.6, tomentose all of it."},
     "rules.appearance.organs.*.season": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a plant's year from the months floras give, a choice of the model's (seasonal looks, 2026-10-16): its flowers show in the months it flowers in and its fruit in the months it is ripe in, as the season rules set their days, where they had shown all year and never fruited."},
     "rules.appearance.organs.fruit.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours unripe fruit, a choice of the model's (seasonal looks, 2026-10-16): green as the leaves are, since floras state the ripe colour and seldom the unripe one."},
     "rules.appearance.organs.*.inflorescence.dome": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a corymb's outline, a choice of the model's (batch 3 review, 2026-10-18): floras word a corymb flat-topped, rounded (convex) or globose, as Dendrology (2019) p. 323 does a mophead hydrangea's; the three are drawn as tips level, on a half sphere and round a ball."},

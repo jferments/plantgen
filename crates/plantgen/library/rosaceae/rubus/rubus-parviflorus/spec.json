@@ -17,20 +17,19 @@
       "crown_rate": 0.22,
       "space_density": 276.3,
       "internode": 0.12,
-      "max_shoot": 4,
+      "max_shoot": 8,
       "bud_break": 1.2,
       "branch_angle": 35,
       "apical_young": 0.56,
       "apical": 0.5,
       "apical_years": 4,
-      "flux": 4,
+      "flux": 8,
       "spur_light": 0.08,
       "shade_death": 0.03,
       "steer_weight": 0.4,
       "droop": 0.02,
       "wiggle": 10,
       "fork_height": 0.03,
-      "fork_stems": 9,
       "fork_angle": 35,
       "pipe_tip": 0.0015,
       "pipe_organ": 0.003,
@@ -43,10 +42,9 @@
       "leaf_angle": 60,
       "blooms": 1,
       "adult_age": 3,
-      "bloom_size": 0.04,
       "bloom_angle": 50,
       "leaf_area": 0.517,
-      "bloom_area": 0.751,
+      "bloom_area": 0.412,
       "path_half": 0.74
     }
   },
@@ -89,40 +87,6 @@
           "petiole": 0.35
         },
         "face_up": 0.4
-      },
-      "bloom": {
-        "shape": {
-          "template": "fruit",
-          "kind": "drupelets",
-          "aspect": 1.25,
-          "unripe": 0.4
-        },
-        "inflorescence": { "flowers": 3, "size": 0.4, "spread": 40 },
-        "colour": [0.62, 0.05, 0.06],
-        "accent": [0.55, 0.6, 0.38],
-        "season": {
-          "ripening": 25,
-          "flower_look": {
-            "shape": {
-              "template": "flower",
-              "petal_width": 1.3,
-              "point": 0.0,
-              "notch": 0.0,
-              "centre": 0.3,
-              "stamens": 30,
-              "stamen_length": 0.25
-            },
-            "colour": [0.96, 0.96, 0.93],
-            "accent": [0.88, 0.8, 0.4],
-            "size": 3.0,
-            "form": {
-              "flower": {
-                "cup": 15,
-                "curl": 10
-              }
-            }
-          }
-        }
       }
     }
   },
@@ -150,10 +114,22 @@
     "fruiting_months": [6, 7],
     "height_typical_m": {"min": 0.5, "max": 2},
     "woodiness": "woody",
-    "leaf_length_m": {"min": 0.1, "max": 0.2},
+    "leaf_length_m": {"min": 0.05, "max": 0.2},
     "sexual_system": "hermaphrodite",
     "inflorescence": "corymb",
-    "fruit_size_m": {"min": 0.01, "max": 0.015}
+    "fruit_size_m": {"min": 0.005, "max": 0.009},
+    "fruitlets_per_fruit": {"min": 50, "max": 60},
+    "fruitlet_coherence": "coherent",
+    "fruit_hairs": "pubescent",
+    "fruit_shape": "hemispheric",
+    "fruit_width_m": {"min": 0.01, "max": 0.018},
+    "units_per_inflorescence": {"min": 3, "max": 7, "low": 1, "high": 15},
+    "inflorescence_length_m": {"min": 0.04, "max": 0.1},
+    "flower_size_m": {"min": 0.03, "max": 0.05},
+    "flower_colour": [246, 246, 240],
+    "fruit_colour_ripe": [204, 36, 44],
+    "stem_clump": "thicket",
+    "stem_life_years": {"min": 2, "max": 3}
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -194,18 +170,14 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a thornless shrub of upright stems carrying big, soft, maple-like leaves and white flowers like crumpled tissue paper. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a thornless shrub of upright stems carrying big, soft, maple-like leaves and white flowers like crumpled tissue paper. Not fitted to measurements. Its stems now rise as a thicket of short-lived canes from the rules for its stated stem clump and stem life (Rosaceae review round 2, 2026-10-19), in place of the hand-set nine stems forking from one foot. Each cane's year's growth raised (max_shoot 4 to 8, flux 4 to 8) so a cane grows about 0.4 m a season and stands 1.2 m by its third summer, as FEIS (Gucker 2012) gives sprouts 0.3-0.6 m tall in their first season and growth of 0.6 cm a day for 60 days after a fire."
     },
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough sizes from general knowledge of the species: 1.6 m tall at 12 years in the open. Replace with measured data before calling this species calibrated."
     },
-    "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye: bright green leaves; white flowers; red berries later; shredding tan bark. Fruit (plant roadmap P4), as in mid-July: soft red thimbleberries, wider than long, some still pale. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in May to July; berries red in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): shreddy bark peeling on old canes; set from general knowledge of the species, not measured."
-    },
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye: bright green leaves; shredding tan bark. Its flowers and fruit (appearance.organs.bloom), their colours, clusters, sizes and year, are drawn by the rules at the flowering plants from its stated characters (Rosaceae review, 2026-10-19); the hand-set cluster had drawn its fruit 2.4 cm long against the flora's hemispheric fruit 1-1.8 cm across. Bark pattern (plant roadmap P4, `bark_pattern`): shreddy bark peeling on old canes; set from general knowledge of the species, not measured."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -236,11 +208,6 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "appearance.organs.bloom.season.flower_look": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): large white crinkled flowers 3 to 5 cm across with many stamens, 3 to 11 in a cluster, drawn opening together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five white petals between five sepals on a floral cup, its stamens by hand and thirty free pistils, from the characters of its own, Rosaceae's and Rubus's by the rules at the flowering plants."
-    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
@@ -253,10 +220,23 @@
     },
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
-    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): leaf blade orbiculate to reniform, 5-20 x 5-25 cm, palmately (3-)5(-7)-lobed."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."}
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruit hemispheric, 1-1.8 cm across, so a dome about half as tall: 5-9 mm along its stalk."},
+    "traits.fruitlets_per_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): drupelets 50-60 to a fruit."},
+    "traits.fruitlet_coherence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): drupelets coherent, the fruit coming away from its torus whole."},
+    "traits.fruit_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): ovaries densely hairy toward their tips, so the drupelets are drawn hairy; the ripe fruit's hairs are not described."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruit hemispheric."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruit hemispheric, 1-1.8 cm, taken as its width across."},
+    "traits.units_per_inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): inflorescences terminal and axillary, (1-)3-7(-15)-flowered, cymiform to thyrsiform."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives its length: a loose cyme of 3-7 flowers 3-5 cm across (FNA) is some 4-10 cm long."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): petals white, broadly obovate, (10-)14-22(-28) mm, so an open flower of five spreading petals is about 3-5 cm across."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): petals white; sRGB by eye for the word."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruits red; sRGB by eye for the word."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.751)."},
+    "traits.stem_clump": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's thimbleberry review (Gucker 2012, read 2026-10-19): strongly rhizomatous, its stems rising from the rhizomes to form clumps or dense thickets; a clone may live 45 years."},
+    "traits.stem_life_years": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's thimbleberry review (Gucker 2012, read 2026-10-19): the stems typically biennial, most living two years and some three, those that live longer growing large side branches; flowers come on the second-year stems."}
   },
   "provenance": {
     "sources": [

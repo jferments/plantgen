@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (857):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (883):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -88,7 +88,7 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.inflorescence.pedicel  {flowering}\n  appearance.organs.*.inflorescence.peduncle  {flowering}\n  appearance.organs.*.inflorescence.unit  {flowering}\n  appearance.organs.*.season  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
         ),
         format!(
-            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.armed on `fruit` cards  {flowering}\n  appearance.organs.*.shape.back_base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
+            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.armed on `fruit` cards  {flowering}\n  appearance.organs.*.shape.aspect on `fruit` cards  {flowering}\n  appearance.organs.*.shape.back_base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.back_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_colour on `flower` cards  {flowering}\n  appearance.organs.*.shape.base_length on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
         ),
         format!(
             "\n  appearance.organs.*.shape.carpels on `flower` cards  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
@@ -103,7 +103,7 @@ fn rules_and_traits_say_where_they_come_from() {
         // leaf length and leaf habit; a stem succulent's
         // from its girth and flowers.
         format!(
-            "\n  appearance.organs.leaf.leafing.autumn  {flowering}\n  appearance.organs.leaf.leafing.fall  {flowering}\n  appearance.organs.leaf.leafing.full  {flowering}\n  appearance.organs.leaf.leafing.out  {flowering}\n  appearance.organs.leaf.leafing.turn  {flowering}\n  appearance.organs.leaf.shape.leaf on `sprig` cards  {flowering}\n  appearance.organs.leaf.shape.template  {flowering}\n  appearance.organs.leaf.shape.twigs on `sprig` cards  {flowering}\n  generator.params.bloom_angle  {flowering}\n  generator.params.bloom_floor  {flowering}\n  generator.params.bloom_hang  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.bloom_stalk  {flowering}\n  generator.params.bud_size  {flowering}\n  generator.params.bud_years  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.params.flower_tilt  {flowering}\n  generator.params.fork_angle  {flowering}\n  generator.params.fork_clear  {flowering}\n  generator.params.fork_height  {flowering}\n  generator.params.forks  {flowering}\n  generator.params.fruit_length  {flowering}\n  generator.params.fruit_size  {flowering}\n  generator.params.geminate  {flowering}\n  generator.params.hook  {flowering}\n  generator.params.lie  {flowering}\n  generator.params.lie_branch  {flowering}\n  generator.params.nod  {flowering}\n  generator.params.scape  {flowering}\n  generator.params.short_share  {flowering}\n  generator.params.sucker_spread  {flowering}\n  generator.params.suckers  {flowering}\n  generator.params.unit_leaves  {flowering}\n  generator.params.units  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
+            "\n  appearance.organs.leaf.leafing.autumn  {flowering}\n  appearance.organs.leaf.leafing.fall  {flowering}\n  appearance.organs.leaf.leafing.full  {flowering}\n  appearance.organs.leaf.leafing.out  {flowering}\n  appearance.organs.leaf.leafing.turn  {flowering}\n  appearance.organs.leaf.shape.leaf on `sprig` cards  {flowering}\n  appearance.organs.leaf.shape.template  {flowering}\n  appearance.organs.leaf.shape.twigs on `sprig` cards  {flowering}\n  generator.params.bloom_angle  {flowering}\n  generator.params.bloom_floor  {flowering}\n  generator.params.bloom_hang  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.bloom_stalk  {flowering}\n  generator.params.bud_size  {flowering}\n  generator.params.bud_years  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.params.flower_tilt  {flowering}\n  generator.params.fork_angle  {flowering}\n  generator.params.fork_clear  {flowering}\n  generator.params.fork_height  {flowering}\n  generator.params.forks  {flowering}\n  generator.params.fruit_length  {flowering}\n  generator.params.fruit_size  {flowering}\n  generator.params.geminate  {flowering}\n  generator.params.hook  {flowering}\n  generator.params.lie  {flowering}\n  generator.params.lie_branch  {flowering}\n  generator.params.nod  {flowering}\n  generator.params.scape  {flowering}\n  generator.params.short_share  {flowering}\n  generator.params.stem_life  {flowering}\n  generator.params.sucker_rate  {flowering}\n  generator.params.sucker_spread  {flowering}\n  generator.params.suckers  {flowering}\n  generator.params.unit_leaves  {flowering}\n  generator.params.units  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
         ),
         format!(
             "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.space_reach  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.spur_leaf  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.unit_nodes  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n"
@@ -159,11 +159,11 @@ fn rules_and_traits_say_where_they_come_from() {
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
     }
-    // Leaf outlines from shape words, at the kingdom, on three cards; a
+    // Leaf outlines from shape words, at the kingdom, on four cards; a
     // compound leaf's word is its leaflets'.
     assert!(
         built_in.contains(
-            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobe_depth on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobes on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
+            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobe_depth on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.lobes on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` or `lobed` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
         ),
         "{built_in}"
     );
@@ -199,7 +199,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (858):\n"),
+        rules.starts_with("Rules, by their home (884):\n"),
         "{rules}"
     );
     assert!(
