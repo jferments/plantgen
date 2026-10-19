@@ -336,7 +336,7 @@ interpret Ri(k, m, r, d) : m > 1 ->
     Ri(k + floor(m / 4) + floor((m + 1) / 4) + floor((m + 2) / 4), floor((m + 3) / 4), r, d);
 interpret Ri(k, m, r, d) : m == 1 && k < flowers ->
     [ /(k * 360 / flowers + uniform(-12, 12))
-      f(-d * (1 - cos(rad(ring_angle))) - pit * r * cos(rad(ring_angle)) * cos(rad(ring_angle)))
+      f(-d * (1 - cos(rad(ring_angle))) - pit * r * pow(cos(rad(ring_angle)), 4))
       &(90) f(r * sin(rad(ring_angle))) ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ];
 interpret Fo : rand(1) < bud_share -> bud(bud_size * uniform(0.8, 1.2));
 interpret Fo : rand(1) < bud_share + fruit_share && (dioecious < 0.5 || sex >= 0.5) -> fruit(fruit_size * uniform(0.85, 1.15));
@@ -445,7 +445,6 @@ interpret Cf ->
 interpret Ri(k, m, r, d) : m == 1 ->
     [ /((k + 0.5 * floor(k / flowers)) * 360 / flowers + uniform(-12, 12))
       f(-d * (1 - cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step))))
-        - pit * r * cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step)))
-          * cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step))))
+        - pit * r * pow(cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step))), 4))
       &(90) f(r * sin(rad(min(90, ring_angle + floor(k / flowers) * ring_step))))
       ^(90 - flower_angle * uniform(0.8, 1.2)) fruit(fruit_size * uniform(0.85, 1.15)) ];

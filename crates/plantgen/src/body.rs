@@ -1108,14 +1108,17 @@ impl Centreline {
     }
 
     /// How far the surface at `s` sinks back down the axis into the
-    /// apex's pit: nothing at the dome's rim, the pit's whole depth at its
-    /// centre, so a deep pit's centre lies below the rim.
+    /// apex's pit: nothing at the dome's rim and little on its shoulder,
+    /// the pit's whole depth at its centre, so a deep pit's centre lies
+    /// below the rim.
     fn sunk(&self, s: f64) -> f64 {
         if self.pit <= 0.0 || self.dome <= 0.0 || s <= self.length - self.dome {
             return 0.0;
         }
+        // A bowl: steepest partway in, leaving the shoulder round.
         let cap = self.cap(s);
-        self.pit * self.at(s).radius * (1.0 - cap * cap)
+        let open = 1.0 - cap * cap;
+        self.pit * self.at(s).radius * open * open
     }
 
     /// The body's radius at `s`, dome and base included: its ribs' crests.
@@ -1408,9 +1411,11 @@ impl Surface<'_> {
             self.wool * apex_wool(self.line, s) * (1.0 - cap * cap).max(0.0).sqrt()
         } else {
             0.0
-        } - self.line.sunk(s);
-        station.point
-            + station.tangent * lift
+        };
+        // The pit sinks along the apex's own axis, so a stem that bends
+        // near its tip still has its pit at its centre.
+        let apex = self.line.at(self.line.length).tangent;
+        station.point + station.tangent * lift - apex * self.line.sunk(s)
             + station.across * (radius * math::cos(t))
             + side * (radius * self.flatten * math::sin(t))
     }
@@ -2624,7 +2629,7 @@ mod tests {
             ..ribbed()
         };
         let pitted = BodyLook {
-            pit: 0.6,
+            pit: 0.3,
             ..flat.clone()
         };
         pitted.validate().unwrap();
@@ -2647,7 +2652,7 @@ mod tests {
             "the centre {centre} sinks below the rim {rim}"
         );
         assert!(
-            (centre - (1.0 - 0.6 * 0.2)).abs() < 0.02,
+            (centre - (1.0 - 0.3 * 0.2)).abs() < 0.01,
             "the pit's depth: {centre}"
         );
     }
