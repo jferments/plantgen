@@ -244,6 +244,53 @@ class Detect(unittest.TestCase):
         self.assertEqual([r["x"] for r in rows], [1, 2.5, None])
 
     @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
+    def test_count_points_at_parts_of_kept_regions_once(self):
+        from imagekit import count
+        self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det")
+        first = json.loads(self.cli("count", "--pointer", "fake", "--organ", "leaf", "--what", "the leaves",
+                                    "--run", "cnt"))
+        self.assertEqual(first["counted"], 1)  # a's leaf; b's triage saw no leaf, d is unusable
+        self.assertEqual(json.loads(self.cli("count", "--pointer", "fake", "--organ", "leaf", "--what",
+                                             "the leaves", "--run", "cnt2"))["counted"], 0)
+        other = json.loads(self.cli("count", "--pointer", "fake", "--organ", "leaf", "--what", "the leaflets",
+                                    "--run", "cnt3"))
+        self.assertNotEqual(other["analyzer"], first["analyzer"])  # each question is its own analyzer
+        with Store(self.store_dir) as store:
+            row = next(jsonl(store.run_dir("cnt") / "analyses.jsonl"))
+            self.assertEqual((row["sha256"], row["out"]["count"]), (self.sha["a.jpg"], 1))
+            self.assertEqual(len(row["out"]["points"]), 1)
+            self.assertTrue(all(0 <= v <= 1 for v in row["out"]["crop"]))
+            by = count.summary(count.counts(store, first["analyzer"]))
+            self.assertEqual(by["Asimina triloba"]["photos"]["median"], 1)
+            self.assertIsNone(by["Asimina triloba"]["renders"])
+
+    def test_count_answers(self):
+        from imagekit import count
+        status, out = count.answer('{"points": [[100, 200], [300, 400]], "count": 3}', "flower", "x", [0, 0, 1, 1])
+        self.assertEqual((status, out["count"], out["count_stated"], out["points"][0]), ("ok", 2, 3, [0.1, 0.2]))
+        row = json.dumps({"points": [[500, 100 + 50 * i] for i in range(8)], "count": 8})
+        status, out = count.answer(row, "flower", "x", [0, 0, 1, 1])
+        self.assertTrue(out["degenerate"])
+        self.assertIsNone(out["count"])
+        self.assertEqual(count.answer('{"points": [], "count": null}', "flower", "x", [0, 0, 1, 1])[0], "empty")
+        self.assertEqual(count.answer('{"points": [], "count": 0}', "flower", "x", [0, 0, 1, 1])[1]["count"], 0)
+        cut = count.answer('{"points": [[10, 20], [30, 40], [5', "flower", "x", [0, 0, 1, 1])[1]
+        self.assertEqual(cut["count"], 2)  # a cut-off answer keeps its whole points
+
+    def test_count_chat_writes_crops_then_reads_answers(self):
+        self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det")
+        d = self.tmp / "chat"
+        args = ("count", "--backend", "chat", "--model", "observer", "--chat-dir", str(d), "--organ", "leaf",
+                "--what", "the leaves", "--run", "cc")
+        self.assertEqual(json.loads(self.cli(*args))["waiting"], 1)
+        crops = sorted(d.glob("*.jpg"))
+        self.assertEqual(len(crops), 1)
+        self.assertIn("Point to each of the leaves", (d / "prompt.md").read_text())
+        crops[0].with_suffix(".json").write_text('{"points": [[500, 500]], "count": 1}')
+        self.assertEqual(json.loads(self.cli(*args))["counted"], 1)
+        self.assertEqual(json.loads(self.cli(*args[:-1], "cc2"))["counted"], 0)
+
+    @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
     def test_segment_masks_kept_regions_once(self):
         import numpy as np
         from imagekit import segment
