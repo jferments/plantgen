@@ -925,7 +925,17 @@ pub mod venation;
 /// four, a tobacco's two), each turned out from half way down and lined
 /// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
 /// `fruit_armature` `hooked`) (134 is palm details, #223).
-/// 137: an opened capsule shows its seeds (`seed_size`, from
+/// 136: black cottonwood and wild fig draw single leaves at their flora's
+/// size on its petiole length, and young twigs in its colour, in place of
+/// hand-sized sprig cards; the fig's path_half is refitted to its height
+/// (135 is nightshades round 4, #227).
+/// 137: ten Pacific Northwest natives in families short of three species
+/// (giant chain fern, licorice fern, scouring rush, fringecup, western dog
+/// violet, California poppy, blueblossom, spreading gooseberry, bush
+/// penstemon, orange honeysuckle); a climber bears its leaves in opposite
+/// pairs where its taxon states them so (climber program revision 7) (136 is single
+/// leaves for cottonwood and fig, #232).
+/// 141: an opened capsule shows its seeds (`seed_size`, from
 /// `fruit_seed_length_m`, where `fruit_seed_colour` is stated) packed
 /// round a placenta between its valves; a joined calyx is drawn from
 /// `sepal_length_m` and `calyx_lobe_length_m` (`sepals_fused`), a sheath
@@ -934,9 +944,10 @@ pub mod venation;
 /// that breaks off round its base (`calyx_in_fruit` `circumscissile`)
 /// leaves a torn rim; a lobed blade takes its lobes, sinus depth, lobe
 /// tips (`leaf_lobe_apex`), width and petiole from its traits, acute lobes
-/// narrowing fast to a point; a herb's stem leaf card holds its petiole
-/// unless the herb has a basal rosette; a map whose states tie reads its
-/// `else` formula's names; prickles stand among the stem hairs
-/// (`prickles`, from `spines` `prickles` and `prickle_density`) (136 is
-/// cottonwood and fig leaves, #225).
-pub const GENERATOR_REVISION: u32 = 137;
+/// narrowing fast to a point; a joined calyx may swell low down
+/// (`calyx_swell`, from `calyx_base` `swollen`); a herb's stem leaf card
+/// holds its petiole unless the herb has a basal rosette; a map whose
+/// states tie reads its `else` formula's names; prickles stand among the stem hairs
+/// (`prickles`, from `spines` `prickles` and `prickle_density`) (137 is
+/// ten Pacific Northwest natives, #234).
+pub const GENERATOR_REVISION: u32 = 141;

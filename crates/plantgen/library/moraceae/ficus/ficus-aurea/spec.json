@@ -23,8 +23,6 @@
       "apical_young": 0.62,
       "apical": 0.5,
       "apical_years": 15,
-      "leaf_size": 0.3,
-      "spur_leaf": 0.27,
       "spur_pairs": 2,
       "leaf_angle": 50,
       "leaf_years": 2,
@@ -37,7 +35,7 @@
       "pipe_tip": 0.004,
       "pipe_organ": 0.007,
       "pipe_rings": 2e-05,
-      "path_half": 16.1
+      "path_half": 8.87
     }
   },
   "growth": {
@@ -51,6 +49,7 @@
   },
   "appearance": {
     "bark": [0.55, 0.53, 0.48],
+    "twig": [0.5, 0.24, 0.07],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.1,
@@ -63,14 +62,10 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "sprig",
-          "leaves": 7,
-          "angle": 50,
-          "stalk": 0.1,
+          "template": "simple",
           "widest": 0.5,
           "tip": 0.5,
-          "base": 0.6,
-          "petiole": 0.06
+          "base": 0.6
         }
       }
     },
@@ -112,13 +107,16 @@
     },
     "wood_density_basic_kg_m3": 450,
     "height_typical_m": {"min": 10, "max": 18},
-    "leaf_length_m": {"min": 0.06, "max": 0.13},
-    "leaf_width_m": {"min": 0.03, "max": 0.06},
+    "leaf_length_m": {"min": 0.051, "max": 0.127},
+    "leaf_width_m": {"min": 0.038, "max": 0.076},
+    "petiole_length_m": {"min": 0.013, "max": 0.025},
     "leaf_margin": "entire",
     "fruit_size_m": {"min": 0.008, "max": 0.012},
     "leaf_apex": {"obtuse": "usually", "acuminate": "often"}
   },
   "evidence": {
+    "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Ficus aurea, p. 334: \"terete pithy light orange-colored branchlets marked by pale lenticels\". Colour chosen by eye for light orange."},
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Ficus aurea, p. 334: \"Leaves oblong ... 2'-5' long, 1½'-3' wide, thick and coriaceous ... petioles stout, slightly grooved, ½'-1' in length\"."},
     "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
@@ -129,7 +127,7 @@
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region. Refitted 2026-10-18 from 16.1 to 8.87 when its leaves became single true-size leaves from Sargent's measures: the fuller crown gathered more vigour and grew 18.0 m at 80 years against its 14 m reference; now 14.0 m."
     },
     "generator.params": {
       "evidence": "Authored",
@@ -177,8 +175,8 @@
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
-    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Ficus aurea, p. 334: \"Leaves oblong ... 2'-5' long, 1½'-3' wide, thick and coriaceous ... petioles stout, slightly grooved, ½'-1' in length\"."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Ficus aurea, p. 334: \"Leaves oblong ... 2'-5' long, 1½'-3' wide, thick and coriaceous ... petioles stout, slightly grooved, ½'-1' in length\"."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2809576), as no source read gives it."},
     "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA, Ficus aurea (read 2026-10-18): the tip is blunt or has a short, blunt drawn-out point."}

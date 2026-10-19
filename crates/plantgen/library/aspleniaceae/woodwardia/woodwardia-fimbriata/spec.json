@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "id": "woodwardia-fimbriata",
+  "taxon": {
+    "scientific_name": "Woodwardia fimbriata",
+    "common_name": "giant chain fern",
+    "usda_symbol": "WOFI",
+    "family": "Aspleniaceae",
+    "genus": "Woodwardia",
+    "plant_name_id": 3150308
+  },
+  "growth_form": "fern",
+  "generator": {
+    "params": {
+      "frond_seed": 0.2,
+      "size_years": 3,
+      "open_years": 0.6,
+      "angle_spread": 8,
+      "frond_radius": 0.004,
+      "pinna_angle": 70,
+      "pinna_lift": 5,
+      "droop_years": 2,
+      "crown_age": 4,
+      "season": 0.5,
+      "emerge_spread": 0.3,
+      "unroll": 0.3
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [2, 4, 8]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "foliage": [0.13, 0.25, 0.08],
+    "foliage_shade": [0.04, 0.078, 0.025],
+    "variation": 0.2,
+    "organs": {
+      "pinna": {
+        "shape": {
+          "template": "frond",
+          "width": 0.2,
+          "stipe": 0.02
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 1.1,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "leaf_length_m": {"min": 0.25, "max": 1.0},
+    "petiole_length_m": {"min": 0.15, "max": 0.7},
+    "pinnae": {"min": 16, "max": 48},
+    "leaflet_length_m": {"min": 0.12, "max": 0.42},
+    "leaflet_width_m": {"min": 0.025, "max": 0.08},
+    "stipe_scales": "dense",
+    "stipe_scale_extent": "base",
+    "stipe_scale_colour": [205, 115, 45],
+    "stipe_colour": [205, 185, 125],
+    "rhizome_habit": {"ascending": "usually", "short_creeping": "often"},
+    "leaf_habit": "evergreen",
+    "leaf_posture": "ascending",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "leaf_shape": {"lanceolate": "usually", "elliptic": "often", "oblanceolate": "often"},
+    "frond_dimorphism": "monomorphic",
+    "leaf_hairs": "glabrescent",
+    "sorus_shape": "oblong",
+    "sorus_position": "costal",
+    "indusium": "flap",
+    "rosette": "basal",
+    "height_typical_m": {"min": 0.4, "max": 1.5},
+    "height_max_m": 1.7,
+    "woodiness": "herbaceous",
+    "perennation": "rhizome",
+    "leaf_arrangement": "alternate",
+    "leaf_margin": "serrate"
+  },
+  "evidence": {
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Blade pale green, elliptic-lanceolate, 25-100 cm\". Read as 25 to 100 cm."},
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Leaves monomorphic, evergreen, numerous in vaselike cluster, 40-170 cm\"; \"Blade ... 25-100 cm\". The flora gives no petiole length; the leaf less its blade, read as 15 to 70 cm."},
+    "traits.pinnae": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Pinnae not articulate to rachis, in 8-24 pairs\". Read as 16 to 48 pinnae."},
+    "traits.leaflet_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"narrowly deltate to lanceolate, pinnatifid; proximal to middle pinnae 12-42 × 2.5-8 cm\". The pinnae, read as 12 to 42 cm long."},
+    "traits.leaflet_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"proximal to middle pinnae 12-42 × 2.5-8 cm\". The pinnae, read as 2.5 to 8 cm wide."},
+    "traits.stipe_scales": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Petiole straw-colored, sometimes reddish at base; base thickened, with densely set orange scales.\" Read as dense."},
+    "traits.stipe_scale_extent": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"base thickened, with densely set orange scales\". Read as base."},
+    "traits.stipe_scale_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"densely set orange scales\". Read as a brownish orange."},
+    "traits.stipe_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Petiole straw-colored, sometimes reddish at base\". Read as a pale straw; the reddish base is not drawn."},
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Stems forming a stout caudex covered with petiole bases, suberect\", read as ascending. Hoshizaki and Moran, Fern Grower's Manual (2001), Woodwardia fimbriata (fern-2026-10-15#2267): rhizome short-creeping. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Leaves monomorphic, evergreen\". Hoshizaki and Moran, Fern Grower's Manual (2001) (fern-2026-10-15#2267): evergreen."},
+    "traits.leaf_posture": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001), Woodwardia fimbriata (fern-2026-10-15#2267): fronds erect-spreading; with Flora of North America's \"numerous in vaselike cluster\", read as ascending."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Pinnae not articulate to rachis, in 8-24 pairs ... pinnatifid\". A pinnate blade; read as compound."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Pinnae ... in 8-24 pairs\". Read as pinnate."},
+    "traits.division_order": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001), Woodwardia fimbriata (fern-2026-10-15#2267): pinnate-pinnatifid (from its figure), division order 2; Flora of North America vol. 2: pinnae \"pinnatifid\"."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Blade pale green, elliptic-lanceolate\". Hoshizaki and Moran, Fern Grower's Manual (2001) (fern-2026-10-15#2267): broadly oblanceolate. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
+    "traits.frond_dimorphism": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Leaves monomorphic\"."},
+    "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"scaly-glandular upon emergence but soon glabrate\". Read as glabrescent; Hoshizaki and Moran (fern-2026-10-15#2267) give the lower surface glabrous."},
+    "traits.sorus_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Sori short and broad, mostly curved and confined to costular areoles, deeply sunken into blades.\" Read as oblong; their curve is not drawn."},
+    "traits.sorus_position": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): sori \"confined to costular areoles\", the row of areoles beside each segment's midrib. Read as costal."},
+    "traits.indusium": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): \"Indusia cartilaginous and vaulted\". A flap over each sorus; read as flap."},
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): leaves \"numerous in vaselike cluster, 40-170 cm\". The plant is about as tall as its ascending leaves reach, read as 40 to 150 cm typically, in place of the species-facts estimate of 1 to 2 m (record L3150308)."},
+    "traits.height_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Woodwardia fimbriata (read on eFloras, 2026-10-18): leaves \"40-170 cm\". At most the longest leaf, 1.7 m, in place of the species-facts estimate of 2.7 m (record L3150308)."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3150308), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3150308), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3150308), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3150308), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3150308), as no source read gives it."},
+    "generator.params": {"evidence": "Authored", "source": "plantgen-authors", "note": "Deer fern's values (blechnum-spicant), for a large vase-forming fern: a thicker rachis (frond_radius 0.004, from 0.0015, as the flora's petiole base is \"thickened\" and the leaves to 170 cm), pinnae at 70 degrees to the rachis (from 82). Its hand-set angles, droop and pinna_area are dropped, so the fern rules set them from its posture and the look's default; frond length, stipe share, pinna count and sizes come from the stated measures. Not fitted to measurements."},
+    "allometry": {"evidence": "Authored", "source": "plantgen-authors", "note": "1.1 m tall at 8 years in the open, within the 40-170 cm leaves Flora of North America gives, leaning out in a vase. Replace with measured data before calling this species calibrated."},
+    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours by eye after Flora of North America vol. 2: \"Blade pale green\", a light, slightly yellow green. Its stipes take their stated colour (stipe_colour), its scales theirs (stipe_scale_colour). The pinna card is a frond card (the class rule for division order 2) as wide for its length as the flora's pinnae, 2.5-8 by 12-42 cm (0.2), nearly sessile; its segment count is the card's default, as the flora counts none."},
+    "taxon": {"evidence": "Authored", "source": "plantgen-authors", "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."},
+    "growth_form": {"evidence": "Authored", "source": "plantgen-authors", "note": "The growth form the spec's authors chose from the plant's habit."},
+    "growth": {"evidence": "Authored", "source": "plantgen-authors", "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."},
+    "variants": {"evidence": "Authored", "source": "plantgen-authors", "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."},
+    "taxon.family": {"evidence": "SourceInferred", "source": "wcvp-v16", "note": "WCVP v16's family for the accepted name."},
+    "taxon.plant_name_id": {"evidence": "SourceInferred", "source": "wcvp-v16", "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."}
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy added with core-expansion batch A1 (2026-10-18): sizes and characters from Flora of North America vol. 2, habit from the Fern Grower's Manual, drawing values from deer fern's."
+  }
+}
