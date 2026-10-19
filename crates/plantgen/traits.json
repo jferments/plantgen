@@ -2773,6 +2773,21 @@
       "values": ["monopodial", "sympodial"],
       "why": "whether an axis grows on from its own tip or is carried on by a lateral"
     },
+    "terminal_bud": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a woody plant's long shoots end the year in a true terminal bud, or their tips die and the topmost lateral bud carries each on, as a winter key's 'terminal bud wanting; branchlets prolonged by an upper axillary bud' (a birch's or an elm's), so its twigs and limbs zigzag and fork"
+    },
+    "branch_orientation": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["orthotropic", "plagiotropic"],
+      "optional": true,
+      "why": "whether the shoots a woody plant's limbs bear grow like small trunks, pointing every way with their buds all round them (orthotropic, an oak's or a poplar's), or lie flat, their buds and leaves to either side, so each limb carries level sprays (plagiotropic, a hazel's or an alder's)"
+    },
     "flowering_position": {
       "group": "architecture",
       "organ": "inflorescence",
