@@ -766,6 +766,126 @@
       "optional": true,
       "why": "the thickest a bark grows, on the oldest trunks ('rarely more than 1/4 inch', 'to 30 cm')"
     },
+    "bark_inner_colour_weathered": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour freshly bared bark weathers to before it takes the surface's: a madrone's green 'soon weathering to dark red'"
+    },
+    "lenticel_rows": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a smooth bark's lenticels stand in rows round the stem (cherries)"
+    },
+    "bark_mottle_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of a mottled bark's patches, where floras give one: an alder's whitish lichen patches, an aspen's grey"
+    },
+    "old_bark_from_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.02, 5],
+      "optional": true,
+      "why": "the stem diameter where a bark takes on its old look ('on old trunks', 'at the base of large trees'): its grown look ends there"
+    },
+    "old_bark_on": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["all", "base", "underside"],
+      "optional": true,
+      "why": "where an old bark shows first: all over, at the 'base' of the trunk (birch's black base, aspen's), or on the 'abaxial sides of larger lateral axes' (madrone)"
+    },
+    "old_bark_height_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.1, 30],
+      "optional": true,
+      "why": "how far up the trunk an old bark at the base climbs ('to 2 m')"
+    },
+    "old_bark_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "an old bark's surface, where it differs from the grown bark's"
+    },
+    "old_fissure_network": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["longitudinal", "interlacing", "reticulate", "tessellated"],
+      "optional": true,
+      "why": "how an old bark's fissures run, in the words of fissure_network"
+    },
+    "old_fissure_depth": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["shallow", "moderate", "deep"],
+      "optional": true,
+      "why": "how far an old bark's fissures cut into it, in the words of fissure_depth"
+    },
+    "old_fissure_width": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["narrow", "moderate", "wide"],
+      "optional": true,
+      "why": "how wide an old bark's fissures are, in the words of fissure_width"
+    },
+    "old_ridge_profile": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["rounded", "flat_topped", "sharp"],
+      "optional": true,
+      "why": "an old bark's ridge or plate cross-section"
+    },
+    "old_ridge_spacing_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.003, 0.5],
+      "optional": true,
+      "why": "ridge centre to ridge centre on an old bark"
+    },
+    "old_plate_aspect": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0.5, 40],
+      "optional": true,
+      "why": "an old bark's ridge or plate, its length over its width"
+    },
+    "old_fissure_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the floor of an old bark's fissures"
+    },
+    "old_bark_scale_size_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.002, 0.075],
+      "optional": true,
+      "why": "the scales of a scaly old bark"
+    },
     "twig_colour": {
       "group": "stem_and_bark",
       "organ": "stem",

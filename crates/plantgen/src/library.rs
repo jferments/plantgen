@@ -3320,7 +3320,9 @@ mod tests {
                     "fissure_network": "tessellated", "fissure_depth": "deep",
                     "fissure_width": "narrow", "ridge_profile": "flat_topped",
                     "ridge_spacing_m": 0.04, "plate_aspect": 1.5,
-                    "fissure_colour": [60, 40, 30], "bark_thickness_share": 0.04},
+                    "fissure_colour": [60, 40, 30], "bark_thickness_share": 0.04,
+                    "old_bark_from_m": 0.3, "old_bark_on": "base",
+                    "old_fissure_network": "longitudinal"},
                 "evidence": {"traits": {"evidence": "Authored",
                     "source": "plantgen-authors", "note": "Test."}}}"#,
         );
@@ -3332,8 +3334,14 @@ mod tests {
             .iter()
             .map(|stage| stage.name.as_str())
             .collect();
-        assert_eq!(names, ["young", "grown"]);
-        let (young, grown) = (&look.stages[0], &look.stages[1]);
+        assert_eq!(names, ["young", "grown", "old"]);
+        let (young, grown, old) = (&look.stages[0], &look.stages[1], &look.stages[2]);
+        assert_eq!(grown.until_diameter_m, Some(0.3));
+        assert_eq!(old.on, crate::bark_look::On::Base);
+        assert_eq!(
+            old.fissures.as_ref().unwrap().network,
+            crate::bark_look::Network::Longitudinal
+        );
         assert_eq!(young.until_diameter_m, Some(0.08));
         assert_eq!(young.colour, Some([120, 110, 90]));
         assert_eq!(

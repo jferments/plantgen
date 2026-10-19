@@ -1433,7 +1433,17 @@ fn bark_primitives(
             None
         } else {
             let diameter = 2.0 * radii.iter().sum::<f64>() / 3.0;
-            let stage = look.stage_at(diameter);
+            // Its height above the ground and how far it faces down, for
+            // stages on the base or the underside.
+            let mean = |of: &[f32], axis: usize| {
+                corners
+                    .iter()
+                    .map(|&v| f64::from(of.get(v as usize * 3 + axis).copied().unwrap_or(0.0)))
+                    .sum::<f64>()
+                    / 3.0
+            };
+            let (height, down) = (mean(&arrays.positions, 1), -mean(&arrays.normals, 1));
+            let stage = look.stage_where(diameter, height, down);
             look.stages.iter().position(|s| std::ptr::eq(s, stage))
         };
         groups.entry(stage).or_default().push(triangle);

@@ -31,6 +31,16 @@ use serde::{Deserialize, Serialize};
 
 use crate::rng::{hash_words, mix64, unit};
 
+/// How many of the stem's own diameters a stage on the base climbs where
+/// its record gives no height: birch's black base, about 2 m up a 50 cm
+/// trunk (inferred from photos; imagekit will measure it).
+pub const BASE_RISE: f64 = 4.0;
+
+/// How far down a surface faces, as the downward share of its normal,
+/// before a stage on the underside shows there: the lower third of a
+/// level limb.
+pub const UNDERSIDE: f64 = 0.35;
+
 /// The record's schema.
 pub const BARK_LOOK_SCHEMA: u32 = 1;
 
@@ -116,6 +126,10 @@ pub struct Stage {
     pub until_diameter_m: Option<f64>,
     #[serde(default)]
     pub on: On,
+    /// How far up the stem a stage `on` the base climbs, metres; where
+    /// none is stated, [`BASE_RISE`] times the stem's diameter there.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub base_height_m: Option<f64>,
     /// How it grows; where none is stated, from its layers
     /// ([`Stage::architecture`]).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -415,6 +429,14 @@ pub struct Exfoliation {
     /// `inner_colour`, toward the surface colour.
     #[serde(default)]
     pub aged: Vec<[u8; 3]>,
+    /// One colour exposed bark weathers to before the surface's, where
+    /// `aged` lists none (a flora's "weathering to dark red").
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "some_colour"
+    )]
+    pub weathered: Option<[u8; 3]>,
 }
 
 const fn piece() -> f64 {
@@ -613,6 +635,35 @@ impl BarkLook {
         }
     }
 
+    /// The stage a piece of stem wears: the one its `diameter` reaches
+    /// ([`BarkLook::stage_at`]), where that stage shows: a stage on the
+    /// base only below its height, `height` metres above the ground, and a
+    /// stage on the underside only where the surface faces down (`down`,
+    /// the share of its normal pointing down, above [`UNDERSIDE`]);
+    /// elsewhere the stage before it that shows.
+    #[must_use]
+    pub fn stage_where(&self, diameter: f64, height: f64, down: f64) -> &Stage {
+        let stage = self.stage_at(diameter);
+        let mut index = self
+            .stages
+            .iter()
+            .position(|s| std::ptr::eq(s, stage))
+            .unwrap_or(0);
+        while index > 0 {
+            let here = &self.stages[index];
+            let shows = match here.on {
+                On::All => true,
+                On::Base => height < here.base_height_m.unwrap_or(BASE_RISE * diameter),
+                On::Underside => down > UNDERSIDE,
+            };
+            if shows {
+                break;
+            }
+            index -= 1;
+        }
+        &self.stages[index]
+    }
+
     /// The stage a stem `diameter` metres across wears (where it shows).
     #[must_use]
     pub fn stage_at(&self, diameter: f64) -> &Stage {
@@ -806,6 +857,7 @@ pub fn from_pattern(
         name: name.to_owned(),
         until_diameter_m: None,
         on: On::All,
+        base_height_m: None,
         architecture: Some(architecture),
         colour: Some(colour),
         roughness: matte(),
@@ -857,6 +909,7 @@ pub fn from_pattern(
                 curl_m: 0.0015,
                 inner_colour: Some(inner),
                 aged: Vec::new(),
+                weathered: None,
             }),
             ..stage("fibrous", Architecture::Peeling)
         },
@@ -870,6 +923,7 @@ pub fn from_pattern(
                 curl_m: 0.0008,
                 inner_colour: Some(inner),
                 aged: Vec::new(),
+                weathered: None,
             }),
             ..stage("peeling", Architecture::Exfoliating)
         },
@@ -1440,6 +1494,9 @@ fn exfoliate(
     // surface's own.
     let mut ramp = vec![inner];
     ramp.extend(peel.aged.iter().copied().map(linear));
+    if peel.aged.is_empty() {
+        ramp.extend(peel.weathered.map(linear));
+    }
     ramp.push(surface);
     match peel.mode {
         Mode::FibrousStrips => {
@@ -1971,6 +2028,7 @@ mod tests {
             curl_m: 0.001,
             inner_colour: Some([90, 160, 60]),
             aged: vec![[200, 120, 40]],
+            weathered: None,
         });
         look.stages[1].lenticels = look.stages[0].lenticels.clone();
         let stage = &look.stages[1];
@@ -2106,5 +2164,28 @@ mod tests {
             ..BarkPattern::default()
         };
         assert!(from_pattern("x", &ringed, [0.3; 3]).is_none());
+    }
+
+    #[test]
+    fn base_and_underside_stages_show_only_there() {
+        let mut look = BarkLook::from_json(
+            r#"{"schema": 1, "id": "x", "thickness": {"coefficient": 0.03},
+                "stages": [
+                    {"name": "smooth", "until_diameter_m": 0.3, "colour": [200, 200, 200]},
+                    {"name": "base", "on": "base", "colour": [40, 40, 40],
+                     "fissures": {"network": "reticulate"}}]}"#,
+        )
+        .unwrap();
+        // A 50 cm trunk: dark to 2 m up, smooth above; thin wood smooth.
+        assert_eq!(look.stage_where(0.5, 1.0, 0.0).name, "base");
+        assert_eq!(look.stage_where(0.5, 2.5, 0.0).name, "smooth");
+        assert_eq!(look.stage_where(0.1, 0.5, 0.0).name, "smooth");
+        look.stages[1].base_height_m = Some(5.0);
+        assert_eq!(look.stage_where(0.5, 4.0, 0.0).name, "base");
+        // On the underside: only where the surface faces down.
+        look.stages[1].on = On::Underside;
+        assert_eq!(look.stage_where(0.5, 8.0, 0.9).name, "base");
+        assert_eq!(look.stage_where(0.5, 8.0, 0.0).name, "smooth");
+        assert_eq!(look.stages[1].architecture, Some(Architecture::Furrowed));
     }
 }
