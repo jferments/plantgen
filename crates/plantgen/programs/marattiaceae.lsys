@@ -31,9 +31,12 @@
 # sheaths none (boot_wear, boot_spread, roots, sheath_wedge 0), so it
 # draws as before.
 #
+# Revision 8: gives palm revision 16's bending roots and root collar
+# none (root_bend, root_flare 0).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem marattiaceae 7 extends palm;
+lsystem marattiaceae 8 extends palm;
 
 param vigour_spread = 0.1;
 param upturn = 0;
@@ -146,3 +149,5 @@ param root_angle = 30;
 param root_radius = 0.01;
 param root_reach = 1;
 param sheath_wedge = 0;       # sheaths close round the stem
+param root_bend = 0;          # roots run straight
+param root_flare = 0;         # no collar at the foot
