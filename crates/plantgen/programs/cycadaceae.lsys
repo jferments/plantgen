@@ -21,9 +21,13 @@
 # family rank files (Whitelock 2002): a male bears a pollen cone, a female
 # a crown of sporophylls with seeds along them, not a cone.
 #
+# Revision 7: gives palm revision 13's fan palman, threads, petiole
+# teeth, twice-pinnate fronds and slowly falling dead fronds none, so
+# cycads draw as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cycadaceae 6 extends palm;
+lsystem cycadaceae 7 extends palm;
 
 param vigour_spread = 0.1; # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;          # how strongly a leaning trunk turns back up, radians a metre
@@ -61,3 +65,23 @@ param coil_size = 0.22;       # a coiled piece's length at the crozier's outer t
 param coil_tight = 2;         # how fast the coiled pieces shorten toward the tip
 param coil_pinna = 0.12;      # a coiled leaflet at the outer turn, a share of its open size
 param coil_roll = 0.08;       # a rolled leaflet's thickness, a share of its rolled length
+# Palm revision 13's fan palman, threads, petiole teeth, twice-pinnate
+# fronds and slowly falling dead fronds: none, so cycads draw as before.
+param split_depth = 1;        # fan segments free to the fan's centre
+param palman_angle = 12;      # a palman card is a 12-degree wedge, its card 0.24 wide
+param palman_area = 0.12;
+param tip_droop = 0;
+param filaments = 0;          # no threads
+param filament_length = 0.5;
+param filament_area = 0.01;
+param tooth_length = 0;       # no petiole teeth
+param tooth_spacing = 0.05;
+param tooth_angle = 90;
+param tooth_tip = 1;
+param tooth_area = 0.25;
+param pinna_pairs = 0;        # once pinnate
+param pinna_leaflets = 10;
+param pinnule_length = 0.2;
+param pinnule_angle = 45;
+param pinnule_area = 0.3;
+param dead_fold_years = 0;    # a dead frond hangs at once

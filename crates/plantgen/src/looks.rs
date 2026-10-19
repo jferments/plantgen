@@ -1138,7 +1138,7 @@ impl Season {
                     within("colours", f64::from(channel), 0.0, 1.0)?;
                 }
             }
-            within("stage size", look.size, 0.05, 4.0)?;
+            within("stage size", look.size, 0.05, 8.0)?;
             if let Some(form) = &look.form {
                 form.validate(&look.shape)?;
             }
@@ -1513,6 +1513,18 @@ pub struct Simple {
     /// branching veins; 0 for a pinnate or palmate blade's.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub parallel: u32,
+    /// How deep the bites in a praemorse tip go, as a share of the
+    /// blade's length: a blade cut off square at its tip (`apex_taper`
+    /// near 0.1) whose edge is jagged, as if bitten off, in uneven teeth
+    /// (a fishtail palm's leaflets, Caryota). 0 for an even tip.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub praemorse: f64,
+    /// How strongly the midrib is drawn: 1 a midrib up the middle, 0 none,
+    /// for a blade whose several main veins fan out from its base with
+    /// no midrib among them (a fishtail palm's leaflets, with `parallel`
+    /// veins).
+    #[serde(skip_serializing_if = "is_one")]
+    pub midrib: f64,
 }
 
 impl Default for Simple {
@@ -1534,6 +1546,8 @@ impl Default for Simple {
             apex_point: 0.0,
             apex_notch: 0.0,
             parallel: 0,
+            praemorse: 0.0,
+            midrib: 1.0,
         }
     }
 }
@@ -1920,6 +1934,29 @@ pub struct Flower {
     /// star); none if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub star_colour: Option<[f32; 3]>,
+    /// A stripe down the middle of each petal's or tepal's inner face from
+    /// its foot, in a colour of its own (Kellogg's lily's yellow stripe
+    /// from its nectaries); none if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stripe_colour: Option<[f32; 3]>,
+    /// Share of each petal's length from its foot `stripe_colour` reaches;
+    /// 0 draws no stripe.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub stripe_length: f64,
+    /// The outer (abaxial) face of each petal or tepal in a colour of its
+    /// own (a Canada lily's tepals red outside); the inner face's, a shade
+    /// darker, if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub back_colour: Option<[f32; 3]>,
+    /// The outer face's foot in a colour of its own, fading into the outer
+    /// face's at `back_base_length` of its length (a western lily's tepals
+    /// green outside at their base); none if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub back_base_colour: Option<[f32; 3]>,
+    /// Share of each petal's length from its foot `back_base_colour`
+    /// reaches.
+    #[serde(skip_serializing_if = "is_default_base_length")]
+    pub back_base_length: f64,
     /// The stigma lobes' colour; the filaments' if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stigma: Option<[f32; 3]>,
@@ -2085,6 +2122,11 @@ impl Default for Flower {
             base_colour: None,
             base_length: BASE_LENGTH,
             star_colour: None,
+            stripe_colour: None,
+            stripe_length: 0.0,
+            back_colour: None,
+            back_base_colour: None,
+            back_base_length: BASE_LENGTH,
             stigma: None,
             pericarpel: Skin::Naked,
             bud: None,
@@ -2151,12 +2193,14 @@ impl Flower {
             && self.staminodes == 0
             && self.carpels == 0
             && self.torus == 0.0
-            && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
             && self.spots == 0
             && self.base_colour.is_none()
             && self.star_colour.is_none()
+            && self.stripe_colour.is_none()
+            && self.back_colour.is_none()
+            && self.back_base_colour.is_none()
     }
 
     /// Whether the flower's plane of symmetry is fixed by the axis that
@@ -2617,6 +2661,14 @@ pub struct Fruit {
     /// The kept calyx's lobes; 0 for five.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub kept_lobes: u32,
+    /// How the kept calyx's lobes lie ([`KeptPosture`]): by their length
+    /// unless set.
+    #[serde(skip_serializing_if = "KeptPosture::is_by_length")]
+    pub kept_posture: KeptPosture,
+    /// The valves a ripe capsule opens into from its tip (a jimsonweed's
+    /// four, a tobacco's two), 0 for one that stays shut.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub valves: u32,
     /// What arms the fruit's surface.
     #[serde(skip_serializing_if = "Armed::is_none")]
     pub armed: Armed,
@@ -2669,6 +2721,8 @@ impl Default for Fruit {
             rows: 0.0,
             kept_calyx: 0.0,
             kept_lobes: 0,
+            kept_posture: KeptPosture::ByLength,
+            valves: 0,
             armed: Armed::None,
             hang: 0.0,
             flare: 0.0,
@@ -2834,8 +2888,35 @@ pub enum Armed {
     None,
     /// Stout prickles all over (a jimsonweed's capsule).
     Prickles,
-    /// Fine hooked bristles all over (an enchanter's nightshade's burr).
+    /// Fine straight bristles all over.
     Bristles,
+    /// Fine bristles hooked at their tips (an enchanter's nightshade's
+    /// burr, a cleavers' fruit).
+    Hooks,
+}
+
+/// How a calyx kept under a fruit lies (`crate::fruit`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum KeptPosture {
+    /// As its length gives: short lobes rise a little round the fruit's
+    /// foot, long ones spread in a star.
+    #[default]
+    ByLength,
+    /// Pressed to the fruit, its lobes following the fruit's surface up
+    /// from the stalk (an eggplant's cap, a pepper's cup).
+    Clasping,
+    /// Spread flat in a star (a belladonna's).
+    Spreading,
+    /// Turned back toward the stalk.
+    Reflexed,
+}
+
+impl KeptPosture {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_by_length(&self) -> bool {
+        *self == Self::ByLength
+    }
 }
 
 impl Armed {
@@ -2865,6 +2946,8 @@ struct FruitCard {
     rows: f64,
     kept_calyx: f64,
     kept_lobes: u32,
+    kept_posture: KeptPosture,
+    valves: u32,
     armed: Armed,
     hang: f64,
     flare: f64,
@@ -2897,6 +2980,8 @@ impl Default for FruitCard {
             rows: fruit.rows,
             kept_calyx: fruit.kept_calyx,
             kept_lobes: fruit.kept_lobes,
+            kept_posture: fruit.kept_posture,
+            valves: fruit.valves,
             armed: fruit.armed,
             hang: fruit.hang,
             flare: fruit.flare,
@@ -2944,6 +3029,8 @@ impl TryFrom<FruitCard> for Fruit {
             rows: card.rows,
             kept_calyx: card.kept_calyx,
             kept_lobes: card.kept_lobes,
+            kept_posture: card.kept_posture,
+            valves: card.valves,
             armed: card.armed,
             hang: card.hang,
             flare: card.flare,
@@ -3518,6 +3605,8 @@ impl Shape {
                 check("apex_point", s.apex_point, 0.0, 0.3)?;
                 check("apex_notch", s.apex_notch, 0.0, 0.2)?;
                 count("parallel", s.parallel, 0, 12)?;
+                check("praemorse", s.praemorse, 0.0, 0.3)?;
+                check("midrib", s.midrib, 0.0, 1.0)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Lobed(s) => {
@@ -3613,6 +3702,8 @@ impl Shape {
                 check("tube_reach", s.tube_reach, 0.0, 12.0)?;
                 count("spots", s.spots, 0, 60)?;
                 check("base_length", s.base_length, 0.05, 1.0)?;
+                check("stripe_length", s.stripe_length, 0.0, 1.0)?;
+                check("back_base_length", s.back_base_length, 0.05, 1.0)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
                 check("floral_tube", s.floral_tube, 0.0, 12.0)?;
@@ -3801,6 +3892,9 @@ impl Shape {
                 check("hang", s.hang, -1.0, 1.0)?;
                 if s.kept_lobes != 0 {
                     count("kept_lobes", s.kept_lobes, 3, 12)?;
+                }
+                if s.valves != 0 {
+                    count("valves", s.valves, 2, 10)?;
                 }
                 for channel in s.seeds.into_iter().chain(s.cup).chain(s.ripening).flatten() {
                     check(

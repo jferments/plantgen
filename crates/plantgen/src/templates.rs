@@ -1091,6 +1091,28 @@ fn in_notch(s: &Simple, x: f64, t: f64, length: f64) -> bool {
     notch > 0.0 && t > 1.0 - notch && x.abs() < 0.9 * (t - (1.0 - notch)) * length
 }
 
+/// Whether a point `x` across and `t` along a simple blade falls in a
+/// bite of its praemorse tip (`Simple.praemorse`): the tip's edge, across
+/// the blade's width there, is cut into uneven teeth, seven across the
+/// blade, each bite as deep as `praemorse` of the blade's length times a
+/// share between a half and all of it that varies from tooth to tooth.
+fn in_bite(s: &Simple, x: f64, t: f64, width: f64) -> bool {
+    let depth = s.praemorse;
+    if depth <= 0.0 || t < 1.0 - depth {
+        return false;
+    }
+    let teeth = 7.0;
+    let across = (x / width.max(1e-6)).clamp(-1.0, 1.0);
+    let phase = f64::midpoint(across, 1.0) * teeth;
+    let tooth = phase.floor().min(teeth - 1.0);
+    // Each tooth's depth, from the golden ratio's sequence, so neighbours
+    // differ without a random draw.
+    let deep = 0.5 + 0.5 * (tooth * 0.618_034 + 0.31).fract();
+    // A tooth rises to its point in its middle and falls to its sinuses.
+    let rise = 1.0 - 2.0 * (phase - tooth - 0.5).abs();
+    t > 1.0 - depth * deep * (1.0 - rise)
+}
+
 /// Where a blade's teeth fade in from its base and out toward its tip.
 fn blade_fade(t: f64) -> f64 {
     math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t))
@@ -1261,6 +1283,7 @@ fn shape_seed(shape: &Shape) -> u64 {
     // A blade without basal lobes, fanned veins or a shaped apex or base
     // grows the veins it grew before cards had them.
     let mut text = format!("{plain:?}")
+        .replace(", praemorse: 0.0, midrib: 1.0 }", " }")
         .replace(", parallel: 0 }", " }")
         .replace("outline: None, ", "")
         .replace(
@@ -2058,8 +2081,17 @@ fn simple(
     if x.abs() >= width || in_notch(s, x, t, length) {
         return Paint::EMPTY;
     }
-    if t < 0.97 - s.apex_notch && x.abs() < fine * 0.7 {
-        return Paint::solid(1.2, 0.5);
+    // A praemorse tip's bites cut across the blade as wide as it is a
+    // little below them, where its square end begins.
+    if s.praemorse > 0.0 && in_bite(s, x, t, simple_width(s, length, 1.0 - s.praemorse, None)) {
+        return Paint::EMPTY;
+    }
+    if s.midrib > 0.0 && t < 0.97 - s.apex_notch && x.abs() < fine * 0.7 {
+        return if s.midrib >= 1.0 {
+            Paint::solid(1.2, 0.5)
+        } else {
+            Paint::solid(0.92 + 0.28 * s.midrib, 0.5 * s.midrib)
+        };
     }
     let along = y - base;
     let across = x.abs() / width.max(1e-6);

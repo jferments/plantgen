@@ -3,9 +3,13 @@
   "rank": "genus",
   "name": "Hydrangea",
   "traits": {
-    "inflorescence": {"corymb": "usually", "panicle": "sometimes"}
+    "inflorescence": {"corymb": "usually", "panicle": "sometimes"},
+    "stamens": {"min": 8, "max": 10, "high": 25},
+    "flowering_shoots": "renewed"
   },
   "evidence": {
-    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Hydrangea (read 2026-10-17): about 70 to 98 species; flowers in corymbs or panicles, mostly at stem tips; its lacecap and mophead forms are flat or domed corymb-like heads. Corymb ranked first on that basis, panicle as the lesser form."}
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Hydrangea (read 2026-10-17): about 70 to 98 species; flowers in corymbs or panicles, mostly at stem tips; its lacecap and mophead forms are flat or domed corymb-like heads. Corymb ranked first on that basis, panicle as the lesser form."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China vol. 8 p. 411, Hydrangea (read 2026-10-18): stamens (8 or) 10 (or 25), inserted on the disc. Flora of North America vol. 12, Hydrangea: stamens 10. Dendrology (2019) pp. 322-326 gives 8 to 10 for H. arborescens, H. aspera, H. macrophylla and H. paniculata. Stated for the genus in place of Hydrangeaceae's 4 to 100, which the family's many-stamened mock oranges widen."},
+    "traits.flowering_shoots": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) pp. 322-326, Hydrangea arborescens, H. aspera, H. macrophylla and H. paniculata: inflorescences terminal, corymbs at the shoot tips (panicles on the lateral branch tips in H. paniculata), each ending a shoot of the year; Wikipedia Hydrangea (read 2026-10-17): flowers mostly at the stem tips. A cluster that ends its shoot flowers once, and next year's stand on the new shoots."}
   }
 }

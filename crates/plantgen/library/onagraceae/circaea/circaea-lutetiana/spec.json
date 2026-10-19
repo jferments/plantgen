@@ -95,7 +95,7 @@
       8,
       9
     ],
-    "fruit_armature": "bristly",
+    "fruit_armature": "hooked",
     "calyx_in_fruit": "falling"
   },
   "provenance": {
@@ -239,7 +239,7 @@
     "traits.fruit_armature": {
       "evidence": "SourceInferred",
       "source": "hooker-1884",
-      "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea lutetiana, p. 159 (read on the Internet Archive, 2026-10-17): fruit covered with hooked bristles; Bentham (p. 154): stiff hooked hairs forming a small burr."
+      "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea lutetiana, p. 159 (read on the Internet Archive, 2026-10-17): fruit covered with hooked bristles; Bentham (p. 154): stiff hooked hairs forming a small burr; Britton and Brown (vol. 2, p. 611): densely covered with stiff hooked hairs."
     },
     "traits.calyx_in_fruit": {
       "evidence": "SourceInferred",

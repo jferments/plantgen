@@ -1,0 +1,187 @@
+{
+  "schema": 1,
+  "id": "caryota-urens",
+  "taxon": {
+    "scientific_name": "Caryota urens",
+    "common_name": "fishtail palm",
+    "family": "Arecaceae",
+    "genus": "Caryota",
+    "plant_name_id": 34805
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.15,
+      "trunk_rate": 0.25,
+      "stemless_years": 3,
+      "internode": 0.05,
+      "fronds_per_year": 6,
+      "frond_life": 3,
+      "frond_length": 5.6,
+      "size_years": 6,
+      "petiole": 0.12,
+      "pieces": 24,
+      "leaflet_length": 0.26,
+      "pinnule_length": 0.3,
+      "open_years": 0.8,
+      "old_angle": 55,
+      "hang": 25
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [
+      5,
+      10,
+      20
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 7,
+      "tolerance": 0.6
+    },
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 14,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "clonal": false,
+    "height_typical_m": 12,
+    "height_max_m": 18,
+    "stem_diameter_max_m": 0.3,
+    "leaf_length_m": {
+      "min": 3.5,
+      "max": 6
+    },
+    "petiole_length_m": 0.6,
+    "pinnae": 12,
+    "leaflets": 27,
+    "leaflet_length_m": 0.3
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-pakistan",
+      "note": "Flora of Pakistan, Caryota urens (read 2026-10-18): a solitary, ringed trunk to 12 m; leaves to 3.5 m or more and 3 m wide, borne along the trunk, the primary divisions 1.2 to 1.5 m long, obliquely cut off at their ends. Flora of North America (vol. 22) has the leaves 5 to 7 m and the stem over 15 cm through; Wikipedia (Caryota urens, read 2026-10-18) a trunk 30 cm wide, a petiole about 60 cm and leaflets about 30 cm. Drawn as a trunk 0.15 m in radius; fronds 5.6 m long, the petiole 0.12 of them; the longest pinna 0.26 of the frond (1.45 m) and its longest leaflet 0.3 of the pinna (0.44 m), so most leaflets are 20 to 30 cm; six fronds a year living three years, each frond 5 cm up the trunk from the last and the trunk rising 0.25 m a year besides, so the leaves stand spread along the top two metres of the trunk (estimated, set by eye from photographs)."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 22), Caryota key: stems solitary, more than 15 cm through, in C. urens; clustered in C. mitis."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-pakistan",
+      "note": "Flora of Pakistan, Caryota urens (read 2026-10-18): the trunk to 12 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Caryota urens (read 2026-10-18): to 18 m tall."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Caryota urens (read 2026-10-18): the trunk about 30 cm wide; Flora of North America (vol. 22): more than 15 cm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-pakistan",
+      "note": "Flora of Pakistan, Caryota urens (read 2026-10-18): leaves to 3.5 m long or more; Flora of North America (vol. 22) gives 5 to 7 m. Read as 3.5 to 6 m of blade."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Caryota urens (read 2026-10-18): a petiole about 60 cm."
+    },
+    "traits.pinnae": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No flora read counts the primary pinnae; secondary compilations (Llifle, read 2026-10-18) give five to seven pairs up to 1.5 m long, which fits Flora of Pakistan's 1.2 to 1.5 m divisions on a leaf 3 m wide. Drawn as six pairs, to be checked against a flora or specimens."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No flora read counts the leaflets on a pinna: thirteen a side and one at the tip, set by eye so leaflets about 30 cm long (Wikipedia) fill a pinna about 1.4 m long."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Caryota urens (read 2026-10-18): the leaflets obdeltoid, about 30 cm long, jagged at their ends."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough heights from general knowledge of the species: about 7 m at 10 years and 14 m at 20 to the top of the crown, its trunk then near Flora of Pakistan's 12 m. Wide tolerances."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a palm."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact: twenty years, before the stem flowers and dies, which is not drawn."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of Pakistan, Caryota urens (eFloras)",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "Dransfield et al. (2008), Genera Palmarum, 2nd ed.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy: a solitary fishtail palm with twice-pinnate fronds of wedge-shaped, jagged leaflets. It is hapaxanthic, flowering from the top down and then dying, which is not drawn."
+  }
+}

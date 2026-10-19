@@ -82,6 +82,11 @@
       135,
       25
     ],
+    "perianth_abaxial_colour": [
+      215,
+      85,
+      35
+    ],
     "perianth_spots": "copious",
     "perianth_spot_colour": [
       110,
@@ -121,7 +126,11 @@
     "fruiting_months": [
       8,
       9
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 5,
+      "max": 81
+    }
   },
   "provenance": {
     "sources": [
@@ -236,6 +245,11 @@
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium columbianum (efloras.org, read 2026-10-18): yellow or orange to occasionally red; drawn orange The colour is our reading of the words."
     },
+    "traits.perianth_abaxial_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium columbianum (efloras.org, read 2026-10-18): yellow or orange to occasionally red, with copious maroon spots, often darker and especially reddish abaxially The colour is our reading of the words."
+    },
     "traits.perianth_spots": {
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
@@ -290,6 +304,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read gives it: capsules ripening in August and September."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Derived: the stem's leaves are its 1-9 whorls times 5-9 leaves in each, 5-81, from the counts quoted for leaf_whorls (Flora of North America vol. 26 (2002), Lilium columbianum (efloras.org, read 2026-10-18): leaves in 1-9 whorls or partial whorls. The typical value is our pick of a usual plant inside that range.) and leaves_per_whorl (Abrams vol. 1 (1923), Lilium columbianum: whorls of 5 to 9 leaves, sometimes more (FNA: 3-25); 6 is the count this spec drew by hand before, within that range.)."
     }
   }
 }

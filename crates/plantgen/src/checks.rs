@@ -137,7 +137,7 @@ use std::fmt::Write as _;
 
 use serde_json::{Map, Value};
 
-use crate::graph::{GraphOrgan, PlantGraph};
+use crate::graph::{GraphOrgan, GraphSegment, PlantGraph};
 use crate::grow::Growth;
 use crate::library::Library;
 use crate::looks::{Look, Season, Shape};
@@ -297,10 +297,21 @@ pub const TREE_OUTLINE_FIT: Stated = Stated {
     typical: None,
 };
 
+/// A fertile flower's parts, which a sterile flower lacks: a cluster
+/// whose flowers are all sterile (`sterile_flowers`, a mophead
+/// hydrangea's) draws none, so its stated counts are not judged on it.
+const FERTILE_PARTS: [&str; 3] = ["stamens", "staminodes", "carpels"];
+
 /// `character` as `spec` states it in `traits`, or as a check holds it
-/// where it states none ([`TREE_OUTLINE_FIT`]).
+/// where it states none ([`TREE_OUTLINE_FIT`]); none for a fertile
+/// flower's parts ([`FERTILE_PARTS`]) where every flower is sterile.
 #[must_use]
 pub fn stated(spec: &PlantSpec, traits: &Map<String, Value>, character: &str) -> Option<Stated> {
+    if FERTILE_PARTS.contains(&character)
+        && traits.get("sterile_flowers").and_then(Value::as_str) == Some("all")
+    {
+        return None;
+    }
     traits.get(character).and_then(Stated::of).or_else(|| {
         (character == "crown_outline_fit"
             && matches!(
@@ -1368,6 +1379,9 @@ fn carried(v: Vec3, from: Vec3, to: Vec3) -> Vec3 {
     v * cos + k.cross(v) * sin + k * (k.dot(v) * (1.0 - cos))
 }
 
+/// The patterns [`arrangement`] reads between pairs or whorls.
+const WHORL_PATTERNS: [&str; 2] = ["decussate", "superposed"];
+
 /// How the plant's leaves stand at their nodes, measured on the graph:
 /// the leaves at each node (`leaf_arrangement`, and `leaves_per_whorl` at
 /// a whorl), and how far each node turns from the one below it round its
@@ -1825,7 +1839,10 @@ const UNROLLED: f64 = 0.9;
 /// rest, and the blade's width twice the farthest a leaflet reaches out
 /// from the axis. A frond not yet unrolled (see [`UNROLLED`]) has no
 /// outline or size yet. A frond whose stipe forks into arms (a pedate
-/// blade) is measured as a fan ([`fan_sizes`]).
+/// blade) is measured as a fan ([`fan_sizes`]). A frond whose leaflets
+/// stand on axes of its own branching from its rachis (a fishtail palm's)
+/// is twice pinnate: each such axis is a pinna, the rachis is the frond's
+/// lowest-order axis alone, and its leaflets are counted a pinna at a time.
 fn frond_sizes(
     structure: u32,
     leaflets: &[&GraphOrgan],
@@ -1834,7 +1851,17 @@ fn frond_sizes(
     looks: &[Look],
     tally: &mut Tally,
 ) {
-    let bearing: BTreeSet<u32> = leaflets.iter().filter_map(|organ| organ.segment).collect();
+    // A pedate frond's arms fork from its stipe's top; they are its rachis
+    // forking, not pinnae off it.
+    let own: BTreeSet<u32> = leaflets.iter().filter_map(|organ| organ.segment).collect();
+    let twice = forked(structure, &own, drawn)
+        .is_none()
+        .then(|| pinnae_of(structure, leaflets, drawn))
+        .flatten();
+    let bearing: BTreeSet<u32> = match &twice {
+        Some((_, of)) => of.iter().flatten().map(|&(_, rachis)| rachis).collect(),
+        None => own,
+    };
     let (mut stipe, mut blade) = (0.0, 0.0);
     let mut first = true;
     // How far up the rachis each of its segments starts.
@@ -1842,7 +1869,11 @@ fn frond_sizes(
     // Its blade's shortest and longest segments.
     let (mut shortest, mut longest) = (f64::INFINITY, 0.0_f64);
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
-        if segment.within != Some(structure) {
+        if segment.within != Some(structure)
+            || twice
+                .as_ref()
+                .is_some_and(|(rachis, _)| segment.order > *rachis)
+        {
             continue;
         }
         let length = (segment.end - segment.start).length();
@@ -1861,10 +1892,25 @@ fn frond_sizes(
     let mut width: f64 = 0.0;
     // The blade's outline: how far each leaflet reaches out, and where.
     let mut outline = Vec::with_capacity(leaflets.len());
-    for organ in leaflets {
+    let mut pinnae = BTreeSet::new();
+    for (at, organ) in leaflets.iter().enumerate() {
         let Some((_, size)) = leaf_look(organ, looks) else {
             continue;
         };
+        if let Some((_, of)) = &twice {
+            let Some((pinna, index)) = of[at] else {
+                continue;
+            };
+            pinnae.insert(pinna);
+            let (up, reach) = off_rachis(organ, size, &drawn.segments[index as usize]);
+            width = width.max(2.0 * reach);
+            if let Some(start) = starts.get(&index)
+                && blade > 0.0
+            {
+                outline.push(((start + up - stipe) / blade, reach));
+            }
+            continue;
+        }
         let segment = organ.segment.and_then(|s| drawn.segments.get(s as usize));
         let axis = segment.map_or(organ.heading, |s| {
             (s.end - s.start).normalize_or(organ.heading)
@@ -1911,15 +1957,8 @@ fn frond_sizes(
         tally.add("leaf_width_m", id, 0, width);
         tally.add("petiole_length_m", id, 0, stipe);
     }
-    // Leaflets drawn as frond cards are the frond's pinnae, each divided
-    // again; drawn whole, they are its leaflets.
-    let again = leaflets
-        .first()
-        .and_then(|organ| leaf_look(organ, looks))
-        .map_or(0, |(look, _)| division_order(&look.shape));
-    let count = u32::try_from(leaflets.len()).unwrap_or(u32::MAX);
-    tally.count(if again > 0 { "pinnae" } else { "leaflets" }, id, 0, count);
-    tally.count("division_order", id, 0, 1 + again);
+    let pinnae = twice.is_some().then_some(pinnae.len());
+    frond_counts(id, leaflets, pinnae, looks, tally);
     tally.kind(
         "division_pattern",
         if fan.is_some() { "palmate" } else { "pinnate" },
@@ -1928,9 +1967,81 @@ fn frond_sizes(
     tally.kind("leaf_form", "blade");
 }
 
+/// A frond's leaflets or pinnae and how many times it divides: leaflets
+/// drawn as frond cards are its pinnae, each divided again, and drawn
+/// whole, its leaflets; a twice-pinnate frond's `pinnae` (its axes off its
+/// rachis) bear its leaflets, counted a pinna at a time.
+fn frond_counts(
+    id: u64,
+    leaflets: &[&GraphOrgan],
+    pinnae: Option<usize>,
+    looks: &[Look],
+    tally: &mut Tally,
+) {
+    let again = leaflets
+        .first()
+        .and_then(|organ| leaf_look(organ, looks))
+        .map_or(0, |(look, _)| division_order(&look.shape));
+    let count = u32::try_from(leaflets.len()).unwrap_or(u32::MAX);
+    if let Some(pinnae) = pinnae {
+        let pinnae = u32::try_from(pinnae).unwrap_or(u32::MAX).max(1);
+        tally.count("pinnae", id, 0, pinnae);
+        tally.count("leaflets", id, 0, (count + pinnae / 2) / pinnae);
+        tally.count("division_order", id, 0, 2);
+    } else {
+        tally.count(if again > 0 { "pinnae" } else { "leaflets" }, id, 0, count);
+        tally.count("division_order", id, 0, 1 + again);
+    }
+}
+
+/// A leaflet's pinna: the first segment of the axis it stands on off a
+/// twice-pinnate frond's rachis, and the rachis segment that axis leaves.
+type Pinna = (u32, u32);
+
+/// A twice-pinnate frond's rachis order (the lowest of its segments) and,
+/// for each of its leaflets, its pinna (the first segment of the axis off
+/// the rachis it stands on) and the rachis segment that pinna leaves;
+/// `None` for a frond whose leaflets all stand on its rachis.
+fn pinnae_of(
+    structure: u32,
+    leaflets: &[&GraphOrgan],
+    drawn: &PlantGraph,
+) -> Option<(u16, Vec<Option<Pinna>>)> {
+    let rachis = drawn
+        .segments
+        .iter()
+        .filter(|segment| segment.within == Some(structure))
+        .map(|segment| segment.order)
+        .min()?;
+    let order_of = |index: u32| drawn.segments.get(index as usize).map(|s| s.order);
+    let of: Vec<_> = leaflets
+        .iter()
+        .map(|organ| {
+            let mut index = organ.segment?;
+            let mut root = None;
+            while order_of(index)? > rachis {
+                root = Some(index);
+                index = drawn.segments.get(index as usize)?.parent?;
+            }
+            root.map(|root| (root, index))
+        })
+        .collect();
+    of.iter().any(Option::is_some).then_some((rachis, of))
+}
+
+/// How far along a twice-pinnate frond's rachis segment a leaflet of
+/// `size` on one of its pinnae stands from the segment's start, and how
+/// far its tip reaches out from the rachis.
+fn off_rachis(organ: &GraphOrgan, size: f64, rachis: &GraphSegment) -> (f64, f64) {
+    let axis = (rachis.end - rachis.start).normalize_or(organ.heading);
+    let offset = organ.position + organ.heading * size - rachis.start;
+    let up = offset.dot(axis);
+    (up, (offset - axis * up).length())
+}
+
 /// The top of a frond's bare stipe where its rachis forks into two or
 /// more arms that bear its leaflets (a pedate blade, as a maidenhair's
-/// "2 equal branches surmounting the stipe"), if it does.
+/// "2 equal branches surmounting the stipe"), if it does, and only there.
 fn forked(structure: u32, bearing: &BTreeSet<u32>, drawn: &PlantGraph) -> Option<u32> {
     let mut arms: BTreeMap<u32, u32> = BTreeMap::new();
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
@@ -1946,9 +2057,14 @@ fn forked(structure: u32, bearing: &BTreeSet<u32>, drawn: &PlantGraph) -> Option
             *arms.entry(parent).or_default() += 1;
         }
     }
-    arms.into_iter()
-        .find(|&(_, n)| n >= 2)
-        .map(|(fork, _)| fork)
+    // One fork: a rachis bare of leaflets that bears pairs of leafy axes
+    // all along it (a fishtail palm's pinnae) does not fork.
+    let mut forks = arms
+        .into_iter()
+        .filter(|&(_, n)| n >= 2)
+        .map(|(fork, _)| fork);
+    let fork = forks.next()?;
+    forks.next().is_none().then_some(fork)
 }
 
 /// A forked frond's blade, a fan of leaflets round the top of its stipe:
@@ -2358,17 +2474,19 @@ fn reproductive(
         let layout = cluster.laid_on(organ);
         cluster_kinds(cluster, &layout, look, phase, tally);
         if in_stage(phase, Stage::Open) {
+            // Along its axis: a nodding or hanging cluster held straight.
+            let straight = cluster.laid_straight_on(organ);
             tally.add(
                 "inflorescence_length_m",
                 organ.id,
                 0,
-                organ.size * layout.length(cluster.unit),
+                organ.size * straight.length(cluster.unit),
             );
             tally.add(
                 "peduncle_length_m",
                 organ.id,
                 0,
-                organ.size * layout.peduncle(),
+                organ.size * straight.peduncle(),
             );
             tally.count(
                 "units_per_inflorescence",
@@ -3327,12 +3445,30 @@ pub fn judge_plants(
         .filter(|&&character| vocabulary.applies(character, traits) != crate::traits::Applies::No)
         .filter_map(|&character| {
             let stated = states_of(traits.get(character)?);
-            let drawn: BTreeSet<String> = plants
+            let mut drawn: BTreeSet<String> = plants
                 .iter()
                 .filter_map(|plant| plant.kinds.get(character))
                 .flatten()
                 .cloned()
                 .collect();
+            // A species whose nodes turn one leaf at a time (spiral, two or
+            // three ranks) yet is drawn with its leaves in whorls of three or
+            // more has false whorls,
+            // a spiral's nodes crowded together (a lily's): the turn from
+            // one drawn whorl to the next says nothing of that spiral, so it
+            // is left unread. Whether it is whorled is `leaf_arrangement`'s.
+            let whorled = plants.iter().all(|plant| {
+                plant
+                    .kinds
+                    .get("leaf_arrangement")
+                    .is_some_and(|states| states.iter().all(|state| state == "whorled"))
+            });
+            if character == "phyllotaxis_pattern"
+                && whorled
+                && !stated.iter().any(|s| s == "decussate")
+            {
+                drawn.retain(|state| !WHORL_PATTERNS.contains(&state.as_str()));
+            }
             // A drawn state may be any of several (`berry|drupe`), where
             // the drawing does not tell them apart.
             let verdict = if drawn.is_empty() {

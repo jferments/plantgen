@@ -117,6 +117,32 @@
       "colour": "nectary_colour",
       "why": "Nectaries a flora says show at the foot of each petal or tepal are drawn there in their colour, together a star at the flower's heart."
     },
+    "appearance.organs.*.shape.stripe_colour": {
+      "template": "flower",
+      "colour": "perianth_stripe_colour",
+      "why": "A stripe a flora names down the middle of each petal or tepal is drawn in its colour along the midrib of the inner face, from the foot."
+    },
+    "appearance.organs.*.shape.stripe_length": {
+      "template": "flower",
+      "needs": ["perianth_stripe_colour"],
+      "rule": "clamp(first(perianth_stripe_length, 0.5), 0.05, 1)",
+      "why": "The stripe reaches as far along each petal or tepal as its flora says; a 'proximal' stripe with no share given reaches half way, the proximal half."
+    },
+    "appearance.organs.*.shape.back_colour": {
+      "template": "flower",
+      "colour": "perianth_abaxial_colour",
+      "why": "Where a flora colours the petals' or tepals' outer (abaxial) face apart from the inner, the outer face is drawn in that colour, as seen from behind or under a nodding flower."
+    },
+    "appearance.organs.*.shape.back_base_colour": {
+      "template": "flower",
+      "colour": "perianth_abaxial_base_colour",
+      "why": "Where a flora colours the outer face's base apart from the rest, it is drawn in that colour from the foot, fading into the outer face's colour where it stops."
+    },
+    "appearance.organs.*.shape.back_base_length": {
+      "template": "flower",
+      "rule": "clamp(perianth_abaxial_base_length, 0.05, 1)",
+      "why": "The outer base colour reaches as far along each petal or tepal as its flora says ('green abaxially on proximal 2/5-1/2')."
+    },
     "generator.params.bloom_stalk": {
       "map": {"inflorescence": {"solitary": {"rule": "pedicel_length_m"}}},
       "why": "A tree's or shrub's solitary flower hangs or stands on its own stalk, as long as its flora measures it; a cluster's flowers keep their stalks in the cluster."
@@ -202,7 +228,7 @@
       "why": "A cluster's fruit is as long, for the length of the cluster and its peduncle, as floras measure them, whichever axis bears it."
     },
     "appearance.organs.*.season.flower_look.size": {
-      "rule": "clamp(flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3) / fruit_size_m, 0.05, 4)",
+      "rule": "clamp(flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3) / fruit_size_m, 0.05, 8)",
       "why": "A flower is as wide, for its fruit's length, as floras measure the flower and the fruit (the flower by its petals' reach where sepals outreach them, as the bloom size rule grows it): a cluster's flower against its fruit, a lone flower against the fruit it becomes."
     },
     "appearance.organs.*.season.fruit_size": {
@@ -295,8 +321,8 @@
       "map": {"perianth": {"sepals_and_petals": "corolla", "tepals": "tepals", "spiral": "spiral", "absent": "absent"}},
       "why": "A calyx and corolla draws one whorl of petals with sepals below them; like tepals draw two whorls; a spiral, tepals on a spiral; no perianth, none."
     },
-    "appearance.organs.*.shape.petal_ratio": {"template": "flower", "map": {"petal_shape": {"linear": 0.15, "lanceolate": 0.3, "oblong": 0.45, "spatulate": 0.45, "elliptic": 0.5, "ovate": 0.6, "obovate": 0.65, "orbicular": 0.95}}, "between": true, "why": "A petal is as wide for its length as its outline is stated: a narrow strap (linear) to as broad as long (orbicular), drawn among as many petals as the flower has."},
-    "appearance.organs.*.shape.taper": {"template": "flower", "map": {"petal_shape": {"linear": 1.0, "lanceolate": 1.3, "oblong": 0.3, "spatulate": 0.4, "elliptic": 0.8, "ovate": 1.1, "obovate": 0.45, "orbicular": 0.45}}, "between": true, "why": "A petal narrows from its widest to its tip as its outline is stated: straight sides to a point (lanceolate, ovate), a curve (elliptic), or round and full to the tip (obovate, spatulate, orbicular, oblong)."},
+    "appearance.organs.*.shape.petal_ratio": {"template": "flower", "map": {"sterile_flowers": {"all": {"map": {"sterile_sepal_shape": {"linear": 0.15, "lanceolate": 0.3, "oblong": 0.45, "spatulate": 0.45, "elliptic": 0.5, "ovate": 0.6, "obovate": 0.65, "orbicular": 0.95}}}, "marginal": {"map": {"petal_shape": {"linear": 0.15, "lanceolate": 0.3, "oblong": 0.45, "spatulate": 0.45, "elliptic": 0.5, "ovate": 0.6, "obovate": 0.65, "orbicular": 0.95}}}, "none": {"map": {"petal_shape": {"linear": 0.15, "lanceolate": 0.3, "oblong": 0.45, "spatulate": 0.45, "elliptic": 0.5, "ovate": 0.6, "obovate": 0.65, "orbicular": 0.95}}}}}, "else": {"map": {"petal_shape": {"linear": 0.15, "lanceolate": 0.3, "oblong": 0.45, "spatulate": 0.45, "elliptic": 0.5, "ovate": 0.6, "obovate": 0.65, "orbicular": 0.95}}}, "between": true, "why": "A petal is as wide for its length as its outline is stated: a narrow strap (linear) to as broad as long (orbicular), drawn among as many petals as the flower has. Where every flower is sterile, the petals drawn are its showy sepals, as their outline is stated (sterile_sepal_shape)."},
+    "appearance.organs.*.shape.taper": {"template": "flower", "map": {"sterile_flowers": {"all": {"map": {"sterile_sepal_shape": {"linear": 1.0, "lanceolate": 1.3, "oblong": 0.3, "spatulate": 0.4, "elliptic": 0.8, "ovate": 1.1, "obovate": 0.45, "orbicular": 0.45}}}, "marginal": {"map": {"petal_shape": {"linear": 1.0, "lanceolate": 1.3, "oblong": 0.3, "spatulate": 0.4, "elliptic": 0.8, "ovate": 1.1, "obovate": 0.45, "orbicular": 0.45}}}, "none": {"map": {"petal_shape": {"linear": 1.0, "lanceolate": 1.3, "oblong": 0.3, "spatulate": 0.4, "elliptic": 0.8, "ovate": 1.1, "obovate": 0.45, "orbicular": 0.45}}}}}, "else": {"map": {"petal_shape": {"linear": 1.0, "lanceolate": 1.3, "oblong": 0.3, "spatulate": 0.4, "elliptic": 0.8, "ovate": 1.1, "obovate": 0.45, "orbicular": 0.45}}}, "between": true, "why": "A petal narrows from its widest to its tip as its outline is stated: straight sides to a point (lanceolate, ovate), a curve (elliptic), or round and full to the tip (obovate, spatulate, orbicular, oblong). Where every flower is sterile, the petals drawn are its showy sepals, as their outline is stated (sterile_sepal_shape)."},
     "appearance.organs.*.shape.point": {"template": "flower", "map": {"petal_apex": {"acuminate": 1.0, "acute": 0.6, "obtuse": 0.25, "rounded": 0.0, "truncate": 0.0, "emarginate": 0.0, "bilobed": 0.0}}, "between": true, "why": "A petal's tip is as pointed as stated: drawn out (acuminate), pointed (acute), blunt (obtuse), or round (rounded, truncate, and a notched tip's lobes)."},
     "appearance.organs.*.shape.notch": {"template": "flower", "map": {"petal_apex": {"emarginate": 0.15, "bilobed": 0.45}}, "between": true, "why": "An emarginate petal's tip is notched; a bilobed one is cleft into two lobes."},
     "appearance.organs.*.shape.petals": {
@@ -306,8 +332,9 @@
     },
     "appearance.organs.*.shape.sepals": {
       "template": "flower",
-      "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 0, 12)"}, "tepals": 0, "spiral": 0, "absent": 0}},
-      "why": "A calyx has as many sepals as the flower's merosity; tepals and a spiral's outer tepals are drawn as the perianth itself."
+      "map": {"sterile_flowers": {"all": 0, "marginal": {"map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 0, 12)"}, "tepals": 0, "spiral": 0, "absent": 0}}}, "none": {"map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 0, 12)"}, "tepals": 0, "spiral": 0, "absent": 0}}}}},
+      "else": {"map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 0, 12)"}, "tepals": 0, "spiral": 0, "absent": 0}}},
+      "why": "A calyx has as many sepals as the flower's merosity; tepals and a spiral's outer tepals are drawn as the perianth itself. A cluster whose flowers are all sterile (a mophead hydrangea's) draws no calyx below them: their showy petaloid sepals are its corolla, in the flower's colour."
     },
     "appearance.organs.*.shape.corolla": {
       "template": "flower",
@@ -360,8 +387,9 @@
     },
     "appearance.organs.*.shape.floral_tube": {
       "template": "flower",
-      "rule": "clamp(hypanthium_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0, 12)",
-      "why": "A floral tube a flora measures above an inferior ovary is drawn that long, over the radius its petals reach."
+      "map": {"sterile_flowers": {"all": 0, "marginal": {"rule": "clamp(hypanthium_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0, 12)"}, "none": {"rule": "clamp(hypanthium_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0, 12)"}}},
+      "else": {"rule": "clamp(hypanthium_length_m / (0.5 * flower_size_m / clamp(first(sepal_length_m / petal_length_m, 1), 1, 3)), 0, 12)"},
+      "why": "A floral tube a flora measures above an inferior ovary is drawn that long, over the radius its petals reach. A sterile flower is all spread calyx, with no tube below it."
     },
     "appearance.organs.*.shape.stamen_length": {
       "template": "flower",
@@ -386,8 +414,9 @@
     },
     "appearance.organs.*.shape.tube": {
       "template": "flower",
-      "map": {"hypanthium": {"true": 0.4, "false": 0}},
-      "why": "A hypanthium is a floral cup under the perianth, 0.4 of the flower's radius long."
+      "map": {"sterile_flowers": {"all": 0, "marginal": {"map": {"hypanthium": {"true": 0.4, "false": 0}}}, "none": {"map": {"hypanthium": {"true": 0.4, "false": 0}}}}},
+      "else": {"map": {"hypanthium": {"true": 0.4, "false": 0}}},
+      "why": "A hypanthium is a floral cup under the perianth, 0.4 of the flower's radius long. A sterile flower is all spread calyx, with no floral cup below it."
     },
     "appearance.organs.*.shape.ovary": {
       "template": "flower",
@@ -401,18 +430,21 @@
     },
     "appearance.organs.*.shape.anther_tilt": {"template": "flower", "map": {"anther_attachment": {"basifixed": 0, "dorsifixed": 45, "versatile": 80}}, "why": "An anther stands along its filament where the filament joins its base, leans where it joins its back, and lies nearly across the filament's tip where it swings free (versatile), as Simpson defines the three."}, "appearance.organs.*.shape.stamens": {
       "template": "flower",
-      "rule": "clamp(round(stamens), 0, 400)",
-      "why": "A flower draws its stamens, up to 400."
+      "map": {"sterile_flowers": {"all": 0, "marginal": {"rule": "clamp(round(stamens), 0, 400)"}, "none": {"rule": "clamp(round(stamens), 0, 400)"}}},
+      "else": {"rule": "clamp(round(stamens), 0, 400)"},
+      "why": "A flower draws its stamens, up to 400. A sterile flower (a mophead hydrangea's) draws none."
     },
     "appearance.organs.*.shape.staminodes": {
       "template": "flower",
-      "rule": "clamp(round(staminodes), 0, 50)",
-      "why": "A flower draws its sterile stamens without anthers, up to 50."
+      "map": {"sterile_flowers": {"all": 0, "marginal": {"rule": "clamp(round(staminodes), 0, 50)"}, "none": {"rule": "clamp(round(staminodes), 0, 50)"}}},
+      "else": {"rule": "clamp(round(staminodes), 0, 50)"},
+      "why": "A flower draws its sterile stamens without anthers, up to 50. A sterile flower (a mophead hydrangea's) draws none."
     },
     "appearance.organs.*.shape.carpels": {
       "template": "flower",
-      "rule": "clamp(round(carpels), 0, 100)",
-      "why": "A flower draws one pistil of up to five carpels, or of any number in an inferior ovary; above five in a superior one, as many free pistils, up to 100."
+      "map": {"sterile_flowers": {"all": 0, "marginal": {"rule": "clamp(round(carpels), 0, 100)"}, "none": {"rule": "clamp(round(carpels), 0, 100)"}}},
+      "else": {"rule": "clamp(round(carpels), 0, 100)"},
+      "why": "A flower draws one pistil of up to five carpels, or of any number in an inferior ovary; above five in a superior one, as many free pistils, up to 100. A sterile flower (a mophead hydrangea's) draws none."
     },
     "appearance.organs.*.shape.petal_whorls": {"template": "flower", "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(first(petal_whorls, 1)), 1, 2)"}}}, "why": "A corolla stands in the whorls it is stated in."},
     "appearance.organs.*.shape.whorl": {"template": "flower", "map": {"perianth": {"tepals": {"rule": "first(perianth_parts, 0) > 0 ? clamp(round(flower_merosity), 2, 6) : 0"}}}, "why": "Tepals whose number is stated stand in whorls of the flower's merosity (a magnolia's three, four or five whorls of three); otherwise in two whorls of half each."},
@@ -438,6 +470,18 @@
       "map": {"calyx_in_fruit": {"falling": 0, "persistent": 0.35, "accrescent": 0.9}},
       "why": "A calyx that stays on the fruit is drawn under it, its lobes a third of the fruit's width and clasping its foot; one that grows on after flowering spreads in a star nearly as long as the fruit is wide."
     },
+    "appearance.organs.*.shape.kept_posture": {
+      "template": "fruit",
+      "needs": ["calyx_in_fruit"],
+      "map": {"fruiting_calyx_posture": {"clasping": "clasping", "spreading": "spreading", "reflexed": "reflexed"}},
+      "why": "A kept calyx lies as floras say it does: a clasping one is pressed over the fruit's base as a cap, its lobes following the fruit up from the stalk; a spreading one stands out flat in a star; a reflexed one turns back toward the stalk. Where no posture is stated, short lobes rise a little round the fruit's foot and long ones spread."
+    },
+    "appearance.organs.*.shape.valves": {
+      "template": "fruit",
+      "needs": ["capsule_valves"],
+      "rule": "clamp(round(capsule_valves), 2, 10)",
+      "why": "A ripe capsule splits from its tip into as many valves as floras count, each turned out from about half way down; an unripe one stays shut."
+    },
     "appearance.organs.*.shape.kept_lobes": {
       "template": "fruit",
       "needs": ["calyx_in_fruit"],
@@ -451,8 +495,8 @@
     },
     "appearance.organs.*.shape.armed": {
       "template": "fruit",
-      "map": {"fruit_armature": {"smooth": "none", "prickly": "prickles", "bristly": "bristles"}},
-      "why": "A prickly fruit is drawn with stout prickles all over, a bristly one with fine bristles."
+      "map": {"fruit_armature": {"smooth": "none", "prickly": "prickles", "bristly": "bristles", "hooked": "hooks"}},
+      "why": "A prickly fruit is drawn with stout prickles all over, a bristly one with fine bristles, a hooked one with fine bristles bent back at their tips."
     },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",

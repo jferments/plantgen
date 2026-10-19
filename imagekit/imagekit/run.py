@@ -81,10 +81,15 @@ def outputs(store: Store, aid: str) -> dict:
     return out
 
 
-def default_triage(store: Store) -> str | None:
-    hit = store.db.execute("select analyzer, count(*) n from analyses where task='triage' and status='ok' "
-                           "group by analyzer order by n desc limit 1").fetchone()
-    return hit[0] if hit else None
+def default_triage(store: Store, shas=None) -> str | None:
+    """The triage analyzer with most answers: among shas when given (the images in scope), else overall."""
+    rows = store.db.execute("select analyzer, sha256 from analyses where task='triage' and status='ok' and region=0")
+    keep = set(shas) if shas is not None else None
+    n: dict[str, int] = {}
+    for aid, sha in rows:
+        if keep is None or sha in keep:
+            n[aid] = n.get(aid, 0) + 1
+    return max(sorted(n), key=n.get) if n else None
 
 
 class Job:
@@ -106,7 +111,7 @@ class Job:
         self.views = {}
         params = {"image_px": self.px}
         if self.task == "observe":
-            tri = args.triage or default_triage(store)
+            tri = args.triage or default_triage(store, rows)
             if not tri:
                 raise SystemExit("observe needs a triage first: imagekit run triage --backend ...")
             params["triage"] = tri
