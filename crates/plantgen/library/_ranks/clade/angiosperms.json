@@ -470,6 +470,18 @@
       "map": {"calyx_in_fruit": {"falling": 0, "persistent": 0.35, "accrescent": 0.9}},
       "why": "A calyx that stays on the fruit is drawn under it, its lobes a third of the fruit's width and clasping its foot; one that grows on after flowering spreads in a star nearly as long as the fruit is wide."
     },
+    "appearance.organs.*.shape.kept_posture": {
+      "template": "fruit",
+      "needs": ["calyx_in_fruit"],
+      "map": {"fruiting_calyx_posture": {"clasping": "clasping", "spreading": "spreading", "reflexed": "reflexed"}},
+      "why": "A kept calyx lies as floras say it does: a clasping one is pressed over the fruit's base as a cap, its lobes following the fruit up from the stalk; a spreading one stands out flat in a star; a reflexed one turns back toward the stalk. Where no posture is stated, short lobes rise a little round the fruit's foot and long ones spread."
+    },
+    "appearance.organs.*.shape.valves": {
+      "template": "fruit",
+      "needs": ["capsule_valves"],
+      "rule": "clamp(round(capsule_valves), 2, 10)",
+      "why": "A ripe capsule splits from its tip into as many valves as floras count, each turned out from about half way down; an unripe one stays shut."
+    },
     "appearance.organs.*.shape.kept_lobes": {
       "template": "fruit",
       "needs": ["calyx_in_fruit"],
@@ -483,8 +495,8 @@
     },
     "appearance.organs.*.shape.armed": {
       "template": "fruit",
-      "map": {"fruit_armature": {"smooth": "none", "prickly": "prickles", "bristly": "bristles"}},
-      "why": "A prickly fruit is drawn with stout prickles all over, a bristly one with fine bristles."
+      "map": {"fruit_armature": {"smooth": "none", "prickly": "prickles", "bristly": "bristles", "hooked": "hooks"}},
+      "why": "A prickly fruit is drawn with stout prickles all over, a bristly one with fine bristles, a hooked one with fine bristles bent back at their tips."
     },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",

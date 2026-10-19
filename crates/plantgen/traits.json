@@ -920,6 +920,60 @@
       "range": [0, 5],
       "why": "the stalk between blade and shoot"
     },
+    "petiole_armature": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["unarmed", "fine", "stout"],
+      "optional": true,
+      "why": "what a palm's petiole margins bear: nothing, numerous small fine teeth (Serenoa), or stout teeth or spines (Washingtonia, Copernicia)"
+    },
+    "petiole_tooth_length_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.1],
+      "optional": true,
+      "when": {"petiole_armature": ["fine", "stout"]},
+      "why": "the longest tooth or spine on a petiole's margins, where they are largest, near its foot"
+    },
+    "petiole_tooth_spacing_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0.002, 0.5],
+      "optional": true,
+      "when": {"petiole_armature": ["fine", "stout"]},
+      "why": "how far apart a petiole's teeth stand along each margin, on average"
+    },
+    "petiole_tooth_form": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["straight", "curved", "hooked"],
+      "optional": true,
+      "when": {"petiole_armature": ["fine", "stout"]},
+      "why": "a petiole tooth's form: standing straight out from the margin, curved back toward the stem, or hooked back"
+    },
+    "petiole_teeth_distal": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["even", "diminishing"],
+      "optional": true,
+      "when": {"petiole_armature": ["fine", "stout"]},
+      "why": "how a petiole's teeth run toward the blade: as large and close as at its foot, or smaller and sparser (Washingtonia)"
+    },
+    "petiole_tooth_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "when": {"petiole_armature": ["fine", "stout"]},
+      "why": "a petiole's teeth as they are seen"
+    },
     "plication": {
       "group": "leaves",
       "organ": "leaf",
@@ -927,6 +981,34 @@
       "values": ["induplicate", "reduplicate"],
       "optional": true,
       "why": "how a pleated leaf, as a palm's, splits into its leaflets or segments: along its upper folds, so each is V-shaped with its trough up (induplicate), or along its lower folds, so each is keeled, Λ-shaped (reduplicate)"
+    },
+    "fan_split_depth": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "share",
+      "range": [0.05, 1],
+      "optional": true,
+      "when": {"division_pattern": ["palmate"]},
+      "why": "how far a fan leaf's segments are free of each other, from their tips toward the blade's centre, as a share of the blade's radius: a third in Washingtonia, nearly to the base in some Livistona; the rest is one piece"
+    },
+    "segment_posture": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["stiff", "drooping", "pendulous"],
+      "optional": true,
+      "when": {"division_pattern": ["palmate"]},
+      "why": "how a fan leaf's free segments are held: stiff, in the blade's plane; drooping, their free parts bending down; or pendulous, hanging (Washingtonia at maturity)"
+    },
+    "segment_filaments": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["none", "few", "many"],
+      "optional": true,
+      "when": {"division_pattern": ["palmate"]},
+      "why": "threads a fan leaf bears where its blade split into segments: none; a few, between some of the segments; or many, between them and hanging from their margins and tips (Washingtonia filifera)"
     },
     "vernation": {
       "group": "leaves",
@@ -1103,6 +1185,21 @@
       "when": {"leaf_division": ["compound"]},
       "optional": true,
       "why": "how deeply each leaflet of a compound leaf is cut, where floras say: not at all, into shallow lobes (a poison oak's oak-like leaflets), or to about halfway"
+    },
+    "leaflet_end": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "enum",
+      "values": ["pointed", "bifid", "praemorse"],
+      "optional": true,
+      "why": "a palm leaflet's tip: narrowing to a point, briefly split in two, or praemorse, broad and jagged as if bitten off (the fishtail palms')"
+    },
+    "leaflet_midrib": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a leaflet has a midrib; a fishtail palm's has none, its several main veins fanning out from its base"
     },
     "pinnae": {
       "group": "leaves",
@@ -1304,6 +1401,13 @@
       "type": "colour",
       "optional": true,
       "why": "a grown leaf's underside where it differs from its upper side: paler, waxy, hairy or powdered (a goldback fern's golden farina)"
+    },
+    "dead_leaf_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "why": "a dead leaf that stays on the plant as it is seen, as a fan palm's skirt of hanging dead leaves"
     },
     "stipe_scale_colour": {
       "group": "leaves",
@@ -2231,13 +2335,29 @@
       "optional": true,
       "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), or grows on into a large spreading star (a belladonna's)"
     },
+    "fruiting_calyx_posture": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["clasping", "spreading", "reflexed"],
+      "optional": true,
+      "why": "how a calyx kept on the fruit lies: pressed to the fruit's base as a cap or cup (an eggplant's, a pepper's), spread flat in a star (a belladonna's), or turned back toward the stalk"
+    },
+    "capsule_valves": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "count",
+      "range": [2, 10],
+      "optional": true,
+      "why": "the valves a ripe capsule splits into from its tip (a jimsonweed's four, a tobacco's two)"
+    },
     "fruit_armature": {
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
-      "values": ["smooth", "prickly", "bristly"],
+      "values": ["smooth", "prickly", "bristly", "hooked"],
       "optional": true,
-      "why": "a fruit's surface where it is armed: stout prickles (a jimsonweed's capsule) or fine hooked bristles (an enchanter's nightshade's burr)"
+      "why": "a fruit's surface where it is armed: stout prickles (a jimsonweed's capsule), fine straight bristles, or fine bristles hooked at the tip (an enchanter's nightshade's burr, a cleavers' fruit)"
     },
     "fruit_persistence": {
       "group": "fruit_and_cones",

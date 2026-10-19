@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "id": "caryota-mitis",
+  "taxon": {
+    "scientific_name": "Caryota mitis",
+    "common_name": "clustering fishtail palm",
+    "family": "Arecaceae",
+    "genus": "Caryota",
+    "plant_name_id": 34778
+  },
+  "growth_form": "palm",
+  "generator": {
+    "params": {
+      "trunk_radius": 0.06,
+      "trunk_rate": 0.12,
+      "stemless_years": 3,
+      "internode": 0.025,
+      "fronds_per_year": 5,
+      "frond_life": 3,
+      "frond_length": 3.6,
+      "size_years": 3,
+      "petiole": 0.3,
+      "pieces": 30,
+      "leaflet_length": 0.18,
+      "pinnule_length": 0.33,
+      "open_years": 0.8,
+      "old_angle": 55,
+      "hang": 25,
+      "suckers": 4,
+      "sucker_age": 4,
+      "sucker_rate": 0.6,
+      "sucker_distance": 0.35
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [
+      5,
+      10,
+      20
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 4,
+      "tolerance": 0.6
+    },
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 7,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "clonal": true,
+    "height_typical_m": 7,
+    "height_max_m": 10,
+    "stem_diameter_max_m": 0.15,
+    "leaf_length_m": {
+      "min": 2,
+      "max": 2.8
+    },
+    "petiole_length_m": {
+      "min": 0.8,
+      "max": 2
+    },
+    "pinnae": {
+      "min": 18,
+      "max": 46
+    },
+    "leaflets": {
+      "min": 21,
+      "max": 41
+    }
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (vol. 23, p. 150), Caryota mitis (read 2026-10-18): clustered stems to 10 m and 8 to 20 cm through; petioles 0.8 to 2 m; the rachis 2 to 2.8 m with 9 to 23 primary pinnae a side, each with 10 to 20 secondary pinnae a side. Drawn as stems 0.06 m in radius; fronds 3.6 m long, the petiole 0.3 of them (about 1.1 m); the pinnae from the family's rule (sixteen pairs, fifteen leaflets a side), the longest pinna 0.18 of the frond (0.65 m) and its longest leaflet a third of the pinna (0.2 m, within the 7 to 25 cm PROSEA gives, read 2026-10-18); five fronds a year living three years, full size within a few years of a stem's start, the stem rising 0.12 m a year besides, each 2.5 cm up the stem from the last; four suckers from the fourth year, most within a few years of it (estimated, set by eye from photographs)."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (vol. 23, p. 150), Caryota mitis: stems clustered; Flora of North America (vol. 22): clustered, 15 cm through or less."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A clump's usual height, about 7 m, set below Flora of China's 10 m greatest."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (vol. 23, p. 150), Caryota mitis: stems to 10 m."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 22), Caryota mitis: stems 15 cm through or less; Flora of China (vol. 23, p. 150) gives 8 to 20 cm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (vol. 23, p. 150), Caryota mitis: the rachis 2 to 2.8 m."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (vol. 23, p. 150), Caryota mitis: petioles 0.8 to 2 m."
+    },
+    "traits.pinnae": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (vol. 23, p. 150), Caryota mitis: 9 to 23 primary pinnae on each side of the rachis."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (vol. 23, p. 150), Caryota mitis: 10 to 20 secondary pinnae on each side of a primary one, with one at its tip."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough heights from general knowledge of the species: about 4 m at 10 years and 7 m at 20 to the top of the crown, under Flora of China's 10 m stems. Wide tolerances."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a palm."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact: twenty years, before the stem flowers and dies, which is not drawn."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of China, vol. 23, Caryota mitis (eFloras)",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "Dransfield et al. (2008), Genera Palmarum, 2nd ed.",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "WCVP v16, World Checklist of Vascular Plants",
+        "licence": "CC BY 4.0"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy: a clustered fishtail palm with twice-pinnate fronds of wedge-shaped, jagged leaflets. Each stem is hapaxanthic, flowering from the top down and then dying while the clump lives on, which is not drawn."
+  }
+}

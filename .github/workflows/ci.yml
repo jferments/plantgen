@@ -36,13 +36,38 @@ jobs:
       CARGO_INCREMENTAL: "0"
       CARGO_TERM_COLOR: never
     steps:
+      # Two commits deep, so a pull request's merge commit has its base as
+      # HEAD^1 for the next step.
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      # A pull request that changes only files no Rust build or test reads
+      # (imagekit, photo rules, docs, PlantLab, the top-level notes) skips
+      # the Rust steps. Pushes to main and train runs (workflow_dispatch)
+      # always run them.
+      - name: What changed
+        id: changes
+        run: |
+          set -eu
+          rust=true
+          if [ "${{ github.event_name }}" = pull_request ]; then
+            changed=$(git diff --name-only HEAD^1 HEAD)
+            printf '%s\n' "$changed"
+            if [ -n "$changed" ] && ! printf '%s\n' "$changed" \
+                | grep -qvE '^(imagekit/|photo-rules/|docs/|lab/|[^/]+\.md$)'; then
+              rust=false
+              echo "Only files outside the Rust workspace changed: skipping the Rust steps."
+            fi
+          fi
+          echo "rust=$rust" >> "$GITHUB_OUTPUT"
       # The Cargo target lives beside the checkout in this runner's own work
       # folder (_work/plantgen/cargo-target), which checkout never cleans and no
       # After runner uses; the service cannot create folders under ~/.cache.
       - name: Cargo target in this runner's work folder
+        if: steps.changes.outputs.rust == 'true'
         run: echo "CARGO_TARGET_DIR=$RUNNER_WORKSPACE/cargo-target" >> "$GITHUB_ENV"
       - name: Start over when the Cargo target outgrows its budget
+        if: steps.changes.outputs.rust == 'true'
         run: |
           set -eu
           if [ -d "$CARGO_TARGET_DIR" ]; then
@@ -55,6 +80,7 @@ jobs:
       # The runner's service has no ~/.cargo/bin on its PATH (After's
       # rust_environment.py adds it the same way).
       - name: Toolchain (rust-toolchain.toml)
+        if: steps.changes.outputs.rust == 'true'
         run: |
           set -eu
           cargo_bin="${CARGO_HOME:-$HOME/.cargo}/bin"
@@ -63,10 +89,16 @@ jobs:
           rustup toolchain install 2>/dev/null || rustup show
           rustc --version
       - name: Format
+        if: steps.changes.outputs.rust == 'true'
         run: cargo fmt --all --check
       - name: Clippy
+        if: steps.changes.outputs.rust == 'true'
         run: cargo clippy --workspace --all-targets --locked
       - name: Build
+        if: steps.changes.outputs.rust == 'true'
         run: cargo build --workspace --all-targets --locked
+      # --no-fail-fast runs every test binary after a failure, so one run
+      # reports every failing test, not just the first binary's.
       - name: Test
-        run: cargo test --workspace --all-targets --locked
+        if: steps.changes.outputs.rust == 'true'
+        run: cargo test --workspace --all-targets --locked --no-fail-fast

@@ -901,4 +901,32 @@ pub mod venation;
 /// flower may be drawn up to eight times its fruit's size, where it was
 /// four, so a mophead's sterile flowers reach their stated size (132 is
 /// lily leftovers, #218).
-pub const GENERATOR_REVISION: u32 = 133;
+/// 134: fan palms' blades, petiole teeth, skirts and fishtail palms (palm
+/// revision 13): a fan's segments part only over their outer share
+/// (`split_depth`, from `fan_split_depth`), inside it one piece drawn as
+/// wedges (`palman`), their free parts turning down where they part
+/// (`tip_droop`, from `segment_posture`) and bearing threads in the
+/// sinuses and along their margins (`filament`, from
+/// `segment_filaments`); a petiole's margins bear teeth (`tooth`) as long,
+/// far apart, leaning and shrinking toward the blade as stated
+/// (`petiole_armature` and the `petiole_tooth_*` words); a dead frond
+/// hangs from the trunk's surface, standing out at first and falling flat
+/// against it over a year (`dead_fold_years`), in the colour stated for
+/// dead leaves (`dead_leaf_colour`); a twice-pinnate frond bears pairs
+/// of pinnae with leaflets of their own (`pinnule`, from `pinnae` and
+/// `leaflets`), and a simple blade may end in a bitten, jagged tip
+/// (`Simple.praemorse`, from `leaflet_end`) and lack a midrib
+/// (`Simple.midrib`, from `leaflet_midrib`): Caryota's fishtail leaflets
+/// (133 is panicles and hydrangeas, #219).
+/// 135: a fruit's kept calyx lies as stated (`kept_posture`, from
+/// `fruiting_calyx_posture`: an eggplant's cap pressed over the fruit, a
+/// belladonna's flat star, or turned back); a ripe capsule opens from its
+/// tip into its valves (`valves`, from `capsule_valves`: a jimsonweed's
+/// four, a tobacco's two), each turned out from half way down and lined
+/// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
+/// `fruit_armature` `hooked`) (134 is palm details, #223).
+/// 136: black cottonwood and wild fig draw single leaves at their flora's
+/// size on its petiole length, and young twigs in its colour, in place of
+/// hand-sized sprig cards; the fig's path_half is refitted to its height
+/// (135 is nightshades round 4, #227).
+pub const GENERATOR_REVISION: u32 = 136;
