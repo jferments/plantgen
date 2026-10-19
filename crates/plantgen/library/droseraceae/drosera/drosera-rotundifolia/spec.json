@@ -91,8 +91,8 @@
     "stipules": true,
     "glandular_hairs": "dense",
     "glandular_hair_length_m": {
-      "min": 0.001,
-      "max": 0.004
+      "min": 0.0005,
+      "max": 0.0009
     },
     "hair_colour": [
       195,
@@ -214,7 +214,26 @@
       "max": 12,
       "typical": 8
     },
-    "flowering_stems": 1
+    "flowering_stems": 1,
+    "marginal_gland_length_m": {
+      "min": 0.00127,
+      "max": 0.0032
+    },
+    "glandular_hairs_per_cm2": 410,
+    "gland_head_diameter_m": {
+      "min": 0.00011,
+      "max": 0.0002
+    },
+    "gland_drop_diameter_m": {
+      "min": 0.0003,
+      "max": 0.0006
+    },
+    "gland_secretion": "clear",
+    "gland_stalk_colour": [
+      150,
+      30,
+      70
+    ]
   },
   "evidence": {
     "taxon": {
@@ -359,8 +378,8 @@
     },
     "traits.glandular_hair_length_m": {
       "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: the stalked glands (tentacles) are longest at the blade margin, a few mm, shorter toward the centre; no flora gives a length."
+      "source": "kozak-2026",
+      "note": "A model estimate: Darwin gives the disc tentacles as 'short' and no length (p.4); the central tentacles of the related D. intermedia measure 0.46-0.91 mm (Kozak et al. 2026, Table 1)."
     },
     "traits.hair_colour": {
       "evidence": "SourceInferred",
@@ -546,6 +565,36 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia, Drosera rotundifolia (read 2026-10-19): a single flowering stalk from the centre of the rosette."
+    },
+    "traits.marginal_gland_length_m": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4-5: 'Towards the margin they become longer and longer and more inclined outwards'; p.253: an extreme marginal tentacle 'about 1/20 of an inch in length' (1.27 mm); the marginal tentacles of D. intermedia are 1.6-3.2 mm (Kozak et al. 2026)."
+    },
+    "traits.glandular_hairs_per_cm2": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4: tentacles counted on 31 leaves, 'the average number was 192; the greatest number being 260, and the least 130'. Over a blade 7 x 8.5 mm, the middle of FNA's 4-10 x 5-12 mm, about 0.47 square centimetres, that is about 410 to the square centimetre (the division is the model's)."
+    },
+    "traits.gland_head_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.6: the glands are oval, 'about 4/500 of an inch in length' (0.20 mm); their width is D. intermedia's, 0.11-0.17 mm (Kozak et al. 2026), the model drawing the oval as a ball between the two."
+    },
+    "traits.gland_drop_diameter_m": {
+      "evidence": "Authored",
+      "source": "darwin-1875",
+      "note": "A model estimate: Darwin, Insectivorous Plants (1875), p.4: the glands 'are surrounded by large drops of extremely viscid secretion, which, glittering in the sun, have given rise to the plant's poetical name of the sun-dew'; p.13: it 'appears colourless'. Its width is a model estimate, 1.5 to 3 times the gland's (no measurement found)."
+    },
+    "traits.gland_secretion": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.13: the secretion 'is extremely viscid, so that it can be drawn out into long threads. It appears colourless'."
+    },
+    "traits.gland_stalk_colour": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4-5: the disc tentacles have green pedicels, the longer ones toward the margin purple, as nine to sixteen on a leaf of 252: the purple, the more, is drawn."
     }
   },
   "provenance": {
