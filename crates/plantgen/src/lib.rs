@@ -978,12 +978,18 @@ pub mod venation;
 /// or needle shoot drawn near the camera) is the organ at its finest, with
 /// no cap on its triangles; simplifying is the caller's choice (`plantc
 /// export --triangles`, `--max-mib`) (140 is cactus pericarpels, #226).
-/// 142: branching form (broadleaf 23): a shoot without a terminal bud
+/// 142: a palm's fronds stand up the year's trunk as they emerge over the
+/// year (palm 14), so its leaf bases and boots wind evenly up the trunk in
+/// place of bands at each year's top; Phoenix keeps its broad leaf bases
+/// for the trunk's life, standing close to the stem (141 is full-quality
+/// part meshes, #237).
+/// 143: branching form (broadleaf 23): a shoot without a terminal bud
 /// dies back each year and its topmost lateral carries it on, sometimes
 /// as a fork (`tip_abort`, from `terminal_bud`); a plagiotropic plant's
 /// limbs carry flat sprays (`plagio`, from `branch_orientation`); a
 /// tree's dead branches stand until they fall (`dead_keep`); a
 /// small-leaved tree's or shrub's long shoots set their leaves no farther
 /// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
-/// are switches no rule turns on yet (`breakup_age`, `tip_loss`).
-pub const GENERATOR_REVISION: u32 = 142;
+/// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (142 is
+/// palm trunks, #240).
+pub const GENERATOR_REVISION: u32 = 143;

@@ -228,9 +228,25 @@
 # split_depth 1, tip_droop, filaments, tooth_length and pinna_pairs 0 draw
 # as revision 12 did, but for the dead fronds.
 #
+# Revision 14 (a year's fronds up the year's trunk): a frond stands on
+# the stem where the stem had grown to when it emerged. A year's fronds
+# emerge over emerge_spread of the year, the i-th of the year's k at
+# phase emerge_spread (i + x) / k for a draw x from 0 to 1 (until now any
+# phase from 0 to emerge_spread, in any order up the stem), and that
+# share of the year's growth of trunk lies among them, each frond
+# trunk_rate · emerge_spread / k above the last, so a palm's leaf bases,
+# boots and scars wind evenly up its trunk (Dransfield et al. 2008,
+# Genera Palmarum p. 10: each leaf leaves one node, so the spacing of the
+# rings is a year's growth over the year's leaves; p. 242, a Phoenix stem
+# clothed in spirally arranged leaf bases). Until now the
+# whole year's fronds stood within internode of each other at the
+# year's top, so the trunk between was bare and its boots stood in bands.
+# A cycad's flush (emerge_spread near 0) still stands as one band, and a
+# crownshaft's fronds still stand at its top.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 13;
+lsystem palm 14;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -379,7 +395,7 @@ param sucker_rate;
 param sucker_distance;
 
 module Y(v, n);               # a crown: vigour, suckers so far
-module Fc(i, m, c, r);        # fronds i to i + m - 1 of this year's cohort, on a crown c years old and a trunk r in radius
+module Fc(i, m, c, r, d, k);  # fronds i to i + m - 1 of this year's k, on a crown c years old and a trunk r in radius, each d further up than the last
 module Fr(s, a, e, r);        # a frond s long at a degrees, emerging at phase e of its year, its sheath round a crownshaft r in radius
 module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
 module Pp(k, s, e);           # a drawn piece of a rachis
@@ -449,17 +465,20 @@ rule Y(v, n) : crownshaft > 0 ->
     [ Sc(crownshaft) Fc(0, mod(floor(age + 0.5), max(1, round(flush_interval))) == 0
                              ? max(1, round(fronds_per_year * v)) : 0, age * v, trunk_radius
           * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
-             + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
+             + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)),
+          0, max(1, round(fronds_per_year * v)))
       Cn(age >= adult_age && mod(floor(age + 1.5), max(1, round(cone_interval))) == 0 ? 1 : 0, trunk_radius * 0.97) ] Y(v, n);
 rule Y(v, n) : mod(floor(age + 0.5), max(1, round(flush_interval))) == 0 ->
     T(0, 1, 0, upturn * trunk_rate * v)
-    Tk(trunk_rate * v * smoothstep(0, stemless_years, age), trunk_radius
+    Tk(trunk_rate * v * smoothstep(0, stemless_years, age) * (1 - clamp(emerge_spread, 0, 1)), trunk_radius
       * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
          + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
     [ Cw(trunk_radius) ]
     Fc(0, max(1, round(fronds_per_year * v)), age * v, trunk_radius
           * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
-             + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
+             + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)),
+       trunk_rate * v * smoothstep(0, stemless_years, age) * clamp(emerge_spread, 0, 1)
+         / max(1, round(fronds_per_year * v)), max(1, round(fronds_per_year * v)))
     Cn(age >= adult_age && mod(floor(age + 1.5), max(1, round(cone_interval))) == 0 ? 1 : 0, trunk_radius
        * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
           + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0))) Y(v, n);
@@ -487,14 +506,15 @@ rule Sb(n) : suckers > n && t >= sucker_age && rand() < sucker_rate -> [ Sk(n + 
 
 # This year's fronds, a little apart up the trunk, each turned on round
 # the spiral.
-decompose Fc(i, m, c, r) : m > 1 ->
-    Fc(i, floor(m / 2), c, r) Fc(i + floor(m / 2), m - floor(m / 2), c, r);
-decompose Fc(i, m, c, r) : m == 1 ->
-    Tk(internode, crownshaft > 0 ? trunk_radius * 0.97 : r) /(divergence + gauss() * 3)
+decompose Fc(i, m, c, r, d, k) : m > 1 ->
+    Fc(i, floor(m / 2), c, r, d, k) Fc(i + floor(m / 2), m - floor(m / 2), c, r, d, k);
+decompose Fc(i, m, c, r, d, k) : m == 1 ->
+    Tk(internode + d, crownshaft > 0 ? trunk_radius * 0.97 : r) /(divergence + gauss() * 3)
     [ Fr(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years)))
          * uniform(1 - frond_spread, 1 + frond_spread),
-         gauss() * angle_spread, uniform(0, emerge_spread), crownshaft > 0 ? trunk_radius * 0.97 : r) ];
-decompose Fc(i, m, c, r) -> ;
+         gauss() * angle_spread, emerge_spread * (i + uniform(0, 1)) / k,
+         crownshaft > 0 ? trunk_radius * 0.97 : r) ];
+decompose Fc(i, m, c, r, d, k) -> ;
 
 # A frond dies after frond_life years: it hangs from its seat beside its
 # foot, or falls and leaves its boot, or falls.
