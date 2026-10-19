@@ -40,6 +40,7 @@ param forks_low = 2;        # crowns that wake below a flowered tip
 param forks_high = 3;
 param fork_angle = 35;      # angle a new crown leans out from the old axis
 param upturn = 0;           # how strongly a leaning crown's stem turns back up, radians a metre
+param stemless = 0;         # 1: the stem below the living leaves is not drawn
 param flower_age = 8;       # the first year a crown may flower
 param once = 0;             # 1: a crown flowers once and dies
 param bloom = 0.7;          # chance a year an old enough crown flowers

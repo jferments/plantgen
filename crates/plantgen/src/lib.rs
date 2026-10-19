@@ -1129,4 +1129,10 @@ pub mod venation;
 /// is lost the trunk's fork stems spread as scaffold limbs (`fork_set`,
 /// from `leader`), and a flat-topped crown is flattened (`crown_form`
 /// `flat_topped`) (155 is Rosaceae, #236).
-pub const GENERATOR_REVISION: u32 = 156;
+/// 157: stemless rosettes (rosette revision 4). A basal rosette (an
+/// agave's, an aloe's, a hechtia's) keeps its crown on the ground: the
+/// stem below its living leaves goes with the leaves that fell, a pup's
+/// runner drops to the ground as its parent's stem goes, and the short
+/// stem the living leaves stand on is drawn inside their bases
+/// (`stemless`, from `rosette`) (156 is growth-form language, #252).
+pub const GENERATOR_REVISION: u32 = 157;

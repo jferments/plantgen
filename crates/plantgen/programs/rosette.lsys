@@ -39,9 +39,18 @@
 # is born at the step's end, so a rule that ends a part by its age counts
 # the step it is in (`age + dt >=`).
 #
+# Revision 4 (stemless rosettes): a stemless rosette (stemless 1: a basal
+# rosette, an agave's) keeps its crown on the ground. Its stem gains a
+# little with every leaf, but the stem below the living leaves is not
+# drawn: an internode goes with its leaf, when the leaf falls (or, in a
+# skirt, when the dead leaf does), so the stem shown is only the short one
+# the living leaves stand on, and a pup's runner drops from the crown to
+# the ground as its parent's stem goes. Before, an old agave's crown stood
+# on a bare cylinder of every internode it had grown.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem rosette 3;
+lsystem rosette 4;
 
 # The plant.
 param vigour_spread;          # a rosette grows exp(gauss() * vigour_spread) times as fast
@@ -72,6 +81,7 @@ param forks_low;              # crowns that wake below a flowered tip
 param forks_high;
 param fork_angle;             # angle a new crown leans out from the old axis
 param upturn;                 # how strongly a leaning crown's stem turns back up, radians a metre
+param stemless;               # 1: the stem below the living leaves is not drawn
 # Flowering.
 param flower_age;             # the first year a crown may flower
 param once;                   # 1: a crown flowers once and dies
@@ -103,6 +113,8 @@ module Hd(i, m, h, b);        # flowering nodes i to i + m - 1 of a head h long;
 module Bh(l);                 # a side branch l long with its flowers
 module Fk(j);                 # j crowns still to wake below a flowered tip
 module Pp;                    # a pup on its runner
+module In;                    # a stemless rosette's internode, which goes with its leaf
+module Dn(h);                 # a pup's drop to the ground, h at its birth
 
 organ blade leaf area leaf_area;
 organ dead leaf area dead_area;
@@ -120,22 +132,22 @@ rule Y(v, n, p) : fork > 0 && age * v >= flower_age && rand() < bloom ->
     [ Sm Sk ] Fk(round(uniform(forks_low, forks_high + 0.999) - 0.5));
 # A crown in flower that goes on.
 rule Y(v, n, p) : once == 0 && fork == 0 && age * v >= flower_age && rand() < bloom ->
-    [ Sm Sk ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p);
+    [ Sm Sk ] !(trunk_radius * (stemless > 0 ? 0.5 : 1)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p);
 # A pup.
 rule Y(v, n, p) : pups > p && age >= pup_age && rand() < pup_rate ->
-    [ Pp ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
-rule Y(v, n, p) -> !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
+    [ Pp ] !(trunk_radius * (stemless > 0 ? 0.5 : 1)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
+rule Y(v, n, p) -> !(trunk_radius * (stemless > 0 ? 0.5 : 1)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
 
 # This year's leaves, a little apart up the stem, each turned on round
 # the spiral and opening out. Leaves are sized by the crown's age.
 decompose Lc(i, m, c) : m > 1 ->
     Lc(i, floor(m / 2), c) Lc(i + floor(m / 2), m - floor(m / 2), c);
-decompose Lc(i, m, c) : m == 1 ->
+decompose Lc(i, m, c) : m == 1 && stemless == 0 ->
     !(trunk_radius) F(internode) /(divergence + gauss() * 3)
     [ Lv(leaf_length * (leaf_seed + (1 - leaf_seed) * (1 - exp(-c / size_years)))
          * uniform(1 - leaf_spread, 1 + leaf_spread),
          gauss() * angle_spread) ];
-decompose Lc(i, m, c) -> ;
+decompose Lc(i, m, c) : m < 1 -> ;
 
 # A leaf opens with age, then dies: it falls, or folds down and hangs.
 rule Lv(s, a) : age + dt >= leaf_life && skirt > 0 -> Dv(s);
@@ -170,6 +182,28 @@ decompose Fk(j) : j > 0 ->
 decompose Fk(j) -> ;
 
 # A pup: out along a runner at the foot, then up, a small crown of its own.
-decompose Pp ->
+decompose Pp : stemless == 0 ->
     /(uniform(0, 360)) &(90) f(pup_distance * uniform(0.6, 1.4)) ^(90)
     Y(exp(gauss() * vigour_spread), 0, pups);
+
+# A stemless rosette (revision 4), last in the program so that the random
+# draws above keep their places. Its leaves stand on internodes that go
+# with them: an internode lasts as long as its leaf, dead or alive. The
+# leaves' broad bases wrap the short stem they stand on, so it is drawn
+# half as thick, inside them (by eye: at full thickness it showed as a
+# tan collar between the lowest leaves).
+decompose Lc(i, m, c) : m == 1 ->
+    !(trunk_radius * 0.5) In /(divergence + gauss() * 3)
+    [ Lv(leaf_length * (leaf_seed + (1 - leaf_seed) * (1 - exp(-c / size_years)))
+         * uniform(1 - leaf_spread, 1 + leaf_spread),
+         gauss() * angle_spread) ];
+rule In : age + dt >= leaf_life + (skirt > 0 ? dead_life : 0) -> ;
+interpret In -> F(internode);
+# Its pup starts at the parent's crown, as high as the parent's living
+# leaves stand on the stem, and drops with that stem as those leaves
+# fall, so it reaches the ground in leaf_life years.
+decompose Pp ->
+    Dn(min(leaf_life, pup_age) * max(1, round(leaf_rate)) * internode)
+    /(uniform(0, 360)) &(90) f(pup_distance * uniform(0.6, 1.4)) ^(90)
+    Y(exp(gauss() * vigour_spread), 0, pups);
+interpret Dn(h) -> f(-h * max(0, 1 - age / leaf_life));
