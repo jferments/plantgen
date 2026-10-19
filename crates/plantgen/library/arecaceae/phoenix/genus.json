@@ -61,6 +61,14 @@
           "rule": "0.06 * leaf_length_m",
           "why": "Each living frond's sheath reaches past the stem's surface along its petiole's base, so the crown's leaf bases hide the stem's top; about a sixteenth of the leaf's length, as Caryota's (set by eye: no flora gives the sheath's length)."
         },
+        "generator.params.root_bend": {
+          "rule": "30",
+          "why": "A root leaves the foot 30 degrees further out than its mean angle and turns down by as much along its length, so the roots arch and cross as in photographs of date palms' feet (set by eye)."
+        },
+        "generator.params.root_flare": {
+          "rule": "0.35",
+          "why": "As the root zone rises, new root initials push the trunk's foot outward: a date palm's foot is about a third wider at the ground than the trunk once the zone has risen (the share set by eye from photographs)."
+        },
         "generator.params.sheath_area": {
           "rule": "0.554",
           "why": "An open sheath shades with the area its broad wedge draws: 0.554 of its length squared, as the leaf base it leaves (boot)."
@@ -119,6 +127,11 @@
           "evidence": "SourceInferred",
           "source": "dransfield-1986-ftea-palmae",
           "note": "Flora of Tropical East Africa (via Colplanta, read through a search summary; the page was blocked here): the trunk covered with leaf-sheath bases when young, later becoming smooth. University of Arizona Campus Arboretum (also through a search summary): a rough grey trunk to half a metre across, its diamond pattern the leaf scars, most noticeable where the overlapping woody leaf bases have been pruned. How far and how fast a base wears, and how unevenly, set by eye."
+        },
+        "rules.generator.params.root_flare": {
+          "evidence": "SourceInferred",
+          "source": "broschat-elliott-2007",
+          "note": "Broschat and Elliott (2007, University of Florida IFAS EP344, read through a search summary): as the root initiation zone rises on older palms, new root initials push the trunk's foot outward, a normal part of maturing that varies by palm. How much wider, set by eye."
         },
         "rules.generator.params.roots": {
           "evidence": "SourceInferred",

@@ -1,0 +1,360 @@
+{
+  "schema": 1,
+  "id": "filipendula-ulmaria",
+  "taxon": {
+    "scientific_name": "Filipendula ulmaria",
+    "common_name": "meadowsweet",
+    "family": "Rosaceae",
+    "genus": "Filipendula",
+    "plant_name_id": 2921975
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 1.1,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.8,
+      "max": 1.5,
+      "high": 1.7
+    },
+    "woodiness": "herbaceous",
+    "life_span": "perennial",
+    "leaf_habit": "deciduous",
+    "stem_posture": "erect",
+    "rosette": "none",
+    "leaf_colour": [
+      52,
+      100,
+      40
+    ],
+    "shoot_leaves": {
+      "min": 8,
+      "max": 15
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "terminal_leaflet": true,
+    "leaflets": {
+      "min": 5,
+      "max": 9,
+      "high": 11
+    },
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "leaflet_length_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "leaflet_width_m": {
+      "min": 0.015,
+      "max": 0.035
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "acuminate",
+    "leaf_margin": "serrate",
+    "leaf_hairs_beneath": "tomentose",
+    "inflorescence": "panicle",
+    "units_per_inflorescence": {
+      "min": 100,
+      "max": 300
+    },
+    "inflorescence_branches": {
+      "min": 6,
+      "max": 12
+    },
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.25
+    },
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "petal_length_m": {
+      "min": 0.0025,
+      "max": 0.005
+    },
+    "flower_colour": [
+      246,
+      240,
+      214
+    ],
+    "stamens": {
+      "min": 20,
+      "max": 40
+    },
+    "fruit_type": "achene",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.006
+    },
+    "fruit_colour_ripe": [
+      150,
+      120,
+      70
+    ],
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): plants 80-100 cm tall; FNA 12-17 dm."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): plants cespitose from stout horizontal rhizomes; herbs."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula (eFloras, read 2026-10-19): perennial herbs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): basal leaves deciduous by flowering."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): stems sulcate, erect."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): basal leaves 1 or 2, gone by flowering, so the plant is a leafy stem."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a leafy flowering stem of 8 to 15 alternate leaves, smaller upward (FNA: stems leafy)."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): leaflets green above, white-tomentose beneath; sRGB by eye."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): leaf blade pinnate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): pinnate, with 2-5 pairs of leaflets."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): leaflets undivided, with smaller leaflets between the pairs; the end leaflet palmately 3-5-lobed."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): terminal leaflet round, 3-7 cm, palmately lobed."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): 2-5 pairs of leaflets and the end one; FNA 2-4 pairs."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stem leaves 10 cm to 30 cm long."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): lateral leaflets 2-6 cm."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: lateral leaflets 1.5 cm to 3.5 cm wide, ovate."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): lateral leaflets ovate to elliptic."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): leaflet apex acuminate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): margins doubly serrate."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): leaflets white tomentose beneath; FNA greyish tomentose or hairy on the nerves."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): inflorescence terminal, paniculate."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): inflorescences 100+-flowered."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: 6 to 12 primary branches."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the panicle 10 cm to 25 cm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): flowers about 5 mm across."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): petals 2.5-5 mm, white to cream."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): petals white to cream; sRGB by eye for cream."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula (eFloras, read 2026-10-19): stamens 20-40, longer than the petals."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): achenes 6-8, flattened, twisted."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): achenes 3-6 mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: achenes brown when ripe."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): flowering and fruiting June to September; FNA July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Filipendula ulmaria (eFloras, read 2026-10-19): fruiting June to September; drawn from August."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a clump of upright leafy stems with pinnate leaves, white beneath, topped by frothy cream panicles of tiny flowers."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.1 m tall at 3 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Rosaceae thread (2026-10-19): characters from Flora of North America vol. 9 and Flora of China vol. 9; the drawing comes from the library's rules for those characters."
+  }
+}

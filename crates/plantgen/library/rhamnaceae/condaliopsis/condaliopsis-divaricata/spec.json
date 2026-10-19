@@ -70,7 +70,7 @@
     {
       "age": 15,
       "environment": "open",
-      "height": 1.5,
+      "height": 2.0,
       "tolerance": 0.4
     }
   ],
@@ -344,7 +344,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "1.5 m tall at 15 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+      "note": "2 m tall at 15 years in the open, the middle of FNA's 1-3 m (an earlier 1.5 m guessed a drier bajada plant, which the open setting does not model). Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {

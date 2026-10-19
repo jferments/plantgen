@@ -96,7 +96,12 @@
       9
     ],
     "fruit_armature": "hooked",
-    "calyx_in_fruit": "falling"
+    "calyx_in_fruit": "falling",
+    "fruit_shape": "obovoid",
+    "fruit_width_m": {
+      "min": 0.0026,
+      "max": 0.0038
+    }
   },
   "provenance": {
     "sources": [
@@ -245,6 +250,16 @@
       "evidence": "SourceInferred",
       "source": "hooker-1884",
       "note": "Hooker, Student's Flora, 3rd ed. (1884), Circaea, p. 159 (read on the Internet Archive, 2026-10-17): calyx limb 2-parted, reflexed and falling early."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 2 (1913), Circaea lutetiana, p. 611 (read on the Internet Archive, 2026-10-17): fruit broadly obovoid, nearly 2 lines long, 2-celled, densely covered with stiff hooked hairs; Hooker (p. 159): broadly obovoid; Bentham (p. 154): small and pear-shaped; Gray (p. 602, C. lutetiana var. canadensis): roundish-pyriform."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: 2.6-3.8 mm wide: the floras call the fruit broadly obovoid or roundish-pyriform without measuring its width, so about three quarters of its 3.5-5 mm length."
     }
   }
 }

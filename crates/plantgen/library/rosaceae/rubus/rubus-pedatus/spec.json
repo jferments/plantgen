@@ -1,0 +1,340 @@
+{
+  "schema": 1,
+  "id": "rubus-pedatus",
+  "taxon": {
+    "scientific_name": "Rubus pedatus",
+    "common_name": "strawberryleaf raspberry",
+    "family": "Rosaceae",
+    "genus": "Rubus",
+    "plant_name_id": 2985296
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.06,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "spines": "none",
+    "stem_posture": "prostrate",
+    "clonal": true,
+    "rosette": "none",
+    "leaf_colour": [
+      62,
+      112,
+      42
+    ],
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": 5,
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.025,
+      "low": 0.01,
+      "high": 0.034
+    },
+    "leaf_width_m": {
+      "min": 0.03,
+      "max": 0.05,
+      "low": 0.015
+    },
+    "leaflet_length_m": {
+      "min": 0.015,
+      "max": 0.025,
+      "low": 0.01,
+      "high": 0.034
+    },
+    "leaflet_width_m": {
+      "min": 0.012,
+      "max": 0.02,
+      "low": 0.008,
+      "high": 0.025
+    },
+    "leaf_shape": "obovate",
+    "leaf_apex": "obtuse",
+    "leaf_margin": "serrate",
+    "inflorescence": "solitary",
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.025
+    },
+    "petal_length_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "flower_colour": [
+      246,
+      246,
+      240
+    ],
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "fruit_colour_ripe": [
+      210,
+      30,
+      36
+    ],
+    "fruit_shape": "globose",
+    "fruitlets_per_fruit": {
+      "min": 3,
+      "max": 6
+    },
+    "fruitlet_coherence": "weakly_coherent",
+    "fruit_hairs": "glabrous",
+    "flowering_months": [
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): herbs to 1 dm, unarmed."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): herbs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): leaves deciduous."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): unarmed."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): stems creeping, the flowering branches erect."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): stems creeping, so a patch spreads."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): leaves along creeping stems, no rosette."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves bright green."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): leaves pedately compound."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): pedately compound: palmate in outline."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): three leaflets, the side ones cut nearly to their base, so the leaf reads as five; drawn as five once-divided."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): leaflets 3, often appearing as if 5."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): terminal leaflet (1-)1.5-2.5 (to 3.4) cm, so the leaf's blade about as long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the fan of the end leaflet and the two deeply cut side ones 3 cm to 5 cm across, from FNA's leaflets 1.2-2 cm wide side by side; from 1.5 cm where the leaflets are the smallest FNA gives (0.8 cm)."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): terminal leaflet (1-)1.5-2.5 (to 3.4) cm long."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): terminal leaflet (0.8-)1.2-2 (to 2.5) cm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): terminal leaflet obovate to obovate-rhombic."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): apex rounded to obtuse."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): margins coarsely singly or doubly serrate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): inflorescences 1-flowered."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 1.5 cm to 2.5 cm across, petals spreading."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): petals white, 6-10 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): petals white; sRGB by eye."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): fruits 0.6-1 cm, of 3-6 drupelets."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): fruits red; sRGB by eye."
+    },
+    "traits.fruit_shape": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a small round cluster of a few drupelets."
+    },
+    "traits.fruitlets_per_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): drupelets 3-6 to a fruit."
+    },
+    "traits.fruitlet_coherence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): drupelets weakly coherent, coming away from the torus."
+    },
+    "traits.fruit_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): ovaries and styles glabrous."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): flowering June to August."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fruit ripe August and September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a low creeping carpet of small five-parted toothed leaves, single white flowers on short upright stalks and a few red drupelets."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.06 m tall at 3 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Rosaceae thread (2026-10-19): characters from Flora of North America vol. 9 and Flora of China vol. 9; the drawing comes from the library's rules for those characters."
+  }
+}

@@ -146,7 +146,7 @@
     {
       "age": 10,
       "environment": "open",
-      "height": 0.25,
+      "height": 0.3,
       "tolerance": 0.4
     }
   ],
@@ -402,7 +402,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "0.25 m tall at 10 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+      "note": "0.3 m tall at 10 years in the open, the middle of FNA's and Abrams's 1-5 dm, as it grows in subalpine parkland (an earlier 0.25 m was a guess below the middle the generator, growing from the stated heights, does not draw). Replace with measured data before calling this species calibrated."
     },
     "traits.stem_clump": {
       "evidence": "SourceInferred",

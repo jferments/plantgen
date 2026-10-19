@@ -3,7 +3,10 @@
   "rank": "genus",
   "name": "Cornus",
   "traits": {"flowering_position": "terminal"},
+  "generator": {"params": {"blooms": 1, "bloom_years": 1}},
   "evidence": {
+    "generator.params.bloom_years": {"evidence": "SourceInferred", "source": "bonner-karrfalt-2008", "note": "The Woody Plant Seed Manual's Cornus chapter: the flowers are borne in terminal clusters, at the ends of the twigs, so only a twig's newest short shoots flower. Every short shoot flowering all its life packed a Pacific dogwood's shoots with overlapping heads along their length; flowering only in its first year leaves separate heads near the shoot tips, as photographs show (Imagekit count trial, 2026-10-19)."},
+    "generator.params.blooms": {"evidence": "SourceInferred", "source": "bonner-karrfalt-2008", "note": "The Woody Plant Seed Manual's Cornus chapter: the flowers are borne in terminal clusters (a head inside showy bracts in the flowering and Pacific dogwoods, a flat-topped cyme in red-osier), one to a flowering shoot, so a short shoot bears one bloom. Two to a shoot packed a Pacific dogwood's every shoot with overlapping heads where photos show separate heads at the shoot tips (Imagekit count trial, 2026-10-19)."},
     "traits.flowering_position": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",

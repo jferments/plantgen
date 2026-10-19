@@ -1,0 +1,343 @@
+{
+  "schema": 1,
+  "id": "crataegus-monogyna",
+  "taxon": {
+    "scientific_name": "Crataegus monogyna",
+    "common_name": "common hawthorn",
+    "family": "Rosaceae",
+    "genus": "Crataegus",
+    "plant_name_id": 2921984
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      25
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 9.0,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 4,
+      "max": 10
+    },
+    "height_max_m": 12,
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "spines": "thorns",
+    "spine_length_m": {
+      "min": 0.007,
+      "max": 0.01,
+      "high": 0.024
+    },
+    "bark_colour": [
+      120,
+      110,
+      100
+    ],
+    "leaf_colour": [
+      44,
+      92,
+      36
+    ],
+    "leaf_division": "simple",
+    "leaf_incision": "lobed",
+    "division_pattern": "pinnate",
+    "leaf_lobes": {
+      "min": 3,
+      "max": 7
+    },
+    "leaf_length_m": {
+      "min": 0.012,
+      "max": 0.055
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.03
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "acute",
+    "leaf_margin": "serrate",
+    "inflorescence": "corymb",
+    "units_per_inflorescence": {
+      "min": 5,
+      "max": 15
+    },
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.06
+    },
+    "flower_size_m": {
+      "min": 0.008,
+      "max": 0.016
+    },
+    "flower_colour": [
+      250,
+      248,
+      244
+    ],
+    "stamens": {
+      "min": 15,
+      "max": 20
+    },
+    "anther_colour": [
+      190,
+      70,
+      120
+    ],
+    "carpels": 1,
+    "fruit_type": "pome",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.011
+    },
+    "fruit_colour_ripe": [
+      150,
+      20,
+      24
+    ],
+    "fruit_shape": "ellipsoid",
+    "flowering_months": [
+      4,
+      5
+    ],
+    "fruiting_months": [
+      9,
+      10
+    ],
+    "fruits_per_inflorescence": {"min": 2, "max": 3}
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): shrubs or trees 40-100 (to 120) dm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): to 120 dm."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): shrubs or trees."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: deciduous."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): thorns on the twigs, few to many."
+    },
+    "traits.spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): thorns 0.7-1 cm, the stout lateral ones to 2.4 cm."
+    },
+    "traits.bark_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: bark grey-brown."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): leaves lustrous dark green above, paler beneath; sRGB by eye."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): leaf a single blade."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): blade with 1-3 lobes a side, the sinuses usually deep."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): lobes along the midrib."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): 1-3 lobes a side and the end one: 3 to 7."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): blade 1.2-5.5 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): petiole slender, 1-3 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): blade ovate to deltate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): apex acute."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): margins weakly and often few-toothed at the lobe tips."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: flowers in corymbs."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): inflorescences 5-15-flowered, lax."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: clusters 3 cm to 6 cm across."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): flowers 8-16 mm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: petals white."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): stamens 15-20."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): anthers pink-purple; sRGB by eye."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): style 1 (one-seeded, hence monogyna)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): pomes."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): pomes 6-11 mm across."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): pomes usually dark red, sometimes bright; sRGB by eye."
+    },
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): pomes orbicular to somewhat cylindric, 6-11 mm across; Wikipedia, Crataegus monogyna (read 2026-10-19): the haw small, oval, about 10 mm long. Between round and cylindric: ellipsoid."},
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): flowering April to May."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Crataegus monogyna var. monogyna (eFloras, read 2026-10-19): fruiting September to October."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a dense thorny small tree with small deeply lobed glossy leaves, sprays of white flowers with pink anthers and dark red haws."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "9.0 m tall at 25 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.fruits_per_inflorescence": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Crataegus monogyna (read 2026-10-19): the haws develop in groups of two or three along the smaller branches, from corymbs of 5-15 flowers (FNA)."}
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Rosaceae thread (2026-10-19): characters from Flora of North America vol. 9 and Flora of China vol. 9; the drawing comes from the library's rules for those characters."
+  }
+}

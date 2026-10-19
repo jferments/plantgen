@@ -2322,7 +2322,10 @@ fn card_outline(shape: &Shape) -> Option<(Vec<(f64, f64)>, f64)> {
             sampled(|u| outline_profile(s.outline.as_deref(), u, s.widest, s.base, s.tip)),
             s.width,
         ),
-        Shape::Lobed(s) => (sampled(lobed_envelope), s.width),
+        Shape::Lobed(s) => (
+            sampled(|u| lobed_envelope(s.outline.as_deref(), u)),
+            s.width,
+        ),
         Shape::Compound(c) if c.confluent.unwrap_or(0.0) < 0.5 => {
             let form = crate::divided::Form::of(c);
             (
@@ -2816,6 +2819,7 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
         FruitKind::Follicles => "aggregate|follicle",
         FruitKind::Samaras => "aggregate",
         FruitKind::Berries => "berry|aggregate",
+        FruitKind::Achenes => "aggregate|achene",
     }
 }
 
