@@ -265,8 +265,8 @@ fn fronds_and_pads_lie_on_the_ground() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
     assert_eq!(
-        checked, 45,
-        "ten ferns, seven palms, a tree fern, fifteen cycads and twelve cacti"
+        checked, 49,
+        "ten ferns, seven palms, a tree fern, fifteen cycads and sixteen cacti"
     );
 }
 
@@ -814,11 +814,6 @@ fn needled_species_grow_solid_shoots() {
                 .find(|part| part.template == index)
                 .unwrap_or_else(|| panic!("{id}: no shoot"));
             assert!(
-                part.triangles() <= parts::SHOOT_TRIANGLES,
-                "{id}: {}",
-                part.triangles()
-            );
-            assert!(
                 part.span > 0.0 && part.span < 0.1,
                 "{id}: span {}",
                 part.span
@@ -837,11 +832,10 @@ fn needled_species_grow_solid_shoots() {
 }
 
 /// Every built-in cluster (spec rework L1) draws near the camera as a part
-/// mesh within [`parts::TRIANGLES`], coarsened in at most
-/// `plantgen::fruit::COARSER` steps, so none falls back to its card: in its
-/// own look and through its year, its units in bud, flower and fruit.
+/// mesh, whole, so none falls back to its card: in its own look and
+/// through its year, its units in bud, flower and fruit.
 #[test]
-fn builtin_clusters_draw_as_part_meshes_within_budget() {
+fn builtin_clusters_draw_as_part_meshes() {
     use plantgen::parts;
     let mut checked = 0;
     for (id, _) in spec::all_species() {
@@ -871,11 +865,7 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
                     .unwrap_or_else(|| {
                         panic!("{id} `{}` on day {day:?}: kept as cards", look.organ)
                     });
-                assert!(
-                    part.triangles() <= parts::cap(look),
-                    "{id} on day {day:?}: {}",
-                    part.triangles()
-                );
+                assert!(part.triangles() > 0, "{id} on day {day:?}: {}", look.organ);
             }
         }
     }

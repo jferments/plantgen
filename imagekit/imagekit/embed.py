@@ -11,8 +11,11 @@ Each part is three writes, in this order: the vectors and their ids
 and its analyzer, then one analyses.jsonl row per image pointing at its
 row. Only the last makes an image count as done.
 
-Only whole images (region 0) for now; the ids carry a region so organ crops
-can join the same parts later.
+With --regions, the vectors are of the organs `imagekit detect` found
+(each a crop with a small margin), one row per (image, region). The
+detector, the organs kept, the triage that kept them and the margin are in
+the analyzer's params, so organ vectors never mix with whole-image ones or
+with another detector's regions; `imagekit search --organ` reads them.
 """
 from __future__ import annotations
 
@@ -37,39 +40,84 @@ def register(subparsers) -> None:
     p.add_argument("--limit", type=int, help="embed at most this many images")
     p.add_argument("--batch-size", type=int, default=16, help="images per forward pass (default 16)")
     p.add_argument("--part-rows", type=int, default=2048, help="images per part file (default 2048)")
+    p.add_argument("--taxon", action="append", help="only images of this taxon (repeatable)")
+    p.add_argument("--regions", action="store_true", help="embed the detected organs instead of whole images")
+    p.add_argument("--detector", help="--regions: the detect analyzer (default: the one with most answers)")
+    p.add_argument("--organ", action="append", help="--regions: only this organ (repeatable; default every organ)")
+    p.add_argument("--triage", help="--regions: keep organs this triage saw (default: the one with most answers; "
+                                    "'none' keeps every region)")
+    p.add_argument("--pad", type=float, default=0.08, help="--regions: margin round each box (default %(default)s)")
     p.set_defaults(func=cmd_embed)
 
 
 def cmd_embed(args, store: Store) -> None:
+    spec = None
+    if args.regions:
+        spec = region_spec(store, images_of(store, args.batch, args.taxon), args.detector, args.organ, args.triage,
+                           args.pad)
     for name in [m.strip() for m in args.model.split(",") if m.strip()]:
         embed(store, name, batches=args.batch, run=args.run, device=args.device, image_px=args.image_px,
-              limit=args.limit, batch_size=args.batch_size, part_rows=args.part_rows)
+              limit=args.limit, batch_size=args.batch_size, part_rows=args.part_rows, taxa=args.taxon,
+              regions=spec)
 
 
-def images_of(store: Store, batches=None) -> list[str]:
+def images_of(store: Store, batches=None, taxa=None) -> list[str]:
+    if taxa:
+        from .regions import scope
+        return sorted(scope(store, taxa, batches))
     if not batches:
         return store.all_images()
     return sorted({r["sha256"] for b in batches for r in jsonl(store.batch_dir(b) / "images.jsonl")})
 
 
+def region_spec(store: Store, shas, detector=None, organs=None, triage=None, pad: float = 0.08) -> dict:
+    """What decides which organ crops are embedded; it goes into the analyzer's params."""
+    from .regions import default_detector
+    from .run import default_triage
+    det = detector or default_detector(store, shas)
+    if not det:
+        raise SystemExit("no detections on these images: run `imagekit detect` first")
+    tri = None if triage == "none" else (triage or default_triage(store, shas))
+    return {"detector": det, "organs": sorted(organs) if organs else None, "triage": tri, "pad": pad}
+
+
+def region_todo(store: Store, aid: str, shas, spec: dict) -> list[tuple[str, dict]]:
+    """[(sha256, region)] of the organs in scope that have no vector under aid, in image order."""
+    from .regions import regions, scope
+    from .run import outputs
+    rows = scope(store)
+    keep = set(shas)
+    rows = {s: r for s, r in rows.items() if s in keep}
+    tri = outputs(store, spec["triage"]) if spec.get("triage") else None
+    found = regions(store, spec["detector"], rows, tri, set(spec.get("organs") or []))
+    done = {(s, r) for s, r in store.db.execute("select sha256, region from analyses where analyzer=?", (aid,))}
+    return [(sha, reg) for sha in sorted(found) for reg in found[sha] if (sha, reg["region"]) not in done]
+
+
 def embed(store: Store, name: str, *, batches=None, run: str | None = None, device: str = "auto",
           image_px: int | None = None, limit: int | None = None, batch_size: int = 16, part_rows: int = 2048,
-          log=None) -> dict:
-    """Embed the images that lack this model's vectors; return counts."""
+          taxa=None, regions: dict | None = None, log=None) -> dict:
+    """Embed the images (or with `regions`, the organ crops) that lack this model's vectors; return counts."""
     from . import vectors
     log = log or (lambda *a: print(*a, file=sys.stderr))
     m = vectors.preset(name)
     revision = vectors.resolve_revision(name)
-    defn = vectors.definition(name, revision, image_px)
+    defn = vectors.definition(name, revision, image_px, regions)
     aid = analyzer.register(store, defn)
-    shas = images_of(store, batches)
-    todo = store.missing(aid, shas)
-    log(f"{name} ({m['repo']}@{revision[:12]}, analyzer {aid}): {len(todo)} of {len(shas)} images need vectors")
+    shas = images_of(store, batches, taxa)
+    if regions:
+        from .regions import crop
+        todo = region_todo(store, aid, shas, regions)
+        what = f"organ crops (detector {regions['detector']})"
+    else:
+        todo = [(s, None) for s in store.missing(aid, shas)]
+        what = f"of {len(shas)} images"
+    log(f"{name} ({m['repo']}@{revision[:12]}, analyzer {aid}): {len(todo)} {what} need vectors")
     if limit is not None:
         todo = todo[:limit]
     if not todo:
         return {"model": name, "analyzer": aid, "embedded": 0, "failed": 0, "seconds": 0.0}
-    run = run or store.unsealed("run", f"embed-{name}-{time.strftime('%Y-%m-%d')}")
+    run = run or store.unsealed("run", f"embed-{name}{'-organs' if regions else ''}-{time.strftime('%Y-%m-%d')}")
     check_open(store.run_dir(run))
     t_load = time.perf_counter()
     enc = vectors.load_embedder(name, revision, defn["params"]["image_px"], device)
@@ -84,10 +132,11 @@ def embed(store: Store, name: str, *, batches=None, run: str | None = None, devi
         vecs, ids, secs = [], [], []
         for i in range(0, len(chunk), batch_size):
             group, ims = [], []
-            for sha in chunk[i:i + batch_size]:
+            for sha, reg in chunk[i:i + batch_size]:
                 try:
-                    ims.append(vectors.load_image(store.blob(sha), enc.image_px))
-                    group.append(sha)
+                    ims.append(vectors.load_image(store.blob(sha), enc.image_px) if reg is None
+                               else crop(store, sha, reg["box"], regions["pad"]))
+                    group.append((sha, 0 if reg is None else reg["region"]))
                 except Exception as err:  # noqa: BLE001 - one unreadable image does not stop a run
                     log(f"  unreadable, skipped: {sha} ({err})")
                     failed += 1
@@ -122,7 +171,7 @@ def write_part(store, run, name, aid, defn, enc, ids, vecs, secs) -> None:
     with open(tmp, "wb") as fh:
         np.save(fh, arr)
     ids_tmp = vdir / f"part-{n:04d}.ids.jsonl.tmp"
-    ids_tmp.write_text("".join(json.dumps({"sha256": s, "region": 0}) + "\n" for s in ids))
+    ids_tmp.write_text("".join(json.dumps({"sha256": s, "region": r}) + "\n" for s, r in ids))
     ids_tmp.replace(vdir / f"part-{n:04d}.ids.jsonl")
     tmp.replace(vdir / part)
     update_run(store, run, name, {"model": defn["model"], "revision": defn["model_revision"], "analyzer": aid,
@@ -130,9 +179,9 @@ def write_part(store, run, name, aid, defn, enc, ids, vecs, secs) -> None:
                part=(part, aid), add_rows=len(ids), add_seconds=sum(secs))
     rel = f"vectors/{name}/{part}"
     at = now()
-    rows = [{"sha256": s, "region": 0, "analyzer": aid, "task": "embed", "status": "ok",
+    rows = [{"sha256": s, "region": r, "analyzer": aid, "task": "embed", "status": "ok",
              "out": {"part": rel, "row": i, "dim": int(arr.shape[1])}, "run": run, "at": at,
-             "seconds": round(secs[i], 4)} for i, s in enumerate(ids)]
+             "seconds": round(secs[i], 4)} for i, (s, r) in enumerate(ids)]
     append_jsonl(store.run_dir(run) / "analyses.jsonl", rows)
     for r in rows:
         store.index_analysis(r, run)

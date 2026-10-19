@@ -89,7 +89,6 @@
             "colour": [0.6, 0.18, 0.08],
             "angle_spread": 15,
             "length_spread": 0.3,
-            "curve": 35,
             "flat": 0.5,
             "tip": [0.7, 0.6, 0.3]
           }

@@ -3,6 +3,7 @@
   "rank": "genus",
   "name": "Corylus",
   "traits": {
+    "branch_orientation": "plagiotropic",
     "short_shoots": true,
     "wood_density_basic_kg_m3": 530,
     "leaf_arrangement": "alternate",
@@ -10,6 +11,7 @@
     "flowering_position": "both"
   },
   "evidence": {
+    "traits.branch_orientation": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Open-grown Corylus cornuta photos read blind for branching (imagekit run branching-chat-woody-forms-2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/README.md): side branches plagiotropic in 14 of 16 observations that showed them."},
     "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: Acer, Betula, Corylus, Fagus and rosaceous fruit trees such as Pyrus have a well-developed short-shoot system, whose short shoots fill most of the crown and bear most of its leaves (Wilson's red maple)."},
     "traits.wood_density_basic_kg_m3": {
       "evidence": "SourceInferred",

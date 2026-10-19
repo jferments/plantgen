@@ -157,6 +157,45 @@ class OpenAICompat:
         return any(h in self.base_url for h in ("localhost", "127.0.0.1", "0.0.0.0")) or bool(self.cfg.get("local"))
 
 
+# What Claude's structured outputs accept: every object closed, no numeric,
+# length or array-size constraints. Answers are still checked against the
+# full schema afterwards (run.judge), so dropping these loses nothing.
+DROP_KEYS = {"$schema", "$id", "minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum", "multipleOf",
+             "minLength", "maxLength", "pattern", "minItems", "maxItems", "uniqueItems", "if", "then", "else"}
+
+
+def claude_schema(schema):
+    """The schema as Claude's structured outputs take it, or None when an object has open keys."""
+    if isinstance(schema, list):
+        out = [claude_schema(s) for s in schema]
+        return out
+    if not isinstance(schema, dict):
+        return schema
+    if schema.get("type") == "object" or "properties" in schema:
+        if "properties" not in schema or "patternProperties" in schema or "propertyNames" in schema \
+                or schema.get("additionalProperties", False) is not False:
+            return None
+    out = {}
+    for k, v in schema.items():
+        if k in DROP_KEYS:
+            continue
+        if k in ("properties", "$defs", "definitions"):
+            sub = {name: claude_schema(s) for name, s in v.items()}
+            if any(x is None for x in sub.values()):
+                return None
+            out[k] = sub
+        elif k in ("items", "anyOf", "allOf", "oneOf", "not"):
+            sub = claude_schema(v)
+            if sub is None or (isinstance(sub, list) and any(x is None for x in sub)):
+                return None
+            out["anyOf" if k == "oneOf" else k] = sub
+        else:
+            out[k] = v
+    if "properties" in out:
+        out["additionalProperties"] = False
+    return out
+
+
 class AnthropicAPI:
     """The Claude API through the official SDK; structured outputs keep answers to the schema."""
     kind = "anthropic"
@@ -188,8 +227,9 @@ class AnthropicAPI:
             ]}],
             "output_config": {"effort": self.effort},
         }
-        if self.use_format:
-            p["output_config"]["format"] = {"type": "json_schema", "schema": schema}
+        strict = claude_schema(schema) if self.use_format else None
+        if strict is not None:  # the batch path has no retry without it, so send only what the API takes
+            p["output_config"]["format"] = {"type": "json_schema", "schema": strict}
         return p
 
     def usd(self, usage, batch: bool = False) -> float | None:

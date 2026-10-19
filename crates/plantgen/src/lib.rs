@@ -974,12 +974,45 @@ pub mod venation;
 /// `glochid_colour`, also the stem's glochids); and a round fruit with no
 /// stated width is as wide as long (137 is #234; 138 and 139 are #167's
 /// nodding leaders and old-conifer refit).
-/// 141: old conifers keep their foliage from 150 to 300 years: a side
+/// 141: each organ type's part mesh (a flower, fruit, cluster, flower head
+/// or needle shoot drawn near the camera) is the organ at its finest, with
+/// no cap on its triangles; simplifying is the caller's choice (`plantc
+/// export --triangles`, `--max-mib`) (140 is cactus pericarpels, #226).
+/// 142: a palm's fronds stand up the year's trunk as they emerge over the
+/// year (palm 14), so its leaf bases and boots wind evenly up the trunk in
+/// place of bands at each year's top; Phoenix keeps its broad leaf bases
+/// for the trunk's life, standing close to the stem (141 is full-quality
+/// part meshes, #237).
+/// 143: a cactus's central spine form draws its spines: curved and twisted
+/// centrals bend (`curve`), a hooked principal central turns back as a
+/// fishhook (`hook`), in place of hooks and curves set by hand; a woolly
+/// pericarpel and fruit (`fruit_surface` woolly: Homalocephala,
+/// Astrophytum); a flat stem top (`stem_apex` flat); white hair flecks
+/// between the areoles (new trait `stem_flecks`, body `flecks`); an
+/// apex's woolly cap closes over the tip; a reduced flower with more than
+/// 12 stamens draws a ring of anthers; a cactus's floral tube wears its
+/// pericarpel's colour and skin and flares near its mouth, over a
+/// pericarpel shortened to the ovary's swelling; a column stem's sink follows
+/// its height curve, so a seedling's top shows (142 is palm
+/// trunks, #240).
+/// 144: branching form (broadleaf 23): a shoot without a terminal bud
+/// dies back each year and its topmost lateral carries it on, sometimes
+/// as a fork (`tip_abort`, from `terminal_bud`); a plagiotropic plant's
+/// limbs carry flat sprays (`plagio`, from `branch_orientation`); a
+/// tree's dead branches stand until they fall (`dead_keep`); a
+/// small-leaved tree's or shrub's long shoots set their leaves no farther
+/// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
+/// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
+/// cactus genera, #239).
+/// 145: old conifers keep their foliage from 150 to 300 years: a side
 /// shoot keeps growing at least `side_floor` once the leader stops rising
-/// (coming in over `floor_ramp` metres below the top), the family's
+/// (coming in over the top `floor_ramp` share of the height), the family's
 /// dormant buds wait on the limbs' main axes for 300 years (`epi_order`),
 /// a limb is shed for the mean light of its tips (`limb_tip`) more than
 /// for its size, and slow shoots are laid down every few years
-/// (`seg_min`) so the fully branched old crowns fit the module limit (140
-/// is cactus pericarpels, #226).
-pub const GENERATOR_REVISION: u32 = 141;
+/// (`seg_min`) so the fully branched old crowns fit the module limit; a
+/// tall tree lays down less trunk wood per square metre of foliage once
+/// its leader passes `ring_share` of its full height; and the top whorls'
+/// branch shoots lengthen over `top_ramp` years of the leader's growth in
+/// place of a fixed depth (144 is branching form, #244).
+pub const GENERATOR_REVISION: u32 = 145;

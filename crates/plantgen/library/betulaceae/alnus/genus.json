@@ -3,12 +3,14 @@
   "rank": "genus",
   "name": "Alnus",
   "traits": {
+    "branch_orientation": "plagiotropic",
     "wood_density_basic_kg_m3": 470,
     "leaf_arrangement": "alternate",
     "phyllotaxis_pattern": {"tristichous": "usually", "distichous": "sometimes"},
     "flowering_position": "lateral"
   },
   "evidence": {
+    "traits.branch_orientation": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Open-grown Alnus rubra photos read blind for branching (imagekit run branching-chat-woody-forms-2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/TALLY-wave1.md): side branches plagiotropic in 8 of 9 observations that showed them, orthotropic in 1."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Alnus (gwddagg_v2.2_genus.csv, read): specific gravity 0.47 (wsg_est, the hierarchical-model genus mean, from 567 records in 40 sources); trunks 0.47, branches 0.47. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
