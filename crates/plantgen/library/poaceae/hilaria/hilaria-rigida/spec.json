@@ -105,9 +105,9 @@
           "spread": 15,
           "peduncle": 0.05,
           "stalk": [
-            0.45,
-            0.43,
-            0.35
+            0.1706,
+            0.1549,
+            0.1005
           ]
         },
         "colour": [
@@ -215,7 +215,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye from the photos (observations 3770337, 148080836, 328974622, 69283601, 10776079, 346930362, 21148131, 45087852): a coarse, bushy clump of stiff, felty grey-green culms, short rigid blades, and narrow straw-coloured spikes of bearded spikelet groups. The panicle's colour is set by hand (spikes pale straw, sRGB 215, 205, 170 by eye from the photos (the sources read give no colour)), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules."
+      "note": "By eye from the photos (observations 3770337, 148080836, 328974622, 69283601, 10776079, 346930362, 21148131, 45087852): a coarse, bushy clump of stiff, felty grey-green culms, short rigid blades, and narrow straw-coloured spikes of bearded spikelet groups. The panicle's colour is set by hand (spikes pale straw, sRGB 215, 205, 170 by eye from the photos (the sources read give no colour)), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

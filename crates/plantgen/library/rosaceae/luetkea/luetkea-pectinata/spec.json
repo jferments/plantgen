@@ -58,19 +58,19 @@
       }
     },
     "bark": [
-      0.4,
-      0.3,
-      0.22
+      0.1329,
+      0.0732,
+      0.0397
     ],
     "foliage": [
-      0.16,
-      0.32,
-      0.1
+      0.022,
+      0.0835,
+      0.01
     ],
     "foliage_shade": [
-      0.051,
-      0.102,
-      0.032
+      0.0077,
+      0.0351,
+      0.0055
     ]
   },
   "allometry": [
@@ -332,7 +332,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a bright green mat of finely dissected, fan-like leaves, from which short stalks rise with narrow spikes of creamy white flowers. Organ cards from spreading phlox's (phlox-diffusa), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: a bright green mat of finely dissected, fan-like leaves, from which short stalks rise with narrow spikes of creamy white flowers. Organ cards from spreading phlox's (phlox-diffusa), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

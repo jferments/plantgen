@@ -38,19 +38,19 @@
     "variation": 0.2,
     "organs": {},
     "bark": [
-      0.5,
-      0.47,
-      0.44
+      0.214,
+      0.1873,
+      0.1626
     ],
     "foliage": [
-      0.4,
-      0.45,
-      0.36
+      0.1329,
+      0.1706,
+      0.1065
     ],
     "foliage_shade": [
-      0.128,
-      0.144,
-      0.115
+      0.0465,
+      0.0717,
+      0.0586
     ]
   },
   "allometry": [
@@ -351,7 +351,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a low, dense, intricately branched grey shrub with silky grey-green linear leaves and scattered magenta-purple flowers, then round burs with purple barbed spines."
+      "note": "By eye, from the photos the traits cite: a low, dense, intricately branched grey shrub with silky grey-green linear leaves and scattered magenta-purple flowers, then round burs with purple barbed spines. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

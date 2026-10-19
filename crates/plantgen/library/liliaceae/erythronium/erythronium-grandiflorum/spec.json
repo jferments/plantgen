@@ -86,14 +86,14 @@
           }
         },
         "colour": [
-          0.98,
-          0.84,
-          0.12
+          0.9551,
+          0.6739,
+          0.0134
         ],
         "accent": [
-          0.92,
-          0.75,
-          0.1
+          0.8276,
+          0.5225,
+          0.01
         ]
       }
     },
@@ -332,7 +332,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: two plain green, lance-shaped basal leaves under a leafless stalk with one or two nodding, bright yellow lilies whose tepals sweep back. Organ cards from yellow trout lily's (erythronium-americanum), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: two plain green, lance-shaped basal leaves under a leafless stalk with one or two nodding, bright yellow lilies whose tepals sweep back. Organ cards from yellow trout lily's (erythronium-americanum), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

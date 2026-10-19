@@ -40,19 +40,19 @@
     "variation": 0.2,
     "organs": {},
     "bark": [
-      0.52,
-      0.5,
-      0.45
+      0.233,
+      0.214,
+      0.1706
     ],
     "foliage": [
-      0.36,
-      0.41,
-      0.29
+      0.1065,
+      0.14,
+      0.0684
     ],
     "foliage_shade": [
-      0.115,
-      0.131,
-      0.093
+      0.0373,
+      0.0588,
+      0.0376
     ]
   },
   "allometry": [
@@ -331,7 +331,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a low, compact, rounded shrub of many brittle grey stems from the base, grey-green triangular leaves, short spikes of small greenish heads at the twig tips."
+      "note": "By eye, from the photos the traits cite: a low, compact, rounded shrub of many brittle grey stems from the base, grey-green triangular leaves, short spikes of small greenish heads at the twig tips. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

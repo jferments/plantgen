@@ -53,14 +53,14 @@
     "variation": 0.2,
     "organs": {},
     "foliage": [
-      0.45,
-      0.5,
-      0.38
+      0.1706,
+      0.214,
+      0.1193
     ],
     "foliage_shade": [
-      0.144,
-      0.16,
-      0.122
+      0.0597,
+      0.0899,
+      0.0656
     ]
   },
   "allometry": [
@@ -358,7 +358,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a mound of many erect, grey-felted stems from a woody base, pale grey-green shallowly three-lobed leaves, and open sprays of cupped apricot-orange flowers."
+      "note": "By eye, from the photos the traits cite: a mound of many erect, grey-felted stems from a woody base, pale grey-green shallowly three-lobed leaves, and open sprays of cupped apricot-orange flowers. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

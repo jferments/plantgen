@@ -121,14 +121,14 @@
               "sepals_fused": 0.4
             },
             "colour": [
-              0.72,
-              0.5,
-              0.82
+              0.477,
+              0.214,
+              0.6383
             ],
             "accent": [
-              0.9,
-              0.9,
-              0.95
+              0.7874,
+              0.7874,
+              0.89
             ],
             "size": 0.55
           }
@@ -136,14 +136,14 @@
       }
     },
     "foliage": [
-      0.3,
-      0.42,
-      0.2
+      0.0732,
+      0.1473,
+      0.0331
     ],
     "foliage_shade": [
-      0.096,
-      0.134,
-      0.064
+      0.0256,
+      0.0619,
+      0.0182
     ]
   },
   "allometry": [
@@ -420,7 +420,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a branched annual with stout hollow stems, bright green palmate leaves of narrow leaflets, and loose spikes of lilac-pink pea flowers."
+      "note": "By eye, from the photos the traits cite: a branched annual with stout hollow stems, bright green palmate leaves of narrow leaflets, and loose spikes of lilac-pink pea flowers. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -112,14 +112,14 @@
               "aspect": 0.85
             },
             "colour": [
-              0.88,
-              0.42,
-              0.68
+              0.7484,
+              0.1473,
+              0.42
             ],
             "accent": [
-              0.75,
-              0.25,
-              0.42
+              0.5225,
+              0.0509,
+              0.1473
             ],
             "size": 1.8
           }
@@ -127,9 +127,9 @@
       }
     },
     "bark": [
-      0.4,
-      0.3,
-      0.22
+      0.1329,
+      0.0732,
+      0.0397
     ],
     "foliage": [
       0.07,
@@ -387,7 +387,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a dense, low mat of erect stems clothed in short, dark green, needle-like leaves, each stem topped by a cluster of nodding rose-pink bells on long red stalks. Organ cards from evergreen huckleberry's (vaccinium-ovatum), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: a dense, low mat of erect stems clothed in short, dark green, needle-like leaves, each stem topped by a cluster of nodding rose-pink bells on long red stalks. Organ cards from evergreen huckleberry's (vaccinium-ovatum), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

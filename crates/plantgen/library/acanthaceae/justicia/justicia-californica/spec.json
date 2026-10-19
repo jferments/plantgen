@@ -38,19 +38,19 @@
     "variation": 0.2,
     "organs": {},
     "bark": [
-      0.55,
-      0.62,
-      0.5
+      0.2633,
+      0.3424,
+      0.214
     ],
     "foliage": [
-      0.3,
-      0.42,
-      0.24
+      0.0732,
+      0.1473,
+      0.047
     ],
     "foliage_shade": [
-      0.096,
-      0.134,
-      0.077
+      0.0256,
+      0.0619,
+      0.0259
     ]
   },
   "allometry": [
@@ -379,7 +379,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a rounded mound of many slender, grey-green, nearly leafless rush-like stems, a few small opposite leaves, and showers of red tubular two-lipped flowers in late winter and spring."
+      "note": "By eye, from the photos the traits cite: a rounded mound of many slender, grey-green, nearly leafless rush-like stems, a few small opposite leaves, and showers of red tubular two-lipped flowers in late winter and spring. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

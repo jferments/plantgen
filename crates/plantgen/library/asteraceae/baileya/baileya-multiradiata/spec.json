@@ -68,26 +68,26 @@
           "ray_width": 0.9
         },
         "colour": [
-          0.98,
-          0.84,
-          0.1
+          0.9551,
+          0.6739,
+          0.01
         ],
         "accent": [
-          0.95,
-          0.7,
-          0.05
+          0.89,
+          0.448,
+          0.0039
         ]
       }
     },
     "foliage": [
-      0.55,
-      0.6,
-      0.5
+      0.2633,
+      0.3185,
+      0.214
     ],
     "foliage_shade": [
-      0.176,
-      0.192,
-      0.16
+      0.0922,
+      0.1338,
+      0.1177
     ]
   },
   "allometry": [
@@ -413,7 +413,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a silvery woolly clump of pinnately cut basal leaves sending up many slender grey stems, each ending in one bright yellow daisy with papery rays."
+      "note": "By eye, from the photos the traits cite: a silvery woolly clump of pinnately cut basal leaves sending up many slender grey stems, each ending in one bright yellow daisy with papery rays. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

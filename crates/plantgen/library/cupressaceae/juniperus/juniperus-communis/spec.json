@@ -64,9 +64,9 @@
           "aspect": 1.0
         },
         "colour": [
-          0.55,
-          0.65,
-          0.8
+          0.2633,
+          0.3801,
+          0.6038
         ]
       },
       "spray": {
@@ -82,9 +82,9 @@
       }
     },
     "bark": [
-      0.4,
-      0.22,
-      0.15
+      0.1329,
+      0.0397,
+      0.0196
     ],
     "foliage": [
       0.11,
@@ -348,7 +348,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a low, spreading mat of stiff, sharp, upcurved needles in threes, grey-green with a white band above, carrying pale glaucous blue berry-cones. Organ cards from Rocky Mountain juniper's (juniperus-scopulorum), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: a low, spreading mat of stiff, sharp, upcurved needles in threes, grey-green with a white band above, carrying pale glaucous blue berry-cones. Organ cards from Rocky Mountain juniper's (juniperus-scopulorum), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     }
   },
   "provenance": {

@@ -90,14 +90,14 @@
           "pedicel": 0.12
         },
         "colour": [
-          0.88,
-          0.32,
-          0.2
+          0.7484,
+          0.0835,
+          0.0331
         ],
         "accent": [
-          0.5,
-          0.2,
-          0.15
+          0.214,
+          0.0331,
+          0.0196
         ],
         "season": {
           "ripening": 25,
@@ -112,14 +112,14 @@
               "stamen_length": 0.25
             },
             "colour": [
-              0.96,
-              0.95,
-              0.92
+              0.9114,
+              0.89,
+              0.8276
             ],
             "accent": [
-              0.88,
-              0.82,
-              0.6
+              0.7484,
+              0.6383,
+              0.3185
             ],
             "size": 1.2,
             "form": {
@@ -133,9 +133,9 @@
       }
     },
     "bark": [
-      0.42,
-      0.3,
-      0.26
+      0.1473,
+      0.0732,
+      0.055
     ],
     "foliage": [
       0.08,
@@ -447,7 +447,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: an open shrub of several smooth, reddish-grey stems, pinnate leaves of many oblong, toothed leaflets, flat clusters of white flowers and coral-red fruit. Organ cards from western serviceberry's (amelanchier-alnifolia), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: an open shrub of several smooth, reddish-grey stems, pinnate leaves of many oblong, toothed leaflets, flat clusters of white flowers and coral-red fruit. Organ cards from western serviceberry's (amelanchier-alnifolia), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

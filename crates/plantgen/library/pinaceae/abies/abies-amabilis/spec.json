@@ -77,11 +77,6 @@
         ]
       }
     },
-    "bark": [
-      0.55,
-      0.55,
-      0.52
-    ],
     "foliage": [
       0.05,
       0.14,
@@ -322,7 +317,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a symmetrical, narrowly conical fir with level branches, dark glossy green needles silvery beneath, smooth pale grey bark and erect purple cones near the top. Organ cards from grand fir's (abies-grandis), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: a symmetrical, narrowly conical fir with level branches, dark glossy green needles silvery beneath, smooth pale grey bark and erect purple cones near the top. Organ cards from grand fir's (abies-grandis), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     }
   },
   "provenance": {

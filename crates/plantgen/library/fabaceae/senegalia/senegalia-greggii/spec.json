@@ -47,9 +47,9 @@
           "aspect": 0.12
         },
         "colour": [
-          0.42,
-          0.32,
-          0.24
+          0.1473,
+          0.0835,
+          0.047
         ],
         "form": "thorn"
       },
@@ -59,11 +59,6 @@
         }
       }
     },
-    "bark": [
-      0.47,
-      0.44,
-      0.39
-    ],
     "foliage": [
       0.3,
       0.4,
@@ -403,7 +398,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a spreading, many-stemmed shrub of grey zigzag branches armed with small hooked prickles, feathery pale green leaves, creamy fuzzy spikes in late spring and twisted red-brown pods."
+      "note": "By eye, from the photos the traits cite: a spreading, many-stemmed shrub of grey zigzag branches armed with small hooked prickles, feathery pale green leaves, creamy fuzzy spikes in late spring and twisted red-brown pods. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

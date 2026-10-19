@@ -45,19 +45,19 @@
       }
     },
     "bark": [
-      0.6,
-      0.6,
-      0.55
+      0.3185,
+      0.3185,
+      0.2633
     ],
     "foliage": [
-      0.33,
-      0.38,
-      0.28
+      0.089,
+      0.1193,
+      0.0637
     ],
     "foliage_shade": [
-      0.1056,
-      0.1216,
-      0.0896
+      0.0311,
+      0.0501,
+      0.035
     ]
   },
   "allometry": [
@@ -343,7 +343,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a low, rounded mound of white-woolly stems and sparse narrow grey-green leaves, covered in spring with bright yellow heads of three to five broad, three-toothed rays that dry papery on the plant."
+      "note": "By eye, from the photos the traits cite: a low, rounded mound of white-woolly stems and sparse narrow grey-green leaves, covered in spring with bright yellow heads of three to five broad, three-toothed rays that dry papery on the plant. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

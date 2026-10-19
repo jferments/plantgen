@@ -54,17 +54,7 @@
   },
   "appearance": {
     "variation": 0.2,
-    "organs": {},
-    "foliage": [
-      0.3,
-      0.4,
-      0.33
-    ],
-    "foliage_shade": [
-      0.096,
-      0.128,
-      0.106
-    ]
+    "organs": {}
   },
   "allometry": [
     {
@@ -323,7 +313,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a basal tuft of blue-grey lanceolate leaves sending up several tall, slender stems hung with rose-magenta funnel-shaped flowers."
+      "note": "By eye, from the photos the traits cite: a basal tuft of blue-grey lanceolate leaves sending up several tall, slender stems hung with rose-magenta funnel-shaped flowers. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

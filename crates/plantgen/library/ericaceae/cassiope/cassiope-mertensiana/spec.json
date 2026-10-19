@@ -101,14 +101,14 @@
               "aspect": 0.9
             },
             "colour": [
-              0.97,
-              0.96,
-              0.94
+              0.9331,
+              0.9114,
+              0.8689
             ],
             "accent": [
-              0.75,
-              0.2,
-              0.18
+              0.5225,
+              0.0331,
+              0.0272
             ],
             "size": 2.3
           }
@@ -116,9 +116,9 @@
       }
     },
     "bark": [
-      0.4,
-      0.3,
-      0.22
+      0.1329,
+      0.0732,
+      0.0397
     ],
     "foliage": [
       0.09,
@@ -402,7 +402,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a low heath of upright, cord-like shoots clothed in tiny, pressed, four-ranked scale leaves, hung with small white bells on red stalks. Organ cards from evergreen huckleberry's (vaccinium-ovatum), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: a low heath of upright, cord-like shoots clothed in tiny, pressed, four-ranked scale leaves, hung with small white bells on red stalks. Organ cards from evergreen huckleberry's (vaccinium-ovatum), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

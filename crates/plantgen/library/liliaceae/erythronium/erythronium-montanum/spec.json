@@ -87,14 +87,14 @@
           }
         },
         "colour": [
-          0.97,
-          0.97,
-          0.95
+          0.9331,
+          0.9331,
+          0.89
         ],
         "accent": [
-          0.95,
-          0.68,
-          0.12
+          0.89,
+          0.42,
+          0.0134
         ]
       }
     },
@@ -348,7 +348,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: two broad, plain green basal leaves under a stout leafless stalk carrying one to three nodding white lilies with golden-orange centres. Organ cards from yellow trout lily's (erythronium-americanum), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: two broad, plain green basal leaves under a stout leafless stalk carrying one to three nodding white lilies with golden-orange centres. Organ cards from yellow trout lily's (erythronium-americanum), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

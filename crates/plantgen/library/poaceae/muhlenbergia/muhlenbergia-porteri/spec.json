@@ -80,9 +80,9 @@
           "taper": 0
         },
         "colour": [
-          0.42,
-          0.36,
-          0.25
+          0.1473,
+          0.1065,
+          0.0509
         ],
         "shade": [
           0.1344,
@@ -102,9 +102,9 @@
           "taper": 0.3,
           "peduncle": 0.05,
           "stalk": [
-            0.4,
-            0.3,
-            0.32
+            0.1329,
+            0.0732,
+            0.0835
           ],
           "branch": {
             "kind": "raceme",
@@ -226,7 +226,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye from the photos (observations 18973867, 4706451, 192934618, 184760982, 19983391, 111591905, 184599582, 253321042): a wiry, much-branched mound of thin culms, woody at the base, few tiny blades, and airy, widely spreading pinkish-purple panicles. The panicle's colour is set by hand (Hitchcock (1935) p. 380, 381: lemma purple; pinkish purple in the photos; sRGB 140, 80, 120 by eye), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules."
+      "note": "By eye from the photos (observations 18973867, 4706451, 192934618, 184760982, 19983391, 111591905, 184599582, 253321042): a wiry, much-branched mound of thin culms, woody at the base, few tiny blades, and airy, widely spreading pinkish-purple panicles. The panicle's colour is set by hand (Hitchcock (1935) p. 380, 381: lemma purple; pinkish purple in the photos; sRGB 140, 80, 120 by eye), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

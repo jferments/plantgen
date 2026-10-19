@@ -84,31 +84,31 @@
           "sepal_length": 1.0
         },
         "colour": [
-          0.68,
-          0.76,
-          0.4
+          0.42,
+          0.5382,
+          0.1329
         ],
         "accent": [
-          0.5,
-          0.62,
-          0.25
+          0.214,
+          0.3424,
+          0.0509
         ]
       }
     },
     "bark": [
-      0.45,
-      0.55,
-      0.3
+      0.1706,
+      0.2633,
+      0.0732
     ],
     "foliage": [
-      0.24,
-      0.38,
-      0.13
+      0.047,
+      0.1193,
+      0.0153
     ],
     "foliage_shade": [
-      0.077,
-      0.122,
-      0.042
+      0.0164,
+      0.0501,
+      0.0084
     ]
   },
   "allometry": [
@@ -373,7 +373,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a tall, stout, very leafy stem of broad, pleated, yellow-green leaves, crowned by a drooping panicle of small yellowish green flowers. Organ cards from common beargrass's (xerophyllum-tenax), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: a tall, stout, very leafy stem of broad, pleated, yellow-green leaves, crowned by a drooping panicle of small yellowish green flowers. Organ cards from common beargrass's (xerophyllum-tenax), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

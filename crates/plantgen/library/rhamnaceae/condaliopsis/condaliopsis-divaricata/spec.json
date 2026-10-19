@@ -48,27 +48,22 @@
           "aspect": 0.12
         },
         "colour": [
-          0.62,
-          0.64,
-          0.58
+          0.3424,
+          0.3672,
+          0.2957
         ],
         "form": "thorn"
       }
     },
-    "bark": [
-      0.66,
-      0.68,
-      0.63
-    ],
     "foliage": [
-      0.32,
-      0.4,
-      0.26
+      0.0835,
+      0.1329,
+      0.055
     ],
     "foliage_shade": [
-      0.102,
-      0.128,
-      0.083
+      0.0292,
+      0.0558,
+      0.0303
     ]
   },
   "allometry": [
@@ -339,7 +334,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a rigid, densely and divaricately branched shrub of pale grey-green, thorn-tipped branchlets, small grey-green leaves, and dark blue berries with a bloom."
+      "note": "By eye, from the photos the traits cite: a rigid, densely and divaricately branched shrub of pale grey-green, thorn-tipped branchlets, small grey-green leaves, and dark blue berries with a bloom. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

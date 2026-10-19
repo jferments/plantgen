@@ -99,21 +99,21 @@
           }
         },
         "colour": [
-          0.86,
-          0.42,
-          0.64
+          0.7106,
+          0.1473,
+          0.3672
         ],
         "accent": [
-          0.93,
-          0.62,
-          0.77
+          0.8481,
+          0.3424,
+          0.5542
         ]
       }
     },
     "bark": [
-      0.42,
-      0.25,
-      0.17
+      0.1473,
+      0.0509,
+      0.0245
     ],
     "foliage": [
       0.09,
@@ -351,7 +351,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a low, twiggy clump of ascending stems with small oval leaves toothed toward the tip, topped by flat, fuzzy clusters of rose-pink flowers. Organ cards from hardhack's (spiraea-douglasii), recoloured and resized by hand."
+      "note": "By eye, from the photos the traits cite: a low, twiggy clump of ascending stems with small oval leaves toothed toward the tip, topped by flat, fuzzy clusters of rose-pink flowers. Organ cards from hardhack's (spiraea-douglasii), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

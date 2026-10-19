@@ -69,19 +69,19 @@
       }
     },
     "bark": [
-      0.42,
-      0.38,
-      0.32
+      0.1473,
+      0.1193,
+      0.0835
     ],
     "foliage": [
-      0.24,
-      0.36,
-      0.14
+      0.047,
+      0.1065,
+      0.0174
     ],
     "foliage_shade": [
-      0.077,
-      0.115,
-      0.045
+      0.0164,
+      0.0447,
+      0.0096
     ]
   },
   "allometry": [
@@ -361,7 +361,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a compact rounded shrub of many upright stems, bright green needle-like leaves crowded on the twigs, flat clusters of small golden heads in autumn that fade to buff."
+      "note": "By eye, from the photos the traits cite: a compact rounded shrub of many upright stems, bright green needle-like leaves crowded on the twigs, flat clusters of small golden heads in autumn that fade to buff. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

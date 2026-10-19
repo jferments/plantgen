@@ -56,14 +56,14 @@
       }
     },
     "foliage": [
-      0.52,
-      0.56,
-      0.48
+      0.233,
+      0.2738,
+      0.196
     ],
     "foliage_shade": [
-      0.166,
-      0.179,
-      0.154
+      0.0815,
+      0.115,
+      0.1078
     ]
   },
   "allometry": [
@@ -297,7 +297,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: dense tufts of erect, narrow, grey-woolly leaves, some sending up short woolly stems capped by a tight cluster of creamy, dark-flecked heads. The basal leaves' petiole share is set by hand from the leaf and petiole lengths the traits give, as no rule sets a rosette leaf's."
+      "note": "By eye, from the photos the traits cite: dense tufts of erect, narrow, grey-woolly leaves, some sending up short woolly stems capped by a tight cluster of creamy, dark-flecked heads. The basal leaves' petiole share is set by hand from the leaf and petiole lengths the traits give, as no rule sets a rosette leaf's. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

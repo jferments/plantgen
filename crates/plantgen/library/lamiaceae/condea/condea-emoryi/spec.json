@@ -43,14 +43,14 @@
       0.55
     ],
     "foliage": [
-      0.55,
-      0.58,
-      0.52
+      0.2633,
+      0.2957,
+      0.233
     ],
     "foliage_shade": [
-      0.176,
-      0.186,
-      0.166
+      0.0922,
+      0.1242,
+      0.1282
     ]
   },
   "allometry": [
@@ -360,7 +360,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: an upright shrub of many slender straight grey stems, silvery-woolly ovate leaves in pairs, and woolly clusters of small violet flowers at the branch ends."
+      "note": "By eye, from the photos the traits cite: an upright shrub of many slender straight grey stems, silvery-woolly ovate leaves in pairs, and woolly clusters of small violet flowers at the branch ends. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -103,9 +103,9 @@
           "taper": 0.2,
           "peduncle": 0.05,
           "stalk": [
-            0.5,
-            0.48,
-            0.35
+            0.214,
+            0.196,
+            0.1005
           ],
           "branch": {
             "kind": "raceme",
@@ -220,7 +220,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye from the photos (observations 33236284, 133248955, 324238842, 238154280, 238508458, 143912946, 7484484, 17786628): a small, loosely branched annual tuft of few short blades and slender culms, each ending in a zigzag axis of pale straw, needle-like spikes that hang down and fall whole. The panicle's colour is set by hand (spikes pale straw, sRGB 200, 195, 150 by eye from the photos (the sources read give no colour)), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules."
+      "note": "By eye from the photos (observations 33236284, 133248955, 324238842, 238154280, 238508458, 143912946, 7484484, 17786628): a small, loosely branched annual tuft of few short blades and slender culms, each ending in a zigzag axis of pale straw, needle-like spikes that hang down and fall whole. The panicle's colour is set by hand (spikes pale straw, sRGB 200, 195, 150 by eye from the photos (the sources read give no colour)), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

@@ -67,34 +67,29 @@
           "aspect": 0.12
         },
         "colour": [
-          0.45,
-          0.55,
-          0.4
+          0.1706,
+          0.2633,
+          0.1329
         ],
         "form": "thorn"
       },
       "bloom": {
         "colour": [
-          0.98,
-          0.84,
-          0.1
+          0.9551,
+          0.6739,
+          0.01
         ]
       }
     },
-    "bark": [
-      0.45,
-      0.56,
-      0.42
-    ],
     "foliage": [
-      0.36,
-      0.46,
-      0.26
+      0.1065,
+      0.1789,
+      0.055
     ],
     "foliage_shade": [
-      0.115,
-      0.147,
-      0.083
+      0.0373,
+      0.0751,
+      0.0303
     ],
     "bark_pattern": {
       "kind": "smooth",
@@ -420,7 +415,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a low-branched, multi-stemmed tree with smooth blue-green bark on trunk and twigs, a sparse spreading crown of tiny leaflets, smothered in bright yellow flowers in spring."
+      "note": "By eye, from the photos the traits cite: a low-branched, multi-stemmed tree with smooth blue-green bark on trunk and twigs, a sparse spreading crown of tiny leaflets, smothered in bright yellow flowers in spring. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

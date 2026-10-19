@@ -55,20 +55,15 @@
         "form": "thorn"
       }
     },
-    "bark": [
-      0.55,
-      0.54,
-      0.52
-    ],
     "foliage": [
-      0.22,
-      0.32,
-      0.14
+      0.0397,
+      0.0835,
+      0.0174
     ],
     "foliage_shade": [
-      0.07,
-      0.102,
-      0.045
+      0.0139,
+      0.0351,
+      0.0096
     ]
   },
   "allometry": [
@@ -352,7 +347,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a dense, intricately branched shrub of smooth grey zigzag branches with short spines, small rough dark green leaves, and bright orange berries."
+      "note": "By eye, from the photos the traits cite: a dense, intricately branched shrub of smooth grey zigzag branches with short spines, small rough dark green leaves, and bright orange berries. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",

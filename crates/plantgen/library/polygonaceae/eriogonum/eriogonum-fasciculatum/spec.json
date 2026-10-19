@@ -36,9 +36,9 @@
     "variation": 0.2,
     "organs": {},
     "bark": [
-      0.4,
-      0.35,
-      0.3
+      0.1329,
+      0.1005,
+      0.0732
     ],
     "foliage": [
       0.18,
@@ -269,7 +269,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a compact, rounded shrub of many slender branches crowded with small grey-green oblanceolate leaves in bunches, topped with dense round clusters of tiny whitish-pink flowers."
+      "note": "By eye, from the photos the traits cite: a compact, rounded shrub of many slender branches crowded with small grey-green oblanceolate leaves in bunches, topped with dense round clusters of tiny whitish-pink flowers. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "allometry": {
       "evidence": "Authored",

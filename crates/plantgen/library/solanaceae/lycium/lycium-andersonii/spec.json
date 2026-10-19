@@ -47,27 +47,27 @@
           "aspect": 0.12
         },
         "colour": [
-          0.6,
-          0.58,
-          0.52
+          0.3185,
+          0.2957,
+          0.233
         ],
         "form": "thorn"
       }
     },
     "bark": [
-      0.62,
-      0.6,
-      0.55
+      0.3424,
+      0.3185,
+      0.2633
     ],
     "foliage": [
-      0.32,
-      0.42,
-      0.24
+      0.0835,
+      0.1473,
+      0.047
     ],
     "foliage_shade": [
-      0.102,
-      0.134,
-      0.077
+      0.0292,
+      0.0619,
+      0.0259
     ]
   },
   "allometry": [
@@ -370,7 +370,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a rounded, much-branched shrub of pale grey spiny twigs, clusters of small fleshy green leaves, pale lavender-white tubular flowers and bright red berries in spring."
+      "note": "By eye, from the photos the traits cite: a rounded, much-branched shrub of pale grey spiny twigs, clusters of small fleshy green leaves, pale lavender-white tubular flowers and bright red berries in spring. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
     },
     "generator.params": {
       "evidence": "Authored",
