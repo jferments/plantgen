@@ -201,8 +201,9 @@ Usage:
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
       the plant, metres from its foot with +Y up; --focus leaf:F,
-      bloom:F or stalk:F frames the middle of the leaf, of the flower,
-      fruit or cone, or of the hairy young stem or leaf stalk, F of the
+      bloom:F, stalk:F or stem:F frames the middle of the leaf, of the
+      flower, fruit or cone, of the hairy young stem or leaf stalk, or of
+      a piece of living stem (its prickles and bark), F of the
       way up the plant's (0 lowest, 1 highest),
       SPAN 0.05 unless given; --view under looks up at it from below, at
       the lower faces of its leaves. --parts on (level 0)
@@ -2277,12 +2278,18 @@ fn stand_command(args: &[String]) -> Result<(), Failure> {
 }
 
 #[allow(clippy::too_many_lines)]
-/// The point `--focus leaf:F`, `bloom:F` or `stalk:F` names on `plant`:
-/// the middle of the leaf card (of the flower, fruit or cone card, or of
-/// the piece of hairy young stem or leaf stalk,
-/// `mesh::PlantMesh::hair_tubes`) `F` of the way up the plant's, from 0
-/// the lowest to 1 the highest.
-fn named_point(plant: &mesh::PlantMesh, what: &str, at: f64) -> Result<Vec3, Failure> {
+/// The point `--focus leaf:F`, `bloom:F`, `stalk:F` or `stem:F` names on
+/// `plant`: the middle of the leaf card (of the flower, fruit or cone
+/// card, of the piece of hairy young stem or leaf stalk,
+/// `mesh::PlantMesh::hair_tubes`, or of the piece of living wood in
+/// `graph`, where its prickles and bark show) `F` of the way up the
+/// plant's, from 0 the lowest to 1 the highest.
+fn named_point(
+    plant: &mesh::PlantMesh,
+    graph: &plantgen::graph::PlantGraph,
+    what: &str,
+    at: f64,
+) -> Result<Vec3, Failure> {
     let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
     let mut points: Vec<Vec3> = match what {
         "leaf" => plant.cards[..plant.bent_cards()]
@@ -2314,10 +2321,21 @@ fn named_point(plant: &mesh::PlantMesh, what: &str, at: f64) -> Result<Vec3, Fai
             .iter()
             .map(|tube| (vector(tube.start) + vector(tube.end)) * 0.5)
             .collect(),
+        "stem" => graph
+            .segments
+            .iter()
+            .filter(|segment| {
+                segment.body == 0
+                    && segment.shed.is_none_or(|shed| shed > graph.age)
+                    && segment.born <= graph.age
+            })
+            .map(|segment| (segment.start + segment.end) * 0.5)
+            .collect(),
         _ => {
-            return Err(
-                format!("`--focus` names leaf:F, bloom:F or stalk:F, found `{what}`").into(),
-            );
+            return Err(format!(
+                "`--focus` names leaf:F, bloom:F, stalk:F or stem:F, found `{what}`"
+            )
+            .into());
         }
     };
     if points.is_empty() {
@@ -2434,7 +2452,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         // The organs to draw as part meshes are known only until they
         // are placed.
         if let Some((what, at)) = named.as_ref() {
-            bloom = Some(named_point(&plant, what, *at)?);
+            bloom = Some(named_point(&plant, graph, what, *at)?);
         }
         // A close-up swaps part meshes in round what it looks at only, as
         // a renderer does near the camera; the rest keep their cards.
@@ -2504,7 +2522,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             let span: f64 = options.number("span")?.unwrap_or(0.05);
             let point = match bloom {
                 Some(point) => point,
-                None => named_point(&plant, &what, at)?,
+                None => named_point(&plant, graph, &what, at)?,
             };
             Some((point, span))
         }
