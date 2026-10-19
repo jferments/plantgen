@@ -38,7 +38,7 @@
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 11 extends column;
+lsystem cactaceae 12 extends column;
 
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
 param lean = 3;               # most degrees a lone stem leans at its foot, in a random direction
@@ -102,6 +102,7 @@ param swell = 0;              # an old trunk joint grows (1 + swell) times as th
 param swell_years = 15;       # ...over about this many years
 param swell_side = 0.5;       # a lateral at depth d swells swell_side^d as much
 param dome = 1;               # the look's dome, in radii of the tip: where rings and pads' daughters sit
+param pit = 0;                # the look's pit: how far the apex sinks below the dome's rim, in radii of the tip
 param bloom_age = 30;         # the plant's first year in flower
 param flowers = 0;            # flowers, buds and fruit in a ring round each column's tip
 param ring_angle = 40;        # where the ring sits on the dome, degrees from the tip

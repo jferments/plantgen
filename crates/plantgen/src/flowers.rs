@@ -139,19 +139,36 @@ pub struct Tube {
     pub mouth: f64,
     /// How much it swells in its middle.
     pub belly: f64,
+    /// How much it swells low down, most a third of the way up (a
+    /// jimsonweed's calyx, swollen at its base).
+    pub swell: f64,
     /// The lobes on its mouth: its vertices round are a multiple.
     pub lobes: u32,
     /// The angle of its first lobe.
     pub turn: f64,
     /// As [`Piece::calyx`].
     pub calyx: f32,
+    /// How sharply it is angled, 0 to 1: a ridge at each lobe's middle
+    /// and a groove between ([`Flower::calyx_angled`]).
+    pub angled: f64,
 }
 
 impl Tube {
     /// Its radius `u` of the way from its foot to its mouth.
     #[must_use]
     pub fn radius_at(&self, u: f64) -> f64 {
-        self.foot + (self.mouth - self.foot) * u + self.belly * 4.0 * u * (1.0 - u)
+        self.foot
+            + (self.mouth - self.foot) * u
+            + self.belly * 4.0 * u * (1.0 - u)
+            + self.swell * 6.75 * u * (1.0 - u) * (1.0 - u)
+    }
+
+    /// Its radius `u` of the way up at `angle` round the axis: proud on
+    /// each lobe's ridge and sunk between them where it is angled.
+    #[must_use]
+    pub fn radius_round(&self, u: f64, angle: f64) -> f64 {
+        let ridge = math::cos(f64::from(self.lobes) * (angle - self.turn));
+        self.radius_at(u) * (1.0 + 0.14 * self.angled * ridge)
     }
 }
 
@@ -371,60 +388,14 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             foot: neck,
             mouth,
             belly: flare,
+            swell: 0.0,
             lobes: flower.sepals.max(n),
             turn: psi,
             calyx: 1.0,
+            angled: 0.0,
         }
     });
     let seat = floral_tube.map_or(seat, |t| t.height + t.length);
-
-    // Sepals, between the petals.
-    let mut pieces = Vec::new();
-    let mut calyx_tube = None;
-    if flower.perianth == Perianth::Corolla
-        && flower.sepals > 0
-        && flower.corolla != Corolla::Labellate
-    {
-        let m = f64::from(flower.sepals);
-        let sepal = flower.sepal_length * length;
-        let fused = flower.sepals_fused;
-        let foot = (s * 1.05).max(r * 0.04);
-        let (height, at) = if fused > 0.0 {
-            let tube = Tube {
-                height: seat,
-                length: fused * sepal,
-                foot,
-                mouth: foot + fused * sepal * 0.35,
-                belly: 0.0,
-                lobes: flower.sepals,
-                turn: psi + PI / m,
-                calyx: 1.0,
-            };
-            calyx_tube = Some(tube);
-            (seat + tube.length, tube.mouth)
-        } else {
-            (seat, foot)
-        };
-        let tooth = (1.0 - fused) * sepal;
-        for j in 0..flower.sepals {
-            pieces.push(Piece {
-                term: Term::Sepal,
-                role: None,
-                angle: psi + TAU * f64::from(j) / m + PI / m,
-                radius: at,
-                height,
-                cup: rise(sepal_cup),
-                length: tooth,
-                width: (spread(m, s, r) * 0.8).clamp(tooth * 0.08, tooth.max(1e-9)),
-                curl: curl * 0.5,
-                curl_from: form.curl_from,
-                fold: 0.0,
-                base: if fused > 0.0 { 0.9 } else { 0.35 },
-                taper: 1.3,
-                calyx: 1.0,
-            });
-        }
-    }
 
     // The corolla tube, and where the petals stand on it.
     let whorled = matches!(flower.perianth, Perianth::Corolla | Perianth::Tepals);
@@ -438,10 +409,82 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         foot: s.max(r * 0.04),
         mouth: flower.throat * length,
         belly: flower.belly * length,
+        swell: 0.0,
         lobes: n,
         turn: psi,
         calyx: 0.0,
+        angled: 0.0,
     });
+    // Sepals, between the petals.
+    let mut pieces = Vec::new();
+    let mut calyx_tube = None;
+    if flower.perianth == Perianth::Corolla
+        && flower.sepals > 0
+        && flower.corolla != Corolla::Labellate
+    {
+        let m = f64::from(flower.sepals);
+        let sepal = flower.sepal_length * length;
+        let fused = flower.sepals_fused;
+        let foot = (s * 1.05).max(r * 0.04);
+        let (height, at) = if fused > 0.0 {
+            // Widening to its mouth, but held close round a corolla
+            // tube it sheathes (a jimsonweed's long calyx).
+            let length = fused * sepal;
+            let wide = foot + length * 0.35;
+            // A sheath stands nearly as wide at its foot as at its mouth:
+            // a tube, not a funnel.
+            let (foot, mouth) = match &tube {
+                Some(t) if t.length > 0.0 => {
+                    let hug = t.radius_at((length / t.length).min(1.0)) * 1.15;
+                    let mouth = wide.min(hug.max(foot * 1.3));
+                    (foot.max(mouth * 0.8), mouth)
+                }
+                _ => (foot, wide),
+            };
+            let calyx = Tube {
+                height: seat,
+                length,
+                foot,
+                mouth,
+                belly: 0.0,
+                swell: flower.calyx_swell * mouth,
+                lobes: flower.sepals,
+                turn: psi + PI / m,
+                calyx: 1.0,
+                angled: flower.calyx_angled,
+            };
+            calyx_tube = Some(calyx);
+            (seat + calyx.length, calyx.mouth)
+        } else {
+            (seat, foot)
+        };
+        let tooth = (1.0 - fused) * sepal;
+        // A tube's teeth carry on up its line unless a posture is stated.
+        let tooth_cup = if fused >= 0.5 && flower.sepal_rise.is_none() {
+            75.0
+        } else {
+            sepal_cup
+        };
+        for j in 0..flower.sepals {
+            pieces.push(Piece {
+                term: Term::Sepal,
+                role: None,
+                angle: psi + TAU * f64::from(j) / m + PI / m,
+                radius: at,
+                height,
+                cup: rise(tooth_cup),
+                length: tooth,
+                width: (spread(m, s, r) * 0.8).clamp(tooth * 0.08, tooth.max(1e-9)),
+                curl: curl * 0.5,
+                curl_from: form.curl_from,
+                fold: 0.0,
+                base: if fused > 0.0 { 0.9 } else { 0.35 },
+                taper: 1.3,
+                calyx: 1.0,
+            });
+        }
+    }
+
     let (lobe_height, lobe_radius, lobe_length, lobe_width, lobe_base) = match &tube {
         Some(t) => {
             let lobe = (1.0 - flower.fused) * length;
@@ -1787,9 +1830,9 @@ fn revolve(
         };
         for i in 0..=stations {
             let u = f64::from(i) / f64::from(stations);
-            let radius = tube.radius_at(u) * if inner { 0.94 } else { 1.0 };
             for k in 0..around {
                 let angle = tube.turn + TAU * f64::from(k) / f64::from(around);
+                let radius = tube.radius_round(u, angle) * if inner { 0.94 } else { 1.0 };
                 mesh.push(leaf.vertex(
                     frame.point(angle, radius, tube.height + tube.length * u),
                     paint,

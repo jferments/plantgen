@@ -106,7 +106,13 @@
       140,
       70
     ],
-    "fruiting_calyx_posture": "clasping"
+    "fruiting_calyx_posture": "clasping",
+    "sepal_length_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "calyx_lobe_length_m": 0.0004,
+    "stem_hairs": "glabrescent"
   },
   "provenance": {
     "sources": [
@@ -255,6 +261,21 @@
       "evidence": "SourceInferred",
       "source": "bailey-cyclopedia-1914",
       "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum annuum, p. 659 (read on the Internet Archive, 2026-10-17): the calyx obconical or cup-shaped, usually embracing the fruit's base (var. conoides); Flora of British India (p. 238): campanulate, much shorter than the fruit."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Capsicum annuum (eFloras, read 2026-10-18): calyx cup-shaped, undulate, 2-3 x 3 mm."
+    },
+    "traits.calyx_lobe_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Capsicum annuum, p. 238 (read on the Internet Archive, 2026-10-17): calyx nearly entire or minutely 5-toothed; Flora of China: cup-shaped, undulate. 0.4 mm is our reading of 'minutely'."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Capsicum annuum (eFloras, read 2026-10-18): stems glabrescent; Bailey (vol. 2, p. 658): glabrous or nearly so."
     }
   }
 }
