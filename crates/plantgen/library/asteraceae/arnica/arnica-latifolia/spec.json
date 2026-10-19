@@ -101,7 +101,7 @@
     "capitulum_kind": "radiate",
     "ray_florets": {
       "min": 8,
-      "max": 12
+      "max": 15
     },
     "ray_length_m": {
       "min": 0.012,
@@ -259,9 +259,9 @@
       "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: outside (ray) flowers petal-like, yellow, strap-shaped; center (disk) flowers small, numerous, yellow, tubular."
     },
     "traits.ray_florets": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "8 to 12 rays to a head, set by hand from iNaturalist photos (observations 149114632, 54130187, 130872947, 233318373, 239607651, 145480920, 292669466, 106358452): the sources read give no count or measure."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 367, 375, 376 (eFloras, read 2026-10-19), Arnica latifolia: ray florets 8-15; corollas yellow."
     },
     "traits.ray_length_m": {
       "evidence": "Authored",

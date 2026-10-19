@@ -87,12 +87,14 @@
     "rhizome_habit": "short_creeping",
     "rosette": "basal",
     "leaf_length_m": {
-      "min": 0.04,
-      "max": 0.15
+      "low": 0.02,
+      "min": 0.03,
+      "max": 0.16,
+      "high": 0.2
     },
     "leaf_width_m": {
-      "min": 0.008,
-      "max": 0.03
+      "min": 0.007,
+      "max": 0.045
     },
     "petiole_length_m": {
       "low": 0,
@@ -126,9 +128,9 @@
       "max": 0.004
     },
     "ray_colour": [
-      196,
-      168,
-      222
+      200,
+      140,
+      205
     ],
     "disc_colour": [
       242,
@@ -217,14 +219,14 @@
       "note": "Abrams and Ferris vol. 4 (1960) p. 346, Erigeron peregrinus: basal and lower cauline leaves well developed, the others smaller."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: basal blades 4 cm to 15 cm long, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 20 p. 328, 329 (eFloras, read 2026-10-19), Erigeron glacialis: basal blades linear-oblanceolate to broadly lanceolate or spatulate, (20-)30-160(-200) x 7-45 mm."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: blades 8 mm to 3 cm wide, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 20 p. 328, 329 (eFloras, read 2026-10-19), Erigeron glacialis: basal blades (20-)30-160(-200) x 7-45 mm."
     },
     "traits.petiole_length_m": {
       "evidence": "Authored",
@@ -283,8 +285,8 @@
     },
     "traits.ray_colour": {
       "evidence": "SourceInferred",
-      "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4 (1960) p. 346, Erigeron peregrinus subsp. callianthemus (now E. glacialis): rays white to purple; subsp. callianthemus rays commonly rich rose-purple or darker (key p. 346); pale lavender-pink in the photos from Mount Rainier; sRGB by eye."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 20 p. 328, 329 (eFloras, read 2026-10-19), Erigeron glacialis: ray corollas usually blue to rose purple or pink, sometimes white to pale blue; Abrams and Ferris (1960 p. 346) for subsp. callianthemus: rays commonly rich rose-purple or darker. A mid rose-lavender in sRGB, in place of the paler shade first chosen."
     },
     "traits.disc_colour": {
       "evidence": "Authored",

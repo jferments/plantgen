@@ -102,8 +102,10 @@
       "max": 0.12
     },
     "units_per_inflorescence": {
-      "min": 6,
-      "max": 30
+      "low": 6,
+      "min": 10,
+      "max": 30,
+      "high": 60
     },
     "capitulum_kind": "radiate",
     "ray_florets": {
@@ -113,8 +115,9 @@
       "high": 12
     },
     "ray_length_m": {
-      "min": 0.007,
-      "max": 0.013
+      "low": 0.007,
+      "min": 0.009,
+      "max": 0.015
     },
     "involucre_height_m": {
       "min": 0.007,
@@ -264,9 +267,9 @@
       "note": "A model estimate (confidence medium), as no source read gives it: the flat-topped cluster 5 cm to 12 cm across, as in the photos."
     },
     "traits.units_per_inflorescence": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "6 to 30 heads to a cluster, set by hand from iNaturalist photos (observations 177668911, 92335244, 92357096, 17046135, 390386093, 235912344, 383474248, 234014736): the sources read give no count or measure."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 20 p. 549, 566 (eFloras, read 2026-10-19), Senecio triangularis: heads 10-30(-60) in corymbiform to subracemiform arrays; as few as 6 in the photos the spec first cited."
     },
     "traits.capitulum_kind": {
       "evidence": "SourceInferred",
@@ -280,8 +283,8 @@
     },
     "traits.ray_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4 (1960) p. 436, Senecio triangularis: rays 7-13 mm. long."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 20 p. 549, 566 (eFloras, read 2026-10-19), Senecio triangularis: ray florets ± 8; corolla laminae 9-15 mm; Abrams and Ferris (1960 p. 436): rays 7-13 mm."
     },
     "traits.involucre_height_m": {
       "evidence": "SourceInferred",

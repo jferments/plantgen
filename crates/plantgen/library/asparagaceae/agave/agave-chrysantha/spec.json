@@ -23,7 +23,7 @@
       "old_angle": 55,
       "open_years": 2.5,
       "angle_spread": 6,
-      "internode": 0.001,
+      "internode": 0.0001,
       "trunk_radius": 0.09,
       "flower_age": 20,
       "once": 1,
@@ -371,7 +371,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for golden-flowered agave from Flora of North America vol. 26 p. 459: leaves 40-75 cm (leaf_length 0.6) spreading to ascending, a scape 4-7 m (stalk_height 5.5) with 8-18 branches in its distal quarter to third (stalk_head 0.3), 12-21 erect flowers 3.5-6.5 cm long to a cluster, occasionally suckering (pups 2). Flowering once and dying, flower_age, leaf_rate and the pups' timing are estimates (as for every agave); the blade's area is about half its aspect, as on the template."
+      "note": "Set by hand for golden-flowered agave from Flora of North America vol. 26 p. 459: leaves 40-75 cm (leaf_length 0.6) spreading to ascending, a scape 4-7 m (stalk_height 5.5) with 8-18 branches in its distal quarter to third (stalk_head 0.3), 12-21 erect flowers 3.5-6.5 cm long to a cluster, occasionally suckering (pups 2). Flowering once and dying, flower_age, leaf_rate and the pups' timing are estimates (as for every agave); the blade's area is about half its aspect, as on the template. internode corrected from 0.001 to 0.0001 (2026-10-19): Flora of North America vol. 26 p. 459 (eFloras, read 2026-10-19), Agave chrysantha: \"Plants acaulescent\"; at 0.001 a 30-year rosette stood on about 24 cm of bare stem."
     },
     "appearance": {
       "evidence": "Authored",

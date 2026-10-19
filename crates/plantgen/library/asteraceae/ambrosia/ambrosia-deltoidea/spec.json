@@ -69,7 +69,7 @@
       "min": 0.3,
       "max": 0.5
     },
-    "height_max_m": 0.5,
+    "height_max_m": 0.8,
     "age_max_years": 50,
     "life_span": "perennial",
     "woodiness": "woody",
@@ -79,16 +79,18 @@
     "leaf_division": "simple",
     "leaf_incision": "none",
     "leaf_length_m": {
-      "min": 0.01,
-      "max": 0.02
+      "min": 0.012,
+      "max": 0.025,
+      "high": 0.035
     },
     "leaf_width_m": {
       "min": 0.005,
-      "max": 0.01
+      "max": 0.012,
+      "high": 0.018
     },
     "petiole_length_m": {
-      "min": 0.003,
-      "max": 0.008
+      "min": 0.005,
+      "max": 0.012
     },
     "leaf_shape": {
       "deltate": "usually",
@@ -135,7 +137,8 @@
     ],
     "light": [
       "sun"
-    ]
+    ],
+    "stem_clump": "many"
   },
   "evidence": {
     "taxon": {
@@ -175,8 +178,8 @@
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"a native, drought-deciduous, microphyllous shrub growing up to 1.65 feet (50 cm) tall\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 11, 14 (eFloras, read 2026-10-19), Ambrosia deltoidea: shrubs, 30-80+ cm (FEIS: up to 50 cm)."
     },
     "traits.age_max_years": {
       "evidence": "SourceInferred",
@@ -220,18 +223,18 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"Leaf length is 0.6 to 0.8 inches (1.5-2 cm) or smaller\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 11, 14 (eFloras, read 2026-10-19), Ambrosia deltoidea: blades deltate to lance-deltate, 12-25(-35) x 5-12(-18) mm."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: blades about half as wide as long, 5 mm to 1 cm, triangular-lanceolate as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 11, 14 (eFloras, read 2026-10-19), Ambrosia deltoidea: blades 12-25(-35) x 5-12(-18) mm."
     },
     "traits.petiole_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: petioles 3 mm to 8 mm; Kearney and Peebles (1942, p. 946) call the leaves distinctly petioled."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 11, 14 (eFloras, read 2026-10-19), Ambrosia deltoidea: petioles 5-12+ mm."
     },
     "traits.leaf_shape": {
       "evidence": "Authored",
@@ -342,6 +345,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.4 m tall at 12 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"Innumerable slender and brittle branches spring up from the base forming a compact, roughly hemispherical crown\": many stems from the base."
     }
   },
   "provenance": {

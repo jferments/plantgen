@@ -111,20 +111,16 @@
     "cauline_leaves": "reduced",
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
-    "leaf_incision": {
-      "parted": "often",
-      "lobed": "often",
-      "none": "sometimes"
-    },
+    "leaf_incision": "lobed",
     "division_pattern": "pinnate",
     "division_order": 1,
     "leaf_length_m": {
       "min": 0.03,
-      "max": 0.08
+      "max": 0.1
     },
     "leaf_width_m": {
-      "min": 0.015,
-      "max": 0.04
+      "min": 0.01,
+      "max": 0.05
     },
     "leaf_shape": {
       "ovate": "often",
@@ -149,16 +145,17 @@
       "max": 0.008
     },
     "involucre_diameter_m": {
-      "min": 0.011,
-      "max": 0.016
+      "min": 0.01,
+      "max": 0.025
     },
     "ray_florets": {
-      "min": 25,
-      "max": 50
+      "min": 34,
+      "max": 55,
+      "low": 25
     },
     "ray_length_m": {
-      "min": 0.011,
-      "max": 0.015
+      "min": 0.01,
+      "max": 0.02
     },
     "ray_colour": [
       250,
@@ -202,7 +199,8 @@
     ],
     "soil_texture": [
       "sand"
-    ]
+    ],
+    "ray_apex": "toothed"
   },
   "evidence": {
     "taxon": {
@@ -277,8 +275,8 @@
     },
     "traits.leaf_incision": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 970), Baileya: leaves pinnatifid to entire; the basal ones of this species pinnately parted or lobed in the photos."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: basal (rosette) leaves ... blades ovate, usually pedately to pinnately lobed."
     },
     "traits.division_pattern": {
       "evidence": "SourceInferred",
@@ -291,14 +289,14 @@
       "note": "Kearney and Peebles (1942, p. 970), Baileya: leaves pinnatifid: cut once."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: basal leaves 3 cm to 8 cm long including the stalk, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: basal (rosette) leaves mostly 3-10 x 1-5 cm."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: blades 1.5 cm to 4 cm wide."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: basal (rosette) leaves mostly 3-10 x 1-5 cm."
     },
     "traits.leaf_shape": {
       "evidence": "Authored",
@@ -347,18 +345,18 @@
     },
     "traits.involucre_diameter_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: involucre 11-16 mm. broad."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: involucres hemispheric (vernal forms), mostly 5-10 x 10-25 mm."
     },
     "traits.ray_florets": {
       "evidence": "SourceInferred",
-      "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: rays 25-50."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: rays (vernal forms) mostly 34-55; Abrams and Ferris vol. 4 (1960) p. 196: rays 25-50."
     },
     "traits.ray_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: ligules 11-15 mm. long."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: laminae linear-oblanceolate, mostly 10-20 x 5 mm."
     },
     "traits.ray_colour": {
       "evidence": "Authored",
@@ -424,6 +422,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.35 m tall at 3 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.ray_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: laminae ... apices moderately to deeply 3-toothed."
     }
   },
   "provenance": {

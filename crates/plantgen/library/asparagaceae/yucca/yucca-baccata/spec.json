@@ -234,7 +234,8 @@
       7,
       8,
       9
-    ]
+    ],
+    "flower_posture": "pendent"
   },
   "evidence": {
     "taxon": {
@@ -396,6 +397,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.8 m tall at 20 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: \"Flowers pendent, 5-13 cm, nearly as wide; perianth campanulate\"."
     }
   },
   "provenance": {
