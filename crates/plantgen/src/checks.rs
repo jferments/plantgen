@@ -2808,6 +2808,7 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
         FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny => "berry",
         FruitKind::Follicles | FruitKind::Samaras => "aggregate",
         FruitKind::Berries => "berry|aggregate",
+        FruitKind::Achenes => "aggregate|achene",
     }
 }
 

@@ -115,6 +115,7 @@
       36
     ],
     "fruit_shape": "ovoid",
+    "fruitlets": "achenes",
     "flowering_months": [
       4,
       5,
@@ -287,6 +288,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): aggregate fruit: achenes on a swollen red torus."
+    },
+    "traits.fruitlets": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): aggregate fruit: achenes set on the surface of the enlarged fleshy torus."
     },
     "traits.fruit_size_m": {
       "evidence": "Authored",

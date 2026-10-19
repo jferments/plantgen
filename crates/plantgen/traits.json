@@ -2293,9 +2293,9 @@
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
-      "values": ["drupelets", "follicles", "samaras", "berries", "hip"],
+      "values": ["drupelets", "follicles", "samaras", "berries", "hip", "achenes"],
       "optional": true,
-      "why": "what a fruit from one flower's many free pistils is made of: drupelets (a blackberry), follicles on a cone-like axis (a magnolia), samaras overlapping up a spindle (the tulip tree), separate berries from one stalk (the pawpaw), or achenes inside a cup (a hip: roses, sweetshrub)"
+      "why": "what a fruit from one flower's many free pistils is made of: drupelets (a blackberry), follicles on a cone-like axis (a magnolia), samaras overlapping up a spindle (the tulip tree), separate berries from one stalk (the pawpaw), achenes inside a cup (a hip: roses, sweetshrub), or achenes set on the surface of a fleshy receptacle (a strawberry)"
     },
     "fruitlets_per_fruit": {
       "group": "fruit_and_cones",

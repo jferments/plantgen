@@ -3605,6 +3605,21 @@ fn one_fruit(
             }
             Paint::solid(0.5 + 0.55 * bump + 0.25 * math::sqrt(1.0 - d), 0.0)
         }
+        FruitKind::Achenes => {
+            // Achenes in offset rows, small dark flecks on the flesh.
+            let d = ellipse(0.5, 0.5, 1.0);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            let cell = 0.16;
+            let row = (t * 0.5 / cell * (length / half_width)).floor();
+            let offset = if row % 2.0 == 0.0 { 0.0 } else { 0.5 };
+            let fu = frac(t * 0.5 / cell * (length / half_width));
+            let fv = frac(v / (2.0 * cell) + offset);
+            let fleck = (fu - 0.5).powi(2) + (fv - 0.5).powi(2) < 0.04 && t > 0.1;
+            let shade = ball(d, 0.5, 0.5);
+            Paint::solid(if fleck { shade * 0.55 } else { shade }, 0.0)
+        }
         FruitKind::Hip => {
             let d = ellipse(0.4, 0.4, 1.0);
             if d < 1.0 {

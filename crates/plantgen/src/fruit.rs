@@ -66,6 +66,10 @@ const DRIED: [f32; 3] = [0.36, 0.26, 0.16];
 /// The golden angle, degrees.
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
 
+/// A dry fruit's dull yellow-brown, which an achene on a fleshy
+/// receptacle takes three parts of to one of the flesh under it.
+const ACHENE: [f32; 3] = [0.55, 0.45, 0.2];
+
 /// The triangles one aggregate's drupelets may take, by its detail from
 /// the finest step to the coarsest: a lone fruit at the first, a fruit in
 /// a cluster of up to a dozen at the third. A cluster whose fruit then
@@ -681,6 +685,7 @@ impl One {
             FruitKind::Follicles => self.follicles(body, extras, part, mesh),
             FruitKind::Samaras => self.samaras(body, part, mesh),
             FruitKind::Berries => self.berries(body, part, mesh),
+            FruitKind::Achenes => self.achenes(body, part, mesh),
         }
         self.taper(self.flare, first, mesh);
         leaves::smooth_normals(mesh, first, first_index);
@@ -1064,6 +1069,58 @@ impl One {
             .draw(self.direction, self.across, colour, part, mesh);
         }
         leaves::smooth_normals(mesh, first, first_index);
+    }
+
+    /// A fleshy receptacle with achenes on its surface, each lying in it
+    /// lengthwise on a Fibonacci spiral, all but the stalk end:
+    /// its `fruitlets`, or as many as its detail holds (80 at the finest,
+    /// then 50 and 30; none at the coarsest, where they are too small to
+    /// show). Each is an ovoid along the surface, as long as `n` of them
+    /// need to stand apart over a fifth of the fruit's skin, in the dull
+    /// colour of a dry fruit ([`ACHENE`]).
+    fn achenes(&self, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        self.body()
+            .draw(self.direction, self.across, colour, part, mesh);
+        let most = match self.detail.around {
+            14.. => 80,
+            10..=13 => 50,
+            8..=9 => 30,
+            _ => return,
+        };
+        let count = if self.fruitlets == 0 {
+            most
+        } else {
+            self.fruitlets.min(most)
+        };
+        let mean = math::sqrt(self.width * self.length).max(1e-9);
+        // n pi r^2 = 0.2 * pi * mean^2 (the skin about pi times the
+        // squared mean width).
+        let radius = mean * math::sqrt(0.2 / f64::from(count.max(1)));
+        let facets = Detail {
+            around: 4,
+            rings: if self.detail.around >= 14 { 3 } else { 2 },
+            fine: None,
+        };
+        let achene = [0, 1, 2].map(|k| colour[k] * 0.25 + ACHENE[k] * 0.75);
+        for i in 0..count {
+            let (point, out, ring) = self.spiral(i, count, (0.12, 0.98), 1.0);
+            if ring < 0.15 {
+                continue;
+            }
+            // Long along the fruit, shallow out of its skin.
+            Spheroid {
+                centre: point - out * (radius * 0.1),
+                a: radius * 0.7,
+                b: radius * 0.3,
+                c: radius * 0.45,
+                ribs: 0,
+                rib_depth: 0.0,
+                waves: 0,
+                wave_depth: 0.0,
+                detail: facets,
+            }
+            .draw(self.direction, out, achene, part, mesh);
+        }
     }
 
     /// How many drupelets [`Self::drupelets`] draws: its `fruitlets`, at
@@ -1669,6 +1726,7 @@ mod tests {
             FruitKind::Follicles,
             FruitKind::Samaras,
             FruitKind::Berries,
+            FruitKind::Achenes,
         ];
         let organ = GraphOrgan {
             id: 11,

@@ -2099,6 +2099,16 @@ fn draw_laid(
         u32::try_from(laid.units.len()).unwrap_or(u32::MAX),
         part.coarse,
     );
+    // On the finest step, a cluster of few flowers draws each whorl by
+    // whorl as a lone flower's first coarse step does, while all of them
+    // together take no more than half a cluster's part mesh: a rose's or
+    // a bramble's few big flowers, not kites. Many small ones are reduced.
+    let flowering = shown
+        .iter()
+        .flatten()
+        .filter(|shown| matches!(shown.shape, Shape::Flower(flower) if !flower.is_plain()))
+        .count();
+    let mut whole: Option<bool> = None;
     for (index, (p, shown)) in laid.units.iter().zip(&shown).enumerate() {
         if thinned && !kept(organ, index) {
             continue;
@@ -2146,7 +2156,23 @@ fn draw_laid(
                 // axis that bears it where it is zygomorphic.
                 let first = mesh.positions.len();
                 let first_index = mesh.indices.len();
-                crate::flowers::draw_reduced(
+                let whole = part.coarse == 0
+                    && !thinned
+                    && *whole.get_or_insert_with(|| {
+                        flowering * crate::flowers::triangles(flower, form, 1)
+                            <= crate::parts::CLUSTER_TRIANGLES / 2
+                    });
+                let draw = if whole {
+                    crate::flowers::draw
+                } else {
+                    crate::flowers::draw_reduced
+                };
+                let part = if whole {
+                    Part { coarse: 1, ..part }
+                } else {
+                    part
+                };
+                draw(
                     &crate::flowers::layout(flower, form, unit_length * 0.5, spin),
                     crate::flowers::Frame::new(
                         base,

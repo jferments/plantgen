@@ -3116,6 +3116,9 @@ pub enum FruitKind {
     /// Several berries from one flower, splayed from one stalk (the
     /// pawpaw's), each as wide as `aspect` makes it.
     Berries,
+    /// A fleshy receptacle with dry achenes set on its surface (a
+    /// strawberry's): `fruitlets` of them, or as many as its detail holds.
+    Achenes,
 }
 
 impl FruitKind {

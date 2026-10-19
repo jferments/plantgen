@@ -92,6 +92,21 @@
     }
   },
   "forms": {
+    "forb": {
+      "rules": {
+        "generator.params.nodes": {
+          "rule": "clamp(round(shoot_leaves), 1, 40)",
+          "why": "A Rosaceae herb's flowering stem is one year's growth, so it bears the leaves its flora counts on a year's shoot, one at a node (the family's leaves are alternate): a cloudberry's stem one to three, a meadowsweet's leafy stem a dozen, not the flowering plants' forb default of five."
+        }
+      },
+      "evidence": {
+        "rules": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The herb program grows each stem's leaves at nodes; a herbaceous stem that dies back each year is a single year's growth unit, so the shoot_leaves count is its stem leaves (2026-10-19)."
+        }
+      }
+    },
     "decurrent_tree": {
       "generator": {
         "program": "rosaceae",

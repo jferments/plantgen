@@ -58,6 +58,10 @@
       100,
       40
     ],
+    "shoot_leaves": {
+      "min": 8,
+      "max": 15
+    },
     "leaf_division": "compound",
     "division_pattern": "pinnate",
     "division_order": 1,
@@ -194,6 +198,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), Filipendula ulmaria (eFloras, read 2026-10-19): basal leaves 1 or 2, gone by flowering, so the plant is a leafy stem."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a leafy flowering stem of 8 to 15 alternate leaves, smaller upward (FNA: stems leafy)."
     },
     "traits.leaf_colour": {
       "evidence": "SourceInferred",
