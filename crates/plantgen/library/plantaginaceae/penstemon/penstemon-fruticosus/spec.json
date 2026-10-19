@@ -1,0 +1,352 @@
+{
+  "schema": 1,
+  "id": "penstemon-fruticosus",
+  "taxon": {
+    "scientific_name": "Penstemon fruticosus",
+    "common_name": "bush penstemon",
+    "usda_symbol": "PEFR3",
+    "family": "Plantaginaceae",
+    "genus": "Penstemon",
+    "plant_name_id": 2550934
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 12,
+      "branch_angle": 45
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.4,
+      0.33,
+      0.27
+    ],
+    "foliage": [
+      0.08,
+      0.2,
+      0.06
+    ],
+    "foliage_shade": [
+      0.026,
+      0.064,
+      0.019
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.4
+    },
+    "height_max_m": 0.6,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.06
+    },
+    "leaf_width_m": {
+      "min": 0.004,
+      "max": 0.015
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "serrate",
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "raceme",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.05
+    },
+    "flower_colour": [
+      140,
+      105,
+      200
+    ],
+    "flower_symmetry": "zygomorphic",
+    "flower_merosity": 5,
+    "perianth_fused": true,
+    "corolla_shape": "tubular",
+    "zygomorphy": "bilabiate",
+    "stamens": 4,
+    "staminodes": 1,
+    "carpels": 2,
+    "ovary_position": "superior",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.008,
+      "max": 0.012
+    },
+    "fruit_colour_ripe": [
+      125,
+      90,
+      55
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "An evergreen woody subshrub (the model record: shrub, woody, 0.15-0.4 m), drawn by the shrub form. Plantaginaceae has no shrub form of its own, so it grows by the flowering plants' broadleaf default."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it: flowers violet. The colour is our reading of the word, a blue-leaning violet."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010), Penstemon fruticosus as the worked floral formula (pdf p. 57, printed pp. 39-44; ref floral-2026-10-15#199): floral formula ↓ K(5) [C(5) A4:1°] G(2); flower zygomorphic. The same on p. 328 for var. scouleri."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010), Penstemon fruticosus as the worked floral formula (pdf p. 57, printed pp. 39-44; ref floral-2026-10-15#199): flower 5-merous: 5 sepals, fused; 5 petals fused into a tube."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010), Penstemon fruticosus as the worked floral formula (pdf p. 57, printed pp. 39-44; ref floral-2026-10-15#199): 5 petals fused into a tube; p. 328: corolla 5, fused."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010), Penstemon fruticosus as the worked floral formula (pdf p. 57, printed pp. 39-44; ref floral-2026-10-15#199): 5 petals fused into a tube; drawing notes: a bilateral tubular flower."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 328 (pdf pp. 344-345; ref floral-2026-10-15#1250), Penstemon fruticosus var. scouleri, Fig. 11.24A: corolla bilabiate, 2 upper and 3 lower lobes, a broad lower lip."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010), Penstemon fruticosus as the worked floral formula (pdf p. 57, printed pp. 39-44; ref floral-2026-10-15#199): 4 fertile stamens, fused to the corolla; p. 328: 4, on the corolla tube."
+    },
+    "traits.staminodes": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010), Penstemon fruticosus as the worked floral formula (pdf p. 57, printed pp. 39-44; ref floral-2026-10-15#199): fifth stamen sterile, 1 staminode; p. 328: 1 adaxial staminode (elaborate)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010), Penstemon fruticosus as the worked floral formula (pdf p. 57, printed pp. 39-44; ref floral-2026-10-15#199): carpels 2, fused (syncarpous); p. 328: 2, median."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010), Penstemon fruticosus as the worked floral formula (pdf p. 57, printed pp. 39-44; ref floral-2026-10-15#199): ovary superior; p. 328 agrees."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it: capsule brown when ripe. The colour is our reading of the word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2550934), as no source read gives it."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Bark and foliage greens kept from the template, Oregon boxleaf (another low evergreen subshrub of opposite leaves): no source read gives this species' leaf or stem colour. Flower and fruit colours come from the traits."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Kept from the template, Oregon boxleaf (12 stems from the foot, branches at 45 degrees), for a low many-stemmed evergreen subshrub; sizes, leaf life and flowers come from the traits by the library's rules. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 12 years in the open, within the model record's usual 0.15-0.4 m. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with core-species batch A1 (2026-10-18): flower plan from Floral Diagrams, the rest from the model record (no Flora of North America text on eFloras); drawing values from Oregon boxleaf's."
+  }
+}
