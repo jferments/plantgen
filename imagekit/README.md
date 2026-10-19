@@ -256,6 +256,7 @@ imagekit embed --model dinov2 --regions --taxon "Asimina triloba"
 imagekit search --model dinov2 --organ leaf --image leaf.jpg --by-species
 imagekit segment --taxon "Asimina triloba"                 # SAM 2.1 crown masks on the whole-plant boxes
 imagekit measure --taxon "Asimina triloba" --plantc target/release/plantc   # crown outline measures per mask
+imagekit detect --organs flower --within <detector> --taxon "Cornus nuttallii"   # single flowers inside a mass
 imagekit count --taxon "Cornus nuttallii" --organ flower --what "the white petal-like bracts around this flower head"
 imagekit count --summary <analyzer>                         # counts per taxon, photos against renders
 ```
@@ -302,7 +303,16 @@ vision backend works too (`--backend vllm --model Qwen/Qwen3-VL-8B-Instruct`,
 and one prompt for free observers, then reads their `<id>.json` answers
 back. A row or column of evenly spaced points is the model listing, not
 looking: it is kept as `degenerate` with no count. Each `--what` is its
-own analyzer. Counting from masks failed in the daisy pilot (rays merge
+own analyzer.
+
+Where a flower box covers a whole mass of flowers (a tree in bloom, a
+dense render), `detect --within <detector>` looks again inside that
+detector's regions of the same organs. A large region is cut into
+overlapping tiles about 0.3 of the image's long side, so small flowers
+fill what Grounding DINO sees. Boxes cut by a tile edge are dropped, and
+so is a box holding two smaller ones of its organ (the mass). Count on
+that detector (`count --detector <within detector>`). It takes about two
+minutes a render on a CPU. Counting from masks failed in the daisy pilot (rays merge
 into one mask), so counts come from pointing only.
 
 ## Render and compare

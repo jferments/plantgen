@@ -176,6 +176,29 @@ class Detect(unittest.TestCase):
         again = json.loads(self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det2"))
         self.assertEqual(again["detected"], 0)
 
+    def test_within_looks_again_inside_parent_regions(self):
+        first = json.loads(self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det"))
+        again = json.loads(self.cli("detect", "--model", "fake", "--organs", "leaf", "--within", first["analyzer"],
+                                    "--run", "det-in"))
+        self.assertNotEqual(again["analyzer"], first["analyzer"])
+        self.assertEqual(again["detected"], 1)  # only a has a kept leaf region to look inside
+        rows = {r["sha256"]: r for r in jsonl(Path(self.store_dir) / "sources/image-analyses/det-in/analyses.jsonl")}
+        leaf = rows[self.sha["a.jpg"]]["out"]["regions"][0]
+        for got, want in zip(leaf["box"], self.boxes["a.jpg"]):
+            self.assertAlmostEqual(got, want, delta=0.05)  # back in the whole image's fractions
+        with Store(self.store_dir) as store:
+            self.assertEqual(analyzer_params(store, again["analyzer"])["within"]["detector"], first["analyzer"])
+
+    def test_a_box_holding_two_of_its_organ_is_a_mass(self):
+        found = [("flower", [0.0, 0.0, 1.0, 1.0], 0.9), ("flower", [0.1, 0.1, 0.3, 0.3], 0.5),
+                 ("flower", [0.6, 0.6, 0.8, 0.8], 0.5), ("leaf", [0.2, 0.2, 0.9, 0.9], 0.5)]
+        kept = regions.drop_nested(found)
+        self.assertEqual([b for _, b, _ in kept], [f[1] for f in found[1:]])
+        cut = regions.tiles([0.0, 0.0, 1.0, 0.5], 0.3, 0.3)
+        self.assertEqual(len(cut), 5 * 2)  # tiles a quarter overlapping cover the box, edge to edge
+        self.assertEqual((cut[0][:2], cut[-1][2:]), ([0.0, 0.0], [1.0, 0.5]))
+        self.assertEqual(regions.tiles([0.1, 0.1, 0.4, 0.4], 0.3, 0.3), [[0.1, 0.1, 0.4, 0.4]])
+
     def test_needs_a_triage_or_all(self):
         with Store(self.store_dir) as store:
             store.db.execute("delete from analyses where task='triage'")
