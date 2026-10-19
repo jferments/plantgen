@@ -123,8 +123,8 @@ def ingest(store: Store, batch: str, *, max_px: int = MAX_PX, wcvp: str | None =
         dup = None
         if store.has_image(sha):
             dup = {"of": sha, "match": "sha256", "distance": 0}
-        else:
-            near = store.near(ph, *im.size)
+        elif cand.get("source") != "render":  # renders are exact: a plain card or close-up can sit within
+            near = store.near(ph, *im.size)     # a few bits of another species' and is still its own image
             if near:  # the row names the held image; the download's own hash and size are kept in `duplicate`
                 dup = {"of": near[0], "match": "phash", "distance": near[1], "download": {"sha256": sha, **size}}
                 sha = near[0]

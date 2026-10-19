@@ -132,11 +132,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
     ),
     (
-        "echinocereus-engelmannii",
-        "central_spine_form",
-        "its main central is drawn flattened and straight (its lower central, by eye from photographs), against the curved and twisted centrals Britton and Rose describe; a twisted spine is not drawn",
-    ),
-    (
         "ferocactus-acanthodes-subsp-acanthodes",
         "stem_form",
         "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
@@ -360,6 +355,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "vachellia-tortilis",
         "inflorescence_length_m",
         "umbrella thorn first flowers with the family programs' blooms (revision 110): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
+    ),
+    (
+        "washingtonia-filifera",
+        "height_max_m",
+        "its greatest height, 20 m, is a model estimate no source read gives, and its third seed already grew to 20.0 m; since palm revision 14 stands a year's newest spear on top of the year's trunk, the second seed's spear reaches 20.1 m, until a flora's greatest height replaces the estimate",
     ),
     (
         "whipplea-modesta",

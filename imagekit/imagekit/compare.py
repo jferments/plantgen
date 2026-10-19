@@ -34,7 +34,7 @@ from pathlib import Path
 
 from .prompts import Rules
 from .run import image_rows, outputs
-from .store import Store
+from .store import Store, is_render
 
 WEIGHT = {"habit": 1.0, "architecture": 0.9, "foliage": 0.8, "surface": 0.6, "shoot": 0.6,
           "flower": 0.5, "inflorescence": 0.5, "fruit": 0.4, "leaf": 0.4, "season": 0.4}
@@ -74,10 +74,6 @@ def register(sub) -> None:
 
 
 # reading the store
-
-def is_render(row: dict) -> bool:
-    return bool(row["source"].get("render")) or row["source"].get("source") == "render"
-
 
 def taxon_names(row: dict) -> set:
     t = row["taxon"]

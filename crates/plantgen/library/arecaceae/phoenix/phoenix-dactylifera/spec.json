@@ -36,8 +36,6 @@
       "leaflet_lift": 35,
       "droop": 0.006,
       "droop_years": 4,
-      "boots": 1,
-      "boot_life": 30,
       "boot_length": 0.3,
       "suckers": 3,
       "sucker_age": 6,
@@ -46,7 +44,6 @@
       "leaflet_area": 0.047,
       "ray_area": 0.057,
       "dead_area": 0.099,
-      "boot_area": 0.333,
       "leaflet_scatter": 15,
       "hang": 20
     }
@@ -76,11 +73,6 @@
         "colour": [0.13, 0.18, 0.15]
       },
       "boot": {
-        "shape": {
-          "template": "blade",
-          "taper": 0.2,
-          "aspect": 0.4
-        },
         "colour": [0.22, 0.16, 0.1]
       },
       "dead": {
