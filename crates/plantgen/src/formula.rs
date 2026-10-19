@@ -97,6 +97,16 @@ const FUNCS: [(Func, &str, usize); 19] = [
 ];
 
 /// The day of the year each month begins on, in a year of 365 days.
+/// The day of the year month `month` (1 to 12; 13 is the next January)
+/// begins on, as the `month_start` function gives it.
+pub(crate) fn month_start(month: f64) -> f64 {
+    let month = month.floor() - 1.0;
+    let year = (month / 12.0).floor();
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let within = (month - 12.0 * year) as usize;
+    MONTH_STARTS[within.min(11)] + 365.0 * year
+}
+
 const MONTH_STARTS: [f64; 12] = [
     1.0, 32.0, 60.0, 91.0, 121.0, 152.0, 182.0, 213.0, 244.0, 274.0, 305.0, 335.0,
 ];
@@ -487,13 +497,7 @@ fn apply(func: Func, a: [f64; 3]) -> f64 {
             t * t * (3.0 - 2.0 * t)
         }
         Func::Step => flag(a[1] >= a[0]),
-        Func::MonthStart => {
-            let month = a[0].floor() - 1.0;
-            let year = (month / 12.0).floor();
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let within = (month - 12.0 * year) as usize;
-            MONTH_STARTS[within.min(11)] + 365.0 * year
-        }
+        Func::MonthStart => month_start(a[0]),
     }
 }
 
