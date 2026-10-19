@@ -5,7 +5,7 @@
     "kind": "sprays",
     "length_m": [0.05, 0.15],
     "fall_colours": [[0.58, 0.24, 0.08], [0.52, 0.22, 0.08], [0.62, 0.3, 0.11]],
-    "dry_colours": [[0.38, 0.2, 0.1], [0.33, 0.18, 0.1], [0.42, 0.24, 0.12]],
+    "dry_colours": [[0.335, 0.209, 0.139], [0.293, 0.188, 0.132], [0.375, 0.249, 0.165]],
     "curl": 0.25,
     "pale_beneath": 0.0
   },
@@ -28,7 +28,7 @@
   ],
   "look": {
     "tile_m": 1.0,
-    "mean": [0.13, 0.07, 0.035],
+    "mean": [0.206, 0.122, 0.074],
     "relief_m": 0.021
   },
   "evidence": {
@@ -40,12 +40,12 @@
     "foliage": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Authored from botanical descriptions of western redcedar: whole flat sprays of scale leaves, 5 to 15 cm long, shed each autumn rusty orange and drying red-brown; small cones 1 to 1.4 cm long. Cedar litter rots slowly. Colours chosen by eye from photographs of cedar litter; numbers plausible, not measured."
+      "note": "Authored from botanical descriptions of western redcedar: whole flat sprays of scale leaves, 5 to 15 cm long, shed each autumn rusty orange and drying red-brown; small cones 1 to 1.4 cm long. Cedar litter rots slowly. Colours chosen by eye from photographs of cedar litter; numbers plausible, not measured. The dry colours were moved 0.3 of the way to their own grey on 2026-10-18, beside a photograph of a conifer floor the owner supplied: weathered needles bleach to a grey tan."
     },
     "look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
+      "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing. The brightness was raised 1.7 times on 2026-10-18, beside a photograph of a conifer floor the owner supplied, on which the litter in Project After read far darker than real duff."
     },
     "pieces": {
       "evidence": "Authored",

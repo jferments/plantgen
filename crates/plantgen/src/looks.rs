@@ -1138,7 +1138,7 @@ impl Season {
                     within("colours", f64::from(channel), 0.0, 1.0)?;
                 }
             }
-            within("stage size", look.size, 0.05, 4.0)?;
+            within("stage size", look.size, 0.05, 8.0)?;
             if let Some(form) = &look.form {
                 form.validate(&look.shape)?;
             }
@@ -1930,6 +1930,29 @@ pub struct Flower {
     /// star); none if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub star_colour: Option<[f32; 3]>,
+    /// A stripe down the middle of each petal's or tepal's inner face from
+    /// its foot, in a colour of its own (Kellogg's lily's yellow stripe
+    /// from its nectaries); none if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stripe_colour: Option<[f32; 3]>,
+    /// Share of each petal's length from its foot `stripe_colour` reaches;
+    /// 0 draws no stripe.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub stripe_length: f64,
+    /// The outer (abaxial) face of each petal or tepal in a colour of its
+    /// own (a Canada lily's tepals red outside); the inner face's, a shade
+    /// darker, if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub back_colour: Option<[f32; 3]>,
+    /// The outer face's foot in a colour of its own, fading into the outer
+    /// face's at `back_base_length` of its length (a western lily's tepals
+    /// green outside at their base); none if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub back_base_colour: Option<[f32; 3]>,
+    /// Share of each petal's length from its foot `back_base_colour`
+    /// reaches.
+    #[serde(skip_serializing_if = "is_default_base_length")]
+    pub back_base_length: f64,
     /// The stigma lobes' colour; the filaments' if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stigma: Option<[f32; 3]>,
@@ -2095,6 +2118,11 @@ impl Default for Flower {
             base_colour: None,
             base_length: BASE_LENGTH,
             star_colour: None,
+            stripe_colour: None,
+            stripe_length: 0.0,
+            back_colour: None,
+            back_base_colour: None,
+            back_base_length: BASE_LENGTH,
             stigma: None,
             pericarpel: Skin::Naked,
             bud: None,
@@ -2161,12 +2189,14 @@ impl Flower {
             && self.staminodes == 0
             && self.carpels == 0
             && self.torus == 0.0
-            && self.ovary == Ovary::Superior
             && self.turn == 0.0
             && self.open == 1.0
             && self.spots == 0
             && self.base_colour.is_none()
             && self.star_colour.is_none()
+            && self.stripe_colour.is_none()
+            && self.back_colour.is_none()
+            && self.back_base_colour.is_none()
     }
 
     /// Whether the flower's plane of symmetry is fixed by the axis that
@@ -3625,6 +3655,8 @@ impl Shape {
                 check("tube_reach", s.tube_reach, 0.0, 12.0)?;
                 count("spots", s.spots, 0, 60)?;
                 check("base_length", s.base_length, 0.05, 1.0)?;
+                check("stripe_length", s.stripe_length, 0.0, 1.0)?;
+                check("back_base_length", s.back_base_length, 0.05, 1.0)?;
                 check("spur", s.spur, 0.0, 3.0)?;
                 check("tube", s.tube, 0.0, 3.0)?;
                 check("floral_tube", s.floral_tube, 0.0, 12.0)?;

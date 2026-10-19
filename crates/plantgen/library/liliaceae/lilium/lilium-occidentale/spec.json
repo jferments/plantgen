@@ -94,6 +94,15 @@
       140,
       45
     ],
+    "perianth_abaxial_base_colour": [
+      100,
+      145,
+      55
+    ],
+    "perianth_abaxial_base_length": {
+      "min": 0.4,
+      "max": 0.5
+    },
     "perianth_spots": "many",
     "perianth_spot_colour": [
       90,
@@ -127,7 +136,11 @@
       6,
       7,
       8
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 3,
+      "max": 171
+    }
   },
   "provenance": {
     "sources": [
@@ -262,6 +275,16 @@
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium occidentale (efloras.org, read 2026-10-18): green proximally (and usually forming a green star) The colour is our reading of the words."
     },
+    "traits.perianth_abaxial_base_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium occidentale (efloras.org, read 2026-10-18): conspicuously green abaxially on proximal 2/5-1/2 The colour is our reading of the words."
+    },
+    "traits.perianth_abaxial_base_length": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium occidentale (efloras.org, read 2026-10-18): conspicuously green abaxially on proximal 2/5-1/2"
+    },
     "traits.perianth_spots": {
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
@@ -306,6 +329,11 @@
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium occidentale (efloras.org, read 2026-10-18): flowering summer (Jun-Aug)"
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Derived: the stem's leaves are its 1-9 whorls times 3-19 leaves in each, 3-171, from the counts quoted for leaf_whorls (Flora of North America vol. 26 (2002), Lilium occidentale (efloras.org, read 2026-10-18): in 1-9 whorls. The typical value is our pick of a usual plant inside that range.) and leaves_per_whorl (Flora of North America vol. 26 (2002), Lilium occidentale (efloras.org, read 2026-10-18): 3-19 leaves per whorl. The typical value is our pick of a usual plant inside that range.)."
     }
   }
 }

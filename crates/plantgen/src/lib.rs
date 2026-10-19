@@ -868,7 +868,40 @@ pub mod venation;
 /// perianth stands on, a floral cup or an inferior ovary such as a
 /// cactus's pericarpel, so the tepals no longer float above the joint; a
 /// pericarpel the tepals open straight from is globose, not a stalk.
-/// 131: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
+/// 131: a cluster of flowers draws its axis as for flowers no wider than
+/// half again their pedicels, not a tenth of a flower thick, so a few
+/// large flowers no longer hang from a stalk thicker than their stem (130
+/// is joint flowers on their pericarpels, #220).
+/// 132: a petal's or tepal's outer face is drawn in its own colour where
+/// a flora gives one (`back_colour`, from `perianth_abaxial_colour`), and
+/// its foot outside in another (`back_base_colour`, `back_base_length`,
+/// from `perianth_abaxial_base_colour` and `perianth_abaxial_base_length`);
+/// a stripe down the middle of its inner face from its foot where a flora
+/// names one (`stripe_colour`, `stripe_length`, from
+/// `perianth_stripe_colour` and `perianth_stripe_length`), as Kellogg's
+/// lily's yellow stripe; a flower's spots are drawn one-sided, as their
+/// backs lie against the part; a lily with scattered leaves bears at least
+/// as many as its flora counts on the stem (`shoot_leaves`), so the
+/// orange lily's 50 to 75 (131 is the cluster axis, #209).
+/// 133: a raceme's, spike's, catkin's, panicle's or corymb's nodes run
+/// from its peduncle's top to where its top unit reaches the tip, not
+/// half a node in from each, so a panicle of few branches draws its
+/// stated length; a cluster whose flowers are all sterile
+/// (`sterile_flowers`, a mophead hydrangea's) draws them as its showy
+/// sepals (`sterile_sepal_shape`) with no stamens, pistil or floral cup; a
+/// flower with no carpels stands on no ovary; a petal whose outline is
+/// stated is as wide on the solid as on its card; and from the flat
+/// coarse step a flower of three to six petals is a polygon through
+/// their tips, not a hexagon. A lineage whose inflorescences end leafy
+/// shoots (`flowering_shoot_leaves`) unfolds that many leaves below each
+/// cluster, and one that flowers on new shoots (`flowering_shoots`)
+/// flowers on a short shoot or a stopped tip only in its first year
+/// (broadleaf program revision 22), so a hydrangea's heads stand at the
+/// crown's surface above their leaves, not along the old wood; and a
+/// flower may be drawn up to eight times its fruit's size, where it was
+/// four, so a mophead's sterile flowers reach their stated size (132 is
+/// lily leftovers, #218).
+/// 134: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
 /// hemlocks) carries its year's needles in two sprays, one at the foot of
 /// each half of the shoot, so they follow the bend; the one spray at the
 /// shoot's foot had run on straight and left the nodding tip a bare
@@ -876,9 +909,9 @@ pub mod venation;
 /// several stems from one foot (`stems`, `stem_angle`), and a needle card
 /// may lean its needles forward (`lean`) and leave the foot of each axis
 /// bare (`bare`) so they crowd in a tuft near its end; both default to
-/// what was drawn before (130 is cactus flowers on their
-/// pericarpels, #220).
-/// 132: old conifers (`pinidae` revision 13): a limb whose tips catch too
+/// what was drawn before (133 is panicles and hydrangea
+/// heads, #219).
+/// 135: old conifers (`pinidae` revision 13): a limb whose tips catch too
 /// little light for the wood it carries is shed (`limb_light`, scaled by
 /// `shade_death`), so Douglas-fir, western hemlock and Sitka spruce grow
 /// past 150 years under the module limit; a shoot shorter than
@@ -892,6 +925,10 @@ pub mod venation;
 /// limbs branch again (`side_order` 2, twigs living `twig_years` with one
 /// spray each), stop lengthening with their reach, start short below the
 /// treetop (`top_ramp`) and clear the trunk in step with height (`bole`),
-/// so fully branched crowns grow to 300 years (131 is nodding
+/// so fully branched crowns grow to 300 years; shade strengthens apical
+/// control (`apical_light`, scaled by shade tolerance), so a stand-grown
+/// Douglas-fir keeps a narrow crown and a trunk of its reference size;
+/// limb shedding and short shoots' fewer buds are set for Pinaceae, not
+/// the program, so yews and cypresses grow as before (134 is nodding
 /// leaders, #167).
-pub const GENERATOR_REVISION: u32 = 132;
+pub const GENERATOR_REVISION: u32 = 135;

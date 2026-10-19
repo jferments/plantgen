@@ -114,7 +114,11 @@
       6,
       7,
       8
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 3,
+      "max": 128
+    }
   },
   "provenance": {
     "sources": [
@@ -293,6 +297,11 @@
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): subsp. purpurascens flowering summer (mid Jun-mid Aug)"
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Derived: the stem's leaves are its 1-8 whorls times 3-16 leaves in each, 3-128, from the counts quoted for leaf_whorls (Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): in 1-8 whorls. The typical value is our pick of a usual plant inside that range.) and leaves_per_whorl (Flora of North America vol. 26 (2002), Lilium washingtonianum (efloras.org, read 2026-10-18): 3-16 leaves per whorl. The typical value is our pick of a usual plant inside that range.)."
     }
   }
 }

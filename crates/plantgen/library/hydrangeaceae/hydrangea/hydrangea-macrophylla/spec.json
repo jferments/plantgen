@@ -89,8 +89,14 @@
     "leaf_apex": "acuminate",
     "leaf_margin": "serrate",
     "inflorescence": "corymb",
+    "flowering_shoot_leaves": {
+      "min": 4,
+      "max": 8
+    },
     "inflorescence_posture": "erect",
     "inflorescence_outline": "globose",
+    "sterile_flowers": "all",
+    "sterile_sepal_shape": "orbicular",
     "inflorescence_length_m": {
       "min": 0.1,
       "max": 0.2
@@ -100,8 +106,8 @@
       "max": 200
     },
     "flower_size_m": {
-      "min": 0.015,
-      "max": 0.03
+      "min": 0.025,
+      "max": 0.04
     },
     "flower_merosity": 4,
     "flower_colour": [
@@ -231,6 +237,11 @@
       "source": "dendrology",
       "note": "Idžojtić, Dendrology (2019) p. 323, Hydrangea macrophylla: inflorescence a corymb, terminal, erect, dense."
     },
+    "traits.flowering_shoot_leaves": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Two to four pairs of leaves below each head, set by hand from iNaturalist photos (observations 318011531, 125899695, 14822845, 89309857; imagekit batch inat-2026-10-18-3): the sources read give no count; Dendrology (2019) p. 323 has the corymb terminal, ending a leafy shoot."
+    },
     "traits.inflorescence_posture": {
       "evidence": "SourceInferred",
       "source": "dendrology",
@@ -240,6 +251,16 @@
       "evidence": "SourceInferred",
       "source": "dendrology",
       "note": "Idžojtić, Dendrology (2019) p. 323, Hydrangea macrophylla: inflorescence 10-20 cm in diameter, globose in the Hortensia Group (mopheads), all its flowers sterile, as the photos show."
+    },
+    "traits.sterile_flowers": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 322-324, Hydrangea macrophylla: the Hortensia Group's globose heads are all sterile flowers (Lacecap Group: fertile flowers ringed by sterile ones); a sterile flower is K3-5, petaloid, C0, 1.5-3(-4) cm across, its sepals obovate-rhombic or broadly elliptic. The mophead is the form this spec draws (its globose outline)."
+    },
+    "traits.sterile_sepal_shape": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 324-326, Hydrangea macrophylla: a sterile flower's 3 to 5 petaloid sepals are obovate-rhombic or broadly elliptic, narrowed at the base, spreading. Read as orbicular: in the photos the mophead's sepals are nearly as broad as long and overlap at their margins (iNaturalist observations 388065803, 328637493, 304694460, 318011531; fetched with imagekit, batch inat-2026-10-18-3), where obovate drew them two thirds as broad, with gaps."
     },
     "traits.inflorescence_length_m": {
       "evidence": "SourceInferred",
@@ -254,7 +275,7 @@
     "traits.flower_size_m": {
       "evidence": "SourceInferred",
       "source": "dendrology",
-      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: sterile flowers 1.5-3(-4) cm in diameter."
+      "note": "Idžojtić, Dendrology (2019) p. 324, Hydrangea macrophylla: sterile flowers 1.5-3(-4) cm in diameter. A mophead's are the upper part of that range, 2.5 cm to 4 cm: in the photos each is about a fifth of its 10-20 cm head's width (iNaturalist observations 328637493, 304694460, 14822845; imagekit batch inat-2026-10-18-3)."
     },
     "traits.flower_merosity": {
       "evidence": "SourceInferred",

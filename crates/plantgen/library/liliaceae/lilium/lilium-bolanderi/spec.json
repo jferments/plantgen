@@ -127,7 +127,11 @@
       6,
       7,
       8
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 3,
+      "max": 95
+    }
   },
   "provenance": {
     "sources": [
@@ -311,6 +315,11 @@
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): flowering summer (mid Jun-mid Aug)"
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Derived: the stem's leaves are its 1-5 whorls times 3-19 leaves in each, 3-95, from the counts quoted for leaf_whorls (Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): in 1-5(-6) whorls. The typical value is our pick of a usual plant inside that range.) and leaves_per_whorl (Flora of North America vol. 26 (2002), Lilium bolanderi (efloras.org, read 2026-10-18): 3-19 leaves per whorl. The typical value is our pick of a usual plant inside that range.)."
     }
   }
 }
