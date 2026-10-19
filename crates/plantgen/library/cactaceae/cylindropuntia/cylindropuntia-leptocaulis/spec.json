@@ -1,0 +1,439 @@
+{
+  "schema": 1,
+  "id": "cylindropuntia-leptocaulis",
+  "taxon": {
+    "scientific_name": "Cylindropuntia leptocaulis",
+    "common_name": "Christmas cholla",
+    "family": "Cactaceae",
+    "genus": "Cylindropuntia",
+    "plant_name_id": 2750418
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 5,
+      "joint_spread": 0.4,
+      "daughters_low": 1.0,
+      "daughters_high": 2.4,
+      "generations": 16,
+      "branch_angle": 65,
+      "twist": 20,
+      "trunk_joints": 3,
+      "leader_lean": 10,
+      "sag": 0.1,
+      "swell": 0.4,
+      "swell_years": 12,
+      "bloom_age": 4,
+      "joint_flowers": 1,
+      "flower_angle": 40,
+      "flower_size": 0.02,
+      "bud_rate": 0.6
+    }
+  },
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      25
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.12,
+      0.16,
+      0.1
+    ],
+    "foliage_shade": [
+      0.054,
+      0.072,
+      0.045
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "dome": 1.0,
+        "base": 0.8,
+        "tubercles": {
+          "width": 0.4
+        },
+        "areoles": {
+          "spacing": 0.015,
+          "felt_radius": 0.0012
+        },
+        "spines": [
+          {
+            "role": "radial",
+            "angle": 30,
+            "width": 0.0005,
+            "angle_spread": 20,
+            "length_spread": 0.5,
+            "tip": [
+              0.8,
+              0.7,
+              0.35
+            ]
+          },
+          {
+            "role": "glochid",
+            "count": [
+              6,
+              14
+            ],
+            "angle": 55,
+            "length": 0.002,
+            "width": 0.0001,
+            "angle_spread": 20,
+            "length_spread": 0.3
+          }
+        ],
+        "greying": {
+          "years": 6
+        },
+        "cork": {
+          "colour": [
+            0.15,
+            0.12,
+            0.09
+          ],
+          "start": 10,
+          "rate": 0.03,
+          "height": 0.3,
+          "spines": 0.4
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 1.2
+    },
+    "height_max_m": 1.8,
+    "woodiness": "woody",
+    "rosette": "none",
+    "stem_colour": [
+      120,
+      140,
+      105
+    ],
+    "joint_length_m": {
+      "min": 0.02,
+      "max": 0.08
+    },
+    "joint_width_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "tubercle_relief": "low",
+    "tubercle_shape": "elongate",
+    "areole_wool_colour": [
+      230,
+      220,
+      180
+    ],
+    "radial_spines": {
+      "min": 0,
+      "max": 1,
+      "high": 3
+    },
+    "radial_spine_length_m": {
+      "min": 0.014,
+      "max": 0.045
+    },
+    "spine_colour": [
+      200,
+      190,
+      175
+    ],
+    "spine_colour_aged": [
+      150,
+      140,
+      130
+    ],
+    "glochids": true,
+    "glochid_colour": [
+      200,
+      170,
+      70
+    ],
+    "flower_colour": [
+      215,
+      210,
+      120
+    ],
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.025
+    },
+    "anther_colour": [
+      232,
+      205,
+      60
+    ],
+    "filament_colour": [
+      200,
+      205,
+      110
+    ],
+    "stigma_colour": [
+      190,
+      200,
+      100
+    ],
+    "fruit_surface": "areolate",
+    "fruit_shape": "obovoid",
+    "fruit_colour_ripe": [
+      210,
+      50,
+      45
+    ],
+    "fruit_size_m": {
+      "min": 0.009,
+      "max": 0.015,
+      "high": 0.027
+    },
+    "fruit_width_m": {
+      "min": 0.006,
+      "max": 0.007
+    },
+    "flowering_months": [
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      10,
+      11,
+      12,
+      1
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: most plants 0.5 m to 1.2 m tall, within FNA's 0.5-1.8 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: shrubs or small trees, sparingly to densely branched, 0.5-1.8 m."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: shrubs or small trees; old stems woody."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: stem segments usually alternate; no leaves to speak of."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: stem segments gray-green or purplish; grey-green in the photos; sRGB by eye."
+    },
+    "traits.joint_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: stem segments 2-8 x 0.3-0.5 cm. Anderson (2001 p. 211) gives joints 20-80 cm, which reads as a misprint for the whole branches; FNA's measure is used."
+    },
+    "traits.joint_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: stem segments 2-8 x 0.3-0.5 cm."
+    },
+    "traits.tubercle_relief": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: tubercles linear, drying as elongate, riblike wrinkles; Anderson (2001 p. 211): no prominent tubercles."
+    },
+    "traits.tubercle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: tubercles linear, 1.1-2(-3) cm."
+    },
+    "traits.areole_wool_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: wool white to yellow, aging gray; sRGB by eye."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: spines 0-1(-3) per areole, usually in apical areoles to well distributed; FNA does not tell radials from centrals."
+    },
+    "traits.radial_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: the longest (4-)14-45 mm, erect, flexible."
+    },
+    "traits.spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: spines red-brown with gray to whitish coat, tips yellow; sheaths gray to purple-gray; whitish in the photos; sRGB by eye."
+    },
+    "traits.spine_colour_aged": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: spines aging red-brown, the sheaths grey; sRGB by eye."
+    },
+    "traits.glochids": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: glochids in adaxial tuft or crescent to encircling areole, yellow or reddish brown, 1-3(-5) mm."
+    },
+    "traits.glochid_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: glochids yellow or reddish brown; yellow drawn; sRGB by eye."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: inner tepals pale yellow to greenish yellow, sometimes tipped red, 5-8 mm; sRGB by eye."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: flowers 1.5 cm to 2.5 cm across, the inner tepals 5-8 mm long (FNA)."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: anthers yellow."
+    },
+    "traits.filament_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: filaments greenish yellow; style yellow."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: stigma lobes greenish yellow."
+    },
+    "traits.fruit_surface": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: fruits fleshy, smooth, spineless; areoles 16-20."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: fruits obovoid, 9-15(-27) x 6-7(-12) mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: fruits yellow to scarlet; Kearney and Peebles (1942 p. 615): the small scarlet fruits mark the species; scarlet in the photos; sRGB by eye."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: fruits obovoid, 9-15(-27) x 6-7(-12) mm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 101, 104, 105 (eFloras, read 2026-10-19), Cylindropuntia leptocaulis: fruits 9-15(-27) x 6-7(-12) mm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (1942) p. 615, Opuntia leptocaulis: southern Arizona, 1,000 to 5,000 feet, May and June; FNA: flowering spring-early summer, sometimes fall (Mar-Aug, Oct)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the scarlet fruits ripe and hanging on from October into January, as its common name says."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 191473774, 87902429, 46330057, 390420539, 99511795, 25594006, 111517420, 278885777): thin grey-green pencil stems with short side branchlets at right angles, one long whitish sheathed spine at many areoles, a tuft of yellow glochids, and glossy scarlet oval fruits in winter. Colours, counts and lengths come from the traits through the family's rules."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Christmas cholla from Flora of North America vol. 4: a shrub 0.5-1.8 m of pencil-thin segments 2-8 cm long, with short branchlets at right angles along the major axes (branch_angle 65, many generations of small joints). The joints' size comes from the traits through the subfamily's rules; daughters, generations, sag and swell are set by eye against the template."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.9 m tall at 20 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

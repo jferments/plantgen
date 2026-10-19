@@ -1,0 +1,370 @@
+{
+  "schema": 1,
+  "id": "psilostrophe-cooperi",
+  "taxon": {
+    "scientific_name": "Psilostrophe cooperi",
+    "common_name": "paperflower",
+    "family": "Asteraceae",
+    "genus": "Psilostrophe",
+    "plant_name_id": 3116217
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 12,
+      "branch_angle": 35
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      2,
+      5,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "bloom": {
+        "shape": {
+          "template": "head"
+        }
+      }
+    },
+    "bark": [
+      0.6,
+      0.6,
+      0.55
+    ],
+    "foliage": [
+      0.33,
+      0.38,
+      0.28
+    ],
+    "foliage_shade": [
+      0.1056,
+      0.1216,
+      0.0896
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.25,
+      "max": 0.3,
+      "low": 0.15,
+      "high": 0.5
+    },
+    "height_max_m": 0.5,
+    "life_span": "perennial",
+    "woodiness": "semi",
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.0015,
+      "max": 0.004
+    },
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "leaf_hairs": "villous",
+    "leaf_division": "simple",
+    "inflorescence": "solitary",
+    "peduncle_length_m": {
+      "min": 0.035,
+      "max": 0.06,
+      "high": 0.08
+    },
+    "capitulum_kind": "radiate",
+    "involucre_height_m": {
+      "min": 0.006,
+      "max": 0.008
+    },
+    "involucre_diameter_m": {
+      "min": 0.005,
+      "max": 0.007
+    },
+    "phyllaries": {
+      "min": 5,
+      "max": 12
+    },
+    "phyllary_series": {
+      "min": 1,
+      "max": 2
+    },
+    "ray_florets": {
+      "min": 3,
+      "max": 6
+    },
+    "ray_length_m": {
+      "min": 0.012,
+      "max": 0.02,
+      "low": 0.008
+    },
+    "ray_width_m": {
+      "min": 0.007,
+      "max": 0.012
+    },
+    "ray_apex": "toothed",
+    "ray_colour": [
+      250,
+      214,
+      40
+    ],
+    "disc_colour": [
+      238,
+      190,
+      35
+    ],
+    "disc_florets": {
+      "min": 10,
+      "max": 17,
+      "low": 6,
+      "high": 25
+    },
+    "pappus": "scales",
+    "fruit_type": "cypsela",
+    "flowering_months": [
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      5,
+      6,
+      7
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: shrubs or subshrubs, (15-)25-30(-50+) cm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: (15-)25-30(-50+) cm; the 50 cm is taken as its greatest."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (1942) p. 969, Psilostrophe cooperi: plant definitely shrubby (key to species), flowering throughout the year."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: shrubs or subshrubs; Kearney and Peebles (1942 p. 969): plant definitely shrubby. Drawn semi-woody, a subshrub's woody base."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves along the branches, with no basal rosette, set by hand from iNaturalist photos (observations 261208822, 261806410, 180482349, 397176318, 141908100, 115520642, 214501789, 216012053): the sources read give no count or measure."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 415, 416 (eFloras, read 2026-10-19), Psilostrophe (genus): leaves basal and cauline or all cauline; alternate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 1.5 cm to 5 cm long, as in the photos."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 1.5 mm to 4 mm wide, linear, as in the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (1942) p. 969, Psilostrophe cooperi: leaves linear or narrowly linear-lanceolate, entire (key to species)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (1942) p. 969, Psilostrophe cooperi: leaves linear or narrowly linear-lanceolate, entire (key to species)."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 415, 416 (eFloras, read 2026-10-19), Psilostrophe (genus): faces densely to sparsely arachno-villous or more or less strigillose; the species' stems pannose, white."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 415, 416 (eFloras, read 2026-10-19), Psilostrophe (genus): blades spatulate to oblanceolate or linear, margins usually entire."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: heads borne singly; Kearney and Peebles (1942 p. 969): heads mostly solitary at the tips of the branches, slender-peduncled."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: peduncles 35-60(-80+) mm."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 415, 416 (eFloras, read 2026-10-19), Psilostrophe (genus): heads radiate."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: involucres 6-8 mm."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: involucres 5 mm to 7 mm across, at the top of the 2-7 mm FNA gives the genus (vol. 21 p. 415)."
+    },
+    "traits.phyllaries": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 415, 416 (eFloras, read 2026-10-19), Psilostrophe (genus): phyllaries persistent, 5-12 in 1-2 series."
+    },
+    "traits.phyllary_series": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 415, 416 (eFloras, read 2026-10-19), Psilostrophe (genus): phyllaries 5-12 in 1-2 series."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: rays 3-6; the photos show 3 to 5."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: ray laminae (8-)12-20 mm, spreading to reflexed in fruit."
+    },
+    "traits.ray_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: ray laminae 7 mm to 12 mm wide, broad and fan-shaped, about two thirds as wide as long in the photos."
+    },
+    "traits.ray_apex": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each ray broad and ending in three teeth, set by hand from iNaturalist photos (observations 261208822, 261806410, 180482349, 397176318, 141908100, 115520642, 214501789, 216012053): the sources read give no count or measure."
+    },
+    "traits.ray_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 415, 416 (eFloras, read 2026-10-19), Psilostrophe (genus): ray corollas yellow to orange, marcescent; bright lemon yellow in the photos, drying papery and pale; sRGB by eye."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 415, 416 (eFloras, read 2026-10-19), Psilostrophe (genus): disc corollas yellow to orange; sRGB by eye from the photos."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: disc florets (6-)10-17(-25)."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: pappi of 4-6 oblong to more or less lanceolate scales 2-2.5 mm."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: cypselae usually glabrous, sometimes gland-dotted."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 453, 454 (eFloras, read 2026-10-19), Psilostrophe cooperi: flowering (Feb-)Apr-Jun(-Dec); Kearney and Peebles (1942 p. 969): flowering throughout the year. The main spring flush is drawn."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cypselae ripe May to July, after the spring flowering, the papery rays still on the heads."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, rounded mound of white-woolly stems and sparse narrow grey-green leaves, covered in spring with bright yellow heads of three to five broad, three-toothed rays that dry papery on the plant."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for paperflower from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 5 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

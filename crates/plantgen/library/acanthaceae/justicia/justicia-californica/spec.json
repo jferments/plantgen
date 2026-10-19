@@ -1,0 +1,407 @@
+{
+  "schema": 1,
+  "id": "justicia-californica",
+  "taxon": {
+    "scientific_name": "Justicia californica",
+    "common_name": "chuparosa",
+    "family": "Acanthaceae",
+    "genus": "Justicia",
+    "plant_name_id": 2331247
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 10,
+      "branch_angle": 40,
+      "fork_angle": 35,
+      "wiggle": 8
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.55,
+      0.62,
+      0.5
+    ],
+    "foliage": [
+      0.3,
+      0.42,
+      0.24
+    ],
+    "foliage_shade": [
+      0.096,
+      0.134,
+      0.077
+    ]
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 1.0,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.5
+    },
+    "height_max_m": 2,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "drought_deciduous",
+    "rosette": "none",
+    "stem_colour": [
+      150,
+      165,
+      140
+    ],
+    "stem_hairs": "puberulent",
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_length_m": {
+      "min": 0.008,
+      "max": 0.025
+    },
+    "leaf_width_m": {
+      "min": 0.005,
+      "max": 0.015
+    },
+    "petiole_length_m": {
+      "min": 0.002,
+      "max": 0.005
+    },
+    "leaf_shape": {
+      "ovate": "usually",
+      "orbicular": "sometimes"
+    },
+    "leaf_margin": "entire",
+    "leaf_hairs": "puberulent",
+    "inflorescence": "raceme",
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 8
+    },
+    "flowering_position": "terminal",
+    "flower_colour": [
+      215,
+      55,
+      45
+    ],
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "bilabiate",
+    "corolla_shape": "tubular",
+    "corolla_tube_length_m": {
+      "min": 0.012,
+      "max": 0.018
+    },
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.035
+    },
+    "sepal_length_m": 0.004,
+    "stamens": 2,
+    "stamen_exsertion": "exserted",
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "flowering_months": [
+      12,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "elevation_min_m": 400,
+    "elevation_max_m": 1070,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry"
+    ],
+    "soil_texture": [
+      "rock"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a shrub (FEIS, Anderson 2001)."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: most plants 0.6 m to 1.5 m high, as in the photos."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: a shrub, up to 2 m. high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: a shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: a shrub with spreading brittle branches."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: leaves falling in the dry season, the branches then leafless and rush-like."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: a much-branched shrub: no rosette."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: branches grey-green, rush-like; sRGB by eye from the photos."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: canescent-puberulent herbage."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: leaves opposite."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: leaves petioled, the blades ovate: simple."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: blades ovate, entire."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades 8 mm to 2.5 cm long, a little longer than wide (Abrams and Ferris give their width, 5-15 mm)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: leaves suborbicular to oblong-ovate, 5-15 mm. broad."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: leaves on short petioles; 2 mm to 5 mm by eye from the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: leaves suborbicular to oblong-ovate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: blades entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: canescent-puberulent herbage."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: flowers in naked racemes."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Three to eight flowers to a raceme, set by hand from iNaturalist photos (observations 152868137, 331249380, 21296914, 21784826, 19249172, 211365859, 155476067, 202272769): the sources read give no count or measure."
+    },
+    "traits.flowering_position": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Racemes at the ends of the green branches, set by hand from iNaturalist photos (observations 152868137, 331249380, 21296914, 21784826, 19249172, 211365859, 155476067, 202272769): the sources read give no count or measure."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: corolla rather dull red; sRGB by eye from the photos (red to orange-red)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: corolla strongly bilabiate."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: corolla strongly bilabiate."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: corolla tubular-funnelform."
+    },
+    "traits.corolla_tube_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: corollas 2.5-3.5 cm. long, the lips nearly as long as the tube: the tube about half."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: corollas dull red, 2.5-3.5 cm. long."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 14, Beloperone californica: calyx lobes about 4 mm. long."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: stamens 2, exserted."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone: stamens 2, exserted."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a club-shaped capsule, as in the family."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules 1.5 cm to 2 cm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone californica: 1,300 to 3,500 feet, frequent on dry rocky slopes, December to May (Abrams and Ferris 1960 p. 14: February to June)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripen from March to June."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone californica: 1,300 to 3,500 feet: about 400 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone californica: 1,300 to 3,500 feet: about 1,070 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone californica: dry rocky slopes, in the open."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone californica: dry rocky slopes; also along washes in the photos."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 842), Beloperone californica: dry rocky slopes."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a rounded mound of many slender, grey-green, nearly leafless rush-like stems, a few small opposite leaves, and showers of red tubular two-lipped flowers in late winter and spring."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for chuparosa from its sources and the photos the traits cite, on the template of snowbrush ceanothus (ceanothus-velutinus); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.0 m tall at 10 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

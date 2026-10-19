@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "penstemon-parryi",
+  "layers": {
+    "herb": 0.2
+  },
+  "moisture": [
+    0.05,
+    0.12,
+    0.7,
+    0.8
+  ],
+  "heat_load": [
+    0.2,
+    0.5,
+    1.6,
+    2.0
+  ],
+  "elevation_m": [
+    300,
+    450,
+    1550,
+    1800
+  ],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.25,
+  "coldest_c": [
+    3,
+    6,
+    16,
+    20
+  ],
+  "hard_freeze_c": [
+    -14,
+    -10,
+    6,
+    10
+  ],
+  "warmest_c": [
+    23,
+    26,
+    33,
+    36
+  ],
+  "degree_days_0": [
+    4000,
+    5000,
+    10000,
+    11500
+  ],
+  "degree_days_5": [
+    2500,
+    3300,
+    8000,
+    9500
+  ],
+  "moisture_index": [
+    0.06,
+    0.1,
+    0.45,
+    0.55
+  ],
+  "summer_rain": [
+    0.25,
+    0.35,
+    0.75,
+    0.85
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A scattered perennial herb of canyons and well-drained slopes, abundant in wet springs."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Well-drained slopes and moister canyon floors and washes."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect; often in canyons and on cooler slopes."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 460 to 1,520 m (Kearney and Peebles: 1,500 to 5,000 feet)."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Canyons and well-drained slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sun to light shade."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 6 to 16 °C; gone below 3 °C and above 20 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −10 °C borne, gone where the year's coldest night falls below about −14 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 26 to 33 °C; gone below 23 °C, where summers are too short, and above 36 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 5,000 to 10,000 degree-days above 0 °C, none below 4,000."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 3,300 to 8,000 degree-days above 5 °C, none below 2,500."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.1, gone by 0.06."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Needs the summer monsoon: from about 0.35 of the year's precipitation falling in the July to September storms, gone below 0.25, where winter rain falls alone; the bajada gets about half its rain then. Up to about 0.75, gone by 0.85."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA Forest Service Fire Effects Information System (FEIS): species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m) from general knowledge of the species, the ranges and elevations in Kearney and Peebles (1942) and, where one exists, the FEIS species review. Parry's penstemon grows in southern Arizona and Sonora (Kearney and Peebles 1942), in the Arizona Upland and desert grassland where the monsoon brings summer rain. Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

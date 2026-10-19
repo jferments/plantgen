@@ -1,0 +1,413 @@
+{
+  "schema": 1,
+  "id": "yucca-baccata",
+  "taxon": {
+    "scientific_name": "Yucca baccata",
+    "common_name": "banana yucca",
+    "family": "Asparagaceae",
+    "genus": "Yucca",
+    "plant_name_id": 291585
+  },
+  "growth_form": "rosette_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.15,
+      "lean": 5,
+      "leaf_rate": 15,
+      "leaf_life": 5,
+      "leaf_length": 0.7,
+      "leaf_seed": 0.2,
+      "size_years": 6,
+      "leaf_spread": 0.15,
+      "young_angle": 6,
+      "old_angle": 42,
+      "open_years": 1.5,
+      "angle_spread": 8,
+      "internode": 0.0012,
+      "trunk_rate": 0,
+      "trunk_radius": 0.1,
+      "flower_age": 8,
+      "bloom": 0.35,
+      "stalk_height": 1.0,
+      "stalk_radius": 0.025,
+      "stalk_head": 0.55,
+      "stalk_branches": 14,
+      "branch_length": 0.12,
+      "branch_angle": 40,
+      "flowers": 8,
+      "flower_size": 0.07,
+      "flower_angle": 100,
+      "stalk_life": 2,
+      "pups": 4,
+      "pup_age": 6,
+      "pup_rate": 0.3,
+      "pup_distance": 0.5,
+      "leaf_area": 0.023,
+      "flower_area": 0.23,
+      "dead_area": 0.023
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [
+      5,
+      20,
+      40,
+      60
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.18,
+      0.15,
+      0.11
+    ],
+    "foliage": [
+      0.12,
+      0.17,
+      0.13
+    ],
+    "foliage_shade": [
+      0.054,
+      0.0765,
+      0.0585
+    ],
+    "variation": 0.1,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.045
+        },
+        "colour": [
+          0.12,
+          0.17,
+          0.13
+        ],
+        "solid": {
+          "section": "channelled",
+          "fold": 0.3,
+          "thickness": 0.3,
+          "widest": 0.35,
+          "base": 0.6,
+          "taper": 1.2,
+          "arch": 4,
+          "margin": [
+            0.35,
+            0.25,
+            0.15
+          ],
+          "spine": {
+            "length": 0.005,
+            "width": 0.002,
+            "colour": [
+              0.3,
+              0.22,
+              0.12
+            ]
+          }
+        }
+      },
+      "dead": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.045
+        },
+        "colour": [
+          0.35,
+          0.3,
+          0.2
+        ],
+        "shade": [
+          0.175,
+          0.15,
+          0.1
+        ]
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.5,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.25
+        },
+        "colour": [
+          0.85,
+          0.8,
+          0.66
+        ],
+        "accent": [
+          0.55,
+          0.38,
+          0.42
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 0.8,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 0.75
+    },
+    "height_max_m": 1.5,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "basal",
+    "clonal": true,
+    "leaf_habit": "evergreen",
+    "leaf_posture": "erect",
+    "leaf_length_m": {
+      "min": 0.51,
+      "max": 1.02
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.06,
+      "typical": 0.035
+    },
+    "leaf_shape": "linear",
+    "leaf_colour": [
+      110,
+      140,
+      128
+    ],
+    "inflorescence": "panicle",
+    "inflorescence_length_m": {
+      "min": 0.6,
+      "max": 0.82
+    },
+    "peduncle_length_m": {
+      "min": 0.6,
+      "max": 0.8
+    },
+    "inflorescence_branches": {
+      "min": 11,
+      "max": 18
+    },
+    "flower_colour": [
+      240,
+      232,
+      205
+    ],
+    "flower_size_m": {
+      "min": 0.05,
+      "max": 0.13
+    },
+    "fruit_type": "berry",
+    "fruit_size_m": {
+      "min": 0.05,
+      "max": 0.23
+    },
+    "fruit_width_m": {
+      "min": 0.04,
+      "max": 0.075
+    },
+    "flowering_months": [
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Yucca baccata: leaf clusters are approximately 24 to 30 inches (60-75 cm) high and twice as wide."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: in flower up to about 1.5 m, the panicle within or a quarter beyond the rosette (FNA vol. 26 pp. 427-428, var. baccata); FNA gives the species, with its caulescent var. brevifolia, as shorter than 2.5 m. FEIS's 30 feet is not used."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Yucca baccata: a native, perennial shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Yucca baccata: rhizomatous stems 8-15 cm in diameter, 20-55 cm long, covered with thick bark."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 427, 428 (eFloras, read 2026-10-19), Yucca baccata var. baccata: plants acaulescent or caulescent; stems, if present, 1-6, aerial or subterranean, shorter than 0.3 m."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: plants often forming open colonies of rosettes; FEIS: 1 or 2 adventitious sprouts emerge from the upper surface of the rhizomes."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves live for years, as in every yucca."
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: leaf blade erect, bluish green, concavo-convex, rigid."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Yucca baccata: individual blades reaching lengths of 20 to 40 inches (51-102 cm); FNA: 30-100 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: leaf blade 30-100 x 2-6 cm; FEIS: widths of 1.25 to 1.50 inches (3.2-3.8 cm)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: blades long and narrow, about twenty times as long as wide: linear."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: leaf blade bluish green, scabrous or glaucous; olive to blue-green in the photos; sRGB by eye."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: inflorescences erect, paniculate, dense; FEIS: 11 to 18 flowering branches."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: inflorescences ovoid, 6-8.2 dm."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 427, 428 (eFloras, read 2026-10-19), Yucca baccata var. baccata: peduncle 0.6-0.8 m."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Yucca baccata: the panicle is 12 to 36 inches (30.5-91.4 cm) long with 11 to 18 flowering branches."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: tepals usually cream-colored, occasionally tinged with purple; sRGB by eye from the photos, where the buds show the purple."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: flowers pendent, 5-13 cm, nearly as wide."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: fruits pendent, baccate, indehiscent, elongate, fleshy, succulent."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: fruits 5-23 x 4-7.5 cm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 26 p. 424, 427, 428 (eFloras, read 2026-10-19), Yucca baccata: fruits 5-23 x 4-7.5 cm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (1942) p. 198, Yucca baccata: 3,000 to 8,000 feet, April to July; FEIS: flowering dates range from March to July, later at higher elevation."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fruits ripe July to September."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for banana yucca from FEIS (Groen 2005) and Flora of North America vol. 26: rosettes 60-75 cm high of erect, rigid leaves 51-102 cm long (leaf_length 0.7, old_angle 42), stemless or with stems under 0.3 m in var. baccata (trunk_rate 0), open colonies from rhizomes (pups 4), a dense panicle of 11 to 18 branches within or a quarter beyond the rosette (stalk_height 1.0), pendent flowers 5-13 cm (flower_angle 100, flower_size 0.07). FEIS: a 3-year reproductive cycle is likely (bloom 0.35). Leaf rate and life are estimates."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: an open colony of stemless rosettes of stiff, erect, bluish to olive-green sword leaves edged with curling brown fibres, a dense panicle of pendent cream bells, purple-tinged in bud, held among or just above the leaves."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.8 m tall at 20 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "hemionitis-lindheimeri",
+  "layers": {
+    "herb": 0.2
+  },
+  "moisture": [
+    0,
+    0.1,
+    0.6,
+    0.75
+  ],
+  "heat_load": [
+    0.1,
+    0.3,
+    1.5,
+    1.9
+  ],
+  "elevation_m": [
+    0,
+    200,
+    2500,
+    2800
+  ],
+  "max_slope_deg": 70,
+  "shade_tolerance": 0.5,
+  "coldest_c": [
+    -4,
+    0,
+    15,
+    18
+  ],
+  "hard_freeze_c": [
+    -22,
+    -17,
+    10,
+    14
+  ],
+  "warmest_c": [
+    19,
+    22,
+    33,
+    35
+  ],
+  "degree_days_0": [
+    2800,
+    3600,
+    9500,
+    11000
+  ],
+  "degree_days_5": [
+    1500,
+    2200,
+    7600,
+    9000
+  ],
+  "moisture_index": [
+    0.05,
+    0.1,
+    0.6,
+    0.8
+  ],
+  "summer_rain": [
+    0.2,
+    0.3,
+    0.75,
+    0.85
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A small fern of rocky slopes and ledges, its fronds scattered along a creeping rhizome among the rocks."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dry rock; the fronds curl in drought and open after rain."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rocky slopes, among boulders and in their shade."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "200 to 2,500 m (Flora of North America); 2,000 to 8,000 feet in Arizona's mountains (Kearney and Peebles)."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rocky slopes and ledges."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sun (Fern Grower's Manual) to the shade of boulders."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 0 to 15 °C; gone below −4 °C and above 18 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −17 °C borne, gone where the year's coldest night falls below about −22 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 22 to 33 °C; gone below 19 °C, where summers are too short, and above 35 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 3,600 to 9,500 degree-days above 0 °C, none below 2,800."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 2,200 to 7,600 degree-days above 5 °C, none below 1,500."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.1 to 0.6, gone by 0.05 and above 0.8."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Needs the monsoon's summer rain: from about 0.3 of the year's precipitation in summer, gone below 0.2; up to about 0.75, gone by 0.85."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Flora of North America (eFloras): habitat, elevation and distribution",
+        "url": "http://www.efloras.org",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m, 32.25 N 111.17 W) from general knowledge of the species and the ranges, habitats and elevations in the sources read for its spec (2026-10-19). Fairy swords (Lindheimer's lip fern) grows from Arizona to New Mexico, western Texas and Mexico on rocky slopes and ledges (Flora of North America, as Cheilanthes lindheimeri; Kearney and Peebles). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records; every full range holds the bajada's climate (coldest month about 11 °C, warmest about 31 °C, about 7,600 degree-days above 0 °C, coldest night about −4 °C, moisture index about 0.15, about half the year's rain in summer)."
+  }
+}

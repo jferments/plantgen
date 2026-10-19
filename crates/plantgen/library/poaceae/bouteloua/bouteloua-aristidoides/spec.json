@@ -1,0 +1,332 @@
+{
+  "schema": 1,
+  "id": "bouteloua-aristidoides",
+  "taxon": {
+    "scientific_name": "Bouteloua aristidoides",
+    "common_name": "needle grama",
+    "family": "Poaceae",
+    "genus": "Bouteloua",
+    "plant_name_id": 399397
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "params": {
+      "tillers": 10,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.04,
+      "tiller_lean": 30,
+      "leaves": 2,
+      "leaf_spread": 0.3,
+      "leaf_angle": 30,
+      "arch": 6,
+      "pieces": 4,
+      "flowering": 0.9,
+      "culm_radius": 0.0006,
+      "culm_leaves": 1,
+      "culm_lean": 20,
+      "panicle_nod": 5,
+      "adult_age": 1,
+      "maturity": 0.3
+    }
+  },
+  "growth": {
+    "years": 1,
+    "step": 1,
+    "keyframes": [
+      1
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.3,
+      0.2
+    ],
+    "foliage": [
+      0.12,
+      0.16,
+      0.07
+    ],
+    "foliage_shade": [
+      0.036,
+      0.048,
+      0.021
+    ],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "template": "blade",
+          "taper": 1
+        }
+      },
+      "thatch": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        },
+        "colour": [
+          0.38,
+          0.31,
+          0.18
+        ],
+        "shade": [
+          0.1216,
+          0.0992,
+          0.0576
+        ]
+      },
+      "panicle": {
+        "shape": {
+          "template": "spikelet"
+        },
+        "inflorescence": {
+          "branches": 11,
+          "per_node": 1,
+          "size": 0.15,
+          "spread": 70,
+          "taper": 0.2,
+          "peduncle": 0.05,
+          "stalk": [
+            0.5,
+            0.48,
+            0.35
+          ],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 3,
+            "pedicel": 0.02,
+            "peduncle": 0.1,
+            "size": 0.5,
+            "spread": 10
+          }
+        },
+        "colour": [
+          0.6,
+          0.56,
+          0.4
+        ],
+        "accent": [
+          0.5,
+          0.46,
+          0.32
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.2,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "annual",
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "culm_length_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "rhizome_habit": "none",
+    "clonal": false,
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.05,
+      "high": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "inflorescence": "panicle",
+    "inflorescence_branches": {
+      "min": 8,
+      "max": 14
+    },
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
+    "florets_per_spikelet": 1,
+    "awns": true,
+    "awn_length_m": 0.005,
+    "awn_insertion": "apical",
+    "fruit_type": "caryopsis",
+    "flowering_months": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "An annual: grown for its one season, as the library's annual herbs are."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 33236284, 133248955, 324238842, 238154280, 238508458, 143912946, 7484484, 17786628): a small, loosely branched annual tuft of few short blades and slender culms, each ending in a zigzag axis of pale straw, needle-like spikes that hang down and fall whole. The panicle's colour comes from flower_colour through the family's rule, its spikelets from the order's."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: annual, erect or spreading, branching."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: culms slender, 10 to 30 cm tall."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: culms slender, 10 to 30 cm tall."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: annual, from fibrous roots."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: annual."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: blades small and few, in vigorous plants as much as 15 cm long; 1 cm to 5 cm usual (species-facts estimate)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades 1 mm to 2 mm wide."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: spikes mostly 8 to 14 on a slender axis, reflexed, readily falling: a panicle of short spikes."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: spikes mostly 8 to 14 on a slender axis."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the axis with its spikes 3 cm to 8 cm long, as in the photos."
+    },
+    "traits.florets_per_spikelet": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: spikelets 2 to 4, narrow, appressed; rudiment of 3 scabrous awns exceeding the fertile floret: one fertile floret."
+    },
+    "traits.awns": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: rudiment of 3 scabrous awns about 5 mm long, exceeding the fertile floret."
+    },
+    "traits.awn_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 512, Bouteloua aristidoides: rudiment of 3 scabrous awns about 5 mm long."
+    },
+    "traits.awn_insertion": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the awns leave the floret's tip."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a grain (caryopsis), as in every grass."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (1942) p. 138, Bouteloua aristidoides: deserts, dry mesas, and rocky hillsides, June to October; the summer-rain months July to October drawn."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: grains ripe August to November."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for needle grama from Hitchcock (1935 p. 512): an annual, erect or spreading and branching (tillers 10, tiller_lean 30), culms slender (culm_radius 0.0006), blades small and few (leaves 2), spikes reflexed on a slender axis; grown and flowering in its one year (adult_age 1, maturity 0.3), set by hand as the poaceae program's own adult_age would otherwise hold it back a year."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.2 m tall at 1 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

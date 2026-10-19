@@ -1,0 +1,388 @@
+{
+  "schema": 1,
+  "id": "condea-emoryi",
+  "taxon": {
+    "scientific_name": "Condea emoryi",
+    "common_name": "desert lavender",
+    "family": "Lamiaceae",
+    "genus": "Condea",
+    "plant_name_id": 472139
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 8,
+      "branch_angle": 30,
+      "fork_angle": 25,
+      "wiggle": 6
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.6,
+      0.58,
+      0.55
+    ],
+    "foliage": [
+      0.55,
+      0.58,
+      0.52
+    ],
+    "foliage_shade": [
+      0.176,
+      0.186,
+      0.166
+    ]
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 1.8,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1,
+      "max": 3
+    },
+    "height_max_m": 3,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "stem_hairs": "tomentose",
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.025
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.018
+    },
+    "petiole_length_m": {
+      "min": 0.007,
+      "max": 0.012
+    },
+    "leaf_shape": "ovate",
+    "leaf_margin": "crenate",
+    "leaf_hairs": "tomentose",
+    "hair_colour": [
+      225,
+      225,
+      220
+    ],
+    "inflorescence": "cyme",
+    "flowering_position": "terminal",
+    "inflorescence_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "pedicel_length_m": {
+      "min": 0.001,
+      "max": 0.004
+    },
+    "flower_colour": [
+      130,
+      90,
+      200
+    ],
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "sepal_length_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "bilabiate",
+    "stamens": 4,
+    "fruit_type": "schizocarp",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "flowering_months": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "elevation_max_m": 1520,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry"
+    ],
+    "soil_texture": [
+      "rock"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a shrub (FEIS, Anderson 2001)."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: erect aromatic shrub 1-3 m. high."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: 1-3 m. high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: a shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: erect aromatic shrub with numerous slender straight branches."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: evergreen in frost-free years, though it sheds many leaves in drought."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: leafy branches: no rosette."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: white scurfy-tomentose throughout."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 785), Hyptis: leaves opposite, as in the family."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 785), Hyptis: leaves ovate: simple."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: leaves crenulate, not lobed."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: leaves ovate, 15-25 mm. long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades 1 cm to 1.8 cm wide, about two thirds as wide as long."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: on petioles half as long as the blades."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: leaves ovate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: leaves crenulate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: white scurfy-tomentose."
+    },
+    "traits.hair_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hairs white, giving the shrub a silvery grey look; sRGB by eye, set by hand from iNaturalist photos (observations 75904319, 160620748, 149856283, 18474438, 102281338, 153258499, 109005569, 38232094): the sources read give no count or measure."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: flowers in axillary short-peduncled cymes, paniculate at the ends of the branches."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: cymes paniculate at the ends of the branches."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 785), Hyptis: woolly, globose cymules, 1 cm to 2 cm across in the photos."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: pedicels 1-4 mm. long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: corolla violet; sRGB by eye from the photos."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: corolla 4-6 mm. long."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: calyx 4-6 mm. long."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: corolla two-lipped, as in the genus."
+    },
+    "traits.zygomorphy": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: corolla two-lipped, as in the genus."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 785), Hyptis: stamens 4."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: four nutlets, as in the family."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: nutlets 2 mm to 3 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 662, Hyptis emoryi: January to May; Kearney and Peebles (1942, p. 785): flowering almost throughout the year."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: nutlets ripe from March to June."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 785), Hyptis emoryi: up to 5,000 feet: about 1,520 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 785), Hyptis emoryi: rocky slopes and canyons, in the open."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 785), Hyptis emoryi: rocky slopes; also along washes."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 785), Hyptis emoryi: rocky slopes."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: an upright shrub of many slender straight grey stems, silvery-woolly ovate leaves in pairs, and woolly clusters of small violet flowers at the branch ends."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for desert lavender from its sources and the photos the traits cite, on the template of snowbrush ceanothus (ceanothus-velutinus); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.8 m tall at 10 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

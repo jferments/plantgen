@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "id": "penstemon-parryi",
+  "taxon": {
+    "scientific_name": "Penstemon parryi",
+    "common_name": "Parry's penstemon",
+    "family": "Plantaginaceae",
+    "genus": "Penstemon",
+    "plant_name_id": 2550571
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 6,
+      "clump_radius": 0.08,
+      "stem_lean": 12,
+      "nodes": 4,
+      "basal_leaves": 8,
+      "basal_angle": 60,
+      "bare": 0.1,
+      "leaf_peak": 0.2,
+      "leaf_top": 0.4,
+      "leaf_base": 0.8,
+      "leaf_angle": 40,
+      "raceme": 0.5,
+      "flowers": 20,
+      "pedicel": 0.008,
+      "flower_angle": 55,
+      "fruit_below": 0.1,
+      "buds_above": 0.85,
+      "bud_spacing": 0.6,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.3,
+      0.4,
+      0.33
+    ],
+    "foliage_shade": [
+      0.096,
+      0.128,
+      0.106
+    ]
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 0.9
+    },
+    "height_max_m": 1.2,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "rosette": "basal",
+    "cauline_leaves": "reduced",
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.008,
+      "max": 0.02
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "leaf_colour": [
+      110,
+      140,
+      120
+    ],
+    "inflorescence": "panicle",
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "flower_colour": [
+      225,
+      50,
+      140
+    ],
+    "corolla_shape": "funnelform",
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "bilabiate",
+    "stamens": 4,
+    "staminodes": 1,
+    "fruit_type": "capsule",
+    "flowering_months": [
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      5,
+      6
+    ],
+    "elevation_min_m": 460,
+    "elevation_max_m": 1520,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry",
+      "mesic"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: most flowering stems 50 cm to 90 cm high, as in the photos."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 811), Penstemon parryi: in favourable situations and seasons many erect stems up to 4 feet (1.2 m) in length."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 811), Penstemon parryi: produces from the base many erect stems, year after year: a perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 806), Penstemon: herbs or shrubs; this species herbaceous, its stems from the base (p. 811)."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A basal tuft of grey-green leaves at the foot of the stems, set by hand from iNaturalist photos (observations 80732382, 344281358, 119081243, 159439332, 158669788, 103973336, 67211816, 72133076): the sources read give no count or measure."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Stem leaves fewer and smaller than the basal ones, in pairs, set by hand from iNaturalist photos (observations 80732382, 344281358, 119081243, 159439332, 158669788, 103973336, 67211816, 72133076): the sources read give no count or measure."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 806), Penstemon: leaves opposite, the upper ones sessile."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: cauline leaves narrowly lanceolate to lance-oblong: simple."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: leaves entire."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 4 cm to 10 cm long, the basal ones longest."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 8 mm to 2 cm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: cauline leaves narrowly lanceolate to lance-oblong."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: leaves entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: herbage glaucous, glabrous."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: herbage glaucous; sRGB by eye from the photos (blue-grey green)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 806), Penstemon: flowers paniculate."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: corolla 15 to 20 mm long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: corolla rose magenta; sRGB by eye from the photos."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 807), Penstemon parryi: corolla broadly funnelform, with a broad flaring limb, glandular."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 806), Penstemon: corolla 2-lipped."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 806), Penstemon: corolla 2-lipped."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 806), Penstemon: 4 fertile stamens."
+    },
+    "traits.staminodes": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 806), Penstemon: a fifth stamen sterile (the staminode); bearded in this species (p. 807)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 806), Penstemon: fruit a septicidal capsule."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 811), Penstemon parryi: 1,500 to 5,000 feet, mountain canyons and well-drained slopes, spring; March to May here."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripen in May and June."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 811), Penstemon parryi: 1,500 to 5,000 feet: about 460 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 811), Penstemon parryi: 1,500 to 5,000 feet: about 1,520 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 811), Penstemon parryi: well-drained slopes and canyons, in the open."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 811), Penstemon parryi: mountain canyons and well-drained slopes: dry slopes and moister canyon floors."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a basal tuft of blue-grey lanceolate leaves sending up several tall, slender stems hung with rose-magenta funnel-shaped flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Parry's penstemon from its sources and the photos the traits cite, on the template of small-flowered penstemon (penstemon-procerus); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.7 m tall at 3 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

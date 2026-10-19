@@ -1,0 +1,348 @@
+{
+  "schema": 1,
+  "id": "ambrosia-deltoidea",
+  "taxon": {
+    "scientific_name": "Ambrosia deltoidea",
+    "common_name": "triangle-leaf bursage",
+    "family": "Asteraceae",
+    "genus": "Ambrosia",
+    "plant_name_id": 3119485
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 12,
+      "branch_angle": 45,
+      "fork_angle": 45
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [
+      2,
+      6,
+      20
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.52,
+      0.5,
+      0.45
+    ],
+    "foliage": [
+      0.36,
+      0.41,
+      0.29
+    ],
+    "foliage_shade": [
+      0.115,
+      0.131,
+      0.093
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.5
+    },
+    "height_max_m": 0.5,
+    "age_max_years": 50,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "drought_deciduous",
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "leaf_width_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "petiole_length_m": {
+      "min": 0.003,
+      "max": 0.008
+    },
+    "leaf_shape": {
+      "deltate": "usually",
+      "lanceolate": "often"
+    },
+    "leaf_margin": "serrate",
+    "leaf_hairs": "glabrescent",
+    "leaf_hairs_beneath": "tomentose",
+    "inflorescence": "spike",
+    "inflorescence_unit": "capitulum",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "flowering_position": "terminal",
+    "sexual_system": "monoecious",
+    "fruit_type": "achene",
+    "fruit_size_m": {
+      "min": 0.005,
+      "max": 0.007
+    },
+    "fruit_armature": "prickly",
+    "flowering_months": [
+      12,
+      1,
+      2,
+      3,
+      4
+    ],
+    "fruiting_months": [
+      3,
+      4,
+      5
+    ],
+    "elevation_min_m": 300,
+    "elevation_max_m": 900,
+    "moisture": [
+      "xeric"
+    ],
+    "light": [
+      "sun"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: most plants 30 cm to 50 cm high, under FEIS's maximum, as in the photos."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"a native, drought-deciduous, microphyllous shrub growing up to 1.65 feet (50 cm) tall\"."
+    },
+    "traits.age_max_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"It has an observed longevity of about 50 years\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"relatively short lived for a desert shrub\", about 50 years: a perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"a native, drought-deciduous, microphyllous shrub\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"drought-deciduous\"; \"Most new leaves ... develop and mature during the winter and early spring\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"Innumerable slender and brittle branches spring up from the base forming a compact, roughly hemispherical crown\": leaves along the branches, no rosette."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves alternate along the twigs, set by hand from iNaturalist photos (observations 212351627, 18473955, 157623372, 265471097, 158201416, 156980924, 202338997, 214504237): the sources read give no count or measure."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 946), Franseria deltoidea: leaves distinctly petioled, the blades serrate or serrulate: simple, undivided blades."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 946), Franseria deltoidea: blades serrate or serrulate, not lobed or dissected as in its relatives."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"Leaf length is 0.6 to 0.8 inches (1.5-2 cm) or smaller\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades about half as wide as long, 5 mm to 1 cm, triangular-lanceolate as in the photos."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 3 mm to 8 mm; Kearney and Peebles (1942, p. 946) call the leaves distinctly petioled."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Blades triangular (deltate) to triangular-lanceolate, as the name says, set by hand from iNaturalist photos (observations 212351627, 18473955, 157623372, 265471097, 158201416, 156980924, 202338997, 214504237): the sources read give no count or measure."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 946), Franseria deltoidea: leaf blades serrate or serrulate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"The branches and young leaves ... are tomentulose and resinous. Leaves become glabrous above with age\"."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 946), Franseria deltoidea: leaves canescent-tomentulose beneath, green above."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"Staminate heads are borne terminally. Two-flowered, pistillate involucres are clustered below the staminate spikes\"."
+    },
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): staminate heads in terminal spikes: the units are capitula."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: staminate spikes 2 cm to 6 cm long, as in the photos."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"Staminate heads are borne terminally\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): staminate heads in spikes and pistillate involucres clustered below them on the same plant: monoecious."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"They produce globose, spiny achenes\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 946), Franseria deltoidea: fruit turbinate, about 6 mm long, 2- or 3-beaked."
+    },
+    "traits.fruit_armature": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 946), Franseria deltoidea: the bur with about 20 or more flattened, often hook-tipped spines."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 948), Franseria deltoidea: very abundant on plains and mesas in Maricopa, Pinal and Pima Counties, December to April (FEIS gives February to July across its range)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: burs ripe from March to May, after the winter flowering; FEIS says seeds come after both summer and winter rains."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"grows from 1,000 to 3,000 feet (300-900 m)\"."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"grows from 1,000 to 3,000 feet (300-900 m)\"; Kearney and Peebles (1942, p. 948) give 1,000 to 2,800 feet."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"commonly grows in open spaces on pediments, upper bajada surfaces, and basin floors\": dry desert ground."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Ambrosia deltoidea (Marshall 1994): \"a dominant or codominant member of the Arizona Upland Subdivision of the Sonoran Desert\" that \"commonly grows in open spaces\"."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, compact, rounded shrub of many brittle grey stems from the base, grey-green triangular leaves, short spikes of small greenish heads at the twig tips."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for triangle-leaf bursage from its sources and the photos the traits cite, on the template of white bursage (ambrosia-dumosa); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.4 m tall at 12 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

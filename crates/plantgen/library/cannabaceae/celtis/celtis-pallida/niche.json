@@ -1,0 +1,158 @@
+{
+  "schema": 2,
+  "species": "celtis-pallida",
+  "layers": {
+    "shrub": 0.3,
+    "subcanopy": 0.1
+  },
+  "moisture": [
+    0.05,
+    0.12,
+    0.7,
+    0.8
+  ],
+  "heat_load": [
+    0.3,
+    0.6,
+    1.7,
+    2.1
+  ],
+  "elevation_m": [
+    -50,
+    0,
+    1300,
+    1600
+  ],
+  "max_slope_deg": 35,
+  "shade_tolerance": 0.4,
+  "coldest_c": [
+    4,
+    7,
+    22,
+    25
+  ],
+  "hard_freeze_c": [
+    -15,
+    -10,
+    8,
+    12
+  ],
+  "warmest_c": [
+    25,
+    27,
+    34,
+    37
+  ],
+  "degree_days_0": [
+    4500,
+    5500,
+    11500,
+    13000
+  ],
+  "degree_days_5": [
+    3000,
+    3800,
+    9500,
+    11000
+  ],
+  "moisture_index": [
+    0.05,
+    0.1,
+    0.6,
+    0.8
+  ],
+  "summer_rain": [
+    0.2,
+    0.3,
+    0.8,
+    0.9
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A dense spiny shrub, often in thickets on foothills and mesas and beside washes."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dry foothills, mesas and the edges of washes."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 460 to 1,070 m in Arizona (Kearney and Peebles: 1,500 to 3,500 feet), lower toward Texas and Mexico."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Foothills, mesas and wash banks."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sun to part shade; often grows up under palo verdes and mesquites."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 7 to 22 °C; gone below 4 °C and above 25 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −10 °C borne, gone where the year's coldest night falls below about −15 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 27 to 34 °C; gone below 25 °C, where summers are too short, and above 37 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 5,500 to 11,500 degree-days above 0 °C, none below 4,500."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 3,800 to 9,500 degree-days above 5 °C, none below 3,000."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.1, gone by 0.05."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Needs the summer monsoon: from about 0.3 of the year's precipitation falling in the July to September storms, gone below 0.2, where winter rain falls alone; the bajada gets about half its rain then. Up to about 0.8, gone by 0.9."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA Forest Service Fire Effects Information System (FEIS): species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m) from general knowledge of the species, the ranges and elevations in Kearney and Peebles (1942) and, where one exists, the FEIS species review. Desert hackberry grows from western Texas to Arizona and northern Mexico (Kearney and Peebles 1942), in Sonoran, Chihuahuan and Tamaulipan thornscrub with summer rain. Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

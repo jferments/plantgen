@@ -1,0 +1,310 @@
+{
+  "schema": 1,
+  "id": "hilaria-rigida",
+  "taxon": {
+    "scientific_name": "Hilaria rigida",
+    "common_name": "big galleta",
+    "family": "Poaceae",
+    "genus": "Hilaria",
+    "plant_name_id": 418957
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "params": {
+      "tillers": 80,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.15,
+      "tiller_lean": 15,
+      "leaves": 3,
+      "leaf_spread": 0.3,
+      "leaf_angle": 35,
+      "arch": 3,
+      "pieces": 4,
+      "flowering": 0.4,
+      "culm_radius": 0.0015,
+      "culm_leaves": 3,
+      "culm_lean": 10,
+      "panicle_nod": 5
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.3,
+      0.2
+    ],
+    "foliage": [
+      0.2,
+      0.22,
+      0.17
+    ],
+    "foliage_shade": [
+      0.06,
+      0.066,
+      0.051
+    ],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "template": "blade",
+          "taper": 1
+        }
+      },
+      "thatch": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        },
+        "colour": [
+          0.45,
+          0.4,
+          0.3
+        ],
+        "shade": [
+          0.144,
+          0.128,
+          0.096
+        ]
+      },
+      "panicle": {
+        "shape": {
+          "template": "spikelet"
+        },
+        "inflorescence": {
+          "flowers": 10,
+          "per_node": 1,
+          "divergence": 180,
+          "size": 0.12,
+          "spread": 15,
+          "peduncle": 0.05,
+          "stalk": [
+            0.45,
+            0.43,
+            0.35
+          ]
+        },
+        "colour": [
+          0.6,
+          0.55,
+          0.42
+        ],
+        "accent": [
+          0.55,
+          0.5,
+          0.4
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "semi",
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 1.0
+    },
+    "culm_length_m": {
+      "min": 0.5,
+      "max": 1.0,
+      "low": 0.3
+    },
+    "rhizome_habit": "short_creeping",
+    "clonal": true,
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.002,
+      "max": 0.004
+    },
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "spikelet_length_m": 0.008,
+    "fruit_type": "caryopsis",
+    "flowering_months": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 3770337, 148080836, 328974622, 69283601, 10776079, 346930362, 21148131, 45087852): a coarse, bushy clump of stiff, felty grey-green culms, short rigid blades, and narrow straw-coloured spikes of bearded spikelet groups. The panicle's colour comes from flower_colour through the family's rule, its spikelets from the order's."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Pleuraphis rigida: a native perennial grass, highly branched at the base, giving it a bush-like appearance."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 468, Hilaria rigida: plants rather robust at base, branching, the base rather woody, decumbent or rhizomatous."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 468, Hilaria rigida: culms numerous, rigid, felty-pubescent, 50 to 100 cm tall; FEIS: 12 to 40 inches (30-100 cm)."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 468, Hilaria rigida: culms 50 to 100 cm tall; FEIS: 30-100 cm."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Pleuraphis rigida: its clumped growth form is a result of the tillers or short rhizomes it produces."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Pleuraphis rigida: tillers or short rhizomes."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 468, Hilaria rigida: blades spreading, 2 to 5 cm long, or longer on sterile shoots."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 468, Hilaria rigida: blades 2 to 4 mm wide, more or less involute, acuminate into a rigid coriaceous point."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 468, Hilaria rigida: group of spikelets about 8 mm long, densely bearded at base, the groups along a spike."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: spikes 5 cm to 10 cm long."
+    },
+    "traits.spikelet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 468, Hilaria rigida: group of spikelets about 8 mm long."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a grain (caryopsis), as in every grass."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Pleuraphis rigida: flowers from February through September in Arizona; Kearney and Peebles (1942 p. 130): February to September."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: grains ripe April to October, after each flush of flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for big galleta from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.7 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

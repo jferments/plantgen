@@ -1,0 +1,447 @@
+{
+  "schema": 1,
+  "id": "lupinus-arizonicus",
+  "taxon": {
+    "scientific_name": "Lupinus arizonicus",
+    "common_name": "Arizona lupine",
+    "family": "Fabaceae",
+    "genus": "Lupinus",
+    "plant_name_id": 2348076
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "clump_radius": 0.02,
+      "stem_lean": 10,
+      "nodes": 8,
+      "bare": 0.05,
+      "leaf_peak": 0.3,
+      "leaf_top": 0.6,
+      "leaf_base": 0.8,
+      "leaf_angle": 55,
+      "basal_leaves": 0,
+      "raceme": 0.03,
+      "flowers": 1,
+      "pedicel": 0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "flower_branches": 3,
+      "branch_angle": 45
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "leaflet_width": 0.16,
+          "teeth": 0,
+          "lowest": 0.6,
+          "widest": 0.6,
+          "tip": 0.5,
+          "base": 0
+        },
+        "face_up": 0.5
+      },
+      "basal": {
+        "shape": {
+          "template": "compound",
+          "leaflet_width": 0.16,
+          "teeth": 0,
+          "lowest": 0.6,
+          "widest": 0.6,
+          "tip": 0.5,
+          "base": 0
+        },
+        "face_up": 0.4
+      },
+      "flower": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.25
+        },
+        "inflorescence": {
+          "flowers": 30,
+          "per_node": 4,
+          "divergence": 45,
+          "size": 0.078,
+          "spread": 65,
+          "pedicel": 0.018,
+          "peduncle": 0.15,
+          "taper": 0.3
+        },
+        "colour": [
+          0.3,
+          0.35,
+          0.2
+        ],
+        "season": {
+          "opening": 28,
+          "bud_look": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.6
+            },
+            "colour": [
+              0.55,
+              0.38,
+              0.62
+            ],
+            "size": 0.29
+          },
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petal_width": 1.2,
+              "point": 0.3,
+              "notch": 0.0,
+              "centre": 0.25,
+              "sepal_length": 0.45,
+              "sepals_fused": 0.4
+            },
+            "colour": [
+              0.72,
+              0.5,
+              0.82
+            ],
+            "accent": [
+              0.9,
+              0.9,
+              0.95
+            ],
+            "size": 0.4
+          }
+        }
+      }
+    },
+    "foliage": [
+      0.3,
+      0.42,
+      0.2
+    ],
+    "foliage_shade": [
+      0.096,
+      0.134,
+      0.064
+    ]
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.4
+    },
+    "height_max_m": 0.5,
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "rosette": "none",
+    "cauline_leaves": "like_basal",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": {
+      "min": 6,
+      "max": 10
+    },
+    "leaflet_length_m": {
+      "min": 0.015,
+      "max": 0.035
+    },
+    "leaflet_width_m": {
+      "min": 0.005,
+      "max": 0.012
+    },
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "petiole_length_m": {
+      "min": 0.03,
+      "max": 0.07
+    },
+    "leaf_shape": "oblanceolate",
+    "leaf_apex": "mucronate",
+    "leaf_margin": "entire",
+    "inflorescence": "raceme",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.2
+    },
+    "flower_size_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "flower_colour": [
+      190,
+      130,
+      205
+    ],
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "papilionaceous",
+    "fruit_type": "legume",
+    "fruit_size_m": {
+      "min": 0.012,
+      "max": 0.018
+    },
+    "flowering_months": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      4,
+      5
+    ],
+    "elevation_max_m": 910,
+    "light": [
+      "sun"
+    ],
+    "soil_texture": [
+      "sand"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 491, Lupinus sparsiflorus var. arizonicus: plants 1-2 dm. high; var. barbatulus taller and stouter, to about 4 dm. in the photos."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: rarely over 50 cm, in wet years."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus sparsiflorus var. barbatulus: keyed among the annual lupines."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus sparsiflorus var. barbatulus: an annual herb, somewhat succulent."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus sparsiflorus var. barbatulus: stems stout and fistulous, leafy throughout: no rosette."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The stem leaves as large as the lowest ones, spread along the branching stems, set by hand from iNaturalist photos (observations 336406908, 338966375, 339109267, 194391602, 160803294, 158331293, 148212311, 10412272): the sources read give no count or measure."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus: leaves alternate, digitately compound."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus: leaves digitate, of 4 to 15 leaflets."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus: leaves digitate (palmate)."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus: leaflets entire, the leaf divided once."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Six to ten leaflets to a leaf, within the genus's 4 to 15 (Kearney and Peebles 1942 p. 434), set by hand from iNaturalist photos (observations 336406908, 338966375, 339109267, 194391602, 160803294, 158331293, 148212311, 10412272): the sources read give no count or measure."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 1.5 cm to 3.5 cm long, two to four times as long as wide."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus sparsiflorus var. barbatulus: leaflets broadly oblanceolate, 5 to 12 mm wide, rounded and mucronate at apex."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 4 cm to 10 cm long with the petiole."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 3 cm to 7 cm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus sparsiflorus var. barbatulus: leaflets broadly oblanceolate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus sparsiflorus var. barbatulus: leaflets rounded-mucronate at apex."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaflets entire, as in the genus."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus: flowers in terminal racemes."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: racemes 5 cm to 20 cm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus sparsiflorus var. barbatulus: flowers not more than 10 mm long; Abrams (1944 p. 491): flowers 8-10 mm long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus sparsiflorus var. barbatulus: corolla pale purplish pink; sRGB by eye from the photos (lilac to pink-purple)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus: papilionaceous flowers."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus: papilionaceous flowers."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 434), Lupinus: a legume."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: pods 1.2 cm to 1.8 cm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 437), Lupinus sparsiflorus var. barbatulus: 3,000 feet or lower, abundant in sandy washes and on plains, February to May."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: pods ripen in April and May, before the plant dies in the heat."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 437), Lupinus sparsiflorus var. barbatulus: 3,000 feet or lower: about 910 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 437), Lupinus sparsiflorus var. barbatulus: sandy washes and open plains."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 437), Lupinus sparsiflorus var. barbatulus: sandy washes."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a branched annual with stout hollow stems, bright green palmate leaves of narrow leaflets, and loose spikes of lilac-pink pea flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Arizona lupine from its sources and the photos the traits cite, on the template of large-leaved lupine (lupinus-polyphyllus); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 1 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

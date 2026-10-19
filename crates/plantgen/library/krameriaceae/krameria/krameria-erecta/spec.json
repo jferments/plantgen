@@ -1,0 +1,379 @@
+{
+  "schema": 1,
+  "id": "krameria-erecta",
+  "taxon": {
+    "scientific_name": "Krameria erecta",
+    "common_name": "range ratany",
+    "family": "Krameriaceae",
+    "genus": "Krameria",
+    "plant_name_id": 2336125
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 10,
+      "branch_angle": 50,
+      "fork_angle": 40,
+      "wiggle": 14
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "bark": [
+      0.5,
+      0.47,
+      0.44
+    ],
+    "foliage": [
+      0.4,
+      0.45,
+      0.36
+    ],
+    "foliage_shade": [
+      0.128,
+      0.144,
+      0.115
+    ]
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.45,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.6
+    },
+    "height_max_m": {
+      "min": 0.6,
+      "max": 1
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_length_m": {
+      "min": 0.005,
+      "max": 0.012
+    },
+    "leaf_width_m": {
+      "min": 0.0007,
+      "max": 0.0015
+    },
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "leaf_hairs": "sericeous",
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "flower_colour": [
+      175,
+      40,
+      125
+    ],
+    "flower_merosity": 5,
+    "flower_symmetry": "zygomorphic",
+    "sepal_length_m": {
+      "min": 0.006,
+      "max": 0.011
+    },
+    "petal_length_m": {
+      "min": 0.0025,
+      "max": 0.004
+    },
+    "stamens": 4,
+    "fruit_type": "nut",
+    "fruit_shape": "globose",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.007
+    },
+    "fruit_armature": "hooked",
+    "fruit_colour_ripe": [
+      150,
+      70,
+      95
+    ],
+    "flowering_months": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      5,
+      6,
+      9,
+      10
+    ],
+    "elevation_min_m": 150,
+    "elevation_max_m": 1500,
+    "light": [
+      "sun",
+      "part"
+    ],
+    "moisture": [
+      "dry",
+      "xeric"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a shrub (FEIS, Anderson 2001)."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"a native, long-lived, deciduous, perennial shrub that grows from 12 to 24 inches (30-60 cm) tall\"."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: 1 m at most; the Range Plant Handbook (p. B88) gives 1 to 2 feet."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"a native, long-lived, deciduous, perennial shrub\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 422), Krameria parvifolia: a woody, straggling shrub with rigid branchlets."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"deciduous\"; it \"retains its leaves for up to 2 months longer in the fall\" than its neighbours."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"densely branched\", leafy along the twigs: no rosette."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"The leaves are alternate and pubescent\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 627, Krameria glandulosa: leaves narrowly linear, simple."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 627, Krameria glandulosa: leaves narrowly linear, entire."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 627, Krameria glandulosa: leaves 5-10 mm. long (K. imparata, p. 628: 2-12 mm)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 627, Krameria glandulosa: leaves narrowly linear, less than 1 mm. wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B88, Range ratany: leaves linear, silky."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 627, Krameria glandulosa: leaves narrowly linear, entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B88, Range ratany: leaves silky; Kearney and Peebles (1942, p. 422): harshly strigose."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flowers borne singly in the axils along the twigs, set by hand from iNaturalist photos (observations 162433107, 156295305, 207803442, 194547216, 112063786, 9400976, 338806796, 406882897): the sources read give no count or measure."
+    },
+    "traits.flowering_position": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flowers in the leaf axils, along the twigs, set by hand from iNaturalist photos (observations 162433107, 156295305, 207803442, 194547216, 112063786, 9400976, 338806796, 406882897): the sources read give no count or measure."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B88, Range ratany: flowers about 3/4 inch across, purplish."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"flowers are irregular and purple in color\"; sRGB by eye from the photos (magenta-purple sepals)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 421), Krameria: petals 5, smaller than the sepals."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"flowers are irregular\"."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 628, Krameria imparata: sepals 6-11 mm. long."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 628, Krameria imparata: upper petals 4 mm. long, the lower 2.5 mm."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 421), Krameria: stamens 3 or 4; 4 here, as in the photos' flowers."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"the fruit is globose, indehiscent, thick walled, and spiny\": a nut-like bur."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"the fruit is globose\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 627, Krameria glandulosa: fruit 6-7 mm. in diameter."
+    },
+    "traits.fruit_armature": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 422), Krameria parvifolia: fruit spines barbed below the apex (Abrams 1944 p. 628: prickles barbed on the sides)."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B88, Range ratany: burlike fruit with purple barbed spines; sRGB by eye from the photos."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 422), Krameria parvifolia: 5,000 feet or lower, April to October; the Range Plant Handbook (p. B88): in spring and again in late summer. Here March to May and August and September."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): fruiting on May 22, about 17 days after flowering (May 5); so May and June after the spring flowers, and September and October after the summer ones."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"generally grows at elevations ranging from 500 to 5,000 feet (150-1,500 m)\"."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"generally grows at elevations ranging from 500 to 5,000 feet (150-1,500 m)\"; Kearney and Peebles (1942, p. 422): 5,000 feet or lower."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"commonly occurs in the understory of catclaw acacia\", Joshua tree and juniper, and in the open: sun to part shade."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): \"drought resistant\"; \"The annual precipitation is 8 to 25 inches (20-65 cm)\"."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, dense, intricately branched grey shrub with silky grey-green linear leaves and scattered magenta-purple flowers, then round burs with purple barbed spines."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for range ratany from its sources and the photos the traits cite, on the template of snowbrush ceanothus (ceanothus-velutinus); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.45 m tall at 10 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

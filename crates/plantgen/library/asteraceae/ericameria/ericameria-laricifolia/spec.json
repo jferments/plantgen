@@ -1,0 +1,387 @@
+{
+  "schema": 1,
+  "id": "ericameria-laricifolia",
+  "taxon": {
+    "scientific_name": "Ericameria laricifolia",
+    "common_name": "turpentine bush",
+    "family": "Asteraceae",
+    "genus": "Ericameria",
+    "plant_name_id": 3094150
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 10,
+      "branch_angle": 35,
+      "fork_angle": 30
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      2,
+      5,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.6,
+          "aspect": 0.015
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "head"
+        },
+        "inflorescence": {
+          "flowers": 12,
+          "size": 0.35,
+          "spread": 45
+        },
+        "colour": [
+          0.95,
+          0.78,
+          0.12
+        ],
+        "accent": [
+          0.85,
+          0.62,
+          0.08
+        ]
+      }
+    },
+    "bark": [
+      0.42,
+      0.38,
+      0.32
+    ],
+    "foliage": [
+      0.24,
+      0.36,
+      0.14
+    ],
+    "foliage_shade": [
+      0.077,
+      0.115,
+      0.045
+    ]
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1
+    },
+    "height_max_m": 1,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "cyme",
+    "inflorescence_unit": "capitulum",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "capitulum_kind": "radiate",
+    "involucre_height_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "ray_florets": {
+      "min": 3,
+      "max": 11
+    },
+    "disc_florets": {
+      "min": 10,
+      "max": 16
+    },
+    "ray_colour": [
+      245,
+      200,
+      30
+    ],
+    "disc_colour": [
+      240,
+      190,
+      40
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "flowering_months": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "fruiting_months": [
+      10,
+      11,
+      12
+    ],
+    "elevation_min_m": 900,
+    "elevation_max_m": 1830,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry",
+      "xeric"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: compact rounded shrub 3-10 dm. high."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: 3-10 dm. high: 1 m at most."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: a shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: compact rounded shrub, resinous."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: evergreen: the resinous linear leaves stay on through the year, as on its relatives in the genus."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: leafy branches, no rosette."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves crowded and alternate along the twigs, set by hand from iNaturalist photos (observations 105162415, 80050961, 154581701, 12441625, 269893975, 104821011, 107501397, 79883771): the sources read give no count or measure."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: leaves linear, entire: simple."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: leaves linear, entire."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: leaves linear, 1-2 cm. long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: leaves 1-2 mm. wide; Kearney and Peebles (1942, p. 904) key it by leaves not more than 2 mm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: leaves linear."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: leaves linear, entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: glabrous, resinous and glandular-punctate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: heads in small leafy cymes at the ends of the branches."
+    },
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: heads (capitula) in small cymes."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cymes 2 cm to 5 cm across, as in the photos."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 904), Haplopappus laricifolius: heads radiate; Abrams and Ferris (1960, p. 288) give rays 3-11."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: involucre 3-5 mm. high."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: rays 3-11."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 288, Ericameria laricifolia: disk-flowers 10-16."
+    },
+    "traits.ray_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rays golden yellow; sRGB by eye, set by hand from iNaturalist photos (observations 105162415, 80050961, 154581701, 12441625, 269893975, 104821011, 107501397, 79883771): the sources read give no count or measure."
+    },
+    "traits.disc_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Disc yellow; sRGB by eye, set by hand from iNaturalist photos (observations 105162415, 80050961, 154581701, 12441625, 269893975, 104821011, 107501397, 79883771): the sources read give no count or measure."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a cypsela with a pappus of bristles, as in the genus."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cypselae 3 mm to 4 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 906), Haplopappus laricifolius: 3,000 to 6,000 feet, August to November (Abrams and Ferris 1960 p. 288: September and October)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cypselae shed from October to December, after the autumn flowering."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 906), Haplopappus laricifolius: 3,000 to 6,000 feet: about 900 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 906), Haplopappus laricifolius: 3,000 to 6,000 feet: about 1,830 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 906), Haplopappus laricifolius: dry rocky slopes and mesas: open, sunny ground."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 906), Haplopappus laricifolius: dry rocky slopes and mesas."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a compact rounded shrub of many upright stems, bright green needle-like leaves crowded on the twigs, flat clusters of small golden heads in autumn that fade to buff."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for turpentine bush from its sources and the photos the traits cite, on the template of rubber rabbitbrush (ericameria-nauseosa); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.6 m tall at 10 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}
