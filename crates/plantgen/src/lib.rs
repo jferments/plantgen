@@ -918,4 +918,11 @@ pub mod venation;
 /// (`Simple.praemorse`, from `leaflet_end`) and lack a midrib
 /// (`Simple.midrib`, from `leaflet_midrib`): Caryota's fishtail leaflets
 /// (133 is panicles and hydrangeas, #219).
-pub const GENERATOR_REVISION: u32 = 134;
+/// 135: a fruit's kept calyx lies as stated (`kept_posture`, from
+/// `fruiting_calyx_posture`: an eggplant's cap pressed over the fruit, a
+/// belladonna's flat star, or turned back); a ripe capsule opens from its
+/// tip into its valves (`valves`, from `capsule_valves`: a jimsonweed's
+/// four, a tobacco's two), each turned out from half way down and lined
+/// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
+/// `fruit_armature` `hooked`) (134 is palm details, #223).
+pub const GENERATOR_REVISION: u32 = 135;

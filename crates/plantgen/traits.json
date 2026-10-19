@@ -2335,13 +2335,29 @@
       "optional": true,
       "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), or grows on into a large spreading star (a belladonna's)"
     },
+    "fruiting_calyx_posture": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["clasping", "spreading", "reflexed"],
+      "optional": true,
+      "why": "how a calyx kept on the fruit lies: pressed to the fruit's base as a cap or cup (an eggplant's, a pepper's), spread flat in a star (a belladonna's), or turned back toward the stalk"
+    },
+    "capsule_valves": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "count",
+      "range": [2, 10],
+      "optional": true,
+      "why": "the valves a ripe capsule splits into from its tip (a jimsonweed's four, a tobacco's two)"
+    },
     "fruit_armature": {
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
-      "values": ["smooth", "prickly", "bristly"],
+      "values": ["smooth", "prickly", "bristly", "hooked"],
       "optional": true,
-      "why": "a fruit's surface where it is armed: stout prickles (a jimsonweed's capsule) or fine hooked bristles (an enchanter's nightshade's burr)"
+      "why": "a fruit's surface where it is armed: stout prickles (a jimsonweed's capsule), fine straight bristles, or fine bristles hooked at the tip (an enchanter's nightshade's burr, a cleavers' fruit)"
     },
     "fruit_persistence": {
       "group": "fruit_and_cones",
