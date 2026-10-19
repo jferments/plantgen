@@ -1,0 +1,444 @@
+{
+  "schema": 1,
+  "id": "mammillaria-heyderi",
+  "taxon": {
+    "scientific_name": "Mammillaria heyderi",
+    "common_name": "little nipple cactus",
+    "family": "Cactaceae",
+    "genus": "Mammillaria",
+    "plant_name_id": 2361050
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 2,
+      "sink": 0.045,
+      "stems": 1,
+      "seedling": 0.006,
+      "height_max": 0.07,
+      "height_rate": 0.08,
+      "height_shape": 1.5,
+      "radius_min": 0.006,
+      "radius_height": 0.03,
+      "fill": 0.95,
+      "fill_years": 6,
+      "wiggle": 0.2,
+      "bend": 0.5,
+      "bloom_age": 5,
+      "flowers": 12,
+      "flower_angle": 35
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "tubercles": {
+          "width": 0.55
+        },
+        "areoles": {
+          "felt_radius": 0.0012,
+          "felt": [
+            0.85,
+            0.83,
+            0.78
+          ]
+        },
+        "spines": [
+          {
+            "role": "radial",
+            "angle": 12,
+            "width": 0.00018,
+            "angle_spread": 6,
+            "length_spread": 0.3
+          },
+          {
+            "role": "central",
+            "count": [
+              0,
+              1
+            ],
+            "angle": 70,
+            "width": 0.0003,
+            "angle_spread": 10,
+            "arc": 0,
+            "length_spread": 0.3,
+            "tip": [
+              0.25,
+              0.15,
+              0.08
+            ]
+          }
+        ],
+        "greying": {
+          "colour": [
+            0.6,
+            0.57,
+            0.52
+          ],
+          "years": 6
+        },
+        "axils": {}
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 0.06,
+      "tolerance": 0.6
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "stem_apex": "flat",
+    "tubercle_axils": "woolly",
+    "areole_spacing_m": {
+      "min": 0.008,
+      "max": 0.012
+    },
+    "stem_colour": [
+      105,
+      135,
+      95
+    ],
+    "stem_diameter_max_m": {
+      "min": 0.075,
+      "max": 0.15
+    },
+    "radial_spines": {
+      "min": 10,
+      "max": 22
+    },
+    "radial_spine_length_m": {
+      "min": 0.006,
+      "max": 0.015
+    },
+    "central_spines": {
+      "min": 0,
+      "max": 1
+    },
+    "central_spine_length_m": {
+      "min": 0.002,
+      "max": 0.008
+    },
+    "central_spine_form": "straight",
+    "radial_spine_texture": "needlelike",
+    "petal_shape": "linear",
+    "tepal_length_m": {
+      "min": 0.011,
+      "max": 0.019
+    },
+    "spine_colour": [
+      225,
+      215,
+      195
+    ],
+    "central_spine_colour": [
+      140,
+      100,
+      65
+    ],
+    "areole_wool_colour": [
+      235,
+      232,
+      222
+    ],
+    "corolla_shape": "funnelform",
+    "flower_colour": [
+      235,
+      228,
+      205
+    ],
+    "perianth_stripe_colour": [
+      175,
+      140,
+      110
+    ],
+    "perianth_stripe_length": 0.8,
+    "flower_size_m": {
+      "min": 0.019,
+      "max": 0.038
+    },
+    "stigma_colour": [
+      140,
+      170,
+      80
+    ],
+    "fruit_colour_ripe": [
+      205,
+      30,
+      40
+    ],
+    "fruit_shape": "club_shaped",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.035
+    },
+    "fruit_width_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "height_typical_m": {
+      "min": 0.04,
+      "max": 0.09
+    },
+    "flowering_months": [
+      3,
+      4
+    ],
+    "fruiting_months": [
+      1,
+      2,
+      3,
+      8,
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  "evidence": {
+    "traits.stem_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. The areoles stand about a tubercle's foot apart; the grey-green by hand."
+    },
+    "traits.tubercle_axils": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. The areoles stand about a tubercle's foot apart; the grey-green by hand."
+    },
+    "traits.areole_spacing_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. The areoles stand about a tubercle's foot apart; the grey-green by hand."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. The areoles stand about a tubercle's foot apart; the grey-green by hand."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. The areoles stand about a tubercle's foot apart; the grey-green by hand."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. The areoles stand about a tubercle's foot apart; the grey-green by hand."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.radial_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.central_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.central_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.central_spine_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.radial_spine_texture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.central_spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.areole_wool_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Colours by hand from the words; the wool's (not stated) a near white."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.perianth_stripe_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.perianth_stripe_length": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: plants unbranched, protruding relatively little above soil. Roots obconic taproots. Stems top-shaped, flat-topped, protruding above ground 0-2 × (4-)7.5-15 cm, firm; tubercles 9-15(-20) × 3-7 mm; axils with short wool, bristles absent. Spines (8-)10-18(-27) per areole, usually brownish, darker at tip; radial spines (8-)10-22(-26) per areole, white to white-and-brown or brown, needlelike, 6-15(-16) mm, stiff, abaxial spines longest; central spines (0-)1(-4) per areole, porrect or ascending, not hooked, (0.5-)2-8 mm. Flowers 1.9-3.8 × 1.5-3 cm; inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes; stigma lobes externally green. Fruits brilliant red: scarlet, carmine, or crimson, obovoid to clavate, 10-35(-40) × 5-8 mm. Mammillaria heyderi var. heyderi: stems 4-9 × 4-10(-15) cm; tubercles 9-20 × 3-7 mm. Flowers 1.8-2.3 × 1.8-1.9 cm. Flowering Mar-Apr; fruiting Aug-Mar. Inner tepals 11-19 × 2-2.5 mm, so linear. Colours by hand from the words."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes, 11-19 × 2-2.5 mm; a strap some seven times as long as wide, so linear."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria heyderi: inner tepals white, greenish or cream to pale pink, with tan, pink, greenish, or brownish midstripes, 11-19 × 2-2.5 mm; a strap some seven times as long as wide, so linear."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from the flora's words: a single flat-topped, top-shaped stem sunk to within a centimetre or two of its top, a ring of cream flowers well below the apex. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A rough stem height, most of it below ground: about 6 cm by 15 years. Wide tolerance."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Tubercle width and felt by eye; the radials' and central's widths from 'needlelike, stiff' and the central's 'brownish, darker at tip'."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific names as WCVP v16 accepts them, common names as the Flora of North America gives them, and the genus the scientific name is written in."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America, vol. 4 (Cactaceae), on eFloras",
+        "url": "http://www.efloras.org/flora_page.aspx?flora_id=1",
+        "licence": "quoted facts; the treatment's text is not copied"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Procedural proxy drawn from the Flora of North America's text (2026-10-19). Calibration against measurements and photographs comes later."
+  }
+}

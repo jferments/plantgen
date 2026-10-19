@@ -720,6 +720,38 @@
       "when": {"spines": ["areoles"]},
       "why": "whether the central spines twist about their length like a wrung ribbon, as a flora's 'often twisted' centrals do, whatever their main form"
     },
+    "radial_spine_texture": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["needlelike", "bristlelike", "hairlike"],
+      "when": {"spines": ["areoles"]},
+      "why": "how stiff a cactus's radial spines are: needlelike and stiff, bristlelike, or hairlike and soft, curling every which way (a mammillaria's 'hairlike, soft' radials)"
+    },
+    "tubercle_axils": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["naked", "woolly", "bristly", "woolly_and_bristly"],
+      "when": {"spines": ["areoles"]},
+      "why": "what a tubercled cactus bears in the axils between its tubercles, apart from the spine clusters at their tips: nothing, short wool, bristles, or wool and bristles (a mammillaria's 'axils with short wool', 'axils bearing sparse white hairs and slender bristles')"
+    },
+    "axil_bristle_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.1],
+      "optional": true,
+      "why": "how long the bristles in a tubercle's axil are"
+    },
+    "axil_hair_colour": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the wool and bristles in the tubercles' axils, where it differs from the areoles' wool"
+    },
     "spine_sheaths": {
       "group": "stem_and_bark",
       "organ": "spine",
@@ -3028,9 +3060,9 @@
       "group": "architecture",
       "organ": "inflorescence",
       "type": "enum",
-      "values": ["crown", "crown_and_flanks", "upper_half"],
+      "values": ["crown", "crown_and_flanks", "upper_half", "ring_below_apex"],
       "when": {"spines": ["areoles"]},
-      "why": "where a cactus column's flowers open: in a ring round its apex, near the apex and down the upper flanks, or along the upper half of the stem, below the apex"
+      "why": "where a cactus column's flowers open: in a ring round its apex, near the apex and down the upper flanks, along the upper half of the stem, below the apex, or in a ring distant from the apex, in the tubercles' axils of the year before (a mammillaria's), last year's fruit in a ring farther down"
     },
     "short_shoots": {
       "group": "architecture",

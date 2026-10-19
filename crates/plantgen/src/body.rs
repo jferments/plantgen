@@ -101,6 +101,10 @@ pub struct BodyLook {
     /// Tufts of white hairs dotted over the skin between the areoles.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flecks: Option<Flecks>,
+    /// Wool and bristles in the axils of the tubercles, between each
+    /// tubercle and the one above it: a mammillaria's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub axils: Option<Axils>,
 }
 
 impl Default for BodyLook {
@@ -120,6 +124,7 @@ impl Default for BodyLook {
             greying: None,
             cork: None,
             flecks: None,
+            axils: None,
         }
     }
 }
@@ -259,6 +264,12 @@ pub struct SpineSet {
     /// from base to tip, degrees: a twisted spine's ribbon.
     #[serde(skip_serializing_if = "is_zero")]
     pub twist: f64,
+    /// How far each spine wanders from straight, degrees, each its own
+    /// way: soft, hairlike spines curl and lie every which way, as a
+    /// mammillaria's 'hairlike' or 'crinkly' radials do; 0 for stiff
+    /// spines.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub crinkle: f64,
     /// How far the set keeps to the upper areoles of its segment, 0 to 1:
     /// at 0 every areole carries the whole set; a pad's or joint's lower
     /// areoles carry a share `1 - 2 distal (1 - along)` of it, so at 0.5
@@ -319,6 +330,7 @@ impl Default for SpineSet {
             curve: 0.0,
             hook: 0.0,
             twist: 0.0,
+            crinkle: 0.0,
             distal: 0.0,
             width: 0.0006,
             flat: 1.0,
@@ -413,6 +425,39 @@ pub struct Flecks {
     /// dense cover that greys the whole body.
     pub share: f64,
 }
+
+/// What grows in a tubercle's axil, the angle between its upper side and
+/// the stem: wool, bristles, or both. A mammillaria's flowers come from
+/// there, apart from its spine clusters at the tubercles' tips.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Axils {
+    /// Radius of the wool's tuft, metres; 0 for none.
+    pub wool: f64,
+    /// The wool's and bristles' colour.
+    pub colour: [f32; 3],
+    /// Fewest and most bristles in an axil.
+    pub bristles: [u32; 2],
+    /// A bristle's length, metres.
+    pub bristle_length: f64,
+    /// A bristle's width at its foot, metres.
+    pub bristle_width: f64,
+}
+
+impl Default for Axils {
+    fn default() -> Self {
+        Self {
+            wool: 0.001,
+            colour: [0.9, 0.89, 0.85],
+            bristles: [0, 0],
+            bristle_length: 0.008,
+            bristle_width: 0.00008,
+        }
+    }
+}
+
+/// Most bristles in one axil.
+const MAX_AXIL_BRISTLES: u32 = 24;
 
 impl Default for Flecks {
     fn default() -> Self {
@@ -532,6 +577,7 @@ impl BodyLook {
             within("spines curve", set.curve, -180.0, 180.0)?;
             within("spines hook", set.hook, 0.0, 270.0)?;
             within("spines twist", set.twist, -720.0, 720.0)?;
+            within("spines crinkle", set.crinkle, 0.0, 120.0)?;
             within("spines distal", set.distal, 0.0, 1.0)?;
             within("spines width", set.width, 0.000_05, 0.01)?;
             within("spines flat", set.flat, 0.05, 1.0)?;
@@ -559,6 +605,18 @@ impl BodyLook {
         if let Some(flecks) = &self.flecks {
             colour_ok("flecks colour", flecks.colour)?;
             within("flecks share", flecks.share, 0.0, 1.0)?;
+        }
+        if let Some(axils) = &self.axils {
+            colour_ok("axils colour", axils.colour)?;
+            within("axils wool", axils.wool, 0.0, 0.02)?;
+            let [low, high] = axils.bristles;
+            if high < low || high > MAX_AXIL_BRISTLES {
+                return Err(format!(
+                    "axils bristles must be two numbers up to {MAX_AXIL_BRISTLES}, the first no larger, found {low} and {high}"
+                ));
+            }
+            within("axils bristle_length", axils.bristle_length, 0.0005, 0.1)?;
+            within("axils bristle_width", axils.bristle_width, 0.000_02, 0.001)?;
         }
         Ok(())
     }
@@ -1126,6 +1184,29 @@ impl Centreline {
         self.at(s).radius * self.cap(s)
     }
 
+    /// How fast the crest's radius changes along the axis at `s`.
+    fn crest_slope(&self, s: f64) -> f64 {
+        let ds = (self.length * 1e-4).max(1e-7);
+        let (low, high) = ((s - ds).max(0.0), (s + ds).min(self.length));
+        (self.crest(high) - self.crest(low)) / (high - low).max(1e-12)
+    }
+
+    /// The plain skin's outward normal at `s` in the plane through the
+    /// axis: its share straight out from the axis and its share along
+    /// it, from the crest's and the pit's slopes.
+    fn skin_normal(&self, s: f64) -> (f64, f64) {
+        let ds = (self.length * 1e-4).max(1e-7);
+        let (low, high) = ((s - ds).max(0.0), (s + ds).min(self.length));
+        let span = (high - low).max(1e-12);
+        let dr = (self.crest(high) - self.crest(low)) / span;
+        let dz = 1.0 - (self.sunk(high) - self.sunk(low)) / span;
+        let length = (dr * dr + dz * dz).sqrt();
+        if length < 1e-12 {
+            return (1.0, 0.0);
+        }
+        (dz / length, -dr / length)
+    }
+
     /// Distances along the axis to put rings at: the base's and the dome's
     /// rings by equal angles round their quarter circles, the rest as far
     /// apart as `step` allows while the axis turns less than `detail`'s
@@ -1356,6 +1437,11 @@ impl Surface<'_> {
         }
         let width = self.bump_width;
         let length = width * self.bump_stretch;
+        // Along the skin, not the axis: over a flat top a little way
+        // along the axis is a long way across the skin, as the areoles
+        // are placed (see `spiral_sites`).
+        let slope = self.line.crest_slope(s);
+        let metric = math::sqrt(1.0 + slope * slope);
         let first = self.bumps.partition_point(|site| site.s < s - length);
         let (sin, cos) = (math::sin(t), math::cos(t));
         let around = radius * math::sqrt(sin * sin + self.flatten * self.flatten * cos * cos);
@@ -1365,6 +1451,7 @@ impl Surface<'_> {
             if ds > length {
                 break;
             }
+            let ds = ds * metric;
             let arc = wrap(site.t - t) * around;
             let d2 = (ds * ds) / (length * length) + (arc * arc) / (width * width);
             if d2 < 1.0 {
@@ -1401,10 +1488,40 @@ impl Surface<'_> {
         (radius + swell, valley)
     }
 
-    /// The surface point at `(s, t)`.
+    /// How far the tubercle at `(s, t)` stands out of the skin, metres,
+    /// where a woolly cap does not bury it.
+    fn tubercle_rise(&self, s: f64, t: f64) -> f64 {
+        if self.bumps.is_empty() || self.bump_height <= 0.0 {
+            return 0.0;
+        }
+        // A tubercle's height is a share of the body's radius, not of
+        // the dome's shrinking crest, so the tubercles on a flat top
+        // stand nearly as tall as those round its rim; the young ones
+        // nearest the apex stand lower, down to nothing at the tip.
+        let crest = self.line.crest(s);
+        let size = self.line.at(s).radius * self.line.cap(s).sqrt();
+        let mut rise = size * self.bump_height * self.bump(s, t, crest);
+        if self.wool > 0.0 {
+            rise *= 1.0 - apex_wool(self.line, s);
+        }
+        rise
+    }
+
+    /// The surface point at `(s, t)`. A tubercle stands out along the
+    /// plain skin's normal, not straight out from the axis, so on a flat
+    /// or sunken top it rises up out of the top instead of sliding across
+    /// it.
     fn point(&self, s: f64, t: f64) -> Vec3 {
         let station = self.line.at(s);
-        let (radius, _) = self.radius(s, t);
+        let (mut radius, _) = self.radius(s, t);
+        let rise = self.tubercle_rise(s, t);
+        let up = if rise > 0.0 {
+            let (out, up) = self.line.skin_normal(s);
+            radius += rise * (out - 1.0);
+            rise * up
+        } else {
+            0.0
+        };
         let side = station.tangent.cross(station.across);
         let lift = if self.wool > 0.0 {
             let cap = self.line.cap(s);
@@ -1415,7 +1532,7 @@ impl Surface<'_> {
         // The pit sinks along the apex's own axis, so a stem that bends
         // near its tip still has its pit at its centre.
         let apex = self.line.at(self.line.length).tangent;
-        station.point + station.tangent * lift - apex * self.line.sunk(s)
+        station.point + station.tangent * (lift + up) - apex * self.line.sunk(s)
             + station.across * (radius * math::cos(t))
             + side * (radius * self.flatten * math::sin(t))
     }
@@ -2120,6 +2237,9 @@ impl Body<'_> {
         }
         if detail.spines != Spines::Tint {
             self.spines(&surface, &sites, out);
+            if let Some(axils) = look.axils.as_ref().filter(|_| bump_width > 0.0) {
+                self.axils(&surface, &sites, axils, out);
+            }
         }
         // A body and its spines move with its first segment.
         out.wood.bear(first, self.bearer());
@@ -2287,6 +2407,95 @@ impl Body<'_> {
                     centre + 1 + corner,
                     centre + 1 + (corner + 1) % 6,
                 ]);
+            }
+        }
+    }
+
+    /// Each tubercle's axil: a low tuft of wool in the crease above the
+    /// tubercle, and bristles standing out of it up the stem.
+    fn axils(&self, surface: &Surface<'_>, sites: &[Site], axils: &Axils, out: &mut PlantMesh) {
+        const SIDES: u32 = 3;
+        let line = self.line;
+        let colour = [axils.colour[0], axils.colour[1], axils.colour[2], 1.0];
+        // The crease lies most of a tubercle's length above its areole.
+        let reach = 0.8 * surface.bump_width * surface.bump_stretch;
+        let wood = &mut out.wood;
+        for site in sites {
+            let s = site.s + reach;
+            if s >= line.length {
+                continue;
+            }
+            let (position, normal, up) = surface.frame(s, site.t);
+            let side = normal.cross(up);
+            let station = line.at(s);
+            let vertex = |position: Vec3, normal: Vec3| Vertex {
+                position,
+                normal,
+                uv: [0.0, 0.0],
+                color: colour,
+                born: station.born,
+                shed: station.shed,
+                level: 0,
+                segment: crate::mesh::NO_SEGMENT,
+            };
+            let seed = mix64(self.axis.id ^ mix64(u64::from(site.ordinal) ^ 0xA41));
+            // Young axils on the dome carry less wool.
+            let dome_start = line.length - line.dome;
+            let young = if line.dome > 0.0 && s > dome_start {
+                1.0 - 0.5 * ((s - dome_start) / line.dome).min(1.0)
+            } else {
+                1.0
+            };
+            let wool = axils.wool * young * (0.75 + 0.5 * unit(seed));
+            if wool > 0.0 {
+                let centre = wood.push(vertex(position + normal * (wool * 0.6), normal));
+                for corner in 0..6 {
+                    let angle = PI / 3.0 * f64::from(corner);
+                    let out = up * math::cos(angle) + side * math::sin(angle);
+                    wood.push(vertex(
+                        position + out * wool - normal * (wool * 0.2),
+                        (out * 0.6 + normal).normalize_or(normal),
+                    ));
+                }
+                for corner in 0..6 {
+                    wood.indices.extend_from_slice(&[
+                        centre,
+                        centre + 1 + corner,
+                        centre + 1 + (corner + 1) % 6,
+                    ]);
+                }
+            }
+            let [low, high] = axils.bristles;
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let count = low + (unit(mix64(seed ^ 0xB)) * f64::from(high - low + 1)).floor() as u32;
+            for bristle in 0..count.min(high) {
+                let draw = |k: u64| unit(mix64(seed ^ mix64(u64::from(bristle) * 7 + k)));
+                // Out of the crease and up the stem, fanned round it.
+                let turn = 2.0 * PI * draw(1);
+                let tilt = 0.35 + 0.5 * draw(2);
+                let heading = (normal * math::cos(tilt)
+                    + (up * math::cos(turn) * 0.8 + side * math::sin(turn)) * math::sin(tilt)
+                    + up * 0.5)
+                    .normalize_or(normal);
+                let length = axils.bristle_length * young * (0.75 + 0.35 * draw(3));
+                let across = heading.cross(normal).normalize_or(side);
+                let other = heading.cross(across);
+                let foot = position - normal * (axils.bristle_width * 2.0);
+                let tip = foot + heading * length;
+                let base = u32::try_from(wood.positions.len()).unwrap_or(u32::MAX);
+                for corner in 0..SIDES {
+                    let angle = 2.0 * PI * f64::from(corner) / f64::from(SIDES);
+                    let out = across * math::cos(angle) + other * math::sin(angle);
+                    wood.push(vertex(foot + out * (axils.bristle_width * 0.5), out));
+                }
+                let tip = wood.push(vertex(tip, heading));
+                for corner in 0..SIDES {
+                    wood.indices.extend_from_slice(&[
+                        base + corner,
+                        base + (corner + 1) % SIDES,
+                        tip,
+                    ]);
+                }
             }
         }
     }

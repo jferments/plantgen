@@ -152,8 +152,41 @@
       "why": "The main central keeps to the upper areoles as the other centrals do."
     },
     "generator.params.flank": {
-      "map": {"flower_zone": {"crown": 0, "crown_and_flanks": 6, "upper_half": 15}},
+      "map": {"flower_zone": {"crown": 0, "crown_and_flanks": 6, "upper_half": 15, "ring_below_apex": 0}},
       "why": "A column's flowers open in a ring round its apex, or also down its flank: near the tip and along the upper sides, on the last six years' growth, or from the upper half of a short, slow stem, on its last fifteen years'."
+    },
+    "generator.params.ring_angle": {
+      "map": {"flower_zone": {"ring_below_apex": 55}},
+      "why": "A mammillaria's flowers open 'in ring distant from stem apex' (Flora of North America's Mammillaria), from the axils of tubercles grown the year before, so the ring sits most of the way down the dome rather than round the tip."
+    },
+    "generator.params.crown_rings": {
+      "map": {"flower_zone": {"ring_below_apex": 2}},
+      "why": "Its fruit ripen the year after flowering, while the stem grows on, so last year's ring of fruit stands below this year's flowers: 'subsequent apical growth displacing fruits even farther away from apex' (Flora of North America's Mammillaria)."
+    },
+    "generator.params.ring_step": {
+      "map": {"flower_zone": {"ring_below_apex": 15}},
+      "why": "Each older ring sits a year's growth farther down the dome."
+    },
+    "appearance.bodies.stem.spines.radial.crinkle": {
+      "map": {"radial_spine_texture": {"needlelike": 0, "bristlelike": 12, "hairlike": 70}},
+      "why": "Stiff needlelike radials run straight; bristles waver a little; hairlike, soft radials curl and lie every which way (Flora of North America's Mammillaria prolifera var. texana, 'hairlike, soft')."
+    },
+    "appearance.bodies.stem.axils.wool": {
+      "map": {"tubercle_axils": {"naked": 0, "woolly": {"rule": "areole_spacing_m * 0.13"}, "bristly": 0, "woolly_and_bristly": {"rule": "areole_spacing_m * 0.09"}}},
+      "why": "Wool in a tubercle's axil makes a tuft in the crease above the tubercle about an eighth as wide as the tubercles stand apart ('axils with short wool', Flora of North America's Mammillaria heyderi), thinner where bristles share the axil."
+    },
+    "appearance.bodies.stem.axils.bristles": {
+      "map": {"tubercle_axils": {"naked": [0, 0], "woolly": [0, 0], "bristly": [3, 8], "woolly_and_bristly": [2, 6]}},
+      "why": "A bristly axil bears a few slender bristles ('sparse white hairs and slender bristles', Flora of North America's Mammillaria prolifera var. texana)."
+    },
+    "appearance.bodies.stem.axils.bristle_length": {
+      "needs": ["axil_bristle_length_m"],
+      "rule": "max(axil_bristle_length_m)",
+      "why": "The axil's bristles are as long as the flora says."
+    },
+    "appearance.bodies.stem.axils.colour": {
+      "colour": ["axil_hair_colour", "areole_wool_colour"],
+      "why": "The axils' wool and bristles take the colour the flora gives them, or else the areoles' wool's."
     },
     "appearance.bodies.stem.colour": {
       "colour": "stem_colour",
