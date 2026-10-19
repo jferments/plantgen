@@ -978,7 +978,33 @@ pub mod venation;
 /// or needle shoot drawn near the camera) is the organ at its finest, with
 /// no cap on its triangles; simplifying is the caller's choice (`plantc
 /// export --triangles`, `--max-mib`) (140 is cactus pericarpels, #226).
-/// 142: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
+/// 142: a palm's fronds stand up the year's trunk as they emerge over the
+/// year (palm 14), so its leaf bases and boots wind evenly up the trunk in
+/// place of bands at each year's top; Phoenix keeps its broad leaf bases
+/// for the trunk's life, standing close to the stem (141 is full-quality
+/// part meshes, #237).
+/// 143: a cactus's central spine form draws its spines: curved and twisted
+/// centrals bend (`curve`), a hooked principal central turns back as a
+/// fishhook (`hook`), in place of hooks and curves set by hand; a woolly
+/// pericarpel and fruit (`fruit_surface` woolly: Homalocephala,
+/// Astrophytum); a flat stem top (`stem_apex` flat); white hair flecks
+/// between the areoles (new trait `stem_flecks`, body `flecks`); an
+/// apex's woolly cap closes over the tip; a reduced flower with more than
+/// 12 stamens draws a ring of anthers; a cactus's floral tube wears its
+/// pericarpel's colour and skin and flares near its mouth, over a
+/// pericarpel shortened to the ovary's swelling; a column stem's sink follows
+/// its height curve, so a seedling's top shows (142 is palm
+/// trunks, #240).
+/// 144: branching form (broadleaf 23): a shoot without a terminal bud
+/// dies back each year and its topmost lateral carries it on, sometimes
+/// as a fork (`tip_abort`, from `terminal_bud`); a plagiotropic plant's
+/// limbs carry flat sprays (`plagio`, from `branch_orientation`); a
+/// tree's dead branches stand until they fall (`dead_keep`); a
+/// small-leaved tree's or shrub's long shoots set their leaves no farther
+/// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
+/// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
+/// cactus genera, #239).
+/// 145: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
 /// blade on a stalk four times its length); fleshy and succulent blades
 /// are drawn solid (`leaf_succulence`, `leaf_cross_section`); a herb's
 /// rosette and flowering stems are as many as its taxa count
@@ -990,5 +1016,5 @@ pub mod venation;
 /// a margin length that grades it from short and upright to long and
 /// spreading, a stalk colour and a drop of clear, milky or amber secretion,
 /// and strands draw on flower and cluster cards (fifteen Caryophyllales
-/// species, two more sundews and hemp, #243; 141 is #237).
-pub const GENERATOR_REVISION: u32 = 142;
+/// species, two more sundews and hemp, #243; 144 is #244).
+pub const GENERATOR_REVISION: u32 = 145;

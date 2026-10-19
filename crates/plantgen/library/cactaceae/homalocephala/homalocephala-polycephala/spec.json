@@ -1,0 +1,385 @@
+{
+  "schema": 1,
+  "id": "homalocephala-polycephala",
+  "taxon": {
+    "scientific_name": "Homalocephala polycephala",
+    "common_name": "cottontop cactus",
+    "family": "Cactaceae",
+    "genus": "Homalocephala",
+    "plant_name_id": 3226387
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 3,
+      "stems": 20,
+      "stem_rate": 0.03,
+      "clump_radius": 0.35,
+      "stem_lean": 20,
+      "seedling": 0.01,
+      "height_max": 0.4,
+      "height_rate": 0.03,
+      "height_shape": 1.6,
+      "radius_min": 0.01,
+      "radius_height": 0.25,
+      "fill": 0.95,
+      "fill_years": 15,
+      "wiggle": 0.3,
+      "bend": 0.5,
+      "bloom_age": 15,
+      "flowers": 6,
+      "ring_angle": 20,
+      "flower_angle": 20
+    }
+  },
+  "growth": {
+    "years": 80,
+    "step": 1,
+    "keyframes": [
+      10,
+      25,
+      50,
+      80
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "ribs": {
+          "spacing": 0.04,
+          "depth": 0.2,
+          "sharpness": 0.85
+        },
+        "areoles": {
+          "spacing": 0.025,
+          "felt_radius": 0.004,
+          "felt": [
+            0.85,
+            0.82,
+            0.74
+          ],
+          "apex_wool": 0.02
+        },
+        "spines": [
+          {
+            "role": "radial",
+            "angle": 25,
+            "width": 0.0012,
+            "angle_spread": 15,
+            "length_spread": 0.3,
+            "flat": 0.6
+          },
+          {
+            "role": "central",
+            "count": [
+              3,
+              3
+            ],
+            "angle": 45,
+            "width": 0.002,
+            "angle_spread": 15,
+            "length_spread": 0.25,
+            "flat": 0.5
+          },
+          {
+            "role": "main",
+            "count": [
+              1,
+              1
+            ],
+            "angle": 35,
+            "width": 0.0025,
+            "aim": 180,
+            "arc": 0,
+            "angle_spread": 10,
+            "length_spread": 0.2,
+            "flat": 0.45
+          }
+        ],
+        "greying": {
+          "colour": [
+            0.45,
+            0.43,
+            0.41
+          ],
+          "years": 15
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "ribs": {
+      "min": 11,
+      "max": 25
+    },
+    "stem_apex": "rounded",
+    "stem_colour": [
+      95,
+      120,
+      75
+    ],
+    "stem_diameter_max_m": {
+      "min": 0.15,
+      "max": 0.3,
+      "low": 0.09
+    },
+    "radial_spines": {
+      "min": 6,
+      "max": 14
+    },
+    "radial_spine_length_m": 0.05,
+    "central_spines": 4,
+    "central_spine_form": {
+      "curved": "usually",
+      "twisted": "often"
+    },
+    "spine_colour": [
+      170,
+      85,
+      70
+    ],
+    "spine_colour_aged": [
+      120,
+      115,
+      110
+    ],
+    "areole_wool_colour": [
+      235,
+      225,
+      200
+    ],
+    "flower_colour": [
+      245,
+      215,
+      40
+    ],
+    "flower_size_m": {
+      "min": 0.04,
+      "max": 0.06
+    },
+    "stigma_colour": [
+      245,
+      215,
+      50
+    ],
+    "carpels": {
+      "min": 6,
+      "max": 14
+    },
+    "fruit_colour_ripe": [
+      215,
+      190,
+      145
+    ],
+    "fruit_shape": "ovoid",
+    "fruit_size_m": {
+      "min": 0.015,
+      "max": 0.04
+    },
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.4
+    },
+    "flowering_months": [
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "traits.ribs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.stem_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.central_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.central_spine_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.spine_colour_aged": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.radial_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. The species: fruits hidden by hairs, drying to a tan shell. Its radials the genus's longest; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.areole_wool_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. The species: fruits hidden by hairs, drying to a tan shell. Its radials the genus's longest; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. The species: fruits hidden by hairs, drying to a tan shell. Its radials the genus's longest; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. The species: fruits hidden by hairs, drying to a tan shell. Its radials the genus's longest; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from the flora's words: a compact mound of up to 50 grey-green heads, leaning out from the middle, crowned with white wool and yellow flowers in summer. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A rough head height: about 30 cm by 50 years. Wide tolerance."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rib depth and sharpness by eye for the flora's sharp, flat-sided crests; areoles about 2.5 cm apart by eye (the flora gives no spacing); spine widths for its flattened, stout spines, the abaxial central the main one."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific names as WCVP v16 accepts them, common names as the Flora of North America gives them, and the genus the scientific name is written in."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America, vol. 4 (Cactaceae), on eFloras",
+        "url": "http://www.efloras.org/flora_page.aspx?flora_id=1",
+        "licence": "quoted facts; the treatment's text is not copied"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Procedural proxy drawn from the Flora of North America's text (2026-10-19). Calibration against measurements and photographs comes later."
+  }
+}

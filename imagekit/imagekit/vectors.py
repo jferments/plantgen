@@ -66,12 +66,15 @@ def resolve_revision(name: str) -> str:
     return HfApi().model_info(m["repo"]).sha
 
 
-def definition(name: str, revision: str, image_px: int | None = None) -> dict:
-    """The analyzer definition for whole-image vectors from one model."""
+def definition(name: str, revision: str, image_px: int | None = None, regions: dict | None = None) -> dict:
+    """The analyzer definition for one model's vectors: of whole images, or with `regions` (the detector, the
+    organs kept, the triage that kept them, the margin and the lowest score) of organ crops."""
     m = preset(name)
-    return {"task": "embed", "model": m["repo"], "model_revision": revision,
-            "params": {"image_px": image_px or m["image_px"], "region_kind": "whole", "pooling": m["pooling"],
-                       "normalized": True}}
+    params = {"image_px": image_px or m["image_px"], "region_kind": "organ" if regions else "whole",
+              "pooling": m["pooling"], "normalized": True}
+    if regions:
+        params["regions"] = regions
+    return {"task": "embed", "model": m["repo"], "model_revision": revision, "params": params}
 
 
 def pick_device(device: str = "auto") -> str:
@@ -325,17 +328,20 @@ class VectorSet:
         return np.concatenate(out) if out else np.zeros(0, dtype=np.float32)
 
 
-def load(store: Store, name: str, analyzer: str | None = None) -> VectorSet:
+def load(store: Store, name: str, analyzer: str | None = None, region_kind: str = "whole") -> VectorSet:
     """Every stored vector of one model. With several analyzers for the model (another revision or
-    image size), the one with the most vectors is used unless `analyzer` names one; vectors from
-    different analyzers are never mixed. A (sha256, region) seen twice keeps its first row."""
+    image size), the one with the most vectors of this region kind (whole images, or organ crops) is
+    used unless `analyzer` names one; vectors from different analyzers are never mixed. A
+    (sha256, region) seen twice keeps its first row."""
     import numpy as np
+    defs = analyzers(store)
+    kind_of = lambda a: ((defs.get(a) or {}).get("params") or {}).get("region_kind", "whole")  # noqa: E731
     found = []  # (run, part path, analyzer)
     for run in store.runs():
         info = (read_run(store, run).get("models") or {}).get(name) or {}
         for part, aid in sorted((info.get("parts") or {}).items()):
             p = vector_dir(store, run, name) / part
-            if p.exists():
+            if p.exists() and (analyzer is not None or kind_of(aid) == region_kind):
                 found.append((run, p, aid))
     counts: dict[str, int] = {}
     for _, p, aid in found:
@@ -357,5 +363,5 @@ def load(store: Store, name: str, analyzer: str | None = None) -> VectorSet:
             continue
         ids.extend(part_ids[i] for i in keep)
         parts.append((arr, None if len(keep) == len(part_ids) else np.array(keep)))
-    defn = analyzers(store).get(analyzer, {}) if analyzer else {}
+    defn = defs.get(analyzer, {}) if analyzer else {}
     return VectorSet(name, analyzer, defn, ids, parts, {a: n for a, n in counts.items() if a != analyzer})

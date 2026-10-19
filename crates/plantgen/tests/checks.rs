@@ -52,11 +52,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
-        "aristolochia-macrophylla",
-        "shoot_leaves",
-        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18 (3 before its blades took their stated breadth, 10 to 35 cm, which drops one more on some shoots); the climber program grows few leaves on a shoot",
-    ),
-    (
         "ascarina-lucida",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -127,11 +122,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its trailing stems' leaf pairs are drawn turned out to the stem's two sides in one plane, as a lying stem's leaves lie to the light, so the measure reads them superposed where the floras give decussate pairs, until a lying stem can set its pairs crossing (as whipplea's)",
     ),
     (
-        "celastrus-scandens",
-        "shoot_leaves",
-        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18, from maples' long shoots; the climber program grows few leaves on a shoot (as on aristolochia-macrophylla)",
-    ),
-    (
         "chloranthus-serratus",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -200,11 +190,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "drosera-rotundifolia",
         "crown_width_max_m",
         "Droseraceae's perennation is a tie (rhizome or tuber, often), and on a tie the forb's stems rule takes its else without reading `flowering_stems`, so sundew draws six scapes where it states one or two and spreads to 19 cm against 15 cm; #233 fixes the tie",
-    ),
-    (
-        "echinocereus-engelmannii",
-        "central_spine_form",
-        "its main central is drawn flattened and straight (its lower central, by eye from photographs), against the curved and twisted centrals Britton and Rose describe; a twisted spine is not drawn",
     ),
     (
         "ferocactus-acanthodes-subsp-acanthodes",
@@ -347,6 +332,26 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "aspen first flowers with the family programs' blooms (revision 110): its stated 2 to 3 years is adult_age, but broadleaf bears blooms only on short shoots, which a young aspen whose buds all grow out as long shoots first makes in its fourth year",
     ),
     (
+        "portulaca-oleracea",
+        "inflorescence_bracts",
+        "the 2 to 6 small bracts under its tip clusters (FNA vol. 4) are not drawn: a cluster's card draws no bracts unless a rule sets them",
+    ),
+    (
+        "portulaca-oleracea",
+        "inflorescence_length_m",
+        "its flowers sit 1 to 3 together at the stem tips, sessile, and the cluster is measured across its drawn flowers, 4 to 9 mm, against FNA's 8 to 15 mm, which includes the crowded leaves around them (inferred)",
+    ),
+    (
+        "portulaca-oleracea",
+        "phyllotaxis_pattern",
+        "its prostrate stems' leaves are drawn turned out to the stem's two sides, as a lying stem's leaves lie to the light, so the measure reads them distichous where the floras give alternate or subopposite, until a lying stem keeps its leaves' arrangement",
+    ),
+    (
+        "portulacaria-afra",
+        "crown_width_max_m",
+        "the shrub program sizes the crown from its height, and no rule yet takes a flora's greatest width (one tried at the order did not narrow the drawn crown), so elephant bush draws 3.4 to 4.2 m across against 3 m",
+    ),
+    (
         "program:broadleaf",
         "crown_outline_fit",
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
@@ -405,26 +410,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:sapindaceae",
         "crown_outline_fit",
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
-    ),
-    (
-        "portulaca-oleracea",
-        "inflorescence_bracts",
-        "the 2 to 6 small bracts under its tip clusters (FNA vol. 4) are not drawn: a cluster's card draws no bracts unless a rule sets them",
-    ),
-    (
-        "portulaca-oleracea",
-        "inflorescence_length_m",
-        "its flowers sit 1 to 3 together at the stem tips, sessile, and the cluster is measured across its drawn flowers, 4 to 9 mm, against FNA's 8 to 15 mm, which includes the crowded leaves around them (inferred)",
-    ),
-    (
-        "portulaca-oleracea",
-        "phyllotaxis_pattern",
-        "its prostrate stems' leaves are drawn turned out to the stem's two sides, as a lying stem's leaves lie to the light, so the measure reads them distichous where the floras give alternate or subopposite, until a lying stem keeps its leaves' arrangement",
-    ),
-    (
-        "portulacaria-afra",
-        "crown_width_max_m",
-        "the shrub program sizes the crown from its height, and no rule yet takes a flora's greatest width (one tried at the order did not narrow the drawn crown), so elephant bush draws 3.4 to 4.2 m across against 3 m",
     ),
     (
         "rivina-humilis",
@@ -500,6 +485,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "vachellia-tortilis",
         "inflorescence_length_m",
         "umbrella thorn first flowers with the family programs' blooms (revision 110): its head, 5 to 10 mm, has no stated flower size, so its flowers are laid out at the default share and the head measures 1.5 to 2 mm; and its pods, 7 to 10 cm, are this cluster's unit, so it cannot grow as the heads do",
+    ),
+    (
+        "washingtonia-filifera",
+        "height_max_m",
+        "its greatest height, 20 m, is a model estimate no source read gives, and its third seed already grew to 20.0 m; since palm revision 14 stands a year's newest spear on top of the year's trunk, the second seed's spear reaches 20.1 m, until a flora's greatest height replaces the estimate",
     ),
     (
         "whipplea-modesta",
