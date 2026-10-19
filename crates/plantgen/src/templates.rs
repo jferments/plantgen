@@ -2434,7 +2434,12 @@ fn blade(s: &Blade, x: f64, y: f64) -> Paint {
 pub(crate) fn frond_pinna(s: &Frond, k: u32, left: bool) -> (f64, f64) {
     let offset = if left { 0.3 } else { 0.0 };
     let tk = (f64::from(k) + 0.5 + offset) / (f64::from(s.pinnae) + 0.3);
-    let reach = s.width * 0.5 * math::pow(math::sin(PI * math::pow(tk, 0.75)), 0.7);
+    let lance = math::pow(math::sin(PI * math::pow(tk, 0.75)), 0.7);
+    // An oblong outline keeps its breadth to its last fifth, narrowing
+    // only a little at its foot.
+    let oblong = (0.85 + 0.15 * (tk / 0.2).min(1.0)) * math::pow(((1.0 - tk) / 0.2).min(1.0), 0.7);
+    let o = s.oblong.clamp(0.0, 1.0);
+    let reach = s.width * 0.5 * (lance + o * (oblong - lance));
     (tk, reach)
 }
 
@@ -2459,7 +2464,8 @@ fn frond(s: &Frond, x: f64, y: f64, fine: f64) -> Paint {
     let side = if x < 0.0 { -1.0 } else { 1.0 };
     for k in 0..s.pinnae {
         let (tk, reach) = frond_pinna(s, k, side < 0.0);
-        let angle = math::radians(74.0 - 32.0 * tk);
+        let o = s.oblong.clamp(0.0, 1.0);
+        let angle = math::radians(74.0 - 32.0 * tk + o * (12.0 + 22.0 * tk));
         let pinna = reach / math::sin(angle);
         if pinna < 0.004 {
             continue;
@@ -2471,8 +2477,10 @@ fn frond(s: &Frond, x: f64, y: f64, fine: f64) -> Paint {
         if !(0.0..=1.0).contains(&u) {
             continue;
         }
-        let mut width =
-            (0.3 * pinna).min(0.5 * spacing * math::sin(angle)) * blade_profile(u, 0.25, 0.8, 0.6);
+        // Oblong pinnae are widest midway, square at the foot and blunt,
+        // and reach their neighbours.
+        let mut width = (0.3 * pinna).min((0.5 + 0.1 * o) * spacing * math::sin(angle))
+            * blade_profile(u, 0.25 + 0.25 * o, 0.8 + 0.2 * o, 0.6 * (1.0 - o));
         if s.divided > 0.0 && (0.04..0.92).contains(&u) {
             let bump = math::pow(math::sin(PI * frac(u * 7.0)), 0.5);
             width *= 1.0 - 0.75 * s.divided * (1.0 - bump);
