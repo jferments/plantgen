@@ -191,12 +191,12 @@
       "max": 0.2
     },
     "leaflet_length_m": {
-      "min": 0.03,
-      "max": 0.065
+      "min": 0.018,
+      "max": 0.06
     },
     "leaflet_width_m": {
-      "min": 0.01,
-      "max": 0.022
+      "min": 0.006,
+      "max": 0.025
     },
     "leaf_shape": {
       "oblong": "usually",
@@ -210,16 +210,16 @@
     "inflorescence": "corymb",
     "flowering_position": "terminal",
     "units_per_inflorescence": {
-      "min": 15,
-      "max": 60
+      "min": 12,
+      "max": 80
     },
     "inflorescence_length_m": {
-      "min": 0.04,
-      "max": 0.1
+      "min": 0.02,
+      "max": 0.08
     },
     "flower_size_m": {
-      "min": 0.008,
-      "max": 0.01
+      "min": 0.011,
+      "max": 0.017
     },
     "flower_merosity": 5,
     "flower_colour": [
@@ -230,13 +230,13 @@
     "fruit_type": "pome",
     "fruit_size_m": {
       "min": 0.007,
-      "max": 0.008
+      "max": 0.013
     },
     "fruit_shape": "ellipsoid",
     "fruit_colour_ripe": [
-      235,
-      90,
-      60
+      205,
+      75,
+      90
     ],
     "fruit_persistence": "persistent",
     "flowering_months": [
@@ -246,7 +246,12 @@
     "fruiting_months": [
       9,
       10
-    ]
+    ],
+    "stem_clump": "few",
+    "stamens": {
+      "min": 15,
+      "max": 20
+    }
   },
   "evidence": {
     "taxon": {
@@ -345,14 +350,14 @@
       "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Leaves are pinnately compound and are 4 to 8 inches (10-20 cm) long\"."
     },
     "traits.leaflet_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 3 cm to 6.5 cm long, as in the photos; Abrams gives a length only for S. occidentalis."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: leaflets \"oblong to narrowly elliptic … 1.8–6 × 0.6–2.5 cm\"."
     },
     "traits.leaflet_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 1 cm to 2.2 cm wide, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: leaflets \"1.8–6 × 0.6–2.5 cm, l/w ratio 1.9–3.5\"."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
@@ -381,18 +386,18 @@
     },
     "traits.units_per_inflorescence": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"with 15 to 60 flowers per head\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: \"Panicles 12–80-flowered, rounded, 2–8 cm diam.\"; FEIS: 15 to 60 flowers per head."
     },
     "traits.inflorescence_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: flat-topped clusters 4 cm to 10 cm across, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: \"Panicles 12–80-flowered, rounded, 2–8 cm diam.\"."
     },
     "traits.flower_size_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 8 mm to 10 mm across, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: \"Flowers 11–17 mm diam.\"."
     },
     "traits.flower_merosity": {
       "evidence": "SourceInferred",
@@ -411,8 +416,8 @@
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"fruit ellipsoid, coral red, 7-8 mm. long\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: \"Pomes pinkish red or red … subglobose to broadly elliptic or obovoid, 7–13 × 7–13 mm, dull, glaucous\"."
     },
     "traits.fruit_shape": {
       "evidence": "SourceInferred",
@@ -421,8 +426,8 @@
     },
     "traits.fruit_colour_ripe": {
       "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"fruit ellipsoid, coral red\", \"not glaucous\" (key); sRGB by eye."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: \"Pomes pinkish red or red (often appearing slightly purplish) … dull, glaucous\"; \"the fresh fruits of S. sitchensis are often pinkish red; fruits of S. californica and S. scopulina are generally orange-red\". sRGB by eye from that wording."
     },
     "traits.fruit_persistence": {
       "evidence": "SourceInferred",
@@ -453,6 +458,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "1.8 m tall at 12 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: \"Shrubs, 10–40 dm. Stems 1–8\"."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Sorbus sitchensis: \"stamens 15–20\"."
     }
   },
   "provenance": {

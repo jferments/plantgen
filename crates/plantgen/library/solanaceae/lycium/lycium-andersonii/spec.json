@@ -103,14 +103,14 @@
     "leaf_incision": "none",
     "leaf_length_m": {
       "min": 0.003,
-      "max": 0.015
+      "max": 0.035
     },
     "leaf_width_m": {
       "min": 0.001,
-      "max": 0.003
+      "max": 0.008
     },
     "leaf_shape": {
-      "oblanceolate": "usually",
+      "spatulate": "usually",
       "linear": "often"
     },
     "leaf_margin": "entire",
@@ -150,7 +150,8 @@
     "flowering_months": [
       2,
       3,
-      4
+      4,
+      5
     ],
     "fruiting_months": [
       4,
@@ -164,7 +165,11 @@
     "moisture": [
       "dry",
       "xeric"
-    ]
+    ],
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 2
+    }
   },
   "evidence": {
     "taxon": {
@@ -254,18 +259,18 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: leaves 3-15 mm. long (FEIS: 3-17 mm)."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"Leaves: blade spatulate, 3–35 × 1–8 mm, fleshy to succulent\"; Abrams (1951 p. 667): 3-15 mm."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: leaves succulent, 1-3 mm. broad."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"blade spatulate, 3–35 × 1–8 mm\"."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: leaves linear-terete to narrowly oblanceolate."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"blade spatulate\"; Abrams (1951 p. 667): \"linear-terete to narrowly oblanceolate\"."
     },
     "traits.leaf_margin": {
       "evidence": "SourceInferred",
@@ -339,8 +344,8 @@
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 789), Lycium andersonii: up to 5,600 feet, February to April (and August and September after summer rain); Abrams (1951 p. 667): March to May."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"Flowering Feb–May\"; Kearney and Peebles (1942, p. 789): February to April."
     },
     "traits.fruiting_months": {
       "evidence": "Authored",
@@ -381,6 +386,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "1.2 m tall at 15 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"Inflorescences 2-flowered fascicles or solitary flowers\"."
     }
   },
   "provenance": {

@@ -24,7 +24,7 @@
       "leaf_peak": 0.0,
       "leaf_top": 1.0,
       "raceme": 0.3,
-      "flowers": 15,
+      "flowers": 1,
       "flower_angle": 50,
       "pedicel": 0.003,
       "flowering_share": 0.5,
@@ -114,7 +114,7 @@
       "max": 0.05
     },
     "units_per_inflorescence": {
-      "min": 10,
+      "min": 5,
       "max": 30
     },
     "flower_merosity": 5,
@@ -125,8 +125,8 @@
     "petal_shape": "obovate",
     "sepal_length_m": 0.002,
     "flower_size_m": {
-      "min": 0.006,
-      "max": 0.008
+      "min": 0.003,
+      "max": 0.006
     },
     "flower_colour": [
       246,
@@ -141,7 +141,11 @@
       7,
       8,
       9
-    ]
+    ],
+    "petiole_length_m": {
+      "min": 0.005,
+      "max": 0.01
+    }
   },
   "evidence": {
     "taxon": {
@@ -265,9 +269,9 @@
       "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"raceme narrow, 1-5 cm. long\"."
     },
     "traits.units_per_inflorescence": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "10 to 30 flowers to a raceme, set by hand from iNaturalist photos (observations 248882149, 235278907, 235284059, 388106402, 385828507, 236858631, 376772951, 377636425): the sources read give no count or measure."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Luetkea: \"Inflorescences terminal, 5–20(–30)-flowered, racemes\"."
     },
     "traits.flower_merosity": {
       "evidence": "SourceInferred",
@@ -290,9 +294,9 @@
       "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"sepals ovate, acute, 2 mm. long\"."
     },
     "traits.flower_size_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 6 mm to 8 mm across, about twice the 3-3.5 mm petals Abrams gives."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Luetkea: \"Flowers 3–6 mm diam.\"."
     },
     "traits.flower_colour": {
       "evidence": "SourceInferred",
@@ -327,7 +331,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for partridgefoot from Abrams's description and the photos the traits cite, on spreading phlox's (phlox-diffusa) structure: many short, leafy shoots leaning out from a mat, the leaves largest low on each shoot, and half of them ending in a narrow raceme of about 15 white flowers on a bare stalk (Abrams 1944 p. 413). Not fitted to measurements."
+      "note": "Set by hand for partridgefoot from Abrams's description and the photos the traits cite, on spreading phlox's (phlox-diffusa) structure: many short, leafy shoots leaning out from a mat, the leaves largest low on each shoot, and half of them ending in a narrow raceme of about 15 white flowers on a bare stalk (Abrams 1944 p. 413). Not fitted to measurements. flowers corrected from 15 (spreading phlox's, whose flowers stand singly along the shoot) to 1: Flora of North America vol. 9 (eFloras, read 2026-10-19), Luetkea: \"Inflorescences terminal, 5–20(–30)-flowered, racemes\": one raceme ends each flowering shoot."
     },
     "appearance": {
       "evidence": "Authored",
@@ -338,6 +342,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.1 m tall at 4 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Luetkea pectinata: \"petiole 5–10 mm, narrowly winged\"."
     }
   },
   "provenance": {

@@ -96,16 +96,16 @@
     "division_order": 1,
     "leaflets": 3,
     "leaf_length_m": {
-      "min": 0.04,
+      "min": 0.03,
       "max": 0.12
     },
     "petiole_length_m": {
-      "min": 0.03,
-      "max": 0.1
+      "min": 0.01,
+      "max": 0.15
     },
     "leaflet_length_m": {
-      "min": 0.015,
-      "max": 0.035
+      "min": 0.01,
+      "max": 0.05
     },
     "leaf_shape": "obovate",
     "leaf_margin": "serrate",
@@ -114,7 +114,7 @@
     "inflorescence": "cyme",
     "units_per_inflorescence": {
       "min": 1,
-      "max": 5
+      "max": 6
     },
     "flower_merosity": 5,
     "petal_length_m": {
@@ -122,8 +122,8 @@
       "max": 0.01
     },
     "sepal_length_m": {
-      "min": 0.005,
-      "max": 0.006
+      "min": 0.004,
+      "max": 0.008
     },
     "flower_size_m": {
       "min": 0.018,
@@ -140,7 +140,19 @@
       7,
       8,
       9
-    ]
+    ],
+    "pedicel_length_m": {
+      "min": 0.003,
+      "max": 0.045
+    },
+    "carpels": {
+      "min": 20,
+      "max": 50
+    },
+    "fruit_size_m": {
+      "min": 0.0012,
+      "max": 0.0015
+    }
   },
   "evidence": {
     "taxon": {
@@ -214,19 +226,19 @@
       "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: basal leaves \"ternate\"."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: basal leaves 4 cm to 12 cm long with their petioles, as in the photos; Abrams gives no length."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"Basal leaves 2-ranked, ternate, (1–)3–12(–20) cm\"."
     },
     "traits.petiole_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: petioles 3 cm to 10 cm long; Abrams (1944 p. 434): \"usually with long slender petioles\"."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"petiole (0.5–)1–15(–18) cm\"."
     },
     "traits.leaflet_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 1.5 cm to 3.5 cm long, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"leaflets 3, central widely obovate to flabellate, (0.5–)1–5 × (0.4–)1–3(–3.5) cm\"."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
@@ -254,9 +266,9 @@
       "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"cymes few-flowered\"."
     },
     "traits.units_per_inflorescence": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "One to five flowers to a stem; Abrams (1944 p. 434): \"cymes few-flowered\", set by hand from iNaturalist photos (observations 145624511, 40901066, 296521191, 8438199, 182887878, 366919469, 392046, 232901042): the sources read give no count or measure."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"Inflorescences 1–6-flowered\"."
     },
     "traits.flower_merosity": {
       "evidence": "Authored",
@@ -270,8 +282,8 @@
     },
     "traits.sepal_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"sepals ovate, acute, 5-6 mm. long\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"sepals 4–8 mm, apex acute to obtuse\"."
     },
     "traits.flower_size_m": {
       "evidence": "Authored",
@@ -307,6 +319,21 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.22 m tall at 3 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"Pedicels straight, 0.3–4.5(–5) cm\"."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"carpels 20–50\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"Achenes 1.2–1.5 mm\"."
     }
   },
   "provenance": {

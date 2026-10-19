@@ -21,7 +21,7 @@
       "leaf_base": 1.0,
       "leaf_angle": 40,
       "leaf_length": 0.05,
-      "basal_leaves": 8,
+      "basal_leaves": 5,
       "basal_angle": 45,
       "raceme": 0.03,
       "flowers": 1,
@@ -111,8 +111,8 @@
       "max": 0.1
     },
     "petiole_length_m": {
-      "min": 0.03,
-      "max": 0.1
+      "min": 0.06,
+      "max": 0.12
     },
     "leaf_hairs": "villous",
     "stem_hairs": "villous",
@@ -120,11 +120,11 @@
     "perianth": "spiral",
     "perianth_parts": {
       "min": 5,
-      "max": 8
+      "max": 7
     },
     "tepal_length_m": {
-      "min": 0.02,
-      "max": 0.025
+      "min": 0.015,
+      "max": 0.03
     },
     "flower_size_m": {
       "min": 0.04,
@@ -143,8 +143,8 @@
     ],
     "fruit_type": "achene",
     "fruit_size_m": {
-      "min": 0.025,
-      "max": 0.03
+      "min": 0.023,
+      "max": 0.044
     },
     "fruit_colour_ripe": [
       205,
@@ -160,7 +160,11 @@
       7,
       8,
       9
-    ]
+    ],
+    "stamens": {
+      "min": 150,
+      "max": 200
+    }
   },
   "evidence": {
     "taxon": {
@@ -279,9 +283,9 @@
       "note": "A model estimate (confidence medium), as no source read gives it: basal blades 4 cm to 10 cm long, as in the photos."
     },
     "traits.petiole_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: basal petioles 3 cm to 10 cm long, as in the photos; Abrams (1944 p. 193) calls them long, and the involucral leaves short-petioled."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Anemone occidentalis (Pulsatilla occidentalis): basal leaves' \"petiole 6-8(-12) cm\"."
     },
     "traits.leaf_hairs": {
       "evidence": "SourceInferred",
@@ -304,14 +308,14 @@
       "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: sepals petaloid; petals none: drawn as a single series of tepals."
     },
     "traits.perianth_parts": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: petaloid sepals 5 to 8, usually 6, as in the photos."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Anemone occidentalis (Pulsatilla occidentalis): \"sepals 5-7, white, tinged purple\"."
     },
     "traits.tepal_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: sepals oval to oblong, 20-25 mm. long."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Anemone occidentalis (Pulsatilla occidentalis): sepals \"ovate to obovate, rarely elliptic, 15-30 × 10-17(-19) mm\"."
     },
     "traits.flower_size_m": {
       "evidence": "SourceInferred",
@@ -340,8 +344,8 @@
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: achenes villous, the styles long-silky-plumose, 2.5-3 cm. long: each fruit drawn as its achene and plumose style."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Anemone occidentalis (Pulsatilla occidentalis): achene \"body ellipsoid, 3-4 × ca. 1.5 mm\", \"beak … (18-)20-40(-50) mm, long-villous, plumose\": body and beak together."
     },
     "traits.fruit_colour_ripe": {
       "evidence": "Authored",
@@ -366,12 +370,17 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for western pasqueflower from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+      "note": "Set by hand for western pasqueflower from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). The rest of its growth comes from the library's rules for the form. Not fitted to measurements. basal_leaves corrected from 8 to 5: Flora of North America vol. 3 (eFloras, read 2026-10-19), Anemone occidentalis: \"Basal leaves (2-)3-6(-8)\"."
     },
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.4 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Anemone occidentalis (Pulsatilla occidentalis): \"stamens 150-200\"."
     }
   },
   "provenance": {

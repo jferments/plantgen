@@ -82,22 +82,6 @@
           "notch": 0.0,
           "centre": 0.3
         },
-        "inflorescence": {
-          "branches": 6,
-          "flowers": 4,
-          "size": 0.4,
-          "spread": 70,
-          "branch": {
-            "branches": 3,
-            "size": 0.5,
-            "spread": 50,
-            "branch": {
-              "spread": 45,
-              "pedicel": 0.1,
-              "size": 0.9
-            }
-          }
-        },
         "colour": [
           0.7106,
           0.1473,
@@ -166,13 +150,16 @@
       "max": 0.04
     },
     "units_per_inflorescence": {
-      "min": 30,
-      "max": 100
+      "min": 100,
+      "max": 1000
     },
-    "petal_length_m": 0.0015,
+    "petal_length_m": {
+      "min": 0.001,
+      "max": 0.0025
+    },
     "flower_size_m": {
-      "min": 0.004,
-      "max": 0.005
+      "min": 0.002,
+      "max": 0.004
     },
     "flower_colour": [
       230,
@@ -181,7 +168,10 @@
     ],
     "stamen_exsertion": "exserted",
     "fruit_type": "follicle",
-    "fruit_size_m": 0.004,
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
     "flowering_months": [
       6,
       7,
@@ -190,7 +180,12 @@
     "fruiting_months": [
       8,
       9
-    ]
+    ],
+    "stem_clump": "many",
+    "stamens": {
+      "min": 35,
+      "max": 40
+    }
   },
   "evidence": {
     "taxon": {
@@ -294,19 +289,19 @@
       "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: inflorescence \"2-4 cm. broad\"."
     },
     "traits.units_per_inflorescence": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "30 to 100 small flowers to a cluster, set by hand from iNaturalist photos (observations 71501350, 13742396, 136606818, 233507514, 382337049, 386273598, 386152994, 383833706): the sources read give no count or measure."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"Inflorescences mostly terminal, corymbiform or hemispheric panicles, 100–1000+-flowered, 2–4 × 2–4 cm\"."
     },
     "traits.petal_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 411, Spiraea densiflora: \"petals rose-colored, 1.5 mm. long, obovate\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"petals light to dark pink, ovate to obovate, 1–2.5 mm\"."
     },
     "traits.flower_size_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: each flower 4 mm to 5 mm across its exserted stamens, about three times the 1.5 mm petals Abrams gives."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"Flowers 2–4 mm diam.\"."
     },
     "traits.flower_colour": {
       "evidence": "SourceInferred",
@@ -325,8 +320,8 @@
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 411, Spiraea densiflora: follicles \"about 4 mm. long including the short beak\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"Follicles oblanceoloid, 2–3 mm\"."
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",
@@ -343,11 +338,6 @@
       "source": "plantgen-authors",
       "note": "Douglas spiraea's (spiraea-douglasii) values, changed by hand for subalpine spiraea: a low clump of many ascending stems (Abrams 1944 p. 410: \"A low shrub with ascending branches, 2-6 dm. high\"), small leaves and short internodes, and one flat-topped cluster 3.5 cm long at each shoot's tip. Not fitted to measurements."
     },
-    "appearance.organs.bloom.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"inflorescence flat-topped or rounded, 2-4 cm. broad\". Drawn as 10 short branches spreading widely, each forking again into small clusters of rose flowers."
-    },
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -357,6 +347,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.45 m tall at 8 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"Shrubs, 2–10 dm. Stems spreading to ascending, branched\"; Abrams (1944 p. 410): \"A low shrub with ascending branches\"."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"stamens 35–40, 2 times petal length\"."
     }
   },
   "provenance": {

@@ -78,10 +78,10 @@
   "traits": {
     "height_typical_m": {
       "min": 1,
-      "max": 2
+      "max": 3
     },
     "height_max_m": {
-      "min": 2.5,
+      "min": 3,
       "max": 4
     },
     "life_span": "perennial",
@@ -98,8 +98,8 @@
     "leaf_division": "simple",
     "leaf_incision": "none",
     "leaf_length_m": {
-      "min": 0.005,
-      "max": 0.015
+      "min": 0.003,
+      "max": 0.02
     },
     "leaf_width_m": {
       "min": 0.005,
@@ -113,8 +113,8 @@
     "leaf_hairs": "puberulent",
     "inflorescence": "umbel",
     "units_per_inflorescence": {
-      "min": 2,
-      "max": 6
+      "min": 5,
+      "max": 30
     },
     "flower_colour": [
       200,
@@ -128,8 +128,8 @@
       "ellipsoid": "often"
     },
     "fruit_size_m": {
-      "min": 0.006,
-      "max": 0.008
+      "min": 0.007,
+      "max": 0.01
     },
     "fruit_colour_ripe": [
       45,
@@ -137,10 +137,10 @@
       80
     ],
     "flowering_months": [
+      4,
       5,
       6,
-      7,
-      8
+      7
     ],
     "fruiting_months": [
       7,
@@ -188,13 +188,13 @@
     },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS species review, Ziziphus obtusifolia (Sullivan 1993), the species of which this is the Arizona variety canescens: \"It generally grows up to 6 feet (2 m) tall\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (eFloras, read 2026-10-19), Ziziphus divaricata (Condalia lycioides var. canescens, Ziziphus obtusifolia var. canescens): \"Shrubs or small trees, 1–3(–4) m\"."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 555), Condalia lycioides var. canescens: up to 2.5 m high; FEIS (species): \"can reach heights of 13 feet (4 m)\"."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (eFloras, read 2026-10-19), Ziziphus divaricata: \"Shrubs or small trees, 1–3(–4) m\"; Kearney and Peebles (1942, p. 555): up to 2.5 m."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
@@ -243,8 +243,8 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 61, Condalia lycioides var. canescens: leaves oblong, 5-15 mm. long."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (eFloras, read 2026-10-19), Ziziphus divaricata: blade \"ovate, oblong, or elliptic to nearly linear, 0.3–2(–2.5) cm, relatively thin-herbaceous\"."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
@@ -272,9 +272,9 @@
       "note": "Abrams vol. 3 (1951) p. 61, Condalia lycioides var. canescens: flowers in short-peduncled umbels."
     },
     "traits.units_per_inflorescence": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Two to six small flowers in a cluster, set by hand from iNaturalist photos (observations 265950085, 6650299, 212685543, 20034541, 107526343, 77775055, 63359014, 168755382): the sources read give no count or measure."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (eFloras, read 2026-10-19), Ziziphus divaricata: \"Inflorescences pedunculate thyrses, 10–20 mm, (5–)10–30-flowered, peduncles 2–4 mm\"."
     },
     "traits.flower_colour": {
       "evidence": "Authored",
@@ -298,8 +298,8 @@
     },
     "traits.fruit_size_m": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 554), Condalia lycioides: drupe 6 to 8 mm in diameter (Abrams 1951 p. 61: 6-10 mm)."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (eFloras, read 2026-10-19), Ziziphus divaricata: \"Drupes dark blue to blue-black or purplish, globose to slightly elongate, 7–10 mm\"."
     },
     "traits.fruit_colour_ripe": {
       "evidence": "SourceInferred",
@@ -308,8 +308,8 @@
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 555), Condalia lycioides var. canescens: 5,000 feet or lower, May to September (Abrams 1951 p. 61: April to July)."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 12 (eFloras, read 2026-10-19), Ziziphus divaricata: \"Flowering Apr–Jul(–Sep)\"."
     },
     "traits.fruiting_months": {
       "evidence": "Authored",
