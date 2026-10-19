@@ -190,6 +190,7 @@
     },
     "calyx_in_fruit": "persistent",
     "flowering_months": [
+      1,
       2,
       3,
       4,
@@ -203,6 +204,8 @@
       12
     ],
     "fruiting_months": [
+      1,
+      2,
       3,
       4,
       5,
@@ -233,7 +236,11 @@
       "max": 20,
       "typical": 14
     },
-    "flowering_branches": 2
+    "flowering_branches": 2,
+    "fruit_seed_length_m": {
+      "min": 0.002,
+      "max": 0.003
+    }
   },
   "evidence": {
     "taxon": {
@@ -529,12 +536,12 @@
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "fna-online",
-      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): flowering year-round. A look has one season a year that begins with its buds, so year-round flowering is drawn as February to December, buds showing in late January (a library gap: no season yet runs all year)."
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): flowering year-round."
     },
     "traits.fruiting_months": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: flowers all year (FNA), so ripe berries are on the plant all year; drawn March to December, a month after the drawn flowering begins."
+      "note": "A model estimate (confidence medium), as no source read gives it: flowers all year (FNA), so ripe berries are on the plant all year; no source states fruiting separately."
     },
     "traits.elevation_min_m": {
       "evidence": "SourceInferred",
@@ -575,6 +582,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read counts it: FNA: racemes terminal and from the upper axils."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Rivina humilis (eFloras flora_id=1 taxon_id=220011674, read 2026-10-19): seeds lenticular, 2-3 mm, in thin, densely pubescent membranes; Flora of China ca. 2 mm."
     }
   },
   "provenance": {

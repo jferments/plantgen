@@ -20,7 +20,6 @@
       "terminal": "often"
     },
     "bract_form": "scale",
-    "inflorescence_bracts": 1,
     "flower_merosity": {
       "min": 5,
       "max": 5,
@@ -81,11 +80,6 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): bract 1 per flower, small."
-    },
-    "traits.inflorescence_bracts": {
-      "evidence": "SourceInferred",
-      "source": "flora-of-china",
-      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): bract 1 (under each flower)."
     },
     "traits.flower_merosity": {
       "evidence": "SourceInferred",

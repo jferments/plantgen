@@ -1,0 +1,55 @@
+# The leafy cacti (Pereskia): shrubs and small trees with broad, flat,
+# alternate leaves and woody stems, on the broadleaf base. Where a thorny
+# broadleaf carries a pair of thorns beside each bud, a pereskia's bud
+# sits in an areole, a short shoot whose spines grow in a cluster from the
+# leaf's axil, spread a little round the leaf and off the stem at about
+# thorn_angle. A young areole carries `areole_first` spines; an areole
+# goes on making spines as its stem ages, one more a year with the chance
+# `areole_growth`, up to `areole_spines`, so an old trunk is far spinier
+# than its twigs. Everything else grows as on the broadleaf base.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem pereskia 1 extends broadleaf;
+
+param thorns = 1;           # 1: an areole of spines in each leaf's axil
+param thorn_length = 0.02;
+param thorn_angle = 60;     # angle of a spine to its shoot
+param areole_spines = 6;    # most spines an areole makes
+param areole_first = 1;     # spines a new areole carries, on the average
+param areole_growth = 0.3;  # chance a year that an areole adds a spine
+param areole_spread = 30;   # how far the spines of an areole fan round and out, degrees
+
+module As(k, n);             # k spines still to place in a new areole, n placed
+module Ar(k);                # an areole with k spines, which may make more
+
+# A new areole's spines, areole_first of them on the average (1.5: one or
+# two), each turned a little round the stem
+# and off it.
+decompose As(k, n) : k >= 1 ->
+    [ /(gauss() * areole_spread) &(thorn_angle + gauss() * areole_spread * 0.5) thorn(thorn_length * uniform(0.6, 1.2)) ]
+    As(k - 1, n + 1);
+decompose As(k, n) : k < 1 -> Ar(n);
+
+# An areole adds a spine in a year with the chance areole_growth, until it
+# has areole_spines.
+rule Ar(k) : k < areole_spines && rand() < areole_growth ->
+    [ /(gauss() * areole_spread) &(thorn_angle + gauss() * areole_spread * 0.5) thorn(thorn_length * uniform(0.6, 1.2)) ]
+    Ar(k + 1);
+
+# A long shoot's node with one leaf, as on the broadleaf base, with an
+# areole above the leaf in place of the thorn pair.
+decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns > 0
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) incline(set_point, incline_rate) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    As(floor(areole_first + rand()), 0)
+    /(divergence) M(n - 1, u, l);
+
+# The nodes past the long ones: short-shoot and latent buds, each with its
+# areole.
+decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns > 0 ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    As(floor(areole_first + rand()), 0)
+    /(divergence) M(n - 1, u, l);

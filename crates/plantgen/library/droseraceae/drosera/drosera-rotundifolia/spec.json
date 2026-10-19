@@ -215,6 +215,15 @@
       "typical": 8
     },
     "flowering_stems": 1,
+    "fruit_seed_length_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "fruit_seed_colour": [
+      190,
+      155,
+      110
+    ],
     "marginal_gland_length_m": {
       "min": 0.00127,
       "max": 0.0032
@@ -224,6 +233,13 @@
       "min": 0.00011,
       "max": 0.0002
     },
+    "gland_head_shape": "oval",
+    "marginal_gland_head_shape": "elongated",
+    "disc_gland_stalk_colour": [
+      85,
+      135,
+      55
+    ],
     "gland_drop_diameter_m": {
       "min": 0.0003,
       "max": 0.0006
@@ -566,6 +582,16 @@
       "source": "wikipedia",
       "note": "Wikipedia, Drosera rotundifolia (read 2026-10-19): a single flowering stalk from the centre of the rosette."
     },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): seeds 1-1.5 mm, fusiform."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): seeds light brown with a metallic sheen; sRGB by eye for 'light brown'."
+    },
     "traits.marginal_gland_length_m": {
       "evidence": "SourceInferred",
       "source": "darwin-1875",
@@ -579,7 +605,22 @@
     "traits.gland_head_diameter_m": {
       "evidence": "SourceInferred",
       "source": "darwin-1875",
-      "note": "Darwin, Insectivorous Plants (1875), p.6: the glands are oval, 'about 4/500 of an inch in length' (0.20 mm); their width is D. intermedia's, 0.11-0.17 mm (Kozak et al. 2026), the model drawing the oval as a ball between the two."
+      "note": "Darwin, Insectivorous Plants (1875), p.6: the glands are oval, 'about 4/500 of an inch in length' (0.20 mm); their width is D. intermedia's, 0.11-0.17 mm (Kozak et al. 2026), the model drawing the oval as a ball between the two across, longer along its hair (gland_head_shape)."
+    },
+    "traits.gland_head_shape": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.6: the glands are oval."
+    },
+    "traits.marginal_gland_head_shape": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.6-7: the glands of the extreme marginal tentacles are elongated, unlike the oval glands of the disc."
+    },
+    "traits.disc_gland_stalk_colour": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4-5: the pedicels of the short tentacles on the disc are green; the colour is the model's leaf green, a little darker."
     },
     "traits.gland_drop_diameter_m": {
       "evidence": "Authored",
@@ -594,7 +635,7 @@
     "traits.gland_stalk_colour": {
       "evidence": "SourceInferred",
       "source": "darwin-1875",
-      "note": "Darwin, Insectivorous Plants (1875), p.4-5: the disc tentacles have green pedicels, the longer ones toward the margin purple, as nine to sixteen on a leaf of 252: the purple, the more, is drawn."
+      "note": "Darwin, Insectivorous Plants (1875), p.4-5: the disc tentacles have green pedicels, the longer ones toward the margin purple: the marginal colour, shading to the disc's green (disc_gland_stalk_colour) toward the middle."
     }
   },
   "provenance": {

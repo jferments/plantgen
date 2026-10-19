@@ -34,7 +34,7 @@
       "space_reach": 1.8,
       "space_kill": 0.5,
       "pipe_rings": 4.8e-06,
-      "bloom_area": 0.871,
+      "bloom_area": 2.142,
       "path_half": 10.0
     }
   },
