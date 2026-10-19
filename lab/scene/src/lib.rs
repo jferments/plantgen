@@ -286,7 +286,10 @@ pub fn template_hairs(templates: &Templates) -> Vec<[f32; 4]> {
         .templates
         .iter()
         .map(|template| {
-            let colour = template.hairs.as_ref().map_or([0.0; 3], |hairs| hairs.colour);
+            let colour = template
+                .hairs
+                .as_ref()
+                .map_or([0.0; 3], |hairs| hairs.colour);
             [colour[0], colour[1], colour[2], template.hair()]
         })
         .collect()
@@ -473,6 +476,10 @@ pub struct Shot {
     /// grid this many cells along each side: for renderers that cannot cut
     /// cards out by their texture, such as ray tracing. 0 for none.
     pub cut_cards: usize,
+    /// On level 0, draw every flower, fruit, cone and needle shoot as its
+    /// part mesh, as `plantc render --parts on` and full-quality exports
+    /// do near the camera. Ignored on the other levels.
+    pub parts: bool,
 }
 
 impl Shot {
@@ -495,6 +502,7 @@ impl Shot {
             frame_height: None,
             focus: None,
             cut_cards: 0,
+            parts: false,
         }
     }
 }
@@ -539,6 +547,38 @@ pub struct Scene {
     /// can be drawn without growing it again ([`levels`]); `None` for
     /// scenes that do not keep it.
     pub growth: Option<Arc<Growth>>,
+    /// What framing the plant needs, so a viewer can look at it from
+    /// another view without drawing it again ([`Scene::framing_for`]).
+    pub fit: Fit,
+}
+
+/// The sizes a plant is framed by: how far it reaches from its axis, the
+/// height framed, and its scale's height and gap, metres.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Fit {
+    pub reach: f64,
+    pub framed: f64,
+    pub scale_height: f64,
+    pub gap: f64,
+    /// Whether the scale stands beside the plant.
+    pub scale: bool,
+}
+
+impl Scene {
+    /// The camera that frames this plant from `view` in a picture `aspect`
+    /// wide over its height, as [`build`] would have framed it: changing
+    /// the view never needs the plant grown or drawn again.
+    #[must_use]
+    pub fn framing_for(&self, view: View, aspect: f64) -> Framing {
+        let fit = self.fit;
+        frame(
+            view,
+            aspect,
+            fit.scale,
+            None,
+            (fit.reach, fit.framed, fit.scale_height, fit.gap),
+        )
+    }
 }
 
 /// A part of the plant, as the readings count it.
@@ -609,6 +649,8 @@ pub struct Facts {
     pub triangles: usize,
     pub cards: usize,
     pub on_host: bool,
+    /// Flowers, fruit, cones and needle shoots drawn as part meshes.
+    pub parts: bool,
     pub export: ExportSizes,
 }
 
@@ -764,6 +806,115 @@ pub fn levels(shot: &Shot, library: &Library, growth: &Growth) -> Result<Vec<Fac
         .collect()
 }
 
+/// `shot`'s plant drawn from `growth`, a plant [`build_watched`] already
+/// grew from the same species, site, seed and age: what changes with the
+/// day, the level of detail, the quality and part meshes, without growing
+/// it again. The scene keeps `growth`.
+///
+/// # Errors
+///
+/// When the species does not load or the level does not draw.
+pub fn dress(shot: &Shot, library: &Library, growth: &Arc<Growth>) -> Result<Scene, String> {
+    let spec = load_spec(&shot.species, library)?;
+    let request = request(shot, &spec, library);
+    let drawing = drawing::dress(&request, Growth::clone(growth))?;
+    let mut scene = from_drawing(&drawing, &request, shot);
+    scene.growth = Some(Arc::clone(growth));
+    Ok(scene)
+}
+
+/// What an organ is doing on a day of its year, as the window's season
+/// strip shows it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Phase {
+    /// Not on the plant.
+    Gone,
+    Bud,
+    Flower,
+    /// Fruit still unripe, then ripe.
+    Unripe,
+    Ripe,
+    /// Leaves unfolding, in full leaf, and turning.
+    Unfolding,
+    Leaf,
+    Turning,
+}
+
+/// One organ's year: its phase on every day `TRACK_STEP` days apart from
+/// day 1.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Track {
+    /// The organ's name in the program (`flower`, `leaf`).
+    pub organ: String,
+    /// The leaves' year (unfold, turn, fall) rather than a flowering one.
+    pub leaves: bool,
+    pub phases: Vec<Phase>,
+}
+
+/// Days between a track's samples.
+pub const TRACK_STEP: usize = 3;
+
+/// Each seasonal organ's year as `spec` states it: its flowering organs'
+/// buds, flowers and fruit ([`plantgen::looks::Season`]), and deciduous
+/// leaves' unfolding, full leaf and turning ([`plantgen::looks::Leafing`]).
+/// Organs that look the same all year have no track.
+#[must_use]
+pub fn year(spec: &PlantSpec) -> Vec<Track> {
+    use plantgen::looks::Stage;
+    let days: Vec<f64> = (1..=365).step_by(TRACK_STEP).map(f64::from).collect();
+    let mut tracks = Vec::new();
+    for (organ, look) in &spec.appearance.organs {
+        if let Some(season) = &look.season {
+            let phases = days
+                .iter()
+                .map(|&day| match season.stage(day) {
+                    Stage::Gone => Phase::Gone,
+                    Stage::Bud => Phase::Bud,
+                    Stage::Flower => Phase::Flower,
+                    Stage::Fruit { unripe } if unripe > 0.5 => Phase::Unripe,
+                    Stage::Fruit { .. } => Phase::Ripe,
+                })
+                .collect();
+            tracks.push(Track {
+                organ: organ.clone(),
+                leaves: false,
+                phases,
+            });
+        }
+        if let Some(leafing) = &look.leafing {
+            let phases = days
+                .iter()
+                .map(|&day| {
+                    // A day before the leaves come out belongs to the next
+                    // year where they fall then, as `Leafing` counts it.
+                    let on = if day < leafing.out && day + 365.0 < leafing.fall {
+                        day + 365.0
+                    } else {
+                        day
+                    };
+                    if on < leafing.out || on >= leafing.fall {
+                        Phase::Gone
+                    } else if on < leafing.full {
+                        Phase::Unfolding
+                    } else if on < leafing.turn {
+                        Phase::Leaf
+                    } else {
+                        Phase::Turning
+                    }
+                })
+                .collect();
+            tracks.push(Track {
+                organ: organ.clone(),
+                leaves: true,
+                phases,
+            });
+        }
+    }
+    // Leaves first, then the flowering organs.
+    tracks.sort_by_key(|track| !track.leaves);
+    tracks
+}
+
 /// Each part's triangles and cards in `plant`: the wood, the cards of
 /// each organ kind by their template's organ, and the `solids` (spines)
 /// drawn in place of the cards from `first_solid` on.
@@ -822,6 +973,7 @@ fn request<'a>(shot: &'a Shot, spec: &'a PlantSpec, library: &'a Library) -> Req
     }
     request.day = shot.day;
     request.level = shot.level;
+    request.parts = shot.parts && shot.level == 0;
     request
 }
 
@@ -879,7 +1031,14 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
     } else {
         SceneMesh::default()
     };
-    let framing = frame(shot, reach, framed, scale_height, gap);
+    let scaled = shot.scale && shot.focus.is_none();
+    let framing = frame(
+        shot.view,
+        shot.aspect,
+        scaled,
+        shot.focus,
+        (reach, framed, scale_height, gap),
+    );
     let (shadow_low, shadow_high) = {
         let pad = framed * 1.5 + reach;
         (
@@ -903,6 +1062,7 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         triangles: wood.triangle_count() + cards.triangle_count() + solids.triangle_count(),
         cards: plant.cards.len(),
         on_host: drawing.on_host,
+        parts: request.parts,
         export,
     };
     let first_solid = if solid_spines {
@@ -937,6 +1097,13 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         facts,
         parts,
         growth: None,
+        fit: Fit {
+            reach,
+            framed,
+            scale_height,
+            gap,
+            scale: scaled,
+        },
     }
 }
 
@@ -1192,10 +1359,16 @@ pub fn scale(height: f64, x: f64) -> (SceneMesh, f64, f64) {
 
 /// The camera that frames a plant `framed` metres tall reaching `reach`
 /// from its axis, with its scale `gap` beyond, as `plantc`'s previews do.
-fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> Framing {
-    if let Some((point, span)) = shot.focus {
+fn frame(
+    view: View,
+    aspect: f64,
+    scale: bool,
+    focus: Option<([f64; 3], f64)>,
+    (reach, framed, scale_height, gap): (f64, f64, f64, f64),
+) -> Framing {
+    if let Some((point, span)) = focus {
         let target = Vec3::new(point[0], point[1], point[2]);
-        let direction = shot.view.direction();
+        let direction = view.direction();
         let half_fov = (FOV_Y_DEG.to_radians() * 0.5).tan();
         #[allow(clippy::cast_possible_truncation)]
         return Framing {
@@ -1207,12 +1380,12 @@ fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> F
             },
         };
     }
-    let height = if shot.scale {
+    let height = if scale {
         framed.max(scale_height * 1.1)
     } else {
         framed
     };
-    let right = if shot.scale {
+    let right = if scale {
         reach + gap + (0.5 * gap).max(0.05)
     } else {
         reach
@@ -1220,13 +1393,13 @@ fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> F
     let center_x = (right - reach) * 0.5;
     let half_width = f64::midpoint(right, reach);
     let half_fov = (FOV_Y_DEG.to_radians() * 0.5).tan();
-    let aspect = shot.aspect.max(0.1);
+    let aspect = aspect.max(0.1);
     let distance = (height * 0.5 / half_fov).max(half_width / (half_fov * aspect)) * 1.12 + reach;
     let target = Vec3::new(center_x, height * 0.5, 0.0);
     #[allow(clippy::cast_possible_truncation)]
-    match shot.view {
+    match view {
         View::Side | View::ThreeQuarter | View::Oblique => {
-            let direction = shot.view.direction();
+            let direction = view.direction();
             Framing {
                 eye: (target + direction * distance).to_f32(),
                 target: target.to_f32(),
@@ -1237,7 +1410,7 @@ fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> F
             }
         }
         View::Top => Framing {
-            eye: [center_x as f32, (height + 50.0) as f32, 0.0],
+            eye: [center_x as f32, (height + TOP_EYE_ABOVE) as f32, 0.0],
             target: [center_x as f32, 0.0, 0.0],
             up: [0.0, 0.0, -1.0],
             projection: Projection::Orthographic {
@@ -1246,6 +1419,12 @@ fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> F
         },
     }
 }
+
+/// How far above the plant's top the top view's eye stands, metres: far
+/// enough that nothing is clipped, which an orthographic camera allows.
+/// A perspective viewer finds the plant's framed height as the eye's
+/// height less this.
+pub const TOP_EYE_ABOVE: f64 = 50.0;
 
 /// A picture made of tiles: one plant each, with captions.
 #[derive(Debug, Clone)]
@@ -1549,7 +1728,7 @@ pub fn sidecar(facts: &Facts, picture: &str, width: u32, height: u32) -> String 
             "  \"crown_width_m\": {:.3},\n",
             "  \"triangles\": {},\n",
             "  \"cards\": {},\n",
-            "  \"on_host\": {}\n",
+            "  \"on_host\": {}{}\n",
             "}}\n"
         ),
         text(picture),
@@ -1570,6 +1749,13 @@ pub fn sidecar(facts: &Facts, picture: &str, width: u32, height: u32) -> String 
         facts.triangles,
         facts.cards,
         facts.on_host,
+        // Only when drawn, so sidecars of pictures without part meshes
+        // (and the batches that skip by them) stay as they were.
+        if facts.parts {
+            ",\n  \"parts\": true"
+        } else {
+            ""
+        },
     )
 }
 
