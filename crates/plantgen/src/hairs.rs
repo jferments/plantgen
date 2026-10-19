@@ -493,8 +493,7 @@ impl Form {
             Self::Stellate => 7.0,
             Self::Dendritic => 13.0,
             Self::Gland => 2.0,
-            Self::Sting => 1.5,
-            Self::Prickle => 1.5,
+            Self::Sting | Self::Prickle => 1.5,
         }
     }
 }
