@@ -312,7 +312,14 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
 
     // The seat: where the perianth stands.
     let cup_length = flower.tube * r;
-    let ovary_length = if cup_length > 0.0 {
+    // A cactus flower with a floral tube carries its perianth on the tube,
+    // so its pericarpel is only the ovary's own swelling at the tube's
+    // foot, short, not a stalk as long as the tube's cup (Anderson, The
+    // Cactus Family pp. 31 to 33).
+    let carried = flower.pericarpel != Skin::Naked && flower.floral_tube > 0.0;
+    let ovary_length = if carried && cup_length > 0.0 {
+        cup_length.min(0.5 * r)
+    } else if cup_length > 0.0 {
         cup_length
     } else {
         (1.2 * c).max(0.3 * r)
@@ -353,15 +360,30 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         ),
     };
     // A floral tube on the inferior ovary, widening a little to the rim
-    // the perianth stands on.
+    // the perianth stands on; a cactus's (a salverform cereus's) stays
+    // slender most of its length and flares abruptly near its mouth.
     let floral_tube = (position == Ovary::Inferior && flower.floral_tube > 0.0).then(|| {
         let neck = s.max(0.12 * ovary_length) * 0.7;
+        let (mouth, flare) = if carried {
+            let mouth = (s * 1.05).max(neck * 2.4);
+            (mouth, -0.35 * (mouth - neck))
+        } else {
+            ((s * 1.05).max(neck * 1.3), 0.0)
+        };
+        // Its foot sunk into the ovary's top where the two are as wide, so
+        // the receptacle runs on unbroken.
+        let height = match ovary {
+            Some((centre, a, b)) if carried && b > neck => {
+                centre + a * math::sqrt(1.0 - (neck / b).powi(2))
+            }
+            _ => seat,
+        };
         Tube {
-            height: seat,
+            height,
             length: flower.floral_tube * r,
             foot: neck,
-            mouth: (s * 1.05).max(neck * 1.3),
-            belly: 0.0,
+            mouth,
+            belly: flare,
             lobes: flower.sepals.max(n),
             turn: psi,
             calyx: 1.0,
@@ -1146,6 +1168,58 @@ impl Colours {
             _ => self.toward_calyx(tube.calyx),
         }
     }
+
+    /// As [`Self::of_tube`], but a cactus's floral tube, the pericarpel
+    /// carried up to the perianth, is the pericarpel's colour.
+    fn of_any_tube(&self, laid: &Floral, tube: &Tube) -> [f32; 3] {
+        if laid.pericarpel != Skin::Naked && laid.floral_tube.as_ref() == Some(tube) {
+            self.pericarpel
+        } else {
+            self.of_tube(tube)
+        }
+    }
+}
+
+/// The scales or areoles up a cactus's floral tube, spaced as on its
+/// pericarpel (`a` long by `b` wide), so the tube reads as the same
+/// receptacle carried up to the perianth: scaled, felted or spiny as the
+/// pericarpel is, though more sparsely spined.
+#[allow(clippy::too_many_arguments)]
+fn tube_skin(
+    laid: &Floral,
+    tube: &Tube,
+    frame: &Frame,
+    (a, b): (f64, f64),
+    colours: &Colours,
+    fine: bool,
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    // As many as on the pericarpel per length of skin, at most a few
+    // dozen.
+    let per = if fine { 21.0 } else { 8.0 };
+    let count = (per * tube.length / (1.55 * a.max(1e-6)))
+        .round()
+        .clamp(0.0, if fine { 60.0 } else { 16.0 });
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let count = count as u32;
+    // Sites sized for the tube, not the wider pericarpel.
+    let wide = b.min(tube.radius_at(0.5) * 2.5);
+    crate::fruit::tube_skin(
+        (
+            frame.foot + frame.axis * tube.height,
+            frame.axis,
+            frame.side,
+            tube.length,
+        ),
+        |u| tube.radius_at(u),
+        (laid.pericarpel, count, if fine { 2 } else { 0 }),
+        (a.min(wide * 2.0), wide),
+        colours.pericarpel,
+        colours.dress,
+        part,
+        mesh,
+    );
 }
 
 /// The calyx's colour where neither the flower nor the plant sets one: a
@@ -1218,6 +1292,9 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             part,
             mesh,
         );
+        if let Some(tube) = &laid.floral_tube {
+            tube_skin(laid, tube, &frame, (a, b), &colours, fine, part, mesh);
+        }
     }
     for tube in [&laid.floral_tube, &laid.calyx_tube, &laid.tube]
         .into_iter()
@@ -1228,8 +1305,12 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             tube,
             frame,
             (tube.lobes * round).clamp(8, 96),
-            if fine { 6 } else { 3 },
-            colours.of_tube(tube),
+            match (fine, tube.belly < 0.0) {
+                (true, true) => 12,
+                (true, false) => 6,
+                _ => 3,
+            },
+            colours.of_any_tube(laid, tube),
             part,
             mesh,
         );
@@ -1587,13 +1668,16 @@ pub(crate) fn draw_reduced(
             part,
             mesh,
         );
+        if let Some(tube) = &laid.floral_tube {
+            tube_skin(laid, tube, &frame, (a, b), &colours, false, part, mesh);
+        }
     }
     for tube in [&laid.floral_tube, &laid.calyx_tube, &laid.tube]
         .into_iter()
         .flatten()
     {
         let sides = tube.lobes.max(3);
-        let colour = colours.of_tube(tube);
+        let colour = colours.of_any_tube(laid, tube);
         for k in 0..sides {
             let a0 = tube.turn + TAU * f64::from(k) / f64::from(sides);
             let a1 = tube.turn + TAU * f64::from(k + 1) / f64::from(sides);
@@ -1775,6 +1859,38 @@ pub(crate) fn draw_reduced(
                 );
             } else {
                 both(&[foot - across, foot + across, tip], colour, mesh);
+            }
+        }
+        // More stamens than it draws one by one (a cactus's or a rose's
+        // hundred): their anthers as a starburst of 24 narrow spikes
+        // where their tips stand, in the anthers' colour, so the flower
+        // keeps the dense ring the full one shows.
+        if !naked && laid.stamens.len() > 12 {
+            #[allow(clippy::cast_precision_loss)]
+            let count = laid.stamens.len() as f64;
+            let (mut height, mut inner, mut outer) = (0.0, f64::MAX, 0.0_f64);
+            for stamen in &laid.stamens {
+                let (foot, direction) = frame.rod(&stamen.rod);
+                let tip = foot + direction * stamen.rod.length - frame.foot;
+                let up = tip.dot(axis);
+                let out = (tip - axis * up).length();
+                height += up / count;
+                inner = inner.min(out);
+                outer = outer.max(out);
+            }
+            let inner = inner.min(outer * 0.6);
+            for k in 0..24 {
+                let at = TAU * (f64::from(k) + 0.5) / 24.0;
+                let half = TAU / 24.0 * 0.3;
+                both(
+                    &[
+                        frame.point(at - half, inner, height),
+                        frame.point(at + half, inner, height),
+                        frame.point(at, outer, height),
+                    ],
+                    colours.anther,
+                    mesh,
+                );
             }
         }
     }

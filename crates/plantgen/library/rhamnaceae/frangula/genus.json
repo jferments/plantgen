@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Frangula",
+  "traits": {
+    "terminal_bud": false
+  },
+  "evidence": {
+    "traits.terminal_bud": {
+      "evidence": "SourceInferred",
+      "source": "sargent-1922",
+      "note": "Sargent's Manual (sargent-1922), Rhamnus (p. 723), where Frangula's species stood: 'Trees or shrubs, with terete often spinescent branches, without a terminal bud, scaly or naked axillary buds'."
+    }
+  }
+}

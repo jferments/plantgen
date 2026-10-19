@@ -592,9 +592,9 @@
       "group": "stem_and_bark",
       "organ": "stem",
       "type": "enum",
-      "values": ["tapering", "rounded", "broad"],
+      "values": ["tapering", "rounded", "broad", "flat"],
       "when": {"spines": ["areoles"]},
-      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, or broad, a rounded shoulder under a wide flattish top that may sink at its centre"
+      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, or flat, a low button or disc topped nearly level with its rim"
     },
     "stem_outline": {
       "group": "stem_and_bark",
@@ -700,6 +700,15 @@
       "type": "bool",
       "when": {"spines": ["areoles"]},
       "why": "whether each spine wears a papery sheath, as a cholla's do"
+    },
+    "stem_flecks": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["sparse", "numerous", "covering"],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "tufts of minute white hairs speckling a cactus's skin between its areoles, as an Astrophytum's: sparsely, numerously, or so densely they hide the skin"
     },
     "stem_colour": {
       "group": "stem_and_bark",
@@ -2264,9 +2273,9 @@
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
-      "values": ["naked", "scaly", "areolate", "spiny"],
+      "values": ["naked", "scaly", "areolate", "spiny", "woolly"],
       "when": {"spines": ["areoles"]},
-      "why": "what a cactus's pericarpel, and the fruit it grows into, bears on its skin: nothing (naked), broad scales, felted areoles (with glochids but no spines), or areoles with spines"
+      "why": "what a cactus's pericarpel, and the fruit it grows into, bears on its skin: nothing (naked), broad scales, felted areoles (with glochids but no spines), areoles with spines, or scales with long wool in their axils that hides much of the skin"
     },
     "fruit_shape": {
       "group": "fruit_and_cones",
@@ -2801,6 +2810,21 @@
       "type": "enum",
       "values": ["monopodial", "sympodial"],
       "why": "whether an axis grows on from its own tip or is carried on by a lateral"
+    },
+    "terminal_bud": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a woody plant's long shoots end the year in a true terminal bud, or their tips die and the topmost lateral bud carries each on, as a winter key's 'terminal bud wanting; branchlets prolonged by an upper axillary bud' (a birch's or an elm's), so its twigs and limbs zigzag and fork"
+    },
+    "branch_orientation": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["orthotropic", "plagiotropic"],
+      "optional": true,
+      "why": "whether the shoots a woody plant's limbs bear grow like small trunks, pointing every way with their buds all round them (orthotropic, an oak's or a poplar's), or lie flat, their buds and leaves to either side, so each limb carries level sprays (plagiotropic, a hazel's or an alder's)"
     },
     "flowering_position": {
       "group": "architecture",

@@ -3151,6 +3151,10 @@ pub enum FruitKind {
     /// A cactus fruit whose areoles bear short spines, crowned by its
     /// dried perianth (hedgehogs, organ pipe, spiny chollas).
     Spiny,
+    /// A cactus fruit under narrow scales whose axils bear long wool
+    /// that hides it, crowned by its dried perianth (Echinocactus,
+    /// Astrophytum).
+    Woolly,
     /// An aggregate of follicles on a cone-like axis (magnolias), the
     /// ripe ones split along their backs, each showing its seeds.
     Follicles,
@@ -3175,6 +3179,7 @@ impl FruitKind {
             Self::Scaly => Some(Skin::Scaly),
             Self::Areolate => Some(Skin::Areolate),
             Self::Spiny => Some(Skin::Spiny),
+            Self::Woolly => Some(Skin::Woolly),
             _ => None,
         }
     }
@@ -3195,6 +3200,9 @@ pub enum Skin {
     Areolate,
     /// Areoles with spines (hedgehogs, organ pipe).
     Spiny,
+    /// Narrow scales with long wool in their axils (Echinocactus,
+    /// Astrophytum).
+    Woolly,
 }
 
 impl Skin {
