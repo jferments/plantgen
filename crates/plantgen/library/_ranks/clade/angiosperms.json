@@ -601,6 +601,10 @@
       "map": {"spines": {"prickles": {"map": {"aciculi": {"none": 0, "sparse": 40, "dense": 300}}, "else": 0}}},
       "why": "Needle-like aciculi and bristles among the prickles are drawn as thin needles a third a prickle's length: on a stem 1 cm across about one every 2.5 cm where sparse, one every 3 mm where they cover it (a beach rose's young canes)."
     },
+    "appearance.organs.thorn.form.prickles.between_only": {
+      "map": {"spines": {"prickles": {"map": {"prickle_position": {"scattered": true}}}}},
+      "why": "A stem whose prickles are scattered between its nodes, as a catclaw's are, bears none at the nodes themselves."
+    },
     "appearance.organs.thorn.shape.template": {
       "map": {"spines": {"thorns": "blade", "prickles": "blade"}},
       "why": "A thorn or prickle is drawn from a blade card: its length the organ's, its foot's width the card's aspect, narrowing to a point."

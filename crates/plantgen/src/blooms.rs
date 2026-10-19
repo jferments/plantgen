@@ -627,6 +627,7 @@ pub(crate) fn build_coarse(
                     segment,
                     (width, look.bend.droop.to_radians()),
                     (between * kept, bristles * kept),
+                    !form.between_only,
                     painted,
                     part,
                     mesh,

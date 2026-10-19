@@ -36,6 +36,10 @@ pub struct PrickleForm {
     /// Aciculi (needle-like prickles, bristles) a metre of stem 1 cm
     /// across bears among them.
     pub bristles: f64,
+    /// Whether its prickles stand only between the nodes, none at them (a
+    /// flora's prickles "scattered" or "at the internodes": a catclaw's).
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub between_only: bool,
 }
 
 impl PrickleForm {
@@ -170,7 +174,7 @@ pub(crate) fn foot(organ: &GraphOrgan, segment: Option<&GraphSegment>) -> (Vec3,
     )
 }
 
-/// Draw a node organ's prickle, then `between` prickles and `bristles`
+/// Draw a node organ's prickle (where `node`), then `between` prickles and `bristles`
 /// aciculi on its internode `segment` (counts already thinned to the
 /// budget), each placed by the organ's id: the same plant draws them in
 /// the same places at every age.
@@ -180,6 +184,7 @@ pub(crate) fn draw_organ(
     segment: Option<&GraphSegment>,
     (width, curve): (f64, f64),
     (between, bristles): (f64, f64),
+    node: bool,
     colour: [f32; 3],
     part: Part,
     mesh: &mut Mesh,
@@ -188,22 +193,24 @@ pub(crate) fn draw_organ(
     let heading = organ.heading.normalize_or(Vec3::Y);
     let (stem, _, at) = foot(organ, segment);
     let thick = (width * 0.5).min(size * 0.2).max(size * 0.06);
-    draw(
-        &Prickle {
-            banded: true,
-            foot: at,
-            out: heading,
-            back: -stem,
-            length: size,
-            width: size * width,
-            thick,
-            curve,
-        },
-        SIDES,
-        colour,
-        part,
-        mesh,
-    );
+    if node {
+        draw(
+            &Prickle {
+                banded: true,
+                foot: at,
+                out: heading,
+                back: -stem,
+                length: size,
+                width: size * width,
+                thick,
+                curve,
+            },
+            SIDES,
+            colour,
+            part,
+            mesh,
+        );
+    }
     let Some(segment) = segment else {
         return;
     };
@@ -352,6 +359,7 @@ mod tests {
             Some(&segment),
             (0.6, 0.5),
             (3.0, 4.0),
+            true,
             [0.5; 3],
             part(),
             &mut mesh,
@@ -359,6 +367,22 @@ mod tests {
         assert_eq!(
             mesh.triangle_count(),
             PRICKLE_TRIANGLES + 3 * BETWEEN_TRIANGLES + 4 * NEEDLE_TRIANGLES
+        );
+        // Prickles only between the nodes: none at the node.
+        let mut between = Mesh::default();
+        draw_organ(
+            &organ,
+            Some(&segment),
+            (0.6, 0.5),
+            (3.0, 4.0),
+            false,
+            [0.5; 3],
+            part(),
+            &mut between,
+        );
+        assert_eq!(
+            between.triangle_count(),
+            3 * BETWEEN_TRIANGLES + 4 * NEEDLE_TRIANGLES
         );
         let first = mesh.positions[0];
         assert!((f64::from(first[0]).hypot(f64::from(first[2])) - 0.005).abs() < 0.004);

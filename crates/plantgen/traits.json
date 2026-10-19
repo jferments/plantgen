@@ -1173,6 +1173,14 @@
       "when": {"spines": ["prickles"]},
       "why": "needle-like prickles and stiff bristles mixed in among the prickles (a rose's aciculi, a raspberry's bristles): none, sparse, or dense, covering the stem's skin"
     },
+    "prickle_position": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["infrastipular", "scattered", "both"],
+      "when": {"spines": ["prickles"]},
+      "why": "where a stem's prickles stand: at the nodes, below the stipules (a rose's infrastipular prickles, often paired); scattered between the nodes and not at them (a catclaw's, \"distributed along branches at the internodes\"); or both"
+    },
     "thorn_origin": {
       "group": "stem_and_bark",
       "organ": "spine",

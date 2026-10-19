@@ -1110,7 +1110,8 @@ pub mod venation;
 /// `plantc export --bark-look spec` bakes it; and a thorn or prickle
 /// stands on its stem's surface, a prickle as a flattened cone curving
 /// back as its flora says (`spine_curve`, `spine_angle`, `spine_width_m`)
-/// with more between the nodes (`internodal_prickles`, `aciculi`), and
+/// with more between the nodes (`internodal_prickles`, `aciculi`) or
+/// only there (`prickle_position`), and
 /// a shoot's thorns stand alone where they are shoots (`thorn_origin`),
 /// on as many nodes as its flora says (`thorn_frequency`), as long as its
 /// range runs, falling from older stems where it says so
