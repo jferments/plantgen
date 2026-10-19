@@ -33,6 +33,26 @@
     }
   },
   "rules": {
+    "generator.params.joints": {
+      "map": {"stem_form": {"cylindric_joints": 1, "flat_joints": 1}},
+      "why": "Chollas, prickly pears and the jointed epiphytes grow as chains of joints."
+    },
+    "generator.params.pad": {
+      "map": {"stem_form": {"flat_joints": 1}},
+      "why": "A prickly pear's or a Christmas cactus's joints are flat."
+    },
+    "generator.params.joint_length": {
+      "rule": "joint_length_m",
+      "why": "A grown joint's length."
+    },
+    "generator.params.joint_radius": {
+      "rule": "joint_width_m / 2",
+      "why": "A joint's radius, or a pad's half width."
+    },
+    "generator.params.teeth": {
+      "rule": "joint_teeth",
+      "why": "A toothed joint's margins are cut into as many saw teeth a side as its flora gives."
+    },
     "appearance.organs.flower.form.flower.cup": {
       "map": {"corolla_shape": {"rotate": 10, "cupped": 35, "campanulate": 45, "funnelform": 50, "tubular": 65, "salverform": 15, "urceolate": 70}}, "between": true,
       "why": "A cactus's tepals are free, on a spiral that runs from the spreading outer ones to the upright inner ones about this mean rise: flat in a wheel, a bowl in a cup, a bell, a funnel, a narrow tube, a flat limb on a tube, an urn."
@@ -308,7 +328,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role."
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role. The joints of chollas, prickly pears and the jointed epiphytes from their stated form and size, for any cactus whose stem is a chain of joints."
     },
     "traits.perianth_parts": {
       "evidence": "SourceInferred",

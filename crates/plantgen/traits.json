@@ -657,6 +657,15 @@
       "when": {"stem_form": ["cylindric_joints", "flat_joints"]},
       "why": "a grown joint's thickness across, or a pad's width at its widest"
     },
+    "joint_teeth": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "count",
+      "range": [0, 20],
+      "optional": true,
+      "when": {"stem_form": ["flat_joints"]},
+      "why": "saw teeth on each margin of a flat joint, the top pair included, as a Christmas cactus's 'sharply serrate' joints; 0 an entire pad"
+    },
     "areole_spacing_m": {
       "group": "stem_and_bark",
       "organ": "areole",

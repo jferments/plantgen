@@ -1,0 +1,30 @@
+# The holiday cacti (Schlumbergera): epiphytes whose stems are chains of
+# short, flat joints, forking at each joint's tip, on the cactus base. A
+# joint is narrow at its foot and widens to a truncate top, its margins
+# cut into `teeth` saw teeth a side, the last pair at the top's corners
+# (Britton and Rose's Zygocactus truncatus: 'sharply serrate, with two
+# prominent teeth at otherwise truncate apex'). Each tooth rises slowly
+# from its notch and falls sharply to the next, so the teeth point toward
+# the joint's tip. Everything else grows as on the cactus base.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem schlumbergera 1 extends cactaceae;
+
+param teeth = 0;            # saw teeth on each margin of a flat joint; 0 an untoothed pad
+param tooth_depth = 0.18;   # how far a notch cuts in, as a share of the half width
+param joint_foot = 0.25;    # a toothed joint's half width at its foot, as a share of its widest
+
+module Jt(i, n, l, r);      # teeth i to n of a joint l long, r its half width
+
+# A toothed joint: its narrow foot, then its teeth, each a little wider
+# than the one below, the top pair widest.
+interpret Js(l, r) : pad > 0 && teeth > 0 ->
+    T(0, -1, 0, sag * l / 4) rest(rest_gap)
+    !(r * joint_foot) stem(l * 0.25)
+    Jt(0, teeth, l * 0.75, r);
+interpret Jt(i, n, l, r) : i < n ->
+    !(r * (1 - tooth_depth) * (0.85 + 0.15 * (i + 1) / n)) stem(l / n * 0.8)
+    !(r * (0.85 + 0.15 * (i + 1) / n)) stem(l / n * 0.2)
+    Jt(i + 1, n, l, r);
+interpret Jt(i, n, l, r) -> ;

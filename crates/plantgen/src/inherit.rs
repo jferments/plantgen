@@ -2600,7 +2600,13 @@ fn stage_seasons(
         if !fits || by_hand(origins, &look).is_some() {
             continue;
         }
+        // A look's year is counted from its first day, which must fall in
+        // the calendar year: fruit set after New Year (a Christmas
+        // cactus's, from flowers of November and December) is counted
+        // from the next year's start.
+        let shift = if days[0] > 365.0 { 365.0 } else { 0.0 };
         for (name, value) in SEASON_DAYS.iter().zip(days) {
+            let value = value - shift;
             let path = format!("{look}.season.{name}");
             #[allow(clippy::cast_possible_truncation)]
             let value = if value.fract() == 0.0 {
