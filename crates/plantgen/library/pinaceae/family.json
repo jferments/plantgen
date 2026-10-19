@@ -39,6 +39,18 @@
       "rule": "0.06",
       "why": "Once the leader slows, a lit limb still lengthens a few centimetres a year, so the old crown keeps its spread instead of stopping where the leader did."
     },
+    "generator.params.apical_light": {
+      "rule": "0.5",
+      "why": "Shade strengthens apical control: a shaded branch takes a smaller share of the leader's shoot than a lit one, so a tree grown in a stand keeps a narrow crown while its leader races up (forest-grown Douglas-fir about 3 m across its crown at 30 years, its trunk about 25 cm through). Taking the full share in any light, the shaded limbs of a stand-grown Douglas-fir spread 4 m and carried four times the needles, and its trunk grew twice as thick as stand-grown trees'."
+    },
+    "generator.params.limb_light": {
+      "rule": "0.01",
+      "why": "A limb older than limb_age whose tips catch too little light for the wood it carries is shed, so Douglas-fir, western hemlock and Sitka spruce grow past 150 years under the program's module limit (pinidae revision 13); set for the family, as the yews and cypresses it was not fitted on keep their limbs as before."
+    },
+    "generator.params.bud_length": {
+      "rule": "0.1",
+      "why": "A shoot shorter than 10 cm sets proportionally fewer side buds, so a slow old crown no longer smothers itself in buds (pinidae revision 13); set for the family, as the yews and cypresses it was not fitted on branch as before."
+    },
     "generator.params.top_ramp": {
       "rule": "2",
       "why": "Branch shoots are shortest in the top whorls and lengthen over the first metres below the treetop (Cannell et al. 1976, Sitka spruce), so the top is a point: at full length from the first year, young treetops were three to five times as wide as photographed ones."
