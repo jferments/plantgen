@@ -129,6 +129,7 @@
       "max": 0.007
     },
     "calyx_section": "angled",
+    "calyx_base": "swollen",
     "fruiting_calyx_posture": "reflexed",
     "leaf_width_m": {
       "min": 0.04,
@@ -334,6 +335,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 17 (Solanaceae), Datura stramonium (eFloras, read 2026-10-18): calyx tubular, 5-angular; Britton and Brown (vol. 3) and Gray (p. 717): prismatic; King's: 5-angled; Wikipedia: sharply angled."
+    },
+    "traits.calyx_base": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Datura stramonium' (read 2026-10-17): calyx long, tubular, swollen at the base and sharply angled, with five sharp teeth. No flora read gives its width low down; the bulge's size is the rule's."
     },
     "traits.fruiting_calyx_posture": {
       "evidence": "SourceInferred",

@@ -68,9 +68,9 @@
       "max": 0.045
     },
     "bark_colour": [
-      115,
-      135,
-      95
+      95,
+      85,
+      80
     ],
     "leaf_colour": [
       80,
@@ -126,6 +126,11 @@
     "fruiting_calyx_posture": "clasping",
     "stem_hairs": "tomentose",
     "hair_branching": "stellate",
+    "hair_colour": [
+      150,
+      145,
+      140
+    ],
     "leaf_hairs": "pubescent",
     "leaf_hairs_beneath": "tomentose",
     "spines": "prickles",
@@ -226,8 +231,8 @@
     },
     "traits.bark_colour": {
       "evidence": "SourceInferred",
-      "source": "bailey-cyclopedia-1914",
-      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 6 (1914-17), Solanum Melongena, p. 3182 (read on the Internet Archive, 2026-10-17): woolly or scurfy and spiny; the stems grey-green in photographs (iNaturalist 205124070). The colour is our reading."
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observations 407224305, 87451145 and 402680512 (CC-licensed photographs, viewed 2026-10-19 through imagekit, batch inat-eggplant-stems-2026-10-19): the young stems are dark purplish green under a thin felt. Bailey (vol. 6, p. 3182): woolly or scurfy. This is the skin's colour; the stem hairs draw the felt over it. The colour is our reading of the photographs."
     },
     "traits.leaf_colour": {
       "evidence": "SourceInferred",
@@ -308,6 +313,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): pubescent with stellate hairs, the leaves stellate-tomentose; Flora of British India (p. 235): star-shaped wool beneath."
+    },
+    "traits.hair_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observations 402680512 and 407224305 (CC-licensed photographs, viewed 2026-10-19 through imagekit, batch inat-eggplant-stems-2026-10-19): the stellate felt on the young stems and leaves reads grey, the dark skin showing through it; the plant is grey-green, not white. Bailey (vol. 6, p. 3182): woolly or scurfy. The colour is our reading of the photographs."
     },
     "traits.leaf_hairs": {
       "evidence": "SourceInferred",

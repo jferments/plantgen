@@ -139,6 +139,9 @@ pub struct Tube {
     pub mouth: f64,
     /// How much it swells in its middle.
     pub belly: f64,
+    /// How much it swells low down, most a third of the way up (a
+    /// jimsonweed's calyx, swollen at its base).
+    pub swell: f64,
     /// The lobes on its mouth: its vertices round are a multiple.
     pub lobes: u32,
     /// The angle of its first lobe.
@@ -154,7 +157,10 @@ impl Tube {
     /// Its radius `u` of the way from its foot to its mouth.
     #[must_use]
     pub fn radius_at(&self, u: f64) -> f64 {
-        self.foot + (self.mouth - self.foot) * u + self.belly * 4.0 * u * (1.0 - u)
+        self.foot
+            + (self.mouth - self.foot) * u
+            + self.belly * 4.0 * u * (1.0 - u)
+            + self.swell * 6.75 * u * (1.0 - u) * (1.0 - u)
     }
 
     /// Its radius `u` of the way up at `angle` round the axis: proud on
@@ -360,6 +366,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             foot: neck,
             mouth: (s * 1.05).max(neck * 1.3),
             belly: 0.0,
+            swell: 0.0,
             lobes: flower.sepals.max(n),
             turn: psi,
             calyx: 1.0,
@@ -380,6 +387,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         foot: s.max(r * 0.04),
         mouth: flower.throat * length,
         belly: flower.belly * length,
+        swell: 0.0,
         lobes: n,
         turn: psi,
         calyx: 0.0,
@@ -417,6 +425,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 foot,
                 mouth,
                 belly: 0.0,
+                swell: flower.calyx_swell * mouth,
                 lobes: flower.sepals,
                 turn: psi + PI / m,
                 calyx: 1.0,

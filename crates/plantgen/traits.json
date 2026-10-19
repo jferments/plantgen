@@ -1640,6 +1640,14 @@
       "optional": true,
       "why": "a joined calyx's tube in cross-section: round, or angled with a ridge down each sepal's midrib (a jimsonweed's prismatic, 5-angled calyx)"
     },
+    "calyx_base": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["even", "swollen"],
+      "optional": true,
+      "why": "a joined calyx's tube along its length: even, or swollen at its base (a jimsonweed's)"
+    },
     "calyx_colour": {
       "group": "flowers",
       "organ": "sepal",

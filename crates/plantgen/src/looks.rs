@@ -1916,6 +1916,10 @@ pub struct Flower {
     /// ridge down each sepal's midrib (a jimsonweed's prismatic calyx).
     #[serde(skip_serializing_if = "is_zero")]
     pub calyx_angled: f64,
+    /// How much a joined calyx's tube swells low down, over its mouth's
+    /// radius, 0 to 0.5 (a jimsonweed's, swollen at its base).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub calyx_swell: f64,
     /// The sepals' colour, and a spiral's outer tepals'; a leaf green if
     /// absent. A labellate flower's sepals take the petals' colour.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2129,6 +2133,7 @@ impl Default for Flower {
             sepal_length: SEPAL_LENGTH,
             sepals_fused: 0.0,
             calyx_angled: 0.0,
+            calyx_swell: 0.0,
             calyx: None,
             filament: None,
             pistil: None,
@@ -3703,6 +3708,7 @@ impl Shape {
                 check("sepal_length", s.sepal_length, 0.1, 3.0)?;
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
                 check("calyx_angled", s.calyx_angled, 0.0, 1.0)?;
+                check("calyx_swell", s.calyx_swell, 0.0, 0.5)?;
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
                     check("filament", f64::from(channel), 0.0, 1.0)?;

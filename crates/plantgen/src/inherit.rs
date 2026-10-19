@@ -1165,6 +1165,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("sepal_length", Number),
                 ("sepals_fused", Number),
                 ("calyx_angled", Number),
+                ("calyx_swell", Number),
                 ("corolla", Word),
                 ("banner", Number),
                 ("lip", Number),
