@@ -41,7 +41,7 @@ use crate::quality::Quality;
 /// its stems and thickest limbs and its leaves are a few cards.
 pub const DIAL_MAX: f64 = 6.0;
 
-/// The least share of its cap ([`crate::parts::cap`]) a part mesh may
+/// The least share of its finest triangles a part mesh may
 /// hold, and of its spines an areole keeps as solids, half a level along
 /// the dial, approached geometrically from the nearest level.
 pub const SOLID_SHARE: f64 = 1.0 / 16.0;
@@ -63,7 +63,7 @@ pub struct Detail {
     pub along: f64,
     /// Its lengths and counts, for a plant of the height it was given.
     pub lod: LodSpec,
-    /// Share of their caps the part meshes hold, and of their spines the
+    /// Share of their finest triangles the part meshes hold, and of their spines the
     /// areoles drawn solid keep; 1 on the nearest level, and 0 where
     /// neither is drawn.
     pub solid_detail: f64,
