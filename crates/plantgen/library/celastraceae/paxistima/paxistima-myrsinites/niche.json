@@ -1,0 +1,153 @@
+{
+  "schema": 2,
+  "species": "paxistima-myrsinites",
+  "layers": {
+    "shrub": 0.4
+  },
+  "moisture": [
+    0.2,
+    0.35,
+    0.8,
+    0.9
+  ],
+  "heat_load": [
+    0.2,
+    0.5,
+    1.6,
+    2.0
+  ],
+  "elevation_m": [
+    -50,
+    -10,
+    2800,
+    3300
+  ],
+  "max_slope_deg": 45,
+  "shade_tolerance": 0.6,
+  "coldest_c": [
+    -25,
+    -18,
+    6,
+    10
+  ],
+  "hard_freeze_c": [
+    -45,
+    -38,
+    3,
+    8
+  ],
+  "warmest_c": [
+    7,
+    10,
+    22,
+    26
+  ],
+  "degree_days_0": [
+    600,
+    1000,
+    5000,
+    6500
+  ],
+  "degree_days_5": [
+    150,
+    300,
+    3000,
+    4000
+  ],
+  "moisture_index": [
+    0.25,
+    0.4,
+    1,
+    1.01
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.5,
+    0.7
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A low evergreen shrub of conifer forest and open subalpine woods."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Moderately dry to moist ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Lowlands to subalpine."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Slopes and flats."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Shade tolerant."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about −18 to 6 °C; gone below −25 °C and above 10 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −38 °C borne, gone where the year's coldest night falls below about −45 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 10 to 22 °C; gone below 7 °C, where summers are too short, and above 26 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 1,000 to 5,000 degree-days above 0 °C, none below 600."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 300 to 3,000 degree-days above 5 °C, none below 150."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.4, gone by 0.25."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: summer-dry Cascade summers suit it; up to about 0.5 of the year's precipitation in summer, gone by 0.7."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Mount Rainier subalpine meadow scene (Paradise, about 1,650 m) from general knowledge of the species; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Oregon boxwood grows from British Columbia to California and New Mexico (the PLANTS Database). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}
