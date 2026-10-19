@@ -995,4 +995,13 @@ pub mod venation;
 /// pericarpel shortened to the ovary's swelling; a column stem's sink follows
 /// its height curve, so a seedling's top shows (142 is palm
 /// trunks, #240).
-pub const GENERATOR_REVISION: u32 = 143;
+/// 144: branching form (broadleaf 23): a shoot without a terminal bud
+/// dies back each year and its topmost lateral carries it on, sometimes
+/// as a fork (`tip_abort`, from `terminal_bud`); a plagiotropic plant's
+/// limbs carry flat sprays (`plagio`, from `branch_orientation`); a
+/// tree's dead branches stand until they fall (`dead_keep`); a
+/// small-leaved tree's or shrub's long shoots set their leaves no farther
+/// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
+/// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
+/// cactus genera, #239).
+pub const GENERATOR_REVISION: u32 = 144;
