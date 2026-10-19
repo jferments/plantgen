@@ -23,6 +23,7 @@ looked at it). Renders are always detected and need no triage.
 from __future__ import annotations
 
 import json
+import math
 import socket
 import sys
 import time
@@ -55,6 +56,9 @@ THRESHOLD, TEXT_THRESHOLD = 0.3, 0.25
 MIN_SIDE = 0.04      # a box narrower than this fraction of the image's long side is too small to read
 SAME = 0.5           # two boxes of one organ overlapping this much (IoU) are one
 MAX_PER_ORGAN = 8
+WITHIN_PAD = 0.05    # margin round a parent region when detecting inside it (--within)
+WITHIN_MAX = 48      # parts kept per organ inside the parent regions of one image
+WITHIN_TILE = 0.3    # a parent region larger than this (x the image's long side) is looked at in tiles this size
 LABEL_RULE = 2       # how a run-together label is read (organ_of_label); a change is a new analyzer
 
 
@@ -73,6 +77,8 @@ def register(sub) -> None:
     p.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     p.add_argument("--limit", type=int)
     p.add_argument("--run", help="run name (default detect-<model>-<date>)")
+    p.add_argument("--within", metavar="DETECTOR", help="look again inside this detect analyzer's regions of the same "
+                                                        "organs, one crop at a time (single flowers in a mass)")
     p.set_defaults(func=cmd_detect)
 
     p = sub.add_parser("crops", help="cut detected organs out into a folder, with crops.jsonl")
@@ -96,7 +102,8 @@ def public() -> list[str]:
     return [k for k, v in DETECTORS.items() if not v.get("test")]
 
 
-def definition(model: str, organs, threshold: float = THRESHOLD, detect_px: int = DETECT_PX) -> dict:
+def definition(model: str, organs, threshold: float = THRESHOLD, detect_px: int = DETECT_PX,
+               within: str | None = None) -> dict:
     if model not in DETECTORS:
         raise SystemExit(f"unknown detector {model!r}: one of {', '.join(public())}")
     bad = [o for o in organs if o not in PHRASES]
@@ -106,7 +113,11 @@ def definition(model: str, organs, threshold: float = THRESHOLD, detect_px: int 
     return {"task": "detect", "model": m["repo"], "model_revision": m["revision"],
             "params": {"phrases": {o: list(PHRASES[o]) for o in organs}, "threshold": threshold,
                        "text_threshold": TEXT_THRESHOLD, "detect_px": detect_px, "min_side": MIN_SIDE,
-                       "same_iou": SAME, "max_per_organ": MAX_PER_ORGAN, "labels": LABEL_RULE}}
+                       "same_iou": SAME, "max_per_organ": MAX_PER_ORGAN, "labels": LABEL_RULE,
+                       **({"within": {"detector": within, "pad": WITHIN_PAD}, "max_per_organ": WITHIN_MAX,
+                           "min_side": "of the parent region", "nested": "a box holding two of its organ is dropped",
+                           "tile": WITHIN_TILE, "tile_overlap": 0.25}
+                          if within else {})}}
 
 
 # --- selection --------------------------------------------------------------------------------------------------
@@ -168,6 +179,7 @@ def regions(store: Store, detector: str, rows: dict, triage: dict | None = None,
 def crop(store: Store, sha: str, box, pad: float = 0.0, px: int | None = None):
     """The region of an image (box in fractions), with a margin of pad x its long side, at most px on a side."""
     from PIL import Image
+
     from .vectors import load_image
     im = load_image(store.blob(sha))
     w, h = im.size
@@ -195,7 +207,8 @@ def tidy(found, defn: dict) -> list[dict]:
     order = list(p["phrases"])
     keep: dict[str, list] = {o: [] for o in order}
     for organ, box, score in sorted(found, key=lambda t: -t[2]):
-        if organ not in keep or max(box[2] - box[0], box[3] - box[1]) < p["min_side"]:
+        small = isinstance(p["min_side"], (int, float)) and max(box[2] - box[0], box[3] - box[1]) < p["min_side"]
+        if organ not in keep or small:
             continue
         if len(keep[organ]) < p["max_per_organ"] and all(_iou(box, b) < p["same_iou"] for b, _ in keep[organ]):
             keep[organ].append((box, score))
@@ -205,6 +218,71 @@ def tidy(found, defn: dict) -> list[dict]:
             out.append({"region": len(out) + 1, "organ": organ, "box": [round(v, 4) for v in box],
                         "score": round(score, 3)})
     return out
+
+
+def _inside(inner, outer, slack: float = 0.02) -> bool:
+    return (inner[0] >= outer[0] - slack and inner[1] >= outer[1] - slack and inner[2] <= outer[2] + slack
+            and inner[3] <= outer[3] + slack)
+
+
+def drop_nested(found) -> list:
+    """Drop each box that holds two or more smaller boxes of its organ: it is a mass of parts, not one."""
+    out = []
+    for organ, box, score in found:
+        area = (box[2] - box[0]) * (box[3] - box[1])
+        held = [b for o, b, _ in found if o == organ and b is not box and (b[2] - b[0]) * (b[3] - b[1]) < area
+                and _inside(b, box)]
+        if len(held) < 2:
+            out.append((organ, box, score))
+    return out
+
+
+def tiles(box, tx: float, ty: float, overlap: float = 0.25) -> list:
+    """box (fractions) cut into overlapping tiles at most tx wide and ty tall (about 1.2x on a short run)."""
+    return [[x0, y0, x1, y1] for y0, y1 in _steps(box[1], box[3], ty, overlap)
+            for x0, x1 in _steps(box[0], box[2], tx, overlap)]
+
+
+def _steps(a: float, b: float, tile: float, overlap: float) -> list:
+    if b - a <= tile * 1.2:
+        return [(a, b)]
+    n = math.ceil((b - a - tile * overlap) / (tile * (1 - overlap)))
+    step = (b - a - tile) / (n - 1)
+    return [(a + i * step, a + i * step + tile) for i in range(n)]
+
+
+def find_within(det, im, parents, pad: float, min_side: float, px: int = DETECT_PX, tile: float = WITHIN_TILE,
+                overlap: float = 0.25) -> list:
+    """The detector run inside each parent region of im, boxes back in image fractions. A large region is cut
+    into overlapping square tiles (tile x the image's long side), so that small parts fill enough of what the
+    detector sees; the whole region is looked at too, for parts bigger than a tile. A box smaller than min_side
+    of its crop's long side is dropped (the whole-image rule at the crop's scale), and so is a tile's box
+    touching a tile edge inside the region: a part smaller than the overlap lies whole in a neighbouring tile.
+    A box holding two smaller ones of its organ (the mass the parent saw) is dropped last."""
+    from PIL import Image
+    w, h = im.size
+    tx, ty = tile * max(w, h) / w, tile * max(w, h) / h
+    found = []
+    for reg in parents:
+        b = reg["box"]
+        m = pad * max(b[2] - b[0], b[3] - b[1])
+        cb = [max(0.0, b[0] - m), max(0.0, b[1] - m), min(1.0, b[2] + m), min(1.0, b[3] + m)]
+        whole = tiles(cb, 9.0, 9.0)
+        for tb in whole + [t for t in tiles(cb, tx, ty, overlap) if t != whole[0]]:
+            c = im.crop((round(tb[0] * w), round(tb[1] * h), round(tb[2] * w), round(tb[3] * h)))
+            if min(c.size) < 8:
+                continue
+            tw, th = tb[2] - tb[0], tb[3] - tb[1]
+            c.thumbnail((px, px), Image.Resampling.LANCZOS)
+            for organ, box, score in det.find(c):
+                if max(box[2] - box[0], box[3] - box[1]) < min_side:
+                    continue
+                if tb != cb and ((box[0] < 0.01 and tb[0] > cb[0]) or (box[1] < 0.01 and tb[1] > cb[1])
+                        or (box[2] > 0.99 and tb[2] < cb[2]) or (box[3] > 0.99 and tb[3] < cb[3])):
+                    continue
+                found.append((organ, [tb[0] + box[0] * tw, tb[1] + box[1] * th, tb[0] + box[2] * tw,
+                                      tb[1] + box[3] * th], score))
+    return drop_nested(found)
 
 
 def organ_of_label(label: str, phrases: dict) -> str | None:
@@ -238,6 +316,7 @@ class GroundingDino:
     def __init__(self, defn: dict, device: str):
         import torch
         from transformers import AutoModelForZeroShotObjectDetection, AutoProcessor
+
         from .vectors import pick_device
         self.torch, self.device = torch, pick_device(device)
         self.proc = AutoProcessor.from_pretrained(defn["model"], revision=defn["model_revision"])
@@ -295,15 +374,21 @@ def load_detector(name: str, defn: dict, device: str):
 def detect(store: Store, model: str = "gdino-tiny", organs=DEFAULT_ORGANS, *, taxa=None, batches=None,
            triage: str | None = None, all_images: bool = False, threshold: float = THRESHOLD,
            detect_px: int = DETECT_PX, device: str = "auto", limit: int | None = None, run: str | None = None,
-           log=None) -> dict:
-    """Detect organs in the images in scope that lack this detector's answer; return counts."""
+           within: str | None = None, log=None) -> dict:
+    """Detect organs in the images in scope that lack this detector's answer; return counts. With `within` (a
+    detect analyzer), look only inside that detector's kept regions of the same organs, one crop at a time, so a
+    mass of flowers becomes its single flowers."""
     from PIL import Image
+
     from .vectors import load_image
     log = log or (lambda *a: print(*a, file=sys.stderr))
-    defn = definition(model, list(organs), threshold, detect_px)
+    defn = definition(model, list(organs), threshold, detect_px, within)
     aid = analyzer.register(store, defn)
     rows = scope(store, taxa, batches)
     tri, answers = (None, {}) if all_images else triage_answers(store, rows, triage)
+    parents = regions(store, within, rows, answers if tri else None, set(organs)) if within else None
+    if parents is not None:
+        rows = {s: r for s, r in rows.items() if s in parents}
     if not all_images:
         if not tri and not all(is_render(r) for r in rows.values()):
             raise SystemExit("no triage on these images: run `imagekit run triage ...` first, or pass --all")
@@ -311,7 +396,8 @@ def detect(store: Store, model: str = "gdino-tiny", organs=DEFAULT_ORGANS, *, ta
     todo = store.missing(aid, sorted(rows))
     if limit is not None:
         todo = todo[:limit]
-    log(f"detect {model} (analyzer {aid}{', triage ' + tri if tri else ''}): {len(todo)} of {len(rows)} images")
+    log(f"detect {model} (analyzer {aid}{', within ' + within if within else ''}{', triage ' + tri if tri else ''}): "
+        f"{len(todo)} of {len(rows)} images")
     if not todo:
         return {"analyzer": aid, "detected": 0, "regions": 0}
     run = run or store.unsealed("run", f"detect-{model}-{time.strftime('%Y-%m-%d')}")
@@ -329,8 +415,12 @@ def detect(store: Store, model: str = "gdino-tiny", organs=DEFAULT_ORGANS, *, ta
             log(f"  unreadable, skipped: {sha} ({err})")
             continue
         size = list(im.size)
-        im.thumbnail((detect_px, detect_px), Image.Resampling.LANCZOS)
-        regs = tidy(det.find(im), defn)
+        if parents is not None:
+            im.thumbnail((4 * detect_px, 4 * detect_px), Image.Resampling.LANCZOS)  # crops keep their detail
+            regs = tidy(find_within(det, im, parents[sha], WITHIN_PAD, MIN_SIDE, detect_px), defn)
+        else:
+            im.thumbnail((detect_px, detect_px), Image.Resampling.LANCZOS)
+            regs = tidy(det.find(im), defn)
         dt = time.perf_counter() - t
         secs += dt
         row = {"sha256": sha, "region": 0, "analyzer": aid, "task": "detect", "status": "ok",
@@ -360,7 +450,7 @@ def cmd_detect(args, store: Store) -> None:
     organs = [o.strip() for o in args.organs.split(",") if o.strip()]
     print(json.dumps(detect(store, args.model, organs, taxa=args.taxon, batches=args.batch, triage=args.triage,
                             all_images=args.all, threshold=args.threshold, detect_px=args.detect_px,
-                            device=args.device, limit=args.limit, run=args.run), indent=1))
+                            device=args.device, limit=args.limit, run=args.run, within=args.within), indent=1))
 
 
 def cmd_crops(args, store: Store) -> None:
