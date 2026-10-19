@@ -358,6 +358,14 @@
       "type": "bool",
       "why": "whether it spreads by its own shoots, runners or roots"
     },
+    "culm_branching": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["simple", "branched", "much_branched"],
+      "optional": true,
+      "why": "whether a grass's flowering culms branch above the base as floras word it: unbranched, branching at some nodes, or branching from most nodes into a bushy, tangled mound (bush muhly, big galleta)"
+    },
     "stem_clump": {
       "group": "form",
       "organ": "plant",

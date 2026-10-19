@@ -190,7 +190,8 @@
       9,
       10,
       11
-    ]
+    ],
+    "culm_branching": "much_branched"
   },
   "evidence": {
     "taxon": {
@@ -357,6 +358,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.6 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.culm_branching": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), Muhlenbergia porteri: culms woody or persistent at base, numerous, wiry, widely spreading or ascending through bushes, mostly branching from all the nodes; FEIS: often highly branched."
     }
   },
   "provenance": {

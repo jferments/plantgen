@@ -179,7 +179,8 @@
       8,
       9,
       10
-    ]
+    ],
+    "culm_branching": "much_branched"
   },
   "evidence": {
     "taxon": {
@@ -296,6 +297,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.7 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.culm_branching": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935, p. 468), Hilaria rigida: plants rather robust at base, branching, the branches mostly erect or ascending; FEIS: highly branched at the base, giving it a bush-like appearance."
     }
   },
   "provenance": {
