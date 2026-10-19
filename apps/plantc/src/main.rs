@@ -314,6 +314,7 @@ Usage:
       or with `--looks litter` the 23 canopy species' litters: each look's
       colour above its relief.
   plantc bark --look FILE.json --out DIR [--size N] [--period M] [--seed N]
+  plantc bark --probe up|round --out DIR [--size N] [--period M]
       Draw a bark look (the bark language's drawing record) stage by
       stage, each at a diameter typical of it, as tiles repeating every
       M metres (default 0.5) of N texels a side (default 512): base
@@ -3127,11 +3128,7 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
 #[allow(clippy::too_many_lines)]
 fn bark_command(args: &[String]) -> Result<(), Failure> {
     use plantgen::bark_look::{self, BarkLook};
-    let options = Options::parse(args, &["look", "out", "size", "period", "seed"])?;
-    let path = options
-        .flags
-        .get("look")
-        .ok_or("missing `--look FILE.json`")?;
+    let options = Options::parse(args, &["look", "probe", "out", "size", "period", "seed"])?;
     let out = Path::new(options.flags.get("out").ok_or("missing `--out DIR`")?);
     let size = options.number::<usize>("size")?.unwrap_or(512);
     if !(16..=4096).contains(&size) || !size.is_power_of_two() {
@@ -3139,6 +3136,27 @@ fn bark_command(args: &[String]) -> Result<(), Failure> {
     }
     let period = options.number::<f64>("period")?.unwrap_or(0.5);
     let seed = options.number::<u64>("seed")?.unwrap_or(1);
+    // A probe: a metre of trunk a metre across, for checking renderers.
+    if let Some(way) = options.flags.get("probe") {
+        let up = match way.as_str() {
+            "up" => true,
+            "round" => false,
+            _ => return Err("`--probe` is `up` or `round`".into()),
+        };
+        fs::create_dir_all(out)
+            .map_err(|error| format!("cannot make {}: {error}", out.display()))?;
+        let name = format!("probe-{way}");
+        let file = out.join(format!("{name}.glb"));
+        let glb = bark_look::glb(&bark_look::probe(size, period, up), &name, 1.0, 1.0);
+        fs::write(&file, glb)
+            .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+        out!("wrote {}", file.display());
+        return Ok(());
+    }
+    let path = options
+        .flags
+        .get("look")
+        .ok_or("missing `--look FILE.json` or `--probe up|round`")?;
     let text = fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
     let look = BarkLook::from_json(&text).map_err(|error| error.to_string())?;
     fs::create_dir_all(out).map_err(|error| format!("cannot make {}: {error}", out.display()))?;
@@ -3191,6 +3209,10 @@ fn bark_command(args: &[String]) -> Result<(), Failure> {
             &tile.normal_rgba(),
         )?;
         write(format!("{stem}-orm.png"), size, size, &tile.orm_rgba())?;
+        // A metre of trunk wearing it, as glTF.
+        let file = out.join(format!("{stem}.glb"));
+        fs::write(&file, bark_look::glb(&tile, &stem, diameter, 1.0))
+            .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
         write(
             format!("{stem}-height.png"),
             size,

@@ -1271,6 +1271,135 @@ fn normalized(v: [f64; 3]) -> [f64; 3] {
     v.map(|c| c / length)
 }
 
+/// Waves on a probe tile, each way.
+pub const PROBE_WAVES: f64 = 4.0;
+
+/// A probe for checking how a renderer reads the maps: mid-grey (linear
+/// 0.5), fully rough, with `PROBE_WAVES` sine waves of relief a period,
+/// running up the stem when `up` (height varies along it) or round it,
+/// sloping at most one in two. Height at texel row (or column) `t` of the
+/// tile's `size` is `period / (4π waves) sin(2π waves t / size)`.
+#[must_use]
+pub fn probe(size: usize, period: f64, up: bool) -> Tile {
+    let amplitude = period / (4.0 * core::f64::consts::PI * PROBE_WAVES);
+    let mut height = Vec::with_capacity(size * size);
+    for y in 0..size {
+        for x in 0..size {
+            let t = crate::texture::to_f64(if up { y } else { x }) / crate::texture::to_f64(size);
+            height.push(amplitude * libm::sin(2.0 * core::f64::consts::PI * PROBE_WAVES * t));
+        }
+    }
+    Tile {
+        size,
+        period_m: period,
+        albedo: vec![[0.5; 3]; size * size],
+        height,
+        roughness: vec![1.0; size * size],
+        occlusion: vec![1.0; size * size],
+        thickness_m: 0.0,
+    }
+}
+
+/// `x` (0 or more, a few thousand at most) as a count.
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+fn whole(x: f64) -> usize {
+    x.max(0.0) as usize
+}
+
+/// A length of trunk `diameter` metres across and `length` long, drawn
+/// with `tile` as glTF's standard metallic-roughness material: base
+/// colour (sRGB), normal (+Y up the stem), and occlusion, roughness and
+/// metal in one map. The tile wraps a whole number of times round the
+/// trunk (stretched round it by at most half a tile) and once every
+/// period up it; texture coordinates count tiles, the image's top row up
+/// the stem. Tangents run round the trunk, to the right seen from outside,
+/// with `w` 1, so the bitangent glTF derives points up it.
+#[must_use]
+#[allow(clippy::cast_possible_truncation)] // Vertex data is single precision.
+pub fn glb(tile: &Tile, name: &str, diameter: f64, length: f64) -> Vec<u8> {
+    use crate::gltf::{self, Document, number};
+    use serde_json::json;
+    let circumference = core::f64::consts::PI * diameter;
+    let wraps = libm::round(circumference / tile.period_m).max(1.0);
+    let around = 16 * whole(wraps).clamp(2, 16);
+    let rings = (whole(libm::ceil(length / (diameter / 4.0))) + 1).clamp(2, 256);
+    let (mut positions, mut normals, mut tangents, mut uvs) = (vec![], vec![], vec![], vec![]);
+    for ring in 0..rings {
+        let along = crate::texture::to_f64(ring) / crate::texture::to_f64(rings - 1);
+        let y = along * length;
+        for step in 0..=around {
+            let share = crate::texture::to_f64(step) / crate::texture::to_f64(around);
+            // Counter to the angle, so round the trunk is to the right.
+            let angle = -2.0 * core::f64::consts::PI * share;
+            let (sin, cos) = (libm::sin(angle), libm::cos(angle));
+            positions.extend([0.5 * diameter * cos, y, 0.5 * diameter * sin].map(|v| v as f32));
+            normals.extend([cos, 0.0, sin].map(|v| v as f32));
+            // Along increasing u: the derivative of the position by `share`.
+            tangents.extend([sin, 0.0, -cos, 1.0].map(|v| v as f32));
+            uvs.extend([share * wraps, -y / tile.period_m].map(|v| v as f32));
+        }
+    }
+    let row = u32::try_from(around + 1).unwrap_or(u32::MAX);
+    let mut indices = vec![];
+    for ring in 0..u32::try_from(rings - 1).unwrap_or(0) {
+        for step in 0..u32::try_from(around).unwrap_or(0) {
+            let (a, b) = (ring * row + step, (ring + 1) * row + step);
+            // Counter-clockwise seen from outside, as glTF's front faces are.
+            indices.extend([a, a + 1, b, a + 1, b + 1, b]);
+        }
+    }
+    let mut document = Document::new();
+    let png =
+        |rgba: Vec<u8>| crate::raster::encode_png(tile.size, tile.size, &rgba).unwrap_or_default();
+    let sampler = document.sampler(json!({
+        "magFilter": gltf::LINEAR,
+        "minFilter": gltf::LINEAR_MIPMAP_LINEAR,
+        "wrapS": gltf::REPEAT,
+        "wrapT": gltf::REPEAT,
+    }));
+    let texture = |document: &mut Document, part: &str, rgba: Vec<u8>| {
+        let image = document.png(&format!("{name} {part}"), &png(rgba));
+        document.texture(image, sampler)
+    };
+    let colour = texture(&mut document, "base colour", tile.base_colour_rgba());
+    let normal = texture(&mut document, "normal", tile.normal_rgba());
+    let orm = texture(&mut document, "occlusion roughness metal", tile.orm_rgba());
+    let material = document.material(json!({
+        "name": name,
+        "pbrMetallicRoughness": {
+            "baseColorTexture": { "index": colour },
+            "metallicRoughnessTexture": { "index": orm },
+            "metallicFactor": 1,
+            "roughnessFactor": 1,
+        },
+        "normalTexture": { "index": normal },
+        "occlusionTexture": { "index": orm },
+        "extras": {
+            "plantgen_bark": {
+                "period_m": number(tile.period_m as f32),
+                "thickness_m": number(tile.thickness_m as f32),
+            },
+        },
+    }));
+    let primitive = json!({
+        "attributes": {
+            "POSITION": document.attribute(&positions, 3, true),
+            "NORMAL": document.attribute(&normals, 3, false),
+            "TANGENT": document.attribute(&tangents, 4, false),
+            "TEXCOORD_0": document.attribute(&uvs, 2, false),
+        },
+        "indices": document.indices(&indices),
+        "material": material,
+    });
+    let mesh = document.mesh(name, vec![primitive]);
+    let node = document.node(json!({ "name": name, "mesh": mesh }));
+    document.glb(
+        json!({ "version": "2.0", "generator": "PlantGen bark" }),
+        &[node],
+        json!({ "diameter_m": number(diameter as f32), "length_m": number(length as f32) }),
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1370,5 +1499,28 @@ mod tests {
                        {"name": "b", "until_diameter_m": 0.2, "architecture": "stretched", "colour": [1,2,3]},
                        {"name": "c", "architecture": "stretched", "colour": [1,2,3]}]}"#;
         assert!(BarkLook::from_json(text).is_err());
+    }
+
+    #[test]
+    fn trunk_glb_checks_and_carries_the_maps() {
+        let look = look();
+        let stage = look.stage_at(0.5);
+        let tile = bake(&look, stage, 0.5, 32, 0.25, 1);
+        let bytes = glb(&tile, "test", 0.5, 1.0);
+        let summary = crate::gltf::check(&bytes).unwrap();
+        assert_eq!(
+            (summary.meshes, summary.materials, summary.images),
+            (1, 1, 3)
+        );
+        let read = crate::gltf::Glb::read(&bytes).unwrap();
+        let material = &read.json["materials"][0];
+        assert_eq!(material["normalTexture"]["index"], 1);
+        assert_eq!(material["occlusionTexture"]["index"], 2);
+        assert_eq!(read.json["samplers"][0]["wrapS"], crate::gltf::REPEAT);
+        // Whole wraps round the trunk: 0.5 m across at a 0.25 m period.
+        let (uvs, width) = read.accessor(3).unwrap();
+        assert_eq!(width, 2);
+        let most = uvs.chunks(2).map(|uv| uv[0]).fold(0.0, f64::max);
+        assert!((most - 6.0).abs() < 1.0e-6, "{most}");
     }
 }
