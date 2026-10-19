@@ -304,7 +304,12 @@ species at each seed (default three): side, 45 degrees down, and three
 framed close-ups (a foliage shoot, a flower or fruit or a second shoot
 lower down, a leaf underside; for cacti the ribs, a flower and the apex),
 plus the species' flat cards from `plantc atlas`, one image per card, for
-the face-on features. Close-ups that are mostly sky or ground are dropped.
+the face-on features. Close-up frames scale with the plant's height, so a
+herb's shoot and flower fill them as a tree's do, and the flower close-up
+is aimed at the height whose draft probe shows the most flower. Close-ups
+that are still mostly sky or ground are dropped. Renders merge with a held
+image only on identical bytes, never on a near look: plain atlas cards of
+two species can sit within a few dHash bits of each other.
 Each image goes into a batch (`render-<species>-<date>`) with source
 `render`, licence CC0, and a `render` block saying how it was made: commit,
 generator revision, species id, seed, age, day, env, view, focus, span and

@@ -143,6 +143,11 @@ class Job:
         self.aid = analyzer.analyzer_id(self.definition)
         redo = ("invalid", "refused") if args.retry_invalid else ()
         self.todo = store.missing(self.aid, sorted(rows), 0, redo)
+        gone = [sha for sha in self.todo if not store.blob(sha).exists()]
+        if gone:  # a store pulled with --no-images holds the records, not the files
+            print(f"  {len(gone)} images in scope have no file in this store, skipped "
+                  f"(imagekit pull --batch ... without --no-images fetches them)", file=sys.stderr)
+            self.todo = [sha for sha in self.todo if sha not in set(gone)]
         if args.limit:
             self.todo = self.todo[: args.limit]
         self.held = len(rows) - len(store.missing(self.aid, sorted(rows), 0))
