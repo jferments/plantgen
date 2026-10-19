@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (713):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (804):\n  appearance.organs.*.inflorescence.branch.kind  {flowering}\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -103,15 +103,15 @@ fn rules_and_traits_say_where_they_come_from() {
         // leaf length and leaf habit; a stem succulent's
         // from its girth and flowers.
         format!(
-            "\n  appearance.organs.leaf.leafing.autumn  {flowering}\n  appearance.organs.leaf.leafing.fall  {flowering}\n  appearance.organs.leaf.leafing.full  {flowering}\n  appearance.organs.leaf.leafing.out  {flowering}\n  appearance.organs.leaf.leafing.turn  {flowering}\n  appearance.organs.leaf.shape.leaf on `sprig` cards  {flowering}\n  appearance.organs.leaf.shape.template  {flowering}\n  appearance.organs.leaf.shape.twigs on `sprig` cards  {flowering}\n  generator.params.bloom_angle  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.bloom_stalk  {flowering}\n  generator.params.bud_years  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.params.flower_tilt  {flowering}\n  generator.params.fork_angle  {flowering}\n  generator.params.fork_height  {flowering}\n  generator.params.forks  {flowering}\n  generator.params.fruit_length  {flowering}\n  generator.params.fruit_size  {flowering}\n  generator.params.geminate  {flowering}\n  generator.params.lie  {flowering}\n  generator.params.short_share  {flowering}\n  generator.params.sucker_spread  {flowering}\n  generator.params.suckers  {flowering}\n  generator.params.unit_leaves  {flowering}\n  generator.params.units  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
+            "\n  appearance.organs.leaf.leafing.autumn  {flowering}\n  appearance.organs.leaf.leafing.fall  {flowering}\n  appearance.organs.leaf.leafing.full  {flowering}\n  appearance.organs.leaf.leafing.out  {flowering}\n  appearance.organs.leaf.leafing.turn  {flowering}\n  appearance.organs.leaf.shape.leaf on `sprig` cards  {flowering}\n  appearance.organs.leaf.shape.template  {flowering}\n  appearance.organs.leaf.shape.twigs on `sprig` cards  {flowering}\n  generator.params.bloom_angle  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.bloom_stalk  {flowering}\n  generator.params.bud_years  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.params.flower_tilt  {flowering}\n  generator.params.fork_angle  {flowering}\n  generator.params.fork_height  {flowering}\n  generator.params.forks  {flowering}\n  generator.params.fruit_length  {flowering}\n  generator.params.fruit_size  {flowering}\n  generator.params.geminate  {flowering}\n  generator.params.lie  {flowering}\n  generator.params.scape  {flowering}\n  generator.params.short_share  {flowering}\n  generator.params.sucker_spread  {flowering}\n  generator.params.suckers  {flowering}\n  generator.params.unit_leaves  {flowering}\n  generator.params.units  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
         ),
         format!(
-            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.space_reach  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.spur_leaf  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n"
+            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.space_reach  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.spur_leaf  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.unit_nodes  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n"
         ),
         // The monocots' rules sort between the campanulids' and the seed
         // plants'.
         format!(
-            "\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.apex_whorl  {seed_plants}\n  generator.params.bloom_pairs  {seed_plants}\n  generator.params.bloom_years  {seed_plants}\n  generator.params.bole_clear  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.crown_fullness  {seed_plants}\n  generator.params.crown_ratio  {seed_plants}\n  generator.params.crown_widest  {seed_plants}\n  generator.params.dioecious  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.flat_top  {seed_plants}\n  generator.params.limb_arch  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.room_height  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.tip_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
+            "\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.apex_whorl  {seed_plants}\n  generator.params.bloom_pairs  {seed_plants}\n  generator.params.bloom_years  {seed_plants}\n  generator.params.bole_clear  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.crown_fullness  {seed_plants}\n  generator.params.crown_ratio  {seed_plants}\n  generator.params.crown_widest  {seed_plants}\n  generator.params.dioecious  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.flat_top  {seed_plants}\n  generator.params.limb_arch  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.plagio  {seed_plants}\n  generator.params.room_height  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.tip_abort  {seed_plants}\n  generator.params.tip_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
         ),
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
@@ -168,7 +168,7 @@ fn rules_and_traits_say_where_they_come_from() {
         "{built_in}"
     );
     assert!(
-        built_in.contains("General, with no taxonomic home: 85 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 138 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.
@@ -199,7 +199,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (714):\n"),
+        rules.starts_with("Rules, by their home (805):\n"),
         "{rules}"
     );
     assert!(

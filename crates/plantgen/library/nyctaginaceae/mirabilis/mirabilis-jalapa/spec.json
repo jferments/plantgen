@@ -1,0 +1,596 @@
+{
+  "schema": 1,
+  "id": "mirabilis-jalapa",
+  "taxon": {
+    "scientific_name": "Mirabilis jalapa",
+    "common_name": "four o'clock",
+    "family": "Nyctaginaceae",
+    "genus": "Mirabilis",
+    "plant_name_id": 2502156
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 3,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      3
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 0.8,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "forb",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "often"
+    },
+    "woodiness": "herbaceous",
+    "perennation": "tuber",
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 1.0,
+      "high": 2.0
+    },
+    "height_max_m": 2.0,
+    "stem_length_m": {
+      "min": 0.5,
+      "max": 1.5,
+      "high": 2.8
+    },
+    "crown_width_max_m": 1.2,
+    "stem_clump": "few",
+    "stem_posture": {
+      "erect": "usually",
+      "decumbent": "sometimes"
+    },
+    "stem_cross_section": {
+      "terete": "usually",
+      "square": "sometimes"
+    },
+    "stem_hairs": {
+      "glabrous": "usually",
+      "puberulent": "sometimes"
+    },
+    "crown_form": "rounded",
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.07
+    },
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.14,
+      "low": 0.03,
+      "high": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.09
+    },
+    "leaf_shape": {
+      "ovate": "usually",
+      "deltate": "often",
+      "lanceolate": "sometimes",
+      "cordate": "sometimes"
+    },
+    "leaf_apex": "acuminate",
+    "leaf_base_shape": {
+      "truncate": "often",
+      "obtuse": "often"
+    },
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "leaf_colour": [
+      62,
+      112,
+      48
+    ],
+    "inflorescence": "cyme",
+    "inflorescence_unit": "flower",
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 7
+    },
+    "flowering_position": "terminal",
+    "peduncle_length_m": {
+      "min": 0.0005,
+      "max": 0.005
+    },
+    "pedicel_length_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "bract_form": "leafy",
+    "inflorescence_bracts": 5,
+    "bract_length_m": {
+      "min": 0.005,
+      "max": 0.012
+    },
+    "perianth": "tepals",
+    "perianth_fused": true,
+    "corolla_shape": "salverform",
+    "corolla_tube_length_m": {
+      "min": 0.03,
+      "max": 0.05,
+      "low": 0.02,
+      "high": 0.06
+    },
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.03
+    },
+    "flower_merosity": 5,
+    "flower_colour": [
+      222,
+      52,
+      140
+    ],
+    "stamens": 5,
+    "stamen_exsertion": "exserted",
+    "carpels": 1,
+    "ovary_position": "superior",
+    "flower_posture": "ascending",
+    "fruit_type": "achene",
+    "fruit_size_m": {
+      "min": 0.007,
+      "max": 0.011
+    },
+    "fruit_width_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "fruit_shape": {
+      "ellipsoid": "usually",
+      "obovoid": "sometimes",
+      "globose": "sometimes"
+    },
+    "fruit_colour_ripe": [
+      38,
+      30,
+      26
+    ],
+    "fruit_colour_ripening": [
+      168,
+      176,
+      70
+    ],
+    "calyx_in_fruit": "persistent",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 1000,
+    "light": [
+      "sun"
+    ],
+    "habitat_notes": "Naturalised in North America on roadsides, old fields, fence rows and waste ground, 0-1000 m (to 2800 m elsewhere); a garden plant through the tropics and warm-temperate zones, native to Mexico.",
+    "habit_notes": "Bushy, much-branched herb from a large black tuberous root (up to 20 kg); nodes swollen; leaves in opposite pairs; flowers open in late afternoon and close next morning, fragrant; one plant may bear flowers of several colours and flowers splashed or striped with them (rose-pink, yellow, white, red, magenta).",
+    "shoot_leaves": {
+      "min": 12,
+      "max": 24,
+      "typical": 16
+    },
+    "flowering_branches": 4,
+    "flowering_branch_orders": 2,
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.06
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a bushy, repeatedly forking herb with opposite leaves and clusters of long-tubed trumpet flowers at the branch tips."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.8 m tall at 2 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a bushy, repeatedly forking herb with opposite leaves and clusters of long-tubed trumpet flowers at the branch tips."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): a herbaceous, bushy garden perennial or annual."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Mirabilis jalapa (read 2026-10-19; lower trust): perennial, grown as an annual in the temperate zone; FOC vol. 5 calls it an annual herb; FNA vol. 4: annual or perennial garden plant."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): herbs."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): roots tuberous, black or blackish brown; FNA vol. 4: the root may weigh up to 20 kg; Wikipedia: the underground part survives frost and sprouts in spring."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): to 1 m tall; Wikipedia: mostly 1 m, rarely up to 2 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Mirabilis jalapa (read 2026-10-19; lower trust): rarely up to 2 m."
+    },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): stems usually several, 5-15 dm (to 28 dm)."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a bushy clump about as wide as tall, to about 1.2 m."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): stems usually several (from the root crown): a few."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): stems erect, much branched; FNA vol. 4 genus: erect to decumbent; Wikipedia: posture often prostrate (not followed)."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): stems cylindric (terete); Wikipedia says quadrangular, kept as sometimes."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): herbage glabrous or lightly puberulent, the hairs often in 2 lines; FOC: glabrous or slightly pubescent."
+    },
+    "traits.crown_form": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Mirabilis jalapa (read 2026-10-19; lower trust): a bushy, much-branched plant; a rounded clump read from that (FOC: much branched)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis (eFloras, read 2026-10-19): leaves opposite."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Nyctaginaceae (eFloras, read 2026-10-19): opposite, decussate pairs (family)."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): flat blades."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Nyctaginaceae (eFloras, read 2026-10-19): leaf blade simple."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): petioles at midstem 1-7 cm; FOC: 1-4 cm; upper leaves short-stalked or sessile (sect. Mirabilis)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): blade 4-14 cm long; FOC vol. 5: 3-15 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): blade 2-9 cm wide; FOC the same."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): blade usually deltate-ovate, oblong-ovate or broadly lanceolate, the base cordate to obtuse; FOC: ovate or ovate-triangular, base truncate or cordate (cordate kept as sometimes, since the vocabulary puts a lobed base in the shape)."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): apex acuminate."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): base truncate or cordate; FNA: cordate to obtuse."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): margin entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): the herb glabrous or slightly pubescent; blades glabrous (FNA: herbage glabrous or lightly puberulent)."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: plain mid green; no source names the leaf colour; sRGB by eye."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis sect. Mirabilis (eFloras, read 2026-10-19): compact cymes in the upper axils and terminal, each involucre with 1 flower."
+    },
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis sect. Mirabilis (eFloras, read 2026-10-19): single flowers, each in its own involucre."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Mirabilis jalapa (read 2026-10-19; lower trust): inflorescences of 3-7 flowers; FOC: flowers usually several, clustered at branch tips."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): flowers usually several clustered at the tips of branches; FNA: also in the upper axils."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): peduncle 0.5-5 mm."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): pedicel 1-2 mm."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): involucre herbaceous (green, calyx-like)."
+    },
+    "traits.inflorescence_bracts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): involucre of 5 bracts, 40-60% connate; FOC: campanulate, 5-lobed."
+    },
+    "traits.bract_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): involucral bracts 5-12 mm in flower, 7-15(-17) mm in fruit; FOC: involucre about 1 cm."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): showy petaloid perianth, no corolla."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): perianth a tube 2-6 cm under a spreading limb."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis (eFloras, read 2026-10-19): limb salverform (FNA sect. Mirabilis: long funnelform, tube narrow, limb abruptly flared): a narrow tube with a flat limb."
+    },
+    "traits.corolla_tube_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): tube 2-6 cm; FNA: perianth (2-)3.5-5 cm overall."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): limb 2.5-3 cm across."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): limb 5-lobed."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): perianth usually rose-pink, sometimes yellow, rarely white or variegated; FOC: purple, red, yellow, white or variegated. sRGB by eye for the word."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): stamens 5, filaments slender, exserted."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): filaments exserted."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Nyctaginaceae (eFloras, read 2026-10-19): 1-carpellate."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Nyctaginaceae (eFloras, read 2026-10-19): ovary superior, enclosed in the perianth base."
+    },
+    "traits.flower_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: the long tubes rise at a slant from the involucres at the branch tips."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): fruit (anthocarp) dark brown to nearly black, smooth or obscurely rugose or tuberculate; read as achene."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): fruits 7-11 mm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): fruit 5-8 mm across."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): broadly ellipsoid to slightly obovoid, round or bluntly 5-angled in section; FOC: globose."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): fruits dark brown to nearly black; FOC: black. sRGB by eye for the word."
+    },
+    "traits.fruit_colour_ripening": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Mirabilis jalapa (read 2026-10-19; lower trust): fruits greenish yellow before turning black. sRGB by eye for the word."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): the involucre persists and grows a little, 7-15(-17) mm in fruit; the perianth base stays as the fruit wall while the limb falls (FOC: deciduous limb)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): flowering summer to early fall in North America (year-round elsewhere); FOC: June-October."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): fruiting August-November."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): 0-1000 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): to 1000 m in the flora (2800 m outside it)."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Mirabilis jalapa (read 2026-10-19; lower trust): does best in full sun."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis jalapa var. jalapa (eFloras, read 2026-10-19): roadsides, old fields, fence rows, waste areas; introduced; native to Mexico."
+    },
+    "traits.habit_notes": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis jalapa (eFloras, read 2026-10-19): nodes inflated; flowers open late afternoon, close next morning; FNA root to 20 kg; Wikipedia: flowers of different colours on one plant, sectors, flakes and spots."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a stem to 1 m forking repeatedly, with opposite pairs a few cm apart."
+    },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: stems much branched, the flowers clustered at the branch tips."
+    },
+    "traits.flowering_branch_orders": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: the stems fork again and again (FNA: much branched), so the side branches branch once more."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a terminal cluster of 3-6 flowers in their involucres, about as long as a flower tube."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

@@ -86,7 +86,6 @@
             "angle_spread": 10,
             "arc": 0,
             "length_spread": 0.2,
-            "hook": 170,
             "tip": [0.15, 0.08, 0.05]
           }
         ],

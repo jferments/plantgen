@@ -374,6 +374,10 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     if !strands.heads.indices.is_empty() {
         meshes.push((&strands.heads, Material::Gland));
     }
+    // Last: what lies behind a drop shows through it.
+    if !strands.drops.indices.is_empty() {
+        meshes.push((&strands.drops, Material::Drop));
+    }
     let mut shaded = vec![(&figure_mesh, Material::Opaque)];
     shaded.extend(items);
     // A close-up's shadow map covers only a box round what it frames, so its

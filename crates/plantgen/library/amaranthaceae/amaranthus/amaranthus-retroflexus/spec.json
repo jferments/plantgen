@@ -1,0 +1,534 @@
+{
+  "schema": 1,
+  "id": "amaranthus-retroflexus",
+  "taxon": {
+    "scientific_name": "Amaranthus retroflexus",
+    "common_name": "redroot pigweed",
+    "family": "Amaranthaceae",
+    "genus": "Amaranthus",
+    "plant_name_id": 2633061
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 1,
+    "step": 1,
+    "keyframes": [
+      1
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 1,
+      "environment": "open",
+      "height": 1.0,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "forb",
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "stem_posture": "erect",
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 1.5,
+      "high": 2.0
+    },
+    "height_max_m": 2.0,
+    "crown_width_max_m": 1.0,
+    "stem_diameter_max_m": 0.02,
+    "root_depth_max_m": 2.4,
+    "stem_cross_section": "angled",
+    "stem_hairs": "pubescent",
+    "stem_colour": [
+      140,
+      170,
+      95
+    ],
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_shape": {
+      "ovate": "usually",
+      "elliptic": "sometimes",
+      "lanceolate": "sometimes"
+    },
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.07
+    },
+    "petiole_length_m": {
+      "min": 0.015,
+      "max": 0.055
+    },
+    "leaf_base_shape": "cuneate",
+    "leaf_apex": {
+      "acute": "often",
+      "obtuse": "often",
+      "emarginate": "sometimes"
+    },
+    "leaf_margin": "entire",
+    "leaf_hairs": "puberulent",
+    "leaf_hairs_beneath": "pubescent",
+    "leaf_colour": [
+      80,
+      125,
+      55
+    ],
+    "inflorescence": "panicle",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.2
+    },
+    "flowering_position": "both",
+    "bract_length_m": {
+      "min": 0.0035,
+      "max": 0.005,
+      "low": 0.0025,
+      "high": 0.006
+    },
+    "flower_colour": [
+      160,
+      182,
+      128
+    ],
+    "flower_size_m": 0.003,
+    "perianth": "tepals",
+    "perianth_parts": 5,
+    "flower_merosity": 5,
+    "tepal_length_m": {
+      "min": 0.0025,
+      "max": 0.0035,
+      "low": 0.002,
+      "high": 0.004
+    },
+    "stamens": {
+      "min": 4,
+      "max": 5,
+      "low": 3
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 2
+    },
+    "sexual_system": "monoecious",
+    "fruit_type": "capsule",
+    "fruit_shape": {
+      "obovoid": "usually",
+      "ellipsoid": "sometimes",
+      "ovoid": "sometimes"
+    },
+    "fruit_size_m": {
+      "min": 0.0015,
+      "max": 0.0025
+    },
+    "fruit_colour_ripe": [
+      175,
+      190,
+      135
+    ],
+    "calyx_in_fruit": "persistent",
+    "flowering_months": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 2500,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "mesic",
+      "dry"
+    ],
+    "soil_texture": [
+      "loam",
+      "sand",
+      "clay"
+    ],
+    "habitat_notes": "Disturbed ground: fields, gardens, roadsides, railways, waste places, river and lake banks (FNA, FEIS).",
+    "shoot_leaves": {
+      "min": 15,
+      "max": 40,
+      "typical": 25
+    },
+    "inflorescence_branches": {
+      "min": 5,
+      "max": 15
+    },
+    "inflorescence_branch_kind": "spike",
+    "units_per_inflorescence": {
+      "min": 1000,
+      "max": 5000
+    },
+    "flowering_branches": 4
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: one stout erect stem branching above, ending in a dense bristly green panicle of spikes."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.0 m tall at 1 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: one stout erect stem branching above, ending in a dense bristly green panicle of spikes."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): an annual herb: forb."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Amaranthus retroflexus species review (fs.usda.gov/database/feis/plants/forb/amaret, read 2026-10-19): a coarse, monoecious annual herb with a taproot; regenerates from seed each year."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus (Mosyakin & Robertson) (eFloras, read 2026-10-19): herbs."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): stems erect; underdeveloped or damaged plants rarely ascending to nearly prostrate."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): stems 0.2-1.5(-2) m; FOC 20-80 cm; FEIS 0.3-2 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): to 2 m."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a large open-grown plant branched in its upper half spreads to about 1 m."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: FOC calls the stem stout; about 2 cm at the base of a large plant."
+    },
+    "traits.root_depth_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Amaranthus retroflexus species review (fs.usda.gov/database/feis/plants/forb/amaret, read 2026-10-19): taproot; in New Mexico pinyon-juniper woodland root depth averaged 100 cm, range 10-240 cm."
+    },
+    "traits.stem_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): stem slightly obtusely angled (var. retroflexus: thick, obtusely angulate)."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): densely to moderately pubescent, especially the distal stem and branches; FOC densely pubescent."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): stem light green; FNA: reddish near the base (the 'red root'); sRGB by eye for 'light green'."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): leafy erect stem, no basal rosette described."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus (Mosyakin & Robertson) (eFloras, read 2026-10-19): leaves alternate."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus (Mosyakin & Robertson) (eFloras, read 2026-10-19): leaves alternate; spiral assumed as for the genus."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): blade ovate to rhombic-ovate; FOC ovate-rhombic or elliptic; Wikipedia: upper leaves lance-shaped. Rhombic has no state; ovate leads."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): blade 2-15 cm; FOC 5-12 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): blade 1-7 cm wide; FOC 2-5 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): petiole light green, 1.5-5.5 cm, hairy; FNA petiole half to equalling the blade."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): base cuneate to rounded-cuneate; FOC cuneate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): apex acute, obtuse or slightly emarginate, with a terminal mucro (FOC acute or notched, with a mucro)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): margins entire, plane or slightly undulate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): both surfaces shortly hairy."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): densely hairy abaxially."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: no flora read names the leaf colour; a mid green, sRGB by eye."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): inflorescences terminal and axillary, branched, leafless at least distally, usually short and thick; FOC complex thyrsoid structures of many spikes, the terminal spike longer. Read as a panicle of dense spikes."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): erect or reflexed at the tip; FOC erect."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: FNA calls the inflorescences short and thick and FOC gives 2-4 cm across but no length; a terminal panicle of spikes about 5-20 cm long on a grown plant."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): inflorescences terminal and axillary; FEIS: often extra dense clusters in the axils of upper leaves."
+    },
+    "traits.bract_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): each flower's bract lanceolate to subulate, (2.5-)3.5-5(-6) mm, longer than the tepals, with an excurrent spiny midrib; FOC 4-6 mm, white. These floral bracts, not inflorescence-foot bracts, give the spike its bristly look."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): inflorescences green or silvery green, often with a reddish or yellowish tint; FOC tepals white with a green midvein; sRGB by eye for 'silvery green'."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: tepals 2.5-3.5 mm long (FNA), so a flower about 3 mm across."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): tepals 5, membranous."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): pistillate and staminate flowers with 5 tepals."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): tepals 5."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): pistillate tepals (2-)2.5-3.5(-4) mm, spatulate-obovate; FOC 2-2.5 mm."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): staminate flowers few at the tips of the inflorescences; stamens (3-)4-5."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): stigmas 3; FOC stigmas 3, rarely 2."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Amaranthus retroflexus species review (fs.usda.gov/database/feis/plants/forb/amaret, read 2026-10-19): monoecious; FNA staminate flowers few at the inflorescence tips."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): utricles with regular circumscissile dehiscence (a lid); Wikipedia calls it a capsule with a lid. Read as capsule."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): utricles broadly obovoid to broadly elliptic; FOC ovoid, compressed."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): utricles 1.5-2.5 mm, shorter than or about equal to the tepals."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): utricles light green; sRGB by eye for the words."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus (eFloras, read 2026-10-19): key: fruit enveloped in the persistent perianth (A. retroflexus)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Amaranthus retroflexus species review (fs.usda.gov/database/feis/plants/forb/amaret, read 2026-10-19): blooms July-October in the Great Plains, August-October in the central and northeastern US; FNA summer-fall; FOC flowering July-August."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): fruiting August-September; FEIS matures late summer or early fall, so October added."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): 0-2500 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): 0-2500 m; FEIS records to 2804 m in Colorado."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Amaranthus retroflexus species review (fs.usda.gov/database/feis/plants/forb/amaret, read 2026-10-19): an obligate initial-community species of bare, disturbed open sites."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Amaranthus retroflexus species review (fs.usda.gov/database/feis/plants/forb/amaret, read 2026-10-19): grows in dry to moist conditions."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Amaranthus retroflexus species review (fs.usda.gov/database/feis/plants/forb/amaret, read 2026-10-19): in Utah good growth on sandy loam, loam and clay, fair on sandy and clay-loam soils, poor on gravel and dense clay."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): banks of rivers, lakes and streams, disturbed habitats, agricultural fields, railroads, roadsides, waste areas."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a stem 0.2-1(-2) m with alternate leaves 2-4 cm apart."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: a dense terminal panicle of crowded spikes, with axillary spikes below; 5-15 spikes in the terminal one."
+    },
+    "traits.inflorescence_branch_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (read 2026-10-19): inflorescences terminal and axillary, the terminal one a dense panicle of thick, crowded spikes."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: each spike is packed with sessile flowers 2-3 mm long, a few hundred to a spike."
+    },
+    "traits.flowering_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: stems branched in the upper part, the branches ending in spikes."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

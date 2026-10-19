@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Astrophytum",
+  "parent": "subfamily/cactoideae",
+  "traits": {
+    "stem_form": "globose",
+    "stem_apex": "broad",
+    "tubercles": false,
+    "fruit_surface": "woolly",
+    "corolla_shape": "funnelform",
+    "flower_zone": "crown",
+    "stem_flecks": "numerous",
+    "areole_spacing_m": {
+      "min": 0.006,
+      "max": 0.009
+    },
+    "radial_spines": 0,
+    "central_spines": 0
+  },
+  "evidence": {
+    "traits.stem_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.stem_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.tubercles": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.fruit_surface": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.flower_zone": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.stem_flecks": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.areole_spacing_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    },
+    "traits.central_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: Astrophytum: stem unsegmented, dark green or gray-green, hemispheric or depressed-spheric, (2.5-)6-15 × 6-10(-20) cm, speckled by numerous tufts of dense, whitish hairs less than 0.5 mm; ribs 8-10, broad and nearly flat or rounded; areoles 6-9 mm apart, circular; spines absent. Flowers near the stem apex, funnelform; ovary sparsely to densely scaly, the axils long hairy with arachnoid trichomes. Fruits sparsely to densely scaly, the axils of the scales long woolly, spineless; floral remnant persistent."
+    }
+  }
+}

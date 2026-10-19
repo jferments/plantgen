@@ -265,8 +265,8 @@ fn fronds_and_pads_lie_on_the_ground() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
     assert_eq!(
-        checked, 49,
-        "eleven ferns, seven palms, a tree fern, fifteen cycads and fifteen cacti"
+        checked, 53,
+        "eleven ferns, seven palms, a tree fern, fifteen cycads and nineteen cacti"
     );
 }
 
@@ -891,9 +891,13 @@ fn builtin_clusters_draw_as_part_meshes() {
          harsh paintbrush's spikes and Pacific bleeding heart's racemes, and lamb\'s ear\'s spike \
          (hair practice), the tomato's, eggplant's and tobacco's cymes and panicle (nightshades), \
          western columbine's cymes, now that its genus states them, and the racemes of fringecup, \
-         blueblossom, spreading gooseberry and bush penstemon (phase A's first ten), and the \
+         blueblossom, spreading gooseberry and bush penstemon (phase A's first ten), the \
          fourteen of the Mount Rainier subalpine batch, and the fifteen of the Saguaro desert \
-         batch (beargrass's and banana yucca's flowering stalks are drawn whole, not as clusters)"
+         batch (beargrass's and banana yucca's flowering stalks are drawn whole, not as clusters), \
+         and the twelve of the Caryophyllales families: bladder campion's and four o'clock's cymes, \
+         pigweed's and jewels of Opar's panicles, thrift's and purslane's heads, sundew's coil, \
+         carpetweed's umbels, the racemes of pokeweed, saltcedar and rougeplant, and greasewood's catkins, \
+         and the glands' great and thread-leaved sundews' coils and hemp's spikes"
     );
 }
 

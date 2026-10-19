@@ -1,0 +1,612 @@
+{
+  "schema": 1,
+  "id": "tamarix-ramosissima",
+  "taxon": {
+    "scientific_name": "Tamarix ramosissima",
+    "common_name": "saltcedar",
+    "family": "Tamaricaceae",
+    "genus": "Tamarix",
+    "plant_name_id": 2521261
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 3.5,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "shrub",
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "height_typical_m": {
+      "min": 1,
+      "max": 3,
+      "high": 6
+    },
+    "height_max_m": 8,
+    "crown_width_max_m": 5,
+    "stem_clump": "many",
+    "crown_form": {
+      "vase": "often",
+      "rounded": "often"
+    },
+    "branching": "decurrent",
+    "bark_colour": [
+      84,
+      80,
+      78
+    ],
+    "twig_colour": [
+      168,
+      72,
+      48
+    ],
+    "leaf_form": "scale",
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.0015,
+      "max": 0.0035,
+      "high": 0.005
+    },
+    "leaf_shape": {
+      "lanceolate": "often",
+      "ovate": "often"
+    },
+    "leaf_apex": "acute",
+    "leaf_hairs": "glabrous",
+    "leaf_colour": [
+      140,
+      172,
+      122
+    ],
+    "leaf_colour_autumn": [
+      204,
+      128,
+      52
+    ],
+    "leaf_habit": "deciduous",
+    "leaf_out_months": [
+      3,
+      4,
+      5
+    ],
+    "leaf_fall_months": [
+      11,
+      12
+    ],
+    "inflorescence": "raceme",
+    "inflorescence_unit": "flower",
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.05,
+      "low": 0.005,
+      "high": 0.08
+    },
+    "units_per_inflorescence": {
+      "min": 30,
+      "max": 40
+    },
+    "inflorescence_posture": "erect",
+    "peduncle_length_m": {
+      "min": 0.002,
+      "max": 0.01
+    },
+    "bract_form": "scale",
+    "bract_length_m": {
+      "min": 0.0015,
+      "max": 0.002,
+      "high": 0.0028
+    },
+    "pedicel_length_m": {
+      "min": 0.0005,
+      "max": 0.0007
+    },
+    "flower_merosity": 5,
+    "perianth": "sepals_and_petals",
+    "perianth_fused": false,
+    "sepal_length_m": {
+      "min": 0.0005,
+      "max": 0.001,
+      "high": 0.0015
+    },
+    "petal_length_m": {
+      "min": 0.0015,
+      "max": 0.002,
+      "low": 0.001
+    },
+    "petal_shape": {
+      "obovate": "usually",
+      "elliptic": "often"
+    },
+    "petal_apex": "emarginate",
+    "corolla_shape": "cupped",
+    "flower_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "flower_colour": [
+      232,
+      146,
+      182
+    ],
+    "stamens": 5,
+    "stamen_exsertion": {
+      "barely_exserted": "usually",
+      "exserted": "sometimes"
+    },
+    "carpels": 3,
+    "ovary_position": "superior",
+    "sexual_system": "hermaphrodite",
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "fruit_shape": "ovoid",
+    "capsule_valves": 3,
+    "calyx_in_fruit": "persistent",
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "fruiting_months": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "age_max_years": 100,
+    "juvenile_period_years": 3,
+    "clonal": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "elevation_min_m": 0,
+    "elevation_max_m": 2500,
+    "light": [
+      "sun"
+    ],
+    "shade_tolerance": "intolerant",
+    "moisture": [
+      "wet",
+      "mesic",
+      "dry"
+    ],
+    "soil_texture": [
+      "sand",
+      "clay",
+      "loam"
+    ],
+    "habitat_notes": "Native from eastern Europe and Turkey across central Asia to western China and Mongolia on riversides, valleys, sandy or clayey saline plains and dunes; an aggressive invader of riverways, lakeshores and arroyos in western North America, 0-2500 m. A facultative phreatophyte and halophyte that excretes salt onto its leaves.",
+    "habit_notes": "Many-stemmed deciduous shrub; long woody growing branches persist, the fine green leafy branchlets fall in autumn with the leaves, so the foliage looks feathery. Old branches dark grey, the year's branches red or orange-yellow. Leaves tiny scales pressed along the twigs, often frosted with excreted salt. Spring racemes come laterally from last year's wood, summer racemes in terminal panicles on new shoots; pink, 5-merous flowers with petals persisting in fruit; seeds minute with a tuft of hairs, wind-borne. Resprouts from the root crown after fire or cutting.",
+    "branchlet_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a many-stemmed shrub with arching reddish stems, a feathery haze of scale-leaved branchlets and dense pink racemes at the shoot tips."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "3.5 m tall at 12 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a many-stemmed shrub with arching reddish stems, a feathery haze of scale-leaved branchlets and dense pink racemes at the shoot tips."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): shrubs or small trees."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): can be long lived."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): woody shrubs or trees."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): 1-3(-6) m tall; FEIS (North America): usually under 6 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): shrubs or trees to 8 m; FEIS: 4-8 m; Wikipedia: up to 8 m."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Tamarix ramosissima (read 2026-10-19; lower trust): up to 5 m wide."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): numerous large basal branches."
+    },
+    "traits.crown_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: Wikipedia calls it an arching shrub: many stems rising from the base and arching outward, vase-like to rounded."
+    },
+    "traits.branching": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: no leading stem; a spreading, much-branched crown on many basal stems (FOC: much branched)."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): old branches dark grey. sRGB by eye for the word."
+    },
+    "traits.twig_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): growing branches of the current year reddish or orange-yellow; Wikipedia: reddish stems. sRGB by eye for the word."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (eFloras, read 2026-10-19): leaves scale-like."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamaricaceae (eFloras, read 2026-10-19): leaves alternate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): blade 1.5-3.5 mm; FOC: leaves of vegetative branches 2-5 mm; FEIS: 1.5-3.5 mm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): leaves of growing branches lanceolate (FNA: lanceolate), those of the vegetative branchlets broadly ovate-orbicular or triangular-cordate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): apex acute."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): leaves glabrous, rarely hairy."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Tamarix ramosissima (read 2026-10-19; lower trust): feathery, pale green foliage. sRGB by eye for the word."
+    },
+    "traits.leaf_colour_autumn": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): in late November the foliage turns yellow-orange to orange-brown before it falls. sRGB by eye for the word."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): foliage deciduous."
+    },
+    "traits.leaf_out_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): buds swell from mid-February on the Salt River (Arizona); in northern Arizona a first flush of foliage in April-May (a second in late July)."
+    },
+    "traits.leaf_fall_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): foliage colours in late November before leaf drop (Arizona, Texas)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): racemes terminal on the current year's branches, clustered into terminal panicles; FNA: inflorescences 1.5-7 cm x 3-4 mm."
+    },
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): single flowers on short pedicels."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): racemes terminal on branches of the current year; FEIS: spring racemes lateral on last year's wood on plants that flower twice."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): racemes (0.5-)3-5(-8) cm x 3-5 mm; FNA: 1.5-7 cm; FEIS (Kansas): racemes average 3.8-5 cm."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): racemes average 3.8-5 cm long with about 20 flowers per inch (2.5 cm), so about 30-40 flowers each (our arithmetic)."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Tamarix ramosissima (read 2026-10-19; lower trust): upright racemes."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): peduncles 2-10 mm."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): bracts lanceolate to linear-subulate, small (scale)."
+    },
+    "traits.bract_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): bracts 1.5-2(-2.8) mm, equalling or exceeding the calyx; FNA: exceeding the pedicel, not reaching the calyx tip."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): pedicels 0.5-0.7 mm."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): flowers 5-merous."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): calyx of 5 sepals and 5 petals."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): petals free."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): sepals 0.5-1.5 mm, margins denticulate; FOC: calyx 0.5-1 mm."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): petals 1.5-2 mm; FOC: 1-1.7 mm."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): petals obovate to elliptic; FOC: obovate to broadly elliptic-obovate."
+    },
+    "traits.petal_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): apex emarginate."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): petals ascending, touching each other and forming a cup-shaped corolla."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a cup of 1-2 mm petals about 2-3 mm across with the stamens (FOC, FNA petal sizes)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): petals pink or purple; Wikipedia: small pink flowers. sRGB by eye for the word."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): antisepalous stamens 5; FOC: 5."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): stamens equalling or about 1.5 times the corolla."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): ovary 3-angled; styles 3."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): ovary superior."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): tamarisk flowers are bisexual."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): capsule."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): capsule 3-5 mm, 3-4 times the calyx."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): capsule 3-angled, conic; ovoid is the nearest state."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): capsule opening in 3."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamaricaceae (eFloras, read 2026-10-19): calyx persistent; petals persistent in fruit too (FOC species)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): flowering early spring to late fall in North America; FOC (Asia): May-September; FEIS: April-November in New Mexico."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): seed produced from May to October, most April-July."
+    },
+    "traits.age_max_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): shrubs 75-100 years old in New Mexico show no sign of decline; 100 as a lower bound on the maximum."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): most begin to reproduce in their third year or later (a few in their first)."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): resprouts from the root crown; buried stem pieces root; root suckering after fire nearly absent; lateral roots perhaps rhizomes (untested)."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): 0-2500 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): 0-2500 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): mature tamarisk is highly susceptible to shading; Wikipedia: full sun."
+    },
+    "traits.shade_tolerance": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): mature plants highly susceptible to shading, shaded plants have altered leaves and fewer flowers; Wikipedia: die after 1-2 years under 98% shade."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "USFS FEIS, Tamarix spp. species review (Zouhar 2003; read 2026-10-19): a facultative phreatophyte of floodplains, arroyos, alkali sinks and playas, rooting to the water table yet surviving drought."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): riversides, valleys, sandy or clayey salty plains, sand dunes; Wikipedia: tolerant of many soils, prefers light sandy ones."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6, Tamarix ramosissima (eFloras, read 2026-10-19): riverways, lakeshores, arroyos, 0-2500 m, introduced; FOC: native range and habitats; FEIS: phreatophyte, halophyte."
+    },
+    "traits.habit_notes": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): two branch kinds, the green branchlets falling in winter; salt glands; FEIS: two flowering seasons, wind-dispersed tufted seeds, sprouting from the root crown."
+    },
+    "traits.branchlet_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: leaves scale-like, 1.5-3.5 mm, on slender deciduous branchlets; the branchlets a few cm long."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

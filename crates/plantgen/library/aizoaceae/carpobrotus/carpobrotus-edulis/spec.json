@@ -1,0 +1,539 @@
+{
+  "schema": 1,
+  "id": "carpobrotus-edulis",
+  "taxon": {
+    "scientific_name": "Carpobrotus edulis",
+    "common_name": "Hottentot fig",
+    "family": "Aizoaceae",
+    "genus": "Carpobrotus",
+    "plant_name_id": 2701245
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 6,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "succulent",
+    "life_span": "perennial",
+    "woodiness": "semi",
+    "leaf_habit": "evergreen",
+    "stem_posture": "prostrate",
+    "clonal": true,
+    "stem_length_m": {
+      "min": 0.5,
+      "max": 3
+    },
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "height_max_m": 0.5,
+    "crown_width_max_m": 6,
+    "clone_radius_m": 25,
+    "bark_texture": "smooth",
+    "rosette": "none",
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "leaf_form": "blade",
+    "leaf_shape": "linear",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.11
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "petiole_length_m": 0,
+    "leaf_margin": "serrate",
+    "leaf_apex": "acute",
+    "leaf_hairs": "glabrous",
+    "leaf_posture": "ascending",
+    "leaf_colour": [
+      110,
+      145,
+      75
+    ],
+    "inflorescence": "solitary",
+    "pedicel_length_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "flower_size_m": {
+      "min": 0.08,
+      "max": 0.1,
+      "low": 0.064,
+      "high": 0.15
+    },
+    "perianth": "spiral",
+    "flower_merosity": 5,
+    "flower_colour": [
+      250,
+      215,
+      60
+    ],
+    "corolla_shape": "rotate",
+    "stamens": {
+      "min": 400,
+      "max": 600,
+      "high": 700
+    },
+    "stamen_length_m": {
+      "min": 0.006,
+      "max": 0.008,
+      "high": 0.012
+    },
+    "anther_colour": [
+      245,
+      210,
+      60
+    ],
+    "filament_colour": [
+      245,
+      215,
+      80
+    ],
+    "style_length_m": {
+      "min": 0.008,
+      "max": 0.015
+    },
+    "carpels": {
+      "min": 8,
+      "max": 12
+    },
+    "ovary_position": "inferior",
+    "hypanthium": true,
+    "flowering_months": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "fruit_type": "berry",
+    "fruit_shape": {
+      "club_shaped": "often",
+      "globose": "often"
+    },
+    "fruit_size_m": {
+      "min": 0.02,
+      "max": 0.035
+    },
+    "fruit_colour_ripe": [
+      205,
+      185,
+      90
+    ],
+    "fruit_colour_ripening": [
+      110,
+      145,
+      75
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 100,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry"
+    ],
+    "soil_texture": [
+      "sand",
+      "rock"
+    ],
+    "habitat_notes": "Coastal dunes, bluffs and terraces, estuary margins (FNA, introduced in California and Florida from South Africa); planted on road banks.",
+    "perianth_parts": {
+      "min": 100,
+      "max": 150
+    },
+    "leaf_succulence": "succulent",
+    "leaf_cross_section": "trigonous",
+    "shoot_leaves": {
+      "min": 20,
+      "max": 40,
+      "typical": 30
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a carpet of trailing succulent stems with crossing pairs of three-angled finger-like leaves and large yellow many-petalled flowers."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 6 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a carpet of trailing succulent stems with crossing pairs of three-angled finger-like leaves and large yellow many-petalled flowers."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): succulent subshrubs: the library's succulent class."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): succulent subshrubs."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): stems to 3 m; bark persistent, leathery: woody at the base only, read as semi."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Carpobrotus edulis (read 2026-10-19): grows year round; the leaves persist (succulent groundcover)."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): stems trailing, mat-forming, rooting at nodes."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Carpobrotus edulis (read 2026-10-19): stoloniferous growth and clonal integration; FNA stems root at the nodes."
+    },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): stems to 3 m (genus 5-30 dm); Wikipedia: shoots grow more than 1 m a year."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a mat of prostrate stems with ascending leaves and flowering shoots, about 10-30 cm deep; no flora gives a height."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: mats piled on themselves or scrambling over shrubs to about 0.5 m."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: one plant's stems run to 3 m in each direction (FNA), so about 6 m across before rooting stems make a clone."
+    },
+    "traits.clone_radius_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Carpobrotus edulis (read 2026-10-19): it can grow to at least 50 m in diameter."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): bark persistent, leathery; no fissures described, read as smooth."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): leaves cauline, in pairs along the trailing stems."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): leaves opposite, slightly connate basally."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): opposite pairs; decussate assumed as for the family's opposite-leaved mesembs."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): blade thick, fleshy, sharply 3-angled in cross-section (no vocabulary state for a trigonous blade; it is a blade, not a needle)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): blade 5-11 x 1-1.5 cm, widest below the middle, sharply 3-angled with a concave upper side: in outline long and narrow, read as linear."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): blade 5-11 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): blade 1-1.5 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): leaves sessile."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): outer angle serrate near the apex (Wikipedia: serrated sides near the tips)."
+    },
+    "traits.leaf_apex": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the 3-angled blade tapers to a pointed tip; acute."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): glabrous."
+    },
+    "traits.leaf_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves curve up from the prostrate stems (Wikipedia: very slightly curved)."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Carpobrotus edulis (read 2026-10-19): leaves dull green or yellow-green, fading to pink with age; FNA leaves green; sRGB by eye for 'dull green'."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): flowers solitary."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): pedicel 20-60 mm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): flowers 8-10 cm across; Wikipedia 6.4-15.2 cm, taken as low and high."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (read 2026-10-19): the showy 'petals' are petaloid staminodes, linear, many, in several series; drawn as a perianth of many parts in a spiral, the nearest the flower card draws."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): calyx lobes 4-5 (2 large outer, 2-3 inner); C. edulis lists 2 outer and 3 inner, so 5."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): petals yellow, aging pink (pink-flowered wild plants are hybrids); sRGB by eye for 'yellow'."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): petals distinct, spreading in many rows: rotate."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): stamens 100 per series, 4(-7) series: about 400 (to 700); the genus says to 600."
+    },
+    "traits.stamen_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): stamens 6-8(-12) mm."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): anthers yellow; sRGB by eye for the word."
+    },
+    "traits.filament_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): stamens yellow; sRGB by eye for the word."
+    },
+    "traits.style_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): style absent; stigmas radiating over the fruit, 8-15 mm (the stigma rays stand where a style would)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): pistil 8-12-carpellate (the species is not given separately)."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): ovary inferior."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Aizoaceae family account (Vivrette, Bleck & Ferren) (eFloras, read 2026-10-19): hypanthium present; Wikipedia: receptacle wedge-shaped, tapering into the pedicel."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): flowering year-round, mostly spring (California). A look has one season a year that begins with its buds, so year-round flowering is drawn as February to December, buds showing in late January (a library gap: no season yet runs all year)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (Vivrette) (eFloras, read 2026-10-19): berries, fleshy, edible, indehiscent."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): fruits clavate to subglobose, depressed at the top."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): fruits 20-35 mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): fruits yellowish; Wikipedia ripening from green to yellow; sRGB by eye for 'yellowish'."
+    },
+    "traits.fruit_colour_ripening": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Carpobrotus edulis (read 2026-10-19): fruit ripening from green to yellow; sRGB by eye for 'green' (taken as the leaf's green)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: no source gives the fruiting season; with mostly spring flowers in California, fruits ripen through summer into autumn."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): 0-100 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): 0-100 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Carpobrotus edulis (read 2026-10-19): flowers open in bright sunlight; a pioneer of open dunes."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, Carpobrotus (read 2026-10-19): drought tolerant; sandy coastal habitats of Mediterranean climates."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): coastal dunes, bluffs and terraces (sand, rock)."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (eFloras, read 2026-10-19): coastal dunes, bluffs and terraces, margins of estuaries; planted along highways and for dune stabilization."
+    },
+    "traits.perianth_parts": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: FNA: petaloid staminodes many, in 2-4 series, so about a hundred; the card draws at most 60. They are linear, 30-40 mm long (FNA), stated before as petal_length_m and petal_shape, which a spiral perianth does not take."
+    },
+    "traits.leaf_succulence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus (read 2026-10-19): leaves thick and fleshy, rounded-triangular to sharply three-angled in section."
+    },
+    "traits.leaf_cross_section": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Carpobrotus edulis (read 2026-10-19): blade sharply three-angled in section, the upper face concave; Wikipedia the same."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: trailing stems 1-3 m set with crossing pairs of leaves 4-13 cm long, the pairs about 10 cm apart and crowded toward the tips."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

@@ -3,6 +3,7 @@
   "aliases": {
     "chamaenerion-angustifolium": "epilobium-angustifolium",
     "cladium-jamaicense": "cladium-mariscus-subsp-jamaicense",
+    "echinocactus-polycephalus": "homalocephala-polycephala",
     "ferocactus-cylindraceus": "ferocactus-acanthodes-subsp-acanthodes",
     "mahonia-aquifolium": "berberis-aquifolium",
     "mahonia-nervosa": "berberis-nervosa",
@@ -24,6 +25,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "Cladium jamaicense, the name the spec's authors wrote, is a synonym of Cladium mariscus subsp. jamaicense in WCVP v16."
+    },
+    "aliases.echinocactus-polycephalus": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Echinocactus polycephalus, the Flora of North America's name, is a synonym of Homalocephala polycephala in WCVP v16."
     },
     "aliases.ferocactus-cylindraceus": {
       "evidence": "SourceInferred",

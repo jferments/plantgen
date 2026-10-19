@@ -6,67 +6,153 @@
   "traits": {
     "leaf_arrangement": {
       "alternate": "usually",
-      "whorled": "sometimes",
-      "opposite": "sometimes"
+      "opposite": "rarely"
     },
     "leaf_division": "simple",
     "leaf_margin": "entire",
     "leaf_venation": "pinnate",
     "stipules": {
-      "true": "rarely",
-      "false": "usually"
+      "false": "usually",
+      "true": "rarely"
     },
     "sexual_system": {
       "hermaphrodite": "usually",
       "dioecious": "sometimes"
     },
-    "ovary_position": {
-      "superior": "usually",
-      "half_inferior": "sometimes"
-    },
+    "ovary_position": "superior",
     "hypanthium": false,
     "woodiness": {
       "herbaceous": "usually",
       "woody": "sometimes"
     },
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often",
-      "raceme": "often",
+      "raceme": "usually",
       "spike": "often",
-      "panicle": "often"
+      "panicle": "sometimes",
+      "cyme": "sometimes"
     },
     "flower_symmetry": "actinomorphic",
-    "perianth": {
-      "tepals": "usually",
-      "sepals_and_petals": "sometimes"
-    },
+    "perianth": "tepals",
     "fruit_type": {
-      "capsule": "often",
-      "berry": "often",
-      "samara": "often",
-      "nut": "often",
-      "aggregate": "often",
-      "schizocarp": "often",
-      "drupe": "often",
-      "achene": "sometimes"
+      "berry": "usually",
+      "drupe": "sometimes",
+      "achene": "sometimes",
+      "capsule": "rarely"
     },
     "stamens": {
       "min": 4,
-      "max": 50
+      "max": 30,
+      "high": 100
     },
     "carpels": {
       "min": 4,
       "max": 12,
       "low": 1,
-      "high": 16
-    }
+      "high": 18
+    },
+    "flowering_position": "both",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "high": 8
+    },
+    "calyx_in_fruit": "persistent"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Phytolaccaceae with Achatocarpaceae, Agdestidaceae, Barbeuiaceae, Gisekiaceae, Stegnospermataceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes whorled or opposite; leaves simple; margins entire; veins pinnate; stipules usually absent, rarely present; plants usually hermaphrodite, sometimes dioecious; ovary usually superior, sometimes half inferior; floral cup absent; stems usually herbaceous, sometimes woody; flowers solitary, in cymes, in racemes, in spikes or in panicles; flowers actinomorphic; perianth usually tepals, sometimes sepals and petals; fruit capsule, berry, samara, nut, aggregate, schizocarp or drupe, sometimes achene; stamens 4 to 50; carpels (1-) 4 to 12 (-16). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): leaves simple, alternate. FNA vol. 4 (broad family) adds opposite or seemingly whorled leaves, which belong to Gisekia (now Gisekiaceae)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): leaves simple."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolaccaceae (eFloras, read 2026-10-19): margins entire, often undulate; FOC: entire."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolaccaceae (eFloras, read 2026-10-19): blade pinnately veined."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): stipules absent or tiny; FNA: minute or absent."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): rarely dioecious; flowers bisexual or rarely unisexual."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): herbs or shrubs, rarely trees."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): racemose, cymose, panicled or spicate; FNA vol. 4: spikes, racemes, panicles or compound dichasia. Racemes first by Phytolacca's weight."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolaccaceae (eFloras, read 2026-10-19): inflorescences axillary, terminal or leaf-opposed."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): flowers actinomorphic, rarely zygomorphic."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolaccaceae (eFloras, read 2026-10-19): sepals 4-8, usually persistent, often unequal; petals absent. FOC: tepals 4 or 5. One whorl, so tepals."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): tepals 4 or 5; FNA: sepals 4-8."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): ovary superior (FNA: inferior only in Agdestis, now Agdestidaceae)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolaccaceae (eFloras, read 2026-10-19): flowers hypogynous, stamens sometimes on a hypogynous disk; no floral cup."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolaccaceae (eFloras, read 2026-10-19): stamens 4-30 (to 100 outside the flora); FOC: 4 to many."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolaccaceae (eFloras, read 2026-10-19): gynoecium 1-12(-18)-carpellate; FOC: carpels 1 to many. Family file's (1-)4-12 range kept, high raised to 18."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): fruit fleshy, a berry or drupe, rarely a capsule; FNA vol. 4 (broad family): achenes, berries or cypselas."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Phytolaccaceae (eFloras, read 2026-10-19): tepals persistent; FNA: sepals usually persistent."
     }
   }
 }
