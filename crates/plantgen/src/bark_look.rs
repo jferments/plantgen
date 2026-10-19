@@ -41,6 +41,27 @@ pub const BASE_RISE: f64 = 4.0;
 /// level limb.
 pub const UNDERSIDE: f64 = 0.35;
 
+/// How far either side of where a stage ends the next one comes in, as a
+/// share of that diameter or height: gradually, over [`BLEND_STEPS`]
+/// textures that mix the two, as plates and dark base bark spread over a
+/// trunk (inferred; imagekit will measure it).
+pub const BLEND: f64 = 0.3;
+
+/// How far either side of [`UNDERSIDE`] an underside stage comes in, in
+/// the downward share of the normal.
+pub const UNDERSIDE_BLEND: f64 = 0.15;
+
+/// How many steps a blend between two stages takes: the later stage
+/// covers a quarter, a half, then three quarters of the bark.
+pub const BLEND_STEPS: u8 = 4;
+
+/// How much the stem's patches ([`patch`]) move a blend's step, at most,
+/// in its middle: neighbouring faces of one ring take different steps.
+pub const PATCH_JITTER: f64 = 0.25;
+
+/// The size of those patches, in metres (inferred).
+pub const PATCH_M: f64 = 0.4;
+
 /// The record's schema.
 pub const BARK_LOOK_SCHEMA: u32 = 1;
 
@@ -557,6 +578,123 @@ impl std::fmt::Display for BarkLookError {
     }
 }
 
+/// What a piece of stem wears ([`BarkLook::wear_where`]): stage `over`
+/// covering `step` of [`BLEND_STEPS`] of stage `under`; one stage alone
+/// is both, at step 0.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Wear {
+    pub under: usize,
+    pub over: usize,
+    pub step: u8,
+}
+
+impl Wear {
+    /// Stage `stage` alone.
+    #[must_use]
+    pub fn plain(stage: usize) -> Self {
+        Self {
+            under: stage,
+            over: stage,
+            step: 0,
+        }
+    }
+
+    /// The stage that covers most of it (at half, the later one).
+    #[must_use]
+    pub fn most(self) -> usize {
+        if 2 * self.step >= BLEND_STEPS {
+            self.over
+        } else {
+            self.under
+        }
+    }
+
+    /// The share of the bark the later stage covers.
+    #[must_use]
+    pub fn share(self) -> f64 {
+        f64::from(self.step) / f64::from(BLEND_STEPS)
+    }
+}
+
+/// `over` covering `share` of `under`, two tiles of one size and period:
+/// it takes first the texels where its own bark stands highest (plates,
+/// ridges and lifted pieces come first) in patches about a fifth of the
+/// tile across, so a larger share covers all a smaller one did.
+#[must_use]
+pub fn mix(under: &Tile, over: &Tile, share: f64, seed: u64) -> Tile {
+    let size = under.size;
+    let count = size * size;
+    let (low, high) = over.relief();
+    let span = (high - low).max(1.0e-9);
+    let draws = crate::texture::Draws(hash_words(&[seed, 0x006d_6978]));
+    let mut order: Vec<(f64, usize)> = (0..count)
+        .map(|texel| {
+            let (x, y) = (
+                crate::texture::to_f64(texel % size),
+                crate::texture::to_f64(texel / size),
+            );
+            let noise = crate::texture::fbm(draws, 5, 3, x, y, size);
+            let raised = (over.height[texel] - low) / span;
+            (0.65 * noise + 0.35 * raised, texel)
+        })
+        .collect();
+    order.sort_by(|a, b| b.0.total_cmp(&a.0).then(a.1.cmp(&b.1)));
+    let mut tile = under.clone();
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let taken = libm::round(share.clamp(0.0, 1.0) * crate::texture::to_f64(count)) as usize;
+    for &(_, texel) in &order[..taken.min(count)] {
+        tile.albedo[texel] = over.albedo[texel];
+        tile.height[texel] = over.height[texel];
+        tile.roughness[texel] = over.roughness[texel];
+        tile.occlusion[texel] = over.occlusion[texel];
+    }
+    tile.thickness_m = under.thickness_m.max(over.thickness_m);
+    tile
+}
+
+/// A smooth noise, 0 to 1, over the stem's surface at `position` (metres):
+/// patches about [`PATCH_M`] across with ragged edges a third that size,
+/// the same everywhere for one position.
+#[must_use]
+pub fn patch(position: [f64; 3]) -> f64 {
+    let coarse = lattice_noise(position, PATCH_M, 1);
+    let fine = lattice_noise(position, PATCH_M / 3.0, 2);
+    // Value noise gathers near a half; spread it back over 0 to 1.
+    (0.5 + 1.6 * (0.75 * coarse + 0.25 * fine - 0.5)).clamp(0.0, 1.0)
+}
+
+/// Value noise on a cubic lattice `cell` metres across, smoothly
+/// interpolated; `salt` picks the lattice values.
+fn lattice_noise(position: [f64; 3], cell: f64, salt: u64) -> f64 {
+    let scaled = position.map(|x| x / cell);
+    let base = scaled.map(libm::floor);
+    let fraction: Vec<f64> = (0..3)
+        .map(|axis| {
+            let t = scaled[axis] - base[axis];
+            t * t * (3.0 - 2.0 * t)
+        })
+        .collect();
+    let mut total = 0.0;
+    for corner in 0..8_u64 {
+        let mut weight = 1.0;
+        let mut words = [salt, 0, 0, 0];
+        for axis in 0..3 {
+            let up = (corner >> axis) & 1 == 1;
+            weight *= if up {
+                fraction[axis]
+            } else {
+                1.0 - fraction[axis]
+            };
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            {
+                words[axis + 1] = (base[axis] as i64 + i64::from(up)) as u64;
+            }
+        }
+        total += weight * unit(mix64(hash_words(&words)));
+    }
+    total
+}
+
 impl BarkLook {
     /// A record from its JSON, checked.
     ///
@@ -635,33 +773,70 @@ impl BarkLook {
         }
     }
 
-    /// The stage a piece of stem wears: the one its `diameter` reaches
-    /// ([`BarkLook::stage_at`]), where that stage shows: a stage on the
-    /// base only below its height, `height` metres above the ground, and a
-    /// stage on the underside only where the surface faces down (`down`,
-    /// the share of its normal pointing down, above [`UNDERSIDE`]);
-    /// elsewhere the stage before it that shows.
+    /// What a piece of stem wears: the stage its `diameter` reaches
+    /// ([`BarkLook::stage_at`]) where that stage shows (a stage on the
+    /// base only below its height, `height` metres above the ground; a
+    /// stage on the underside only where the surface faces down, `down`
+    /// being the share of its normal pointing down, above [`UNDERSIDE`]),
+    /// elsewhere the stage before it. Near each of those edges, within
+    /// [`BLEND`] of it, the two stages blend in [`BLEND_STEPS`]; `patch`
+    /// (0 to 1, [`patch`] at the piece) moves the step by up to
+    /// [`PATCH_JITTER`] so the steps break up into patches.
     #[must_use]
-    pub fn stage_where(&self, diameter: f64, height: f64, down: f64) -> &Stage {
-        let stage = self.stage_at(diameter);
-        let mut index = self
+    pub fn wear_where(&self, diameter: f64, height: f64, down: f64, patch: f64) -> Wear {
+        let spread = libm::log(1.0 + BLEND);
+        let ramp =
+            |x: f64, middle: f64, half: f64| ((x - middle + half) / (2.0 * half)).clamp(0.0, 1.0);
+        let ln = |x: f64| libm::log(x.max(1.0e-9));
+        // How much of the bark each stage covers, by itself.
+        let presence: Vec<f64> = self
             .stages
             .iter()
-            .position(|s| std::ptr::eq(s, stage))
-            .unwrap_or(0);
-        while index > 0 {
-            let here = &self.stages[index];
-            let shows = match here.on {
-                On::All => true,
-                On::Base => height < here.base_height_m.unwrap_or(BASE_RISE * diameter),
-                On::Underside => down > UNDERSIDE,
-            };
-            if shows {
-                break;
-            }
-            index -= 1;
+            .enumerate()
+            .map(|(index, stage)| {
+                let reach = match index
+                    .checked_sub(1)
+                    .and_then(|before| self.stages[before].until_diameter_m)
+                {
+                    Some(start) => ramp(ln(diameter), ln(start), spread),
+                    None => 1.0,
+                };
+                let shows = match stage.on {
+                    On::All => 1.0,
+                    On::Base => {
+                        let top = stage.base_height_m.unwrap_or(BASE_RISE * diameter);
+                        if height <= 0.0 {
+                            1.0
+                        } else {
+                            1.0 - ramp(ln(height), ln(top), spread)
+                        }
+                    }
+                    On::Underside => ramp(down, UNDERSIDE, UNDERSIDE_BLEND),
+                };
+                reach * shows
+            })
+            .collect();
+        let Some(over) = (1..self.stages.len()).rev().find(|&i| presence[i] > 0.0) else {
+            return Wear::plain(0);
+        };
+        let under = (1..over).rev().find(|&i| presence[i] > 0.0).unwrap_or(0);
+        let share = presence[over];
+        let moved = share + PATCH_JITTER * (2.0 * patch - 1.0) * 4.0 * share * (1.0 - share);
+        let steps = f64::from(BLEND_STEPS);
+        // Within 0 to BLEND_STEPS.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let step = libm::round(moved.clamp(0.0, 1.0) * steps) as u8;
+        match step {
+            0 => Wear::plain(under),
+            s if s >= BLEND_STEPS => Wear::plain(over),
+            step => Wear { under, over, step },
         }
-        &self.stages[index]
+    }
+
+    /// The stage that covers most of a piece of stem ([`BarkLook::wear_where`]).
+    #[must_use]
+    pub fn stage_where(&self, diameter: f64, height: f64, down: f64, patch: f64) -> &Stage {
+        &self.stages[self.wear_where(diameter, height, down, patch).most()]
     }
 
     /// The stage a stem `diameter` metres across wears (where it shows).
@@ -2177,15 +2352,87 @@ mod tests {
         )
         .unwrap();
         // A 50 cm trunk: dark to 2 m up, smooth above; thin wood smooth.
-        assert_eq!(look.stage_where(0.5, 1.0, 0.0).name, "base");
-        assert_eq!(look.stage_where(0.5, 2.5, 0.0).name, "smooth");
-        assert_eq!(look.stage_where(0.1, 0.5, 0.0).name, "smooth");
+        assert_eq!(look.stage_where(0.5, 1.0, 0.0, 0.5).name, "base");
+        assert_eq!(look.stage_where(0.5, 2.5, 0.0, 0.5).name, "smooth");
+        assert_eq!(look.stage_where(0.1, 0.5, 0.0, 0.5).name, "smooth");
         look.stages[1].base_height_m = Some(5.0);
-        assert_eq!(look.stage_where(0.5, 4.0, 0.0).name, "base");
+        assert_eq!(look.stage_where(0.5, 4.0, 0.0, 0.5).name, "base");
         // On the underside: only where the surface faces down.
         look.stages[1].on = On::Underside;
-        assert_eq!(look.stage_where(0.5, 8.0, 0.9).name, "base");
-        assert_eq!(look.stage_where(0.5, 8.0, 0.0).name, "smooth");
+        assert_eq!(look.stage_where(0.5, 8.0, 0.9, 0.5).name, "base");
+        assert_eq!(look.stage_where(0.5, 8.0, 0.0, 0.5).name, "smooth");
         assert_eq!(look.stages[1].architecture, Some(Architecture::Furrowed));
+    }
+
+    #[test]
+    fn one_stage_gives_way_to_the_next_in_steps() {
+        let look = BarkLook::from_json(
+            r#"{"schema": 1, "id": "x", "thickness": {"coefficient": 0.03},
+                "stages": [
+                    {"name": "smooth", "until_diameter_m": 0.3, "colour": [200, 200, 200]},
+                    {"name": "plates", "colour": [90, 80, 70],
+                     "fissures": {"network": "tessellated"}}]}"#,
+        )
+        .unwrap();
+        // Well clear of the edge, every spot wears one stage.
+        for patch in [0.0, 0.5, 1.0] {
+            assert_eq!(look.wear_where(0.2, 9.0, 0.0, patch), Wear::plain(0));
+            assert_eq!(look.wear_where(0.45, 9.0, 0.0, patch), Wear::plain(1));
+        }
+        // Across it, plates cover more and more of the bark.
+        let plates = |wear: Wear| {
+            if wear.step == 0 {
+                f64::from(u8::from(wear.under == 1))
+            } else {
+                wear.share()
+            }
+        };
+        let shares: Vec<f64> = [0.24, 0.27, 0.3, 0.33, 0.37]
+            .iter()
+            .map(|&d| plates(look.wear_where(d, 9.0, 0.0, 0.5)))
+            .collect();
+        assert!(shares.windows(2).all(|w| w[0] <= w[1]), "{shares:?}");
+        assert_eq!(
+            look.wear_where(0.3, 9.0, 0.0, 0.5),
+            Wear {
+                under: 0,
+                over: 1,
+                step: 2
+            }
+        );
+        // Patches move the step: one ring of a stem wears neighbouring steps.
+        let mut steps = std::collections::BTreeSet::new();
+        for step in 0..400 {
+            let at = [0.1 * f64::from(step % 20), 0.1 * f64::from(step / 20), 0.0];
+            let value = patch(at);
+            assert!((0.0..=1.0).contains(&value));
+            assert_eq!(value.to_bits(), patch(at).to_bits());
+            steps.insert(look.wear_where(0.3, 9.0, 0.0, value).step);
+        }
+        assert!(steps.len() >= 2, "{steps:?}");
+        // A mixed tile takes the later stage's highest texels first, and
+        // a larger share keeps all a smaller one took.
+        let (under, over) = (
+            bake(&look, &look.stages[0], 0.3, 32, 0.3, 1),
+            bake(&look, &look.stages[1], 0.3, 32, 0.3, 1),
+        );
+        let taken = |share: f64| -> Vec<bool> {
+            let tile = mix(&under, &over, share, 1);
+            (0..32 * 32)
+                .map(|t| {
+                    let bits = |c: [f64; 3]| c.map(f64::to_bits);
+                    bits(tile.albedo[t]) == bits(over.albedo[t])
+                        && bits(tile.albedo[t]) != bits(under.albedo[t])
+                })
+                .collect()
+        };
+        let (quarter, half) = (taken(0.25), taken(0.5));
+        let count = |v: &[bool]| v.iter().filter(|&&b| b).count();
+        assert!(
+            (200..=260).contains(&count(&quarter)),
+            "{}",
+            count(&quarter)
+        );
+        assert!(quarter.iter().zip(&half).all(|(&q, &h)| !q || h));
     }
 }

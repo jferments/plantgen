@@ -380,7 +380,8 @@ Usage:
       record (`plantc bark`): each stage baked to textures N texels a side (default 512), repeating
       near every M metres (default 0.5), as a material of its own, with
       the wood split by stage and given texture coordinates in tiles and
-      tangents.
+      tangents. Where one stage gives way to the next, the wood wears
+      textures that mix them in steps of a quarter, in patches.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,

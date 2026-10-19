@@ -1422,8 +1422,8 @@ fn bark_primitives(
         .iter()
         .map(|&diameter| crate::bark_look::period_for(diameter, bark.period_m))
         .collect();
-    // Triangles by stage; off the bark, none.
-    let mut groups: BTreeMap<Option<usize>, Vec<usize>> = BTreeMap::new();
+    // Triangles by what they wear; off the bark, nothing.
+    let mut groups: BTreeMap<Option<crate::bark_look::Wear>, Vec<usize>> = BTreeMap::new();
     for (triangle, corners) in arrays.indices.as_chunks::<3>().0.iter().enumerate() {
         let radii: Vec<f64> = corners
             .iter()
@@ -1443,19 +1443,19 @@ fn bark_primitives(
                     / 3.0
             };
             let (height, down) = (mean(&arrays.positions, 1), -mean(&arrays.normals, 1));
-            let stage = look.stage_where(diameter, height, down);
-            look.stages.iter().position(|s| std::ptr::eq(s, stage))
+            let centre = [0, 1, 2].map(|axis| mean(&arrays.positions, axis));
+            Some(look.wear_where(diameter, height, down, crate::bark_look::patch(centre)))
         };
         groups.entry(stage).or_default().push(triangle);
     }
     let mut out = Vec::new();
-    for (stage, triangles) in groups {
+    for (wear, triangles) in groups {
         let mut part = arrays.subset(&triangles);
-        let Some(stage) = stage else {
+        let Some(wear) = wear else {
             out.push((part, plain));
             continue;
         };
-        let period = periods[stage];
+        let (name, tile, period) = bark_tile(look, wear, &diameters, &periods, &bark);
         // The source vertex of each kept one, for its tube.
         let mut sources = Vec::new();
         let mut seen = std::collections::HashSet::new();
@@ -1479,19 +1479,52 @@ fn bark_primitives(
             part.colours[kept * 3..kept * 3 + 3].fill(shade(source));
         }
         part.add_tangents();
-        let name = format!("bark {}", look.stages[stage].name);
-        let tile = crate::bark_look::bake(
-            look,
-            &look.stages[stage],
-            diameters[stage],
-            bark.texels,
-            period,
-            1,
-        );
         let material = crate::bark_look::material(document, &tile, &name);
         out.push((part, material));
     }
     out
+}
+
+/// The name and tile a piece of wood wearing `wear` takes, and the tile's
+/// period: one stage's at its typical diameter, or a blend's at a
+/// diameter between its two stages'.
+fn bark_tile(
+    look: &crate::bark_look::BarkLook,
+    wear: crate::bark_look::Wear,
+    diameters: &[f64],
+    periods: &[f64],
+    bark: &BarkExport,
+) -> (String, crate::bark_look::Tile, f64) {
+    let diameter = if wear.step == 0 {
+        diameters[wear.under]
+    } else {
+        libm::sqrt(diameters[wear.under] * diameters[wear.over])
+    };
+    let period = if wear.step == 0 {
+        periods[wear.under]
+    } else {
+        crate::bark_look::period_for(diameter, bark.period_m)
+    };
+    let bake = |stage: usize| {
+        crate::bark_look::bake(look, &look.stages[stage], diameter, bark.texels, period, 1)
+    };
+    let (name, tile) = if wear.step == 0 {
+        (
+            format!("bark {}", look.stages[wear.under].name),
+            bake(wear.under),
+        )
+    } else {
+        let name = format!(
+            "bark {} {}/{} over {}",
+            look.stages[wear.over].name,
+            wear.step,
+            crate::bark_look::BLEND_STEPS,
+            look.stages[wear.under].name
+        );
+        let tile = crate::bark_look::mix(&bake(wear.under), &bake(wear.over), wear.share(), 1);
+        (name, tile)
+    };
+    (name, tile, period)
 }
 
 fn plain_material(name: &str, roughness: f32, factor: f32) -> Value {

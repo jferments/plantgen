@@ -1100,7 +1100,8 @@ pub mod venation;
 /// (`bark_architecture`, `fissure_network`, `exfoliation`,
 /// `lenticel_shape`, `old_bark_on` and the rest), which rules at phylum
 /// Tracheophyta turn into its young, grown and old stages; an old stage
-/// shows up from the trunk's base, or on limbs' undersides, where stated;
+/// shows up from the trunk's base, or on limbs' undersides, where stated,
+/// and each stage gives way to the next in mixed steps;
 /// `plantc export --bark-look spec` bakes it (150 is poppies; the desk
 /// renumbers on landing).
 pub const GENERATOR_REVISION: u32 = 151;

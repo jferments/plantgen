@@ -618,7 +618,18 @@ fn bark_draws_as_a_baked_material_per_stage() {
             }
         }
         stages.sort();
-        assert_eq!(stages, ["furrowed", "smooth"], "{compression:?}");
+        // Each stage, and the steps of the blend between them.
+        assert_eq!(
+            stages,
+            [
+                "furrowed",
+                "furrowed 1/4 over smooth",
+                "furrowed 2/4 over smooth",
+                "furrowed 3/4 over smooth",
+                "smooth"
+            ],
+            "{compression:?}"
+        );
         // Without a look, the wood is as it was: one plain primitive.
         let plain = export::export(
             &inputs,
