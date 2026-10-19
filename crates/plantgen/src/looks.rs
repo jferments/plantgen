@@ -1574,6 +1574,12 @@ pub struct Lobed {
     /// 1 for rounded lobes, 0 for pointed ones.
     pub round: f64,
     pub petiole: f64,
+    /// The outline over its lobes' tips, as [`Simple::outline`]: an ovate
+    /// hawthorn's widest low on the blade, a deltate one's near its base
+    /// (Rosaceae, 2026-10-19). Unset, it is widest a little above the
+    /// middle, as an oak's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub outline: Option<Vec<[f64; 2]>>,
 }
 
 impl Default for Lobed {
@@ -1584,6 +1590,7 @@ impl Default for Lobed {
             depth: 0.5,
             round: 1.0,
             petiole: 0.08,
+            outline: None,
         }
     }
 }
@@ -3690,6 +3697,7 @@ impl Shape {
             }
             Self::Lobed(s) => {
                 check("width", s.width, 0.1, 1.5)?;
+                outline(self.name(), s.outline.as_deref(), [("", 0.0, 0.0); 3])?;
                 count("lobes", s.lobes, 1, 10)?;
                 check("depth", s.depth, 0.0, 0.9)?;
                 check("round", s.round, 0.0, 1.0)?;

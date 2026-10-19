@@ -1179,15 +1179,16 @@ fn lobe_flank(share: f64, round: f64) -> f64 {
 }
 
 /// A pinnately lobed leaf's outline over its lobes' tips, at `t` along
-/// its blade: its half-width as a share of its widest.
-pub(crate) fn lobed_envelope(t: f64) -> f64 {
-    blade_profile(t, 0.55, 0.35, 0.3)
+/// its blade: its half-width as a share of its widest; `outline` where its
+/// look draws one ([`Lobed::outline`]).
+pub(crate) fn lobed_envelope(outline: Option<&[[f64; 2]]>, t: f64) -> f64 {
+    outline_profile(outline, t, 0.55, 0.35, 0.3)
 }
 
 /// A pinnately lobed leaf's half-width at `t` along its blade of `length`
 /// card units, with the lobes of its side's `margin` if given.
 fn lobed_width(s: &Lobed, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
-    let envelope = lobed_envelope(t);
+    let envelope = lobed_envelope(s.outline.as_deref(), t);
     let mut sinus = 1.0;
     if let Some(margin) = margin
         && (LOBES.0..LOBES.1).contains(&t)
