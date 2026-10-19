@@ -55,6 +55,10 @@
       "rule": "0.15",
       "why": "The side shoots' floor comes in over the top 15% of an old tree's height (in metres, 10 m left a 20 m subalpine fir's top half as bare limbs carrying sprays only at their tips), so its top stays narrow: in full to the treetop, the short limbs of an old tree's top whorls carried side shoots longer than themselves, and the tops of 300-year Douglas-fir, Sitka spruce and subalpine fir were domes two to four times as wide as photographed ones (inaturalist-crowns-2026-10: the top tenth .06 to .12 of the height)."
     },
+    "generator.params.floor_reach": {
+      "map": {"crown_form": {"columnar": 0.1}},
+      "why": "A columnar crown stops widening once its height slows: its shoots' floor growth fades past a tenth of the tree's height out from the trunk, down to floor_keep, so the limbs' ends still renew their foliage but no longer carry the crown outward. Without it, a 300-year subalpine fir (FEIS: an extremely narrow crown of short branches) grew to .64 of its height across against the photographed old tree's .37, its sides spreading every year after its leader slowed at 60 years; with it, .44 (seed 1), its foliage thinning from 540 m² at 60 years to 350 at 300 as the photographed old trees' crowns go ragged, and its 15- and 60-year crown widths unchanged (60-year leaf area 670 to 540 m², dbh 42 to 39 cm)."
+    },
     "generator.params.limb_light": {
       "rule": "0.003",
       "why": "An old limb is shed for want of light only when its tips catch little light for the wood they carry, a third as readily as the pines' 0.01: a fully branched old limb carries many segments, and at 0.01 limbs whose foliage was well lit were shed for their size, so subalpine fir and western larch lost four fifths of their foliage between 150 and 300 years."

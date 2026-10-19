@@ -129,6 +129,7 @@
       "high": 40
     },
     "foliage_ranks": "all_round",
+    "crown_form": "columnar",
     "leaf_length_m": {
       "min": 0.025,
       "max": 0.03
@@ -186,6 +187,11 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's subalpine fir review (Uchytil 1991, read 2026-10-16): \"Needles are blunt tipped, flattened, and 1 to 1.2 inches (2.5-3 cm) long\"."
+    },
+    "traits.crown_form": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Uchytil 1991), Abies lasiocarpa: \"an extremely narrow and dense crown with short branches\"; the photographed mature and old open-grown trees (inaturalist-crowns-2026-10) are .3 to .5 of their height across with near-parallel sides, a column more than the cone a young one is."
     },
     "traits.foliage_ranks": {
       "evidence": "SourceInferred",

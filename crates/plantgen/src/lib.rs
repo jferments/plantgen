@@ -1090,7 +1090,11 @@ pub mod venation;
 /// first fruit ripen, bearing fruit below its flowers (`fruit_below`),
 /// shows its earlier flowers' fruit from its first fruiting month and
 /// keeps flowering to its last (149 is palms, #250).
-/// 151: a species' spec states its bark in the bark language
+/// 151: a columnar Pinaceae crown stops widening once its height slows:
+/// its shoots' floor growth fades past `floor_reach` of the height out
+/// from the trunk, down to `floor_keep` (Pinaceae rule on `crown_form`;
+/// subalpine fir; 150 is poppies, #242).
+/// 152: a species' spec states its bark in the bark language
 /// (`appearance.bark_look`, `crate::bark_look`): stages by stem diameter,
 /// keyed by name so a genus states how its bark breaks up and its species
 /// add their colours; eleven reference genera state theirs (Acer, Alnus,
@@ -1102,6 +1106,6 @@ pub mod venation;
 /// Tracheophyta turn into its young, grown and old stages; an old stage
 /// shows up from the trunk's base, or on limbs' undersides, where stated,
 /// and each stage gives way to the next in mixed steps;
-/// `plantc export --bark-look spec` bakes it (150 is poppies; the desk
-/// renumbers on landing).
-pub const GENERATOR_REVISION: u32 = 151;
+/// `plantc export --bark-look spec` bakes it (151 is subalpine fir; the
+/// desk renumbers on landing).
+pub const GENERATOR_REVISION: u32 = 152;

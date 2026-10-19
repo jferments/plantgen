@@ -1,29 +1,32 @@
 //! The window's command path. Every button, menu entry, palette entry and
 //! key queues a [`Command`] on the [`Shell`]; [`apply`] carries them out in
 //! order, once a frame, and is the only place that changes what grows,
-//! what shows and what is saved. The interface itself only reads.
+//! what shows and what is saved. The interface itself only reads, apart
+//! from its own state: the browser's search, filter and open groups.
 //!
 //! A command that changes a saved setting saves that one setting
 //! ([`crate::settings`]).
 
+use std::collections::BTreeSet;
 use std::sync::atomic::Ordering;
 
 use bevy::prelude::*;
+use plantgen::spec::Environment;
 use plantlab_scene::{Look, View};
 use plantlab_ui::icons;
 use serde_json::json;
 
+use super::catalogue::Form;
 use super::readings::{self, Readings};
+use super::store::Detail;
 use super::{Lab, picture_name, save_gif};
 use crate::record::{self, Recording, Take};
 use crate::settings::Key;
 
-/// The panels, each on the rail. [`Panel::Keys`] sits at the rail's foot.
+/// The inspector's pages, each a tab at its head.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Panel {
-    Plant,
-    Grow,
-    View,
+    Render,
     Readings,
     Pictures,
     Spec,
@@ -32,20 +35,9 @@ pub enum Panel {
 }
 
 impl Panel {
-    /// The rail, top to bottom; the keys come at its foot.
-    pub const RAIL: [Self; 7] = [
-        Self::Plant,
-        Self::Grow,
-        Self::View,
-        Self::Readings,
-        Self::Pictures,
-        Self::Spec,
-        Self::Bark,
-    ];
-    pub const ALL: [Self; 8] = [
-        Self::Plant,
-        Self::Grow,
-        Self::View,
+    /// The tabs, left to right.
+    pub const ALL: [Self; 6] = [
+        Self::Render,
         Self::Readings,
         Self::Pictures,
         Self::Spec,
@@ -56,41 +48,22 @@ impl Panel {
     #[must_use]
     pub const fn icon(self) -> &'static str {
         match self {
-            Self::Plant => icons::LEAF,
-            Self::Grow => icons::PLANT,
-            Self::View => icons::EYE,
+            Self::Render => icons::SLIDERS_HORIZONTAL,
             Self::Readings => icons::CHART_BAR,
             Self::Pictures => icons::IMAGE,
             Self::Spec => icons::BRACKETS_CURLY,
             Self::Bark => icons::TREE,
-            Self::Keys => icons::QUESTION,
+            Self::Keys => icons::KEYBOARD,
         }
     }
 
-    /// Its word on the rail.
+    /// Its word on the tab.
     #[must_use]
     pub const fn short(self) -> &'static str {
         match self {
-            Self::Plant => "Plant",
-            Self::Grow => "Grow",
-            Self::View => "View",
+            Self::Render => "Render",
             Self::Readings => "Readings",
             Self::Pictures => "Pictures",
-            Self::Spec => "Spec",
-            Self::Bark => "Bark",
-            Self::Keys => "Keys",
-        }
-    }
-
-    /// Its title over the panel.
-    #[must_use]
-    pub const fn title(self) -> &'static str {
-        match self {
-            Self::Plant => "Plant",
-            Self::Grow => "Growing",
-            Self::View => "View and measures",
-            Self::Readings => "Readings",
-            Self::Pictures => "Pictures and animations",
             Self::Spec => "Spec",
             Self::Bark => "Bark",
             Self::Keys => "Keys",
@@ -101,29 +74,12 @@ impl Panel {
     #[must_use]
     pub const fn about(self) -> &'static str {
         match self {
-            Self::Plant => "the species, its age and the day of the year",
-            Self::Grow => "grow, stop and pause; showing the plant as it grows",
-            Self::View => "level of detail, quality, look, view, grid and ruler",
+            Self::Render => "the plant, its season and detail, and Generate",
             Self::Readings => "the plant's measures, parts, levels and file sizes",
             Self::Pictures => "snapshots, recorded growth and GIFs",
             Self::Spec => "the species' spec as the library merges it",
             Self::Bark => "the species' bark pattern and its numbers",
             Self::Keys => "every key",
-        }
-    }
-
-    /// Its key: 1 to 7 for the rail's panels in order, F1 for the keys.
-    #[must_use]
-    pub const fn key(self) -> &'static str {
-        match self {
-            Self::Plant => "1",
-            Self::Grow => "2",
-            Self::View => "3",
-            Self::Readings => "4",
-            Self::Pictures => "5",
-            Self::Spec => "6",
-            Self::Bark => "7",
-            Self::Keys => "F1",
         }
     }
 
@@ -137,18 +93,27 @@ impl Panel {
 /// Everything the window can be asked to do.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Command {
-    /// Grow this species, by its index in the library's list.
-    Species(usize),
+    /// Choose this species, by id; nothing grows until Generate.
+    Choose(String),
     Age(f64),
     Day(f64),
+    Detail(Detail),
     Level(usize),
-    Draft(bool),
+    /// The site it grows on; `None` for its typical one.
+    Site(Option<Environment>),
+    /// Its variant's seed; `None` for the spec's first.
+    Seed(Option<u64>),
+    /// How it is lit and finished; changes the plant on screen at once.
     Look(Look),
+    /// Where the camera stands; changes the plant on screen at once.
     View(View),
-    Grow,
+    /// Grow the plant as the settings say, or draw it again when only how
+    /// it is drawn changed.
+    Generate,
     Stop,
     Pause(bool),
-    GrowOnChange(bool),
+    /// Play the year: draw the plant in each month in turn.
+    PlayYear(bool),
     ShowGrowing(bool),
     Every(u32),
     Follow(bool),
@@ -164,10 +129,10 @@ pub enum Command {
     FrameMs(u32),
     HoldS(f64),
     Pngs(bool),
-    /// A rail button: open the panel alone, or `beside` the open ones;
-    /// close it when it is open. In the Overlay it opens or closes the
-    /// card.
-    Panel(Panel, bool),
+    /// Show this page of the inspector, opening it.
+    Tab(Panel),
+    Library(bool),
+    Inspector(bool),
     Overlay(bool),
     /// Open the palette, its field filled with this.
     Palette(String),
@@ -183,26 +148,38 @@ pub enum Command {
 
 /// The interface's own state and the commands it queued.
 #[derive(Resource)]
+#[allow(clippy::struct_excessive_bools, reason = "what shows")]
 pub struct Shell {
-    /// The docked panels, left to right.
-    pub open: Vec<Panel>,
-    /// The Overlay: no bars, the plant fills the window.
+    /// The inspector's page.
+    pub tab: Panel,
+    /// The library at the left and the inspector at the right show.
+    pub library: bool,
+    pub inspector: bool,
+    /// The Overlay: no bars or docks, the plant fills the window.
     pub overlay: bool,
-    /// The Overlay's floating card.
-    pub card: Option<Panel>,
     pub palette: plantlab_ui::palette::Palette,
     pub palette_open: bool,
     pub palette_fill: Option<String>,
     pub settings_open: bool,
     pub settings: crate::settings::Settings,
-    /// The species list's filter.
+    /// The browser's search.
     pub filter: String,
-    /// The 3D view: the window's rectangle left between the bars, the rail
-    /// and the docks, logical points; and the points per pixel.
+    /// The browser's growth form filter; `None` for every form.
+    pub form: Option<Form>,
+    /// The browser's open groups, orders, families and genera, as
+    /// `rank:name`.
+    pub expanded: BTreeSet<String>,
+    /// Open the chosen species' groups in the browser and scroll to it.
+    pub reveal: bool,
+    /// The 3D view: the window's rectangle left between the bars and the
+    /// docks, logical points; and the points per pixel.
     pub view: Option<bevy_egui::egui::Rect>,
     pub pixels_per_point: f32,
     /// The bark swatch drawn for a species.
     pub bark: Option<(String, bevy_egui::egui::TextureHandle)>,
+    /// The kept renders' pictures loaded, by species: the write they
+    /// show, and the picture (`None` where it does not load).
+    pub pictures: std::collections::HashMap<String, (u64, Option<bevy_egui::egui::TextureHandle>)>,
     /// The Readings board's width class, kept for its hysteresis.
     pub readings_width: plantlab_ui::board::Width,
     pub queue: Vec<Command>,
@@ -211,19 +188,25 @@ pub struct Shell {
 impl Shell {
     #[must_use]
     pub fn new(settings: crate::settings::Settings) -> Self {
+        let library = settings.bool(Key::LibraryOpen).unwrap_or(true);
         Self {
-            open: vec![Panel::Plant],
+            tab: Panel::Render,
+            library,
+            inspector: true,
             overlay: false,
-            card: None,
             palette: plantlab_ui::palette::Palette::default(),
             palette_open: false,
             palette_fill: None,
             settings_open: false,
             settings,
             filter: String::new(),
+            form: None,
+            expanded: BTreeSet::new(),
+            reveal: false,
             view: None,
             pixels_per_point: 1.0,
             bark: None,
+            pictures: std::collections::HashMap::new(),
             readings_width: plantlab_ui::board::Width::default(),
             queue: Vec::new(),
         }
@@ -234,20 +217,10 @@ impl Shell {
         self.queue.push(command);
     }
 
-    /// Whether `panel` shows: docked, or the Overlay's card.
+    /// Whether `panel` shows: the inspector's page, outside the Overlay.
     #[must_use]
     pub fn shows(&self, panel: Panel) -> bool {
-        if self.overlay {
-            self.card == Some(panel)
-        } else {
-            self.open.contains(&panel)
-        }
-    }
-
-    /// The rail button's command for `panel`: close it while it shows,
-    /// else open it, beside the others with Shift held.
-    pub fn toggle(&mut self, panel: Panel, beside: bool) {
-        self.send(Command::Panel(panel, beside));
+        !self.overlay && self.inspector && self.tab == panel
     }
 }
 
@@ -273,54 +246,62 @@ pub fn apply(
 fn run(shell: &mut Shell, lab: &mut Lab, recording: &mut Recording, command: Command) {
     let growing = lab.growing.is_some();
     match command {
-        Command::Species(index) => {
-            if index < lab.species.len() && index != lab.chosen {
-                lab.chosen = index;
-                lab.age = None;
-                lab.dirty = true;
-                lab.reframe = true;
+        Command::Choose(id) => {
+            if lab.catalogue.get(&id).is_some() && id != lab.chosen {
+                lab.year = None;
+                lab.choose(&id);
+                shell.reveal = true;
+                save(shell, Key::Species, json!(id));
+                let recent = json!(lab.recent);
+                save(shell, Key::Recent, recent);
             }
         }
         Command::Age(age) => {
             if age > 0.0 && age.is_finite() {
-                lab.age = Some(age);
-                lab.dirty = true;
+                lab.recipe.age = Some(age);
             }
         }
         Command::Day(day) => {
-            lab.day = day.clamp(1.0, 365.0).round();
-            lab.dirty = true;
+            lab.recipe.day = day.clamp(1.0, 365.0).round();
+        }
+        Command::Detail(detail) => {
+            lab.recipe.detail = detail;
+            if detail.parts() {
+                lab.recipe.level = 0;
+            }
         }
         Command::Level(level) => {
-            lab.level = level.min(3);
-            lab.dirty = true;
+            lab.recipe.level = level.min(3);
+            if level > 0 && lab.recipe.detail.parts() {
+                lab.recipe.detail = Detail::Standard;
+            }
         }
-        Command::Draft(draft) => {
-            lab.draft = draft;
-            lab.dirty = true;
-        }
+        Command::Site(site) => lab.recipe.environment = site,
+        Command::Seed(seed) => lab.recipe.seed = seed,
         Command::Look(look) => {
-            lab.look = look;
-            lab.dirty = true;
+            lab.recipe.look = look;
+            lab.restyle = lab.shown.is_some();
         }
         Command::View(view) => {
-            lab.view = view;
-            lab.reframe = true;
-            lab.dirty = true;
+            lab.recipe.view = view;
+            lab.refit = true;
+            if let Some(shown) = &mut lab.shown {
+                shown.recipe.view = view;
+                shown.shot.view = view;
+            }
         }
-        Command::Grow => {
+        Command::Generate => {
             if !growing {
                 lab.go = true;
             }
         }
         Command::Stop => {
             lab.control.stop.store(true, Ordering::Relaxed);
-            lab.dirty = false;
+            lab.year = None;
         }
         Command::Pause(pause) => lab.control.pause.store(pause, Ordering::Relaxed),
-        Command::GrowOnChange(on) => {
-            lab.auto = on;
-            save(shell, Key::GrowOnChange, json!(on));
+        Command::PlayYear(on) => {
+            lab.year = (on && lab.about.error.is_empty()).then_some(0);
         }
         Command::ShowGrowing(on) => {
             lab.live = on;
@@ -394,27 +375,26 @@ fn run(shell: &mut Shell, lab: &mut Lab, recording: &mut Recording, command: Com
             recording.pngs = on;
             save(shell, Key::Pngs, json!(on));
         }
-        Command::Panel(panel, beside) => {
-            if shell.overlay {
-                shell.card = if shell.card == Some(panel) {
-                    None
-                } else {
-                    Some(panel)
-                };
-            } else if shell.open.contains(&panel) {
-                shell.open.retain(|open| *open != panel);
-            } else if beside {
-                shell.open.push(panel);
-            } else {
-                shell.open = vec![panel];
+        Command::Tab(panel) => {
+            shell.tab = panel;
+            shell.inspector = true;
+            shell.overlay = false;
+        }
+        Command::Library(on) => {
+            shell.library = on;
+            if on {
+                shell.overlay = false;
+                shell.reveal = true;
+            }
+            save(shell, Key::LibraryOpen, json!(on));
+        }
+        Command::Inspector(on) => {
+            shell.inspector = on;
+            if on {
+                shell.overlay = false;
             }
         }
-        Command::Overlay(on) => {
-            if on && !shell.overlay {
-                shell.card = None;
-            }
-            shell.overlay = on;
-        }
+        Command::Overlay(on) => shell.overlay = on,
         Command::Palette(fill) => {
             shell.palette_open = true;
             shell.palette_fill = Some(fill);
@@ -439,53 +419,74 @@ fn save(shell: &mut Shell, key: Key, value: serde_json::Value) {
 mod tests {
     use super::*;
 
-    #[test]
-    fn rail_buttons_open_alone_beside_and_close() {
-        let mut shell = Shell::new(crate::settings::Settings::default());
-        let mut lab = super::super::tests::lab();
-        let mut recording = Recording::new("pictures".into());
-        let mut send = |shell: &mut Shell, command| run(shell, &mut lab, &mut recording, command);
-        assert_eq!(shell.open, [Panel::Plant]);
-        send(&mut shell, Command::Panel(Panel::View, false));
-        assert_eq!(shell.open, [Panel::View]);
-        send(&mut shell, Command::Panel(Panel::Readings, true));
-        assert_eq!(shell.open, [Panel::View, Panel::Readings]);
-        send(&mut shell, Command::Panel(Panel::View, false));
-        assert_eq!(shell.open, [Panel::Readings]);
-        // The Overlay keeps one card at a time and leaves the docks be.
-        send(&mut shell, Command::Overlay(true));
-        send(&mut shell, Command::Panel(Panel::Grow, true));
-        assert_eq!(shell.card, Some(Panel::Grow));
-        send(&mut shell, Command::Panel(Panel::Pictures, false));
-        assert_eq!(shell.card, Some(Panel::Pictures));
-        assert!(shell.shows(Panel::Pictures) && !shell.shows(Panel::Readings));
-        send(&mut shell, Command::Overlay(false));
-        assert!(shell.shows(Panel::Readings));
+    fn shell() -> Shell {
+        Shell::new(crate::settings::Settings::default())
     }
 
     #[test]
-    fn commands_change_what_grows_and_keep_values_in_range() {
-        let mut shell = Shell::new(crate::settings::Settings::default());
+    fn tabs_open_the_inspector_and_the_overlay_hides_it() {
+        let mut shell = shell();
         let mut lab = super::super::tests::lab();
         let mut recording = Recording::new("pictures".into());
-        lab.dirty = false;
+        let mut send = |shell: &mut Shell, command| run(shell, &mut lab, &mut recording, command);
+        assert!(shell.shows(Panel::Render));
+        send(&mut shell, Command::Inspector(false));
+        assert!(!shell.shows(Panel::Render));
+        send(&mut shell, Command::Tab(Panel::Readings));
+        assert!(shell.inspector && shell.shows(Panel::Readings));
+        send(&mut shell, Command::Overlay(true));
+        assert!(!shell.shows(Panel::Readings));
+        send(&mut shell, Command::Library(true));
+        assert!(!shell.overlay && shell.library);
+    }
+
+    #[test]
+    fn choosing_and_settings_never_grow_until_generate() {
+        let mut shell = shell();
+        let mut lab = super::super::tests::lab();
+        let mut recording = Recording::new("pictures".into());
         for command in [
+            Command::Choose("rosa-nutkana".into()),
             Command::Day(400.0),
             Command::Level(9),
+            Command::Seed(Some(4)),
+            Command::Site(Some(Environment::Edge)),
             Command::Every(0),
             Command::PictureWidth(10),
             Command::FrameMs(5),
+            Command::View(View::Top),
         ] {
             run(&mut shell, &mut lab, &mut recording, command);
         }
-        assert!((lab.day - 365.0).abs() < f64::EPSILON);
-        assert_eq!(lab.level, 3);
+        assert!(!lab.go && lab.growing.is_none());
+        assert_eq!(lab.chosen, "rosa-nutkana");
+        assert!((lab.recipe.day - 365.0).abs() < f64::EPSILON);
+        assert_eq!(lab.recipe.level, 3);
+        assert_eq!(lab.recipe.seed, Some(4));
+        assert_eq!(lab.recipe.environment, Some(Environment::Edge));
+        assert_eq!(lab.recipe.view, View::Top);
+        assert!(lab.refit, "the view changes at once");
         assert_eq!(lab.every, 1);
         assert_eq!(recording.width, 128);
         assert_eq!(recording.delay, 2);
-        assert!(lab.dirty);
-        run(&mut shell, &mut lab, &mut recording, Command::Species(1));
-        assert_eq!(lab.chosen, 1);
-        assert!(lab.age.is_none() && lab.reframe);
+        run(&mut shell, &mut lab, &mut recording, Command::Generate);
+        assert!(lab.go);
+    }
+
+    #[test]
+    fn full_detail_is_the_nearest_level() {
+        let mut shell = shell();
+        let mut lab = super::super::tests::lab();
+        let mut recording = Recording::new("pictures".into());
+        run(&mut shell, &mut lab, &mut recording, Command::Level(2));
+        run(
+            &mut shell,
+            &mut lab,
+            &mut recording,
+            Command::Detail(Detail::Full),
+        );
+        assert_eq!(lab.recipe.level, 0);
+        run(&mut shell, &mut lab, &mut recording, Command::Level(1));
+        assert_eq!(lab.recipe.detail, Detail::Standard);
     }
 }

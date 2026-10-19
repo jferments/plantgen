@@ -28,6 +28,11 @@ pub const PLANT_LAYER: usize = 2;
 
 /// Frames to let the recorder draw before reading its picture back.
 const SETTLE_FRAMES: u32 = 3;
+/// A kept render waits longer, frames and seconds: it is taken as the
+/// plant first stands, while the recorder's shaders for it may still be
+/// compiling, and a picture without the plant would stand for it.
+const KEEP_SETTLE_FRAMES: u32 = 30;
+const KEEP_SETTLE_S: f32 = 1.0;
 /// Readings of a blank picture before giving up on it.
 const RETRIES: u32 = 8;
 
@@ -41,7 +46,13 @@ pub enum Take {
     Snapshot,
     /// A frame for the animation.
     Frame,
+    /// The species' last render, kept in [`Recording::keep_folder`] as
+    /// `NAME.png`: the scene as the window shows it, [`KEEP_WIDTH`] wide.
+    Keep,
 }
+
+/// A kept render's width, pixels.
+pub const KEEP_WIDTH: u32 = 960;
 
 /// What the panel asked for, and what has been taken.
 #[derive(Resource)]
@@ -63,6 +74,14 @@ pub struct Recording {
     pub pngs: bool,
     pub frames: Vec<gif::Frame>,
     pub message: String,
+    /// Where [`Take::Keep`] pictures go; `None` keeps none.
+    pub keep_folder: Option<PathBuf>,
+    /// The names of the kept pictures written since the window last
+    /// looked.
+    pub kept: Vec<String>,
+    /// The pictures' height over their width: the view's, when the window
+    /// gives it; else the window's.
+    pub aspect: Option<f32>,
     queue: VecDeque<(Take, String)>,
     busy: Option<Busy>,
     done: Arc<Mutex<Vec<Done>>>,
@@ -73,6 +92,7 @@ struct Busy {
     take: Take,
     name: String,
     waited: u32,
+    since: std::time::Instant,
     asked: bool,
     tries: u32,
 }
@@ -96,6 +116,9 @@ impl Recording {
             pngs: false,
             frames: Vec::new(),
             message: String::new(),
+            keep_folder: None,
+            kept: Vec::new(),
+            aspect: None,
             queue: VecDeque::new(),
             busy: None,
             done: Arc::default(),
@@ -113,6 +136,31 @@ impl Recording {
             return;
         }
         self.queue.push_back((take, name));
+    }
+
+    /// Whether the picture being taken, or the next, is a kept render: of
+    /// the scene whatever the pictures are set to.
+    #[must_use]
+    pub fn keeping(&self) -> bool {
+        match &self.busy {
+            Some(busy) => busy.take == Take::Keep,
+            None => self
+                .queue
+                .front()
+                .is_some_and(|(take, _)| *take == Take::Keep),
+        }
+    }
+
+    /// Forget the kept renders asked for and not yet read back.
+    pub fn drop_keeps(&mut self) {
+        self.queue.retain(|(take, _)| *take != Take::Keep);
+        if self
+            .busy
+            .as_ref()
+            .is_some_and(|busy| busy.take == Take::Keep && !busy.asked)
+        {
+            self.busy = None;
+        }
     }
 
     /// Something is being taken or waits to be.
@@ -217,7 +265,7 @@ pub fn follow(
     if let Some(seen) = window_camera.iter().next() {
         *transform = *seen;
     }
-    let (layer, clear) = if recording.plant_only {
+    let (layer, clear) = if recording.plant_only && !recording.keeping() {
         (PLANT_LAYER, Color::NONE)
     } else {
         (WINDOW_LAYER, background.0)
@@ -247,11 +295,17 @@ pub fn take(
         let Some((take, name)) = recording.queue.pop_front() else {
             return;
         };
-        let aspect = windows
-            .iter()
-            .next()
-            .map_or(1.0, |window| window.height() / window.width().max(1.0));
-        let width = recording.width.clamp(64, 4096);
+        let aspect = recording.aspect.unwrap_or_else(|| {
+            windows
+                .iter()
+                .next()
+                .map_or(1.0, |window| window.height() / window.width().max(1.0))
+        });
+        let width = if take == Take::Keep {
+            KEEP_WIDTH
+        } else {
+            recording.width.clamp(64, 4096)
+        };
         // Even sizes; the window's shape.
         #[allow(
             clippy::cast_possible_truncation,
@@ -275,6 +329,7 @@ pub fn take(
             take,
             name,
             waited: 0,
+            since: std::time::Instant::now(),
             asked: false,
             tries: 0,
         });
@@ -287,7 +342,12 @@ pub fn take(
         return;
     }
     busy.waited += 1;
-    if busy.waited < SETTLE_FRAMES {
+    let settled = if busy.take == Take::Keep {
+        busy.waited >= KEEP_SETTLE_FRAMES && busy.since.elapsed().as_secs_f32() >= KEEP_SETTLE_S
+    } else {
+        busy.waited >= SETTLE_FRAMES
+    };
+    if !settled {
         return;
     }
     let Some((handle, _)) = recording.target.clone() else {
@@ -340,7 +400,7 @@ pub fn keep(mut recording: ResMut<Recording>) {
             continue;
         }
         recording.busy = None;
-        if recording.plant_only {
+        if recording.plant_only && done.take != Take::Keep {
             gif::unpremultiply(&mut rgba);
         }
         match done.take {
@@ -351,6 +411,18 @@ pub fn keep(mut recording: ResMut<Recording>) {
                     .map_err(|error| error.to_string())
                     .and_then(|()| write_png(&path, width, height, &rgba))
                     .map_or_else(|error| error, |()| format!("Saved {}", path.display()));
+            }
+            Take::Keep => {
+                if let Some(folder) = recording.keep_folder.clone() {
+                    let path = folder.join(format!("{}.png", done.name));
+                    match std::fs::create_dir_all(&folder)
+                        .map_err(|error| error.to_string())
+                        .and_then(|()| write_png(&path, width, height, &rgba))
+                    {
+                        Ok(()) => recording.kept.push(done.name),
+                        Err(error) => recording.message = error,
+                    }
+                }
             }
             Take::Frame => {
                 let delay = recording.delay;
