@@ -40,33 +40,134 @@
     },
     "fruit_type": {"aggregate": "often", "pome": "sometimes", "achene": "sometimes", "drupe": "sometimes", "follicle": "rarely", "capsule": "rarely"}
   },
+  "rules": {
+    "generator.params.thorns": {
+      "map": {"spines": {"none": 0, "thorns": 1, "prickles": 1}},
+      "why": "An armed tree or shrub of the family carries its prickles or thorns at the nodes, beside each bud: a rose's below its stipules, a bramble's on its canes, a hawthorn's thorns in the leaf axils."
+    },
+    "appearance.organs.*.shape.blade_width": {
+      "template": "compound",
+      "rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 3), clamp(1.7 * leaflet_length_m / leaf_length_m, 0.2, 1.5))",
+      "why": "Floras of the family's compound leaves (roses, brambles, rowans, meadowsweet) often measure the leaflets but not the whole blade's width. A lateral leaflet stands at about 60 degrees to the rachis, so it reaches out by most of its length on each side: the blade is about 1.7 leaflet lengths wide. The blade's own width wins where it is stated."
+    },
+    "appearance.organs.*.shape.leaflets": {
+      "template": "compound",
+      "map": {
+        "division_pattern": {
+          "pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((pinnae - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnae / 2), 2, 40)) : (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))"},
+          "palmate": {"rule": "clamp(2 * round(((division_order >= 2 ? pinnae : leaflets) - 1) / 2) + 1, 3, 9)"}
+        }
+      },
+      "why": "The family's palmate leaves (brambles, strawberries, cinquefoils) are ternate or digitate about a middle leaflet, three, five or seven of them, so a flora's range is drawn as the nearest odd count. A pinnate leaf is drawn as the flowering plants' rule draws it."
+    },
+    "appearance.organs.*.shape.petiole": {
+      "template": ["compound", "lobed"],
+      "needs": ["petiole_length_m"],
+      "rule": "clamp(petiole_length_m / (leaf_length_m + petiole_length_m), 0.05, 0.7)",
+      "why": "A compound or lobed leaf's card holds its blade and its stalk end to end, as a simple leaf's does, so the stalk's share of the card is the flora's petiole over the two lengths together: a strawberry's long-stalked trifoliate leaf, a raspberry's, a hawthorn's slender-stalked lobed leaf. A card is at most seven tenths stalk, the most the compound card draws."
+    },
+    "generator.params.leaf_years": {
+      "map": {"leaf_habit": {"evergreen": 2}},
+      "why": "An evergreen of the family (a loquat, a Catalina ironwood, a toyon) keeps each leaf into a second year, as the flowering plants' rule has it; the family's own program otherwise sheds every leaf in its first autumn."
+    },
+    "generator.params.leaf_length": {
+      "rule": "max(max(leaf_length_m), first(max(leaf_width_m), 0)) + first(petiole_length_m, 0.15 * max(leaf_length_m))",
+      "why": "A herb of the family (a meadowsweet, a strawberry, a cloudberry) bears its longest stem leaf as long as the longest blade its flora measures, or as wide where it is wider than long (a cloudberry's kidney-shaped blade), with its stalk, or about a sixth more where its flora gives none, as a shrub's leaf card is drawn; the leaves below and above it are shorter by the shares below, as the campanulids' herbs are drawn."
+    },
+    "generator.params.basal_length": {
+      "rule": "max(max(leaf_length_m), first(max(leaf_width_m), 0)) + first(petiole_length_m, 0.15 * max(leaf_length_m))",
+      "why": "A herb's longest basal leaf is as long as the longest blade its flora measures, with its stalk (a sixth more where none is given), as the stem's longest is."
+    },
+    "generator.params.leaf_top": {
+      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
+      "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures."
+    },
+    "generator.params.leaf_base": {
+      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
+      "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures; its basal leaves are drawn apart."
+    },
+    "generator.params.thorn_length": {
+      "rule": "spine_length_m",
+      "why": "A prickle or thorn is drawn as long as its flora measures it."
+    }
+  },
   "forms": {
+    "forb": {
+      "rules": {
+        "generator.params.nodes": {
+          "rule": "clamp(round(shoot_leaves), 1, 40)",
+          "why": "A Rosaceae herb's flowering stem is one year's growth, so it bears the leaves its flora counts on a year's shoot, one at a node (the family's leaves are alternate): a cloudberry's stem one to three, a meadowsweet's leafy stem a dozen, not the flowering plants' forb default of five."
+        }
+      },
+      "evidence": {
+        "rules": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The herb program grows each stem's leaves at nodes; a herbaceous stem that dies back each year is a single year's growth unit, so the shoot_leaves count is its stem leaves (2026-10-19)."
+        }
+      }
+    },
     "decurrent_tree": {
       "generator": {
-        "program": "rosaceae"
+        "program": "rosaceae",
+        "params": {"pipe_tip": 0.0027, "pipe_organ": 0.005}
+      },
+      "rules": {
+        "generator.params.space_kill": {
+          "rule": "max(0.35, 2 * pow(leaf_area * spur_leaf * spur_leaf, 1 / 3))",
+          "why": "Corner's rule as the seed plants have it, but a Rosaceae tree bears its small leaves in tufts on short shoots (spurs) along its twigs, so its twigs stand as far apart as a tuft, not one small leaf: never nearer than the family's built-in trees, which hand values gave 0.45 to 0.6 m (Pacific crab apple, black hawthorn, bitter cherry) and about what the rule itself gives a rowan, a loquat or a Catalina ironwood (0.35 to 0.42 m). Without it a small-leaved hawthorn's crown branched past what the program can grow."
+        }
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
+        },
+        "generator.params": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "A Rosaceae tree's twigs are as thick behind each bud as the flowering plants' decurrent trees' (angiosperms' tree defaults: pipe tip 0.0027, organ 0.005), not the family program's 0.004 and 0.008. A spur-bearing crown has many living buds, so the thicker twig made the pipe model's trunk far too thick: a 25-year hawthorn 41 cm through, a 30-year rowan 56 cm (2026-10-19 renders); with these 28 and 38 cm. Bitter cherry keeps its own value, fitted to its measured trunk."
+        },
+        "rules": {
+          "evidence": "SourceInferred",
+          "source": "fna-online",
+          "note": "Flora of North America vol. 9 (2014), genus Crataegus (eFloras, read 2026-10-19): short shoots present, the leaves and flowers standing on them; Halle, Oldeman and Tomlinson (1978, pp. 59-60) give the rosaceous fruit trees the same well-developed short-shoot system. The 0.35 m floor is ours, from the family's built-in trees' hand values."
         }
       }
     },
     "shrub": {
       "generator": {
-        "program": "rosaceae"
+        "program": "rosaceae",
+        "params": {"bud_break": 1.2, "apical_years": 4, "droop": 0.02, "fork_height": 0.03, "fork_stems": 7, "fork_angle": 35, "pipe_tip": 0.0015, "pipe_organ": 0.003, "flux": 4, "shade_death": 0.03, "spur_light": 0.08, "steer_weight": 0.4}
+      },
+      "rules": {
+        "generator.defaults.internode": {
+          "rule": "0.06 * height_typical_m",
+          "why": "At the family's shrub vigour a shoot grows on for more of each year, so its internodes are shorter for the plant's height than the flowering plants' shrubs' tenth: the median of the family's eleven built-in shrubs, internode over the middle of the usual height (0.04 to 0.1, Nootka rose 0.06, salmonberry 0.07)."
+        }
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
+        },
+        "generator.params": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "A Rosaceae shrub grows as the flowering plants' shrubs do (angiosperms' shrub defaults, the built-in shrubs' medians): many slender stems from the ground and quick lateral growth, with the vigour, shade tolerance and steering every one of the family's eleven built-in shrubs was given by hand (flux 4, shade death 0.03, spur light 0.08, steer weight 0.4), which the flowering plants' shrubs take at half that vigour. The family's own program carries tree values for these (single trunk, thick twigs), which a shrub with no hand values took until 2026-10-19; every built-in Rosaceae shrub sets them by hand, so only new species change."
+        },
+        "rules": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The family's shrub internode, 0.06 of the usual height, is the median of its eleven built-in shrubs' hand values over the middle of their usual heights (2026-10-19)."
         }
       }
     }
   },
   "evidence": {
+    "rules": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rosa and Rubus (eFloras, read 2026-10-19): a rose's prickles grow from the stem's skin, paired or single below the stipules at each node, with smaller ones between the nodes; a bramble's canes carry prickles; a hawthorn's thorns are shoots in the leaf axils (Crataegus monogyna). Drawn by the broadleaf program's thorn beside each bud, at the length the flora gives."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Rosaceae (read 2026-10-17): simple blades either undivided or dissected. Wikipedia (read 2026-10-17): Prunus leaves unlobed, Cotoneaster entire, Crataegus with lobed or serrated margins, Rubus simple, lobed or compound, Sorbus (Torminalis) maple-like lobes. Weighted by the large unlobed genera (Prunus, Cotoneaster, most Crataegus) and by compound-leaved Rubus/Rosa/Potentilla, whose leaflets are not cut."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China family account (read 2026-10-17): blade margin often saw-toothed, only rarely smooth. DELTA (read 2026-10-17) lists crenate, serrate and dentate margins with entire ones fairly infrequent; Wikipedia Rosaceae says the margin is most often serrate and the Rose page gives serrated leaflets. Cotoneaster (entire) is the main exception among big genera."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 325, 327: stamens 20 to many, rarely 1 or 5, arising centripetally. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},

@@ -1,0 +1,384 @@
+{
+  "schema": 1,
+  "id": "lyonothamnus-floribundus",
+  "taxon": {
+    "scientific_name": "Lyonothamnus floribundus",
+    "common_name": "Catalina ironwood",
+    "family": "Rosaceae",
+    "genus": "Lyonothamnus",
+    "plant_name_id": 2950356
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 10.0,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 5,
+      "max": 10
+    },
+    "height_max_m": 15,
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "spines": "none",
+    "clonal": true,
+    "bark_colour": [
+      128,
+      72,
+      50
+    ],
+    "leaf_colour": [
+      36,
+      74,
+      34
+    ],
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "terminal_leaflet": true,
+    "leaflets": {
+      "min": 3,
+      "max": 7
+    },
+    "leaflet_incision": "lobed",
+    "leaf_length_m": {
+      "min": 0.08,
+      "max": 0.2
+    },
+    "petiole_length_m": {
+      "min": 0.012,
+      "max": 0.035
+    },
+    "leaflet_length_m": {
+      "min": 0.06,
+      "max": 0.18
+    },
+    "leaflet_width_m": {
+      "min": 0.012,
+      "max": 0.025
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "entire",
+    "leaf_hairs_beneath": "tomentose",
+    "inflorescence": "corymb",
+    "inflorescence_outline": "flat_topped",
+    "units_per_inflorescence": {
+      "min": 50,
+      "max": 300,
+      "high": 800
+    },
+    "inflorescence_branches": {
+      "min": 8,
+      "max": 16
+    },
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "flower_size_m": {
+      "min": 0.006,
+      "max": 0.008,
+      "low": 0.005
+    },
+    "flower_colour": [
+      248,
+      246,
+      236
+    ],
+    "stamens": {
+      "min": 15,
+      "max": 20,
+      "low": 12
+    },
+    "fruit_type": "follicle",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      120,
+      84,
+      52
+    ],
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): plants 50-100 (to 150) dm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): to 150 dm."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): trees, clonal."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): leaves tardily falling, leathery: kept through the year."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): no armature described."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): plants clonal."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): bark brown or grey, peeling in long red-brown strips; drawn red-brown; sRGB by eye."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves dark glossy green above, paler and felted beneath."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves opposite, as Jepson and other Californian floras key the genus."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: each opposite pair crossing the pair below (decussate), as opposite leaves stand on an upright shoot."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus floribundus (eFloras, read 2026-10-19): on Santa Catalina most plants have undivided leaves; on San Clemente, Santa Cruz and Santa Rosa and in part on Catalina they are palmately or pinnately divided, usually into 3-5 (to 7) pinnately lobed leaflets: divided on most of the islands, so usually compound, sometimes simple."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus floribundus (eFloras, read 2026-10-19): palmately or pinnately divided; drawn pinnate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus floribundus (eFloras, read 2026-10-19): leaflets lobed, not divided again."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus floribundus (eFloras, read 2026-10-19): the divided leaf ends in a leaflet."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): leaflets 3-7, usually 3-5."
+    },
+    "traits.leaflet_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): leaflets usually pinnately lobed, the lobes oblong-rounded to falcate or nearly triangular, broadly attached, their bases often overlapping."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 8 cm to 20 cm long with the petiole."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus floribundus (eFloras, read 2026-10-19): petiole 12-35 mm, often winged."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): simple blades or leaflets 6-18 cm long."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 1.2 cm to 2.5 cm wide across the lobes."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): blades or leaflets elliptic, lance-linear, lanceolate or oblong; drawn lanceolate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): margins somewhat revolute, entire, crenulate or serrate; drawn entire on the lobes."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus floribundus (eFloras, read 2026-10-19): abaxial surface tomentose, slowly glabrescent."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): compound corymbs or panicles, terminal; drawn as a flat-topped corymb."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the compound corymb's 8 to 16 primary branches, each branching again to its flowers; FNA gives no count."
+    },
+    "traits.inflorescence_outline": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: broad flat-topped flower clusters."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): 50-800+ flowers."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: clusters 10 cm to 20 cm across."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): flowers (5-)6-8 mm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): petals white; sRGB by eye."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): stamens (12-)15+ in one series."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): fruits aggregated follicles, 2 (or 3)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): follicles 3-4 mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: dry follicles brown, with the old flowers left rusty brown on the tree."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Lyonothamnus floribundus (eFloras, read 2026-10-19): flowering May to July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: follicles ripe late summer and autumn."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a slim evergreen tree with peeling red-brown bark, opposite fern-like leaves of lobed leaflets and broad flat heads of tiny white flowers."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "10.0 m tall at 30 years in the open, the top of the floras' usual 5-10 m (it grows to 15), as grown taller than that (11.8 m) on 2026-10-19. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Rosaceae thread (2026-10-19): characters from Flora of North America vol. 9 and Flora of China vol. 9; the drawing comes from the library's rules for those characters."
+  }
+}

@@ -1113,4 +1113,12 @@ pub mod venation;
 /// capsule's large seeds sit one to a cell (a spindle's arils), and a
 /// freely branching lying stem spreads into a mat (herb revision 18)
 /// (153 is nightshades round 6, #262).
-pub const GENERATOR_REVISION: u32 = 154;
+/// 155: Rosaceae (#236): the family's shrub form, twig spacing, compound
+/// and lobed leaf cards from their outline words and leaflet sizes, herb
+/// leaf sizes, armed stems from `spines`, bramble fruit by its fruitlets,
+/// clusters of few flowers drawn whole; broadleaf 25's canes that die at
+/// `stem_life_years` while the base renews them (thimbleberry) and a stem
+/// that flowers every year and grows on from one bud (devil's club);
+/// hawthorn's inferior ovary, round petals and oval haws in twos and
+/// threes (154 is poppies round 4, #254).
+pub const GENERATOR_REVISION: u32 = 155;
