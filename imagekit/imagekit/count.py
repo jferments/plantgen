@@ -44,15 +44,18 @@ PAD = 0.08
 def prompt(what: str) -> str:
     """For vision models without native pointing (Qwen-VL, API models, chat observers)."""
     return (f"Point to each of {what}. Give every one its own point, even where they overlap or are partly hidden; "
-            "point only at ones you can see, and do not expect any particular number. Answer with one JSON object and nothing else:\n"
-            '{"points": [[x, y], ...], "count": N}\n'
-            "x and y are positions in the image from 0 to 1000 (0,0 is the top left corner). "
+            "point only at ones you can see, and do not expect any particular number. Answer with one JSON object "
+            "and nothing else:\n"
+            '{"points": [[x, y], ...], "count": N, "face_on": true}\n'
+            "x and y are positions in the image from 0 to 1000 (0,0 is the top left corner). face_on is true when "
+            "you look straight into the organ (a flower or head from the front), so that none of its parts hides "
+            "behind another, and false when it is seen from the side or at a slant. "
             'If the image does not show them at all, answer {"points": [], "count": null}.')
 
 
 SCHEMA = {"type": "object", "additionalProperties": False, "required": ["points", "count"],
           "properties": {"points": {"type": "array", "items": {"type": "array", "items": {"type": "number"}}},
-                         "count": {"type": ["integer", "null"]}}}
+                         "count": {"type": ["integer", "null"]}, "face_on": {"type": "boolean"}}}
 
 _PAIR = re.compile(r"\[\s*(-?[0-9]+(?:\.[0-9]+)?)\s*,\s*(-?[0-9]+(?:\.[0-9]+)?)\s*\]")
 
@@ -90,6 +93,9 @@ def answer(text: str, organ: str, what: str, crop_box) -> tuple[str, dict]:
            "points": [[round(x / 1000, 4), round(y / 1000, 4)] for x, y in pts], "crop": crop_box}
     if bad:
         out["degenerate"] = True
+    f = re.search(r'"face_on"\s*:\s*(true|false)', text or "")
+    if f:
+        out["face_on"] = f.group(1) == "true"
     if said is not None and said != len(pts):
         out["count_stated"] = said
     if m and m.group(1) == "null" and not pts:
@@ -293,8 +299,9 @@ def _chat(store: Store, aid: str, defn: dict, todo, d: Path, run: str, crop_px: 
     return {"analyzer": aid, "run": run, "counted": got, "waiting": len(todo) - got}
 
 
-def counts(store: Store, aid: str, rows: dict | None = None) -> dict:
-    """taxon -> {"photos": [counts], "renders": [counts]} under a count analyzer (ok answers with a count)."""
+def counts(store: Store, aid: str, rows: dict | None = None, face_on: bool = False) -> dict:
+    """taxon -> {"photos": [counts], "renders": [counts]} under a count analyzer (ok answers with a count); with
+    face_on, only the organs seen face-on, where no part hides behind another."""
     from .run import image_rows
     from .store import jsonl
     rows = rows if rows is not None else image_rows(store)
@@ -302,6 +309,8 @@ def counts(store: Store, aid: str, rows: dict | None = None) -> dict:
     for (run,) in store.db.execute("select distinct run from analyses where analyzer=?", (aid,)):
         for row in jsonl(store.run_dir(run) / "analyses.jsonl"):
             if row["analyzer"] != aid or row.get("status") != "ok" or row["out"].get("count") is None:
+                continue
+            if face_on and not row["out"].get("face_on"):
                 continue
             r = rows.get(row["sha256"])
             if not r:
@@ -339,12 +348,13 @@ def register(sub) -> None:
     p.add_argument("--limit", type=int)
     p.add_argument("--run", help="run name (default count-<organ>-<date>)")
     p.add_argument("--summary", metavar="ANALYZER", help="print counts per taxon, photos and renders, and stop")
+    p.add_argument("--face-on", action="store_true", help="with --summary: only organs seen face-on")
     p.set_defaults(func=cmd_count)
 
 
 def cmd_count(args, store: Store) -> None:
     if args.summary:
-        print(json.dumps(summary(counts(store, args.summary)), indent=1))
+        print(json.dumps(summary(counts(store, args.summary, face_on=args.face_on)), indent=1))
         return
     if not (args.what and args.organ):
         raise SystemExit("count needs --what and --organ (or --summary ANALYZER)")

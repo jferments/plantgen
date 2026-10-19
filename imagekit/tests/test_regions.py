@@ -297,6 +297,8 @@ class Detect(unittest.TestCase):
         self.assertIsNone(out["count"])
         self.assertEqual(count.answer('{"points": [], "count": null}', "flower", "x", [0, 0, 1, 1])[0], "empty")
         self.assertEqual(count.answer('{"points": [], "count": 0}', "flower", "x", [0, 0, 1, 1])[1]["count"], 0)
+        side = count.answer('{"points": [[1, 2], [5, 9]], "count": 2, "face_on": false}', "flower", "x", [0, 0, 1, 1])
+        self.assertIs(side[1]["face_on"], False)
         cut = count.answer('{"points": [[10, 20], [30, 40], [5', "flower", "x", [0, 0, 1, 1])[1]
         self.assertEqual(cut["count"], 2)  # a cut-off answer keeps its whole points
 
@@ -309,8 +311,12 @@ class Detect(unittest.TestCase):
         crops = sorted(d.glob("*.jpg"))
         self.assertEqual(len(crops), 1)
         self.assertIn("Point to each of the leaves", (d / "prompt.md").read_text())
-        crops[0].with_suffix(".json").write_text('{"points": [[500, 500]], "count": 1}')
-        self.assertEqual(json.loads(self.cli(*args))["counted"], 1)
+        crops[0].with_suffix(".json").write_text('{"points": [[500, 500]], "count": 1, "face_on": true}')
+        res = json.loads(self.cli(*args))
+        self.assertEqual(res["counted"], 1)
+        with Store(self.store_dir) as store:
+            from imagekit import count
+            self.assertEqual(count.counts(store, res["analyzer"], face_on=True)["Asimina triloba"]["photos"], [1])
         self.assertEqual(json.loads(self.cli(*args[:-1], "cc2"))["counted"], 0)
 
     @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")

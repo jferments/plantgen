@@ -302,7 +302,9 @@ vision backend works too (`--backend vllm --model Qwen/Qwen3-VL-8B-Instruct`,
 `openrouter`, `claude`), and `--backend chat --chat-dir D` writes the crops
 and one prompt for free observers, then reads their `<id>.json` answers
 back. A row or column of evenly spaced points is the model listing, not
-looking: it is kept as `degenerate` with no count. Each `--what` is its
+looking: it is kept as `degenerate` with no count. The model also says
+whether it sees the organ face-on (`face_on`), and `--summary A --face-on`
+counts only those, where no part hides behind another. Each `--what` is its
 own analyzer.
 
 Where a flower box covers a whole mass of flowers (a tree in bloom, a
