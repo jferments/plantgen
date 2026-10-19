@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 0.82,
       "cone_chance": 0.12,
       "cone_years": 2,
       "cone_area": 0.55,
@@ -25,7 +26,8 @@
       "spray_droop": 40,
       "shade_death": 0.08,
       "pipe_organ": 0.011,
-      "branch_reach": 7.4
+      "branch_reach": 6.0,
+      "bole": 0.45
     }
   },
   "growth": {
@@ -139,6 +141,21 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS (Griffith 1992, read): sexual maturity varies from 20 to 40 years. The Woody Plant Seed Manual (Picea, table 2, read): minimum seed-bearing age 20. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 20 years set by hand."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (3 trees) .70 .72 .68 .62 .52 .43 .40 .33 .23 .08; old (2) crown base .40 of height, widest .45 at .55-.65; drawn 60 years .50 .60 .57 .53 .46 .42 .34 .29 .17 .07; 300 years bare to .3, .32 .35 .35 .31 .27 .23 .15. apical sets the young crown's width."
+    },
+    "generator.params.branch_reach": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (3 trees) .70 .72 .68 .62 .52 .43 .40 .33 .23 .08; old (2) crown base .40 of height, widest .45 at .55-.65; drawn 60 years .50 .60 .57 .53 .46 .42 .34 .29 .17 .07; 300 years bare to .3, .32 .35 .35 .31 .27 .23 .15. branch_reach, the wood at which a limb's yearly shoot is halved, sets how far old limbs spread."
+    },
+    "generator.params.bole": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of an old tree's height cleared of limbs, cleared in step with height so saplings keep limbs to the ground: old open-grown trees photographed bare to .40 of their height, as Strieby (2017) draws the old tree bare to about .4 and the 150-year one to about .25."
     },
     "generator.params": {
       "evidence": "Authored",

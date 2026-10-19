@@ -43,6 +43,18 @@
           "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
         }
       }
+    },
+    "vine": {
+      "generator": {
+        "program": "climber"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The climbing program for the family's twining honeysuckles (Lonicera ciliosa, added 2026-10-18): the family's own program is on the broadleaf base, which has no host to climb."
+        }
+      }
     }
   },
   "evidence": {

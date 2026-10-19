@@ -5,6 +5,7 @@
   "parent": "subfamily/cactoideae",
   "traits": {
     "fruit_surface": "spiny",
+    "fruit_spine_fall": "deciduous",
     "corolla_shape": {"funnelform": "usually", "campanulate": "sometimes"},
     "wood_density_basic_kg_m3": 460,
     "carpels": {
@@ -16,6 +17,7 @@
   },
   "evidence": {
     "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 642, Stenocereus: pericarpel with many areoles, usually spiny, the spines and perianth remains falling at maturity; Gibson and Nobel, The Cactus Primer pp. 23 to 25, S. thurberi: formidable spine clusters grow on the pericarpel areoles after fertilization."},
+    "traits.fruit_spine_fall": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (eFloras), Stenocereus: fruits \"bearing deciduous spine clusters\"; Anderson, The Cactus Family (2001) p. 642: the spines fall from the ripe fruit."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 642, Stenocereus: flowers funnelform or campanulate, the perianth short."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Stenocereus (gwddagg_v2.2_genus.csv, read): specific gravity 0.46 (wsg_est, the hierarchical-model genus mean, from 2 records in 1 source); trunks 0.46, branches 0.48. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
     "traits": {

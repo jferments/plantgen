@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "id": "tellima-grandiflora",
+  "taxon": {
+    "scientific_name": "Tellima grandiflora",
+    "common_name": "fringecup",
+    "usda_symbol": "TEGR2",
+    "family": "Saxifragaceae",
+    "genus": "Tellima",
+    "plant_name_id": 2520992
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "stem_rate": 0.5,
+      "clump_radius": 0.1,
+      "stem_lean": 8,
+      "maturity": 1.2,
+      "young_height": 0.5,
+      "stem_radius": 0.002,
+      "wiggle": 2,
+      "nodes": 3,
+      "bare": 0.2,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.5,
+      "leaf_base": 1,
+      "leaf_angle": 50,
+      "basal_angle": 60,
+      "raceme": 0.03,
+      "flowers": 1,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.4, 0.2],
+    "foliage": [0.12, 0.26, 0.08],
+    "foliage_shade": [0.035, 0.08, 0.025],
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "petiole": 0.6
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.8,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {"min": 0.4, "max": 0.9},
+    "height_max_m": 1,
+    "leaf_habit": "semi",
+    "rosette": "basal",
+    "cauline_leaves": "reduced",
+    "leaf_length_m": {"min": 0.035, "max": 0.1},
+    "petiole_length_m": {"min": 0.03, "max": 0.3},
+    "leaf_shape": "cordate",
+    "leaf_incision": "lobed",
+    "leaf_lobes": {"min": 5, "max": 9},
+    "leaf_margin": "crenate",
+    "leaf_apex": "rounded",
+    "leaf_venation": "palmate",
+    "leaf_ciliate": true,
+    "leaf_hairs": "hispid",
+    "glandular_hairs": "dense",
+    "stipules": true,
+    "inflorescence": "raceme",
+    "inflorescence_length_m": {"min": 0.15, "max": 0.4},
+    "inflorescence_posture": "erect",
+    "units_per_inflorescence": {"min": 14, "max": 30},
+    "flower_colour": [232, 232, 200],
+    "calyx_colour": [150, 175, 95],
+    "flower_size_m": {"min": 0.008, "max": 0.012},
+    "flower_symmetry": "actinomorphic",
+    "sepal_length_m": {"min": 0.001, "max": 0.003},
+    "sepal_posture": "erect",
+    "petal_length_m": {"min": 0.003, "max": 0.007},
+    "petal_shape": "obovate",
+    "perianth_reflexion": "recurved",
+    "stamens": 10,
+    "stamen_length_m": {"min": 0.0008, "max": 0.001},
+    "stamen_exsertion": "included",
+    "style_length_m": {"min": 0.001, "max": 0.0015},
+    "ovary_position": "half_inferior",
+    "sexual_system": "hermaphrodite",
+    "fruit_type": "capsule",
+    "fruit_shape": "ovoid",
+    "fruit_size_m": {"min": 0.007, "max": 0.008},
+    "fruit_colour_ripe": [120, 85, 50],
+    "flowering_months": [4, 5, 6, 7],
+    "fruiting_months": [6, 7, 8],
+    "light": ["shade", "part"],
+    "moisture": ["wet", "mesic"],
+    "habitat_notes": "Moist forests, thickets, meadows and rocky slopes, often near streams, in moist shaded sites from Alaska to California.",
+    "elevation_min_m": 0,
+    "elevation_max_m": 2000
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "From piggyback plant's (tolmiea-menziesii) params, changed for fringecup: its raceme drawn as one cluster at each stem's tip, sized and filled by the traits (raceme 0.03, flowers 1, as the recent core species do), so the hand-set flower look, flower_area and the leaf and basal shapes are dropped for the rules; three stem nodes for its 2 or 3 cauline leaves (FNA), the lowest the largest and reduced upward (leaf_peak 0, leaf_top 0.5); leaf_length, basal_length and basal_leaves from the traits by the rules instead of by hand; young_height 0.5 by eye. leaf_area and basal_area left to the shading test. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.8 m tall at 4 years in the open, within the Flora of North America's flowering stems 40 to 90 cm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours by eye from the source words: green leaves and green, glandular stems (FNA's genus: hypanthium green, sepals greenish; no source read gives a leaf colour); the basal leaves' petioles 0.6 of their card, as FNA's petioles 3 to 30 cm are mostly longer than the 3.5 to 10 cm blades."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"Flowering stems erect, leafy, 40-90 cm\"."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives it: semi-evergreen."},
+    "traits.rosette": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"Leaves in basal rosette and cauline\"."},
+    "traits.cauline_leaves": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"cauline leaves 2-3, alternate, relatively large, reduced distally\"."},
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"blade 3.5-10 cm\"."},
+    "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"petiole 3-30 cm\"."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"blade orbiculate or ovate, shallowly 5-9-lobed, base cordate\"; read as cordate (the model's record L2520992 agrees)."},
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"shallowly 5-9-lobed\"."},
+    "traits.leaf_lobes": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"shallowly 5-9-lobed\"."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"ultimate margins serrate to crenate\"; read as crenate (the model's record L2520992 agrees)."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"apex acute or rounded\"; read as rounded."},
+    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"venation palmate\"."},
+    "traits.leaf_ciliate": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"ultimate margins ciliate\"."},
+    "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"sparsely to moderately densely long stipitate-glandular or glandular-hispid adaxially\"; read as hispid."},
+    "traits.glandular_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"Flowering stems erect, leafy, 40-90 cm, densely stipitate-glandular\"."},
+    "traits.stipules": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"stipules sheathing, greenish, ca. 5 mm, membranous\"."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"Inflorescences racemes, terminal from axillary buds in rosette, 14-30-flowered, bracteate\"."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives the flowered part alone: FNA's \"Inflorescences 40-90 cm\" is the whole flowering stem (its genus gives the flowering stems 40-90 cm too), which bears 2 or 3 leaves below its flowers."},
+    "traits.inflorescence_posture": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives it."},
+    "traits.units_per_inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"Inflorescences racemes ... 14-30-flowered\"."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"petals 5, greenish white or cream to pinkish red (sometimes drying dark red)\"; Simpson, Plant Systematics (2019), Tellima grandiflora (ref simpson-2026-10-14#974): greenish cup with pinkish-white petals. sRGB by eye for greenish white to cream, the newly open colour; the pink of older flowers is not drawn."},
+    "traits.calyx_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"hypanthium ... green; sepals 5, greenish\"; sRGB by eye."},
+    "traits.flower_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives it: FNA gives the hypanthium 4.5-9 mm and the petals 3-7 mm, not the flower's width."},
+    "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives it."},
+    "traits.sepal_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"sepals erect, elliptic, 1-3 mm, apex acute\"."},
+    "traits.sepal_posture": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"sepals erect\"."},
+    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"petals ... obovate, 5-7-lobed, 3-7 mm, lobes usually linear\"."},
+    "traits.petal_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"petals ... obovate, 5-7-lobed\"."},
+    "traits.perianth_reflexion": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"petals erect proximally, spreading to reflexed distally\"; read as recurved, the tips bending back."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"stamens 10\"."},
+    "traits.stamen_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"stamens included, 0.8-1 mm\"."},
+    "traits.stamen_exsertion": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"stamens included\"."},
+    "traits.style_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"styles included, 1-1.5 mm\"."},
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima (read on eFloras, 2026-10-18): \"hypanthium adnate to ovary in proximal 1/2\"; \"ovary 1/4 inferior\"; read as half-inferior, the nearest state."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives it."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"Capsules ovoid, 7-8 mm\"."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"Capsules ovoid, 7-8 mm\"."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"Capsules ovoid, 7-8 mm\"."},
+    "traits.fruit_colour_ripe": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives it: brown; sRGB by eye."},
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"Flowering Apr-Jul\"."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520992), as no source read gives it."},
+    "traits.light": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"found in moist, shaded sites\"; \"Moist forests, thickets, meadows\"."},
+    "traits.moisture": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"Moist forests, thickets, meadows, rocky slopes, often near streams\"."},
+    "traits.habitat_notes": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"Moist forests, thickets, meadows, rocky slopes, often near streams; 0-2000 m\"; \"found in moist, shaded sites from Alaska and British Columbia to California\"."},
+    "traits.elevation_min_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"0-2000 m\"."},
+    "traits.elevation_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 8 (2009), Tellima grandiflora (read on eFloras, 2026-10-18): \"0-2000 m\"."}
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy added with the core-species expansion, batch A1 (2026-10-18): sizes and forms from the Flora of North America (species and genus), gaps from the model's record."
+  }
+}

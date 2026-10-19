@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "id": "equisetum-hyemale",
+  "taxon": {
+    "scientific_name": "Equisetum hyemale",
+    "common_name": "scouring rush",
+    "usda_symbol": "EQHY",
+    "family": "Equisetaceae",
+    "genus": "Equisetum",
+    "plant_name_id": 2902170
+  },
+  "growth_form": "fern",
+  "generator": {
+    "params": {
+      "stems": 20,
+      "stem_rate": 0.6,
+      "clump_radius": 0.3,
+      "stem_lean": 4,
+      "maturity": 1.5,
+      "stem_radius": 0.004,
+      "wiggle": 0.5,
+      "bare": 0.05,
+      "nodes": 20,
+      "leaf_length": 0.005,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 10,
+      "leaf_years": 2,
+      "adult_age": 0,
+      "raceme": 0,
+      "flowers": 0,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.639,
+      "bud_area": 0.065,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.16, 0.28, 0.14],
+    "foliage": [0.5, 0.5, 0.46],
+    "foliage_shade": [0.06, 0.06, 0.05],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": { "template": "blade", "taper": 1, "aspect": 0.25 }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "From giant horsetail's (equisetum-telmateia) params, changed for scouring rush: no whorled branches, so each node's whorl is its sheath's teeth, the leaves themselves (Equisetaceae: leaves a whorl of teeth joined into a sheath), as many as leaves_per_whorl gives by the rule, 5 mm long (leaf_length, the model's leaf length), pressed to the stem (leaf_angle 10) and the same size from foot to tip (leaf_top, leaf_base 1); straight, stiff, nearly upright stems (stem_lean 4, wiggle 0.5) about 8 mm thick (stem_radius 0.004, by eye), sheathed from near the ground (bare 0.05), about 20 nodes; more stems in a wider clump for its dense colonies (stems 20, clump_radius 0.3); stem_height from height_typical_m by the rule instead of by hand; leaf_years 2 so a stem stands through its first winter (FNA: aerial stems persisting more than a year). leaf_area left to the shading test, its blade card now broader (aspect 0.25). No cones: the program draws none on a stem without a raceme. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.9 m tall at 4 years in the open, within the Flora of North America's 18 to 220 cm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours by eye from the source words: dark green stems (the bark; the species' usual description, no source read gives a stem colour beyond evergreen); the whorls of teeth, standing for the sheaths, ash grey (Fern Grower's Manual: a wide ash-gray band between a lower black band and an upper black rim; FNA: sheaths dark-girdled, brown to gray above girdle), shaded near black."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine, the subspecies in North America (read on eFloras, 2026-10-18): \"Aerial stems persisting more than a year, unbranched, 18--220 cm\"; erect, so as tall as long."},
+    "traits.height_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine (read on eFloras, 2026-10-18): \"Aerial stems ... 18--220 cm\"; the greatest, 2.2 m (the model's record L2902170 gives 2 m)."},
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001), Equisetum hyemale: evergreen (ref fern-2026-10-15#1069). Flora of North America vol. 2 (1993), subsp. affine (read on eFloras, 2026-10-18): \"Aerial stems persisting more than a year\"."},
+    "traits.branching": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine (read on eFloras, 2026-10-18): \"Aerial stems ... unbranched\"; \"old stems sometimes developing branches with cones in spring\". Fern Grower's Manual (ref fern-2026-10-15#1069): usually unbranched."},
+    "traits.leaves_per_whorl": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine (read on eFloras, 2026-10-18): \"teeth 14--50, articulate and promptly shed or persistent\"; each tooth is a leaf's free tip, the leaves joined below into the sheath (Equisetaceae). The trait counts to 40, so the range stops there."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2902170), as no source read gives it: the free teeth 2 to 5 mm."},
+    "traits.leaf_division": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2902170), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2902170), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2902170), as no source read gives it; the Fern Grower's Manual (ref fern-2026-10-15#1069) gives the rhizome long-creeping."},
+    "traits.cone_apex": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine (read on eFloras, 2026-10-18): \"Cone apex pointed\"; Fern Grower's Manual (ref fern-2026-10-15#1069): a minute point."},
+    "traits.habit_notes": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001), Equisetum hyemale: medium to large scouring rush forming large colonies (ref fern-2026-10-15#1069)."},
+    "traits.light": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001), Equisetum hyemale: sun, usually (ref fern-2026-10-15#1069)."},
+    "traits.moisture": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine (read on eFloras, 2026-10-18): \"Moist roadsides, riverbanks, lakeshores, woodlands\"."},
+    "traits.habitat_notes": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine (read on eFloras, 2026-10-18): \"Moist roadsides, riverbanks, lakeshores, woodlands; 0--3000 m\"; Fern Grower's Manual (ref fern-2026-10-15#1069): shaded riverbanks, railroad ballast."},
+    "traits.elevation_min_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine (read on eFloras, 2026-10-18): \"0--3000 m\"."},
+    "traits.elevation_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 2 (1993), Equisetum hyemale subsp. affine (read on eFloras, 2026-10-18): \"0--3000 m\"."}
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy added with the core-species expansion, batch A1 (2026-10-18): sizes and forms from the Flora of North America (subsp. affine) and the Fern Grower's Manual, gaps from the model's record."
+  },
+  "traits": {
+    "leaf_habit": "evergreen",
+    "height_typical_m": {"min": 0.18, "max": 2.2},
+    "height_max_m": 2.2,
+    "branching": {"unbranched": "usually"},
+    "leaves_per_whorl": {"min": 14, "max": 40},
+    "leaf_length_m": {"min": 0.002, "max": 0.005},
+    "leaf_division": "simple",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "cone_apex": "apiculate",
+    "habit_notes": "Medium to large scouring rush forming large colonies of stiff, evergreen, usually unbranched stems.",
+    "light": ["sun"],
+    "moisture": ["wet", "mesic"],
+    "habitat_notes": "Moist roadsides, riverbanks, lakeshores and woodlands; shaded riverbanks and railroad ballast.",
+    "elevation_min_m": 0,
+    "elevation_max_m": 3000
+  }
+}

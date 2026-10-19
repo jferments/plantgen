@@ -1,0 +1,344 @@
+{
+  "schema": 1,
+  "id": "lonicera-ciliosa",
+  "taxon": {
+    "scientific_name": "Lonicera ciliosa",
+    "common_name": "orange honeysuckle",
+    "usda_symbol": "LOCI3",
+    "family": "Caprifoliaceae",
+    "genus": "Lonicera",
+    "plant_name_id": 2340188
+  },
+  "growth_form": "vine",
+  "generator": {
+    "params": {
+      "shoots": 3,
+      "internode": 0.11,
+      "max_shoot": 2,
+      "cling": 0.2,
+      "hug": 0.5,
+      "climb": 0.35,
+      "seek": 0.6,
+      "drape": 0.03,
+      "adult_rise": 0,
+      "adult_light": 2,
+      "free_years": 1.5,
+      "branch_chance": 0.15,
+      "branch_angle": 50,
+      "max_order": 2,
+      "leaf_angle": 70,
+      "fruiting": 0.15,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 4e-06,
+      "renew": 0
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 0.25,
+    "keyframes": [
+      2,
+      5,
+      8
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.42,
+      0.33,
+      0.25
+    ],
+    "foliage": [
+      0.1,
+      0.2,
+      0.07
+    ],
+    "foliage_shade": [
+      0.035,
+      0.07,
+      0.0245
+    ],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple"
+        }
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 1.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 5.0,
+      "tolerance": 0.6
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 2,
+      "max": 6
+    },
+    "height_max_m": 9,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_shape": "ovate",
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "head",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.06
+    },
+    "flower_size_m": {
+      "min": 0.008,
+      "max": 0.012
+    },
+    "flower_colour": [
+      235,
+      115,
+      30
+    ],
+    "flower_symmetry": "zygomorphic",
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "fruit_type": "berry",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "fruit_colour_ripe": [
+      200,
+      30,
+      30
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "English ivy's climbing values (internode, shoot growth, clinging, seeking, draping, branching), with three stems from the foot for a twining vine. Changed from ivy: adult_rise 0 and adult_light 2, so no shoot takes ivy's upright adult habit (the honeysuckle has no such phase; it fruits on its free shoots once adult, as the climber did before revision 3); renew 0, as the deciduous grape's, so old nodes do not leaf again; max_shoot 2 for ivy's 3 and grown 8 years for ivy's 15, so the vine climbs to the 2 to 6 m (to 9 m) the model record gives rather than ivy's 16 m. Leaf card size, leaf life and fruit size now come from the traits by the vine form's rules; leaf_area and fruit_area are left to the form's defaults until the shading test gives this look's. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 5 m up its host at 8 years, within the model record's usual 2-6 m (record L2340188). Wide tolerance."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No source read gives the stem or leaf colour: a plain mid green and a grey-brown stem, by eye. The leaf is a plain simple blade whose outline and width follow the traits (ivy's lobed juvenile leaf dropped); berries round, coloured from fruit_colour_ripe."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A twining woody vine (the model record: vine, woody, 2-6 m), drawn by the family's vine form on the climber program."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "host": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The host it is grown on for rendering, the built-in ivy's 30-year bigleaf maple, a tree of the same Pacific Northwest woods; not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it: flowers orange. The colour is our reading of the word."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it: berries red. The colour is our reading of the word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2340188), as no source read gives it."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with core-species batch A1 (2026-10-18): characters from the model record (no Flora of North America text on eFloras: Caprifoliaceae and Lonicera are not there); climbing values from English ivy's."
+  },
+  "host": {
+    "species": "acer-macrophyllum",
+    "age": 30,
+    "environment": "open",
+    "seed": 1
+  }
+}
