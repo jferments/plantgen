@@ -138,9 +138,12 @@
 # from the raceme's foot. With branch_lag 0 and hook 0, as every program
 # gives them unless it says otherwise, a herb grows as before.
 #
+# Revision 17: a hooked bud's neck narrows over its three bends, from half
+# the stem's width to a fifth, as a poppy's peduncle thins below its bud.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 16;
+lsystem herb 17;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -401,14 +404,14 @@ decompose Rc(i, m, h, r, g) : m == 1 && (i + 0.5) / flowers + g < buds_above ->
       flower(flower_size * uniform(0.9, 1.1)) ] Br(flower_angle)
     /(flower_divergence);
 # A hooked bud bends over only at the top of its stalk, in a short arc
-# of three bends, and hangs as its stalk leaves it, not turned up to face
+# of three bends, narrowing as a bud's neck does, and hangs as its stalk leaves it, not turned up to face
 # as an open flower does (flower_tilt). A bud a lagging branch bears is as large as its place
 # on the raceme makes it, not shrunk for the lag.
 decompose Rc(i, m, h, r, g) : m == 1 && hook > 0 ->
     !(stem_radius * 0.5) F(h * r / flowers * bud_spacing * (1 - hook))
-    &(nod / 3 / max(1, flowers * (1 - buds_above))) F(h * r / flowers * bud_spacing * hook / 3)
-    &(nod / 3 / max(1, flowers * (1 - buds_above))) F(h * r / flowers * bud_spacing * hook / 3)
-    &(nod / 3 / max(1, flowers * (1 - buds_above))) F(h * r / flowers * bud_spacing * hook / 3)
+    &(nod / 3 / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.4) F(h * r / flowers * bud_spacing * hook / 3)
+    &(nod / 3 / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.32) F(h * r / flowers * bud_spacing * hook / 3)
+    &(nod / 3 / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.25) F(h * r / flowers * bud_spacing * hook / 3)
     [ &(flower_angle * bud_lean) !(stem_radius * 0.2) F(pedicel * bud_stalk)
       bud(bud_size * lerp(1, 0.5, max(0, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above)))) ]
     Br(flower_angle * bud_lean) /(flower_divergence);

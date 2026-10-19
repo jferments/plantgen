@@ -379,8 +379,8 @@
     },
     "appearance.organs.*.shape.calyx": {
       "template": "flower",
-      "colour": "calyx_colour",
-      "why": "Sepals, and a floral tube that bears them, are drawn in their stated colour; leaf green where none is stated."
+      "colour": ["calyx_colour", "leaf_colour"],
+      "why": "Sepals, and a floral tube that bears them, are drawn in their stated colour; where none is stated, floras' green sepals are the plant's own green (an opium poppy's glaucous blue-green bud), and leaf green where no leaf colour is stated either."
     },
     "appearance.organs.*.shape.nod": {"template": "flower", "map": {"flower_posture": {"erect": 0, "ascending": 0, "spreading": 0, "nodding": 0.6, "pendent": 1}}, "why": "A cluster's flower faces along its pedicel; a nodding one turns most of the way down from where it is borne, and a pendent one hangs straight down (a bleeding heart's hearts)."},
     "appearance.organs.*.shape.disc": {"template": "fruit", "map": {"stigmatic_disc": {"true": {"rule": "clamp(round(carpels), 3, 24)"}, "false": 0}}, "why": "A capsule crowned by its stigmatic disc bears it as a low dome with a ray for each carpel, as many as floras count (a poppy's 5 to 18)."},
