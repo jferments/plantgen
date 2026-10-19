@@ -929,4 +929,9 @@ pub mod venation;
 /// size on its petiole length, and young twigs in its colour, in place of
 /// hand-sized sprig cards; the fig's path_half is refitted to its height
 /// (135 is nightshades round 4, #227).
-pub const GENERATOR_REVISION: u32 = 136;
+/// 140: a palm's fronds stand up the year's trunk as they emerge over the
+/// year (palm 14), so its leaf bases and boots wind evenly up the trunk in
+/// place of bands at each year's top; Phoenix keeps its leaf bases for
+/// the trunk's life, standing close to the stem, over a leaf-base bark
+/// (137 is nightshades round 5, #233; 138 and 139 are conifers, #167).
+pub const GENERATOR_REVISION: u32 = 140;

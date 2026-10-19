@@ -24,9 +24,12 @@
 # teeth, twice-pinnate fronds and slowly falling dead fronds none, so
 # king ferns draw as before.
 #
+# Revision 6: palm revision 14 stands a year's fronds up the year's
+# trunk as they emerge over emerge_spread of the year.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem marattiaceae 5 extends palm;
+lsystem marattiaceae 6 extends palm;
 
 param vigour_spread = 0.1;
 param upturn = 0;

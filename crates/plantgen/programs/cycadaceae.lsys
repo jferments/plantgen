@@ -25,9 +25,12 @@
 # teeth, twice-pinnate fronds and slowly falling dead fronds none, so
 # cycads draw as before.
 #
+# Revision 8: palm revision 14 stands a year's fronds up the year's
+# trunk as they emerge over emerge_spread of the year.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cycadaceae 7 extends palm;
+lsystem cycadaceae 8 extends palm;
 
 param vigour_spread = 0.1; # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;          # how strongly a leaning trunk turns back up, radians a metre
