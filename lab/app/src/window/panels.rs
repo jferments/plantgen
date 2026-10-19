@@ -1,23 +1,30 @@
-//! What each panel holds, the menus, the palette's entries and the
-//! settings. Each control reads [`Lab`] and [`Recording`] and queues a
+//! What each inspector page holds, the menus, the palette's entries and
+//! the settings. Each control reads [`Lab`] and [`Recording`] and queues a
 //! [`Command`]; none changes them.
+//!
+//! The Render page holds what a render is made with, in the order a
+//! render is thought through: which plant (its age, site and variant),
+//! when in the year (the day, with each seasonal organ's year drawn under
+//! it), and how much detail; then Generate, always in reach at its foot.
 
 use std::sync::atomic::Ordering;
 
-use bevy_egui::egui::{self, Color32, RichText, Ui};
+use bevy_egui::egui::{self, Align2, Color32, RichText, Sense, Ui, vec2};
 use plantgen::library::Library;
-use plantlab_scene::{Look, View};
+use plantgen::spec::Environment;
+use plantlab_scene::{Look, Phase, TRACK_STEP};
 use plantlab_ui::palette::Entry;
 use plantlab_ui::widgets::{self, SliderLook};
 use plantlab_ui::{icons, theme};
 
 use super::command::{Command, Panel, Shell};
-use super::shell::years;
-use super::{Lab, keyframes, thumbs_command};
-use crate::measure;
+use super::shell::{VIEWS, years};
+use super::store::{Detail, Recipe};
+use super::{About, Lab, store, thumbs_command};
 use crate::record::Recording;
 
-/// Draws `panel`'s contents.
+/// Draws `panel`'s contents: the Render page with Generate kept at its
+/// foot, the others scrolling.
 pub fn show(
     ui: &mut Ui,
     panel: Panel,
@@ -26,92 +33,641 @@ pub fn show(
     readings: &super::readings::Readings,
     shell: &mut Shell,
 ) {
-    match panel {
-        Panel::Plant => plant(ui, lab, shell),
-        Panel::Grow => grow(ui, lab, shell),
-        Panel::View => view(ui, lab, shell),
-        Panel::Readings => super::readings::panel(ui, lab, readings, shell),
-        Panel::Pictures => pictures(ui, lab, recording, shell),
-        Panel::Spec => spec(ui, lab, shell),
-        Panel::Bark => bark(ui, lab, shell),
-        Panel::Keys => keys(ui),
+    if panel == Panel::Render {
+        egui::Panel::bottom("plantlab-generate")
+            .resizable(false)
+            .frame(
+                egui::Frame::new()
+                    .fill(theme::SURFACE_1)
+                    .inner_margin(egui::Margin::symmetric(0, 10)),
+            )
+            .show(ui, |ui| generate(ui, lab, shell));
     }
+    egui::ScrollArea::vertical()
+        .id_salt(("inspector", panel.short()))
+        .auto_shrink([false, false])
+        .show(ui, |ui| match panel {
+            Panel::Render => render(ui, lab, shell),
+            Panel::Readings => super::readings::panel(ui, lab, readings, shell),
+            Panel::Pictures => pictures(ui, lab, recording, shell),
+            Panel::Spec => spec(ui, lab, shell),
+            Panel::Bark => bark(ui, lab, shell),
+            Panel::Keys => keys(ui),
+        });
 }
 
-/// The species, its age and the day of the year.
-fn plant(ui: &mut Ui, lab: &Lab, shell: &mut Shell) {
-    widgets::section(ui, "Species");
-    ui.add(
-        egui::TextEdit::singleline(&mut shell.filter)
-            .hint_text(format!("Find one of {} species", lab.species.len()))
-            .desired_width(f32::INFINITY),
-    );
-    let filter = shell.filter.to_lowercase();
-    egui::ScrollArea::vertical()
-        .id_salt("species")
-        .max_height(240.0)
-        .auto_shrink([false, true])
-        .show(ui, |ui| {
-            for (index, id) in lab.species.iter().enumerate() {
-                if !filter.is_empty() && !id.contains(&filter) {
-                    continue;
-                }
-                if ui
-                    .selectable_label(index == lab.chosen, id.as_str())
-                    .clicked()
-                {
-                    shell.send(Command::Species(index));
+/// The month names, January first.
+pub const MONTHS: [&str; 12] = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
+
+/// The sites a plant can grow on, as the Render page offers them.
+const SITES: [(Option<Environment>, &str); 5] = [
+    (None, "Typical"),
+    (Some(Environment::Open), "Open"),
+    (Some(Environment::Edge), "Edge"),
+    (Some(Environment::Interior), "Interior"),
+    (Some(Environment::Suppressed), "Suppressed"),
+];
+
+/// The days the season chips jump to: the middle of April, July,
+/// October and January.
+const SEASONS: [(&str, f64); 4] = [
+    ("Spring", 105.0),
+    ("Summer", 196.0),
+    ("Autumn", 288.0),
+    ("Winter", 15.0),
+];
+
+/// The Render page: the species, then the plant, the season and the
+/// detail.
+#[allow(clippy::too_many_lines)]
+fn render(ui: &mut Ui, lab: &Lab, shell: &mut Shell) {
+    species_card(ui, lab);
+    if !lab.about.error.is_empty() {
+        ui.label(RichText::new(&lab.about.error).color(theme::ERROR));
+        return;
+    }
+    let recipe = &lab.recipe;
+
+    widgets::section(ui, "Plant");
+    let age = lab.age();
+    ui.horizontal(|ui| {
+        ui.label(RichText::new("Age").color(theme::TEXT_2));
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            let words = if recipe.age.is_none() {
+                format!("{}, its oldest keyframe", years(age))
+            } else {
+                years(age)
+            };
+            ui.label(RichText::new(words).size(theme::SMALL).color(theme::TEXT_3));
+        });
+    });
+    let youngest = lab
+        .about
+        .keyframes
+        .first()
+        .copied()
+        .unwrap_or(1.0)
+        .min(age)
+        .min(1.0);
+    let step = if youngest < 1.0 { 0.0 } else { 1.0 };
+    let look = SliderLook {
+        step,
+        suffix: " y",
+        decimals: (step >= 1.0).then_some(0),
+        ..SliderLook::default()
+    };
+    // The slider takes the row, leaving room for its value.
+    ui.spacing_mut().slider_width = (ui.available_width() - 80.0).max(80.0);
+    let salt = ("age", &lab.chosen);
+    if let Some(age) = widgets::slider(ui, salt, age, youngest..=lab.about.oldest, look) {
+        shell.send(Command::Age(age));
+    }
+    if !lab.about.keyframes.is_empty() {
+        ui.horizontal_wrapped(|ui| {
+            ui.spacing_mut().item_spacing = vec2(4.0, 4.0);
+            for &keyframe in &lab.about.keyframes {
+                let on = (keyframe - age).abs() < 1e-6;
+                if widgets::chip(ui, &years(keyframe), on) && !on {
+                    shell.send(Command::Age(keyframe));
                 }
             }
         });
-
-    widgets::section(ui, "Age and season");
-    if let Some(age) = lab.age {
-        let youngest = age.min(1.0);
-        let step = if youngest < 1.0 { 0.0 } else { 1.0 };
-        ui.label(RichText::new("Age, years").color(theme::TEXT_2));
-        let look = SliderLook {
-            step,
-            ..SliderLook::default()
-        };
-        let salt = ("age", lab.chosen);
-        if let Some(age) = widgets::slider(ui, salt, age, youngest..=lab.oldest, look) {
-            shell.send(Command::Age(age));
-        }
-        let ages = keyframes(&lab.species[lab.chosen]);
-        if !ages.is_empty() {
-            let text: Vec<String> = ages.iter().map(|age| years(*age)).collect();
-            ui.label(
-                RichText::new(format!("Keyframes: {}", text.join(", ")))
-                    .size(theme::SMALL)
-                    .color(theme::TEXT_3),
-            );
-        }
+        ui.label(
+            RichText::new("The keyframes: the ages its spec checks and packages hold")
+                .size(theme::SMALL)
+                .color(theme::TEXT_3),
+        );
     }
-    ui.label(RichText::new("Day of the year").color(theme::TEXT_2));
-    let look = SliderLook {
-        step: 1.0,
-        decimals: Some(0),
-        ..SliderLook::default()
-    };
-    if let Some(day) = widgets::slider(ui, "day", lab.day, 1.0..=365.0, look) {
-        shell.send(Command::Day(day));
-    }
+    ui.add_space(theme::GAP_SMALL);
+    ui.label(RichText::new("Site").color(theme::TEXT_2));
+    ui.horizontal_wrapped(|ui| {
+        ui.spacing_mut().item_spacing = vec2(4.0, 4.0);
+        for (site, word) in SITES {
+            let on = recipe.environment == site;
+            let text = if site.is_none() {
+                format!("{word} ({})", lab.about.typical)
+            } else {
+                word.to_owned()
+            };
+            if widgets::chip(ui, &text, on) && !on {
+                shell.send(Command::Site(site));
+            }
+        }
+    });
     ui.label(
-        RichText::new(date(lab.day))
+        RichText::new(site_words(recipe.environment, &lab.about.typical))
             .size(theme::SMALL)
             .color(theme::TEXT_3),
     );
+    ui.add_space(theme::GAP_SMALL);
+    variant(ui, lab, shell);
 
-    if let Some(shown) = &lab.shown {
-        let facts = &shown.scene.facts;
-        widgets::section(ui, "Grown under");
-        widgets::reading_row(ui, "conditions", &facts.environment);
-        widgets::reading_row(ui, "seed", &facts.seed.to_string());
-        if let Some(entry) = Library::builtin().entry(&facts.species) {
-            widgets::reading_row(ui, "spec", &entry.file());
+    widgets::section(ui, "Season");
+    ui.horizontal(|ui| {
+        ui.label(
+            RichText::new(date(recipe.day))
+                .font(theme::strong_font(ui, theme::BODY))
+                .color(theme::TEXT),
+        );
+        ui.label(
+            RichText::new(format!("day {:.0}", recipe.day))
+                .font(egui::FontId::monospace(theme::SMALL))
+                .color(theme::TEXT_3),
+        );
+    });
+    if let Some(day) = season_strip(ui, &lab.about, recipe.day) {
+        shell.send(Command::Day(day));
+    }
+    ui.horizontal_wrapped(|ui| {
+        ui.spacing_mut().item_spacing = vec2(4.0, 4.0);
+        for (season, day) in SEASONS {
+            let on = (recipe.day - day).abs() < 0.5;
+            if widgets::chip(ui, season, on) && !on {
+                shell.send(Command::Day(day));
+            }
+        }
+        let playing = lab.year.is_some();
+        let (icon, text) = if playing {
+            (icons::STOP, "Stop the year")
+        } else {
+            (icons::PLAY_CIRCLE, "Play the year")
+        };
+        if ui
+            .button(with_icon(ui, icon, text, theme::TEXT))
+            .on_hover_text(
+                "Draw the plant in the middle of each month in turn, from the plant grown once; \
+                 record growth to make a GIF of its year",
+            )
+            .clicked()
+        {
+            shell.send(Command::PlayYear(!playing));
+        }
+    });
+    if lab.about.year.is_empty() {
+        ui.label(
+            RichText::new("Its spec gives it no seasons: it looks the same all year.")
+                .size(theme::SMALL)
+                .color(theme::TEXT_3),
+        );
+    }
+
+    widgets::section(ui, "Detail");
+    let chosen = Detail::ALL
+        .iter()
+        .position(|detail| *detail == recipe.detail)
+        .unwrap_or(0);
+    let names: Vec<&str> = Detail::ALL.iter().map(|detail| detail.label()).collect();
+    if let Some(index) = widgets::segmented(ui, &names, chosen) {
+        shell.send(Command::Detail(Detail::ALL[index]));
+    }
+    ui.label(
+        RichText::new(match recipe.detail {
+            Detail::Draft => "Draft meshes: quick, for trying settings.",
+            Detail::Standard => "Standard meshes, as the library's packages hold them.",
+            Detail::Full => {
+                "Standard meshes with every flower, fruit, cone and needle shoot as its part \
+                 mesh, as full-quality exports draw them up close."
+            }
+        })
+        .size(theme::SMALL)
+        .color(theme::TEXT_3),
+    );
+    ui.add_space(theme::GAP_SMALL);
+    ui.label(RichText::new("Level of detail").color(theme::TEXT_2));
+    let level = if recipe.detail.parts() {
+        0
+    } else {
+        recipe.level
+    };
+    if let Some(level) = widgets::segmented(ui, &["0 nearest", "1", "2", "3 farthest"], level) {
+        shell.send(Command::Level(level));
+    }
+
+    widgets::section(ui, "While it grows");
+    if widgets::switch(ui, "Draw the plant as it grows", lab.live) {
+        shell.send(Command::ShowGrowing(!lab.live));
+    }
+    ui.add_enabled_ui(lab.live, |ui| {
+        let look = SliderLook {
+            step: 1.0,
+            suffix: " steps",
+            logarithmic: true,
+            decimals: Some(0),
+        };
+        if let Some(every) = widgets::slider(ui, "every", f64::from(lab.every), 1.0..=100.0, look) {
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            shell.send(Command::Every(every.round() as u32));
+        }
+    });
+    if widgets::switch(ui, "Move the camera with the plant", lab.follow) {
+        shell.send(Command::Follow(!lab.follow));
+    }
+    ui.add_space(theme::GAP);
+}
+
+/// The chosen species' names, form and ranks, and its last render.
+fn species_card(ui: &mut Ui, lab: &Lab) {
+    let Some(item) = lab.catalogue.get(&lab.chosen) else {
+        return;
+    };
+    widgets::card_frame().show(ui, |ui| {
+        ui.set_width(ui.available_width());
+        ui.label(
+            RichText::new(item.title())
+                .font(theme::strong_font(ui, theme::HEADING))
+                .color(theme::TEXT),
+        );
+        if !item.common.is_empty() {
+            ui.label(
+                RichText::new(&item.scientific)
+                    .italics()
+                    .color(theme::TEXT_2),
+            );
+        }
+        ui.label(
+            RichText::new(format!(
+                "{} · {} · {} · {}",
+                item.form.one(),
+                item.genus,
+                item.family,
+                item.order
+            ))
+            .size(theme::SMALL)
+            .color(theme::TEXT_3),
+        );
+        let line = match lab.store.kept.get(&lab.chosen) {
+            Some(kept) => format!(
+                "Last render {}, in {:.1} s",
+                store::ago(kept.saved, store::now()),
+                kept.seconds
+            ),
+            None => "Not rendered yet".to_owned(),
+        };
+        ui.label(RichText::new(line).size(theme::SMALL).color(theme::TEXT_2));
+    });
+}
+
+/// What a site means for the plant.
+fn site_words(site: Option<Environment>, typical: &str) -> String {
+    match site {
+        None => format!("Where its spec says it usually grows: {typical}."),
+        Some(Environment::Open) => "In the open, with no neighbours shading it.".into(),
+        Some(Environment::Edge) => "At a stand's edge: open on one side.".into(),
+        Some(Environment::Interior) => "Inside a stand, crowded by its neighbours.".into(),
+        Some(Environment::Suppressed) => "Under a canopy, in deep shade.".into(),
+    }
+}
+
+/// The variant: the spec's seeds, the first the typical plant.
+fn variant(ui: &mut Ui, lab: &Lab, shell: &mut Shell) {
+    let seeds = &lab.about.seeds;
+    if seeds.is_empty() {
+        return;
+    }
+    let seed = lab.recipe.seed.unwrap_or(seeds[0]);
+    let index = seeds.iter().position(|known| *known == seed);
+    ui.horizontal(|ui| {
+        ui.label(RichText::new("Variant").color(theme::TEXT_2));
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            let next = index.map_or(0, |index| (index + 1) % seeds.len());
+            if widgets::icon_button(ui, icons::CARET_RIGHT, "The next variant", false) {
+                shell.send(Command::Seed((next != 0).then_some(seeds[next])));
+            }
+            let words = match index {
+                Some(index) => format!("{} of {} · seed {seed}", index + 1, seeds.len()),
+                None => format!("seed {seed}"),
+            };
+            ui.label(
+                RichText::new(words)
+                    .font(egui::FontId::monospace(theme::SMALL))
+                    .color(theme::TEXT),
+            );
+            let back = index.map_or(0, |index| (index + seeds.len() - 1) % seeds.len());
+            if widgets::icon_button(ui, icons::CARET_LEFT, "The variant before", false) {
+                shell.send(Command::Seed((back != 0).then_some(seeds[back])));
+            }
+        });
+    });
+    ui.label(
+        RichText::new(
+            "Each seed grows another plant of the species; the first is the typical one.",
+        )
+        .size(theme::SMALL)
+        .color(theme::TEXT_3),
+    );
+}
+
+/// Each phase's colour on the season strip.
+fn phase_colour(phase: Phase) -> Option<Color32> {
+    Some(match phase {
+        Phase::Gone => return None,
+        Phase::Bud => Color32::from_rgb(0xd9, 0xa8, 0xc4),
+        Phase::Flower => Color32::from_rgb(0xf0, 0x6f, 0xb4),
+        Phase::Unripe => Color32::from_rgb(0xb8, 0xc9, 0x5a),
+        Phase::Ripe => Color32::from_rgb(0xe0, 0x7a, 0x3a),
+        Phase::Unfolding => Color32::from_rgb(0x9f, 0xd8, 0x6b),
+        Phase::Leaf => Color32::from_rgb(0x4c, 0xa0, 0x5a),
+        Phase::Turning => Color32::from_rgb(0xd8, 0xa1, 0x38),
+    })
+}
+
+/// Each phase's word in the strip's legend.
+fn phase_word(phase: Phase) -> &'static str {
+    match phase {
+        Phase::Gone => "",
+        Phase::Bud => "bud",
+        Phase::Flower => "flower",
+        Phase::Unripe => "unripe",
+        Phase::Ripe => "ripe",
+        Phase::Unfolding => "leaves unfold",
+        Phase::Leaf => "full leaf",
+        Phase::Turning => "turning",
+    }
+}
+
+/// A track's band and the gap between bands, points; the most tracks
+/// drawn; the room for the tracks' names.
+const BAND: f32 = 9.0;
+const BAND_GAP: f32 = 3.0;
+const MOST_TRACKS: usize = 6;
+const NAMES: f32 = 64.0;
+
+/// The year as a strip: the months along it, each seasonal organ's year
+/// as a band of its phases, and the day chosen as a line across. A click
+/// or a drag along it chooses the day, sent when let go.
+#[allow(clippy::too_many_lines)]
+fn season_strip(ui: &mut Ui, about: &About, day: f64) -> Option<f64> {
+    let tracks: Vec<_> = about.year.iter().take(MOST_TRACKS).collect();
+    #[allow(clippy::cast_precision_loss)]
+    let bands = tracks.len() as f32 * (BAND + BAND_GAP);
+    let height = 16.0 + bands.max(BAND + BAND_GAP) + 4.0;
+    let (rect, response) =
+        ui.allocate_exact_size(vec2(ui.available_width(), height), Sense::click_and_drag());
+    let strip = egui::Rect::from_min_max(egui::pos2(rect.left() + NAMES, rect.top()), rect.max);
+    let x_of = |day: f64| {
+        #[allow(clippy::cast_possible_truncation)]
+        let share = ((day - 1.0) / 364.0) as f32;
+        strip.left() + share * strip.width()
+    };
+    let day_at = |x: f32| {
+        let share = ((x - strip.left()) / strip.width()).clamp(0.0, 1.0);
+        (1.0 + f64::from(share) * 364.0).round()
+    };
+    let painter = ui.painter_at(rect);
+    let id = response.id.with("held");
+    let held: Option<f64> = ui.data(|data| data.get_temp(id));
+    // The months: a faint band each other month, and their initials.
+    let mut start = 1.0;
+    for (month, days) in [
+        31.0, 28.0, 31.0, 30.0, 31.0, 30.0, 31.0, 31.0, 30.0, 31.0, 30.0, 31.0,
+    ]
+    .iter()
+    .enumerate()
+    {
+        let (x0, x1) = (x_of(start), x_of(start + days - 1.0));
+        if month % 2 == 0 {
+            painter.rect_filled(
+                egui::Rect::from_min_max(egui::pos2(x0, rect.top()), egui::pos2(x1, rect.bottom())),
+                0.0,
+                theme::SURFACE_2,
+            );
+        }
+        painter.text(
+            egui::pos2(f32::midpoint(x0, x1), rect.top() + 7.0),
+            Align2::CENTER_CENTER,
+            &MONTHS[month][..1],
+            egui::FontId::proportional(theme::SMALL - 1.0),
+            theme::TEXT_3,
+        );
+        start += days;
+    }
+    // Each track's band.
+    #[allow(clippy::cast_precision_loss)]
+    let step = TRACK_STEP as f64;
+    for (row, track) in tracks.iter().enumerate() {
+        #[allow(clippy::cast_precision_loss)]
+        let top = rect.top() + 16.0 + row as f32 * (BAND + BAND_GAP);
+        painter.text(
+            egui::pos2(rect.left(), top + BAND / 2.0),
+            Align2::LEFT_CENTER,
+            organ_word(&track.organ, track.leaves),
+            egui::FontId::proportional(theme::SMALL - 1.0),
+            theme::TEXT_2,
+        );
+        painter.rect_filled(
+            egui::Rect::from_min_max(
+                egui::pos2(strip.left(), top),
+                egui::pos2(strip.right(), top + BAND),
+            ),
+            2.0,
+            theme::SURFACE_3,
+        );
+        for (index, phase) in track.phases.iter().enumerate() {
+            let Some(colour) = phase_colour(*phase) else {
+                continue;
+            };
+            #[allow(clippy::cast_precision_loss)]
+            let first = 1.0 + index as f64 * step;
+            let x0 = x_of(first);
+            let x1 = x_of((first + step).min(365.0)).max(x0 + 1.0);
+            painter.rect_filled(
+                egui::Rect::from_min_max(egui::pos2(x0, top), egui::pos2(x1, top + BAND)),
+                0.0,
+                colour,
+            );
         }
     }
+    // The day: the chosen one, or the one under the pointer while held.
+    let under = response
+        .interact_pointer_pos()
+        .map(|position| day_at(position.x));
+    let shown_day = under.or(held).unwrap_or(day);
+    let x = x_of(shown_day);
+    painter.line_segment(
+        [
+            egui::pos2(x, rect.top() + 13.0),
+            egui::pos2(x, rect.bottom()),
+        ],
+        egui::Stroke::new(2.0, theme::TEXT),
+    );
+    painter.circle_filled(egui::pos2(x, rect.top() + 13.0), 3.0, theme::TEXT);
+    let mut sent = None;
+    if response.dragged() || response.is_pointer_button_down_on() {
+        ui.data_mut(|data| data.insert_temp(id, shown_day));
+    }
+    if (response.drag_stopped() || response.clicked())
+        && let Some(day) = under.or(held)
+    {
+        sent = Some(day);
+        ui.data_mut(|data| data.remove::<f64>(id));
+    }
+    let response = response.on_hover_text(date(shown_day));
+    drop(response);
+    // The legend: the phases the strip shows.
+    let mut seen: Vec<Phase> = Vec::new();
+    for track in &tracks {
+        for phase in &track.phases {
+            if *phase != Phase::Gone && !seen.contains(phase) {
+                seen.push(*phase);
+            }
+        }
+    }
+    let order = [
+        Phase::Unfolding,
+        Phase::Leaf,
+        Phase::Turning,
+        Phase::Bud,
+        Phase::Flower,
+        Phase::Unripe,
+        Phase::Ripe,
+    ];
+    if !seen.is_empty() {
+        ui.horizontal_wrapped(|ui| {
+            ui.spacing_mut().item_spacing = vec2(8.0, 2.0);
+            for phase in order.iter().filter(|phase| seen.contains(phase)) {
+                // One label each, a square of its colour then its word, so
+                // the row wraps between phases.
+                let font = egui::FontId::proportional(theme::SMALL - 1.0);
+                let mut job = egui::text::LayoutJob::default();
+                job.append(
+                    "■",
+                    0.0,
+                    egui::TextFormat::simple(
+                        font.clone(),
+                        phase_colour(*phase).unwrap_or(theme::TEXT_3),
+                    ),
+                );
+                job.append(
+                    phase_word(*phase),
+                    3.0,
+                    egui::TextFormat::simple(font, theme::TEXT_3),
+                );
+                ui.add(egui::Label::new(job).wrap_mode(egui::TextWrapMode::Extend));
+            }
+        });
+    }
+    sent
+}
+
+/// A seasonal organ's name on the strip: its name in the program, made
+/// plain (`male_cone` to `male cone`), and `leaves` for the leafing year.
+fn organ_word(organ: &str, leaves: bool) -> String {
+    if leaves {
+        return "leaves".into();
+    }
+    organ.replace('_', " ")
+}
+
+/// Generate, at the Render page's foot: what it will do and how long it
+/// took last; Pause and Stop while it grows.
+fn generate(ui: &mut Ui, lab: &Lab, shell: &mut Shell) {
+    ui.painter().hline(
+        ui.max_rect().x_range(),
+        ui.max_rect().top(),
+        egui::Stroke::new(1.0, theme::LINE_STRONG),
+    );
+    ui.add_space(2.0);
+    if let Some(job) = &lab.growing {
+        let (share, text) = progress(lab);
+        let paused = lab.control.pause.load(Ordering::Relaxed);
+        let label = if job.redraw {
+            "Drawing"
+        } else if paused {
+            "Paused"
+        } else {
+            "Growing"
+        };
+        widgets::progress(ui, share, label, &text);
+        ui.add_space(theme::GAP_SMALL);
+        ui.horizontal(|ui| {
+            if !job.redraw {
+                let pause = if paused { "Resume" } else { "Pause" };
+                if ui.button(pause).on_hover_text("Space").clicked() {
+                    shell.send(Command::Pause(!paused));
+                }
+            }
+            if ui
+                .button("Stop")
+                .on_hover_text("Stop growing; the last frame shown stays (Esc)")
+                .clicked()
+            {
+                shell.send(Command::Stop);
+            }
+        });
+        return;
+    }
+    let changes = lab.changes();
+    let shows = lab.shows_chosen();
+    let text = if shows && changes.is_empty() {
+        "Generate again"
+    } else {
+        "Generate"
+    };
+    if widgets::primary_button(
+        ui,
+        icons::PLAY,
+        text,
+        Some("Enter"),
+        lab.about.error.is_empty(),
+    )
+    .on_hover_text("Grow the plant with these settings")
+    .clicked()
+    {
+        shell.send(Command::Generate);
+    }
+    let note = if lab.redraws() && !changes.is_empty() {
+        let words: Vec<&str> = changes.iter().map(|setting| setting.word()).collect();
+        format!(
+            "Draws the grown plant again for its new {}: no growing.",
+            words.join(" and ")
+        )
+    } else if shows && changes.is_empty() {
+        "On screen as these settings make it.".to_owned()
+    } else {
+        match lab.store.kept.get(&lab.chosen) {
+            Some(kept) if !shows => format!(
+                "Grows the plant. Its last render took {:.1} s.",
+                kept.seconds
+            ),
+            _ => "Grows the plant from seed to its age.".to_owned(),
+        }
+    };
+    ui.add_space(4.0);
+    ui.label(RichText::new(note).size(theme::SMALL).color(theme::TEXT_3));
+}
+
+/// A recipe in words, for the last render's caption: the age, day,
+/// detail, site and variant.
+pub fn recipe_words(recipe: &Recipe, age: f64, about: &About) -> String {
+    let mut words = vec![
+        years(age),
+        date(recipe.day),
+        recipe.detail.name().to_owned(),
+    ];
+    if !recipe.detail.parts() && recipe.level > 0 {
+        words.push(format!("level {}", recipe.level));
+    }
+    words.push(recipe.environment.map_or_else(
+        || format!("{} site", about.typical),
+        |site| format!("{} site", site.name()),
+    ));
+    if let Some(seed) = recipe.seed {
+        words.push(format!("seed {seed}"));
+    }
+    words.join(", ")
 }
 
 /// A day of the year as a date in a year of 365 days.
@@ -142,10 +698,10 @@ pub fn date(day: f64) -> String {
     "31 December".into()
 }
 
-/// What is growing, or why it stopped, and how far it got.
+/// What is growing, or why it stopped, and what is on screen.
 #[must_use]
 pub fn state_line(lab: &Lab) -> (Color32, String) {
-    if lab.growing.is_some() {
+    if let Some(job) = &lab.growing {
         let (_, text) = progress(lab);
         let paused = lab.control.pause.load(Ordering::Relaxed);
         let colour = if paused {
@@ -153,32 +709,48 @@ pub fn state_line(lab: &Lab) -> (Color32, String) {
         } else {
             theme::ACCENT
         };
-        let word = if paused { "Paused" } else { "Growing" };
+        let word = if job.redraw {
+            "Drawing"
+        } else if paused {
+            "Paused"
+        } else {
+            "Growing"
+        };
         return (colour, format!("{word}: {text}"));
     }
     if !lab.message.is_empty() {
         return (theme::STATUS[2], lab.message.clone());
     }
     match &lab.shown {
-        Some(shown) => (
-            theme::STATUS[0],
-            format!(
-                "{}, {}, grown in {:.1} s",
-                shown.scene.facts.species,
-                years(shown.scene.facts.age),
-                shown.seconds
-            ),
-        ),
-        None => (theme::TEXT_3, "Nothing grown yet".into()),
+        Some(shown) => {
+            let name = lab
+                .catalogue
+                .get(&shown.scene.facts.species)
+                .map_or(shown.scene.facts.species.as_str(), |item| item.title());
+            (
+                theme::STATUS[0],
+                format!(
+                    "{name}, {}, {}, made in {:.1} s",
+                    years(shown.scene.facts.age),
+                    date(shown.recipe.day),
+                    shown.seconds
+                ),
+            )
+        }
+        None => (theme::TEXT_3, "Choose the settings, then Generate".into()),
     }
 }
 
 /// The growth's share done and its words.
-fn progress(lab: &Lab) -> (f32, String) {
+#[must_use]
+pub fn progress(lab: &Lab) -> (f32, String) {
+    let seconds = lab.started.elapsed().as_secs_f64();
+    if lab.growing.as_ref().is_some_and(|job| job.redraw) {
+        return (0.0, format!("drawing, {seconds:.1} s"));
+    }
     let step = lab.control.step.load(Ordering::Relaxed);
     let steps = lab.control.steps.load(Ordering::Relaxed);
     let age = f64::from_bits(lab.control.age.load(Ordering::Relaxed));
-    let seconds = lab.started.elapsed().as_secs_f64();
     if steps == 0 {
         (0.0, format!("starting, {seconds:.1} s"))
     } else if step >= steps {
@@ -193,132 +765,337 @@ fn progress(lab: &Lab) -> (f32, String) {
     }
 }
 
-/// Grow, stop and pause, and showing the plant as it grows.
-fn grow(ui: &mut Ui, lab: &Lab, shell: &mut Shell) {
-    let growing = lab.growing.is_some();
-    let paused = lab.control.pause.load(Ordering::Relaxed);
-    widgets::section(ui, "Growth");
-    if growing {
-        let (share, text) = progress(lab);
-        let label = if paused { "Paused" } else { "Growing" };
-        widgets::progress(ui, share, label, &text);
-    } else {
-        let (_, text) = state_line(lab);
-        ui.label(RichText::new(text).color(theme::TEXT_2));
-    }
-    ui.horizontal(|ui| {
-        if ui
-            .add_enabled(!growing, egui::Button::new("Grow"))
-            .on_hover_text("Grow the plant with these settings (Enter)")
-            .clicked()
-        {
-            shell.send(Command::Grow);
-        }
-        let pause = if paused { "Resume" } else { "Pause" };
-        if ui
-            .add_enabled(growing, egui::Button::new(pause))
-            .on_hover_text("Space")
-            .clicked()
-        {
-            shell.send(Command::Pause(!paused));
-        }
-        if ui
-            .add_enabled(growing, egui::Button::new("Stop"))
-            .on_hover_text("Stop growing; the last frame shown stays (Esc)")
-            .clicked()
-        {
-            shell.send(Command::Stop);
-        }
-    });
-
-    widgets::section(ui, "When to grow");
-    if widgets::switch(ui, "Grow when the settings change", lab.auto) {
-        shell.send(Command::GrowOnChange(!lab.auto));
-    }
-    if !lab.auto && lab.dirty && !growing {
-        ui.label(RichText::new("Settings changed: press Grow").color(theme::WARNING));
-    }
-
-    widgets::section(ui, "Show it growing");
-    if widgets::switch(ui, "Draw the plant as it grows", lab.live) {
-        shell.send(Command::ShowGrowing(!lab.live));
-    }
-    ui.add_enabled_ui(lab.live, |ui| {
-        ui.label(RichText::new("Every").color(theme::TEXT_2));
-        let look = SliderLook {
-            step: 1.0,
-            suffix: " steps",
-            logarithmic: true,
-            decimals: Some(0),
-        };
-        if let Some(every) = widgets::slider(ui, "every", f64::from(lab.every), 1.0..=100.0, look) {
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            shell.send(Command::Every(every.round() as u32));
-        }
-    });
-    if widgets::switch(ui, "Move the camera with the plant", lab.follow) {
-        shell.send(Command::Follow(!lab.follow));
-    }
-}
-
-/// The level of detail, quality, look and view, and the measures.
-fn view(ui: &mut Ui, lab: &Lab, shell: &mut Shell) {
-    widgets::section(ui, "Level of detail");
-    if let Some(level) = widgets::segmented(ui, &["0", "1", "2", "3"], lab.level) {
-        shell.send(Command::Level(level));
-    }
-    widgets::section(ui, "Quality");
-    if let Some(index) = widgets::segmented(ui, &["Draft", "Standard"], usize::from(!lab.draft)) {
-        shell.send(Command::Draft(index == 0));
-    }
-    widgets::section(ui, "Look");
-    let looks = [Look::Review, Look::Photo];
-    let chosen = looks.iter().position(|look| *look == lab.look).unwrap_or(0);
-    if let Some(index) = widgets::segmented(ui, &["Review", "Photo"], chosen) {
-        shell.send(Command::Look(looks[index]));
-    }
+/// Every key, in groups.
+fn keys(ui: &mut Ui) {
+    let pair = |key: &str, help: &str| (key.to_owned(), help.to_owned());
+    widgets::key_help(
+        ui,
+        &[
+            (
+                "Rendering",
+                vec![
+                    pair("Enter", "generate"),
+                    pair("Space", "pause or resume"),
+                    pair("Esc", "stop, or leave the Overlay"),
+                ],
+            ),
+            (
+                "View",
+                vec![
+                    pair("1", "from the side"),
+                    pair("2", "three-quarter"),
+                    pair("3", "45 degrees down"),
+                    pair("4", "from the top"),
+                    pair("F", "frame the plant again"),
+                    pair("G", "grid"),
+                    pair("R", "ruler"),
+                    pair("O", "Overlay, and back"),
+                ],
+            ),
+            (
+                "Pictures",
+                vec![pair("P", "snapshot"), pair("S", "save the GIF")],
+            ),
+            (
+                "Window",
+                vec![
+                    pair("L", "the library"),
+                    pair("I", "the inspector"),
+                    pair("F1", "these keys"),
+                    pair("Ctrl+K", "find a species or a command"),
+                    pair("Ctrl+,", "settings"),
+                ],
+            ),
+        ],
+    );
     ui.label(
         RichText::new(
-            "Review is fixed, so species compare fairly; photo adds soft shadows, sky light \
-             and a filmic tone map.",
+            "Drag to turn, middle-drag or Shift-drag to move, scroll to come closer. \
+             In the library, double-click a species to choose it and generate.",
         )
         .size(theme::SMALL)
         .color(theme::TEXT_3),
     );
-    widgets::section(ui, "Camera");
-    let views = [View::Side, View::ThreeQuarter, View::Top];
-    let chosen = views.iter().position(|view| *view == lab.view).unwrap_or(1);
-    if let Some(index) = widgets::segmented(ui, &["Side", "Three-quarter", "Top"], chosen) {
-        shell.send(Command::View(views[index]));
+}
+
+/// One entry of a menu, which the palette lists too.
+pub struct MenuItem {
+    pub label: String,
+    pub key: Option<String>,
+    /// A switch's state; `None` for an action.
+    pub checked: Option<bool>,
+    pub command: Command,
+}
+
+fn item(label: &str, key: Option<&str>, checked: Option<bool>, command: Command) -> MenuItem {
+    MenuItem {
+        label: label.to_owned(),
+        key: key.map(str::to_owned),
+        checked,
+        command,
     }
-    if ui.button("Frame the plant again (F)").clicked() {
-        shell.send(Command::ResetCamera);
+}
+
+/// The menus, each a list of entries.
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn menus(
+    lab: &Lab,
+    recording: &Recording,
+    shell: &Shell,
+) -> Vec<(&'static str, Vec<MenuItem>)> {
+    let paused = lab.control.pause.load(Ordering::Relaxed);
+    let mut plant = vec![
+        item("Generate", Some("Enter"), None, Command::Generate),
+        item(
+            "Find a species…",
+            Some("Ctrl+K"),
+            None,
+            Command::Palette("species ".into()),
+        ),
+    ];
+    if lab.growing.is_some() {
+        plant.push(item(
+            if paused { "Resume" } else { "Pause" },
+            Some("Space"),
+            None,
+            Command::Pause(!paused),
+        ));
+        plant.push(item("Stop", Some("Esc"), None, Command::Stop));
     }
+    plant.push(item(
+        "Play the year",
+        None,
+        Some(lab.year.is_some()),
+        Command::PlayYear(lab.year.is_none()),
+    ));
+    for detail in Detail::ALL {
+        plant.push(item(
+            &format!("{} detail", detail.label()),
+            None,
+            Some(lab.recipe.detail == detail),
+            Command::Detail(detail),
+        ));
+    }
+    plant.extend([
+        item(
+            "Draw the plant as it grows",
+            None,
+            Some(lab.live),
+            Command::ShowGrowing(!lab.live),
+        ),
+        item(
+            "Move the camera with the plant",
+            None,
+            Some(lab.follow),
+            Command::Follow(!lab.follow),
+        ),
+    ]);
+    let mut view: Vec<MenuItem> = VIEWS
+        .iter()
+        .enumerate()
+        .map(|(index, (value, name, _))| {
+            item(
+                &format!("{name} view"),
+                Some(&(index + 1).to_string()),
+                Some(lab.recipe.view == *value),
+                Command::View(*value),
+            )
+        })
+        .collect();
+    view.extend([
+        item(
+            "Review look",
+            None,
+            Some(lab.recipe.look == Look::Review),
+            Command::Look(Look::Review),
+        ),
+        item(
+            "Photo look",
+            None,
+            Some(lab.recipe.look == Look::Photo),
+            Command::Look(Look::Photo),
+        ),
+        item("Grid", Some("G"), Some(lab.grid), Command::Grid(!lab.grid)),
+        item(
+            "Height ruler",
+            Some("R"),
+            Some(lab.ruler),
+            Command::Ruler(!lab.ruler),
+        ),
+        item(
+            "Frame the plant again",
+            Some("F"),
+            None,
+            Command::ResetCamera,
+        ),
+        item(
+            "Overlay",
+            Some("O"),
+            Some(shell.overlay),
+            Command::Overlay(!shell.overlay),
+        ),
+        item(
+            "Library",
+            Some("L"),
+            Some(shell.library),
+            Command::Library(!shell.library),
+        ),
+        item(
+            "Inspector",
+            Some("I"),
+            Some(shell.inspector),
+            Command::Inspector(!shell.inspector),
+        ),
+    ]);
+    let pictures = vec![
+        item("Snapshot", Some("P"), None, Command::Snapshot),
+        item(
+            "Record growth",
+            None,
+            Some(recording.record),
+            Command::Record(!recording.record),
+        ),
+        item("Save GIF", Some("S"), None, Command::SaveGif),
+        item("Clear the frames", None, None, Command::ClearFrames),
+        item(
+            "Pictures of the plant alone",
+            None,
+            Some(recording.plant_only),
+            Command::PlantOnly(!recording.plant_only),
+        ),
+    ];
+    let pages = Panel::ALL
+        .iter()
+        .map(|panel| {
+            item(
+                panel.short(),
+                (*panel == Panel::Keys).then_some("F1"),
+                Some(shell.shows(*panel)),
+                Command::Tab(*panel),
+            )
+        })
+        .collect();
+    let mut help = vec![item(
+        "Settings",
+        Some("Ctrl+,"),
+        None,
+        Command::Settings(true),
+    )];
+    if let Some(shown) = &lab.shown {
+        help.push(item(
+            "Print the thumbs command",
+            None,
+            None,
+            Command::Print(thumbs_command(&shown.shot)),
+        ));
+    }
+    vec![
+        ("Plant", plant),
+        ("View", view),
+        ("Pictures", pictures),
+        ("Pages", pages),
+        ("Help", help),
+    ]
+}
+
+/// The palette's entries: every menu entry and every species, found by
+/// any of its names or ranks.
+#[must_use]
+pub fn palette_entries(lab: &Lab, recording: &Recording, shell: &Shell) -> Vec<(Entry, Command)> {
+    let mut entries = Vec::new();
+    for (menu, items) in menus(lab, recording, shell) {
+        for item in items {
+            let detail = match item.checked {
+                Some(true) => format!("{menu} · on"),
+                Some(false) => format!("{menu} · off"),
+                None => menu.to_owned(),
+            };
+            entries.push((
+                Entry {
+                    label: item.label.to_lowercase(),
+                    detail,
+                    chord: item.key,
+                },
+                item.command,
+            ));
+        }
+    }
+    for item in &lab.catalogue.items {
+        let label = if item.common.is_empty() {
+            format!("species {}", item.scientific.to_lowercase())
+        } else {
+            format!(
+                "species {} {}",
+                item.common.to_lowercase(),
+                item.scientific.to_lowercase()
+            )
+        };
+        entries.push((
+            Entry {
+                label,
+                detail: format!("{} · {} · {}", item.form.one(), item.family, item.order),
+                chord: None,
+            },
+            Command::Choose(item.id.clone()),
+        ));
+    }
+    entries
+}
+
+/// The settings saved between runs: each control saves its own.
+pub fn settings(ui: &mut Ui, lab: &Lab, recording: &Recording, shell: &mut Shell) {
+    let path = shell.settings.path.as_ref().map_or_else(
+        || "no folder known".to_owned(),
+        |path| path.display().to_string(),
+    );
+    widgets::reading_row(ui, "saved in", &path);
     ui.label(
-        RichText::new("Drag to turn, middle-drag or Shift-drag to move, scroll to come closer.")
+        RichText::new("Each change is saved at once, alone. Flags on the command line win.")
             .size(theme::SMALL)
             .color(theme::TEXT_3),
     );
-    widgets::section(ui, "Measures");
-    if widgets::switch(ui, "Grid on the ground (G)", lab.grid) {
+    widgets::section(ui, "Growing");
+    if widgets::switch(ui, "Draw the plant as it grows", lab.live) {
+        shell.send(Command::ShowGrowing(!lab.live));
+    }
+    if widgets::switch(ui, "Move the camera with the plant", lab.follow) {
+        shell.send(Command::Follow(!lab.follow));
+    }
+    widgets::section(ui, "Window");
+    if widgets::switch(ui, "Open with the library showing", shell.library) {
+        shell.send(Command::Library(!shell.library));
+    }
+    if widgets::switch(ui, "Grid on the ground", lab.grid) {
         shell.send(Command::Grid(!lab.grid));
     }
-    if let Some(shown) = &lab.shown
-        && lab.grid
-    {
-        let step = measure::grid_step(shown.scene.ground_radius);
-        ui.label(
-            RichText::new(format!(
-                "Squares {}, bold lines every {}",
-                measure::length(step, step),
-                measure::length(step * 5.0, step * 5.0)
-            ))
-            .size(theme::SMALL)
-            .color(theme::TEXT_3),
-        );
-    }
-    if widgets::switch(ui, "Height ruler (R)", lab.ruler) {
+    if widgets::switch(ui, "Height ruler", lab.ruler) {
         shell.send(Command::Ruler(!lab.ruler));
+    }
+    widgets::section(ui, "Pictures");
+    if widgets::switch(ui, "Pictures of the plant alone", recording.plant_only) {
+        shell.send(Command::PlantOnly(!recording.plant_only));
+    }
+    if widgets::switch(ui, "Save each frame as a PNG too", recording.pngs) {
+        shell.send(Command::Pngs(!recording.pngs));
+    }
+    widgets::section(ui, "Last renders");
+    let folder = lab.store.folder.as_ref().map_or_else(
+        || "not kept: no cache folder known".to_owned(),
+        |path| path.display().to_string(),
+    );
+    widgets::reading_row(ui, "kept in", &folder);
+    widgets::reading_row(ui, "species kept", &lab.store.kept.len().to_string());
+    ui.label(
+        RichText::new(
+            "Each species' last render is kept there, a picture and its settings, \
+             and shown when it is chosen again. Delete the folder to forget them.",
+        )
+        .size(theme::SMALL)
+        .color(theme::TEXT_3),
+    );
+    if !shell.settings.message.is_empty() {
+        ui.label(RichText::new(&shell.settings.message).color(theme::WARNING));
     }
 }
 
@@ -487,7 +1264,7 @@ fn command_text(ui: &mut Ui, text: &str, shell: &mut Shell) {
 
 /// The species' spec, as the library merges it.
 fn spec(ui: &mut Ui, lab: &Lab, shell: &mut Shell) {
-    let id = &lab.species[lab.chosen];
+    let id = &lab.chosen;
     let Some(entry) = Library::builtin().entry(id) else {
         ui.label(RichText::new("Not in the library").color(theme::ERROR));
         return;
@@ -663,306 +1440,6 @@ fn linear_to_srgb(value: f32) -> f32 {
     }
 }
 
-/// Every key, in groups.
-fn keys(ui: &mut Ui) {
-    let pair = |key: &str, help: &str| (key.to_owned(), help.to_owned());
-    let mut panels: Vec<(String, String)> = Panel::RAIL
-        .iter()
-        .map(|panel| pair(panel.key(), panel.title()))
-        .collect();
-    panels.push(pair("Shift+1", "a panel beside the open ones (any digit)"));
-    panels.push(pair("F1", "these keys"));
-    widgets::key_help(
-        ui,
-        &[
-            (
-                "Growing",
-                vec![
-                    pair("Enter", "grow"),
-                    pair("Space", "pause or resume"),
-                    pair("Esc", "stop growing"),
-                ],
-            ),
-            (
-                "View",
-                vec![
-                    pair("F", "frame the plant again"),
-                    pair("G", "grid"),
-                    pair("R", "ruler"),
-                    pair("O", "Overlay, and back"),
-                ],
-            ),
-            (
-                "Pictures",
-                vec![pair("P", "snapshot"), pair("S", "save the GIF")],
-            ),
-            ("Panels", panels),
-            (
-                "Anywhere",
-                vec![pair("Ctrl+P", "search or run"), pair("Ctrl+,", "settings")],
-            ),
-        ],
-    );
-    ui.label(
-        RichText::new("Drag to turn, middle-drag or Shift-drag to move, scroll to come closer.")
-            .size(theme::SMALL)
-            .color(theme::TEXT_3),
-    );
-}
-
-/// One entry of a menu, which the palette lists too.
-pub struct MenuItem {
-    pub label: String,
-    pub key: Option<String>,
-    /// A switch's state; `None` for an action.
-    pub checked: Option<bool>,
-    pub command: Command,
-}
-
-fn item(label: &str, key: Option<&str>, checked: Option<bool>, command: Command) -> MenuItem {
-    MenuItem {
-        label: label.to_owned(),
-        key: key.map(str::to_owned),
-        checked,
-        command,
-    }
-}
-
-/// The menus, each a list of entries.
-#[must_use]
-#[allow(clippy::too_many_lines)]
-pub fn menus(
-    lab: &Lab,
-    recording: &Recording,
-    shell: &Shell,
-) -> Vec<(&'static str, Vec<MenuItem>)> {
-    let growing = lab.growing.is_some();
-    let paused = lab.control.pause.load(Ordering::Relaxed);
-    let mut plant = vec![
-        item(
-            "Choose a species…",
-            None,
-            None,
-            Command::Palette("species ".into()),
-        ),
-        item("Grow", Some("Enter"), None, Command::Grow),
-    ];
-    if growing {
-        plant.push(item(
-            if paused { "Resume" } else { "Pause" },
-            Some("Space"),
-            None,
-            Command::Pause(!paused),
-        ));
-        plant.push(item("Stop", Some("Esc"), None, Command::Stop));
-    }
-    plant.extend([
-        item(
-            "Grow when the settings change",
-            None,
-            Some(lab.auto),
-            Command::GrowOnChange(!lab.auto),
-        ),
-        item(
-            "Show it growing",
-            None,
-            Some(lab.live),
-            Command::ShowGrowing(!lab.live),
-        ),
-        item(
-            "Move the camera with the plant",
-            None,
-            Some(lab.follow),
-            Command::Follow(!lab.follow),
-        ),
-    ]);
-    let mut view = Vec::new();
-    for (name, value) in [
-        ("Side", View::Side),
-        ("Three-quarter", View::ThreeQuarter),
-        ("Top", View::Top),
-    ] {
-        view.push(item(
-            &format!("View from the {}", name.to_lowercase()),
-            None,
-            Some(lab.view == value),
-            Command::View(value),
-        ));
-    }
-    for level in 0..4 {
-        view.push(item(
-            &format!("Level of detail {level}"),
-            None,
-            Some(lab.level == level),
-            Command::Level(level),
-        ));
-    }
-    view.extend([
-        item("Draft quality", None, Some(lab.draft), Command::Draft(true)),
-        item(
-            "Standard quality",
-            None,
-            Some(!lab.draft),
-            Command::Draft(false),
-        ),
-        item(
-            "Review look",
-            None,
-            Some(lab.look == Look::Review),
-            Command::Look(Look::Review),
-        ),
-        item(
-            "Photo look",
-            None,
-            Some(lab.look == Look::Photo),
-            Command::Look(Look::Photo),
-        ),
-        item("Grid", Some("G"), Some(lab.grid), Command::Grid(!lab.grid)),
-        item(
-            "Height ruler",
-            Some("R"),
-            Some(lab.ruler),
-            Command::Ruler(!lab.ruler),
-        ),
-        item(
-            "Frame the plant again",
-            Some("F"),
-            None,
-            Command::ResetCamera,
-        ),
-        item(
-            "Overlay",
-            Some("O"),
-            Some(shell.overlay),
-            Command::Overlay(!shell.overlay),
-        ),
-    ]);
-    let pictures = vec![
-        item("Snapshot", Some("P"), None, Command::Snapshot),
-        item(
-            "Record growth",
-            None,
-            Some(recording.record),
-            Command::Record(!recording.record),
-        ),
-        item("Save GIF", Some("S"), None, Command::SaveGif),
-        item("Clear the frames", None, None, Command::ClearFrames),
-        item(
-            "Pictures of the plant alone",
-            None,
-            Some(recording.plant_only),
-            Command::PlantOnly(!recording.plant_only),
-        ),
-    ];
-    let panels = Panel::ALL
-        .iter()
-        .map(|panel| {
-            item(
-                panel.title(),
-                Some(panel.key()),
-                Some(shell.shows(*panel)),
-                Command::Panel(*panel, false),
-            )
-        })
-        .collect();
-    let mut help = vec![item(
-        "Settings",
-        Some("Ctrl+,"),
-        None,
-        Command::Settings(true),
-    )];
-    if let Some(shown) = &lab.shown {
-        help.push(item(
-            "Print the thumbs command",
-            None,
-            None,
-            Command::Print(thumbs_command(&shown.shot)),
-        ));
-    }
-    vec![
-        ("Plant", plant),
-        ("View", view),
-        ("Pictures", pictures),
-        ("Panels", panels),
-        ("Help", help),
-    ]
-}
-
-/// The palette's entries: every menu entry and every species.
-#[must_use]
-pub fn palette_entries(lab: &Lab, recording: &Recording, shell: &Shell) -> Vec<(Entry, Command)> {
-    let mut entries = Vec::new();
-    for (menu, items) in menus(lab, recording, shell) {
-        for item in items {
-            let detail = match item.checked {
-                Some(true) => format!("{menu} · on"),
-                Some(false) => format!("{menu} · off"),
-                None => menu.to_owned(),
-            };
-            entries.push((
-                Entry {
-                    label: item.label.to_lowercase(),
-                    detail,
-                    chord: item.key,
-                },
-                item.command,
-            ));
-        }
-    }
-    for (index, id) in lab.species.iter().enumerate() {
-        entries.push((
-            Entry {
-                label: format!("species {id}"),
-                detail: "grow this species".into(),
-                chord: None,
-            },
-            Command::Species(index),
-        ));
-    }
-    entries
-}
-
-/// The settings saved between runs: each control saves its own.
-pub fn settings(ui: &mut Ui, lab: &Lab, recording: &Recording, shell: &mut Shell) {
-    let path = shell.settings.path.as_ref().map_or_else(
-        || "no folder known".to_owned(),
-        |path| path.display().to_string(),
-    );
-    widgets::reading_row(ui, "saved in", &path);
-    ui.label(
-        RichText::new("Each change is saved at once, alone. Flags on the command line win.")
-            .size(theme::SMALL)
-            .color(theme::TEXT_3),
-    );
-    widgets::section(ui, "Growing");
-    if widgets::switch(ui, "Grow when the settings change", lab.auto) {
-        shell.send(Command::GrowOnChange(!lab.auto));
-    }
-    if widgets::switch(ui, "Draw the plant as it grows", lab.live) {
-        shell.send(Command::ShowGrowing(!lab.live));
-    }
-    if widgets::switch(ui, "Move the camera with the plant", lab.follow) {
-        shell.send(Command::Follow(!lab.follow));
-    }
-    widgets::section(ui, "Measures");
-    if widgets::switch(ui, "Grid on the ground", lab.grid) {
-        shell.send(Command::Grid(!lab.grid));
-    }
-    if widgets::switch(ui, "Height ruler", lab.ruler) {
-        shell.send(Command::Ruler(!lab.ruler));
-    }
-    widgets::section(ui, "Pictures");
-    if widgets::switch(ui, "Pictures of the plant alone", recording.plant_only) {
-        shell.send(Command::PlantOnly(!recording.plant_only));
-    }
-    if widgets::switch(ui, "Save each frame as a PNG too", recording.pngs) {
-        shell.send(Command::Pngs(!recording.pngs));
-    }
-    if !shell.settings.message.is_empty() {
-        ui.label(RichText::new(&shell.settings.message).color(theme::WARNING));
-    }
-}
-
 /// `icon` then `text` on one line, the icon in the icon font: Inter has
 /// glyphs of its own where Phosphor keeps its icons, so an icon inside a
 /// line of plain text would come out as Inter's glyph.
@@ -1000,11 +1477,10 @@ mod tests {
             .iter()
             .map(|(_, items)| items.len())
             .sum();
-        assert_eq!(entries.len(), menu_entries + lab.species.len());
+        assert_eq!(entries.len(), menu_entries + lab.catalogue.items.len());
         assert!(entries.iter().any(|(entry, _)| entry.label == "grid"));
-        assert!(entries.iter().any(
-            |(entry, command)| entry.label == "species acer-macrophyllum"
-                && matches!(command, Command::Species(_))
-        ));
+        assert!(entries.iter().any(|(entry, command)| entry.label
+            == "species bigleaf maple acer macrophyllum"
+            && *command == Command::Choose("acer-macrophyllum".into())));
     }
 }
