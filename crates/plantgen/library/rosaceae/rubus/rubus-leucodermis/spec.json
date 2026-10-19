@@ -129,6 +129,13 @@
       40
     ],
     "fruit_shape": "globose",
+    "fruitlets_per_fruit": {
+      "min": 30,
+      "max": 60,
+      "low": 20
+    },
+    "fruitlet_coherence": "coherent",
+    "fruit_hairs": "pubescent",
     "flowering_months": [
       4,
       5,
@@ -322,6 +329,21 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), Rubus leucodermis (eFloras, read 2026-10-19): fruits depressed globose to conic."
+    },
+    "traits.fruitlets_per_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus leucodermis var. leucodermis (eFloras, read 2026-10-19): drupelets (20-)30-60 to a fruit; var. nigerrimus 20-40."
+    },
+    "traits.fruitlet_coherence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus leucodermis (eFloras, read 2026-10-19): drupelets coherent, the fruit coming away from its torus, so hollow."
+    },
+    "traits.fruit_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus leucodermis var. leucodermis (eFloras, read 2026-10-19): drupelets pubescent; var. nigerrimus glabrous."
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",

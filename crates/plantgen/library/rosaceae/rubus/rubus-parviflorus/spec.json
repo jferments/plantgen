@@ -92,10 +92,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "fruit",
-          "kind": "drupelets",
-          "aspect": 1.25,
-          "unripe": 0.4
+          "template": "fruit"
         },
         "inflorescence": { "flowers": 3, "size": 0.4, "spread": 40 },
         "colour": [0.62, 0.05, 0.06],
@@ -153,7 +150,12 @@
     "leaf_length_m": {"min": 0.1, "max": 0.2},
     "sexual_system": "hermaphrodite",
     "inflorescence": "corymb",
-    "fruit_size_m": {"min": 0.01, "max": 0.015}
+    "fruit_size_m": {"min": 0.005, "max": 0.009},
+    "fruitlets_per_fruit": {"min": 50, "max": 60},
+    "fruitlet_coherence": "coherent",
+    "fruit_hairs": "pubescent",
+    "fruit_shape": "hemispheric",
+    "fruit_width_m": {"min": 0.01, "max": 0.018}
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -256,7 +258,12 @@
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2985176), as no source read gives it."}
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruit hemispheric, 1-1.8 cm across, so a dome about half as tall: 5-9 mm along its stalk."},
+    "traits.fruitlets_per_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): drupelets 50-60 to a fruit."},
+    "traits.fruitlet_coherence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): drupelets coherent, the fruit coming away from its torus whole."},
+    "traits.fruit_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): ovaries densely hairy toward their tips, so the drupelets are drawn hairy; the ripe fruit's hairs are not described."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruit hemispheric."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruit hemispheric, 1-1.8 cm, taken as its width across."}
   },
   "provenance": {
     "sources": [

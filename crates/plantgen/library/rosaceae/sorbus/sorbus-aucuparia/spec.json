@@ -94,6 +94,10 @@
       "min": 75,
       "max": 200
     },
+    "inflorescence_branches": {
+      "min": 6,
+      "max": 12
+    },
     "inflorescence_length_m": {
       "min": 0.06,
       "max": 0.18
@@ -271,6 +275,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), Sorbus aucuparia (eFloras, read 2026-10-19): panicles 75-200+-flowered."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the flat-topped panicle's 6 to 12 primary branches, each branching again to its flowers; FNA gives no count."
     },
     "traits.inflorescence_length_m": {
       "evidence": "SourceInferred",

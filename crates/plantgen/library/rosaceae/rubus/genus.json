@@ -8,7 +8,9 @@
     "fruit_type": "aggregate",
     "fruitlets": "drupelets",
     "leaf_arrangement": "alternate",
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "calyx_in_fruit": "persistent",
+    "fruiting_calyx_posture": "reflexed"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {
@@ -45,7 +47,9 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), genus Rubus (eFloras, read 2026-10-19): leaves palmately compound or ternate, the lateral leaflets stalked or nearly sessile and smaller than the end one; the 200 degree fan and the lowest leaflets at seven tenths of the end one are ours, read from the key's leaf characters and Himalayan blackberry's leaf as drawn."
-    }
+    },
+    "traits.calyx_in_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), genus Rubus by L. A. Alice et al. (eFloras, read 2026-10-19): the hypanthium usually and the sepals usually persist under the ripe fruit, usually turned back (reflexed); Flora of China vol. 9 (2003), genus Rubus: sepals persistent, erect or reflexed. A species whose sepals stay erect or fall says so."},
+    "traits.fruiting_calyx_posture": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), genus Rubus by L. A. Alice et al. (eFloras, read 2026-10-19): the hypanthium usually and the sepals usually persist under the ripe fruit, usually turned back (reflexed); Flora of China vol. 9 (2003), genus Rubus: sepals persistent, erect or reflexed. A species whose sepals stay erect or fall says so."}
   },
   "rules": {
     "appearance.organs.*.shape.spread": {

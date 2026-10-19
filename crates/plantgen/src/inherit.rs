@@ -1297,6 +1297,9 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cup", Colour),
                 ("ripening", Colour),
                 ("threads", Number),
+                ("fruitlets", Count),
+                ("loose", Number),
+                ("hairs", Number),
             ],
         ),
     ]

@@ -70,14 +70,10 @@
       },
       "bloom": {
         "shape": {
-          "template": "fruit",
-          "kind": "drupelets",
-          "aspect": 0.85,
-          "unripe": 0.8
+          "template": "fruit"
         },
         "inflorescence": { "flowers": 8, "size": 0.25, "spread": 40, "pedicel": 0.225 },
         "colour": [0.06, 0.04, 0.06],
-        "accent": [0.6, 0.08, 0.08],
         "season": {
           "ripening": 30,
           "flower_look": {
@@ -132,7 +128,13 @@
     "leaf_length_m": {"min": 0.1, "max": 0.25},
     "leaf_width_m": {"min": 0.1, "max": 0.2},
     "sexual_system": "hermaphrodite",
-    "inflorescence": "panicle"
+    "inflorescence": "panicle",
+    "fruitlets_per_fruit": {"min": 15, "max": 40, "high": 50},
+    "fruitlet_coherence": "strongly_coherent",
+    "fruit_hairs": "puberulent",
+    "fruit_shape": "cylindric",
+    "fruit_size_m": {"min": 0.01, "max": 0.02},
+    "fruit_colour_ripening": [150, 20, 30]
   },
   "evidence": {
     "traits.flowering_months": {
@@ -226,7 +228,13 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.521)."}
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.521)."},
+    "traits.fruitlets_per_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): drupelets 15-40 (to 50) to a fruit."},
+    "traits.fruitlet_coherence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): drupelets strongly coherent, the fruit falling with its torus inside."},
+    "traits.fruit_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): ovaries hairy at their tips, so the black drupelets carry a few fine hairs."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): fruit globose to subcylindric; drawn cylindric, as the blackberries' longer fruit on the torus they keep."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): fruit 1-2 cm."},
+    "traits.fruit_colour_ripening": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high), as no source read gives it: blackberries pass from green through red before they turn black; sRGB by eye for a dark red."}
   },
   "provenance": {
     "sources": [

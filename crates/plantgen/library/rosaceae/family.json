@@ -94,7 +94,8 @@
   "forms": {
     "decurrent_tree": {
       "generator": {
-        "program": "rosaceae"
+        "program": "rosaceae",
+        "params": {"pipe_tip": 0.0027, "pipe_organ": 0.005}
       },
       "rules": {
         "generator.params.space_kill": {
@@ -107,6 +108,11 @@
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
+        },
+        "generator.params": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "A Rosaceae tree's twigs are as thick behind each bud as the flowering plants' decurrent trees' (angiosperms' tree defaults: pipe tip 0.0027, organ 0.005), not the family program's 0.004 and 0.008. A spur-bearing crown has many living buds, so the thicker twig made the pipe model's trunk far too thick: a 25-year hawthorn 41 cm through, a 30-year rowan 56 cm (2026-10-19 renders); with these 28 and 38 cm. Bitter cherry keeps its own value, fitted to its measured trunk."
         },
         "rules": {
           "evidence": "SourceInferred",

@@ -106,6 +106,18 @@
       40
     ],
     "fruit_shape": "globose",
+    "fruit_colour_ripening": [
+      214,
+      70,
+      36
+    ],
+    "fruitlets_per_fruit": {
+      "min": 10,
+      "max": 20,
+      "low": 5
+    },
+    "fruitlet_coherence": "moderately_coherent",
+    "fruit_hairs": "glabrous",
     "flowering_months": [
       5,
       6,
@@ -113,8 +125,8 @@
       8
     ],
     "fruiting_months": [
-      7,
-      8
+      8,
+      9
     ]
   },
   "evidence": {
@@ -268,15 +280,35 @@
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), Rubus chamaemorus (eFloras, read 2026-10-19): fruits globose."
     },
+    "traits.fruit_colour_ripening": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Rubus chamaemorus (eFloras, read 2026-10-19): aggregate fruit orange-red, becoming yellowish brown: red-orange on the way to its golden ripe colour; sRGB by eye."
+    },
+    "traits.fruitlets_per_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus chamaemorus (eFloras, read 2026-10-19): drupelets (5-)10-20 to a fruit; Flora of China about 20 pistils in a pistillate flower."
+    },
+    "traits.fruitlet_coherence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus chamaemorus (eFloras, read 2026-10-19): drupelets moderately coherent."
+    },
+    "traits.fruit_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Rubus chamaemorus (eFloras, read 2026-10-19): aggregate fruit glabrous."
+    },
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), Rubus chamaemorus (eFloras, read 2026-10-19): flowering May to August."
     },
     "traits.fruiting_months": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high), as no source read gives it: fruit ripe July and August."
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Rubus chamaemorus (eFloras, read 2026-10-19): fruiting August to September."
     },
     "appearance": {
       "evidence": "Authored",

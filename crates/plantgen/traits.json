@@ -1474,9 +1474,9 @@
       "organ": "inflorescence",
       "type": "count",
       "range": [0, 1000],
-      "when": {"inflorescence": ["compound_umbel", "panicle"]},
+      "when": {"inflorescence": ["compound_umbel", "panicle", "corymb"]},
       "optional": true,
-      "why": "the primary branches of a compound inflorescence, each bearing units or branches of its own: a compound umbel's rays, a panicle's branches"
+      "why": "the primary branches of a compound inflorescence, each bearing units or branches of its own: a compound umbel's rays, a panicle's branches, a compound corymb's branches (a rowan's flat-topped clusters)"
     },
     "inflorescence_posture": {
       "group": "flowers",
@@ -2250,8 +2250,8 @@
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
-      "values": ["globose", "ellipsoid", "ovoid", "obovoid", "obconic", "club_shaped"],
-      "why": "a ripe fruit's outline along its length: round (globose), oval and even (ellipsoid), widest toward its base (ovoid), widest toward its tip (obovoid), narrowing to a point at its base (obconic), or swelling from a long narrow base (club_shaped)"
+      "values": ["globose", "ellipsoid", "ovoid", "obovoid", "obconic", "club_shaped", "hemispheric", "conic", "cylindric"],
+      "why": "a ripe fruit's outline along its length: round (globose), oval and even (ellipsoid), widest toward its base (ovoid), widest toward its tip (obovoid), narrowing to a point at its base (obconic), swelling from a long narrow base (club_shaped), a dome about half as tall as wide (hemispheric: a thimbleberry), tapering from a broad base to its tip (conic), or long with nearly parallel sides (cylindric: some blackberries)"
     },
     "fruit_size_m": {
       "group": "fruit_and_cones",
@@ -2296,6 +2296,32 @@
       "values": ["drupelets", "follicles", "samaras", "berries", "hip"],
       "optional": true,
       "why": "what a fruit from one flower's many free pistils is made of: drupelets (a blackberry), follicles on a cone-like axis (a magnolia), samaras overlapping up a spindle (the tulip tree), separate berries from one stalk (the pawpaw), or achenes inside a cup (a hip: roses, sweetshrub)"
+    },
+    "fruitlets_per_fruit": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "count",
+      "range": [1, 500],
+      "optional": true,
+      "when": {"fruitlets": ["drupelets"]},
+      "why": "the drupelets one flower's aggregate fruit is made of: a strawberryleaf raspberry's 3 to 6, a cloudberry's 5 to 20, a raspberry's 20 to 60; fewer drupelets are each larger for the fruit's size"
+    },
+    "fruitlet_coherence": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["strongly_coherent", "coherent", "moderately_coherent", "weakly_coherent"],
+      "optional": true,
+      "when": {"fruitlets": ["drupelets"]},
+      "why": "how firmly an aggregate's drupelets hold together: packed into one firm fruit (a blackberry's, strongly coherent) or barely joined, each a separate bead (a strawberryleaf raspberry's, weakly coherent)"
+    },
+    "fruit_hairs": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["glabrous", "puberulent", "pubescent", "tomentose"],
+      "optional": true,
+      "why": "hairs on a ripe fruit's skin: none (glabrous), minute and sparse (puberulent), soft and plain to see (pubescent), or a dense felt (tomentose: a raspberry's drupelets)"
     },
     "fruit_seed_colour": {
       "group": "fruit_and_cones",

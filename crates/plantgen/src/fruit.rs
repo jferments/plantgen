@@ -66,6 +66,41 @@ const DRIED: [f32; 3] = [0.36, 0.26, 0.16];
 /// The golden angle, degrees.
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
 
+/// The triangles one aggregate's drupelets may take, by its detail from
+/// the finest step to the coarsest: a lone fruit at the first, a fruit in
+/// a cluster of up to a dozen at the third. A cluster whose fruit then
+/// overrun its part mesh's cap is drawn a step coarser (`crate::parts`),
+/// where they take far fewer.
+const DRUPELET_BUDGET: [u32; 5] = [3000, 2000, 1300, 250, 120];
+
+/// The facets (around, rings) a drupelet is drawn with, the finest first:
+/// the finest whose triangles, over all the fruit's drupelets, fit its
+/// budget.
+const DRUPELET_FACETS: [(u32, u32); 5] = [(10, 6), (8, 5), (6, 4), (5, 3), (4, 2)];
+
+/// Where drupelet `i` of `count` sits on its fruit: its place `z` along
+/// the fruit from -1 (the base) to 1 (the tip), and its turn round it,
+/// radians. Many lie on a Fibonacci spiral from near the base (z = -0.8)
+/// to the tip, the base left bare where the calyx is; a few (eight or
+/// fewer: a strawberryleaf raspberry's 3 to 6) stand in one ring round
+/// the torus, low on it, with one more capping it where there are four or
+/// more, as so few drupelets cannot lie on a spiral without bunching.
+fn drupelet_place(i: u32, count: u32, golden: f64) -> (f64, f64) {
+    if count > 8 {
+        let z = -0.8 + 1.8 * (f64::from(i) + 0.5) / f64::from(count);
+        return (z, golden * f64::from(i));
+    }
+    let capped = count >= 4;
+    let ring = if capped { count - 1 } else { count };
+    if capped && i == ring {
+        return (0.8, 0.0);
+    }
+    (
+        -0.15,
+        std::f64::consts::TAU * f64::from(i) / f64::from(ring.max(1)),
+    )
+}
+
 /// Whether `fruit` is one plain berry or cone, drawn as it was before P4
 /// (`crate::blooms`): ripe, with no calyx kept under it, nothing on it,
 /// and held along its organ.
@@ -235,7 +270,7 @@ pub(crate) fn draw_unit(
     mesh: &mut Mesh,
 ) {
     let width = length * fruit.aspect.clamp(0.05, 2.0);
-    let body = if unripe { accent } else { colour };
+    let body = haired(if unripe { accent } else { colour }, fruit.hairs);
     // A ripe fruit's seeds and cup in their own colours; an unripe one's
     // seeds stay shut in it and its cup is green.
     let extras = Extras {
@@ -261,6 +296,8 @@ pub(crate) fn draw_unit(
         } else {
             fruit.valves
         },
+        fruitlets: fruit.fruitlets,
+        loose: fruit.loose,
     };
     if fruit.cone >= 0.5 {
         let cone = GraphOrgan {
@@ -278,6 +315,20 @@ pub(crate) fn draw_unit(
     one.draw(fruit.kind, body, accent, extras, part, mesh);
     one.dress(fruit, body, accent, part, mesh);
     one.open(first, first_index, mesh);
+}
+
+/// The pale grey of the fine hairs over a hairy fruit.
+const HAIR: [f32; 3] = [0.8, 0.78, 0.74];
+
+/// The most of a hairy fruit's colour its hairs pale to [`HAIR`], where it
+/// is densely tomentose: its skin still shows through.
+const HAIR_COVER: f32 = 0.12;
+
+/// `colour` seen through `hairs` ([`Fruit::hairs`]) of fine pale hairs.
+fn haired(colour: [f32; 3], hairs: f64) -> [f32; 3] {
+    #[allow(clippy::cast_possible_truncation)]
+    let share = HAIR_COVER * hairs.clamp(0.0, 1.0) as f32;
+    std::array::from_fn(|i| colour[i] + (HAIR[i] - colour[i]) * share)
 }
 
 /// The silky white of the threads a magnolia's seeds hang on.
@@ -494,6 +545,11 @@ struct One {
     flare: f64,
     /// The valves it is drawn opened into ([`Fruit::valves`]), 0 for shut.
     valves: u32,
+    /// Its drupelets ([`Fruit::fruitlets`]), 0 for as many as its detail
+    /// draws.
+    fruitlets: u32,
+    /// How far its drupelets stand apart ([`Fruit::loose`]).
+    loose: f64,
 }
 
 impl One {
@@ -533,17 +589,24 @@ impl One {
             FruitKind::Berry => self
                 .body()
                 .draw(self.direction, self.across, body, part, mesh),
+            // The dried calyx at a berry's or pome's tip is left out at the
+            // coarsest steps, where a large cluster's fruit (a rowan's
+            // hundred and more) are too small for it to show.
             FruitKind::Crowned => {
                 self.body()
                     .draw(self.direction, self.across, body, part, mesh);
-                self.calyx(0.92, 5, 0.32, 0.08, blooms::shade(body, 0.45), part, mesh);
+                if self.detail.around >= 6 {
+                    self.calyx(0.92, 5, 0.32, 0.08, blooms::shade(body, 0.45), part, mesh);
+                }
             }
             FruitKind::Pome => {
                 let mut pome = self.body();
                 pome.b *= 1.08;
                 pome.c *= 1.08;
                 pome.draw(self.direction, self.across, body, part, mesh);
-                self.calyx(0.95, 5, 0.22, 0.03, blooms::shade(body, 0.35), part, mesh);
+                if self.detail.around >= 6 {
+                    self.calyx(0.95, 5, 0.22, 0.03, blooms::shade(body, 0.35), part, mesh);
+                }
             }
             FruitKind::Drupelets => self.drupelets(body, part, mesh),
             FruitKind::Hip => {
@@ -659,7 +722,9 @@ impl One {
     /// prickles, bristles or hooked bristles over it, drawn only at the
     /// finer steps.
     fn dress(&self, fruit: &Fruit, body: [f32; 3], accent: [f32; 3], part: Part, mesh: &mut Mesh) {
-        if fruit.kept_calyx > 0.0 {
+        // A kept calyx under each of a large cluster's fruit, drawn at its
+        // coarsest, is left out: too small there to show.
+        if fruit.kept_calyx > 0.0 && self.detail.around >= 6 {
             let lobes = if fruit.kept_lobes == 0 {
                 5
             } else {
@@ -912,56 +977,79 @@ impl One {
     }
 
     /// A core under drupelets on a Fibonacci spiral, leaving its base bare.
+    ///
+    /// Its `fruitlets` drupelets, or as many as its detail holds
+    /// ([`Self::drupelet_count`]), each as large as `n` of them need to
+    /// cover the fruit: `n` balls of radius $`\rho`$ cover about 0.85 of a
+    /// sphere of radius $`R`$ where $`n \pi \rho^2 = 0.85 \cdot 4 \pi R^2`$,
+    /// so $`\rho = 1.84 R / \sqrt n`$, with $`R`$ the radius their centres
+    /// stand at, 0.42 of the fruit's mean width, at most 0.28 of it so a few
+    /// (a cloudberry's) still read as separate beads. Their centres sit in
+    /// by about half a drupelet from the fruit's outline, the core under
+    /// them shrinking with them. A `loose` aggregate's drupelets are
+    /// smaller for their spacing and its core smaller, so it shows between
+    /// them.
     fn drupelets(&self, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        let count = self.drupelet_count();
+        let mean = math::sqrt(self.width * self.length).max(1e-9);
+        let loose = self.loose.clamp(0.0, 1.0);
+        let fill = (0.77 / math::sqrt(f64::from(count))).min(0.28);
+        let radius = mean * fill * (1.0 - 0.35 * loose);
+        // Where their centres stand, as a share of the fruit's width and
+        // length: in from its outline by about half a drupelet.
+        let reach = (0.5 - 0.6 * fill).max(0.25);
         let mut core = self.body();
-        core.a *= 0.8;
-        core.b *= 0.8;
-        core.c *= 0.8;
-        core.detail = Detail {
-            around: 6,
-            rings: 4,
-            fine: None,
-        };
-        core.draw(self.direction, self.across, colour, part, mesh);
-        let count: u32 = match self.detail.around {
-            10.. => 30,
-            8..=9 => 16,
-            _ => 10,
-        };
-        let facets = match self.detail.around {
-            14.. => Detail {
-                around: 7,
+        let core_share = 0.8 * (reach / 0.42).min(1.0) * (1.0 - 0.3 * loose);
+        core.a *= core_share;
+        core.b *= core_share;
+        core.c *= core_share;
+        // The core hardly shows between drupelets: coarse where they are.
+        core.detail = if self.detail.around >= 8 {
+            Detail {
+                around: 6,
                 rings: 4,
                 fine: None,
-            },
-            8..=13 => Detail {
-                around: 5,
-                rings: 3,
-                fine: None,
-            },
-            _ => Detail {
+            }
+        } else {
+            Detail {
                 around: 4,
                 rings: 2,
                 fine: None,
-            },
+            }
         };
+        core.draw(self.direction, self.across, colour, part, mesh);
+        // As many facets as the fruit's detail affords its drupelets
+        // ([`DRUPELET_BUDGET`]), so a raspberry's sixty cost what a
+        // cloudberry's dozen do; each still rounded, its normals smoothed
+        // below, so none reads as a cube up close.
+        let budget = match self.detail.around {
+            14.. => DRUPELET_BUDGET[0],
+            10..=13 => DRUPELET_BUDGET[1],
+            8..=9 => DRUPELET_BUDGET[2],
+            6..=7 => DRUPELET_BUDGET[3],
+            _ => DRUPELET_BUDGET[4],
+        };
+        let (around, rings) = DRUPELET_FACETS
+            .iter()
+            .copied()
+            .find(|&(around, rings)| count * 2 * around * (rings - 1) <= budget)
+            .unwrap_or((4, 2));
+        let facets = Detail {
+            around,
+            rings,
+            fine: None,
+        };
+        let first = mesh.positions.len();
+        let first_index = mesh.indices.len();
         let other = self.direction.cross(self.across);
         let golden = math::radians(GOLDEN_DEGREES);
-        let radius = self.width
-            * match count {
-                30.. => 0.13,
-                16..=29 => 0.17,
-                _ => 0.21,
-            };
         for i in 0..count {
-            // From near the base (z = -0.8) to the tip (z = 1).
-            let z = -0.8 + 1.8 * (f64::from(i) + 0.5) / f64::from(count);
+            let (z, angle) = drupelet_place(i, count, golden);
             let ring = math::sqrt((1.0 - z * z).max(0.0));
-            let angle = golden * f64::from(i);
             let radial = self.across * math::cos(angle) + other * math::sin(angle);
             let centre = self.at(0.5)
-                + self.direction * (z * self.length * 0.42)
-                + radial * (ring * self.width * 0.42);
+                + self.direction * (z * self.length * reach)
+                + radial * (ring * self.width * reach);
             Spheroid {
                 centre,
                 a: radius,
@@ -974,6 +1062,25 @@ impl One {
                 detail: facets,
             }
             .draw(self.direction, self.across, colour, part, mesh);
+        }
+        leaves::smooth_normals(mesh, first, first_index);
+    }
+
+    /// How many drupelets [`Self::drupelets`] draws: its `fruitlets`, at
+    /// most as many as its detail holds (100 at the finest, then 40, 16 and
+    /// 10 at the coarsest), or where they are unset 30, 16 or 10 by its
+    /// detail, as before they were counted.
+    fn drupelet_count(&self) -> u32 {
+        let (most, unset) = match self.detail.around {
+            10.. => (100, 30),
+            8..=9 => (40, 16),
+            6..=7 => (16, 10),
+            _ => (10, 10),
+        };
+        if self.fruitlets == 0 {
+            unset
+        } else {
+            self.fruitlets.min(most)
         }
     }
 

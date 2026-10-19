@@ -112,6 +112,12 @@
       36
     ],
     "fruit_shape": "globose",
+    "fruitlets_per_fruit": {
+      "min": 3,
+      "max": 6
+    },
+    "fruitlet_coherence": "weakly_coherent",
+    "fruit_hairs": "glabrous",
     "flowering_months": [
       6,
       7,
@@ -282,6 +288,21 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read gives it: a small round cluster of a few drupelets."
+    },
+    "traits.fruitlets_per_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): drupelets 3-6 to a fruit."
+    },
+    "traits.fruitlet_coherence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): drupelets weakly coherent, coming away from the torus."
+    },
+    "traits.fruit_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus pedatus (eFloras, read 2026-10-19): ovaries and styles glabrous."
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",

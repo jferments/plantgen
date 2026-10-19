@@ -784,11 +784,29 @@ impl Opening {
     /// in one stage, that stage's colour and accent; else the colour most
     /// of their area shows, unripe fruit their accent, and the next. Each
     /// unit's colours are then matched as nearly as these two make them
-    /// ([`blend`]).
+    /// ([`blend`]). Where that leaves the two the same (white flowers
+    /// with no accent of their own), the second is the stalks' colour, so
+    /// the card draws its stalks green rather than as a grey made of the
+    /// flowers' white.
     #[must_use]
     // Colours are told apart exactly: one stage's, or another's.
     #[allow(clippy::float_cmp)]
     pub fn slots(&self, laid: &Layout) -> ([f32; 3], [f32; 3]) {
+        let (colour, accent) = self.unit_slots(laid);
+        if colour != accent {
+            return (colour, accent);
+        }
+        let stalk = laid
+            .units
+            .first()
+            .map(|p| p.stalk)
+            .or_else(|| laid.stalks.first().map(|stalk| stalk.colour));
+        (colour, stalk.unwrap_or(accent))
+    }
+
+    /// The two colours the units alone ask of a card ([`Self::slots`]).
+    #[allow(clippy::float_cmp)]
+    fn unit_slots(&self, laid: &Layout) -> ([f32; 3], [f32; 3]) {
         let mut stages = [false; 3];
         let mut areas: Vec<([f32; 3], f64)> = Vec::new();
         for p in &laid.units {

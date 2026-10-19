@@ -206,7 +206,8 @@ Usage:
       SPAN 0.05 unless given; --view under looks up at it from below, at
       the lower faces of its leaves. --parts on (level 0)
       draws every flower, fruit, cone and needle shoot as its part mesh,
-      as WorldLab does near the camera. --conditions grows it in a place
+      as WorldLab does near the camera; with --focus, only those within
+      four spans (at least 1 m) of the focus, the rest as cards. --conditions grows it in a place
       as plantc grow does (the place itself is not drawn).
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
@@ -2370,10 +2371,18 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         );
         // The organs to draw as part meshes are known only until they
         // are placed.
-        if let Some((what, at)) = named.as_ref().filter(|(what, _)| what == "bloom") {
+        if let Some((what, at)) = named.as_ref() {
             bloom = Some(named_point(&plant, what, *at)?);
         }
-        plantgen::parts::place(&mut plant, &looks, &parts);
+        // A close-up swaps part meshes in round what it looks at only, as
+        // a renderer does near the camera; the rest keep their cards.
+        let span: f64 = options
+            .number("span")?
+            .unwrap_or(if named.is_some() { 0.05 } else { 0.5 });
+        let near = bloom
+            .or(focus.map(|(point, _)| point))
+            .map(|point| (point, (span * 4.0).max(1.0)));
+        plantgen::parts::place_near(&mut plant, &looks, &parts, near);
         plant
     } else {
         mesh::build(

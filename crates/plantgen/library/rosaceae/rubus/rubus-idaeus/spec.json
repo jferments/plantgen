@@ -141,6 +141,13 @@
       50
     ],
     "fruit_shape": "globose",
+    "fruitlets_per_fruit": {
+      "min": 20,
+      "max": 60,
+      "low": 10
+    },
+    "fruitlet_coherence": "coherent",
+    "fruit_hairs": "tomentose",
     "flowering_months": [
       5,
       6,
@@ -342,6 +349,21 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), Rubus idaeus (eFloras, read 2026-10-19): fruits globose to conic; Flora of China subglobose."
+    },
+    "traits.fruitlets_per_fruit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus idaeus (eFloras, read 2026-10-19): drupelets 10-60 to a fruit, 20-60 in subsp. idaeus."
+    },
+    "traits.fruitlet_coherence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Rubus idaeus (eFloras, read 2026-10-19): drupelets coherent (in subsp. strigosus sometimes falling one by one), the fruit coming away from its torus, so hollow."
+    },
+    "traits.fruit_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Rubus idaeus (eFloras, read 2026-10-19): aggregate fruit densely and shortly tomentose."
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",

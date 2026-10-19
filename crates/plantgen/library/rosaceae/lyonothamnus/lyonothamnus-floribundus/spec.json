@@ -103,6 +103,10 @@
       "max": 300,
       "high": 800
     },
+    "inflorescence_branches": {
+      "min": 8,
+      "max": 16
+    },
     "inflorescence_length_m": {
       "min": 0.1,
       "max": 0.2
@@ -293,6 +297,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), Lyonothamnus (eFloras, read 2026-10-19): compound corymbs or panicles, terminal; drawn as a flat-topped corymb."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the compound corymb's 8 to 16 primary branches, each branching again to its flowers; FNA gives no count."
     },
     "traits.inflorescence_outline": {
       "evidence": "Authored",

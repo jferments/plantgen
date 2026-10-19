@@ -2701,6 +2701,22 @@ pub struct Fruit {
     /// threads, as a share of the fruit's length; 0 for seeds held in it.
     #[serde(skip_serializing_if = "is_zero")]
     pub threads: f64,
+    /// The drupelets of one aggregate fruit (a cloudberry's 5 to 20, a
+    /// raspberry's 20 to 60), drawn as many as its detail holds, each as
+    /// large as covers the fruit; 0 for as many as its detail draws.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub fruitlets: u32,
+    /// How far an aggregate's drupelets stand apart, 0 to 1: 0 packed
+    /// into one strongly coherent fruit (a blackberry's), 1 barely held
+    /// together, each a separate bead round a small core (a strawberryleaf
+    /// raspberry's few).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub loose: f64,
+    /// How hairy the fruit's skin is, 0 (glabrous) to 1 (densely
+    /// tomentose): fine pale hairs over it dull and pale its colour, as a
+    /// raspberry's felted drupelets are paler than a blackberry's.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub hairs: f64,
 }
 
 impl Default for Fruit {
@@ -2730,6 +2746,9 @@ impl Default for Fruit {
             cup: None,
             ripening: None,
             threads: 0.0,
+            fruitlets: 0,
+            loose: 0.0,
+            hairs: 0.0,
         }
     }
 }
@@ -2955,6 +2974,9 @@ struct FruitCard {
     cup: Option<[f32; 3]>,
     ripening: Option<[f32; 3]>,
     threads: f64,
+    fruitlets: u32,
+    loose: f64,
+    hairs: f64,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -2989,6 +3011,9 @@ impl Default for FruitCard {
             cup: None,
             ripening: None,
             threads: 0.0,
+            fruitlets: 0,
+            loose: 0.0,
+            hairs: 0.0,
             count: None,
             cluster: None,
             size: None,
@@ -3038,6 +3063,9 @@ impl TryFrom<FruitCard> for Fruit {
             cup: card.cup,
             ripening: card.ripening,
             threads: card.threads,
+            fruitlets: card.fruitlets,
+            loose: card.loose,
+            hairs: card.hairs,
         })
     }
 }
@@ -3905,6 +3933,11 @@ impl Shape {
                     )?;
                 }
                 check("threads", s.threads, 0.0, 1.0)?;
+                check("loose", s.loose, 0.0, 1.0)?;
+                check("hairs", s.hairs, 0.0, 1.0)?;
+                if s.fruitlets != 0 {
+                    count("fruitlets", s.fruitlets, 1, 500)?;
+                }
                 check("unripe", s.unripe, 0.0, 1.0)?;
                 check("apiculum", s.apiculum, 0.0, 0.3)?;
                 check("spine", s.spine, 0.0, 0.5)?;
@@ -6128,9 +6161,12 @@ mod tests {
         let (look, size) = on(clustered(ClusterKind::Umbel, 6, cherry()), 120.0);
         assert_eq!(size, 1.0);
         assert!(stages_of(&look).iter().all(|&(_, stage)| stage == Some(1)));
-        // The card's colours are the flower's.
+        // The card's colours are the flower's, and, where its accent is
+        // its colour, its stalks'.
         assert_eq!(look.colour, [0.95, 0.95, 0.9]);
-        assert_eq!(look.accent, [0.95, 0.95, 0.9]);
+        let cluster = look.inflorescence.as_ref().expect("its cluster");
+        assert_eq!(look.accent, cluster.layout(0.0, 0).units[0].stalk);
+        assert_ne!(look.accent, look.colour);
         // In fruit every unit is its own look, as before units had stages.
         let (look, size) = on(clustered(ClusterKind::Umbel, 6, cherry()), 185.0);
         assert_eq!(size, 1.0);
