@@ -1147,4 +1147,9 @@ pub mod venation;
 /// margin's, and glandular hairs stand on a petiole; a blade close-up
 /// frames the bent blade's middle (herb revision 19; 156 is growth-form
 /// language, #252).
-pub const GENERATOR_REVISION: u32 = 157;
+/// 158: a compound leaf whose lowest leaflets hang back below its
+/// junction is lifted on a longer petiole and shrunk only as much as its
+/// whole height needs, so its blade keeps its flora's size (brambles);
+/// a Rosaceae herb's compound leaf card is as long as its blade, not its
+/// width (157 is Caryophyllales gaps, #267).
+pub const GENERATOR_REVISION: u32 = 158;

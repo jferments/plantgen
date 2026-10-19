@@ -828,7 +828,11 @@ impl Layout {
     }
 
     /// Shrink the leaf about `about` until it stays inside its card, and
-    /// note its reach.
+    /// note its reach. A leaf whose lowest leaflets hang back below its
+    /// junction (a bramble's, a cinquefoil's) is shrunk only as much as
+    /// its whole height needs, and lifted on a longer petiole until they
+    /// clear the card's foot, rather than shrunk about the junction until
+    /// they do: its blade keeps the size the flora gives.
     fn fit(&mut self, about: Point) {
         let points = self.bounds();
         let top = points.iter().fold(f64::MIN, |m, p| m.max(p.1));
@@ -838,17 +842,27 @@ impl Layout {
         if top > 1.0 {
             scale = scale.min((1.0 - about.1) / (top - about.1));
         }
-        if bottom < 0.01 && about.1 > bottom {
-            scale = scale.min((about.1 - 0.01).max(0.0) / (about.1 - bottom));
+        let lift = bottom < 0.01 && about.1 > bottom;
+        if lift {
+            scale = scale.min(0.99 / (top - bottom));
         }
         if side > 0.785 {
             scale = scale.min(0.785 / side);
         }
-        if scale < 1.0 {
+        // How far the shrunk leaf rises so its lowest point clears the
+        // foot, never past the card's top.
+        let shift = if lift {
+            let low = about.1 + scale * (bottom - about.1);
+            let high = about.1 + scale * (top - about.1);
+            (0.01 - low).max(0.0).min((1.0 - high).max(0.0))
+        } else {
+            0.0
+        };
+        if scale < 1.0 || shift > 0.0 {
             let at = |p: Point| {
                 (
                     about.0 + scale * (p.0 - about.0),
-                    about.1 + scale * (p.1 - about.1),
+                    about.1 + scale * (p.1 - about.1) + shift,
                 )
             };
             for axis in &mut self.axes {
