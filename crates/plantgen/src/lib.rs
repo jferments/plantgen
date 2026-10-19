@@ -974,7 +974,11 @@ pub mod venation;
 /// `glochid_colour`, also the stem's glochids); and a round fruit with no
 /// stated width is as wide as long (137 is #234; 138 and 139 are #167's
 /// nodding leaders and old-conifer refit).
-/// 141: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
+/// 141: each organ type's part mesh (a flower, fruit, cluster, flower head
+/// or needle shoot drawn near the camera) is the organ at its finest, with
+/// no cap on its triangles; simplifying is the caller's choice (`plantc
+/// export --triangles`, `--max-mib`) (140 is cactus pericarpels, #226).
+/// 142: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
 /// blade on a stalk four times its length); fleshy and succulent blades
 /// are drawn solid (`leaf_succulence`, `leaf_cross_section`); a herb's
 /// rosette and flowering stems are as many as its taxa count
@@ -982,6 +986,5 @@ pub mod venation;
 /// scape in any flowering plant, and a compound inflorescence's branches
 /// take the kind its taxa name (`inflorescence_branch_kind`); smooth bark
 /// draws with a valid pattern; a shrub without short shoots has a short
-/// share; a fruit's clasping calyx takes fewer steps on its coarser part
-/// meshes (fifteen Caryophyllales species, #243).
-pub const GENERATOR_REVISION: u32 = 141;
+/// share (fifteen Caryophyllales species, #243; 141 is #237).
+pub const GENERATOR_REVISION: u32 = 142;

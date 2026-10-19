@@ -768,14 +768,8 @@ impl One {
     /// the fruit's width long, laid over its surface up from the stalk
     /// and narrowing to a point, seen from either side.
     fn clasp(&self, count: u32, reach: f64, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
-        // Fewer steps along and across each lobe on the coarser steps, as
-        // the body takes fewer facets: a cyme of campion capsules each in
-        // its clasping calyx fits its part mesh only so.
-        let (rows, across) = match part.coarse {
-            0 => (6, 4),
-            1 => (4, 3),
-            _ => (3, 2),
-        };
+        const STEPS: u32 = 6;
+        const ACROSS: u32 = 4;
         let other = self.direction.cross(self.across);
         // The fruit's outline, as `taper` widens it, just proud of it.
         let surface = |along: f64, radial: Vec3| {
@@ -807,22 +801,22 @@ impl One {
             for inner in [false, true] {
                 let leaf = part.leaf(self.at(0.02), self.direction, self.across, 0.0, 0.0, colour);
                 let start = u32::try_from(mesh.positions.len()).unwrap_or(0);
-                for i in 0..=rows {
-                    let u = f64::from(i) / f64::from(rows);
+                for i in 0..=STEPS {
+                    let u = f64::from(i) / f64::from(STEPS);
                     let along = 0.02 + (end - 0.02) * u;
                     // Broad at the foot, narrowing to a point; curved
                     // across with the fruit, so its middle stays outside it.
                     let spread = half_turn * (1.0 - u).powf(0.7);
-                    for j in 0..across {
-                        let side = 2.0 * f64::from(j) / f64::from(across - 1) - 1.0;
+                    for j in 0..ACROSS {
+                        let side = 2.0 * f64::from(j) / f64::from(ACROSS - 1) - 1.0;
                         let angle = mid + side * spread;
                         let radial = self.across * math::cos(angle) + other * math::sin(angle);
                         mesh.push(leaf.vertex(surface(along, radial), colour));
                     }
                 }
-                let v = |i: u32, j: u32| start + i * across + j;
-                for i in 0..rows {
-                    for j in 0..across - 1 {
+                let v = |i: u32, j: u32| start + i * ACROSS + j;
+                for i in 0..STEPS {
+                    for j in 0..ACROSS - 1 {
                         let quad = [
                             v(i, j),
                             v(i, j + 1),
