@@ -13,7 +13,8 @@
     "params": {
       "fork_stems": 10,
       "branch_angle": 35,
-      "fork_angle": 30
+      "fork_angle": 30,
+      "leaf_years": 2
     }
   },
   "growth": {
@@ -42,12 +43,13 @@
         "shape": {
           "template": "blade",
           "taper": 0.6,
-          "aspect": 0.015
+          "aspect": 0.08
         }
       },
       "bloom": {
         "shape": {
-          "template": "head"
+          "template": "head",
+          "involucre": 1.2
         },
         "inflorescence": {
           "flowers": 12,

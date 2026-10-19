@@ -19,7 +19,7 @@
       "basal_angle": 60,
       "bare": 0.1,
       "leaf_peak": 0.2,
-      "leaf_top": 0.4,
+      "leaf_top": 0.3,
       "leaf_base": 0.8,
       "leaf_angle": 40,
       "raceme": 0.5,
@@ -27,9 +27,12 @@
       "pedicel": 0.008,
       "flower_angle": 55,
       "fruit_below": 0.1,
-      "buds_above": 0.85,
+      "buds_above": 0.95,
       "bud_spacing": 0.6,
-      "nod": 0
+      "nod": 0,
+      "leaf_length": 0.04,
+      "maturity": 0.5,
+      "bud_size": 0.021
     }
   },
   "growth": {

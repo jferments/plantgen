@@ -12,7 +12,8 @@
   "generator": {
     "params": {
       "fork_stems": 14,
-      "branch_angle": 45
+      "branch_angle": 45,
+      "leaf_years": 2
     }
   },
   "growth": {

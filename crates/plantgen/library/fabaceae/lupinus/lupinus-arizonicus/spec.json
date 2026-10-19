@@ -84,7 +84,7 @@
           "flowers": 30,
           "per_node": 4,
           "divergence": 45,
-          "size": 0.078,
+          "size": 0.135,
           "spread": 65,
           "pedicel": 0.018,
           "peduncle": 0.15,
@@ -107,7 +107,7 @@
               0.38,
               0.62
             ],
-            "size": 0.29
+            "size": 0.17
           },
           "flower_look": {
             "shape": {
@@ -129,7 +129,7 @@
               0.9,
               0.95
             ],
-            "size": 0.4
+            "size": 0.55
           }
         }
       }
@@ -181,8 +181,8 @@
       "max": 0.012
     },
     "leaf_length_m": {
-      "min": 0.04,
-      "max": 0.1
+      "min": 0.015,
+      "max": 0.035
     },
     "petiole_length_m": {
       "min": 0.03,
@@ -329,7 +329,7 @@
     "traits.leaf_length_m": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: leaves 4 cm to 10 cm long with the petiole."
+      "note": "A model estimate (confidence medium), as no source read gives it: the blade, without its petiole, is the palmate leaf's leaflets, 1.5 cm to 3.5 cm long (the estimate of 4 cm to 10 cm counted the petiole, which leaf_length_m leaves out)."
     },
     "traits.petiole_length_m": {
       "evidence": "Authored",

@@ -18,16 +18,18 @@
       "basal_leaves": 0,
       "bare": 0.1,
       "leaf_peak": 0.3,
-      "leaf_top": 0.4,
-      "leaf_base": 0.8,
+      "leaf_top": 0.8,
+      "leaf_base": 0.85,
       "leaf_angle": 50,
       "raceme": 0.45,
       "flowers": 14,
       "pedicel": 0.01,
       "flower_angle": 45,
       "fruit_below": 0.2,
-      "buds_above": 0.8,
-      "nod": 0
+      "buds_above": 1,
+      "nod": 0,
+      "leaf_length": 0.05,
+      "stem_height": 0.72
     }
   },
   "growth": {
