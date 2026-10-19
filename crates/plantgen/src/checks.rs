@@ -1050,15 +1050,6 @@ const UNIT_RANKS: u32 = 16;
 /// read. Flowers are flowers, heads, umbels, spikes,
 /// panicles and spikelets; fruit is a fruit card that is no cone.
 fn year(grown: &Grown<'_>, tally: &mut Tally) {
-    if grown
-        .spec
-        .appearance
-        .organs
-        .values()
-        .all(|look| look.season.is_none())
-    {
-        return;
-    }
     let graph = grown.graph;
     let standing: BTreeSet<u16> = graph
         .organs
@@ -1066,6 +1057,22 @@ fn year(grown: &Grown<'_>, tally: &mut Tally) {
         .filter(|organ| organ.size > 0.0 && !organ.shed.is_some_and(|shed| shed <= graph.age))
         .map(|organ| organ.organ)
         .collect();
+    // Only the looks of organs it draws: a program's organ it never grows
+    // (a climber's blooms where it bears lone fruit) gives it no year.
+    let look_of = |index: &u16| {
+        grown
+            .growth
+            .organ_types
+            .get(usize::from(*index))
+            .and_then(|kind| grown.spec.appearance.organs.get(&kind.name))
+    };
+    if standing
+        .iter()
+        .filter_map(look_of)
+        .all(|look| look.season.is_none())
+    {
+        return;
+    }
     for index in standing {
         let Some(kind) = grown.growth.organ_types.get(usize::from(index)) else {
             continue;

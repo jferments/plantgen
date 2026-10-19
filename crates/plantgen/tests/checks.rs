@@ -147,11 +147,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cut-back plant's shoots grow 3 to 5 ft a season (Bean) with some 15 to 25 whorls, but in the open at six years its shoots grow no more than a few vigour units, bearing about 8 leaves",
     ),
     (
-        "hedera-helix",
-        "fruit_size_m",
-        "its fruit is drawn as one card 7 cm long, about 8.4 cm as measured, standing for a whole umbel of berries, against the 6 to 9 mm Dendrology (2019) p. 310 gives one drupe",
-    ),
-    (
         "hedyosmum-mexicanum",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -238,11 +233,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "piper-nigrum",
-        "fruit_size_m",
-        "the climber draws a fruiting spike as one fruit card, about 10 cm long (Flora of China: spikes to as long as the leaves), so the measure reads the spike against the 3 to 4 mm drupes on it",
-    ),
-    (
-        "piper-nigrum",
         "shoot_leaves",
         "a climbing shoot adds one or two nodes a season, each with one leaf, so it bears 1 to 2 leaves a year against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
@@ -310,6 +300,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
+    ),
+    (
+        "celastrus-scandens",
+        "shoot_leaves",
+        "a vine's shoot grows its year's internodes and stops, so American bittersweet's shoots hold 2 to 3 leaves against the 4 to 18 the angiosperms state, from maples' long shoots; on main they held 3 (a warning), and since its fruiting nodes bear blooms (climber revision 8) one shoot in three plants holds 2",
+    ),
+    (
+        "circaea-lutetiana",
+        "petiole_length_m",
+        "enchanter's nightshade's shortest petioles sat at 1.7 cm against the 2 to 5 cm read from Hooker's \"almost as long as the blade\" (a warning); with herb revision 16's new leaf rules the same three plants draw other random sizes and the shortest is 1.5 cm",
     ),
     (
         "sarcobatus-vermiculatus",

@@ -6638,7 +6638,14 @@ mod tests {
                 }
                 Field::Number => assert!(with(0.5.into()).is_ok(), "{key}"),
                 Field::Word => {
-                    assert!(with("umbel".into()).is_ok(), "{key}");
+                    // A bract's form takes its own words, a branch's kind a
+                    // cluster's.
+                    let word = if key == "involucre_form" {
+                        "leafy"
+                    } else {
+                        "umbel"
+                    };
+                    assert!(with(word.into()).is_ok(), "{key}");
                     let error = with("none".into()).unwrap_err().to_string();
                     assert!(error.contains("unknown variant"), "{key}: {error}");
                 }

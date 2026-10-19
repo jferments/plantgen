@@ -1516,7 +1516,9 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
     }
     // A bent cluster can reach past its organ's tip (a nodding corymb's
     // long lower pedicels turn upright), and a spathe past its units: it
-    // shrinks to fit its organ.
+    // shrinks to fit its organ. Bracts round its foot or under its flowers
+    // spread out past it as petals do, and leave its units their size (a
+    // dogwood's 4-7 cm bracts round its 2 cm head).
     let high = layout
         .units
         .iter()
@@ -1531,6 +1533,7 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
             layout
                 .sheets
                 .iter()
+                .filter(|sheet| matches!(sheet.kind, SheetKind::Spathe))
                 .map(|sheet| sheet.foot.y + sheet.length),
         )
         .fold(1.0, f64::max);
