@@ -404,10 +404,8 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     // poppy's 1.5-3.5 by 1-3 cm), hiding all within it.
     // A disymmetric corolla's bud is its heart already, its two small
     // sepals at its foot (a bleeding heart's).
-    let enclosing = calyx
-        && open <= 0.0
-        && flower.calyx_shed < 1.0
-        && flower.corolla == Corolla::Regular;
+    let enclosing =
+        calyx && open <= 0.0 && flower.calyx_shed < 1.0 && flower.corolla == Corolla::Regular;
     if calyx {
         let m = f64::from(flower.sepals);
         let sepal = flower.sepal_length * length;
@@ -617,8 +615,8 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             // The heart's plane square to the bearing axis, so a raceme
             // seen from the side shows its hearts face on.
             for angle in [PI / 2.0, 1.5 * PI] {
-                let part = |role, (radius, height): (f64, f64), cup: f64, length: f64, wide: f64| {
-                    Piece {
+                let part =
+                    |role, (radius, height): (f64, f64), cup: f64, length: f64, wide: f64| Piece {
                         radius,
                         height,
                         length: length * g,
@@ -627,8 +625,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                         base: 0.7,
                         taper: 0.6,
                         ..piece(Term::Petal, Some(role), angle, cup, (1.0, 1.0))
-                    }
-                };
+                    };
                 let end = |p: &Piece| {
                     let cup = degrees(p.cup);
                     (
@@ -663,7 +660,11 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             // pairs (a poppy's 2 + 2) open together as one cup, the outer
             // pair as upright as the inner it wrapped in bud.
             let h = f64::from((n / 2).max(1));
-            let outer = if n / 2 <= 2 { form.cup } else { form.cup * 0.85 };
+            let outer = if n / 2 <= 2 {
+                form.cup
+            } else {
+                form.cup * 0.85
+            };
             for k in 0..(n / 2).max(1) {
                 let angle = TAU * f64::from(k) / h;
                 pieces.push(piece(Term::Petal, None, angle, outer, (1.0, 1.0)));
@@ -1722,7 +1723,8 @@ pub(crate) fn draw_reduced(
                 if t < HEART_WIDEST {
                     piece.base + (1.0 - piece.base) * math::sin(FRAC_PI_2 * t / HEART_WIDEST)
                 } else {
-                    end + (1.0 - end) * math::cos(FRAC_PI_2 * (t - HEART_WIDEST) / (1.0 - HEART_WIDEST))
+                    end + (1.0 - end)
+                        * math::cos(FRAC_PI_2 * (t - HEART_WIDEST) / (1.0 - HEART_WIDEST))
                 }
             };
             let at = |t: f64| foot + heading * (piece.length * t);
@@ -3179,5 +3181,4 @@ mod tests {
             "no wider than 3/5 of its length"
         );
     }
-
 }

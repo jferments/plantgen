@@ -819,7 +819,16 @@ impl One {
         if fruit.disc > 0 {
             let colour = blooms::shade(body, 0.7);
             let top = self.at(0.97);
-            blooms::dome(top, self.direction, self.across, self.width * 0.25, self.width * 0.05, colour, part, mesh);
+            blooms::dome(
+                top,
+                self.direction,
+                self.across,
+                self.width * 0.25,
+                self.width * 0.05,
+                colour,
+                part,
+                mesh,
+            );
             self.calyx(0.98, fruit.disc, 0.3, 0.005, colour, part, mesh);
         }
         if fruit.kept_calyx > 0.0 {
