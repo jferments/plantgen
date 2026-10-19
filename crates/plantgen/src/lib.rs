@@ -1093,4 +1093,9 @@ pub mod venation;
 /// its shoots' floor growth fades past `floor_reach` of the height out
 /// from the trunk, down to `floor_keep` (Pinaceae rule on `crown_form`;
 /// subalpine fir; 150 is poppies, #242).
-pub const GENERATOR_REVISION: u32 = 151;
+/// 152: palm 16, the date palm's foot. Its roots bend, leaving the trunk
+/// further out and turning down along their length (`root_bend`); each
+/// sucker has a root zone of its own; the root zone widens the foot into a
+/// collar that grows as the zone rises (`root_flare`)
+/// (151 is subalpine fir, #261).
+pub const GENERATOR_REVISION: u32 = 152;

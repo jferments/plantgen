@@ -271,9 +271,27 @@
 #
 # boot_wear, boot_spread, roots and sheath_wedge 0 draw as revision 14.
 #
+# Revision 16 (the date palm's foot):
+# - A root bends: it leaves the trunk root_bend degrees further out than
+#   root_angle and turns down by as much again over four pieces, each
+#   rolled a little its own way, so the roots arch and cross instead of
+#   standing as straight rods.
+# - A sucker has a root zone of its own (`Sr`), on its own clock: it puts
+#   out roots as the foot does from root_age of its own age, since basal
+#   shoots arise at ground level each with its own roots (Dransfield et
+#   al. 2008, Genera Palmarum p. 4).
+# - The root zone widens the foot: a collar root_flare of the trunk's
+#   radius wider at the ground, tapering to the trunk at the zone's top,
+#   both growing as the zone rises over root_zone_years (Broschat and
+#   Elliott 2007: as the zone rises, new root initials push the trunk's
+#   foot outward). Roots leave the collar's surface.
+#
+# root_bend and root_flare 0 draw as revision 15, but for a root drawn in
+# four pieces, and suckers' roots.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 15;
+lsystem palm 16;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -396,6 +414,8 @@ param root_zone_years;        # years over which the root zone rises to root_zon
 param root_angle;             # degrees a root runs from straight down
 param root_radius;
 param root_reach;             # share of the roots that reach the ground; the rest stop short in the air
+param root_bend;              # degrees a root turns down along its length; it leaves the trunk as much further out
+param root_flare;             # the root zone's extra girth at the ground, a share of trunk_radius, once the zone has risen
 # Cones by sex.
 param dioecious;              # 1: each plant is male or female; 0: every plant bears both
 param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
@@ -460,8 +480,9 @@ module Ds(s, r);              # where a frond s long will hang dead, on a trunk 
 module Dh(s, r);              # a dead frond hanging, on a trunk r in radius
 module Bs(r);                 # where a frond's boot will stand, on a trunk r in radius
 module Bt(r, v);              # a boot v of its length, on a trunk r in radius
-module Rq(i, m);              # roots i to i + m - 1 of this year's
-module Ro(z, q);              # a root leaving the trunk z up, q of the way to the ground
+module Rq(i, m, a);           # roots i to i + m - 1 of this year's, on a foot a years old
+module Ro(z, q, w, a);        # a root leaving the trunk z up, q of the way to the ground, rolled w, on a foot a years old
+module Sr(b);                 # a sucker's root zone, the sucker born in year b
 module Cn(k, r);              # this year's cones, k 1 in a coning year, round a crown r in radius
 module Cf(z);                 # a seed cone z long, on its stalk
 module Cm(z);                 # a pollen cone z long, on its stalk
@@ -944,7 +965,7 @@ rule Sc(z) : age + dt >= frond_life -> ;
 interpret Sc(z) -> !(trunk_radius * 0.97) F(z);
 
 # A sucker: out along a runner at the foot, then up, a palm of its own.
-decompose Sk(n) ->
+decompose Sk(n) : roots <= 0 ->
     /(uniform(0, 360)) &(90) f(sucker_distance * uniform(0.6, 1.4)) ^(90)
     /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), n);
 
@@ -958,17 +979,53 @@ rule Bs(r) : age + dt >= frond_life + (skirt > 0 ? dead_life : 0) && boots > 0 &
 # root_age until it has put out `roots`, each from a height in the root
 # zone as high as it has risen (in a year it sends up a sucker, none).
 rule Sb(n) : roots > 0 && t >= root_age && t < root_age + roots / max(root_rate, 0.001) ->
-    Rq(0, max(1, round(root_rate))) Sb(n);
+    Rq(0, max(1, round(root_rate)), t) Sb(n);
+# A sucker's root zone does the same on the sucker's own clock.
+rule Sr(b) : roots > 0 && t - b >= root_age && t - b < root_age + roots / max(root_rate, 0.001) ->
+    Rq(0, max(1, round(root_rate)), t - b) Sr(b);
 # Roots stand round the foot a golden angle apart in the order they come
 # out; each one's draws are keyed by its place in the year's, so no two
 # of a year's roots fall alike.
-decompose Rq(i, m) : m > 1 -> Rq(i, floor(m / 2)) Rq(i + floor(m / 2), m - floor(m / 2));
-decompose Rq(i, m) : m == 1 ->
-    [ /(137.508 * (i + max(1, round(root_rate)) * floor(t - root_age))) Ro(root_zone * rand(4 * i + 1) * smoothstep(0, max(root_zone_years, 0.001), t),
-                              rand(4 * i + 2) < root_reach ? 1 : 0.05 + 0.25 * rand(4 * i + 3)) ];
-decompose Rq(i, m) -> ;
-# A root leaves the trunk's surface z up and runs root_angle from
-# straight down to the ground, or q of the way when it stopped short.
-interpret Ro(z, q) ->
-    f(z) &(90) f(trunk_radius * (1 + flare) * 0.9) &(90 - root_angle)
-    !(root_radius) F(q * (z / cos(rad(root_angle)) + root_radius * 2));
+decompose Rq(i, m, a) : m > 1 -> Rq(i, floor(m / 2), a) Rq(i + floor(m / 2), m - floor(m / 2), a);
+decompose Rq(i, m, a) : m == 1 ->
+    [ /(137.508 * (i + max(1, round(root_rate)) * floor(a - root_age)))
+      Ro(root_zone * rand(4 * i + 1) * smoothstep(0, max(root_zone_years, 0.001), a),
+         rand(4 * i + 2) < root_reach ? 1 : 0.05 + 0.25 * rand(4 * i + 3), rand(4 * i), a) ];
+decompose Rq(i, m, a) -> ;
+# The root zone's collar: three rings tapering from root_flare wider at
+# the ground to the trunk at the zone's top, both growing as the zone
+# rises; a foot a years old now.
+interpret Sb(n) : roots > 0 && root_flare > 0 && t >= root_age ->
+    [ !(trunk_radius * (1 + root_flare * smoothstep(0, max(root_zone_years, 0.001), t) * 5 / 6))
+      F(root_zone * smoothstep(0, max(root_zone_years, 0.001), t) / 3)
+      !(trunk_radius * (1 + root_flare * smoothstep(0, max(root_zone_years, 0.001), t) / 2))
+      F(root_zone * smoothstep(0, max(root_zone_years, 0.001), t) / 3)
+      !(trunk_radius * (1 + root_flare * smoothstep(0, max(root_zone_years, 0.001), t) / 6))
+      F(root_zone * smoothstep(0, max(root_zone_years, 0.001), t) / 3) ];
+interpret Sr(b) : roots > 0 && root_flare > 0 && t - b >= root_age ->
+    [ !(trunk_radius * (1 + root_flare * smoothstep(0, max(root_zone_years, 0.001), t - b) * 5 / 6))
+      F(root_zone * smoothstep(0, max(root_zone_years, 0.001), t - b) / 3)
+      !(trunk_radius * (1 + root_flare * smoothstep(0, max(root_zone_years, 0.001), t - b) / 2))
+      F(root_zone * smoothstep(0, max(root_zone_years, 0.001), t - b) / 3)
+      !(trunk_radius * (1 + root_flare * smoothstep(0, max(root_zone_years, 0.001), t - b) / 6))
+      F(root_zone * smoothstep(0, max(root_zone_years, 0.001), t - b) / 3) ];
+interpret Sr(b) -> ;
+# A root leaves the collar's surface z up (the trunk's, without one),
+# root_bend further out than root_angle from straight down, and turns
+# down by root_bend over four pieces, each rolled a little its own way,
+# to the ground, or q of the way when it stopped short.
+interpret Ro(z, q, w, a) ->
+    f(z) &(90)
+    f(trunk_radius * (1 + flare + root_flare * smoothstep(0, max(root_zone_years, 0.001), a)
+                      * max(0, 1 - z / max(root_zone * smoothstep(0, max(root_zone_years, 0.001), a), 0.001))) * 0.9)
+    &(90 - root_angle - root_bend) !(root_radius)
+    /(40 * w - 20) F(q * (z / cos(rad(root_angle)) + root_radius * 2) * 0.27) &(root_bend / 4)
+    /(20 - 40 * w) F(q * (z / cos(rad(root_angle)) + root_radius * 2) * 0.27) &(root_bend / 4)
+    /(40 * w - 20) F(q * (z / cos(rad(root_angle)) + root_radius * 2) * 0.27) &(root_bend / 4)
+    /(20 - 40 * w) F(q * (z / cos(rad(root_angle)) + root_radius * 2) * 0.27) &(root_bend / 4);
+
+# A sucker of a palm with a root zone: as below, with the sucker's own
+# root zone at its foot.
+decompose Sk(n) : roots > 0 ->
+    /(uniform(0, 360)) &(90) f(sucker_distance * uniform(0.6, 1.4)) ^(90)
+    [ Sr(t) ] /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), n);
