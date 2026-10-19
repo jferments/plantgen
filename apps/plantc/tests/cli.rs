@@ -168,7 +168,7 @@ fn rules_and_traits_say_where_they_come_from() {
         "{built_in}"
     );
     assert!(
-        built_in.contains("General, with no taxonomic home: 91 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 88 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.

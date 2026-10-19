@@ -947,7 +947,7 @@ pub mod venation;
 /// narrowing fast to a point; a joined calyx may swell low down
 /// (`calyx_swell`, from `calyx_base` `swollen`); a herb's stem leaf card
 /// holds its petiole unless the herb has a basal rosette; a map whose
-/// states tie reads its `else` formula's names; prickles stand among the stem hairs
-/// (`prickles`, from `spines` `prickles` and `prickle_density`) (137 is
-/// ten Pacific Northwest natives, #234).
+/// states tie reads its `else` formula's names; a nightshade's prickles
+/// stand among its stem hairs (`prickles`, from `spines` `prickles` and
+/// `prickle_density`) (137 is ten Pacific Northwest natives, #234).
 pub const GENERATOR_REVISION: u32 = 141;
