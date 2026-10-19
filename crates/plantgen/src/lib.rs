@@ -1064,4 +1064,8 @@ pub mod venation;
 /// broad brown wedge along its petiole's base, so the crown's centre is
 /// clothed in leaf bases where the bare stem showed as a flat-topped
 /// cylinder (148 is cacti, #248).
-pub const GENERATOR_REVISION: u32 = 149;
+/// 150: palm 16, the date palm's foot. Its roots bend, leaving the trunk
+/// further out and turning down along their length (`root_bend`); each
+/// sucker has a root zone of its own; the root zone widens the foot into a
+/// collar that grows as the zone rises (`root_flare`).
+pub const GENERATOR_REVISION: u32 = 150;
