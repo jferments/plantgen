@@ -3,9 +3,11 @@
   "rank": "genus",
   "name": "Betula",
   "traits": {
+    "terminal_bud": false,
     "short_shoots": true
   },
   "evidence": {
+    "traits.terminal_bud": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, analytical key to the genera, pp. xxiii-xxiv): 'Terminal buds wanting; branchlets prolonged by an upper axillary bud' leads, with Carpinus and Ostrya, to Betula (p. 205)."},
     "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: Acer, Betula, Corylus, Fagus and rosaceous fruit trees such as Pyrus have a well-developed short-shoot system, whose short shoots fill most of the crown and bear most of its leaves (Wilson's red maple)."}
   }
 }

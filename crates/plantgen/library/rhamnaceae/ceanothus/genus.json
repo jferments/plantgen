@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Ceanothus",
+  "traits": {
+    "terminal_bud": false
+  },
+  "evidence": {
+    "traits.terminal_bud": {
+      "evidence": "SourceInferred",
+      "source": "sargent-1922",
+      "note": "Sargent's Manual (sargent-1922, analytical key to the genera, pp. xxiii-xxiv): 'Terminal buds wanting; branchlets prolonged by an upper axillary bud' leads, with leaves 3-nerved from the base, to Ceanothus (p. 726)."
+    }
+  }
+}

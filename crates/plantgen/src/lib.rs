@@ -995,17 +995,24 @@ pub mod venation;
 /// pericarpel shortened to the ovary's swelling; a column stem's sink follows
 /// its height curve, so a seedling's top shows (142 is palm
 /// trunks, #240).
-/// 144: a Phoenix's dead frond hangs limp, its leaflets folded up along the
-/// rachis and the rachis drooping, in place of a flat plank standing out
-/// below the crown; its living fronds' brown sheaths clasp the stem below
-/// each frond's foot (`sheath_length`), hiding the stem's top (143 is
-/// cactus spines and flowers, #239).
-/// 145: palm 15. A boot wears shorter as it ages (`boot_wear`,
-/// `boot_wear_years`) and each is a little longer or shorter
-/// (`boot_spread`), so a Phoenix trunk's lower stubs are short and its
-/// outline ragged; the foot puts out a mass of adventitious roots from a
-/// root zone that rises with age, most stopping short in the air (`roots`);
-/// an open sheath (`sheath_wedge`, Phoenix's) is drawn as a broad wedge along
-/// its petiole's base, so the crown's centre is clothed in leaf bases where
-/// a ring of sheath cards left a bare, flat-topped cylinder.
+/// 144: branching form (broadleaf 23): a shoot without a terminal bud
+/// dies back each year and its topmost lateral carries it on, sometimes
+/// as a fork (`tip_abort`, from `terminal_bud`); a plagiotropic plant's
+/// limbs carry flat sprays (`plagio`, from `branch_orientation`); a
+/// tree's dead branches stand until they fall (`dead_keep`); a
+/// small-leaved tree's or shrub's long shoots set their leaves no farther
+/// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
+/// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
+/// cactus genera, #239).
+/// 145: palm 15 and Phoenix's details. A Phoenix's dead frond hangs limp,
+/// its leaflets folded up along the rachis and the rachis drooping, in
+/// place of a flat plank standing out below the crown. A boot wears shorter
+/// as it ages (`boot_wear`, `boot_wear_years`) and each is a little longer
+/// or shorter (`boot_spread`), so a Phoenix trunk's lower stubs are shorter
+/// and its outline ragged. The foot puts out a mass of adventitious roots
+/// from a root zone that rises with age, about half stopping short in the
+/// air (`roots`). An open sheath (`sheath_wedge`, Phoenix's) is drawn as a
+/// broad brown wedge along its petiole's base, so the crown's centre is
+/// clothed in leaf bases where the bare stem showed as a flat-topped
+/// cylinder (144 is branching form, #244).
 pub const GENERATOR_REVISION: u32 = 145;
