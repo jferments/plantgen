@@ -35,6 +35,18 @@ TASKS = {
     "triage": ("01-triage.md", "triage"),
     "observe": ("02-observe.md", "observation"),
     "describe": ("08-describe.md", "description"),
+    "branching": ("09-branching.md", "branching"),
+}
+# Besides 00-ground-rules.md, its task file and its schema, the files a task's prompt is built from.
+TASK_EXTRA = {"observe": ("palette.yaml", "features.yaml")}
+# Until 2026-10-18 an analyzer's rules version was one hash of every rule file, so any new or changed
+# file made every stored answer a new analyzer's. Now it hashes only the files the task reads. The task
+# versions of photo-rules at cef8954 (rules v2) keep the old all-file version b9470f22326e2d05, so the
+# answers made with those rules are still found; a change to a task's files gives it a new version.
+LEGACY_VERSIONS = {
+    ("triage", "c3b1d499f9c415b0"): "b9470f22326e2d05",
+    ("observe", "5ba61de30b34f5dc"): "b9470f22326e2d05",
+    ("describe", "f135bea86192056f"): "b9470f22326e2d05",
 }
 
 
@@ -49,12 +61,28 @@ class Rules:
         h = hashlib.sha256()
         for p in files:
             h.update(p.relative_to(self.path).as_posix().encode() + b"\0" + p.read_bytes())
-        self.version = h.hexdigest()[:16]  # changes whenever any rule file does
+        self.version = h.hexdigest()[:16]  # changes whenever any rule file does (reports; not analyzer ids)
         try:
             self.git = subprocess.run(["git", "-C", str(self.path), "log", "-1", "--format=%H", "--", "."],
                                       capture_output=True, text=True, timeout=10).stdout.strip() or None
         except (OSError, subprocess.SubprocessError):
             self.git = None
+
+    def task_files(self, task: str) -> list[str]:
+        name, schema = TASKS[task]
+        return ["00-ground-rules.md", name, f"schemas/{schema}.schema.json", *TASK_EXTRA.get(task, ())]
+
+    def task_version(self, task: str) -> str:
+        """A hash of the files this task's prompt is built from: other tasks' files do not change it."""
+        h = hashlib.sha256()
+        for rel in sorted(self.task_files(task)):
+            h.update(rel.encode() + b"\0" + (self.path / rel).read_bytes())
+        return h.hexdigest()[:16]
+
+    def analyzer_version(self, task: str) -> str:
+        """The rules version an analyzer of this task records (see LEGACY_VERSIONS)."""
+        v = self.task_version(task)
+        return LEGACY_VERSIONS.get((task, v), v)
 
     def read(self, name: str) -> str:
         return (self.path / name).read_text()
@@ -84,6 +112,9 @@ class Rules:
 
     def parts(self, task: str, photo_id: str, views: list[str] | None = None) -> list[str]:
         """[shared text, per-image text]: the request's user text, sent around the image."""
+        if task == "branching":  # the characters are the same for every image; its views say which apply
+            return [self.shared(task), (f"Views (from triage): {', '.join(views)}\n\n" if views else "")
+                    + f"Photo id: {photo_id}"]
         return [self.shared(task, views), f"Photo id: {photo_id}"]
 
     def user(self, task: str, photo_id: str, views: list[str] | None = None) -> str:
