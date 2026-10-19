@@ -1,0 +1,10 @@
+{
+  "id": "inaturalist-crowns-2026-10",
+  "title": "iNaturalist research-grade photographs of whole open-grown and edge conifers, their crowns' widths read at each tenth of height (81 trees of 10 species, 2026-10-17; observation ids, stages and widths in the PlantGen workspace's conifers/crown-profiles-photos-2026-10-17.json)",
+  "authors": "iNaturalist contributors (each photograph's observer, as its observation credits)",
+  "year": 2026,
+  "url": "https://www.inaturalist.org/observations",
+  "licence": "photographs under their observers' licences, mostly CC BY-NC; only the widths measured from them are kept, never the images",
+  "tier": 3,
+  "kind": "observations"
+}

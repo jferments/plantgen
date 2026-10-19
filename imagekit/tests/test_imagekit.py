@@ -221,6 +221,19 @@ class Duplicates(Base):
         st = Store(self.store_dir).stats()
         self.assertEqual((st["images"], st["source references"]), (3, 5))
 
+    def test_renders_merge_only_on_identical_bytes(self):
+        # a plain atlas card of one species sits within a few dHash bits of another's: still its own image
+        served = {"https://x.org/a.png": picture(7), "https://x.org/b.png": picture(7, size=(400, 300)),
+                  "https://x.org/c.png": picture(7)}
+        net.get_bytes = lambda url, **_: served[url]
+        man = self.tmp / "m.jsonl"
+        man.write_text("".join(json.dumps({"source": "render", "id": n, "url": u, "licence": "cc0", "taxon": "Acer circinatum"})
+                               + "\n" for n, u in enumerate(served)))
+        self.run_cli("fetch", "manifest", str(man), "--batch", "r")
+        dup = {r["source"]["url"]: r["duplicate"] for r in self.rows("r")}
+        self.assertIsNone(dup["https://x.org/b.png"])
+        self.assertEqual(dup["https://x.org/c.png"]["match"], "sha256")
+
     def test_metadata_stripped_and_size_capped(self):
         net.get_bytes = lambda url, **_: picture(3, size=(3000, 2000), exif_gps=True)
         man = self.tmp / "m.jsonl"
@@ -291,3 +304,38 @@ class Schemas(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RenderFrames(unittest.TestCase):
+    def test_close_ups_scale_with_the_plant(self):
+        from imagekit.render import shots
+        span = lambda h, name: next(e for v, e, _ in shots("x", False, {"height": h, "radius": 1}, {"closeups"}, [])  # noqa: E731
+                                    if v == name)[5]
+        self.assertEqual((span(0.9, "shoot"), span(0.9, "bloom")), ("0.36", "0.23"))  # a lily
+        self.assertEqual((span(12, "shoot"), span(12, "bloom")), ("1.00", "0.30"))  # a tree, as before
+
+    def test_bloom_focus_takes_the_height_with_most_flower(self):
+        import stat
+        from imagekit.render import bloom_focus
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp)
+        fake = tmp / "plantc"
+        fake.write_text(f"""#!{sys.executable}
+import sys
+from PIL import Image
+a = sys.argv[1:]
+f = float(a[a.index("--focus") + 1].split(":")[1])
+im = Image.new("RGB", (64, 64), (195, 208, 224))
+for x in range(int(64 * {{0.8: 0.5, 0.6: 0.2}}.get(f, 0))):
+    for y in range(64):
+        im.putpixel((x, y), (230, 110, 30))
+im.save(a[a.index("--out") + 1])
+""")
+        fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
+        base = [str(fake), "render", "x", "--out", str(tmp / "o.png"), "--size", "1536", "--quality", "standard"]
+        self.assertEqual(bloom_focus(base, "0.2", [], tmp), "bloom:0.8")
+        blank = tmp / "blank"
+        blank.write_text(f"#!{sys.executable}\nimport sys\nfrom PIL import Image\n"
+                         f"Image.new('RGB', (64, 64), (195, 208, 224)).save(sys.argv[sys.argv.index('--out') + 1])\n")
+        blank.chmod(blank.stat().st_mode | stat.S_IEXEC)
+        self.assertIsNone(bloom_focus([str(blank), *base[1:]], "0.2", [], tmp))

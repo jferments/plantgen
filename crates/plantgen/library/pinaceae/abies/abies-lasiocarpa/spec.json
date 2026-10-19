@@ -12,6 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
+      "apical": 0.6,
       "cone_chance": 0.12,
       "cone_length": 0.08,
       "height_rate": 0.03,
@@ -25,7 +26,8 @@
       "shade_years": 4,
       "pipe_organ": 0.009,
       "pipe_rings": 6.6e-06,
-      "branch_reach": 1.2
+      "branch_reach": 3.0,
+      "bole": 0.05
     }
   },
   "growth": {
@@ -194,6 +196,21 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923) p. 66, Abies lasiocarpa: \"cones oblong- cylindric, 6-10 cm. long, dark purple\"."
+    },
+    "generator.params.apical": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (4 trees) .47 .53 .51 .47 .36 .26 .19 .18 .12 .05; mature (3) .36 .42 .43 .42 .37 .30 .21 .16 .10 .04; drawn 60 years .31 .36 .40 .36 .34 .31 .23 .15 .07 .04; 150 years .27 .35 .40 .38 .36 .33 .29 .24 .14 .03. apical sets the young crown's width."
+    },
+    "generator.params.branch_reach": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): fitted with the family's ramifying crown (side_order 2, twig_years 10) so the drawn crown's widths at each tenth of height match the photographed open-grown trees': young (4 trees) .47 .53 .51 .47 .36 .26 .19 .18 .12 .05; mature (3) .36 .42 .43 .42 .37 .30 .21 .16 .10 .04; drawn 60 years .31 .36 .40 .36 .34 .31 .23 .15 .07 .04; 150 years .27 .35 .40 .38 .36 .33 .29 .24 .14 .03. branch_reach, the wood at which a limb's yearly shoot is halved, sets how far old limbs spread."
+    },
+    "generator.params.bole": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-crowns-2026-10",
+      "note": "Old conifers (pinidae revision 13): the share of an old tree's height cleared of limbs, cleared in step with height so saplings keep limbs to the ground: photographed trees keep limbs to the ground at every stage (crown base .01 to .05); the spire stays narrow, so its limbs stop lengthening early (branch_reach 3)."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -935,7 +935,55 @@ pub mod venation;
 /// penstemon, orange honeysuckle); a climber bears its leaves in opposite
 /// pairs where its taxon states them so (climber program revision 7) (136 is single
 /// leaves for cottonwood and fig, #232).
-/// 138: poppies. A corolla of merosity 2 in two whorls draws its four
+/// 138: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
+/// hemlocks) carries its year's needles in two sprays, one at the foot of
+/// each half of the shoot, so they follow the bend; the one spray at the
+/// shoot's foot had run on straight and left the nodding tip a bare
+/// stick. Leaders that do not nod grow as before. A conifer may grow
+/// several stems from one foot (`stems`, `stem_angle`), and a needle card
+/// may lean its needles forward (`lean`) and leave the foot of each axis
+/// bare (`bare`) so they crowd in a tuft near its end; both default to
+/// what was drawn before (137 is ten Pacific Northwest natives, #234).
+/// 139: old conifers (`pinidae` revision 13): a limb whose tips catch too
+/// little light for the wood it carries is shed (`limb_light`, scaled by
+/// `shade_death`), so Douglas-fir, western hemlock and Sitka spruce grow
+/// past 150 years under the module limit; a shoot shorter than
+/// `bud_length` sets proportionally fewer side buds, so a slow crown no
+/// longer smothers itself; and a pine's limbs keep a tenth of each year's
+/// sag, not half, so old pines' limbs no longer hang to the ground; and
+/// a branch's yearly shoot may be a share of the leader's (`apical`,
+/// fitted to photographed crowns for six Pinaceae, 0.5 for the rest but
+/// pines; `branch_floor`), so crowns are cones instead of tubes, and the
+/// family's limbs keep 0.15 of each year's sag; and the family's old
+/// limbs branch again (`side_order` 2, twigs living `twig_years` with one
+/// spray each), stop lengthening with their reach, start short below the
+/// treetop (`top_ramp`) and clear the trunk in step with height (`bole`),
+/// so fully branched crowns grow to 300 years; shade strengthens apical
+/// control (`apical_light`, scaled by shade tolerance), so a stand-grown
+/// Douglas-fir keeps a narrow crown and a trunk of its reference size;
+/// limb shedding and short shoots' fewer buds are set for Pinaceae, not
+/// the program, so yews and cypresses grow as before (138 is nodding
+/// leaders, #167).
+/// 140: a cactus's pericarpel is drawn in its stem's colour
+/// (`pericarpel_colour`, from `stem_colour`), and a reduced flower mesh
+/// wears its skin (scales, felted areoles or spines) as the full one does;
+/// a spiny fruit whose spine clusters fall (`fruit_spine_fall` deciduous:
+/// Stenocereus, Echinocereus) ripens with its felted areoles alone; a
+/// pericarpel's and a cactus fruit's areoles take the stem's wool colour
+/// and their glochids or spines the colours floras give them (new trait
+/// `glochid_colour`, also the stem's glochids); and a round fruit with no
+/// stated width is as wide as long (137 is #234; 138 and 139 are #167's
+/// nodding leaders and old-conifer refit).
+/// 141: each organ type's part mesh (a flower, fruit, cluster, flower head
+/// or needle shoot drawn near the camera) is the organ at its finest, with
+/// no cap on its triangles; simplifying is the caller's choice (`plantc
+/// export --triangles`, `--max-mib`) (140 is cactus pericarpels, #226).
+/// 142: a palm's fronds stand up the year's trunk as they emerge over the
+/// year (palm 14), so its leaf bases and boots wind evenly up the trunk in
+/// place of bands at each year's top; Phoenix keeps its broad leaf bases
+/// for the trunk's life, standing close to the stem (141 is full-quality
+/// part meshes, #237).
+/// 143: poppies. A corolla of merosity 2 in two whorls draws its four
 /// petals (a poppy's 2 + 2), where the petals rule clamped the merosity to
 /// 3 and drew six; a caducous calyx (`calyx_caducous`, Papaveraceae)
 /// falls as its flower opens, so a bud wears its sepals and an open flower
@@ -943,4 +991,12 @@ pub mod venation;
 /// leafy branched stems with larger flowers and a capsule beside them;
 /// opium poppy is new; Pacific bleeding heart's leaves are ternate and
 /// dissected, glaucous, held over the clump.
-pub const GENERATOR_REVISION: u32 = 138;
+/// Round 2: two crossed pairs of petals open as one cup; a disymmetric
+/// corolla (`flower_symmetry: disymmetric`, Dicentra) draws two pouched
+/// outer petals with turned-out tips around two narrow inner ones, a
+/// heart; a pendent or nodding flower of a cluster hangs from its pedicel
+/// (`nod`, from `flower_posture`); a capsule with a stigmatic disc
+/// (`stigmatic_disc`, Papaver) wears a dark rayed dome, one ray per
+/// carpel; a fruit's unripe share takes `fruit_colour_unripe` before the
+/// leaves' green (142 is palm trunks, #240).
+pub const GENERATOR_REVISION: u32 = 143;

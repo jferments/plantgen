@@ -270,6 +270,8 @@ class TestClaude(RunBase):
         run_dir = Path(self.store_dir) / "sources" / "image-analyses" / "b1"
         self.assertTrue((run_dir / "pending-msgbatch_1.json").exists())
         self.assertTrue(all(len(r["custom_id"]) == 64 for r in FakeClaude.calls))
+        sent = FakeClaude.calls[0]["params"]["output_config"]["format"]["schema"]
+        self.assertTrue(all(o.get("additionalProperties") is False for o in objects(sent)))  # the API refuses open objects
         self.go("run", "--collect", "b1", "--backend", "claude")
         rows = self.analyses("b1")
         self.assertEqual(len(rows), 4)
@@ -278,6 +280,37 @@ class TestClaude(RunBase):
         with Store(self.store_dir) as s:
             self.assertEqual(json.loads(self.go("plan", "describe", "--backend", "claude"))["to send"], 0)
             self.assertEqual(len(s.all_images()), 4)
+
+
+def objects(schema):
+    if isinstance(schema, dict):
+        if "properties" in schema:
+            yield schema
+        for v in schema.values():
+            yield from objects(v)
+    elif isinstance(schema, list):
+        for v in schema:
+            yield from objects(v)
+
+
+class TestClaudeSchema(unittest.TestCase):
+    def test_closes_objects_and_drops_constraints(self):
+        from imagekit.backends import claude_schema
+        out = claude_schema({"type": "object", "required": ["n"], "properties": {
+            "n": {"type": "integer", "minimum": 0, "maximum": 9},
+            "tags": {"type": "array", "maxItems": 3, "items": {"type": "object", "properties": {"a": {"type": "string"}}}},
+            "v": {"oneOf": [{"type": "string", "maxLength": 4}, {"type": "number"}]}}})
+        self.assertEqual(out["properties"]["n"], {"type": "integer"})
+        self.assertIs(out["additionalProperties"], False)
+        self.assertIs(out["properties"]["tags"]["items"]["additionalProperties"], False)
+        self.assertNotIn("maxItems", out["properties"]["tags"])
+        self.assertEqual(out["properties"]["v"], {"anyOf": [{"type": "string"}, {"type": "number"}]})
+
+    def test_open_keys_send_no_format(self):
+        from imagekit.backends import claude_schema
+        self.assertIsNone(claude_schema({"type": "object", "properties": {
+            "answers": {"type": "object", "additionalProperties": {"type": "string"}}}}))
+        self.assertIsNone(claude_schema({"type": "object", "propertyNames": {"pattern": "^[a-z]+$"}}))
 
 
 if __name__ == "__main__":
