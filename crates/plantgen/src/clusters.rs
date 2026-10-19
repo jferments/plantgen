@@ -2181,9 +2181,9 @@ fn draw_laid(
                     &crate::flowers::layout(flower, form, unit_length * 0.5, spin),
                     crate::flowers::Frame::new(
                         base,
-                        direction,
+                        fruit::hung(direction, flower.nod),
                         to_direction(p.bearing),
-                        any_perpendicular(direction),
+                        any_perpendicular(fruit::hung(direction, flower.nod)),
                         flower.is_zygomorphic(),
                     ),
                     crate::flowers::Colours {

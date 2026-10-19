@@ -1064,13 +1064,38 @@ pub mod venation;
 /// broad brown wedge along its petiole's base, so the crown's centre is
 /// clothed in leaf bases where the bare stem showed as a flat-topped
 /// cylinder (148 is cacti, #248).
-/// 150: Rosaceae (#236): the family's shrub form, twig spacing, compound
+/// 150: poppies. A corolla of merosity 2 in two whorls draws its four
+/// petals (a poppy's 2 + 2), where the petals rule clamped the merosity to
+/// 3 and drew six; a caducous calyx (`calyx_caducous`, Papaveraceae)
+/// falls as its flower opens, so a bud wears its sepals and an open flower
+/// shows none (`calyx_shed` on the flower card). California poppy grows
+/// leafy branched stems with larger flowers and a capsule beside them;
+/// opium poppy is new; Pacific bleeding heart's leaves are ternate and
+/// dissected, glaucous, held over the clump.
+/// Round 2: two crossed pairs of petals open as one cup; a disymmetric
+/// corolla (`flower_symmetry: disymmetric`, Dicentra) draws two pouched
+/// outer petals with turned-out tips around two narrow inner ones, a
+/// heart; a pendent or nodding flower of a cluster hangs from its pedicel
+/// (`nod`, from `flower_posture`); a capsule with a stigmatic disc
+/// (`stigmatic_disc`, Papaver) wears a dark rayed dome, one ray per
+/// carpel; a fruit's unripe share takes `fruit_colour_unripe` before the
+/// leaves' green. Round 3: a herb's flowering side branches flower after
+/// its stem, each a share of a raceme younger (`branch_lag`, herb
+/// revision 16; Papaveraceae a third); a nodding bud (`bud_posture`)
+/// hangs from a stalk hooked in its top quarter, as long as floras
+/// measure it (`bud_length_m`); a caducous calyx closed over a regular
+/// corolla's bud is drawn as an ovoid of its sepals; a heart's petal
+/// parts have curved sides. A herb that flowers on for months while its
+/// first fruit ripen, bearing fruit below its flowers (`fruit_below`),
+/// shows its earlier flowers' fruit from its first fruiting month and
+/// keeps flowering to its last (149 is palms, #250).
+/// 151: Rosaceae (#236): the family's shrub form, twig spacing, compound
 /// and lobed leaf cards from their outline words and leaflet sizes, herb
 /// leaf sizes, armed stems from `spines`, bramble fruit by its fruitlets,
 /// clusters of few flowers drawn whole; broadleaf 24's canes that die at
 /// `stem_life_years` while the base renews them (thimbleberry) and a stem
 /// that flowers every year and grows on from one bud (devil's club);
 /// hawthorn's inferior ovary, round petals and oval haws in twos and
-/// threes (149 is date palm details, #250). The merge desk renumbers it in
+/// threes (150 is poppies, #242). The merge desk renumbers it in
 /// landing order.
-pub const GENERATOR_REVISION: u32 = 150;
+pub const GENERATOR_REVISION: u32 = 151;

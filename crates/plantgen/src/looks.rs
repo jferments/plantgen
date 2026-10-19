@@ -2003,6 +2003,16 @@ pub struct Flower {
     /// radius, 0 to 0.5 (a jimsonweed's, swollen at its base).
     #[serde(skip_serializing_if = "is_zero")]
     pub calyx_swell: f64,
+    /// How far the flower has opened when its calyx falls: a poppy's
+    /// sepals, pushed off as a cap when its petals begin to spread, fall at
+    /// 0.1; at 1 the calyx stays.
+    #[serde(skip_serializing_if = "is_one")]
+    pub calyx_shed: f64,
+    /// How an open flower of a cluster holds itself, as a fruit's `hang`:
+    /// 0 along its pedicel, 1 hanging straight down from it (a bleeding
+    /// heart's), between them turned that share of the way.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub nod: f64,
     /// The sepals' colour, and a spiral's outer tepals'; a leaf green if
     /// absent. A labellate flower's sepals take the petals' colour.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2227,6 +2237,8 @@ impl Default for Flower {
             sepals_fused: 0.0,
             calyx_angled: 0.0,
             calyx_swell: 0.0,
+            calyx_shed: 1.0,
+            nod: 0.0,
             calyx: None,
             filament: None,
             pistil: None,
@@ -2448,6 +2460,11 @@ pub enum Corolla {
     /// banner of a palo verde, which is not a pea flower's; of tepals, the
     /// outer one toward the axis.
     Unequal,
+    /// Symmetric about two planes (disymmetric), as a bleeding heart's: two
+    /// outer petals pouched at the base into a heart, their tips meeting
+    /// below, and two narrow inner petals joined at their tips between
+    /// them (4 petals).
+    Disymmetric,
 }
 
 impl Corolla {
@@ -2849,6 +2866,10 @@ pub struct Fruit {
     /// for a twelfth of it.
     #[serde(skip_serializing_if = "is_zero")]
     pub seed_size: f64,
+    /// Rays of a stigmatic disc crowning the fruit (a poppy's capsule, its
+    /// stigmas radiating on a flat lobed disc): 0 for none.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub disc: u32,
 }
 
 impl Default for Fruit {
@@ -2885,6 +2906,7 @@ impl Default for Fruit {
             loose: 0.0,
             hairs: 0.0,
             seed_size: 0.0,
+            disc: 0,
         }
     }
 }
@@ -3109,6 +3131,8 @@ struct FruitCard {
     spines_fall: f64,
     felt: Option<[f32; 3]>,
     bristles: Option<[f32; 3]>,
+    #[serde(default)]
+    disc: u32,
     seeds: Option<[f32; 3]>,
     cup: Option<[f32; 3]>,
     ripening: Option<[f32; 3]>,
@@ -3158,6 +3182,7 @@ impl Default for FruitCard {
             loose: 0.0,
             hairs: 0.0,
             seed_size: 0.0,
+            disc: fruit.disc,
             count: None,
             cluster: None,
             size: None,
@@ -3214,6 +3239,7 @@ impl TryFrom<FruitCard> for Fruit {
             loose: card.loose,
             hairs: card.hairs,
             seed_size: card.seed_size,
+            disc: card.disc,
         })
     }
 }
@@ -3872,6 +3898,8 @@ impl Shape {
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
                 check("calyx_angled", s.calyx_angled, 0.0, 1.0)?;
                 check("calyx_swell", s.calyx_swell, 0.0, 0.5)?;
+                check("calyx_shed", s.calyx_shed, 0.0, 1.0)?;
+                check("nod", s.nod, 0.0, 1.0)?;
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
                     check("filament", f64::from(channel), 0.0, 1.0)?;
@@ -3936,13 +3964,14 @@ impl Shape {
                 check("open", s.open, 0.0, 1.0)?;
                 if s.petal_whorls == 2
                     && (s.perianth != Perianth::Corolla
-                        || s.corolla != Corolla::Regular
+                        || !matches!(s.corolla, Corolla::Regular | Corolla::Disymmetric)
+                        || (s.corolla == Corolla::Disymmetric && s.petals != 4)
                         || s.petals % 2 != 0
                         || s.petals < 4)
                 {
                     return Err(format!(
                         "petals in two whorls are a regular corolla of an even number, \
-                         at least 4: found {} {:?} {:?}",
+                         at least 4, or a disymmetric one of 4: found {} {:?} {:?}",
                         s.petals, s.perianth, s.corolla
                     ));
                 }
@@ -4080,7 +4109,9 @@ impl Shape {
                 check("stalk", s.stalk, 0.0, 0.6)
             }
             Self::Fruit(s) => {
-                check("aspect", s.aspect, 0.1, 2.0)?;
+                // As slender as the fruit rule draws a pod (a California
+                // poppy's, a twentieth as wide as long).
+                check("aspect", s.aspect, 0.05, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
                 check("kept_calyx", s.kept_calyx, 0.0, 2.0)?;
                 check("hang", s.hang, -1.0, 1.0)?;
@@ -4105,6 +4136,9 @@ impl Shape {
                     count("fruitlets", s.fruitlets, 1, 500)?;
                 }
                 check("seed_size", s.seed_size, 0.0, 0.5)?;
+                if s.disc > 24 {
+                    return Err(format!("disc has 0 to 24 rays, found {}", s.disc));
+                }
                 check("unripe", s.unripe, 0.0, 1.0)?;
                 check("apiculum", s.apiculum, 0.0, 0.3)?;
                 check("spine", s.spine, 0.0, 0.5)?;

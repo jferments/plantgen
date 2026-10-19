@@ -12,7 +12,7 @@
   "growth_form": "forb",
   "generator": {
     "params": {
-      "stems": 6,
+      "stems": 8,
       "stem_rate": 0.5,
       "clump_radius": 0.12,
       "stem_lean": 8,
@@ -22,9 +22,9 @@
       "arch": 0.02,
       "nodes": 0,
       "bare": 1.0,
-      "basal_leaves": 3,
-      "basal_length": 0.3,
-      "basal_angle": 25,
+      "basal_leaves": 4,
+      "basal_length": 0.4,
+      "basal_angle": 20,
       "raceme": 0.03,
       "flowers": 1,
       "flower_size": 0.1,
@@ -35,12 +35,14 @@
       "bud_spacing": 0.5,
       "nod": 0,
       "bud_size": 0.01,
-      "leaf_area": 0.337,
+      "leaf_area": 0.193,
       "basal_area": 0.171,
-      "basal_piece_area": 0.235,
-      "flower_area": 0.178,
-      "bud_area": 0.063,
-      "fruit_area": 0.383
+      "basal_piece_area": 0.023,
+      "flower_area": 0.292,
+      "bud_area": 0.093,
+      "fruit_area": 0.383,
+      "basal_pieces": 2,
+      "basal_arch": 55
     }
   },
   "growth": {
@@ -53,31 +55,23 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.35, 0.3, 0.3],
-    "foliage": [0.08, 0.15, 0.09],
-    "foliage_shade": [0.025, 0.045, 0.028],
+    "bark": [0.3, 0.13, 0.12],
     "variation": 0.2,
     "organs": {
       "basal": {
-        "shape": { "template": "frond", "pinnae": 9, "width": 0.6, "divided": 1.0, "stipe": 0.3 }
-      },
-      "flower": {
-        "inflorescence": { "flowers": 8, "size": 0.2, "droop": 60 },
-        "shape": {
-          "template": "flower",
-          "petals": 4,
-          "petal_whorls": 2,
-          "petal_width": 1.2,
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.2
-        },
-        "colour": [0.85, 0.4, 0.6],
-        "accent": [0.95, 0.8, 0.85]
+        "shape": { "template": "compound", "pattern": "palmate", "leaflets": 3, "inner": "pinnate", "pinnules": 7, "segments": 7, "confluent": 0.45, "leaflet_width": 0.25, "angle": 35, "spread": 40, "teeth": 0, "petiole": 0.05 }
       },
       "fruit": {
-        "shape": { "template": "fruit", "aspect": 0.3 },
+        "shape": { "template": "fruit" },
         "colour": [0.3, 0.35, 0.2]
+      },
+      "basal_piece": {
+        "shape": {
+          "template": "blade",
+          "aspect": 0.025,
+          "taper": 0
+        },
+        "colour": [0.3, 0.13, 0.12]
       }
     }
   },
@@ -98,13 +92,25 @@
     "height_max_m": 0.5,
     "leaf_habit": "deciduous",
     "perennation": "rhizome",
-    "leaf_length_m": {"min": 0.1, "max": 0.25},
-    "leaf_width_m": {"min": 0.1, "max": 0.2},
+    "leaf_length_m": {"min": 0.25, "max": 0.4, "low": 0.15, "high": 0.55},
+    "leaf_width_m": {"min": 0.12, "max": 0.2, "low": 0.08, "high": 0.35},
     "leaf_margin": "dentate",
+    "leaf_underside_colour": [170, 190, 180],
     "inflorescence_length_m": {"min": 0.05, "max": 0.15},
     "flowering_months": [3, 4, 5, 6, 7],
     "fruit_size_m": {"min": 0.015, "max": 0.025},
-    "fruiting_months": [5, 6, 7, 8]
+    "fruiting_months": [5, 6, 7, 8],
+    "leaf_colour": [110, 160, 85],
+    "flower_symmetry": "disymmetric",
+    "flower_posture": "pendent",
+    "inflorescence": "panicle",
+    "inflorescence_posture": "nodding",
+    "flower_colour": [222, 135, 180],
+    "flower_size_m": {"min": 0.016, "max": 0.019, "low": 0.012, "high": 0.024},
+    "units_per_inflorescence": {"min": 2, "max": 30},
+    "inflorescence_branches": 3,
+    "fruit_shape": "ellipsoid",
+    "fruit_width_m": {"min": 0.004, "max": 0.005}
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -117,15 +123,10 @@
       "source": "jepson-1925-manual",
       "note": "Jepson 1925, Dicentra formosa, Fig. 404, p. 405: naked scape-like flowering stems 8 in to 18 in high, a little taller than the leaves (Abrams vol. 2, p. 234, gives the basal leaves as 3 dm to 5 dm long but no scape height)."
     },
-    "appearance.organs.flower.shape.petal_whorls": {
-      "evidence": "SourceInferred",
-      "source": "jepson-1925-manual",
-      "note": "Jepson's Manual (1925), Fumariaceae (in Papaveraceae here): sepals 2, small and scale-like, and petals 4 in 2 dissimilar pairs. So four petals, an outer and an inner pair (drawn alike)."
-    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a delicate herb with lacy, fern-like, blue-green leaves and arching stems hung with pink, heart-shaped flowers. Each stalk ends in one nodding raceme drawn as a cluster (flowers 1, flower_size 0.1 within the 5 cm to 15 cm the species states; its look's inflorescence 8 flowers, each a fifth of its length, bent 60 degrees), now that Papaveraceae's flowers are mostly in racemes; before, the stalk bore 8 single flowers. leaf_area 0.337 is what its lobed leaf card draws on an organ 1 m long since the lobed card takes its lobes, depth and width from the traits (nightshades round 5). Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a delicate herb with lacy, fern-like, blue-green leaves and arching stems hung with pink, heart-shaped flowers. Each stalk ends in one nodding raceme drawn as a cluster (flowers 1, flower_size 0.1 within the 5 cm to 15 cm the species states; its look's inflorescence 8 flowers, each a fifth of its length, bent 60 degrees), now that Papaveraceae's flowers are mostly in racemes; before, the stalk bore 8 single flowers. leaf_area 0.193 is what its lobed leaf card draws on an organ 1 m long since the lobed card takes its lobes, depth and width from the traits (nightshades round 5; re-measured with plantc atlas on the poppies' dissected leaves when the two merged). Its basal leaves (poppies, 2026-10-19) 40 cm long with their stalks, so the blades come out about 17-26 cm, inside Flora of North America's (15-)25-40 cm while the plant stays under Jepson's 18 in scapes; rising 30 degrees from upright and turned 0.3 of the way flat, so the blades are held level over the stalks as a low mound. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
@@ -135,7 +136,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: blue-green leaves; pink flowers. Its flower laid out whorl by whorl (spec rework P5b): four pink petals by hand (in two pairs; the drawing has no joined heart-shaped corolla) above two sepals, six stamens and a pistil of two carpels, from the characters of Papaveraceae and Dicentra by the rules at the flowering plants."
+      "note": "Colours chosen by eye: grey blue-green leaves (Flora of North America vol. 3, Dicentra formosa, read on eFloras 2026-10-19: abaxial and sometimes adaxial surface glaucous); pink flowers. The basal leaf card (poppies, 2026-10-19): a ternate blade (FNA: blade with 3-5 orders of leaflets and lobes), its three divisions each pinnate, 7 pinnules of 5 segments, joined at their bases into a dissected blade (confluent 0.6) with oblong lobes (FNA: penultimate lobes oblong, 10-20 x 3-4 mm), on a petiole a third its length. Its flower laid out whorl by whorl (spec rework P5b): four pink petals by hand (in two pairs; the drawing has no joined heart-shaped corolla) above two sepals, six stamens and a pistil of two carpels, from the characters of Papaveraceae and Dicentra by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",
@@ -171,13 +172,30 @@
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
     "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
-    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Dicentra formosa (read on eFloras, 2026-10-19): leaves (15-)25-40(-55) cm. Replaces the model estimate of 10-25 cm (species-facts-2026-10-15, record L2765608)."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Dicentra formosa (read on eFloras, 2026-10-19): leaves (8-)12-20(-35) cm wide. Replaces the model estimate of 10-20 cm (species-facts-2026-10-15, record L2765608)."},
+    "traits.leaf_underside_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Dicentra formosa (read on eFloras, 2026-10-19): abaxial surface and sometimes adaxial surface glaucous, so a pale grey blue-green beneath. The colour is our reading of the words."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2765608), as no source read gives it."},
+    "traits.leaf_colour": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Read from 40 research-grade iNaturalist photos (imagekit batch poppies-2026-10-19) and Joshi's review 2026-10-19: the leaves a bright, light yellowish green, not the dark blue-green drawn before; Flora of North America vol. 3, Fumariaceae, Dicentra formosa (efloras.org, read 2026-10-19): subsp. formosa leaf blades adaxially not glaucous (abaxial surface glaucous, as leaf_underside_colour). The colour is our reading of the photos."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Fumariaceae, Dicentra formosa (efloras.org, read 2026-10-19), family: flowers bilaterally symmetric about each of 2 perpendicular planes; outer petals both swollen or spurred basally; corolla cordate to oblong in outline."},
+    "traits.flower_posture": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Fumariaceae, Dicentra formosa (efloras.org, read 2026-10-19): flowers pendent."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Fumariaceae, Dicentra formosa (efloras.org, read 2026-10-19): inflorescences paniculate, 2-30-flowered, usually exceeding leaves."},
+    "traits.inflorescence_posture": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist photos (imagekit batch poppies-2026-10-19): the scape arches over at its top so the flowers hang in a one-sided nodding cluster; Flora of North America vol. 3, Fumariaceae, Dicentra formosa (efloras.org, read 2026-10-19): flowers pendent."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Fumariaceae, Dicentra formosa (efloras.org, read 2026-10-19): petals rose-purple, pink, cream, or pale yellow, rarely white (subsp. formosa rose-purple to pink); the pink is our reading of the iNaturalist photos (batch poppies-2026-10-19)."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Fumariaceae, Dicentra formosa (efloras.org, read 2026-10-19): outer petals (12-)16-19(-24) mm long, inner petals (12-)15-18(-22) mm; the pendent flower is as long as its outer petals."},
+    "traits.units_per_inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Fumariaceae, Dicentra formosa (efloras.org, read 2026-10-19): inflorescences paniculate, 2-30-flowered."},
+    "traits.inflorescence_branches": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 3, Dicentra formosa (read 2026-10-19): inflorescences paniculate, 2-30-flowered; the iNaturalist photos (imagekit batch poppies-2026-10-19) show a compact panicle of about three short branches nodding at the top of the scape. The count is our reading of the photos."},
+    "generator.params.basal_pieces": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist photos (imagekit batch poppies-2026-10-19) and Joshi's review 2026-10-19: each leaf stands on a long erect, reddish petiole and holds its blade nearly level at its top, the leaves together a mound; drawn as two pieces, the petiole (basal_piece) and the blade bent over from it (basal_arch). Flora of North America vol. 3, Dicentra formosa: leaves (15-)25-40(-55) cm long with their petioles."},
+    "generator.params.basal_arch": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist photos (imagekit batch poppies-2026-10-19) and Joshi's review 2026-10-19: each leaf stands on a long erect, reddish petiole and holds its blade nearly level at its top, the leaves together a mound; drawn as two pieces, the petiole (basal_piece) and the blade bent over from it (basal_arch). Flora of North America vol. 3, Dicentra formosa: leaves (15-)25-40(-55) cm long with their petioles."},
+    "appearance.organs.basal_piece": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The petiole: a slender stalk, its colour our reading of the reddish to purplish petioles in the iNaturalist photos (imagekit batch poppies-2026-10-19)."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Dicentra formosa (read 2026-10-19): capsules oblong, 4-5 mm diam.; drawn ellipsoid, as wide for their length (appearance.organs.fruit.shape.aspect 0.25) as 4-5 mm is of the 15-25 mm stated length."},
+    "appearance.organs.fruit": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The capsules' green while they ripen, our reading of the iNaturalist photos (imagekit batch poppies-2026-10-19)."},
+    "appearance.bark": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The scapes' colour, our reading of the reddish-purple scapes and pedicels in the iNaturalist photos (imagekit batch poppies-2026-10-19)."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3, Dicentra formosa (read 2026-10-19): capsules oblong, 4-5 mm diam."}
   },
   "provenance": {
     "sources": [
