@@ -1004,5 +1004,8 @@ pub mod venation;
 /// `boot_wear_years`) and each is a little longer or shorter
 /// (`boot_spread`), so a Phoenix trunk's lower stubs are short and its
 /// outline ragged; the foot puts out a mass of adventitious roots from a
-/// root zone that rises with age, most stopping short in the air (`roots`).
+/// root zone that rises with age, most stopping short in the air (`roots`);
+/// an open sheath (`sheath_wedge`, Phoenix's) is drawn as a broad wedge along
+/// its petiole's base, so the crown's centre is clothed in leaf bases where
+/// a ring of sheath cards left a bare, flat-topped cylinder.
 pub const GENERATOR_REVISION: u32 = 145;

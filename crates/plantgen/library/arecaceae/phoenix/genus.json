@@ -59,11 +59,15 @@
         },
         "generator.params.sheath_length": {
           "rule": "0.06 * leaf_length_m",
-          "why": "Each living frond's sheath encircles the stem below its foot, so the crown's leaf bases hide the stem's top; about a sixteenth of the leaf's length, as Caryota's (set by eye: no flora gives the sheath's length)."
+          "why": "Each living frond's sheath reaches past the stem's surface along its petiole's base, so the crown's leaf bases hide the stem's top; about a sixteenth of the leaf's length, as Caryota's (set by eye: no flora gives the sheath's length)."
         },
-        "generator.params.shaft_cards": {
-          "rule": "4",
-          "why": "A sheath drawn as four cards round the stem."
+        "generator.params.sheath_area": {
+          "rule": "0.554",
+          "why": "An open sheath shades with the area its broad wedge draws: 0.554 of its length squared, as the leaf base it leaves (boot)."
+        },
+        "generator.params.sheath_wedge": {
+          "rule": "1",
+          "why": "Phoenix's sheath is open: it splits down the side away from the petiole and does not close round the stem, so it is drawn as one broad wedge along the petiole's base rather than a tube of cards (a tube read as a bare cylinder at the crown's centre)."
         },
         "generator.params.boot_wear": {
           "rule": "0.25",
@@ -129,7 +133,7 @@
         "appearance": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "A dead frond drawn as the built-in palms draw theirs: a brown fan for a fan palm, a brown feather frond for a feather palm. Dead fronds a mid brown (linear [0.2, 0.15, 0.1]; they drew near white at [0.5, 0.42, 0.3]); spines stiff, narrow and tapering to a point, yellowish green as in photographs; a leaf base (boot) broad and rhombic, near three quarters as wide as long, so the bases close up into the criss-cross lattice of photographs. A dead frond hangs limp: its leaflets fold up toward each other along the rachis (55 degrees) and the rachis droops 70 degrees from base to tip, as photographs of unpruned date palms show, instead of standing out as a flat plank. A living frond's sheath brown, as the leaf bases."
+          "note": "A dead frond drawn as the built-in palms draw theirs: a brown fan for a fan palm, a brown feather frond for a feather palm. Dead fronds a mid brown (linear [0.2, 0.15, 0.1]; they drew near white at [0.5, 0.42, 0.3]); spines stiff, narrow and tapering to a point, yellowish green as in photographs; a leaf base (boot) broad and rhombic, near three quarters as wide as long, so the bases close up into the criss-cross lattice of photographs. A dead frond hangs limp: its leaflets fold up toward each other along the rachis (55 degrees) and the rachis droops 70 degrees from base to tip, as photographs of unpruned date palms show, instead of standing out as a flat plank. A living frond's sheath brown and drawn as the leaf base it will leave: a broad wedge, near three quarters as wide as long, along the petiole's base."
         }
       },
       "appearance": {
@@ -146,6 +150,11 @@
             "colour": [0.2, 0.15, 0.1]
           },
           "sheath": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.3,
+              "aspect": 0.7
+            },
             "colour": [0.22, 0.16, 0.1]
           },
           "spine": {

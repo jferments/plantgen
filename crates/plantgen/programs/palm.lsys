@@ -262,7 +262,14 @@
 #   dry air; on some Phoenix the visible zone reaches several feet up the
 #   trunk).
 #
-# boot_wear, boot_spread and roots 0 draw as revision 14.
+# - An open sheath (`sheath_wedge` 1, Phoenix's: Dransfield et al. 2008,
+#   Genera Palmarum p. 13) splits down the side away from its petiole and
+#   does not close round the stem, so it is drawn as one broad wedge along
+#   the petiole's base, sheath_length past the stem's surface, in place
+#   of a ring of cards hanging below the frond's foot. The ring's cards
+#   ended in a flat-topped tube at the crown's centre.
+#
+# boot_wear, boot_spread, roots and sheath_wedge 0 draw as revision 14.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -288,6 +295,7 @@ param crownshaft;             # a crownshaft's length, metres; 0 none
 param shaft_cards;            # cards each frond's sheath wraps the crownshaft with
 param sheath_area;            # leaf area of a sheath 1 m long, m²
 param sheath_length;          # without a crownshaft, how far a frond's sheath clasps the stem below its foot, metres; 0 none
+param sheath_wedge;           # 1: an open sheath, drawn as one broad wedge along the petiole's base in place of cards round the stem
 # Fronds.
 param fronds_per_year;        # fronds a year, or a flush's
 param flush_interval;         # years from one flush to the next; 1 every year
@@ -596,6 +604,13 @@ decompose Fr(s, a, e, r) : crownshaft > 0 && fan > 0 ->
 decompose Fr(s, a, e, r) : crownshaft > 0 ->
     frond [ ring(max(1, round(shaft_cards))) [ Sh(crownshaft, r) ] ]
     Ds(s, r) Pc(0, max(1, round(pieces)), s, e);
+# An open sheath splits down the side away from its petiole, so it does
+# not close round the stem: its wedge is drawn with the petiole.
+decompose Fr(s, a, e, r) : sheath_length > 0 && sheath_wedge > 0 && fan > 0 ->
+    frond Bs(r) Ds(s, r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e)
+    Wg(0, split_depth < 1 ? max(1, round(fan_spread / max(palman_angle, 1))) : 0, s, e);
+decompose Fr(s, a, e, r) : sheath_length > 0 && sheath_wedge > 0 ->
+    frond Bs(r) Ds(s, r) Pc(0, max(1, round(pieces)), s, e);
 decompose Fr(s, a, e, r) : sheath_length > 0 && fan > 0 ->
     frond [ ring(max(1, round(shaft_cards))) [ Sh(sheath_length, r) ] ]
     Bs(r) Ds(s, r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e)
@@ -617,6 +632,14 @@ decompose Pc(k, m, s, e) : m > 1 ->
     Pc(k, floor(m / 2), s, e) Pc(k + floor(m / 2), m - floor(m / 2), s, e);
 
 # The first piece opens the frond, sets its sag and draws the petiole.
+# An open sheath's wedge lies along the petiole's base, from the stem's
+# axis out past its surface by sheath_length.
+interpret Pc(k, m, s, e) : k == 0 && sheath_length > 0 && sheath_wedge > 0 && crownshaft <= 0 ->
+    &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years))
+      + hang * clamp((age + season - e) / max(frond_life, 0.001), 0, 1))
+    [ sheath(trunk_radius * (1 + flare) + sheath_length) ]
+    Pd(tooth_length > 0 ? max(1, round(s * petiole / max(tooth_spacing, 0.001))) : 0, s, e)
+    !(petiole_radius * 0.6) Pp(k, s, e);
 interpret Pc(k, m, s, e) : k == 0 ->
     &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years))
       + hang * clamp((age + season - e) / max(frond_life, 0.001), 0, 1))

@@ -25,8 +25,9 @@
 # Revision 6: palm revision 14 stands a year's fronds up the year's
 # trunk as they emerge over emerge_spread of the year.
 #
-# Revision 7: gives palm revision 15's worn boots and root mass none
-# (boot_wear, boot_spread, roots 0), so it draws as before.
+# Revision 7: gives palm revision 15's worn boots, root mass and open
+# sheaths none (boot_wear, boot_spread, roots, sheath_wedge 0), so it
+# draws as before.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -99,3 +100,4 @@ param root_zone_years = 1;
 param root_angle = 30;
 param root_radius = 0.01;
 param root_reach = 1;
+param sheath_wedge = 0;       # sheaths close round the stem
