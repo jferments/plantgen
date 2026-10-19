@@ -52,7 +52,7 @@
       "why": "Once the leader stops rising, a limb's side shoots still grow a few centimetres a year and set twigs, renewing the foliage along it. Held to the leader's dwindling growth with the limb's own tip, they shrank to millimetres and set almost no twigs, and old crowns lost their foliage after 150 years (grand fir, Douglas-fir, western hemlock)."
     },
     "generator.params.floor_ramp": {
-      "rule": "0.08",
+      "rule": "0.15",
       "why": "The side shoots' floor comes in over the top 15% of an old tree's height (in metres, 10 m left a 20 m subalpine fir's top half as bare limbs carrying sprays only at their tips), so its top stays narrow: in full to the treetop, the short limbs of an old tree's top whorls carried side shoots longer than themselves, and the tops of 300-year Douglas-fir, Sitka spruce and subalpine fir were domes two to four times as wide as photographed ones (inaturalist-crowns-2026-10: the top tenth .06 to .12 of the height)."
     },
     "generator.params.limb_light": {
@@ -72,8 +72,8 @@
       "why": "A shoot shorter than 10 cm sets proportionally fewer side buds, so a slow old crown no longer smothers itself in buds (pinidae revision 13); set for the family, as the yews and cypresses it was not fitted on branch as before."
     },
     "generator.params.top_ramp": {
-      "rule": "2",
-      "why": "Branch shoots are shortest in the top whorls and lengthen over the first metres below the treetop (Cannell et al. 1976, Sitka spruce), so the top is a point: at full length from the first year, young treetops were three to five times as wide as photographed ones."
+      "rule": "4",
+      "why": "Branch shoots are shortest in the top whorls and lengthen over the first few whorls below the treetop (Cannell et al. 1976, Sitka spruce), so the top is a point: at full length from the first year, young treetops were three to five times as wide as photographed ones. Counted in years of the leader's growth, not metres: over a fixed 2 m, a 16 m subalpine fir's whorls born as its leader slowed to about 15 cm a year stayed stubs for a decade, leaving a bare stretch of leader under a tuft (widths at 0.85 and 0.95 of the height .06 and .04 at 60 years, photographed young trees .12 and .05); over 4 years they draw .14 and .06, and mountain hemlock's lollipop top goes too. Fitted on the seven Pinaceae with photographs at 15 and 60 years: 4 years matched as well as or better than 2 m for all but Sitka spruce at 15 (profile error .12 to .15); 6 years widened young tops."
     },
     "generator.params.ring_share": {
       "rule": "0.5",
