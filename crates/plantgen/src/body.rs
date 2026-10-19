@@ -1309,10 +1309,16 @@ impl Centreline {
         if fine_rings > detail.cap_rings.max(1) {
             for ring in 1..=fine_rings {
                 let wanted = total * f64::from(ring) / f64::from(fine_rings);
-                let at = arc.partition_point(|&(_, length)| length < wanted).min(arc.len() - 1);
+                let at = arc
+                    .partition_point(|&(_, length)| length < wanted)
+                    .min(arc.len() - 1);
                 let (s1, l1) = arc[at];
                 let (s0, l0) = if at > 0 { arc[at - 1] } else { (end, 0.0) };
-                let share = if l1 > l0 { (wanted - l0) / (l1 - l0) } else { 1.0 };
+                let share = if l1 > l0 {
+                    (wanted - l0) / (l1 - l0)
+                } else {
+                    1.0
+                };
                 out.push(s0 + (s1 - s0) * share);
             }
         } else {
@@ -1485,8 +1491,7 @@ fn face_profile(y: f64, x: f64, fissures: f64, ordinal: u32) -> (f64, f64, f64) 
     if fissures > 0.0 {
         let phase = f64::from(ordinal % 97) * 0.618_034;
         let across = x / half.max(1e-9);
-        let furrow =
-            (2.0 * across + 0.35 * math::sin(5.0 * y + 6.0 * phase) + 0.5).rem_euclid(1.0);
+        let furrow = (2.0 * across + 0.35 * math::sin(5.0 * y + 6.0 * phase) + 0.5).rem_euclid(1.0);
         let cut = math::smoothstep(0.75, 1.0, (furrow - 0.5).abs() * 2.0);
         let wrinkle = 0.5 + 0.5 * math::sin(9.0 * y + 3.0 * across + 6.0 * phase);
         let out = math::smoothstep(0.1, 0.25, across) * wall;
@@ -1642,7 +1647,10 @@ impl Surface<'_> {
         // the tip itself.
         let crest = self.line.crest(s);
         let radius = self.line.at(s).radius;
-        let size = radius * (crest / (radius * YOUNG_TUBERCLES).max(1e-12)).min(1.0).sqrt();
+        let size = radius
+            * (crest / (radius * YOUNG_TUBERCLES).max(1e-12))
+                .min(1.0)
+                .sqrt();
         let mut rise = size * self.bump_height * self.bump(s, t, crest).0;
         if self.wool > 0.0 {
             rise *= 1.0 - apex_wool(self.line, s);
@@ -2241,8 +2249,8 @@ impl Body<'_> {
             .filter(|_| detail.per_tubercle > 0.0 && spacing > 0.0);
         let bump_width = tubercles.map_or(0.0, |tubercles| tubercles.width * spacing);
         // A flat-faced plate needs finer skin to show its edges.
-        let per_tubercle = detail.per_tubercle
-            * tubercles.map_or(1.0, |tubercles| 1.0 + 3.0 * tubercles.face);
+        let per_tubercle =
+            detail.per_tubercle * tubercles.map_or(1.0, |tubercles| 1.0 + 3.0 * tubercles.face);
 
         let sides = if folded {
             ribs * per_rib
@@ -2277,7 +2285,11 @@ impl Body<'_> {
     /// The triangles of the axis's skin at this level.
     fn triangles(&self) -> usize {
         let layout = self.layout();
-        let dome_step = if layout.bump_width > 0.0 { layout.step } else { 0.0 };
+        let dome_step = if layout.bump_width > 0.0 {
+            layout.step
+        } else {
+            0.0
+        };
         let rings = self.line.rings(&self.detail, layout.step, dome_step).len();
         2 * layout.sides as usize * rings.saturating_sub(1)
     }

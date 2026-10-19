@@ -169,7 +169,6 @@
     },
     "central_spine_form": "straight",
     "radial_spine_texture": "hairlike",
-    "petal_shape": "lanceolate",
     "tepal_length_m": {
       "min": 0.0065,
       "max": 0.008
@@ -383,11 +382,6 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria prolifera var. texana: plants branched; branches 5-20+. Roots fibrous. Stems spheric to cylindric-clavate, 3-9 × 1.2-5 cm, somewhat flaccid; tubercles 7-10 × 3.4-5 mm; axils mostly bearing sparse white hairs and slender bristles equaling or exceeding tubercle length. Spines 30-50 per areole, white to yellow or reddish sometimes tipped dark, puberulent; radial spines 25-40 per areole, white to pale yellow, hairlike, 3-12 × 0.01-0.02 mm, soft, strongly contrasting with relatively rigid, colored central spines; central spines 5-12 per areole, spreading in all directions, straight, 4-9 × 0.11-0.17 mm. Flowers 1-1.8 × 0.8-1.7 cm; inner tepals whitish to creamy yellowish with pinkish or greenish brown midstripes; stigma lobes whitish to yellowish. Fruits bright red, obovoid to clavate-cylindric, 8-20 × 4-5 mm. Flowering spring (Mar-May). The flowers' length by width as the flora gives them. Colours by hand from the words; the small flower's bell by hand."
-    },
-    "traits.petal_shape": {
-      "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Mammillaria prolifera var. texana: inner tepals whitish to creamy yellowish with pinkish or greenish brown midstripes, 6.5-8 × 2-3 mm; about three times as long as wide, so lanceolate."
     },
     "traits.tepal_length_m": {
       "evidence": "SourceInferred",

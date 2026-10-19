@@ -9,8 +9,7 @@
   "traits": {
     "ribs": 0,
     "flowering_position": "terminal",
-    "radial_spine_texture": "needlelike",
-    "petal_shape": "obovate"
+    "radial_spine_texture": "needlelike"
   },
   "rules": {
     "generator.params.thorns": {
@@ -40,11 +39,6 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leafy cacti's areoles drawn from the spine counts and lengths their floras give."
-    },
-    "traits.petal_shape": {
-      "evidence": "SourceInferred",
-      "source": "flora-of-china",
-      "note": "Flora of China vol. 13 (read on eFloras 2026-10-19), Pereskia aculeata: 'Petaloids white to pale yellow, obovate to spatulate, 15-20 × 6-8 mm, margin entire, apex acute to truncate.' Britton and Rose (1919, p. 20) give P. zinniaeflora's petals as 'entire, obtuse or retuse'. Broad obovate petals taken for the genus, by inference from these two."
     },
     "traits": {
       "evidence": "SourceInferred",

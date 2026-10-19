@@ -1064,4 +1064,13 @@ pub mod venation;
 /// broad brown wedge along its petiole's base, so the crown's centre is
 /// clothed in leaf bases where the bare stem showed as a flat-topped
 /// cylinder (148 is cacti, #248).
-pub const GENERATOR_REVISION: u32 = 149;
+/// 150: cacti of four more genera. A cactus's tubercles stand out along
+/// the skin's normal, sized by the body's radius and smaller toward a young
+/// apex, so they show on flat tops; a flat-faced, fissured plate
+/// (`tubercles.face`, `fissures`: Ariocarpus); wool and bristles in the
+/// tubercles' axils (`axils`: Mammillaria); crinkled radials (spine
+/// `crinkle`); fine dome rings. New programs `pereskia` (a leafy cactus on
+/// the broadleaf base, its areoles adding spines as they age) and
+/// `schlumbergera` (flat joints toothed along their margins). A fruit set
+/// after New Year counts its season from the next year's start.
+pub const GENERATOR_REVISION: u32 = 150;
