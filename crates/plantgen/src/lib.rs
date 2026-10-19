@@ -974,4 +974,8 @@ pub mod venation;
 /// `glochid_colour`, also the stem's glochids); and a round fruit with no
 /// stated width is as wide as long (137 is #234; 138 and 139 are #167's
 /// nodding leaders and old-conifer refit).
-pub const GENERATOR_REVISION: u32 = 140;
+/// 141: each organ type's part mesh (a flower, fruit, cluster, flower head
+/// or needle shoot drawn near the camera) is the organ at its finest, with
+/// no cap on its triangles; simplifying is the caller's choice (`plantc
+/// export --triangles`, `--max-mib`) (140 is cactus pericarpels, #226).
+pub const GENERATOR_REVISION: u32 = 141;
