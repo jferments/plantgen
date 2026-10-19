@@ -995,4 +995,11 @@ pub mod venation;
 /// pericarpel shortened to the ovary's swelling; a column stem's sink follows
 /// its height curve, so a seedling's top shows (142 is palm
 /// trunks, #240).
-pub const GENERATOR_REVISION: u32 = 143;
+/// 144: a depressed cactus top sinks to a pit at its centre, with its
+/// crown's flowers and fruit set down into it (`stem_apex` depressed,
+/// body and program `pit`: Lophophora); an apex's woolly cap reaches only
+/// the apical region, three fifths of the tip's radius, not the whole top
+/// of a rounded or broad stem; twisted centrals turn about their length
+/// (new trait `central_spines_twisted`, spine `twist`) (143 is the new
+/// cactus genera, #239).
+pub const GENERATOR_REVISION: u32 = 144;

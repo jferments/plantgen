@@ -77,7 +77,7 @@
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem column 5;
+lsystem column 6;
 
 # The plant.
 param vigour_spread;          # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -146,6 +146,7 @@ param swell;                  # an old trunk joint grows (1 + swell) times as th
 param swell_years;            # ...over about this many years
 param swell_side;             # a lateral at depth d swells swell_side^d as much
 param dome;                   # the look's dome, in radii of the tip: where rings and pads' daughters sit
+param pit;                    # the look's pit: how far the apex sinks below the dome's rim, in radii of the tip
 # Flowers and fruit.
 param bloom_age;              # the plant's first year in flower
 param flowers;                # flowers, buds and fruit in a ring round each column's tip
@@ -334,7 +335,8 @@ interpret Ri(k, m, r, d) : m > 1 ->
     Ri(k + floor(m / 4) + floor((m + 1) / 4), floor((m + 2) / 4), r, d)
     Ri(k + floor(m / 4) + floor((m + 1) / 4) + floor((m + 2) / 4), floor((m + 3) / 4), r, d);
 interpret Ri(k, m, r, d) : m == 1 && k < flowers ->
-    [ /(k * 360 / flowers + uniform(-12, 12)) f(-d * (1 - cos(rad(ring_angle))))
+    [ /(k * 360 / flowers + uniform(-12, 12))
+      f(-d * (1 - cos(rad(ring_angle))) - pit * r * cos(rad(ring_angle)) * cos(rad(ring_angle)))
       &(90) f(r * sin(rad(ring_angle))) ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ];
 interpret Fo : rand(1) < bud_share -> bud(bud_size * uniform(0.8, 1.2));
 interpret Fo : rand(1) < bud_share + fruit_share && (dioecious < 0.5 || sex >= 0.5) -> fruit(fruit_size * uniform(0.85, 1.15));
@@ -442,6 +444,8 @@ interpret Cf ->
 # degrees farther down the dome per ring and turned half a place.
 interpret Ri(k, m, r, d) : m == 1 ->
     [ /((k + 0.5 * floor(k / flowers)) * 360 / flowers + uniform(-12, 12))
-      f(-d * (1 - cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step)))))
+      f(-d * (1 - cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step))))
+        - pit * r * cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step)))
+          * cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step))))
       &(90) f(r * sin(rad(min(90, ring_angle + floor(k / flowers) * ring_step))))
       ^(90 - flower_angle * uniform(0.8, 1.2)) fruit(fruit_size * uniform(0.85, 1.15)) ];

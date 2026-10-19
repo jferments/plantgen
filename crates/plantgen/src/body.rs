@@ -73,6 +73,12 @@ pub struct BodyLook {
     /// broad shoulder under a flatter top.
     #[serde(skip_serializing_if = "is_round")]
     pub shoulder: f64,
+    /// How deep the apex sinks below the dome's rim, in radii of the tip:
+    /// 0 none, as most stems; a peyote's top dips to a pit at its centre,
+    /// where its areoles form (Flora of North America's Lophophora, 'with
+    /// a recessed apex').
+    #[serde(skip_serializing_if = "is_zero")]
+    pub pit: f64,
     /// Length of a rounded base, in radii of the foot: 0 leaves the foot
     /// open, as a stem standing in the ground; a joint of a cholla or a
     /// prickly pear's pad is rounded at both ends.
@@ -105,6 +111,7 @@ impl Default for BodyLook {
             flatten: 1.0,
             dome: 1.0,
             shoulder: 2.0,
+            pit: 0.0,
             base: 0.0,
             ribs: None,
             tubercles: None,
@@ -248,6 +255,10 @@ pub struct SpineSet {
     /// How far its tip turns back as a hook: a fishhook's 120 to 180,
     /// curled over the last eighth or so of its length.
     pub hook: f64,
+    /// How far a flattened spine's cross-section turns about its length
+    /// from base to tip, degrees: a twisted spine's ribbon.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub twist: f64,
     /// How far the set keeps to the upper areoles of its segment, 0 to 1:
     /// at 0 every areole carries the whole set; a pad's or joint's lower
     /// areoles carry a share `1 - 2 distal (1 - along)` of it, so at 0.5
@@ -307,6 +318,7 @@ impl Default for SpineSet {
             length_spread: 0.2,
             curve: 0.0,
             hook: 0.0,
+            twist: 0.0,
             distal: 0.0,
             width: 0.0006,
             flat: 1.0,
@@ -460,6 +472,7 @@ impl BodyLook {
         within("flatten", self.flatten, 0.05, 1.0)?;
         within("dome", self.dome, 0.05, 4.0)?;
         within("shoulder", self.shoulder, 1.0, 4.0)?;
+        within("pit", self.pit, 0.0, 1.5)?;
         within("base", self.base, 0.0, 4.0)?;
         if let Some(ribs) = &self.ribs {
             let [low, high] = ribs.count;
@@ -518,6 +531,7 @@ impl BodyLook {
             within("spines length_spread", set.length_spread, 0.0, 0.9)?;
             within("spines curve", set.curve, -180.0, 180.0)?;
             within("spines hook", set.hook, 0.0, 270.0)?;
+            within("spines twist", set.twist, -720.0, 720.0)?;
             within("spines distal", set.distal, 0.0, 1.0)?;
             within("spines width", set.width, 0.000_05, 0.01)?;
             within("spines flat", set.flat, 0.05, 1.0)?;
@@ -902,6 +916,8 @@ struct Centreline {
     base: f64,
     /// The dome's exponent ([`BodyLook::shoulder`]).
     shoulder: f64,
+    /// How deep the apex sinks, in radii ([`BodyLook::pit`]).
+    pit: f64,
 }
 
 impl Centreline {
@@ -1043,6 +1059,7 @@ impl Centreline {
             dome,
             base,
             shoulder: look.shoulder,
+            pit: look.pit,
         })
     }
 
@@ -1088,6 +1105,17 @@ impl Centreline {
             cap *= math::sqrt((1.0 - x * x).max(0.0));
         }
         cap
+    }
+
+    /// How far the surface at `s` sinks back down the axis into the
+    /// apex's pit: nothing at the dome's rim, the pit's whole depth at its
+    /// centre, so a deep pit's centre lies below the rim.
+    fn sunk(&self, s: f64) -> f64 {
+        if self.pit <= 0.0 || self.dome <= 0.0 || s <= self.length - self.dome {
+            return 0.0;
+        }
+        let cap = self.cap(s);
+        self.pit * self.at(s).radius * (1.0 - cap * cap)
     }
 
     /// The body's radius at `s`, dome and base included: its ribs' crests.
@@ -1380,7 +1408,7 @@ impl Surface<'_> {
             self.wool * apex_wool(self.line, s) * (1.0 - cap * cap).max(0.0).sqrt()
         } else {
             0.0
-        };
+        } - self.line.sunk(s);
         station.point
             + station.tangent * lift
             + station.across * (radius * math::cos(t))
@@ -1584,14 +1612,18 @@ fn rib_sites(line: &Centreline, surface: &Surface<'_>, spacing: f64, id: u64) ->
 }
 
 /// How much of the woolly cap lies at `s`: 1 at the tip, falling to 0
-/// halfway down the dome.
+/// where the dome is [`WOOL_REACH`] of the tip's radius wide, so the wool
+/// covers the apical region, whatever the dome's height or shoulder, and
+/// not the whole top of a rounded or broad stem.
 fn apex_wool(line: &Centreline, s: f64) -> f64 {
     if line.dome <= 0.0 || s <= line.length - line.dome {
         return 0.0;
     }
-    let x = ((s - (line.length - line.dome)) / line.dome).min(1.0);
-    math::smoothstep(0.5, 1.0, x)
+    1.0 - math::smoothstep(0.5 * WOOL_REACH, WOOL_REACH, line.cap(s))
 }
+
+/// How far out the woolly cap reaches, a share of the tip's radius.
+const WOOL_REACH: f64 = 0.6;
 
 /// Least share of an areole's spacing at the apex.
 const APEX_CROWDING: f64 = 0.35;
@@ -2584,6 +2616,43 @@ mod tests {
     }
 
     #[test]
+    fn a_pit_sinks_the_apex_below_the_rim() {
+        let graph = column(1.0, 0.2, 2);
+        let flat = BodyLook {
+            dome: 0.35,
+            shoulder: 3.5,
+            ..ribbed()
+        };
+        let pitted = BodyLook {
+            pit: 0.6,
+            ..flat.clone()
+        };
+        pitted.validate().unwrap();
+        let top = |out: &PlantMesh, near_axis: bool| {
+            out.wood
+                .positions
+                .iter()
+                .filter(|p| (f64::from(p[0]).hypot(f64::from(p[2])) < 0.02) == near_axis)
+                .map(|p| f64::from(p[1]))
+                .fold(f64::MIN, f64::max)
+        };
+        let (plain, sunk) = (mesh(&graph, &flat, 0), mesh(&graph, &pitted, 0));
+        assert!(
+            top(&plain, true) > 0.99,
+            "a flat top's centre is its highest"
+        );
+        let (centre, rim) = (top(&sunk, true), top(&sunk, false));
+        assert!(
+            centre < rim - 0.03,
+            "the centre {centre} sinks below the rim {rim}"
+        );
+        assert!(
+            (centre - (1.0 - 0.6 * 0.2)).abs() < 0.02,
+            "the pit's depth: {centre}"
+        );
+    }
+
+    #[test]
     fn areoles_crowd_over_the_dome_and_wool_caps_the_apex() {
         let graph = column(1.0, 0.2, 2);
         let look = ribbed();
@@ -2645,6 +2714,17 @@ mod tests {
             "the cap's top is {off_axis} m off the axis"
         );
         assert!(f64::from(highest[1]) > 1.01, "the wool raises the tip");
+        // The wool keeps to the apical region: none of the felt's colour on
+        // the dome farther out than WOOL_REACH of the radius.
+        let farthest = capped
+            .wood
+            .positions
+            .iter()
+            .zip(&capped.wood.colors)
+            .filter(|(p, colour)| p[1] > 0.8 && (colour[0] - woolly.areoles.felt[0]).abs() < 0.02)
+            .map(|(p, _)| f64::from(p[0]).hypot(f64::from(p[2])))
+            .fold(0.0, f64::max);
+        assert!(farthest < WOOL_REACH * 0.2 * 1.1, "wool {farthest} m out");
     }
 
     #[test]
