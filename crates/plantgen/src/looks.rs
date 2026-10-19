@@ -3491,6 +3491,29 @@ pub struct Inflorescence {
     /// unless set.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub spathe_colour: Option<[f32; 3]>,
+    /// An involucre: this many bracts, 0 to 24, in a ring round the axis
+    /// at the foot of the lowest unit (an umbel's involucre, a four
+    /// o'clock's calyx-like cup of five); none (0) unless set. Only the
+    /// cluster's own axis bears one.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub involucre: Option<u32>,
+    /// Each involucral bract's length, a share of the axis, 0.005 to 3;
+    /// 0.3.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub involucre_length: Option<f64>,
+    /// Degrees the involucral bracts spread from the axis, 0 to 120; 60.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub involucre_spread: Option<f64>,
+    /// What the involucral and floral bracts are, as a flora names them:
+    /// green and leafy (in the stalks' colour, the default), showy like
+    /// petals (in the look's colour), or small dry scales.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub involucre_form: Option<crate::clusters::BractForm>,
+    /// A floral bract under each unit, where its pedicel leaves the axis
+    /// (a saltcedar's raceme's scale under each flower), as long as this
+    /// share of the axis, 0 to 3; none (0) unless set.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub floral_bract: Option<f64>,
 }
 
 impl Shape {
@@ -3770,7 +3793,7 @@ impl Shape {
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Simple(s) => {
-                check("width", s.width, 0.03, 1.5)?;
+                check("width", s.width, 0.005, 1.5)?;
                 let default = Simple::default();
                 outline(
                     self.name(),
@@ -3820,7 +3843,7 @@ impl Shape {
                 count("twigs", s.twigs, 0, 12)?;
                 check("angle", s.angle, 20.0, 80.0)?;
                 check("stalk", s.stalk, 0.0, 0.4)?;
-                check("width", s.width, 0.03, 1.5)?;
+                check("width", s.width, 0.005, 1.5)?;
                 let default = Sprig::default();
                 outline(
                     self.name(),

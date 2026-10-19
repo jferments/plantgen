@@ -1704,6 +1704,15 @@
       "range": [0.001, 2],
       "why": "the longest of those bracts, from its foot to its tip, a spathe's sheath included"
     },
+    "floral_bract_length_m": {
+      "group": "flowers",
+      "organ": "inflorescence_bract",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.5],
+      "optional": true,
+      "why": "the bract under each flower of a cluster, where its stalk leaves the axis (a saltcedar's raceme's scales): its length from its foot to its tip"
+    },
     "flower_colour": {
       "group": "flowers",
       "organ": "flower",

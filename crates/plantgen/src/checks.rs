@@ -159,7 +159,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 43] = [
+pub const SIZES: [(&str, Judged); 44] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -178,6 +178,7 @@ pub const SIZES: [(&str, Judged); 43] = [
     ("inflorescence_length_m", Judged::Organs),
     ("peduncle_length_m", Judged::Organs),
     ("bract_length_m", Judged::Organs),
+    ("floral_bract_length_m", Judged::Organs),
     ("flower_size_m", Judged::Organs),
     ("spur_length_m", Judged::Organs),
     ("involucre_diameter_m", Judged::Organs),
@@ -2497,15 +2498,31 @@ fn reproductive(
                 0,
                 u32::try_from(layout.units.len()).unwrap_or(u32::MAX),
             );
+            // Its bracts at its foot, a spathe or an involucre: a unit's
+            // own floral bract is no inflorescence bract.
+            let bracts: Vec<&crate::clusters::Sheet> = layout
+                .sheets
+                .iter()
+                .filter(|sheet| !matches!(sheet.kind, crate::clusters::SheetKind::Floral(_)))
+                .collect();
             tally.count(
                 "inflorescence_bracts",
                 organ.id,
                 0,
-                u32::try_from(layout.sheets.len()).unwrap_or(u32::MAX),
+                u32::try_from(bracts.len()).unwrap_or(u32::MAX),
             );
-            for (index, sheet) in (0_u32..).zip(&layout.sheets) {
+            for (index, sheet) in (0_u32..).zip(&bracts) {
                 tally.add("bract_length_m", organ.id, index, organ.size * sheet.length);
-                tally.kind("bract_form", "spathe");
+                tally.kind("bract_form", sheet.kind.form());
+            }
+            for (index, sheet) in (0_u32..).zip(
+                layout
+                    .sheets
+                    .iter()
+                    .filter(|sheet| matches!(sheet.kind, crate::clusters::SheetKind::Floral(_))),
+            ) {
+                tally.add("floral_bract_length_m", organ.id, index, organ.size * sheet.length);
+                tally.kind("bract_form", sheet.kind.form());
             }
             if matches!(
                 cluster.cluster.kind,
@@ -2611,7 +2628,12 @@ fn cluster_kinds(
         ClusterKind::Raceme | ClusterKind::Spike | ClusterKind::Catkin | ClusterKind::Corymb
     ) && cluster.cluster.branches == 0
         && (2..=cluster.cluster.per_node.clamp(1, 8) as usize).contains(&layout.units.len());
-    let kind = if cluster.cluster.kind == ClusterKind::Spike && !layout.sheets.is_empty() {
+    let kind = if cluster.cluster.kind == ClusterKind::Spike
+        && layout
+            .sheets
+            .iter()
+            .any(|sheet| sheet.kind == crate::clusters::SheetKind::Spathe)
+    {
         "spadix".to_owned()
     } else if one_node {
         format!("{}|cyme|umbel", cluster.cluster.kind.name())

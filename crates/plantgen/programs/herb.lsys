@@ -126,12 +126,25 @@
 # turned out to its sides in one plane, and over its other nodes turns up
 # by rise degrees in all, so its tip and raceme stand nearly upright,
 # each turn upward in the frame the stem lay in, whatever the nodes'
-# divergence has rolled it to since.
-# With lie 0, as every lineage gives it, a herb grows as before.
+# divergence has rolled it to since (revision 16 keeps the leaves'
+# arrangement on it). With lie 0, as every lineage gives it, a herb grows
+# as before.
+#
+# Revision 16: a flowering stem may outlive its year. With stem_persists
+# 1 (a herb woody at the base: an ice plant's trailing stems, a
+# rougeplant's) it stays leaf_years as a stem bearing leaves only does,
+# flowering again each year, so an evergreen subshrub keeps its leaves
+# through winter on every stem. With stem_persists 0, as every program
+# gives it unless a rule says otherwise, a herb grows as before. A lying
+# stem's leaves (lie above 0) keep its arrangement: each node's leaves
+# turn to alternate sides by half their divergence from straight up, so
+# a spiral's leaves turn 137.5 degrees from one node to the next while
+# staying above the ground, and a pair crosses the one before, its lower
+# leaf pressed forward along the stem.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 15;
+lsystem herb 16;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -140,6 +153,7 @@ param clump_radius;           # radius a mature clump's stems spread over
 param stem_lean;              # how far the outermost stems lean out
 param maturity;               # years over which stems reach full size
 param leaf_years = 1;         # years a basal leaf, or a stem bearing leaves only, stays on: more than 1 for evergreens
+param stem_persists = 0;      # 1: a flowering stem stays leaf_years too (a herb woody at the base)
 param adult_age;              # the first year the plant is adult and flowers
 # A stem.
 param stem_height;            # stem height at maturity, raceme included
@@ -246,6 +260,7 @@ module Lq(q, g);                 # the leaves at a node at height share q; g > 0
 module Lz(s, g);                 # those leaves, the longest s long
 module Sd(i, h);                 # a side shoot from the axil of main-stem node i
 module Pd(len);                  # a flower's or bud's stalk len long, arching toward flower_tilt
+module Ly(g, s);                 # the leaves at one node, g > 0 on a lying stem
 
 organ leaf leaf area leaf_area;
 organ basal leaf as piece area basal_area;
@@ -332,8 +347,8 @@ decompose Nd(i, m, h, r) : m == 1 ->
     ^(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 0 : 1)) +(gauss() * wiggle * (lie > 0 && i < round(lie * nodes) ? 3 : 1))
     !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
     F(h * (1 - r) * (1 - bare) / nodes)
-    /(lie > 0 && i < round(lie * nodes) ? 90 : 0)
-    Lf(leaf_length * (1 - exp(-t / maturity))
+    /(lie > 0 && i < round(lie * nodes) ? (i - 2 * floor(i / 2) < 0.5 ? 1 : -1) * (180 - divergence / 2) : 0)
+    Ly(lie > 0 && i < round(lie * nodes) ? 1 : 0, leaf_length * (1 - exp(-t / maturity))
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
@@ -342,7 +357,7 @@ decompose Nd(i, m, h, r) : m == 1 ->
        * ((i + 0.5) / nodes < leaf_peak
           ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
           : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
-    /(lie > 0 && i < round(lie * nodes) ? (leaves_per_node == 2 ? -90 : 90) : divergence);
+    /(lie > 0 && i < round(lie * nodes) ? -(i - 2 * floor(i / 2) < 0.5 ? 1 : -1) * (180 - divergence / 2) : divergence);
 decompose Nd(i, m, h, r) -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
@@ -407,9 +422,9 @@ decompose Pd(len) : flower_tilt > 0 ->
     F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1) F(len * 0.1);
 decompose Pd(len) -> F(len);
 
-# Last year's flowering stems are gone; their basal leaves, and stems
-# bearing leaves only, stay leaf_years.
-rule Sw(r) : r > 0 -> %;
+# Last year's flowering stems are gone, unless they persist; their basal
+# leaves, and stems bearing leaves only, stay leaf_years.
+rule Sw(r) : r > 0 && stem_persists < 0.5 -> %;
 rule Sm : age + dt >= leaf_years -> %;
 
 # The sympodium (revision 13). Its rules come last so the draws of the
@@ -473,3 +488,12 @@ decompose Sd(i, h) : t >= adult_age && i >= first_leaves - side_shoots ->
            * pow(unit_shrink, max(0, units - side_units)) / cos(rad(forks > 1.5 ? fork_angle : 0)),
          stem_radius * 0.55, h) ];
 decompose Sd(i, h) -> ;
+
+# A lying stem's leaves (revision 16): a pair crosses the one before, as
+# its flora's decussate pairs do, its upper leaf rising at leaf_angle and
+# its lower one pressed forward along the stem over the ground, not into
+# it; single leaves and whorls stand as on an upright stem. It draws
+# nothing at random, so no herb's draws move.
+decompose Ly(g, s) : g > 0 && leaves_per_node == 2 ->
+    [ &(leaf_angle) $ leaf(s) ] /(180) [ &(leaf_angle * 0.15) $ leaf(s) ];
+decompose Ly(g, s) -> Lf(s);
