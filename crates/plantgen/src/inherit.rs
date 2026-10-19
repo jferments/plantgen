@@ -2903,9 +2903,18 @@ impl Ruled<'_> {
                             picked_reads(key, table, &picks)?
                         }
                         // Its states tie for the most usual, or none says
-                        // how often: a map with an `else` gives that, and
-                        // reads what its `else` reads.
-                        Err(_) if self.rule.contains_key("else") => else_reads(self.rule),
+                        // how often: a map with an `else` gives that. An
+                        // `else` formula reads its names; an `else` map
+                        // reads nothing more, so its trait goes unread and
+                        // a tie on the outer trait draws as a plant stating
+                        // neither (a family's flowers half regular, half not,
+                        // draw regular).
+                        Err(_) if self.rule.contains_key("else") => self
+                            .rule
+                            .get("else")
+                            .and_then(map_formula)
+                            .map(|_| else_reads(self.rule))
+                            .unwrap_or_default(),
                         Err(why) => return Err(why),
                     }
                 }
