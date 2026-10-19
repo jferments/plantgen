@@ -55,9 +55,15 @@
 # half is male and bears no fruit. The rest are female and fruit as
 # before; so does a plant that bears both sexes (dioecious 0).
 #
+# Revision 7 (opposite leaves): a node bears leaves_per_node leaves, which
+# the rules at the vascular plants set from the taxon's leaf_arrangement:
+# one, as before, or a pair (2) on opposite sides of the stem, as a
+# honeysuckle's. The pair's internode is the program's last rule, so a
+# single leaf's node keeps its draws and no species renumbers.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem climber 6;
+lsystem climber 7;
 
 param vigour_spread;
 param shoots;                 # stems from the foot
@@ -79,6 +85,7 @@ param max_order;
 param leaf_size;
 param leaf_angle;
 param divergence;             # roll from one node to the next
+param leaves_per_node;        # leaves at a node: 1, or 2 (a pair, opposite)
 param leaf_years;
 param renew;                  # chance a year that an old node leafs again
 param adult_age;              # the first year the plant is adult and fruits
@@ -132,14 +139,15 @@ rule A(o, h, a) ->
     M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, t >= adult_age ? 1 : 0)
     A(o, h + dt, 0);
 
-# One internode with its leaf, and perhaps a side shoot or fruit.
-decompose M(n, o, w) : n > 0 ->
+# One internode with its leaf, and perhaps a side shoot or fruit; a leaf
+# pair's internode is at the end, so the draws here keep their sites.
+decompose M(n, o, w) : n > 0 && leaves_per_node < 2 ->
     F(internode) /(divergence + gauss() * 10)
     [ &(leaf_angle) $ leaf(leaf_size * uniform(0.85, 1.15)) ]
     [ /(180) Lb ]
     Mb(o, w)
     M(n - 1, o, w);
-decompose M(n, o, w) -> ;
+decompose M(n, o, w) : n <= 0 -> ;
 module Mb(o, w);              # what a node may carry besides its leaf
 module Lb;                    # a node's bud, which may leaf again
 decompose Mb(o, w) : o < max_order && rand() < branch_chance ->
@@ -156,3 +164,13 @@ rule S : age > 1 && ntip == 0 -> %;
 
 # An old node leafs again.
 rule Lb : age >= 1 && rand() < renew * dt -> [ &(leaf_angle) $ leaf(leaf_size * uniform(0.8, 1.1)) ] Lb;
+
+# An internode with its pair of opposite leaves (revision 7), last in the
+# program so every draw above keeps its site.
+decompose M(n, o, w) : n > 0 && leaves_per_node >= 2 ->
+    F(internode) /(divergence + gauss() * 10)
+    [ &(leaf_angle) $ leaf(leaf_size * uniform(0.85, 1.15)) ]
+    [ /(180) &(leaf_angle) $ leaf(leaf_size * uniform(0.85, 1.15)) ]
+    [ /(90) Lb ]
+    Mb(o, w)
+    M(n - 1, o, w);

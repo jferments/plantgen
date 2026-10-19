@@ -929,4 +929,10 @@ pub mod venation;
 /// size on its petiole length, and young twigs in its colour, in place of
 /// hand-sized sprig cards; the fig's path_half is refitted to its height
 /// (135 is nightshades round 4, #227).
-pub const GENERATOR_REVISION: u32 = 136;
+/// 137: ten Pacific Northwest natives in families short of three species
+/// (giant chain fern, licorice fern, scouring rush, fringecup, western dog
+/// violet, California poppy, blueblossom, spreading gooseberry, bush
+/// penstemon, orange honeysuckle); a climber bears its leaves in opposite
+/// pairs where its taxon states them so (climber program revision 7) (136 is single
+/// leaves for cottonwood and fig, #232).
+pub const GENERATOR_REVISION: u32 = 137;
