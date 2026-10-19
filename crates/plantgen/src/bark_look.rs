@@ -1049,11 +1049,17 @@ impl Marks {
         let reach = reach_cells.min(6.0) as i64;
         #[allow(clippy::cast_possible_truncation)]
         let (gx, gy) = (libm::floor(x / cw) as i64, libm::floor(y / cw) as i64);
+        // On a tile smaller than a mark's share of bark (a twig's), only
+        // some cells hold one, so the density stays per_m2.
+        let share = (self.per_m2 * cw * cw).min(1.0);
         let mut best: Option<f64> = None;
         for dy in -reach..=reach {
             for dx in -reach..=reach {
                 let (i, j) = (gx + dx, gy + dy);
                 let id = wrap(i, n) * 65_537 + wrap(j, n);
+                if draws.unit(id, 4) >= share {
+                    continue;
+                }
                 #[allow(clippy::cast_precision_loss)]
                 let px = (i as f64 + draws.unit(id, 1)) * cw;
                 let row_offset = if self.rows {
@@ -1304,6 +1310,16 @@ pub fn probe(size: usize, period: f64, up: bool) -> Tile {
 #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
 fn whole(x: f64) -> usize {
     x.max(0.0) as usize
+}
+
+/// The tile period for a stem `diameter` metres across, near `wanted`:
+/// the stem's circumference over a whole number of tiles, so the tile
+/// wraps round it unstretched, and on stems thinner than `wanted / π` the
+/// circumference itself.
+#[must_use]
+pub fn period_for(diameter: f64, wanted: f64) -> f64 {
+    let circumference = core::f64::consts::PI * diameter;
+    circumference / libm::round(circumference / wanted).max(1.0)
 }
 
 /// A length of trunk `diameter` metres across and `length` long, drawn

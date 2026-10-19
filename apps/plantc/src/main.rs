@@ -314,6 +314,7 @@ Usage:
       or with `--looks litter` the 23 canopy species' litters: each look's
       colour above its relief.
   plantc bark --look FILE.json --out DIR [--size N] [--period M] [--seed N]
+      (each stage's tile wraps its stem a whole number of times, near M)
   plantc bark --probe up|round --out DIR [--size N] [--period M]
       Draw a bark look (the bark language's drawing record) stage by
       stage, each at a diameter typical of it, as tiles repeating every
@@ -3194,6 +3195,7 @@ fn bark_command(args: &[String]) -> Result<(), Failure> {
         look.stages.len()
     );
     for (index, (stage, diameter)) in look.stages.iter().zip(look.typical_diameters()).enumerate() {
+        let period = bark_look::period_for(diameter, period);
         let tile = bark_look::bake(&look, stage, diameter, size, period, seed);
         let stem = format!("{}-{index}-{}", look.id, stage.name);
         write(
@@ -3247,9 +3249,10 @@ fn bark_command(args: &[String]) -> Result<(), Failure> {
         let (low, high) = tile.relief();
         let [r, g, b] = tile.mean_albedo().map(plantgen::texture::linear_to_srgb);
         out!(
-            "  {index} {:<14} at {:>5.0} cm: bark {:>5.1} mm thick, relief {:>5.1} mm, mean colour sRGB {r} {g} {b}",
+            "  {index} {:<14} at {:>5.0} cm: tile {:>4.0} mm, bark {:>5.1} mm thick, relief {:>5.1} mm, mean colour sRGB {r} {g} {b}",
             stage.name,
             diameter * 100.0,
+            period * 1000.0,
             tile.thickness_m * 1000.0,
             (high - low) * 1000.0
         );
