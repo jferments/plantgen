@@ -1,19 +1,25 @@
 //! PlantLab's window: one plant on its ground patch, a camera that orbits
-//! it, and around it the Studio ([`shell`]): a top bar, a rail of panels
-//! that dock beside the view, a status bar, the command palette and the
-//! settings, or the Overlay, where the plant fills the window.
+//! it, and around it the Studio ([`shell`]): a top bar, the library
+//! browser at the left (every species by group, order, family and genus,
+//! with search), the inspector at the right (the render's settings, the
+//! readings, pictures, the spec and the bark), a status bar, the command
+//! palette and the settings; or the Overlay, where the plant fills the
+//! window.
 //!
-//! The interface only queues commands ([`command`]); a change of what
-//! grows regrows the plant on a worker thread
-//! ([`plantlab_scene::build_watched`], PlantGen's own growth). A growth
-//! can be started, paused and stopped, shows its progress, and can show
-//! the plant growing: every N steps the worker draws the plant as it
-//! stands and the window puts it on screen. Otherwise the old plant stays
-//! until the new one is ready. Nothing about the plant is computed here.
+//! Choosing a species grows nothing: the view shows the species' last
+//! render, kept on disk ([`store`]), and takes up the settings it was made
+//! with. **Generate** grows the plant on a worker thread
+//! ([`plantlab_scene::build_watched`], PlantGen's own growth), or, when
+//! only the day, the detail or the level changed, draws the plant already
+//! grown again ([`plantlab_scene::dress`]), which is much quicker. The
+//! view and the look change what is on screen at once. A growth can be
+//! paused and stopped, shows its progress, and can show the plant growing:
+//! every N steps the worker draws the plant as it stands.
 //!
-//! Around it: a measuring grid and a height ruler ([`crate::measure`]),
-//! how big the plant would be as a file, and snapshots and growth
-//! animations ([`crate::record`]).
+//! The interface only queues commands ([`command`]). Nothing about the
+//! plant is computed here. Around it: a measuring grid and a height ruler
+//! ([`crate::measure`]), how big the plant would be as a file, and
+//! snapshots and growth animations ([`crate::record`]).
 
 use std::fmt::Write as _;
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
@@ -34,8 +40,7 @@ use bevy_egui::{
     PrimaryEguiContext,
 };
 use plantgen::library::Library;
-use plantgen::quality;
-use plantlab_scene::{Look, Progress, Scene, Shot, View, Viewer};
+use plantlab_scene::{Look, Progress, Scene, Shot, Track, View, Viewer};
 
 use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
 
@@ -46,13 +51,18 @@ use crate::render::{
 };
 use plantlab_ui::theme;
 
+mod browser;
+mod catalogue;
 mod command;
 mod panels;
 mod readings;
 mod shell;
+mod store;
 
 use crate::settings::{Key, Settings};
+use catalogue::Catalogue;
 use command::{Command, Panel, Shell};
+use store::{Kept, Recipe, Store};
 
 /// How `plantlab open` starts the window.
 #[allow(clippy::struct_excessive_bools, reason = "the command's switches")]
@@ -73,51 +83,46 @@ pub struct Options {
     pub plant_only: Option<bool>,
     /// The window's size, logical pixels.
     pub size: (u32, u32),
-    /// The panels open at the start, left to right.
+    /// The inspector's page at the start (`render`, `readings`, …).
     pub panels: Vec<String>,
     /// Start in the Overlay.
     pub overlay: bool,
     /// The settings file; `None` for the default place.
     pub settings: Option<std::path::PathBuf>,
+    /// Where the last renders are kept; `None` for the default place.
+    pub renders: Option<std::path::PathBuf>,
+    /// Generate the first plant at once, as the window opens.
+    pub generate: bool,
     /// Save a picture of the window and close it: once the plant has
     /// grown, or after this many seconds.
     pub capture: Option<(std::path::PathBuf, Option<f64>)>,
 }
 
-/// What the panel chose, and what is on screen.
+/// What the inspector chose, and what is on screen.
 #[derive(Resource)]
-#[allow(clippy::struct_excessive_bools, reason = "the panel's switches")]
+#[allow(clippy::struct_excessive_bools, reason = "the window's switches")]
 struct Lab {
     /// The 3D view's width over its height, so framing fits the plant
     /// into the view the docks leave.
     aspect: f64,
-    species: Vec<String>,
-    /// Index into `species`.
-    chosen: usize,
-    /// Plant age, years; `None` until the species' keyframes are known.
-    age: Option<f64>,
-    /// The age `--age` asked for, used once.
-    asked_age: Option<f64>,
-    oldest: f64,
-    day: f64,
-    level: usize,
-    draft: bool,
-    look: Look,
-    view: View,
-    /// The settings changed since the last growth started.
-    dirty: bool,
-    /// Grow again whenever the settings change; otherwise only on "Grow".
-    auto: bool,
-    /// "Grow" was pressed.
+    catalogue: Catalogue,
+    /// The species chosen, by id: what Generate grows.
+    chosen: String,
+    /// What the window knows of the chosen species.
+    about: About,
+    /// The settings the next render is made with.
+    recipe: Recipe,
+    /// "Generate" was pressed.
     go: bool,
     /// Show the plant growing, drawn every `every` steps.
     live: bool,
     every: u32,
     /// Move the camera with the plant as it grows.
     follow: bool,
-    /// The worker growing the plant: its own thread, since Bevy compiles
-    /// shaders on its async task pool and a long growth there starves it.
-    growing: Option<std::thread::JoinHandle<Grown>>,
+    /// The worker growing or drawing the plant: its own thread, since Bevy
+    /// compiles shaders on its async task pool and a long growth there
+    /// starves it.
+    growing: Option<Job>,
     /// Shared with the growing worker.
     control: Arc<Control>,
     started: Instant,
@@ -130,16 +135,82 @@ struct Lab {
     message: String,
     /// The camera should frame the next plant shown.
     reframe: bool,
-    /// Frame the plant on screen again now ("Reset camera").
+    /// Frame the plant on screen again now ("Frame the plant again").
     reset_camera: bool,
+    /// Look at the plant on screen from the recipe's view now.
+    refit: bool,
+    /// The camera framed a live frame: fit the grown plant when it comes.
+    settle: bool,
+    /// Show the plant on screen in the recipe's look now.
+    restyle: bool,
     /// The measures on the ground and beside the plant.
     grid: bool,
     ruler: bool,
+    /// The last renders, kept on disk.
+    store: Store,
+    /// Playing the year: the month shown, while it plays.
+    year: Option<usize>,
+    /// Species chosen lately, newest first.
+    recent: Vec<String>,
+}
+
+/// What the window knows of a species before it grows: its keyframes,
+/// seeds, typical site and seasons, from its spec.
+#[derive(Debug, Clone, Default)]
+struct About {
+    /// Keyframe ages, oldest last.
+    keyframes: Vec<f64>,
+    oldest: f64,
+    /// The spec's seeds, the first the typical plant's.
+    seeds: Vec<u64>,
+    /// Its typical site, as a word.
+    typical: String,
+    /// Each seasonal organ's year.
+    year: Vec<Track>,
+    /// Why the spec did not load; empty when it did.
+    error: String,
+}
+
+impl About {
+    fn of(id: &str) -> Self {
+        let library = Library::builtin();
+        match library.spec(id) {
+            Ok(spec) => {
+                let mut keyframes = spec.growth.keyframes.clone();
+                keyframes.sort_by(f64::total_cmp);
+                keyframes.dedup();
+                let typical = plantgen::drawing::typical_environment(&spec, library)
+                    .name()
+                    .to_owned();
+                Self {
+                    oldest: keyframes.last().copied().unwrap_or(1.0),
+                    keyframes,
+                    seeds: spec.variants.seeds.clone(),
+                    typical,
+                    year: plantlab_scene::year(&spec),
+                    error: String::new(),
+                }
+            }
+            Err(error) => Self {
+                oldest: 1.0,
+                error: error.to_string(),
+                ..Self::default()
+            },
+        }
+    }
+}
+
+/// A plant being grown, or drawn again from one already grown.
+struct Job {
+    handle: std::thread::JoinHandle<Grown>,
+    /// Drawn again from the plant on screen, not grown.
+    redraw: bool,
 }
 
 struct Grown {
     result: Result<Scene, String>,
     shot: Shot,
+    recipe: Recipe,
 }
 
 /// What the window and a growing worker share: the buttons one way, the
@@ -201,11 +272,83 @@ impl Viewer for Watcher {
 struct Shown {
     scene: Scene,
     shot: Shot,
+    /// The settings it was made with.
+    recipe: Recipe,
     entities: Vec<Entity>,
     seconds: f64,
     /// A live frame of a plant still growing.
     live: bool,
+    /// When it went on screen.
+    at: Instant,
 }
+
+impl Lab {
+    /// Whether the plant on screen is the chosen species'.
+    fn shows_chosen(&self) -> bool {
+        self.shown
+            .as_ref()
+            .is_some_and(|shown| shown.scene.facts.species == self.chosen)
+    }
+
+    /// The settings changed since the plant on screen was made, when it is
+    /// the chosen species'.
+    fn changes(&self) -> Vec<store::Setting> {
+        match &self.shown {
+            Some(shown) if self.shows_chosen() && !shown.live => self.recipe.changes(&shown.recipe),
+            _ => Vec::new(),
+        }
+    }
+
+    /// Whether Generate would only draw the plant on screen again: the
+    /// chosen species, grown as the recipe says, and kept.
+    fn redraws(&self) -> bool {
+        self.shows_chosen()
+            && self.shown.as_ref().is_some_and(|shown| {
+                !shown.live
+                    && shown.scene.growth.is_some()
+                    && !shown
+                        .recipe
+                        .changes(&self.recipe)
+                        .iter()
+                        .any(|setting| setting.regrows())
+            })
+    }
+
+    /// The age the recipe grows: its own, else the oldest keyframe.
+    fn age(&self) -> f64 {
+        self.recipe.age.unwrap_or(self.about.oldest)
+    }
+
+    /// Choose `id`: what the window shows of it, and the settings of its
+    /// last render, or the current ones grown at its oldest keyframe on
+    /// its typical site.
+    fn choose(&mut self, id: &str) {
+        if self.chosen == id && !self.about.keyframes.is_empty() {
+            return;
+        }
+        id.clone_into(&mut self.chosen);
+        self.about = About::of(id);
+        self.recipe = match self.store.kept.get(id) {
+            Some(kept) => kept.recipe.clone(),
+            None => Recipe {
+                age: None,
+                environment: None,
+                seed: None,
+                ..self.recipe.clone()
+            },
+        };
+        if let Some(age) = self.recipe.age {
+            self.about.oldest = self.about.oldest.max(age);
+        }
+        self.recent.retain(|known| known != id);
+        self.recent.insert(0, id.to_owned());
+        self.recent.truncate(RECENT);
+        self.reframe = true;
+    }
+}
+
+/// Species kept in the recent list.
+const RECENT: usize = 8;
 
 /// The orbiting camera: around `target` moved by `pan`, at `distance`,
 /// turned by `yaw` and raised by `pitch` (radians). Following a growing
@@ -237,9 +380,24 @@ impl Orbit {
         let offset = eye - target;
         self.target = target;
         self.pan = Vec3::ZERO;
+        if let Some(distance) = top_distance(framing) {
+            self.distance = distance;
+            self.yaw = 0.0;
+            self.pitch = TOP_PITCH;
+            return;
+        }
         self.distance = offset.length().max(0.5);
         self.yaw = offset.x.atan2(offset.z);
         self.pitch = (offset.y / self.distance).clamp(-1.0, 1.0).asin();
+    }
+
+    /// Look at a scene's framing from where the camera turns now: its
+    /// target and distance, keeping the turn and any pan.
+    fn fit(&mut self, framing: &plantlab_scene::Framing) {
+        let eye = Vec3::from_array(framing.eye);
+        let target = Vec3::from_array(framing.target);
+        self.target = target;
+        self.distance = top_distance(framing).unwrap_or_else(|| (eye - target).length().max(0.5));
     }
 
     /// Move the centre by a drag of `delta` pixels in a view `pixels` tall
@@ -290,38 +448,46 @@ pub fn run(options: Options) -> Result<(), String> {
         panels,
         overlay,
         settings,
+        renders,
+        generate,
     } = options;
     let library = Library::builtin();
-    let ids: Vec<String> = library
-        .species()
-        .iter()
-        .map(|entry| entry.id.clone())
-        .collect();
-    let chosen = match species.as_deref() {
-        Some(id) => ids
-            .iter()
-            .position(|known| known == id)
-            .ok_or_else(|| format!("`{id}` is not in the library"))?,
-        None => ids
-            .iter()
-            .position(|id| id == "acer-macrophyllum")
-            .unwrap_or(0),
-    };
-    let mut open = Vec::new();
+    let catalogue = Catalogue::of(library);
+    let mut tab = None;
     for name in &panels {
         let panel = Panel::ALL
             .into_iter()
             .find(|panel| panel.short().eq_ignore_ascii_case(name))
             .ok_or_else(|| {
                 let names: Vec<&str> = Panel::ALL.iter().map(|panel| panel.short()).collect();
-                format!("no panel `{name}`; the panels are {}", names.join(", "))
+                format!("no page `{name}`; the pages are {}", names.join(", "))
             })?;
-        open.push(panel);
+        tab = Some(panel);
     }
     let settings = Settings::load(settings.or_else(Settings::default_path));
     if !settings.message.is_empty() {
         eprintln!("{}", settings.message);
     }
+    let known = |id: &str| catalogue.get(id).is_some();
+    let chosen = match species.as_deref() {
+        Some(id) => {
+            let id = library.current(id).unwrap_or(id);
+            if !known(id) {
+                return Err(format!("`{id}` is not in the library"));
+            }
+            id.to_owned()
+        }
+        None => settings
+            .string(Key::Species)
+            .filter(|id| known(id))
+            .map_or_else(|| "acer-macrophyllum".to_owned(), str::to_owned),
+    };
+    let recent: Vec<String> = settings
+        .strings(Key::Recent)
+        .into_iter()
+        .filter(|id| known(id))
+        .take(RECENT)
+        .collect();
     // The flags, else the settings file, else the defaults.
     let live = live.unwrap_or_else(|| {
         if settings.bool(Key::ShowGrowing).unwrap_or(true) {
@@ -335,7 +501,9 @@ pub fn run(options: Options) -> Result<(), String> {
     } else {
         settings.u32(Key::Every).unwrap_or(10)
     };
+    let store = Store::load(renders.or_else(Store::default_folder));
     let mut recording = Recording::new(out);
+    recording.keep_folder.clone_from(&store.folder);
     recording.record = record;
     recording.plant_only = plant_only
         .or(settings.bool(Key::PlantOnly))
@@ -354,44 +522,46 @@ pub fn run(options: Options) -> Result<(), String> {
     if let Some(pngs) = settings.bool(Key::Pngs) {
         recording.pngs = pngs;
     }
-    let lab = Lab {
+    let mut lab = Lab {
         aspect: 1.0,
-        growths: 0,
-        shows: 0,
-        species: ids,
-        chosen,
-        age: None,
-        asked_age: age,
-        oldest: 1.0,
-        day: plantgen::package::DEFAULT_DAY,
-        level: 0,
-        draft: true,
-        look: Look::Review,
-        view: View::ThreeQuarter,
-        dirty: true,
-        auto: settings.bool(Key::GrowOnChange).unwrap_or(true),
-        go: false,
+        catalogue,
+        chosen: String::new(),
+        about: About::default(),
+        recipe: Recipe::default(),
+        go: generate,
         live: live > 0,
         every: every.clamp(1, 100),
         follow: settings.bool(Key::Follow).unwrap_or(true),
         growing: None,
         control: Arc::default(),
         started: Instant::now(),
+        growths: 0,
+        shows: 0,
         shown: None,
         message: String::new(),
         reframe: true,
         reset_camera: false,
+        refit: false,
+        settle: false,
+        restyle: false,
         grid: grid.or(settings.bool(Key::Grid)).unwrap_or(true),
         ruler: ruler.or(settings.bool(Key::Ruler)).unwrap_or(true),
+        store,
+        year: None,
+        recent,
     };
+    lab.choose(&chosen);
+    if let Some(age) = age {
+        lab.recipe.age = Some(age);
+        lab.about.oldest = lab.about.oldest.max(age);
+    }
     let mut shell = Shell::new(settings);
-    if !open.is_empty() {
-        shell.open = open;
+    if let Some(tab) = tab {
+        shell.tab = tab;
+        shell.inspector = true;
     }
-    if overlay {
-        shell.overlay = true;
-        shell.card = shell.open.first().copied();
-    }
+    shell.reveal = true;
+    shell.overlay = overlay;
     let mut app = App::new();
     app.add_plugins(
         DefaultPlugins
@@ -432,6 +602,7 @@ pub fn run(options: Options) -> Result<(), String> {
             (
                 keys,
                 command::apply,
+                play_year,
                 grow,
                 live_frame,
                 show,
@@ -440,6 +611,7 @@ pub fn run(options: Options) -> Result<(), String> {
                 record::follow,
                 record::take,
                 record::keep,
+                kept,
                 readings::gather,
             )
                 .chain(),
@@ -466,16 +638,22 @@ fn backdrop() -> Color {
     Color::srgb_u8(r, g, b)
 }
 
-fn capture(mut commands: Commands, lab: Res<Lab>, mut capture: ResMut<Capture>) {
-    if capture.asked || lab.shown.is_none() {
+fn capture(
+    mut commands: Commands,
+    lab: Res<Lab>,
+    recording: Res<Recording>,
+    mut capture: ResMut<Capture>,
+) {
+    if capture.asked {
         return;
     }
     match capture.after {
         // The window as it is then, the plant perhaps still growing.
         Some(after) if capture.opened.elapsed().as_secs_f64() < after => return,
         Some(_) => capture.frames = 30,
-        // The grown plant, not a live frame of it.
-        None if lab.growing.is_some() => return,
+        // The grown plant, not a live frame of it, once its kept picture
+        // is written; or the window as it opens when nothing grows.
+        None if lab.growing.is_some() || lab.go || recording.working() => return,
         None => {}
     }
     capture.frames += 1;
@@ -564,30 +742,19 @@ fn setup(
     );
 }
 
-/// The species' keyframe ages, oldest last.
-fn keyframes(id: &str) -> Vec<f64> {
-    let mut ages = Library::builtin()
-        .spec(id)
-        .map(|spec| spec.growth.keyframes.clone())
-        .unwrap_or_default();
-    ages.sort_by(f64::total_cmp);
-    ages.dedup();
-    ages
-}
-
-/// The shot the panel's settings describe.
+/// The shot the recipe describes for the chosen species.
 fn shot(lab: &Lab) -> Shot {
-    let mut shot = Shot::thumbnail(&lab.species[lab.chosen]);
-    shot.age = lab.age;
-    shot.day = lab.day;
-    shot.level = lab.level;
-    shot.quality = if lab.draft {
-        quality::DRAFT
-    } else {
-        quality::STANDARD
-    };
-    shot.look = lab.look;
-    shot.view = lab.view;
+    let recipe = &lab.recipe;
+    let mut shot = Shot::thumbnail(&lab.chosen);
+    shot.age = Some(lab.age());
+    shot.day = recipe.day;
+    shot.quality = recipe.detail.quality();
+    shot.parts = recipe.detail.parts();
+    shot.level = if shot.parts { 0 } else { recipe.level };
+    shot.environment = recipe.environment;
+    shot.seed = recipe.seed;
+    shot.look = recipe.look;
+    shot.view = recipe.view;
     shot.aspect = lab.aspect;
     shot
 }
@@ -598,56 +765,116 @@ fn thumbs_command(shot: &Shot) -> String {
     if let Some(age) = shot.age {
         let _ = write!(text, " --age {age}");
     }
+    if let Some(environment) = shot.environment {
+        let _ = write!(text, " --env {}", environment.name());
+    }
+    if let Some(seed) = shot.seed {
+        let _ = write!(text, " --seed {seed}");
+    }
+    let quality = if shot.parts {
+        "full"
+    } else {
+        shot.quality.name
+    };
     let _ = write!(
         text,
-        " --day {} --view {} --quality {} --look {}",
+        " --day {} --view {} --quality {quality} --look {}",
         shot.day,
         shot.view.name(),
-        shot.quality.name,
         shot.look.name()
     );
     text
 }
 
-/// Start growing on "Grow", or when the settings changed and growing
-/// follows them. A change while growing stops the growth under way first.
-fn grow(mut lab: ResMut<Lab>) {
-    let wanted = lab.go || (lab.auto && lab.dirty);
-    if !wanted {
+/// Step through the year while it plays: once the month's plant has
+/// stood a moment, draw the next month's.
+fn play_year(mut lab: ResMut<Lab>) {
+    let Some(month) = lab.year else {
+        return;
+    };
+    if lab.growing.is_some() || lab.go {
         return;
     }
-    if lab.growing.is_some() {
-        if lab.dirty && lab.auto {
-            lab.control.stop.store(true, Ordering::Relaxed);
+    let ready = lab.shows_chosen()
+        && lab.shown.as_ref().is_some_and(|shown| {
+            (shown.recipe.day - MONTH_DAYS[month]).abs() < 0.5
+                && shown.at.elapsed().as_secs_f64() >= YEAR_HOLD_S
+        });
+    if !ready {
+        // The first month: draw it.
+        if lab
+            .shown
+            .as_ref()
+            .is_none_or(|shown| (shown.recipe.day - MONTH_DAYS[month]).abs() >= 0.5)
+        {
+            lab.recipe.day = MONTH_DAYS[month];
+            lab.go = true;
         }
-        lab.go = false;
         return;
     }
-    lab.dirty = false;
+    if month + 1 >= MONTH_DAYS.len() {
+        lab.year = None;
+        return;
+    }
+    lab.year = Some(month + 1);
+    lab.recipe.day = MONTH_DAYS[month + 1];
+    lab.go = true;
+}
+
+/// The middle of each month, as days of the year.
+pub const MONTH_DAYS: [f64; 12] = [
+    15.0, 46.0, 74.0, 105.0, 135.0, 166.0, 196.0, 227.0, 258.0, 288.0, 319.0, 349.0,
+];
+
+/// How long each month stands while the year plays, seconds.
+const YEAR_HOLD_S: f64 = 0.8;
+
+/// Start on "Generate": grow the plant, or draw the one on screen again
+/// when only how it is drawn changed.
+fn grow(mut lab: ResMut<Lab>) {
+    if !lab.go || lab.growing.is_some() {
+        return;
+    }
     lab.go = false;
-    if lab.age.is_none() {
-        let ages = keyframes(&lab.species[lab.chosen]);
-        let oldest = ages.last().copied().unwrap_or(1.0);
-        let age = lab.asked_age.take().unwrap_or(oldest);
-        lab.oldest = oldest.max(age);
-        lab.age = Some(age);
+    if !lab.about.error.is_empty() {
+        lab.message = lab.about.error.clone();
+        return;
     }
     let shot = shot(&lab);
+    let recipe = lab.recipe.clone();
+    let redraw = lab.redraws();
     lab.started = Instant::now();
-    lab.growths += 1;
     lab.message.clear();
     let control = Arc::new(Control::default());
     control
         .every
         .store(if lab.live { lab.every } else { 0 }, Ordering::Relaxed);
     lab.control = Arc::clone(&control);
-    lab.growing = Some(std::thread::spawn(move || {
-        let mut viewer = Watcher(control, Instant::now());
-        Grown {
-            result: plantlab_scene::build_watched(&shot, Library::builtin(), &mut viewer),
+    let growth = redraw
+        .then(|| {
+            lab.shown
+                .as_ref()
+                .and_then(|shown| shown.scene.growth.clone())
+        })
+        .flatten();
+    let handle = if let Some(growth) = growth {
+        std::thread::spawn(move || Grown {
+            result: plantlab_scene::dress(&shot, Library::builtin(), &growth),
             shot,
-        }
-    }));
+            recipe,
+        })
+    } else {
+        lab.growths += 1;
+        std::thread::spawn(move || {
+            let mut viewer = Watcher(control, Instant::now());
+            Grown {
+                result: plantlab_scene::build_watched(&shot, Library::builtin(), &mut viewer),
+                shot,
+                recipe,
+            }
+        })
+    };
+    lab.growing = Some(Job { handle, redraw });
 }
 
 /// What putting a plant on screen touches.
@@ -676,19 +903,42 @@ fn live_frame(mut lab: ResMut<Lab>, mut stage: Stage) {
         return;
     };
     let shot = shot(&lab);
-    put_on_screen(&mut stage, &mut lab, scene, shot, true);
+    let recipe = lab.recipe.clone();
+    let seconds = lab.started.elapsed().as_secs_f64();
+    put_on_screen(&mut stage, &mut lab, scene, (shot, recipe), (true, seconds));
 }
 
-/// Put a newly grown plant on screen in place of the old one.
+/// Put a newly grown plant on screen in place of the old one, and keep it
+/// as the species' last render; or show the plant on screen in a new look.
 fn show(mut lab: ResMut<Lab>, mut stage: Stage) {
+    if lab.restyle {
+        lab.restyle = false;
+        if let Some(old) = lab.shown.take() {
+            for entity in &old.entities {
+                stage.commands.entity(*entity).despawn();
+            }
+            let mut scene = old.scene;
+            scene.look = lab.recipe.look;
+            let (mut shot, mut recipe) = (old.shot, old.recipe);
+            shot.look = scene.look;
+            recipe.look = scene.look;
+            put_on_screen(
+                &mut stage,
+                &mut lab,
+                scene,
+                (shot, recipe),
+                (old.live, old.seconds),
+            );
+        }
+    }
     if !lab
         .growing
         .as_ref()
-        .is_some_and(std::thread::JoinHandle::is_finished)
+        .is_some_and(|job| job.handle.is_finished())
     {
         return;
     }
-    let Some(Ok(grown)) = lab.growing.take().map(std::thread::JoinHandle::join) else {
+    let Some(Ok(grown)) = lab.growing.take().map(|job| job.handle.join()) else {
         lab.message = "the growing thread panicked".into();
         return;
     };
@@ -696,13 +946,11 @@ fn show(mut lab: ResMut<Lab>, mut stage: Stage) {
         Ok(scene) => scene,
         Err(error) => {
             if lab.control.stop.load(Ordering::Relaxed) {
-                // Stopped: by the button, or for new settings.
-                if !lab.dirty {
-                    let step = lab.control.step.load(Ordering::Relaxed);
-                    let steps = lab.control.steps.load(Ordering::Relaxed);
-                    let age = f64::from_bits(lab.control.age.load(Ordering::Relaxed));
-                    lab.message = format!("Stopped at step {step} of {steps}, {age:.1} years.");
-                }
+                let step = lab.control.step.load(Ordering::Relaxed);
+                let steps = lab.control.steps.load(Ordering::Relaxed);
+                let age = f64::from_bits(lab.control.age.load(Ordering::Relaxed));
+                lab.message = format!("Stopped at step {step} of {steps}, {age:.1} years.");
+                lab.year = None;
             } else {
                 lab.message = error;
             }
@@ -710,13 +958,58 @@ fn show(mut lab: ResMut<Lab>, mut stage: Stage) {
         }
     };
     lab.message.clear();
-    put_on_screen(&mut stage, &mut lab, scene, grown.shot, false);
+    let seconds = lab.started.elapsed().as_secs_f64();
+    let species = scene.facts.species.clone();
+    let kept = Kept {
+        recipe: grown.recipe.clone(),
+        saved: store::now(),
+        age: scene.facts.age,
+        height_m: scene.facts.height_m,
+        crown_width_m: scene.facts.crown_width_m,
+        triangles: scene.facts.triangles,
+        seconds,
+        generator_revision: scene.facts.generator_revision,
+    };
+    put_on_screen(
+        &mut stage,
+        &mut lab,
+        scene,
+        (grown.shot, grown.recipe),
+        (false, seconds),
+    );
+    // While the year plays, its months are not the species' last render.
+    if lab.year.is_none() {
+        match lab.store.keep(&species, kept) {
+            Ok(()) => stage.recording.ask(Take::Keep, species),
+            Err(error) => lab.message = format!("The render was not kept: {error}"),
+        }
+    }
+}
+
+/// Note the kept pictures written, so the window shows them anew.
+fn kept(mut lab: ResMut<Lab>, mut recording: ResMut<Recording>) {
+    for id in std::mem::take(&mut recording.kept) {
+        lab.store.wrote(&id);
+    }
 }
 
 /// Replace the plant on screen with `scene`: a grown plant, or a `live`
-/// frame of one still growing. The plant goes on the window's layer and
-/// the plant-only layer, its ground and scale on the window's alone.
-fn put_on_screen(stage: &mut Stage, lab: &mut Lab, scene: Scene, shot: Shot, live: bool) {
+/// frame of one still growing, `seconds` after it started. The plant goes
+/// on the window's layer and the plant-only layer, its ground and scale on
+/// the window's alone.
+fn put_on_screen(
+    stage: &mut Stage,
+    lab: &mut Lab,
+    scene: Scene,
+    (shot, recipe): (Shot, Recipe),
+    (live, seconds): (bool, f64),
+) {
+    // A kept render not yet taken was of the plant going off screen; the
+    // pictures take the view's shape.
+    stage.recording.drop_keeps();
+    #[allow(clippy::cast_possible_truncation)]
+    let aspect = (1.0 / lab.aspect.max(0.1)) as f32;
+    stage.recording.aspect = Some(aspect);
     let commands = &mut stage.commands;
     if let Some(old) = lab.shown.take() {
         for entity in old.entities {
@@ -757,15 +1050,17 @@ fn put_on_screen(stage: &mut Stage, lab: &mut Lab, scene: Scene, shot: Shot, liv
             &mut stage.assets.images,
         );
         if lab.reframe {
-            orbit.frame(&scene.framing);
+            orbit.frame(&scene.framing_for(lab.recipe.view, lab.aspect));
             lab.reframe = false;
-        } else if lab.follow {
+            // Framed on a seedling: frame the grown plant too.
+            lab.settle = live;
+        } else if (lab.follow && live) || (!live && lab.settle) {
             // Keep the way the camera turns and any pan; frame the plant's
             // new size.
-            let eye = Vec3::from_array(scene.framing.eye);
-            let target = Vec3::from_array(scene.framing.target);
-            orbit.target = target;
-            orbit.distance = (eye - target).length().max(0.5);
+            orbit.fit(&scene.framing_for(lab.recipe.view, lab.aspect));
+        }
+        if !live {
+            lab.settle = false;
         }
     }
     if stage.recording.record {
@@ -776,9 +1071,11 @@ fn put_on_screen(stage: &mut Stage, lab: &mut Lab, scene: Scene, shot: Shot, liv
     lab.shown = Some(Shown {
         scene,
         shot,
+        recipe,
         entities,
-        seconds: lab.started.elapsed().as_secs_f64(),
+        seconds,
         live,
+        at: Instant::now(),
     });
 }
 
@@ -791,9 +1088,12 @@ fn save_gif(recording: &mut Recording, scene: &Scene) {
     };
 }
 
-/// A picture's name: the species and its age.
+/// A picture's name: the species, its age and the day.
 fn picture_name(scene: &Scene) -> String {
-    format!("{}-{:.1}y", scene.facts.species, scene.facts.age)
+    format!(
+        "{}-{:.1}y-day{:.0}",
+        scene.facts.species, scene.facts.age, scene.facts.day
+    )
 }
 
 /// Drag to turn around the plant, middle-drag (or Shift and drag) to pan,
@@ -816,10 +1116,11 @@ fn orbit(
         return;
     };
     let view_height = view.logical_viewport_size().map(|size| size.y);
-    if lab.reset_camera {
+    if lab.reset_camera || lab.refit {
         lab.reset_camera = false;
+        lab.refit = false;
         if let Some(shown) = &lab.shown {
-            orbit.frame(&shown.scene.framing);
+            orbit.frame(&shown.scene.framing_for(lab.recipe.view, lab.aspect));
         }
     }
     if !over_panel {
@@ -830,7 +1131,7 @@ fn orbit(
             orbit.drag(motion.delta, pixels, fov());
         } else if buttons.pressed(MouseButton::Left) || buttons.pressed(MouseButton::Right) {
             orbit.yaw -= motion.delta.x * 0.006;
-            orbit.pitch = (orbit.pitch + motion.delta.y * 0.006).clamp(-0.2, 1.5);
+            orbit.pitch = (orbit.pitch + motion.delta.y * 0.006).clamp(-0.2, TOP_PITCH);
         }
         if scroll.delta.y != 0.0 {
             orbit.distance = (orbit.distance * (1.0 - scroll.delta.y * 0.1)).clamp(0.05, 2000.0);
@@ -839,6 +1140,24 @@ fn orbit(
     *transform = orbit.transform();
 }
 
+/// The window's camera keeps its perspective for the top view: straight
+/// down, as near as the orbit turns, from as far above the plant's top as
+/// shows the orthographic framing's height there. `None` for a framing in
+/// perspective.
+fn top_distance(framing: &plantlab_scene::Framing) -> Option<f32> {
+    let plantlab_scene::Projection::Orthographic { half_height } = framing.projection else {
+        return None;
+    };
+    #[allow(clippy::cast_possible_truncation)]
+    let above = plantlab_scene::TOP_EYE_ABOVE as f32;
+    let top = (framing.eye[1] - framing.target[1] - above).max(0.0);
+    Some((top + half_height / (fov() * 0.5).tan()).max(0.5))
+}
+
+/// The steepest the camera looks down, radians: just short of straight
+/// down, where turning it would have no meaning.
+const TOP_PITCH: f32 = 1.55;
+
 /// The camera's vertical field of view, radians.
 fn fov() -> f32 {
     #[allow(clippy::cast_possible_truncation)]
@@ -846,11 +1165,11 @@ fn fov() -> f32 {
     fov
 }
 
-/// Keys, unless a text field has them, each as a command: Enter grows,
-/// Space pauses or resumes, Esc stops (or leaves the Overlay), F frames
-/// the plant again, G the grid, R the ruler, O the Overlay, P a snapshot,
-/// S saves the GIF, 1 to 7 the panels (Shift beside the others), F1 the
-/// keys, Ctrl+P the palette, Ctrl+, the settings.
+/// Keys, unless a text field has them, each as a command: Enter
+/// generates, Space pauses or resumes, Esc stops (or leaves the Overlay),
+/// 1 to 4 the views, F frames the plant again, G the grid, R the ruler, O
+/// the Overlay, P a snapshot, S saves the GIF, L the library, I the
+/// inspector, F1 the keys, Ctrl+P the palette, Ctrl+, the settings.
 fn keys(
     mut contexts: EguiContexts,
     keys: Res<ButtonInput<KeyCode>>,
@@ -865,12 +1184,12 @@ fn keys(
         return;
     }
     let control = keys.any_pressed([KeyCode::ControlLeft, KeyCode::ControlRight]);
-    let shift = keys.any_pressed([KeyCode::ShiftLeft, KeyCode::ShiftRight]);
     let growing = lab.growing.is_some();
     let (overlay, settings_open) = (shell.overlay, shell.settings_open);
+    let (library, inspector) = (shell.library, shell.inspector);
     let mut send = |command| shell.queue.push(command);
     if control {
-        if keys.just_pressed(KeyCode::KeyP) {
+        if keys.just_pressed(KeyCode::KeyP) || keys.just_pressed(KeyCode::KeyK) {
             send(Command::Palette(String::new()));
         }
         if keys.just_pressed(KeyCode::Comma) {
@@ -880,18 +1199,28 @@ fn keys(
     }
     let pressed = |key| keys.just_pressed(key);
     if pressed(KeyCode::Enter) || pressed(KeyCode::NumpadEnter) {
-        send(Command::Grow);
+        send(Command::Generate);
     }
     if pressed(KeyCode::Space) && growing {
         send(Command::Pause(!lab.control.pause.load(Ordering::Relaxed)));
     }
     if pressed(KeyCode::Escape) {
-        if growing {
+        if growing || lab.year.is_some() {
             send(Command::Stop);
         } else if overlay {
             send(Command::Overlay(false));
         } else if settings_open {
             send(Command::Settings(false));
+        }
+    }
+    for (key, view) in [
+        (KeyCode::Digit1, View::Side),
+        (KeyCode::Digit2, View::ThreeQuarter),
+        (KeyCode::Digit3, View::Oblique),
+        (KeyCode::Digit4, View::Top),
+    ] {
+        if pressed(key) {
+            send(Command::View(view));
         }
     }
     if pressed(KeyCode::KeyF) {
@@ -912,22 +1241,14 @@ fn keys(
     if pressed(KeyCode::KeyS) && !recording.frames.is_empty() {
         send(Command::SaveGif);
     }
-    if pressed(KeyCode::F1) {
-        send(Command::Panel(Panel::Keys, shift));
+    if pressed(KeyCode::KeyL) {
+        send(Command::Library(!library));
     }
-    let digits = [
-        KeyCode::Digit1,
-        KeyCode::Digit2,
-        KeyCode::Digit3,
-        KeyCode::Digit4,
-        KeyCode::Digit5,
-        KeyCode::Digit6,
-        KeyCode::Digit7,
-    ];
-    for (key, panel) in digits.into_iter().zip(Panel::RAIL) {
-        if pressed(key) {
-            send(Command::Panel(panel, shift));
-        }
+    if pressed(KeyCode::KeyI) {
+        send(Command::Inspector(!inspector));
+    }
+    if pressed(KeyCode::F1) {
+        send(Command::Tab(Panel::Keys));
     }
 }
 
@@ -1013,30 +1334,18 @@ fn bytes(count: usize) -> String {
 
 #[cfg(test)]
 mod tests {
+    use super::store::Detail;
     use super::*;
 
-    /// A lab as the window starts it, with the library's species.
+    /// A lab as the window starts it, on the bigleaf maple, keeping no
+    /// renders.
     pub(super) fn lab() -> Lab {
-        Lab {
+        let mut lab = Lab {
             aspect: 1.0,
-            growths: 0,
-            shows: 0,
-            species: Library::builtin()
-                .species()
-                .iter()
-                .map(|entry| entry.id.clone())
-                .collect(),
-            chosen: 0,
-            age: Some(5.0),
-            asked_age: None,
-            oldest: 10.0,
-            day: 196.0,
-            level: 0,
-            draft: true,
-            look: Look::Review,
-            view: View::ThreeQuarter,
-            dirty: true,
-            auto: true,
+            catalogue: Catalogue::of(Library::builtin()),
+            chosen: String::new(),
+            about: About::default(),
+            recipe: Recipe::default(),
             go: false,
             live: true,
             every: 10,
@@ -1044,13 +1353,23 @@ mod tests {
             growing: None,
             control: Arc::default(),
             started: Instant::now(),
+            growths: 0,
+            shows: 0,
             shown: None,
             message: String::new(),
             reframe: false,
             reset_camera: false,
+            refit: false,
+            settle: false,
+            restyle: false,
             grid: true,
             ruler: true,
-        }
+            store: Store::default(),
+            year: None,
+            recent: Vec::new(),
+        };
+        lab.choose("acer-macrophyllum");
+        lab
     }
 
     #[test]
@@ -1058,9 +1377,51 @@ mod tests {
         let mut shot = Shot::thumbnail("acer-macrophyllum");
         shot.age = Some(30.0);
         shot.view = View::Side;
+        shot.parts = true;
+        shot.seed = Some(9);
         let text = thumbs_command(&shot);
         assert!(text.starts_with("plantlab thumbs acer-macrophyllum"));
         assert!(text.contains("--age 30") && text.contains("--view side"));
+        assert!(text.contains("--quality full") && text.contains("--seed 9"));
+    }
+
+    #[test]
+    fn choosing_a_species_grows_nothing_and_takes_up_its_last_recipe() {
+        let mut lab = lab();
+        assert!(!lab.go && lab.growing.is_none());
+        assert_eq!(lab.chosen, "acer-macrophyllum");
+        assert!(!lab.about.keyframes.is_empty());
+        assert!((lab.age() - lab.about.oldest).abs() < 1e-9);
+        let kept = Recipe {
+            age: Some(4.0),
+            day: 300.0,
+            detail: Detail::Full,
+            ..Recipe::default()
+        };
+        lab.store.kept.insert(
+            "rosa-nutkana".into(),
+            Kept {
+                recipe: kept.clone(),
+                saved: 0,
+                age: 4.0,
+                height_m: 1.0,
+                crown_width_m: 1.0,
+                triangles: 1,
+                seconds: 1.0,
+                generator_revision: 1,
+            },
+        );
+        lab.choose("rosa-nutkana");
+        assert_eq!(lab.recipe, kept);
+        assert_eq!(lab.recent, ["rosa-nutkana", "acer-macrophyllum"]);
+        let shot = shot(&lab);
+        assert!(shot.parts && shot.level == 0 && shot.age == Some(4.0));
+        // A species without a kept render keeps the day and the detail, and
+        // grows the typical plant at its oldest keyframe.
+        lab.choose("pseudotsuga-menziesii");
+        assert_eq!(lab.recipe.age, None);
+        assert!((lab.recipe.day - 300.0).abs() < 1e-9);
+        assert_eq!(lab.recipe.detail, Detail::Full);
     }
 
     #[test]
@@ -1077,6 +1438,27 @@ mod tests {
         let forward = transform.forward();
         let toward = (orbit.target - transform.translation).normalize();
         assert!(forward.dot(toward) > 0.9999);
+    }
+
+    #[test]
+    fn the_top_view_looks_down_without_turning_over() {
+        let mut orbit = Orbit {
+            pan: Vec3::ZERO,
+            target: Vec3::ZERO,
+            distance: 10.0,
+            yaw: 0.7,
+            pitch: 0.4,
+        };
+        orbit.frame(&plantlab_scene::Framing {
+            eye: [0.0, 60.0, 0.0],
+            target: [0.0, 0.0, 0.0],
+            up: [0.0, 0.0, -1.0],
+            projection: plantlab_scene::Projection::Orthographic { half_height: 5.0 },
+        });
+        let transform = orbit.transform();
+        assert!(transform.forward().y < -0.99, "looks down");
+        assert!(transform.translation.is_finite());
+        assert!(orbit.distance > 5.0);
     }
 
     #[test]
