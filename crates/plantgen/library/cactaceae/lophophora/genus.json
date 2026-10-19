@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Lophophora",
+  "parent": "subfamily/cactoideae",
+  "traits": {
+    "stem_form": "globose",
+    "stem_apex": "flat",
+    "tubercles": true,
+    "tubercle_relief": "low",
+    "tubercle_shape": "broad",
+    "fruit_surface": "naked",
+    "corolla_shape": "campanulate",
+    "flower_zone": "crown",
+    "areole_spacing_m": {
+      "min": 0.003,
+      "max": 0.015
+    },
+    "radial_spines": 0,
+    "central_spines": 0
+  },
+  "evidence": {
+    "traits.stem_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.stem_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.tubercles": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.tubercle_relief": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.tubercle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.fruit_surface": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.flower_zone": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.areole_spacing_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    },
+    "traits.central_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: Lophophora: stems usually gray-green or blue-green to dark green, usually flat-topped and cryptic in the soil surface, sometimes protruding above it with a recessed apex, ribbed or weakly tuberculate, 2-7.5 × (4-)5-12 cm, softly fleshy, dull, glabrous; ribs 5, 8 or 13 (rarely 21), low, broadly rounded, straight; areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm. Spines absent. Flowers deeply nestled in the areolar hairs at the stem apex, campanulate, 1-3 × (1-)1.5-2.5 cm; ovary smooth, scales, hairs and spines absent. Fruits white to pinkish, clavate to nearly cylindric, 11-25 × (2-)4-5 mm, spines and scales absent."
+    }
+  }
+}
