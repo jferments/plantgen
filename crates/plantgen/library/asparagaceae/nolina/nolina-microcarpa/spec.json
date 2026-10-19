@@ -20,7 +20,7 @@
       "size_years": 8,
       "leaf_spread": 0.1,
       "young_angle": 50,
-      "old_angle": 80,
+      "old_angle": 62,
       "open_years": 1.5,
       "angle_spread": 4,
       "internode": 5e-05,
@@ -360,7 +360,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for beargrass from Flora of North America vol. 26 and FEIS (Gucker 2007): an acaulescent clump (trunk_rate 0) of many wiry, lax leaves 80-130 cm long (leaf_length 1.0, each 10% either way), spreading from the centre (young_angle 50, old_angle 80, angle_spread 4) so the clump stands about 0.9 m, cespitose from branched caudices to 2 m across (pups 4, their leaves starting near full size, leaf_seed 0.8, as offsets of an old caudex do), the caudex barely raised (internode 0.00005), the dead leaves kept in the clump as the photos show (skirt 1), a panicle 4-12 dm on a scape (stalk_height 0.7, stalk_head 0.5, so a flowering clump stays near its usual height), tiny white flowers 2-5 to a node (flowers 40 a branch). The blade's aspect is at its least, 0.01 (true 0.008); leaf rate, bloom and flower_age are estimates."
+      "note": "Set by hand for beargrass from Flora of North America vol. 26 and FEIS (Gucker 2007): an acaulescent clump (trunk_rate 0) of many wiry, lax leaves 80-130 cm long (leaf_length 1.0, each 10% either way), spreading from the centre (young_angle 50, old_angle 62, angle_spread 4, so the arched blades end near the ground, not in it) so the clump stands about 0.9 m, cespitose from branched caudices to 2 m across (pups 4, their leaves starting near full size, leaf_seed 0.8, as offsets of an old caudex do), the caudex barely raised (internode 0.00005), the dead leaves kept in the clump as the photos show (skirt 1), a panicle 4-12 dm on a scape (stalk_height 0.7, stalk_head 0.5, so a flowering clump stays near its usual height), tiny white flowers 2-5 to a node (flowers 40 a branch). The blade's aspect is at its least, 0.01 (true 0.008); leaf rate, bloom and flower_age are estimates."
     },
     "appearance": {
       "evidence": "Authored",
