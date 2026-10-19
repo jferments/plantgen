@@ -98,6 +98,25 @@
               "twist": 0
             }
           },
+          "palman": {
+            "shape": {
+              "template": "simple",
+              "width": 0.24,
+              "outline": [[0, 0.04], [0.5, 0.5], [0.96, 1], [1, 0]],
+              "parallel": 3,
+              "petiole": 0
+            },
+            "bend": {"fold": 0, "cup": 0.1, "droop": 0, "twist": 0}
+          },
+          "filament": {
+            "shape": {"template": "blade", "taper": 0.8, "aspect": 0.01},
+            "colour": [0.6, 0.55, 0.38],
+            "bend": {"fold": 0, "cup": 0, "droop": 25, "twist": 0}
+          },
+          "tooth": {
+            "shape": {"template": "blade", "taper": 1, "aspect": 0.6},
+            "colour": [0.3, 0.2, 0.08]
+          },
           "sheath": {
             "shape": {
               "template": "blade",
@@ -219,6 +238,64 @@
           "rule": "max(0, height_typical_m - 0.4 * leaf_length_m) / 50",
           "why": "A palm's crown stands about four tenths of a frond's length above its trunk, so its trunk rises to the rest of its usual height over about fifty years."
         },
+        "generator.params.split_depth": {
+          "rule": "fan_split_depth",
+          "why": "A fan's segments are free of each other only over the share of the blade its flora says it is divided; inside that the blade is one piece, the palman."
+        },
+        "generator.params.tip_droop": {
+          "map": {"segment_posture": {"stiff": 5, "drooping": 30, "pendulous": 50}},
+          "why": "Where its segments part, a stiff fan's go on in the blade's plane, a drooping fan's free parts bend down and a pendulous one's hang (degrees, set by eye from the floras' words); the segment's card bends on down along its length."
+        },
+        "generator.params.filaments": {
+          "map": {"segment_filaments": {"none": 0, "few": 0.5, "many": 3}},
+          "why": "A fan with a few threads bears one in every other sinus between its segments; one with many bears one in every sinus and two more along each segment's free margin, the last at its tip."
+        },
+        "generator.params.tooth_length": {
+          "map": {"petiole_armature": {"unarmed": 0, "fine": {"rule": "first(petiole_tooth_length_m, 0.004)"}, "stout": {"rule": "first(petiole_tooth_length_m, 0.015)"}}},
+          "why": "An armed petiole's teeth as long as its flora gives them, else a few millimetres for fine teeth and about a centimetre and a half for stout ones (set by eye); an unarmed petiole has none."
+        },
+        "generator.params.tooth_spacing": {
+          "map": {"petiole_armature": {"unarmed": 0.05, "fine": {"rule": "first(petiole_tooth_spacing_m, 0.012)"}, "stout": {"rule": "first(petiole_tooth_spacing_m, 0.04)"}}},
+          "why": "Teeth as far apart as the flora gives them, else about three of their lengths apart (set by eye)."
+        },
+        "generator.params.tooth_angle": {
+          "map": {"petiole_tooth_form": {"straight": 90, "curved": 110, "hooked": 125}},
+          "why": "A straight tooth stands square to the petiole; a curved one leans back toward the stem and a hooked one further (degrees from the way to the blade). A card is flat, so its curve is drawn as its lean."
+        },
+        "generator.params.tooth_tip": {
+          "map": {"petiole_teeth_distal": {"even": 1, "diminishing": 0.35}},
+          "why": "Teeth that become smaller and sparser toward the blade end at about a third of their size near the petiole's foot (set by eye)."
+        },
+        "generator.params.pinna_pairs": {
+          "rule": "max(1, round(pinnae / 2))",
+          "why": "A twice-pinnate frond's pinnae, in pairs along its rachis."
+        },
+        "generator.params.pinna_leaflets": {
+          "rule": "max(1, round((leaflets - 1) / 2))",
+          "why": "The leaflets on each pinna of a twice-pinnate frond: those each side of its rachis, with one more at its tip."
+        },
+        "appearance.organs.tooth.colour": {
+          "colour": "petiole_tooth_colour",
+          "why": "A petiole's teeth are drawn in the colour the flora gives them."
+        },
+        "appearance.organs.dead.colour": {
+          "colour": "dead_leaf_colour",
+          "why": "A dead frond that stays on the stem is drawn in the colour the flora gives the dead leaves."
+        },
+        "appearance.organs.pinnule.shape.praemorse": {
+          "template": "simple",
+          "map": {"leaflet_end": {"praemorse": 0.14, "pointed": 0, "bifid": 0}},
+          "why": "A praemorse leaflet's broad tip is jagged, bitten into uneven teeth about a seventh of its length deep (set by eye)."
+        },
+        "appearance.organs.pinnule.shape.midrib": {
+          "template": "simple",
+          "map": {"leaflet_midrib": {"true": 1, "false": 0}},
+          "why": "A leaflet without a midrib, whose main veins fan out from its base, is drawn with none."
+        },
+        "generator.params.dead_fold_years": {
+          "rule": "1",
+          "why": "A palm's dead leaf that stays on the stem first stands out at its last living angle below the crown, then falls against the stem over about a year (set by eye from photographs of skirted fan palms), so the thatch meets the living crown."
+        },
         "generator.params.trunk_radius": {
           "rule": "0.45 * stem_diameter_max_m",
           "why": "A trunk's radius, a little under half its greatest stated diameter, since a palm's trunk is widest at its foot or its belly."
@@ -254,6 +331,9 @@
           "source": "plantgen-authors",
           "note": "The built-in palms' colours and cards: a grey trunk, mid-green narrow leaflets, segments folded and drooping as the built-in fan palms' are, a green sheath for a crownshaft, a brown boot."
         },
+        "appearance.organs.palman": {"evidence": "SourceInferred", "source": "genera-palmarum-2008", "note": "Dransfield et al. (2008, p. 16): a fan leaf's unsplit middle, the palman, from which its single-fold segments part; drawn as flat wedges each twelve degrees of the fan wide (the palm program's palman_angle, so a card 0.24 as wide as long), with a few veins along it for its pleats."},
+        "appearance.organs.filament": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent (1922, p. 104): Washingtonia's segments separate on their margins into numerous slender pale fibres; drawn as fine pale threads a hundredth as wide as they are long, curling as they hang. The colour (linear [0.6, 0.55, 0.38], a pale straw) by eye."},
+        "appearance.organs.tooth": {"evidence": "SourceInferred", "source": "genera-palmarum-2008", "note": "Dransfield et al. (2008, p. 11, 285): emergent teeth along a fan palm's petiole margins, broad at the base and pointed; drawn as triangles six tenths as wide as long, a yellow-brown (by eye) where the flora gives no colour."},
         "appearance.leaf_axis": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "A palm's petiole and rachis are part of its leaf and coloured with it, not with the trunk: Sargent (1922) gives Thrinax floridana's petioles pale yellow-green or orange toward the base and the royal palm's green clasping bases; a yellow green, which species refine."},
         "rules": {
           "evidence": "Authored",
