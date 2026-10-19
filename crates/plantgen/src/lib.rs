@@ -1010,7 +1010,9 @@ pub mod venation;
 /// dormant buds wait on the limbs' main axes for 300 years (`epi_order`),
 /// a limb is shed for the mean light of its tips (`limb_tip`) more than
 /// for its size, and slow shoots are laid down every few years
-/// (`seg_min`) so the fully branched old crowns fit the module limit; a
+/// (`seg_min`) so the fully branched old crowns fit the module limit,
+/// each drawing its foliage at two places along it so its needles stay
+/// near one year's length; a
 /// tall tree lays down less trunk wood per square metre of foliage once
 /// its leader passes `ring_share` of its full height; and the top whorls'
 /// branch shoots lengthen over `top_ramp` years of the leader's growth in
