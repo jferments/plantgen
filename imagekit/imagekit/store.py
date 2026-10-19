@@ -86,7 +86,7 @@ class Store:
     def __init__(self, root: str | os.PathLike = DEFAULT_ROOT):
         self.root = Path(root).expanduser()
         self.root.mkdir(parents=True, exist_ok=True)
-        self.db = sqlite3.connect(self.root / "index.sqlite")
+        self.db = sqlite3.connect(self.root / "index.sqlite", timeout=300)  # another imagekit may be writing
         cols = {r[1] for r in self.db.execute("pragma table_info(analyses)")}
         if cols and "status" not in cols:  # an index from imagekit 0.1: rebuild the analyses part
             self.db.execute("drop table analyses")
