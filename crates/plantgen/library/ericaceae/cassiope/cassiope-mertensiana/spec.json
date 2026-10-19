@@ -1,0 +1,429 @@
+{
+  "schema": 1,
+  "id": "cassiope-mertensiana",
+  "taxon": {
+    "scientific_name": "Cassiope mertensiana",
+    "common_name": "white mountain-heather",
+    "family": "Ericaceae",
+    "genus": "Cassiope",
+    "plant_name_id": 2704398
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 0.25,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 600,
+      "internode": 0.012,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 30,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.005,
+      "fork_stems": 12,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 0.35,
+      "space_kill": 0.09,
+      "leaf_years": 5,
+      "leaf_size": 0.04,
+      "spur_leaf": 0.03,
+      "spur_pairs": 1,
+      "leaf_angle": 45,
+      "blooms": 3,
+      "adult_age": 4,
+      "bloom_size": 0.012,
+      "bloom_angle": 120,
+      "path_half": 0.3
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 24,
+          "angle": 8,
+          "stalk": 0.02,
+          "teeth": 0,
+          "petiole": 0.0
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "crowned",
+          "aspect": 1.0,
+          "unripe": 0.9
+        },
+        "colour": [
+          0.55,
+          0.35,
+          0.25
+        ],
+        "accent": [
+          0.6,
+          0.25,
+          0.2
+        ],
+        "season": {
+          "ripening": 30,
+          "opening": 14,
+          "flower_look": {
+            "shape": {
+              "template": "fruit",
+              "kind": "crowned",
+              "aspect": 0.9
+            },
+            "colour": [
+              0.97,
+              0.96,
+              0.94
+            ],
+            "accent": [
+              0.75,
+              0.2,
+              0.18
+            ],
+            "size": 2.2
+          }
+        }
+      }
+    },
+    "bark": [
+      0.4,
+      0.3,
+      0.22
+    ],
+    "foliage": [
+      0.09,
+      0.2,
+      0.06
+    ],
+    "foliage_shade": [
+      0.029,
+      0.064,
+      0.019
+    ]
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.18,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "height_max_m": 0.3,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "clonal": true,
+    "leaf_form": "scale",
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "leaf_posture": "erect",
+    "leaf_shape": "ovate",
+    "leaf_apex": "obtuse",
+    "leaf_length_m": {
+      "min": 0.003,
+      "max": 0.006
+    },
+    "leaf_width_m": {
+      "min": 0.0015,
+      "max": 0.002
+    },
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "pedicel_length_m": {
+      "min": 0.006,
+      "max": 0.02
+    },
+    "flower_posture": "nodding",
+    "corolla_shape": "campanulate",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "stamens": {
+      "min": 8,
+      "max": 10
+    },
+    "flower_size_m": {
+      "min": 0.006,
+      "max": 0.008
+    },
+    "sepal_length_m": {
+      "min": 0.002,
+      "max": 0.0035
+    },
+    "flower_colour": [
+      248,
+      246,
+      240
+    ],
+    "calyx_colour": [
+      190,
+      60,
+      50
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.0025,
+      "max": 0.0035
+    },
+    "flowering_months": [
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"Low creeping alpine shrub with ascending branches, 1-3 dm. high\"."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"1-3 dm. high\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"Low creeping alpine shrub\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: a shrub."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: leaves \"evergreen and long-persistent on the branches after dying\"."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Prostrate or creeping shrubs with ascending branches\", spreading into mats, as in the photos."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Leaves scale-like, closely imbricate\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: leaves \"decussately opposite in pairs (4-ranked)\"."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: leaves \"decussately opposite in pairs (4-ranked)\"."
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: leaves \"closely imbricate\", pressed against the stem, so each shoot looks like a four-angled cord."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: scale leaves ovate to lance-ovate, as in the photos; Abrams gives only their apex and keel."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: leaves \"obtuse at the apex, rounded or slightly keeled on the back\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"Leaves 3-6 mm. long\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: scale leaves 1.5 mm to 2 mm wide, as in the photos."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Flowers solitary in the axils of the leaves toward the ends of the branches\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: flowers \"in the axils of the leaves toward the ends of the branches\"."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"pedicels 6-20 mm. long, minutely puberulent\"."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: flowers \"on slender elongated pedicels, nodding in anthesis\"."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Corolla campanulate, 4-5-lobed, the lobes much shorter than the tube\"."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Calyx 4-5-lobed\"; \"Corolla campanulate, 4-5-lobed\"; five in most of the photos."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Stamens 8 or 10, included\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: bells 6 mm to 8 mm long, as in the photos; Abrams gives 4-6 mm for C. tetragona (1951 p. 305) and none for this species."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"calyx-lobes 2-3.5 mm. long, ovate, obtuse\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Corolla white; sRGB by eye, set by hand from iNaturalist photos (observations 88217384, 29622385, 127852701, 227023300, 379229319, 131530025, 128442498, 240857348): the sources read give no count or measure."
+    },
+    "traits.calyx_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Calyx lobes and pedicels red; sRGB by eye, set by hand from iNaturalist photos (observations 88217384, 29622385, 127852701, 227023300, 379229319, 131530025, 128442498, 240857348): the sources read give no count or measure."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Capsule globose to ovoid, 4-5-lobed and loculicidally 4-5-valved\" (pp. 303-305)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"capsule subglobose or ovoid, 2.5-3.5 mm. long\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 305, Cassiope mertensiana: \"July-Aug.\"."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripe in August and September, after the July and August flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Evergreen huckleberry's (vaccinium-ovatum) values, changed by hand for white mountain-heather: a low mat of many ascending branches (Abrams 1951 p. 305: \"Low creeping alpine shrub with ascending branches, 1-3 dm. high\"), very short internodes, sprigs of tiny scale leaves pressed to the stem and kept for years, and a few nodding bells near each shoot's tip (genus, p. 303). Not fitted to measurements."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 303, Cassiope: \"Flowers solitary in the axils\", \"nodding in anthesis\", \"Corolla campanulate\"; white bells with red calyx lobes in the photos the traits cite. Drawn without a cluster, as single nodding bells about twice the capsule's size."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low heath of upright, cord-like shoots clothed in tiny, pressed, four-ranked scale leaves, hung with small white bells on red stalks. Organ cards from evergreen huckleberry's (vaccinium-ovatum), recoloured and resized by hand."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.18 m tall at 10 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

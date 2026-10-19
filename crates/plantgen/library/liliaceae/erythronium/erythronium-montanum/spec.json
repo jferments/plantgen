@@ -1,0 +1,370 @@
+{
+  "schema": 1,
+  "id": "erythronium-montanum",
+  "taxon": {
+    "scientific_name": "Erythronium montanum",
+    "common_name": "avalanche lily",
+    "family": "Liliaceae",
+    "genus": "Erythronium",
+    "plant_name_id": 305792
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 3,
+      "stem_rate": 0.6,
+      "clump_radius": 0.08,
+      "stem_lean": 4,
+      "maturity": 1.2,
+      "adult_age": 3,
+      "flowering_share": 0.5,
+      "scape": 1,
+      "stem_radius": 0.002,
+      "wiggle": 1,
+      "nodes": 0,
+      "bare": 0,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 60,
+      "basal_leaves": 2,
+      "basal_angle": 60,
+      "raceme": 0.15,
+      "flowers": 2,
+      "flower_size": 0.065,
+      "pedicel": 0.03,
+      "flower_angle": 110,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "template": "simple",
+          "width": 0.35,
+          "widest": 0.4,
+          "tip": 0.55,
+          "base": 0.1,
+          "teeth": 0,
+          "petiole": 0.3,
+          "parallel": 4
+        },
+        "face_up": 0.3
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.7,
+          "point": 0.6,
+          "centre": 0.12
+        },
+        "form": {
+          "flower": {
+            "cup": -20,
+            "curl": 25
+          }
+        },
+        "colour": [
+          0.97,
+          0.97,
+          0.95
+        ],
+        "accent": [
+          0.95,
+          0.68,
+          0.12
+        ]
+      }
+    },
+    "foliage": [
+      0.1,
+      0.22,
+      0.08
+    ],
+    "foliage_shade": [
+      0.032,
+      0.07,
+      0.026
+    ],
+    "bark": [
+      0.25,
+      0.32,
+      0.15
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.32,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.25,
+      "max": 0.45
+    },
+    "life_span": "perennial",
+    "perennation": "corm",
+    "rosette": "basal",
+    "leaf_habit": "deciduous",
+    "leaf_shape": "ovate",
+    "leaf_apex": "acute",
+    "leaf_length_m": {
+      "min": 0.07,
+      "max": 0.12
+    },
+    "leaf_width_m": {
+      "min": 0.025,
+      "max": 0.04
+    },
+    "petiole_length_m": {
+      "min": 0.03,
+      "max": 0.05
+    },
+    "inflorescence": "raceme",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 3
+    },
+    "flower_posture": "nodding",
+    "perianth_reflexion": "recurved",
+    "tepal_length_m": {
+      "min": 0.035,
+      "max": 0.04
+    },
+    "flower_size_m": {
+      "min": 0.055,
+      "max": 0.075
+    },
+    "flower_colour": [
+      250,
+      250,
+      245
+    ],
+    "perianth_base_colour": [
+      245,
+      175,
+      30
+    ],
+    "perianth_base_length": 0.2,
+    "anther_colour": [
+      245,
+      238,
+      215
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": 0.03,
+    "flowering_months": [
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a low spring herb with basal leaves and a leafless flowering stalk."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name; wcvp_names.csv of the v16 zip, read 2026-10-17)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"scape rather stout, 25-45 cm. long, 1-several-flowered\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"Corm narrowly oblong, 3-4 cm. long, arising in succession from the rhizome\": a perennial."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"Corm narrowly oblong, 3-4 cm. long, arising in succession from the rhizome\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 426, Erythronium: \"the stem simple, bearing two broad or narrow unequal leaves, usually below the middle, the leaves thus appearing basal\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 426, Erythronium: \"Low herbaceous plants, from deep-seated membranous-coated corms\", dying back after flowering."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"Leaves not mottled, oblong-ovate\"."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"acute or acutish at apex, abruptly narrowed at base\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: leaves \"7-12 cm. long\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: leaves \"2.5-4 cm. wide\"."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"petiole 3-5 cm. long\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 426, Erythronium: \"Flowers large, nodding, bractless, solitary or in few-several-flowered racemes\"."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One to three flowers to a scape; Abrams (1923 p. 428): \"1-several-flowered\", set by hand from iNaturalist photos (observations 7199833, 3235549, 89350561, 109882672, 302223287, 145483889, 124825712, 145506538): the sources read give no count or measure."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 426, Erythronium: \"Flowers large, nodding\"."
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: perianth-segments \"somewhat recurved\"."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"perianth-segments white with an orange base\", \"lanceolate-acuminate 35-40 mm. long, 10-13 mm. wide\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 5.5 cm to 7.5 cm across their somewhat recurved 35-40 mm tepals, as in the photos."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"perianth-segments white with an orange base, often drying pinkish\"; sRGB by eye."
+    },
+    "traits.perianth_base_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"white with an orange base\"; sRGB by eye from the photos (golden orange)."
+    },
+    "traits.perianth_base_length": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The orange base about a fifth of each tepal, set by hand from iNaturalist photos (observations 7199833, 3235549, 89350561, 109882672, 302223287, 145483889, 124825712, 145506538): the sources read give no count or measure."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"anthers white, 3-4 mm. long\"; drawn cream, as the pollen colours them in the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"capsule oblong-obovate, rounded at the apex\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: capsule \"about 3 cm. long\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "In flower in July and August on Mount Rainier, as the snow melts, set by hand from iNaturalist photos (observations 7199833, 3235549, 89350561, 109882672, 302223287, 145483889, 124825712, 145506538): the sources read give no count or measure."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Yellow trout lily's (erythronium-americanum) values, changed by hand for avalanche lily: two basal leaves under a taller, stouter leafless scape (Abrams 1923 p. 428: \"scape rather stout, 25-45 cm. long, 1-several-flowered\") with about two large nodding white flowers on short stalks. Not fitted to measurements."
+    },
+    "appearance.organs.basal": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"Leaves not mottled, oblong-ovate, 7-12 cm. long, 2.5-4 cm. wide\"; \"petiole 3-5 cm. long\". The template's mottling removed, the blade broader and stalked."
+    },
+    "appearance.organs.flower": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"perianth-segments white with an orange base\", \"somewhat recurved\". Drawn white with a golden-orange centre, the tepals curled back less than the glacier lily's."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: two broad, plain green basal leaves under a stout leafless stalk carrying one to three nodding white lilies with golden-orange centres. Organ cards from yellow trout lily's (erythronium-americanum), recoloured and resized by hand."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.32 m tall at 4 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

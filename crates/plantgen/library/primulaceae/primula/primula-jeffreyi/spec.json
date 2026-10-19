@@ -1,0 +1,383 @@
+{
+  "schema": 1,
+  "id": "primula-jeffreyi",
+  "taxon": {
+    "scientific_name": "Primula jeffreyi",
+    "common_name": "Jeffrey's shooting star",
+    "family": "Primulaceae",
+    "genus": "Primula",
+    "plant_name_id": 2608371
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 3,
+      "clump_radius": 0.04,
+      "stem_lean": 8,
+      "nodes": 0,
+      "bare": 0,
+      "scape": 1,
+      "basal_leaves": 8,
+      "basal_angle": 40,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "petiole": 0.3
+        }
+      }
+    },
+    "foliage": [
+      0.14,
+      0.3,
+      0.1
+    ],
+    "foliage_shade": [
+      0.045,
+      0.096,
+      0.032
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "basal",
+    "cauline_leaves": "none",
+    "leaf_length_m": {
+      "min": 0.07,
+      "max": 0.25
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.035
+    },
+    "leaf_shape": "oblanceolate",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "umbel",
+    "inflorescence_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "units_per_inflorescence": {
+      "min": 3,
+      "max": 15
+    },
+    "pedicel_length_m": {
+      "min": 0.01,
+      "max": 0.04
+    },
+    "flower_posture": "nodding",
+    "perianth_reflexion": "reflexed",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.025
+    },
+    "petal_length_m": {
+      "min": 0.015,
+      "max": 0.025
+    },
+    "sepal_length_m": {
+      "min": 0.006,
+      "max": 0.007
+    },
+    "sepal_posture": "reflexed",
+    "flower_colour": [
+      214,
+      112,
+      178
+    ],
+    "perianth_base_colour": [
+      240,
+      222,
+      150
+    ],
+    "perianth_base_length": 0.25,
+    "anther_colour": [
+      112,
+      32,
+      82
+    ],
+    "stamen_exsertion": "exserted",
+    "stamen_length_m": {
+      "min": 0.008,
+      "max": 0.009
+    },
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.007
+    },
+    "flowering_months": [
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawn as a forb: a scapose perennial with a basal rosette of leaves from a short rootstock (Abrams 1951 p. 338), its leafless scapes ending in umbels."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name; wcvp_names.csv of the v16 zip, read 2026-10-17)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon Jeffreyi (now Primula jeffreyi): scapes 35-60 cm. high; the plants at Mount Rainier (var. viviparum) are lower, about 20 cm, as in the photos, so set from 20 cm."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon: scapose perennials, with a short rootstock producing fleshy-fibrous roots."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon: scapose perennials."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leaves die back each winter under the snow."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon: leaves basal."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon: leaves basal; flowers in an involucrate umbel terminating the scape."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon Jeffreyi (now Primula jeffreyi): leaves 7-25 cm. long; var. viviparum (p. 340, type locality Mount Rainier): 8-28 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon Jeffreyi (now Primula jeffreyi): leaves 1-3.5 cm. broad; var. viviparum (p. 340): 2.5-4.5 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon Jeffreyi (now Primula jeffreyi): leaves oblanceolate, acute or obtuse, or even rounded at apex, gradually narrowed below to a winged petiole."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon Jeffreyi (now Primula jeffreyi): entire or remotely denticulate; var. viviparum often obscurely crenate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon Jeffreyi (now Primula jeffreyi): glabrous or obscurely and scatteringly glandular-puberulent."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon: flowers in an involucrate umbel, terminating the scape."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: each umbel 4 cm to 10 cm across, its nodding flowers on spreading pedicels, as in the photos."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): umbels usually many-flowered; 3 to 15 flowers in the photos from Washington."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: pedicels 1 cm to 4 cm long, as in the photos."
+    },
+    "traits.flower_posture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flowers nodding on arching pedicels, the stamens pointing down, set by hand from iNaturalist photos (observations 295425469, 297618642, 37819853, 29149777, 125376, 222553, 59941173, 125746): the sources read give no count or measure."
+    },
+    "traits.perianth_reflexion": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): corolla-lobes closely reflexed exposing the dark purple band of the throat."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): flowers 4-5-merous; var. viviparum 5-merous."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): corolla-lobes 15-25 mm. long, swept back, so the flower 1.5 cm to 2.5 cm long."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): corolla-lobes 15-25 mm. long."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): calyx-lobes narrowly lanceolate, acuminate, 6-7 mm. long."
+    },
+    "traits.sepal_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon: calyx persistent, the lobes reflexed in flower, erect after anthesis."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): corolla-lobes rose-pink; sRGB by eye from the photos."
+    },
+    "traits.perianth_base_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): corolla-lobes pale and often yellowish toward the base; sRGB by eye from the photos."
+    },
+    "traits.perianth_base_length": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the pale base about a quarter of each lobe, as in the photos."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): anthers reddish purple; sRGB by eye from the photos."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 338, Dodecatheon: stamens exserted."
+    },
+    "traits.stamen_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): anthers 8-9 mm. long, gradually narrowing from the base to the acute apex; filaments very short or obsolete."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): capsule broadly ovoid."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): capsule broadly ovoid about equaling the calyx-lobes, so about 6-7 mm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 340, Dodecatheon Jeffreyi (now Primula jeffreyi): June-Aug."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripe August and September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a rosette of smooth, narrow, bright green leaves with leafless stalks each bearing an umbel of nodding rose-pink flowers, their petals swept back above a dark purple ring and a beak of purple anthers. The basal leaves' petiole share is set by hand from the leaf and petiole lengths the traits give, as no rule sets a rosette leaf's."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Jeffrey's shooting star from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}

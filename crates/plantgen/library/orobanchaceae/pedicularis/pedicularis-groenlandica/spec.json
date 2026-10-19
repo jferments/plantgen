@@ -1,0 +1,346 @@
+{
+  "schema": 1,
+  "id": "pedicularis-groenlandica",
+  "taxon": {
+    "scientific_name": "Pedicularis groenlandica",
+    "common_name": "elephant's head",
+    "family": "Orobanchaceae",
+    "genus": "Pedicularis",
+    "plant_name_id": 2542861
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.06,
+      "stem_lean": 6,
+      "nodes": 4,
+      "basal_leaves": 8,
+      "basal_angle": 40,
+      "bare": 0.1,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.3,
+      "leaf_base": 1.0,
+      "leaf_angle": 35,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "petiole": 0.3
+        }
+      }
+    },
+    "foliage": [
+      0.13,
+      0.26,
+      0.08
+    ],
+    "foliage_shade": [
+      0.042,
+      0.083,
+      0.026
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
+    "height_max_m": 0.7,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "basal",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": {
+      "min": 25,
+      "max": 31
+    },
+    "terminal_leaflet": true,
+    "leaf_incision": "dissected",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "petiole_length_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "serrate",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.3
+    },
+    "units_per_inflorescence": {
+      "min": 30,
+      "max": 80
+    },
+    "pedicel_length_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "flower_size_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "flower_colour": [
+      205,
+      92,
+      168
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.008
+    },
+    "flowering_months": [
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W143, Pedicularis groenlandica: a perennial herb with a simple, erect stem, 6 inches to 2 feet tall (0.15-0.6 m); Abrams (1951 p. 809): stem 3-7 dm. tall; from 20 cm by eye from the photos."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: stem 3-7 dm. tall."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W143, Pedicularis groenlandica: a smooth, perennial herb."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W143, Pedicularis groenlandica: a smooth, perennial herb."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leaves die back each winter."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W143, Pedicularis groenlandica: dissected, fernlike leaves which are alternate on the stem and also crowded in a rosette near the base."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: leaves with 12-15 pairs of pinnules, all cut to the narrowly margined midrib: drawn as a divided leaf."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: pinnules in pairs along the midrib."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: pinnules serrate-dentate, not divided again."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: 12-15 pairs of pinnules, with the terminal segment 25 to 31."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each leaf ending in a terminal segment, set by hand from iNaturalist photos (observations 380209764, 59858623, 221570, 29490072, 297495466, 170367202, 1593320, 29085458): the sources read give no count or measure."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: all cut to the narrowly margined midrib: the segments joined by a narrow wing."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: leaves basal and on lower part of stem, which may reach 10-15 cm. long; from 5 cm by eye from the photos; the Range Plant Handbook (p. W143): up to about 5 in."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: leaves may reach 2 cm. wide; from 1 cm by eye."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: the basal on petioles usually shorter than the blades; 2 cm to 6 cm by eye from the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: pinnules linear-lanceolate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: somewhat saliently and callosely serrate-dentate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: plant glabrous throughout."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W143, Pedicularis groenlandica: in dense, bracted end clusters (spikes) 4 to 12 in. long, much exceeding the leaves."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W143, Pedicularis groenlandica: spikes 4 to 12 in. long (10-30 cm); from 5 cm, as in the smaller subalpine plants in the photos."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "30 to 80 crowded flowers to a spike, set by hand from iNaturalist photos (observations 380209764, 59858623, 221570, 29490072, 297495466, 170367202, 1593320, 29085458): the sources read give no count or measure."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: pedicels 1-1.5 mm. long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: corolla 8-10 mm. long, the upper lip terminating in a slender, side-curving beak 4-8 mm. long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: corolla red-purple (rose-purple), the lower lip light mallow-purple; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: capsule 6-8 mm. long, dorsally rounded and dehiscing throughout."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: capsule 6-8 mm. long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: July-Aug."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripe August and September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a tuft of fern-like basal leaves, often reddish, below several stems each ending in a dense spike of rose-purple flowers shaped like tiny elephant heads. The basal leaves' petiole share is set by hand from the leaf and petiole lengths the traits give, as no rule sets a rosette leaf's."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for elephant's head from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.35 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}

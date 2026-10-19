@@ -1,0 +1,283 @@
+{
+  "schema": 1,
+  "id": "castilleja-parviflora",
+  "taxon": {
+    "scientific_name": "Castilleja parviflora",
+    "common_name": "magenta paintbrush",
+    "family": "Orobanchaceae",
+    "genus": "Castilleja",
+    "plant_name_id": 2705231
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 6,
+      "clump_radius": 0.08,
+      "stem_lean": 10,
+      "nodes": 10,
+      "bare": 0.05,
+      "leaf_peak": 0.4,
+      "leaf_top": 0.6,
+      "leaf_base": 0.7,
+      "leaf_angle": 45,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.13,
+      0.25,
+      0.08
+    ],
+    "foliage_shade": [
+      0.042,
+      0.08,
+      0.026
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.25,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.3
+    },
+    "height_max_m": 0.4,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.004,
+      "max": 0.012
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_incision": "lobed",
+    "leaf_lobes": {
+      "min": 3,
+      "max": 5
+    },
+    "leaf_margin": "entire",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
+    "units_per_inflorescence": {
+      "min": 8,
+      "max": 20
+    },
+    "flower_size_m": {
+      "min": 0.021,
+      "max": 0.023
+    },
+    "flower_colour": [
+      214,
+      62,
+      132
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": 0.011,
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): stems many, erect, simple, 1.5-3 dm. tall."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: up to about 40 cm in the lushest meadow plants."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): plant perennial, herbaceous."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): plant perennial, herbaceous."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leafy stems die back each winter."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 2 cm to 5 cm long, as in the photos."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola subsp. olympica: leaves of the middle portion of the stem 3-6 mm. wide, narrower than in the typical subspecies; 4 mm to 12 mm by eye from the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): leaves lanceolate to ovate."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): with 1 or 2 pairs of spreading slenderly attenuate lobes."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): 1 or 2 pairs of lobes beside the midlobe: 3 to 5 lobes."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Lobes and blade with smooth edges, set by hand from iNaturalist photos (observations 9698268, 29713081, 1821010, 1821014, 113538, 885389, 230525808, 90152419): the sources read give no count or measure."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 819, Castilleja: spike-like racemes of yellow-, purple-, or red-bracted flowers."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the coloured spike 3 cm to 8 cm long, as in the photos."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "8 to 20 bracted flowers to a spike, set by hand from iNaturalist photos (observations 9698268, 29713081, 1821010, 1821014, 113538, 885389, 230525808, 90152419): the sources read give no count or measure."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): corolla 21-23 mm. long, its galea 10-11 mm. long; the calyx 18-23 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): bracts and calyces distally rose-red to red; the plants at Mount Rainier are magenta, as the photos show; the spike's colour is the bracts', drawn as the flowers' colour; sRGB by eye."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): capsule 11 mm. long."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): capsule 11 mm. long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 841, Castilleja oreopola (now C. parviflora var. oreopola, the variety at Mount Rainier): June-Sept."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripe August and September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a clump of many erect, unbranched leafy stems, the narrow leaves with one or two pairs of slender lobes, each stem tipped by a short spike of magenta bracts."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for magenta paintbrush from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.25 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}

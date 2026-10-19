@@ -1,0 +1,367 @@
+{
+  "schema": 1,
+  "id": "juniperus-communis",
+  "taxon": {
+    "scientific_name": "Juniperus communis",
+    "common_name": "common juniper",
+    "family": "Cupressaceae",
+    "genus": "Juniperus",
+    "plant_name_id": 377427
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "cone_chance": 0.25,
+      "cone_pitch": 90,
+      "height_rate": 0.02,
+      "height_shape": 1.2,
+      "leader_shade": 0.7,
+      "whorl": 3,
+      "interwhorl": 2,
+      "branch_angle": 75,
+      "upturn": 0.01,
+      "bend_set": 0.1,
+      "straighten": 0.3,
+      "branch_growth": 0.15,
+      "side_order": 2,
+      "side_chance": 0.8,
+      "spray_droop": 5,
+      "shade_death": 0.03,
+      "shade_years": 6,
+      "min_shoot": 0.025,
+      "dead_years": 8,
+      "pipe_organ": 0.004,
+      "pipe_rings": 3e-06,
+      "branch_reach": 1.5,
+      "stems": 5,
+      "stem_angle": 75,
+      "ground_gap": 0.005
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      5,
+      10,
+      20,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 1.0
+        },
+        "colour": [
+          0.55,
+          0.65,
+          0.8
+        ]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "twigs": 4,
+          "twig_angle": 50,
+          "ranks": 0,
+          "aspect": 0.7,
+          "width": 0.13,
+          "bundle": 1
+        }
+      }
+    },
+    "bark": [
+      0.4,
+      0.22,
+      0.15
+    ],
+    "foliage": [
+      0.11,
+      0.19,
+      0.11
+    ],
+    "foliage_shade": [
+      0.035,
+      0.061,
+      0.035
+    ],
+    "bark_pattern": {
+      "kind": "fibrous",
+      "scale": 0.02,
+      "elongation": 12.0,
+      "fissure": 0.35,
+      "depth": 0.3,
+      "contrast": 0.5,
+      "variation": 0.25,
+      "smooth_below": 0.01,
+      "roughness": 0.35
+    },
+    "ridges": {
+      "spacing": 0.03,
+      "depth": 0.03,
+      "twist": 10,
+      "contrast": 0.4
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 0.1,
+      "max": 0.9,
+      "high": 1.5
+    },
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.5
+    },
+    "crown_width_max_m": {
+      "min": 2,
+      "max": 4
+    },
+    "stem_posture": "prostrate",
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "bark_texture": "fibrous",
+    "leaf_form": "needle",
+    "leaf_arrangement": "whorled",
+    "leaves_per_whorl": 3,
+    "leaf_shape": "linear",
+    "leaf_apex": "acute",
+    "leaf_margin": "entire",
+    "leaf_length_m": {
+      "min": 0.006,
+      "max": 0.012
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "leaf_life_years": {
+      "min": 5,
+      "max": 10
+    },
+    "juvenile_period_years": {
+      "min": 5,
+      "max": 15
+    },
+    "sexual_system": "dioecious",
+    "cone_length_m": {
+      "min": 0.007,
+      "max": 0.009,
+      "low": 0.004,
+      "high": 0.013
+    },
+    "cone_colour": [
+      140,
+      165,
+      200
+    ],
+    "cone_maturation_years": 2,
+    "cone_retention_years": {
+      "min": 0,
+      "max": 1,
+      "typical": 0
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawn as a shrub on the conifers' program: Abrams (1923 p. 77) gives the alpine plants as a \"Low or usually prostrate alpine or arctic shrub, forming patches several feet in diameter\"; several stems lean out from one foot and spread low."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"most often grows as a low, decumbent mat-forming shrub reaching up to 4.9 feet (1.5 m) in height\"; var. montana, the alpine form, \"usually less than 3 feet (0.9 m) tall\"."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: mats 10 cm to 50 cm high in subalpine heath, as in the photos; Abrams (1923 p. 77): \"Low or usually prostrate\"."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"reaching up to 4.9 feet (1.5 m) in height and 7.6 to 13.1 feet (2-4 m) across\"."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: \"Low or usually prostrate alpine or arctic shrub, forming patches several feet in diameter\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"Individuals can live for more than 170 years\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"a native, evergreen shrub or columnar tree\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"a native, evergreen shrub\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: leaves in whorls along the branches: no rosette."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"The bark of common juniper is thin, shreddy or scaly, often exfoliating into thin strips\"."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"Unlike most junipers, whose leaves turn scalelike at maturity, common juniper leaves remain needlelike throughout the shrub's life\"; the Dendrology extraction (facts.csv, dendrology-2026-10-14#3148) also gives needle."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: \"Leaves in whorls of 3, ascending\"."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: \"Leaves in whorls of 3\"; FEIS (Tirmenstein 1999): \"arranged in whorls of 3\"."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: leaves \"linear-lanceolate\"; read as linear, as the genus (p. 76) gives them \"linear-subulate\"."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: leaves \"pungently acute\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: no teeth described: a needle \"keeled or strongly convex on the lower surface, deeply grooved above\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: leaves \"6-12 mm. long\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: needles 1 mm to 1.5 mm wide, as in the photos."
+    },
+    "traits.leaf_life_years": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: needles kept 5 to 10 years; Abrams's genus (1923 p. 76) says only \"Leaves persistent for many years\"."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: cones from about 5 to 15 years old on a low shrub; no source read gives it."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"Common juniper is typically dioecious but occasionally monoecious\"; the Dendrology extraction (dendrology-2026-10-14#3148) gives dioecious."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: \"berries globose, 7-9 mm. broad\", so as long as broad; the Dendrology extraction (dendrology-2026-10-14#3148) gives (4-)7-9(-13) mm across."
+    },
+    "traits.cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 77, Juniperus sibirica: berries \"bright blue, covered with a white bloom\"; sRGB by eye from the photos (pale glaucous blue)."
+    },
+    "traits.cone_maturation_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Juniperus communis (Tirmenstein 1999): \"Seed usually matures during the second growing season\"."
+    },
+    "traits.cone_retention_years": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: ripe berry-cones mostly fall or are eaten within the year they ripen, as the template's."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rocky Mountain juniper's (juniperus-scopulorum) values, changed by hand for the prostrate alpine common juniper: five stems from one foot leaning far out (stem_angle 75), short level branches that turn up little, slow height growth, and branches kept close to the ground (ground_gap 0.005) so the mat is not shed where it lies (Abrams 1923 p. 77: \"Low or usually prostrate\"; FEIS: \"low, decumbent mat-forming shrub\"). The needles' life comes from leaf_life_years by the Pinidae rule. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: 0.35 m tall at 30 years in the open, a low mat as in the photos; FEIS gives up to 1.5 m. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, spreading mat of stiff, sharp, upcurved needles in threes, grey-green with a white band above, carrying pale glaucous blue berry-cones. Organ cards from Rocky Mountain juniper's (juniperus-scopulorum), recoloured and resized by hand."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

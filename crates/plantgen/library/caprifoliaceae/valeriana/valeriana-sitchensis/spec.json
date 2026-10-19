@@ -1,0 +1,387 @@
+{
+  "schema": 1,
+  "id": "valeriana-sitchensis",
+  "taxon": {
+    "scientific_name": "Valeriana sitchensis",
+    "common_name": "Sitka valerian",
+    "family": "Caprifoliaceae",
+    "genus": "Valeriana",
+    "plant_name_id": 2462419
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.1,
+      "stem_lean": 8,
+      "nodes": 3,
+      "basal_leaves": 0,
+      "bare": 0.15,
+      "leaf_peak": 0.3,
+      "leaf_top": 0.5,
+      "leaf_base": 0.8,
+      "leaf_angle": 50,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.12,
+      0.26,
+      0.08
+    ],
+    "foliage_shade": [
+      0.038,
+      0.083,
+      0.026
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.35,
+      "max": 1.2
+    },
+    "height_max_m": 1.5,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "perennation": "rhizome",
+    "rhizome_habit": "short_creeping",
+    "rosette": "none",
+    "leaf_arrangement": "opposite",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": {
+      "min": 3,
+      "max": 9
+    },
+    "terminal_leaflet": true,
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "leaflet_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
+    "leaflet_width_m": {
+      "min": 0.015,
+      "max": 0.045
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.05
+    },
+    "leaf_shape": "ovate",
+    "leaf_margin": "dentate",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "cyme",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "units_per_inflorescence": {
+      "min": 30,
+      "max": 80
+    },
+    "flower_size_m": {
+      "min": 0.0045,
+      "max": 0.007
+    },
+    "corolla_shape": "funnelform",
+    "flower_merosity": 5,
+    "stamens": 3,
+    "stamen_exsertion": "exserted",
+    "flower_colour": [
+      246,
+      240,
+      242
+    ],
+    "bud_colour": [
+      222,
+      165,
+      185
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.006
+    },
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawn as a forb: a robust perennial herb of subalpine meadows from a stout rhizome (Abrams and Ferris 1960 p. 57), on the flowering plants' herb program, as Caprifoliaceae has no forb program of its own."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: stems robust from a rather stout rhizome, 3.5-12.0 dm. tall."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W200, Valeriana scouleri (the handbook's name, with V. sitchensis as its synonym): stem usually 1 to 2 (sometimes up to 5) ft. tall; set to 1.5 m, a little above Abrams' 12 dm."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: stems from a rather stout rhizome: a perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 56, Valeriana: perennial, strong-smelling herbs from rhizomes or taproots."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leafy stems die back each winter under the snow."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: stems from a rather stout rhizome."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W200, Valeriana scouleri: reproduces by seed and rootstocks; stout rootstocks with an intertwining mass of fibrous roots: read as a short, creeping rhizome."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: basal leaves often wanting; cauline leaves predominating."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 56, Valeriana: leaves decussate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: cauline leaves 2-5 pairs, pinnate to pinnatifid."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: cauline leaves pinnate, the lateral lobes 1-4 pairs, with a terminal lobe."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: leaflets crenate to repand-dentate, not divided again."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: lateral lobes 1-4 pairs and a terminal one, so 3 to 9; the Range Plant Handbook (p. W200) gives 3 to 7 leaflets."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: the terminal lobe obovate, ovate-rhombic to suborbicular."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: cauline leaves 10-20 cm. long."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 3 cm to 8 cm long, the terminal one the largest, as in the photos; Abrams gives the basal leaves' terminal lobe 5-10 cm long."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: the cauline leaves' terminal lobe 2.5-4.5 cm. wide; the lateral ones narrower, from 1.5 cm by eye."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cauline leaves short-stalked, the petiole 1 cm to 5 cm, as in the photos; the Range Plant Handbook (p. W200) calls them short-stalked."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: the terminal lobe obovate, ovate-rhombic, to suborbicular; drawn ovate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: crenate to irregularly repand-dentate or essentially entire; drawn dentate, as most of the photos show."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: leaves glabrous, the stems glabrescent."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W200, Valeriana scouleri: flowers white or pinkish, in contracted, terminal clusters (cymes); Abrams: inflorescences thyrsiform."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: each cluster 2 cm to 5 cm across in flower, as in the photos, lengthening in fruit."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "30 to 80 flowers and buds to a cluster, set by hand from iNaturalist photos (observations 127112874, 85029964, 59542460, 228765842, 65240384, 172739387, 87007676, 299217777): the sources read give no count or measure."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: corolla infundibuliform, 4.5-7.0 long (the scan reads cm., plainly an error for mm.), the limb usually less than half as long as the gibbous tube."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: corolla infundibuliform."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 56, Valeriana: the 5 lobes equal or subequal."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 56, Valeriana: stamens 3, rarely 4, epipetalous."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: stamens and style exserted."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: corolla white to pinkish; sRGB by eye from the photos."
+    },
+    "traits.bud_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Buds pink before the flowers open white; sRGB by eye, set by hand from iNaturalist photos (observations 127112874, 85029964, 59542460, 228765842, 65240384, 172739387, 87007676, 299217777): the sources read give no count or measure."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 56, Valeriana: fruit a cypsela with 3 abaxial and 3 adaxial veins."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: fruits ovate to oblong-ovate, 3-6 mm. long, 2.0 mm. wide."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 57, Valeriana sitchensis: June-Sept."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W200, Valeriana scouleri: the seed crop maturing from approximately mid-August until the end of the growing season."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a clump of stout leafy stems with pairs of pinnate, coarsely toothed leaves, each crowned by a rounded head of tiny white flowers, pink in bud, with protruding stamens."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Sitka valerian from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.6 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}

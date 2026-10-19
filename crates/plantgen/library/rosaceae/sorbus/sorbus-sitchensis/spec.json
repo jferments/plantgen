@@ -1,0 +1,469 @@
+{
+  "schema": 1,
+  "id": "sorbus-sitchensis",
+  "taxon": {
+    "scientific_name": "Sorbus sitchensis",
+    "common_name": "Sitka mountain-ash",
+    "family": "Rosaceae",
+    "genus": "Sorbus",
+    "plant_name_id": 2992372
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 1.0,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 90.9,
+      "internode": 0.1,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 35,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 6,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.19,
+      "space_kill": 0.294,
+      "leaf_size": 0.15,
+      "spur_leaf": 0.12,
+      "spur_pairs": 1,
+      "leaf_angle": 50,
+      "blooms": 1,
+      "adult_age": 4,
+      "bloom_size": 0.07,
+      "bloom_angle": 20,
+      "path_half": 2.35
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "compound",
+          "leaflets": 11,
+          "leaflet_width": 0.3,
+          "petiole": 0.1
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "crowned",
+          "aspect": 1.15,
+          "unripe": 0.4
+        },
+        "inflorescence": {
+          "flowers": 30,
+          "size": 0.4,
+          "spread": 60,
+          "pedicel": 0.12
+        },
+        "colour": [
+          0.88,
+          0.32,
+          0.2
+        ],
+        "accent": [
+          0.5,
+          0.2,
+          0.15
+        ],
+        "season": {
+          "ripening": 25,
+          "opening": 8,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petal_width": 0.55,
+              "point": 0.2,
+              "notch": 0.0,
+              "centre": 0.15,
+              "stamen_length": 0.25
+            },
+            "colour": [
+              0.96,
+              0.95,
+              0.92
+            ],
+            "accent": [
+              0.88,
+              0.82,
+              0.6
+            ],
+            "size": 1.2,
+            "form": {
+              "flower": {
+                "cup": 15,
+                "curl": 15
+              }
+            }
+          }
+        }
+      }
+    },
+    "bark": [
+      0.42,
+      0.3,
+      0.26
+    ],
+    "foliage": [
+      0.08,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.026,
+      0.054,
+      0.019
+    ],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.03,
+      "variation": 0.12,
+      "smooth_below": 0.0
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 1.8,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1.2,
+      "max": 2.4
+    },
+    "height_max_m": {
+      "min": 2,
+      "max": 5,
+      "high": 6
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "bark_texture": "smooth",
+    "shade_tolerance": "intolerant",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": {
+      "min": 7,
+      "max": 13
+    },
+    "terminal_leaflet": true,
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "leaflet_length_m": {
+      "min": 0.03,
+      "max": 0.065
+    },
+    "leaflet_width_m": {
+      "min": 0.01,
+      "max": 0.022
+    },
+    "leaf_shape": {
+      "oblong": "usually",
+      "lanceolate": "often"
+    },
+    "leaf_apex": {
+      "acute": "usually",
+      "acuminate": "sometimes"
+    },
+    "leaf_margin": "serrate",
+    "inflorescence": "corymb",
+    "flowering_position": "terminal",
+    "units_per_inflorescence": {
+      "min": 15,
+      "max": 60
+    },
+    "inflorescence_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "flower_size_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "flower_merosity": 5,
+    "flower_colour": [
+      246,
+      244,
+      236
+    ],
+    "fruit_type": "pome",
+    "fruit_size_m": {
+      "min": 0.007,
+      "max": 0.008
+    },
+    "fruit_shape": "ellipsoid",
+    "fruit_colour_ripe": [
+      235,
+      90,
+      60
+    ],
+    "fruit_persistence": "persistent",
+    "flowering_months": [
+      6,
+      7
+    ],
+    "fruiting_months": [
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"a native, deciduous shrub 4 to 8 feet (1.2-2.4 m) tall\"; \"On rocky alpine sites at higher elevations western mountain-ash is often only 1 to 2 feet (0.3-0.6 m) tall\"."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"Shrub 2-5 m. high with smooth bark\"; FEIS (Matthews 1993): \"or a small tree up to 20 feet (4.5-6.0 m) tall\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): a shrub or small tree, \"6 inches (15 cm) d.b.h.\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"Shrub 2-5 m. high with smooth bark\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"a native, deciduous shrub\"."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"with smooth bark\"; FEIS (Matthews 1993): \"bark is thin and smooth\"."
+    },
+    "traits.shade_tolerance": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Western mountain-ash is shade intolerant and persists in clearings\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Leaves are pinnately compound\"."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Leaves are pinnately compound\"."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 469, Sorbus: \"alternate pinnate deciduous leaves, serrate leaflets\": divided once."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"Leaves bearing 9-13 leaflets\"; FEIS (Matthews 1993): \"with 7 to 11 leaflets\"; the range spans both."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each leaf ending in a single leaflet (odd-pinnate), set by hand from iNaturalist photos (observations 88225355, 107633738, 3536249, 83558082, 135388021, 232196549, 129343023, 52221740): the sources read give no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Leaves are pinnately compound and are 4 to 8 inches (10-20 cm) long\"."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 3 cm to 6.5 cm long, as in the photos; Abrams gives a length only for S. occidentalis."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaflets 1 cm to 2.2 cm wide, as in the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"leaflets linear to oblong-lanceolate\"; mostly oblong in the photos of the Rainier plants."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: leaflets \"acuminate to acute\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: leaflets \"sharply serrate to near the base\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Flowers are borne in terminal corymbs\"; Abrams's genus (1944 p. 469): \"in terminal compound cymes\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Flowers are borne in terminal corymbs\"."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"with 15 to 60 flowers per head\"."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: flat-topped clusters 4 cm to 10 cm across, as in the photos."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 8 mm to 10 mm across, as in the photos."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 469, Sorbus: \"Petals 5, white, spreading, short-clawed\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 469, Sorbus: \"Petals 5, white\"; sRGB by eye from the photos (white, the buds pink-tinged)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Fruits are small pommes\"; Abrams's genus (1944 p. 469): \"a small red berry-like pome\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"fruit ellipsoid, coral red, 7-8 mm. long\"."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"fruit ellipsoid\"."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 470, Sorbus sitchensis: \"fruit ellipsoid, coral red\", \"not glaucous\" (key); sRGB by eye."
+    },
+    "traits.fruit_persistence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Fruits ripen from September to October and persist through late winter\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Western mountain-ash flowers from June to July\"; Abrams (1944 p. 470): May-July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Sorbus sitchensis (Matthews 1993): \"Fruits ripen from September to October\"."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Saskatoon's (amelanchier-alnifolia) values, changed by hand for Sitka mountain-ash: a few stems, longer pinnate leaves (leaf card 15 cm for FEIS's 10-20 cm leaves), and one erect, flat-topped cluster at the tip of a shoot (FEIS: terminal corymbs). Not fitted to measurements."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: an open shrub of several smooth, reddish-grey stems, pinnate leaves of many oblong, toothed leaflets, flat clusters of white flowers and coral-red fruit. Organ cards from western serviceberry's (amelanchier-alnifolia), recoloured and resized by hand."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.8 m tall at 12 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

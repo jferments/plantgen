@@ -1,0 +1,409 @@
+{
+  "schema": 1,
+  "id": "vaccinium-deliciosum",
+  "taxon": {
+    "scientific_name": "Vaccinium deliciosum",
+    "common_name": "Cascade blueberry",
+    "family": "Ericaceae",
+    "genus": "Vaccinium",
+    "plant_name_id": 2458946
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 0.25,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 400,
+      "internode": 0.02,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.02,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.005,
+      "fork_stems": 10,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 0.3,
+      "space_kill": 0.075,
+      "spur_pairs": 1,
+      "leaf_angle": 50,
+      "blooms": 1,
+      "adult_age": 3,
+      "bloom_size": 0.008,
+      "bloom_angle": 120,
+      "path_half": 0.3
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "widest": 0.5,
+          "tip": 0.2,
+          "base": 0.6,
+          "petiole": 0.03
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "crowned",
+          "aspect": 1.0,
+          "unripe": 0.3
+        },
+        "colour": [
+          0.27,
+          0.35,
+          0.55
+        ],
+        "accent": [
+          0.35,
+          0.3,
+          0.3
+        ],
+        "season": {
+          "ripening": 30,
+          "flower_look": {
+            "shape": {
+              "template": "fruit",
+              "kind": "crowned",
+              "aspect": 0.85
+            },
+            "colour": [
+              0.92,
+              0.75,
+              0.76
+            ],
+            "accent": [
+              0.8,
+              0.5,
+              0.52
+            ],
+            "size": 0.85
+          }
+        }
+      }
+    },
+    "bark": [
+      0.42,
+      0.3,
+      0.2
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.09
+    ],
+    "foliage_shade": [
+      0.032,
+      0.054,
+      0.029
+    ]
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.22,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "height_max_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "clonal": true,
+    "leaf_shape": "obovate",
+    "leaf_apex": "acute",
+    "leaf_base_shape": "cuneate",
+    "leaf_margin": "crenate",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.035
+    },
+    "leaf_width_m": {
+      "min": 0.008,
+      "max": 0.02
+    },
+    "leaf_colour": [
+      125,
+      160,
+      130
+    ],
+    "leaf_colour_autumn": [
+      185,
+      45,
+      40
+    ],
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "flower_posture": "nodding",
+    "corolla_shape": "urceolate",
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.006
+    },
+    "flower_colour": [
+      235,
+      190,
+      195
+    ],
+    "stamens": 10,
+    "fruit_type": "berry",
+    "fruit_shape": "globose",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.007
+    },
+    "fruit_colour_ripe": [
+      70,
+      90,
+      140
+    ],
+    "flowering_months": [
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"Low densely branched shrub, 1-3 dm. high, glabrous throughout\"."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"1-3 dm. high\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: a shrub."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"Low densely branched shrub\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 327, Vaccinium: key: \"Leaves not coriaceous, deciduous\" (section Euvaccinium)."
+    },
+    "traits.clonal": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Spreading in low, continuous patches over meadow slopes, set by hand from iNaturalist photos (observations 93890682, 307832590, 4882217, 94886221, 306569656, 16293761, 385558788, 57549521): the sources read give no count or measure."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"Leaves obovate or rarely broadly elliptic\"."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: leaves \"acutish or acute at the apex\"."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: leaves \"mostly cuneate at the base\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: leaves \"distinctly crenately serrulate above the middle\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: leaves \"15-35 mm. long\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 8 mm to 20 mm wide, about half as wide as long as in the photos."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: leaves \"pale green above, glaucescent beneath\"; sRGB by eye from the photos (a dull blue-green)."
+    },
+    "traits.leaf_colour_autumn": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves turning red in autumn; sRGB by eye, set by hand from iNaturalist photos (observations 93890682, 307832590, 4882217, 94886221, 306569656, 16293761, 385558788, 57549521): the sources read give no count or measure."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"flowers solitary in the axils\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"flowers solitary in the axils\"."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: flowers \"nodding on curved pedicels\"."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"corolla pinkish, 5-6 mm. long, subglobose\"; read as urn-shaped, as the genus's (p. 327: \"Corolla globose or ovoid and more or less urceolate\")."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: corolla \"5-6 mm. long\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"corolla pinkish\"; sRGB by eye."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"stamens 10\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"berries blue-black, with a bloom\"."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: berries \"globose to pyriform\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: berries \"6-7 mm. in diameter\"."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"berries blue-black, with a bloom\"; sRGB by eye from the photos, where the bloom shows them dusty blue."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"July.\"."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Ripe berries in August and September, set by hand from iNaturalist photos (observations 93890682, 307832590, 4882217, 94886221, 306569656, 16293761, 385558788, 57549521): the sources read give no count or measure."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Red huckleberry's (vaccinium-parvifolium) values, changed by hand for Cascade blueberry: a low, densely branched shrub 1-3 dm high (Abrams 1951 p. 328), many stems from near the ground, short internodes, and single nodding flowers in the leaf axils. Not fitted to measurements."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium deliciosum: \"flowers solitary in the axils, nodding\"; \"corolla pinkish, 5-6 mm. long, subglobose\"; \"berries blue-black, with a bloom, globose to pyriform, 6-7 mm. in diameter\". Drawn as a pale pink urn a little smaller than the dusty blue berry."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a knee-high-or-lower carpet of blue-green, obovate leaves on green twigs, with pinkish urn-shaped flowers and dusty blue berries, flaming red in autumn. Organ cards from red huckleberry's (vaccinium-parvifolium), recoloured and resized by hand."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.22 m tall at 10 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

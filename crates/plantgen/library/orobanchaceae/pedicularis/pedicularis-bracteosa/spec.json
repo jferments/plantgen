@@ -1,0 +1,340 @@
+{
+  "schema": 1,
+  "id": "pedicularis-bracteosa",
+  "taxon": {
+    "scientific_name": "Pedicularis bracteosa",
+    "common_name": "bracted lousewort",
+    "family": "Orobanchaceae",
+    "genus": "Pedicularis",
+    "plant_name_id": 2541983
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 3,
+      "clump_radius": 0.08,
+      "stem_lean": 6,
+      "nodes": 6,
+      "basal_leaves": 0,
+      "bare": 0.1,
+      "leaf_peak": 0.2,
+      "leaf_top": 0.4,
+      "leaf_base": 0.9,
+      "leaf_angle": 45,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.12,
+      0.25,
+      0.08
+    ],
+    "foliage_shade": [
+      0.038,
+      0.08,
+      0.026
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.4,
+      "max": 1.0
+    },
+    "height_max_m": 1.2,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": {
+      "min": 17,
+      "max": 31
+    },
+    "terminal_leaflet": true,
+    "leaf_incision": "dissected",
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "leaf_width_m": {
+      "min": 0.08,
+      "max": 0.15
+    },
+    "leaflet_length_m": {
+      "min": 0.03,
+      "max": 0.07
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "dentate",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.2
+    },
+    "units_per_inflorescence": {
+      "min": 20,
+      "max": 60
+    },
+    "pedicel_length_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "flower_size_m": {
+      "min": 0.013,
+      "max": 0.018
+    },
+    "flower_colour": [
+      226,
+      214,
+      118
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.012
+    },
+    "flowering_months": [
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 805, Pedicularis bracteosa: stem 4-10 dm. tall; Abrams p. 806, P. latifolia: stem 4-12 dm. tall."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): stem 4-12 dm. tall."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 802, Pedicularis: erect perennial herbs."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 802, Pedicularis: erect perennial herbs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leafy stems die back each winter."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 805, Pedicularis bracteosa: the petioles of the basal leaves mostly lost by anthesis; the leaves borne along the stem."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 805, Pedicularis bracteosa: leaves with about 15 pairs of pinnules, all but the more distal distinct to the midrib: drawn as a divided leaf."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 805, Pedicularis bracteosa: pinnules in pairs along the midrib."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 805, Pedicularis bracteosa: pinnules doubly dentate but not divided again."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): 8 to 10 pairs of pinnules; P. bracteosa (p. 805) about 15 pairs; with the terminal segment 17 to 31."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each leaf ending in a terminal segment, set by hand from iNaturalist photos (observations 228043439, 234015737, 130667633, 386309698, 304624205, 28002646, 29733425, 113754): the sources read give no count or measure."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): pinnules all but the distal distinct to midrib: the distal ones run together."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): leaves which may reach 15-20 cm. long; P. bracteosa (p. 805): to 15 cm long; from 10 cm by eye from the photos."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): leaves may reach 10-15 cm. wide; P. bracteosa (p. 805): to 10 cm wide; from 8 cm by eye."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: pinnules 3 cm to 7 cm long, about half the leaf's width."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): pinnules linear-lanceolate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): irregularly and somewhat doubly sharply dentate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): plant glabrous below the slightly hairy inflorescence."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 802, Pedicularis: a usually spike-like raceme."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the flowering spike 5 cm to 20 cm long, lengthening as it opens, as in the photos."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "20 to 60 crowded flowers to a spike, set by hand from iNaturalist photos (observations 228043439, 234015737, 130667633, 386309698, 304624205, 28002646, 29733425, 113754): the sources read give no count or measure."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 805, Pedicularis bracteosa: pedicels 1-2 mm. long; P. latifolia (p. 806): 1-1.5 mm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): corolla 16-18 mm. long; P. bracteosa (p. 805): 13-16 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): corolla citron-yellow to partially or wholly purple; the plants in the photos from Mount Rainier are pale yellow; sRGB by eye."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 805, Pedicularis bracteosa: capsule 12 mm. long, decurved at apex."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): capsule 10 mm. long; P. bracteosa (p. 805): 12 mm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): June-Aug."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripe August and September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a few tall, unbranched stems with fern-like, deeply divided leaves along them, each topped by a dense spike of pale yellow, hooded flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for bracted lousewort from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.6 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}

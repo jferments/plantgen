@@ -1,0 +1,381 @@
+{
+  "schema": 1,
+  "id": "pulsatilla-occidentalis",
+  "taxon": {
+    "scientific_name": "Pulsatilla occidentalis",
+    "common_name": "western pasqueflower",
+    "family": "Ranunculaceae",
+    "genus": "Pulsatilla",
+    "plant_name_id": 2544164
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 3,
+      "clump_radius": 0.05,
+      "stem_lean": 8,
+      "nodes": 1,
+      "bare": 0.45,
+      "leaf_peak": 0.0,
+      "leaf_top": 1.0,
+      "leaf_base": 1.0,
+      "leaf_angle": 40,
+      "leaf_length": 0.05,
+      "basal_leaves": 8,
+      "basal_angle": 45,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "petiole": 0.45
+        }
+      }
+    },
+    "foliage": [
+      0.2,
+      0.3,
+      0.16
+    ],
+    "foliage_shade": [
+      0.064,
+      0.096,
+      0.051
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.6
+    },
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "basal",
+    "leaf_arrangement": "whorled",
+    "leaves_per_whorl": 3,
+    "leaf_whorls": 1,
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 2,
+    "pinnae": 3,
+    "inner_division_pattern": "pinnate",
+    "leaflets": {
+      "min": 7,
+      "max": 11
+    },
+    "leaf_incision": "dissected",
+    "leaf_shape": "linear",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "petiole_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "leaf_hairs": "villous",
+    "stem_hairs": "villous",
+    "inflorescence": "solitary",
+    "perianth": "spiral",
+    "perianth_parts": {
+      "min": 5,
+      "max": 8
+    },
+    "tepal_length_m": {
+      "min": 0.02,
+      "max": 0.025
+    },
+    "flower_size_m": {
+      "min": 0.04,
+      "max": 0.05
+    },
+    "corolla_shape": "cupped",
+    "flower_colour": [
+      246,
+      244,
+      236
+    ],
+    "anther_colour": [
+      238,
+      200,
+      60
+    ],
+    "fruit_type": "achene",
+    "fruit_size_m": {
+      "min": 0.025,
+      "max": 0.03
+    },
+    "fruit_colour_ripe": [
+      205,
+      195,
+      175
+    ],
+    "flowering_months": [
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: stems 1-6 dm. high, silky-villous."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: scapose perennial herbs with stout rootstocks."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: scapose perennial herbs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leaves die back each winter under the snow."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: basal leaves long-petioled."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: stem leaves 3, forming an involucre remote from the flower: one whorl."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: stem leaves 3, forming an involucre."
+    },
+    "traits.leaf_whorls": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: the 3 stem leaves form one involucre."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: basal leaves ternate, the divisions twice pinnately dissected."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: basal leaves ternate: three divisions from the petiole's tip."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: the three divisions twice pinnately dissected; drawn divided twice, the finest cuts as dissected segments."
+    },
+    "traits.pinnae": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: basal leaves ternate: 3 primary divisions."
+    },
+    "traits.inner_division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: the divisions pinnately dissected."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "7 to 11 primary segments along each of the three divisions, set by hand from iNaturalist photos (observations 19238580, 870941, 1623814, 135289630, 113539, 375040248, 59482182, 145592116): the sources read give no count or measure."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: the ultimate segments narrowly linear and acute: finely dissected."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: the ultimate segments narrowly linear and acute."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: basal blades 4 cm to 10 cm long, as in the photos."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: basal petioles 3 cm to 10 cm long, as in the photos; Abrams (1944 p. 193) calls them long, and the involucral leaves short-petioled."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: the silky-villous divisions."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: stems silky-villous."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: scapose herbs, the involucre remote from the flower: a solitary flower."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: sepals petaloid; petals none: drawn as a single series of tepals."
+    },
+    "traits.perianth_parts": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petaloid sepals 5 to 8, usually 6, as in the photos."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: sepals oval to oblong, 20-25 mm. long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: sepals 20-25 mm. long, cupped, so the flower about 4 cm to 5 cm across, as in the photos."
+    },
+    "traits.corolla_shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sepals held in a shallow cup, set by hand from iNaturalist photos (observations 19238580, 870941, 1623814, 135289630, 113539, 375040248, 59482182, 145592116): the sources read give no count or measure."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: sepals white or tinged with purple; sRGB by eye from the photos."
+    },
+    "traits.anther_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Stamens a dense yellow boss; sRGB by eye, set by hand from iNaturalist photos (observations 19238580, 870941, 1623814, 135289630, 113539, 375040248, 59482182, 145592116): the sources read give no count or measure."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla: achenes numerous, forming a head in fruit and furnished with elongated persistent plumose styles."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: achenes villous, the styles long-silky-plumose, 2.5-3 cm. long: each fruit drawn as its achene and plumose style."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the plumose fruiting heads silvery buff."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 193, Pulsatilla occidentalis: June-Aug."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the shaggy fruiting heads stand from July to September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a small clump of finely dissected, silky-hairy leaves, each hairy stem with a whorl of three leaves below one cup-shaped white flower with a yellow boss of stamens. The basal leaves' petiole share is set by hand from the leaf and petiole lengths the traits give, as no rule sets a rosette leaf's."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for western pasqueflower from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}

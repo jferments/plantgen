@@ -1,0 +1,354 @@
+{
+  "schema": 1,
+  "id": "luetkea-pectinata",
+  "taxon": {
+    "scientific_name": "Luetkea pectinata",
+    "common_name": "partridgefoot",
+    "family": "Rosaceae",
+    "genus": "Luetkea",
+    "plant_name_id": 2950346
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 30,
+      "clump_radius": 0.1,
+      "stem_lean": 35,
+      "stem_radius": 0.0008,
+      "wiggle": 5,
+      "nodes": 10,
+      "leaves_per_node": 1,
+      "leaf_angle": 45,
+      "basal_leaves": 0,
+      "bare": 0.35,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.5,
+      "raceme": 0.3,
+      "flowers": 15,
+      "flower_angle": 50,
+      "pedicel": 0.003,
+      "flowering_share": 0.5
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.25
+        }
+      }
+    },
+    "bark": [
+      0.4,
+      0.3,
+      0.22
+    ],
+    "foliage": [
+      0.16,
+      0.32,
+      0.1
+    ],
+    "foliage_shade": [
+      0.051,
+      0.102,
+      0.032
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.1,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "woodiness": "semi",
+    "life_span": "perennial",
+    "stem_posture": "decumbent",
+    "clonal": true,
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 2,
+    "leaflets": 3,
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "leaflet_length_m": {
+      "min": 0.003,
+      "max": 0.006
+    },
+    "leaf_shape": "linear",
+    "leaf_apex": "acute",
+    "leaf_hairs": "glabrescent",
+    "inflorescence": "raceme",
+    "inflorescence_length_m": {
+      "min": 0.01,
+      "max": 0.05
+    },
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 30
+    },
+    "flower_merosity": 5,
+    "petal_length_m": {
+      "min": 0.003,
+      "max": 0.0035
+    },
+    "petal_shape": "obovate",
+    "sepal_length_m": 0.002,
+    "flower_size_m": {
+      "min": 0.006,
+      "max": 0.008
+    },
+    "flower_colour": [
+      246,
+      243,
+      226
+    ],
+    "stamens": 20,
+    "carpels": 5,
+    "fruit_type": "follicle",
+    "fruit_size_m": 0.004,
+    "flowering_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawn as a forb on the herb program: Abrams (1944 p. 412) gives Luetkea as \"Cespitose woody plants, with prostrate or decumbent stoloniferous branches\", a mat of short leafy shoots about 5-15 cm high, which the herb program draws as many low, outward-leaning stems. No Rosaceae forb is built in, so its template is spreading phlox (phlox-diffusa), another mat."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"Flowering shoots 5-15 cm. high, leafy\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"Cespitose woody plants\"; semi-woody, a mat of slender woody-based shoots."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"Cespitose woody plants\"."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"with prostrate or decumbent stoloniferous branches\"."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"often forming mats\", from \"stoloniferous branches\" (genus, p. 412)."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves crowded along the short shoots, with no basal rosette, set by hand from iNaturalist photos (observations 248882149, 235278907, 235284059, 388106402, 385828507, 236858631, 376772951, 377636425): the sources read give no count or measure."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"Leaves twice or thrice ternately dissected\", borne singly; alternate, as Rosaceae's are (key, p. 408: \"Leaves alternate; herbs or shrubs\")."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"Leaves twice or thrice ternately dissected\"."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"ternately dissected\": three divisions from one point."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"twice or thrice ternately dissected\"; drawn twice."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"ternately dissected\": three divisions at each order."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"Leaves dissected into linear acute divisions, grooved above, 1-1.5 cm. long\"."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the last divisions 3 mm to 6 mm long, a third to a half of the 1-1.5 cm leaf, as in the photos."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"dissected into linear acute divisions\"."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"linear acute divisions\"."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: shoots \"glabrous or sparsely pilose\"; leaves \"glabrate\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"raceme narrow, 1-5 cm. long\"."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"raceme narrow, 1-5 cm. long\"."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "10 to 30 flowers to a raceme, set by hand from iNaturalist photos (observations 248882149, 235278907, 235284059, 388106402, 385828507, 236858631, 376772951, 377636425): the sources read give no count or measure."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"sepals and petals 5\"."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"petals white, round-obovate, 3-3.5 mm. long\"."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"petals white, round-obovate\"."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"sepals ovate, acute, 2 mm. long\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 6 mm to 8 mm across, about twice the 3-3.5 mm petals Abrams gives."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"petals white\"; sRGB by eye from the photos (creamy white, the stamens yellowish)."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"stamens about 20, their filaments subulate\"."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"Pistils usually 5, distinct\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 412, Luetkea: \"Follicles coriaceous, dehiscent on both sutures\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"follicles about 4 mm. long\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 413, Luetkea pectinata: \"July-Sept.\"."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for partridgefoot from Abrams's description and the photos the traits cite, on spreading phlox's (phlox-diffusa) structure: many short, leafy shoots leaning out from a mat, the leaves largest low on each shoot, and half of them ending in a narrow raceme of about 15 white flowers on a bare stalk (Abrams 1944 p. 413). Not fitted to measurements."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a bright green mat of finely dissected, fan-like leaves, from which short stalks rise with narrow spikes of creamy white flowers. Organ cards from spreading phlox's (phlox-diffusa), recoloured and resized by hand."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.1 m tall at 4 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

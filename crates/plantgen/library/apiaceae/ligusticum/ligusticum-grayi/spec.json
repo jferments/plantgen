@@ -1,0 +1,360 @@
+{
+  "schema": 1,
+  "id": "ligusticum-grayi",
+  "taxon": {
+    "scientific_name": "Ligusticum grayi",
+    "common_name": "Gray's licorice-root",
+    "family": "Apiaceae",
+    "genus": "Ligusticum",
+    "plant_name_id": 2344102
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 3,
+      "clump_radius": 0.06,
+      "stem_lean": 10,
+      "nodes": 1,
+      "bare": 0.4,
+      "leaf_peak": 0.0,
+      "leaf_top": 1.0,
+      "leaf_base": 1.0,
+      "leaf_angle": 50,
+      "leaf_length": 0.04,
+      "basal_leaves": 6,
+      "basal_angle": 50,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "petiole": 0.5
+        }
+      }
+    },
+    "foliage": [
+      0.13,
+      0.27,
+      0.08
+    ],
+    "foliage_shade": [
+      0.042,
+      0.086,
+      0.026
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "basal",
+    "cauline_leaves": "reduced",
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 2,
+    "pinnae": 3,
+    "inner_division_pattern": "pinnate",
+    "leaflets": {
+      "min": 5,
+      "max": 9
+    },
+    "leaflet_incision": "cleft",
+    "leaflet_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "leaf_shape": "ovate",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "petiole_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "leaf_hairs": "glabrous",
+    "inflorescence": "compound_umbel",
+    "inflorescence_branches": {
+      "min": 5,
+      "max": 14
+    },
+    "inflorescence_length_m": {
+      "min": 0.04,
+      "max": 0.07
+    },
+    "units_per_inflorescence": {
+      "min": 80,
+      "max": 250
+    },
+    "pedicel_length_m": {
+      "min": 0.003,
+      "max": 0.008
+    },
+    "flower_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "flower_colour": [
+      245,
+      244,
+      236
+    ],
+    "fruit_type": "schizocarp",
+    "fruit_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: stems slender, 2-6 dm. high, glabrous throughout."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum: erect glabrous or pubescent perennial herbs from fibrous root-crowns."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum: perennial herbs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leaves die back each winter."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: stems naked or with one or few much-reduced cauline leaves: the leaves basal."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: one or few much-reduced cauline leaves."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: leaves ternate-pinnate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: leaves ternate: three divisions from the petiole's tip."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: leaves ternate-pinnate, the leaflets pinnatifid: divided twice, the leaflets cleft."
+    },
+    "traits.pinnae": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: leaves ternate: 3 primary divisions."
+    },
+    "traits.inner_division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: the divisions pinnate."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "5 to 9 leaflets along each of the three divisions, set by hand from iNaturalist photos (observations 299304163, 4854691, 234017343, 228438524, 233877049, 131937167): the sources read give no count or measure."
+    },
+    "traits.leaflet_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: leaflets pinnatifid into oblong acute or obtuse divisions."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: leaflets ovate to oblong, 1-2 cm. long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: leaflets ovate to oblong."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: basal blades 5 cm to 15 cm long, as in the photos."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: basal petioles 5 cm to 15 cm long, about as long as the blades, as in the photos."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: glabrous throughout."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum: umbels lateral and terminal; rays and pedicels: a compound umbel."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: rays 5-14."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: rays 2-3.5 cm. long, so the umbel about 4 cm to 7 cm across."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "80 to 250 flowers to an umbel, 15 to 20 to each umbellet, set by hand from iNaturalist photos (observations 299304163, 4854691, 234017343, 228438524, 233877049, 131937167): the sources read give no count or measure."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: pedicels 3-8 mm. long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: flowers 2 mm to 3 mm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum: flowers white, pinkish or purplish; white in the photos; sRGB by eye."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum: fruit slightly flattened laterally, oblong or ovoid; the family's schizocarp."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: fruit oval-oblong, 4-6 mm. long; ribs narrowly winged."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 235, Ligusticum grayi: June-Oct."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fruit ripe August to October."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a tuft of glossy, ternate, finely cut basal leaves, with slender, nearly leafless stalks each bearing a flat compound umbel of tiny white flowers. The basal leaves' petiole share is set by hand from the leaf and petiole lengths the traits give, as no rule sets a rosette leaf's."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Gray's licorice-root from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.4 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}

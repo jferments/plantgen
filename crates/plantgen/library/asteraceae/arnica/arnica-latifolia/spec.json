@@ -1,0 +1,339 @@
+{
+  "schema": 1,
+  "id": "arnica-latifolia",
+  "taxon": {
+    "scientific_name": "Arnica latifolia",
+    "common_name": "broadleaf arnica",
+    "family": "Asteraceae",
+    "genus": "Arnica",
+    "plant_name_id": 2922510
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 7,
+      "clump_radius": 0.2,
+      "stem_lean": 8,
+      "nodes": 3,
+      "basal_leaves": 0,
+      "bare": 0.2,
+      "leaf_peak": 0.5,
+      "leaf_top": 0.5,
+      "leaf_base": 0.7,
+      "leaf_angle": 50,
+      "raceme": 0.15,
+      "flowers": 3,
+      "pedicel": 0.05,
+      "flower_angle": 30
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.14,
+      0.3,
+      0.09
+    ],
+    "foliage_shade": [
+      0.045,
+      0.096,
+      0.029
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.45
+    },
+    "height_max_m": 0.6,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "perennation": "rhizome",
+    "rhizome_habit": "long_creeping",
+    "clonal": true,
+    "rosette": "none",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.14
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.08
+    },
+    "petiole_length_m": {
+      "low": 0,
+      "min": 0.005,
+      "max": 0.02
+    },
+    "leaf_shape": "ovate",
+    "leaf_margin": "dentate",
+    "leaf_hairs": "glabrescent",
+    "inflorescence": "cyme",
+    "capitulum_kind": "radiate",
+    "ray_florets": {
+      "min": 8,
+      "max": 12
+    },
+    "ray_length_m": {
+      "min": 0.012,
+      "max": 0.025
+    },
+    "ray_apex": "toothed",
+    "ray_colour": [
+      250,
+      204,
+      32
+    ],
+    "disc_colour": [
+      236,
+      168,
+      30
+    ],
+    "involucre_height_m": {
+      "min": 0.01,
+      "max": 0.018
+    },
+    "involucre_diameter_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "fruit_type": "cypsela",
+    "flowering_months": [
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: a perennial herb from 8 to 18 inches tall (0.2-0.45 m)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 423, Arnica latifolia: stems mostly solitary or few together, 1-6 dm. tall."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 423, Arnica latifolia: perennial from elongate, mostly nearly naked rhizomes."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 418, Arnica: fibrous-rooted perennial herbs from a rhizome or caudex."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leafy stems die back each winter."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 423, Arnica latifolia: perennial from elongate, mostly nearly naked rhizomes which may be branched."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: rootstock underground, slender, long-creeping, with paired buds."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: in some localities it is the dominant species and may be found in almost pure stands; grows from running rootstocks."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 423, Arnica latifolia: basal leaves sometimes produced on separate short shoots; the flowering stems leafy."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 418, Arnica: leaves simple, opposite, or the reduced uppermost ones occasionally alternate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 423, Arnica latifolia: cauline leaves commonly 3-14 cm. long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 423, Arnica latifolia: cauline leaves commonly 1.5-8 cm. wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cauline leaves sessile or short-petiolate, the petiole up to about 2 cm, as in the photos; Abrams (1960 p. 423): sessile or petiolate."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 423, Arnica latifolia: lance-elliptic or generally broader, rarely cordate; the Range Plant Handbook (p. W25): egg-shaped, rounded or oval."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: usually sharply toothed on margins; Abrams (1960 p. 423): more or less toothed."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: the leaves, stems and involucre smooth or nearly free from hair."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: flower heads usually several (cymose), on slender stalks from axils of upper leaves; Abrams: heads 1-3 or sometimes more; drawn as three."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: outside (ray) flowers petal-like, yellow, strap-shaped; center (disk) flowers small, numerous, yellow, tubular."
+    },
+    "traits.ray_florets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "8 to 12 rays to a head, set by hand from iNaturalist photos (observations 149114632, 54130187, 130872947, 233318373, 239607651, 145480920, 292669466, 106358452): the sources read give no count or measure."
+    },
+    "traits.ray_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: rays 1.2 cm to 2.5 cm long, as in the photos."
+    },
+    "traits.ray_apex": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: rays usually 7-veined, 3-toothed at tip."
+    },
+    "traits.ray_colour": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: showy, bright-yellow, sunflowerlike flower heads; sRGB by eye from the photos."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. W25, Arnica latifolia: disk flowers yellow; deeper yellow-orange in the photos; sRGB by eye."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 424, Arnica latifolia: involucre mostly 10-18 mm. high."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: involucre 1 cm to 2 cm across, turbinate to subhemispheric (Abrams 1960 p. 423)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 424, Arnica latifolia: achenes generally glabrous; pappus white, barbellate."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 424, Arnica latifolia: June-Aug."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: achenes ripe in August and September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: patches of slender stems with two to four pairs of broad, toothed, bright green leaves, each stem bearing one to three bright yellow daisy heads with toothed rays."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for broadleaf arnica from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.35 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}
