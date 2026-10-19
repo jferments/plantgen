@@ -4,7 +4,11 @@
   "name": "Rubus",
   "traits": {
     "wood_density_basic_kg_m3": 400,
-    "ovary_position": "superior"
+    "ovary_position": "superior",
+    "fruit_type": "aggregate",
+    "fruitlets": "drupelets",
+    "leaf_arrangement": "alternate",
+    "life_span": "perennial"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {
@@ -16,6 +20,51 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: stamens numerous; pistils many, crowded on an elevated receptacle, each ovary superior. The counts belong to each species."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rubus by L. A. Alice et al. (eFloras, read 2026-10-19): fruits aggregates of (1-)5-100 drupelets on the torus; leaves alternate on the stems (cauline); plants perennial (one annual species)."
+    },
+    "traits.fruitlets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rubus by L. A. Alice et al. (eFloras, read 2026-10-19): fruits aggregates of (1-)5-100 drupelets on the torus; leaves alternate on the stems (cauline); plants perennial (one annual species)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rubus by L. A. Alice et al. (eFloras, read 2026-10-19): fruits aggregates of (1-)5-100 drupelets on the torus; leaves alternate on the stems (cauline); plants perennial (one annual species)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rubus by L. A. Alice et al. (eFloras, read 2026-10-19): fruits aggregates of (1-)5-100 drupelets on the torus; leaves alternate on the stems (cauline); plants perennial (one annual species)."
+    },
+    "rules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rubus (eFloras, read 2026-10-19): leaves palmately compound or ternate, the lateral leaflets stalked or nearly sessile and smaller than the end one; the 200 degree fan and the lowest leaflets at seven tenths of the end one are ours, read from the key's leaf characters and Himalayan blackberry's leaf as drawn."
+    }
+  },
+  "rules": {
+    "appearance.organs.*.shape.spread": {
+      "template": "compound",
+      "map": {
+        "division_pattern": {
+          "palmate": 200
+        }
+      },
+      "why": "A bramble's palmate or ternate leaf holds its leaflets in a fan a little past a half circle, the end leaflet forward and the lowest pair out to the sides, not swept back round the stalk."
+    },
+    "appearance.organs.*.shape.lowest": {
+      "template": "compound",
+      "map": {
+        "division_pattern": {
+          "palmate": 0.7
+        }
+      },
+      "why": "A bramble's side leaflets are smaller than its end one, the lowest pair smallest."
     }
   }
 }

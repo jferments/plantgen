@@ -112,6 +112,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its drupes are drawn about 1.6 cm across against the 6 to 8 mm Dendrology (2019) p. 196 gives (seen since the book's sizes joined the spec)",
     ),
     (
+        "crataegus-monogyna",
+        "leaf_shape",
+        "its deeply lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate to deltate blades FNA gives",
+    ),
+    (
         "cyperus-papyrus",
         "culm_length_m",
         "its umbel's rays are lateral axes, and the measure stops at the first lateral axis below an inflorescence, so it reads a ray, not the culm",
@@ -315,6 +320,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:sapindaceae",
         "crown_outline_fit",
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
+    ),
+    (
+        "rosa-rugosa",
+        "leaf_arrangement",
+        "a short shoot of an alternate-leaved plant unfolds its two leaves a year at one point (broadleaf's Q), so where short shoots bear most of the leaves, as on beach rose's crowded laterals, the measure counts two leaves at most nodes and reads them opposite",
+    ),
+    (
+        "rubus-pedatus",
+        "phyllotaxis_pattern",
+        "its creeping stems are drawn lying on the ground, and the measure reads their leaves in two ranks where Rosaceae state a spiral (why the herb program ranks them so is not yet traced); FNA gives its leaves no arrangement",
     ),
     (
         "sarcandra-glabra",

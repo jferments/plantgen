@@ -1,0 +1,339 @@
+{
+  "schema": 1,
+  "id": "fragaria-vesca",
+  "taxon": {
+    "scientific_name": "Fragaria vesca",
+    "common_name": "woodland strawberry",
+    "family": "Rosaceae",
+    "genus": "Fragaria",
+    "plant_name_id": 2948952
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.15,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.3
+    },
+    "woodiness": "herbaceous",
+    "life_span": "perennial",
+    "leaf_habit": "deciduous",
+    "rosette": "basal",
+    "clonal": true,
+    "leaf_colour": [
+      70,
+      140,
+      52
+    ],
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": 3,
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.05
+    },
+    "petiole_length_m": {
+      "min": 0.03,
+      "max": 0.2
+    },
+    "leaflet_length_m": {
+      "min": 0.01,
+      "max": 0.05
+    },
+    "leaflet_width_m": {
+      "min": 0.006,
+      "max": 0.04
+    },
+    "leaf_shape": "obovate",
+    "leaf_apex": "obtuse",
+    "leaf_margin": "serrate",
+    "inflorescence": "corymb",
+    "units_per_inflorescence": {
+      "min": 2,
+      "max": 4,
+      "high": 5
+    },
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "pedicel_length_m": {
+      "min": 0.01,
+      "max": 0.03
+    },
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.024
+    },
+    "flower_colour": [
+      248,
+      248,
+      244
+    ],
+    "stamens": 20,
+    "fruit_type": "aggregate",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "fruit_colour_ripe": [
+      214,
+      30,
+      36
+    ],
+    "fruit_shape": "ovoid",
+    "flowering_months": [
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): perennial herbs 5-30 cm tall."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): herbs."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): perennial."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves die back over winter in cold climates."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Fragaria (eFloras, read 2026-10-19): leaves basal, from a short crown."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Fragaria (eFloras, read 2026-10-19): plants spread by stolons."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Fragaria vesca (eFloras, read 2026-10-19): leaves bright green, thin; sRGB by eye."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): leaf blade 3-foliolate, rarely pinnately 5-foliolate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): three leaflets from one point (ternate), drawn palmate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): leaflets undivided."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): 3-foliolate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): leaflets 1-5 cm, so the blade about as long."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): petiole 3-20 cm."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): leaflets 1-5 cm long."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): leaflets 0.6-4 cm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): leaflets obovate, elliptic or broadly ovate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): leaflet apex obtuse."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): margin obtusely or acutely incised-serrate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): inflorescence corymbiform."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): 2-4 (or 5) flowers."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the flower cluster 2 cm to 5 cm across."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): pedicel 1-3 cm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), Fragaria vesca subsp. bracteata (eFloras, read 2026-10-19): flowers 15.3-23.8 mm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): petals white; sRGB by eye."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): stamens about 20."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): aggregate fruit: achenes on a swollen red torus."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fruit 1 cm to 2 cm long."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): aggregate fruit ripening red; sRGB by eye."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): fruit ovoid."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): flowering April to June."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 9 (2003), Fragaria vesca (eFloras, read 2026-10-19): fruiting June to September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a low rosette of bright green three-parted toothed leaves on long stalks, small white flowers in loose clusters and small red strawberries."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.15 m tall at 3 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Rosaceae thread (2026-10-19): characters from Flora of North America vol. 9 and Flora of China vol. 9; the drawing comes from the library's rules for those characters."
+  }
+}

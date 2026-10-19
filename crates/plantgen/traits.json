@@ -738,6 +738,15 @@
       "when": {"spines": ["areoles"]},
       "why": "a grown spine's colour before it greys"
     },
+    "spine_length_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "the length of a thorn or prickle on the woody stems, base to tip, as floras measure it (a rose's prickles below the stipules, a hawthorn's thorns on its twigs)"
+    },
     "wood_density_basic_kg_m3": {
       "group": "stem_and_bark",
       "organ": "stem",
