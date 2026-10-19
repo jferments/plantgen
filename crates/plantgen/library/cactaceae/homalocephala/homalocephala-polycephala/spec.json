@@ -170,6 +170,9 @@
       "curved": "usually",
       "twisted": "often"
     },
+    "central_spines_twisted": {
+      "true": "often"
+    },
     "spine_colour": [
       170,
       85,
@@ -254,6 +257,11 @@
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
     },
     "traits.central_spine_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
+    },
+    "traits.central_spines_twisted": {
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."

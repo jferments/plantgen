@@ -1004,7 +1004,67 @@ pub mod venation;
 /// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
 /// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
 /// cactus genera, #239).
-/// 145: poppies. A corolla of merosity 2 in two whorls draws its four
+/// 145: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
+/// blade on a stalk four times its length); fleshy and succulent blades
+/// are drawn solid (`leaf_succulence`, `leaf_cross_section`); a herb's
+/// rosette and flowering stems are as many as its taxa count
+/// (`rosette_leaves`, `flowering_stems`), a leafless flowering stem is a
+/// scape in any flowering plant, and a compound inflorescence's branches
+/// take the kind its taxa name (`inflorescence_branch_kind`); smooth bark
+/// draws with a valid pattern; a shrub without short shoots has a short
+/// share; a glandular hair has a head, a count per square centimetre,
+/// a margin length that grades it from short and upright to long and
+/// spreading, a stalk colour and a drop of clear, milky or amber secretion,
+/// and strands draw on flower and cluster cards (fifteen Caryophyllales
+/// species, two more sundews and hemp, #243; 144 is #244).
+/// 146: an opened capsule shows its seeds (`seed_size`, from
+/// `fruit_seed_length_m`, where `fruit_seed_colour` is stated) packed
+/// round a placenta between its valves; a joined calyx is drawn from
+/// `sepal_length_m` and `calyx_lobe_length_m` (`sepals_fused`), a sheath
+/// standing close round the corolla tube, angled where `calyx_section`
+/// says so (`calyx_angled`), its teeth carrying on up its line; a calyx
+/// that breaks off round its base (`calyx_in_fruit` `circumscissile`)
+/// leaves a torn rim; a lobed blade takes its lobes, sinus depth, lobe
+/// tips (`leaf_lobe_apex`), width and petiole from its traits, acute lobes
+/// narrowing fast to a point; a joined calyx may swell low down
+/// (`calyx_swell`, from `calyx_base` `swollen`); a herb's stem leaf card
+/// holds its petiole unless the herb has a basal rosette; a map whose
+/// states tie reads its `else` formula's names; a nightshade's prickles
+/// stand among its stem hairs (`prickles`, from `spines` `prickles` and
+/// `prickle_density`) (145 is the
+/// Caryophyllales families, #243).
+/// 147: old conifers keep their foliage from 150 to 300 years: a side
+/// shoot keeps growing at least `side_floor` once the leader stops rising
+/// (coming in over the top `floor_ramp` share of the height), the family's
+/// dormant buds wait on the limbs' main axes for 300 years (`epi_order`),
+/// a limb is shed for the mean light of its tips (`limb_tip`) more than
+/// for its size, and slow shoots are laid down every few years
+/// (`seg_min`) so the fully branched old crowns fit the module limit,
+/// each drawing its foliage at two places along it so its needles stay
+/// near one year's length; a
+/// tall tree lays down less trunk wood per square metre of foliage once
+/// its leader passes `ring_share` of its full height; and the top whorls'
+/// branch shoots lengthen over `top_ramp` years of the leader's growth in
+/// place of a fixed depth (146 is nightshades round 5, #233).
+/// 148: a depressed cactus top sinks to a pit at its centre, with its
+/// crown's flowers and fruit set down into it (`stem_apex` depressed,
+/// body and program `pit`: Lophophora); an apex's woolly cap reaches only
+/// the apical region, three fifths of the tip's radius, not the whole top
+/// of a rounded or broad stem; twisted centrals turn about their length
+/// (new trait `central_spines_twisted`, spine `twist`) (147 is old
+/// conifers, #251).
+/// 149: palm 15 and Phoenix's details. A Phoenix's dead frond hangs limp,
+/// its leaflets folded up along the rachis and the rachis drooping, in
+/// place of a flat plank standing out below the crown. A boot wears shorter
+/// as it ages (`boot_wear`, `boot_wear_years`) and each is a little longer
+/// or shorter (`boot_spread`), so a Phoenix trunk's lower stubs are shorter
+/// and its outline ragged. The foot puts out a mass of adventitious roots
+/// from a root zone that rises with age, about half stopping short in the
+/// air (`roots`). An open sheath (`sheath_wedge`, Phoenix's) is drawn as a
+/// broad brown wedge along its petiole's base, so the crown's centre is
+/// clothed in leaf bases where the bare stem showed as a flat-topped
+/// cylinder (148 is cacti, #248).
+/// 150: poppies. A corolla of merosity 2 in two whorls draws its four
 /// petals (a poppy's 2 + 2), where the petals rule clamped the merosity to
 /// 3 and drew six; a caducous calyx (`calyx_caducous`, Papaveraceae)
 /// falls as its flower opens, so a bud wears its sepals and an open flower
@@ -1025,5 +1085,8 @@ pub mod venation;
 /// hangs from a stalk hooked in its top quarter, as long as floras
 /// measure it (`bud_length_m`); a caducous calyx closed over a regular
 /// corolla's bud is drawn as an ovoid of its sepals; a heart's petal
-/// parts have curved sides (144 is branching form, #244).
-pub const GENERATOR_REVISION: u32 = 145;
+/// parts have curved sides. A herb that flowers on for months while its
+/// first fruit ripen, bearing fruit below its flowers (`fruit_below`),
+/// shows its earlier flowers' fruit from its first fruiting month and
+/// keeps flowering to its last (149 is palms, #250).
+pub const GENERATOR_REVISION: u32 = 150;

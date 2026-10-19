@@ -550,6 +550,25 @@
       "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
       "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
     },
+    "prickle_density": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["sparse", "scattered", "dense"],
+      "optional": true,
+      "when": {"spines": ["prickles"]},
+      "why": "how thickly prickles arm the young stems and stalks, as floras word it: sparse ('sparingly armed', 'a few prickles'), scattered ('prickly'), or dense ('densely prickly')"
+    },
+    "prickle_length_m": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.05],
+      "optional": true,
+      "when": {"spines": ["prickles"]},
+      "why": "a stem's prickle from its foot to its point"
+    },
     "stem_form": {
       "group": "form",
       "organ": "stem",
@@ -592,9 +611,9 @@
       "group": "stem_and_bark",
       "organ": "stem",
       "type": "enum",
-      "values": ["tapering", "rounded", "broad", "flat"],
+      "values": ["tapering", "rounded", "broad", "flat", "depressed"],
       "when": {"spines": ["areoles"]},
-      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, or flat, a low button or disc topped nearly level with its rim"
+      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, flat, a low button or disc topped nearly level with its rim, or depressed, a flat top sinking to a pit at its centre"
     },
     "stem_outline": {
       "group": "stem_and_bark",
@@ -693,6 +712,13 @@
       "values": ["straight", "curved", "hooked", "flattened", "twisted"],
       "when": {"spines": ["areoles"]},
       "why": "the main central spine's form: straight, curved, hooked at its tip (a fishhook's), flattened, or twisted"
+    },
+    "central_spines_twisted": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "bool",
+      "when": {"spines": ["areoles"]},
+      "why": "whether the central spines twist about their length like a wrung ribbon, as a flora's 'often twisted' centrals do, whatever their main form"
     },
     "spine_sheaths": {
       "group": "stem_and_bark",
@@ -1141,9 +1167,69 @@
       "organ": "stem",
       "type": "number",
       "unit": "m",
-      "range": [0.00002, 0.005],
+      "range": [0.00002, 0.01],
       "optional": true,
-      "why": "a glandular hair, from its foot to the top of its head"
+      "why": "a glandular hair, from its foot to the top of its head; where they grade toward a blade's edge (marginal_gland_length_m), those in its middle"
+    },
+    "glandular_hairs_per_cm2": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "1/cm2",
+      "range": [0.1, 100000],
+      "optional": true,
+      "why": "how many glandular hairs stand on a square centimetre of the face, where a count is known (a sundew's tentacles on its blade, a hemp's resin glands on its bracts); it sets their number in place of glandular_hairs' word"
+    },
+    "bract_glandular_hairs_per_cm2": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "1/cm2",
+      "range": [0.1, 100000],
+      "optional": true,
+      "why": "how many glandular hairs stand on a square centimetre of the bracts round the flowers, where they are thick there and few elsewhere (a hemp's resin glands on its pistillate bracts); drawn on the flower clusters in the plant's gland length, head and secretion"
+    },
+    "gland_head_diameter_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.00001, 0.002],
+      "optional": true,
+      "why": "a glandular hair's head across, where measured (a hemp's resin head, a sundew's gland)"
+    },
+    "marginal_gland_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.00002, 0.02],
+      "optional": true,
+      "why": "the glandular hairs at a blade's edge, where they grow longer toward it than glandular_hair_length_m in its middle and lean out over it (a sundew's marginal tentacles, Darwin 1875)"
+    },
+    "gland_secretion": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["clear", "milky", "amber"],
+      "optional": true,
+      "why": "the liquid a glandular hair's head holds or bears as a drop, as it looks: water-clear (a sundew's mucilage, a fresh resin head), milky or cloudy, or amber (aged resin)"
+    },
+    "gland_drop_diameter_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.00001, 0.005],
+      "optional": true,
+      "why": "the drop of secretion round a glandular hair's head, across, where it is larger than the head (a sundew's dew)"
+    },
+    "gland_stalk_colour": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of a glandular hair's own stalk where it is pigmented (a sundew's red tentacles), not clear over the organ"
     },
     "stinging_hairs": {
       "group": "stem_and_bark",
@@ -1169,6 +1255,15 @@
       "range": [0, 50],
       "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
       "why": "lobes on a lobed leaf"
+    },
+    "leaf_lobe_apex": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["acute", "obtuse", "rounded"],
+      "optional": true,
+      "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
+      "why": "the tips of a lobed blade's lobes: pointed (a jimsonweed's 'lobes acute', Britton and Brown), blunt, or rounded (a white oak's)"
     },
     "leaflets": {
       "group": "leaves",
@@ -1285,6 +1380,66 @@
       "values": ["erect", "ascending", "arching", "spreading", "pendent"],
       "optional": true,
       "why": "the grown leaf's habit as a whole, its angle and its arch together, as floras word it for a frond or a blade: standing up, rising at a slant, bending over toward its tip, held out nearly level, or hanging"
+    },
+    "leaf_succulence": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["thin", "fleshy", "succulent"],
+      "optional": true,
+      "why": "how thick and water-filled a blade is, as floras word it: a thin lamina, a fleshy blade a little thicker than a leaf (purslane's, a jewels-of-Opar's), or a succulent one swollen with water, its section a good part as deep as it is wide (an ice plant's, an elephant bush's, a stonecrop's)"
+    },
+    "leaf_cross_section": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["flat", "plano_convex", "terete", "trigonous"],
+      "optional": true,
+      "why": "a thick blade's shape in cross-section: flat on both faces, flat above and rounded below (semiterete), round (terete) or three-angled with a keel below (trigonous, an ice plant's)"
+    },
+    "leaf_thickness_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.1],
+      "optional": true,
+      "why": "a fleshy or succulent blade's thickness at its midrib, face to back"
+    },
+    "branchlet_length_m": {
+      "group": "leaves",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.005, 1],
+      "optional": true,
+      "why": "a leafy branchlet that falls whole with its small leaves (deciduous branchlets: a saltcedar's, a bald cypress's), from its foot to its tip"
+    },
+    "inflorescence_branch_kind": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["raceme", "spike", "cyme", "umbel", "head"],
+      "when": {"inflorescence": ["compound_umbel", "panicle"]},
+      "optional": true,
+      "why": "what each primary branch of a compound inflorescence bears its units in: a panicle of racemes, of dense spikes (an amaranth's), of cymes"
+    },
+    "rosette_leaves": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [1, 200],
+      "optional": true,
+      "when": {"rosette": ["basal"]},
+      "why": "the leaves of one basal rosette in leaf at once, round the foot of its flowering stem, where floras count them: a sundew's handful; a cushion of many rosettes, a thrift's, counts each"
+    },
+    "flowering_stems": {
+      "group": "flowers",
+      "organ": "stem",
+      "type": "count",
+      "range": [1, 200],
+      "optional": true,
+      "why": "the flowering stems or scapes one herb sends up in a year: a sundew's one or two, a thrift cushion's many"
     },
     "stipe_scales": {
       "group": "leaves",
@@ -1610,6 +1765,31 @@
       "values": ["erect", "spreading", "reflexed"],
       "optional": true,
       "why": "how the sepals stand from the flower: up against the corolla, out flat, or bent back toward the stalk (a fuchsia's)"
+    },
+    "calyx_lobe_length_m": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.2],
+      "optional": true,
+      "why": "a joined calyx's free lobes or teeth, from the sinus to the tip; the rest of `sepal_length_m` is its tube (a tobacco's 4-8 mm lobes on a 12-18 mm calyx)"
+    },
+    "calyx_section": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["terete", "angled"],
+      "optional": true,
+      "why": "a joined calyx's tube in cross-section: round, or angled with a ridge down each sepal's midrib (a jimsonweed's prismatic, 5-angled calyx)"
+    },
+    "calyx_base": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["even", "swollen"],
+      "optional": true,
+      "why": "a joined calyx's tube along its length: even, or swollen at its base (a jimsonweed's)"
     },
     "calyx_colour": {
       "group": "flowers",
@@ -2349,6 +2529,15 @@
       "optional": true,
       "why": "the seeds a ripe fruit shows where it opens on them, as they are seen: a magnolia's red seeds hanging from its split follicles"
     },
+    "fruit_seed_length_m": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.05],
+      "optional": true,
+      "why": "a ripe seed's longest measure, as an opened fruit shows its seeds: a jimsonweed's 3-4 mm black seeds between its valves"
+    },
     "fruit_seed_thread_m": {
       "group": "fruit_and_cones",
       "organ": "fruit",
@@ -2385,9 +2574,9 @@
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
-      "values": ["falling", "persistent", "accrescent"],
+      "values": ["falling", "persistent", "accrescent", "circumscissile"],
       "optional": true,
-      "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), or grows on into a large spreading star (a belladonna's)"
+      "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), grows on into a large spreading star (a belladonna's), or breaks off round its base, leaving the base as a rim or collar under it (circumscissile, a jimsonweed's)"
     },
     "fruiting_calyx_posture": {
       "group": "fruit_and_cones",

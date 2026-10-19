@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Portulacaria",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "spines": "none",
+    "height_max_m": 4.5,
+    "bark_texture": {
+      "smooth": "usually",
+      "peeling": "sometimes"
+    },
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "leaf_form": "blade",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "stem_hairs": "glabrous",
+    "sexual_system": "hermaphrodite",
+    "flowering_position": "terminal",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 10
+    },
+    "carpels": 3,
+    "fruit_type": "samara"
+  },
+  "evidence": {
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): evergreen, hairless subshrubs or small trees to 4 m."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): evergreen subshrubs or small trees."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): Portulacarioideae are unarmed."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "English Wikipedia, 'Portulacaria afra' (read 2026-10-19, lower trust): usually 2.5-4.5 m (8-15 ft) tall; German Wikipedia 'Portulacaria' says to 4 m for the genus."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): a smooth bark that peels off."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): entire, succulent leaves in decussate (crosswise opposite) pairs on shoots divided into segments."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves kreuzgegenständig, decussate."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): succulent leaf blades."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): leaves entire (ganzrandig)."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): plants hairless (kahl)."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): plants hairless (kahl)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Didiereaceae' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): Portulacaria has only bisexual flowers (German Wikipedia 'Portulacaria' too: zwittrige Blüten); see the species for female plants."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): terminal inflorescences with very many small flowers."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): two sepals and 4-5 hooded petals; five read as the usual count (the species account gives five)."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): 5-10 stamens per flower."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): superior ovary, three-angled, of 3 carpels with one ovule."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "German Wikipedia, 'Portulacaria' (read 2026-10-19 through the GBIF species API descriptions, dataset 'German Wikipedia - Species Pages', as de.wikipedia.org itself was blocked; lower trust; our translation): fruits three-winged, dry and not opening (German Wikipedia 'Portulacaria afra': small three-winged, one-seeded winged nuts, Flügelnüsse); samara is the vocabulary's winged indehiscent fruit."
+    }
+  }
+}

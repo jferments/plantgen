@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Mirabilis",
+  "traits": {
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "often"
+    },
+    "stem_posture": {
+      "erect": "usually",
+      "decumbent": "sometimes"
+    },
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "inflorescence": "cyme",
+    "flowering_position": "both",
+    "bract_form": "leafy",
+    "inflorescence_bracts": 5,
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 3,
+      "high": 16
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": "tepals",
+    "perianth_fused": true,
+    "corolla_shape": {
+      "funnelform": "usually",
+      "campanulate": "sometimes",
+      "salverform": "sometimes"
+    },
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 5,
+      "low": 3,
+      "high": 6
+    },
+    "stamen_exsertion": "exserted",
+    "carpels": 1,
+    "fruit_type": "achene",
+    "fruit_shape": {
+      "obovoid": "often",
+      "ellipsoid": "often",
+      "globose": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): herbs perennial (annual outside the flora); FOC vol. 5: annual or perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): herbs, often suffrutescent (woody at the base)."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): stems erect to decumbent."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Mirabilis (eFloras, read 2026-10-19): leaves opposite; FNA vol. 4: leaves more or less equal in each pair."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): opposite leaves, the pair members about equal; decussate as in the family."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): inflorescences ending in stalked involucres of 1-16 flowers, usually cymose; FOC vol. 5: involucrate flowers in terminal, more or less flat-topped cymes, rarely single."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): inflorescences terminal and axillary."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): 5 persistent bracts, usually connate, ovate, forming a herbaceous to papery involucre (calyx-like, FOC vol. 5)."
+    },
+    "traits.inflorescence_bracts": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): involucre of 5 bracts, usually connate, rarely distinct; FOC vol. 5: involucre 5-fid."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): involucres subtend 1-16 flowers; 1-3 in sects. Mirabilis and Oxybaphoides (the key), 6-16 in sect. Quamoclidion."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): chasmogamous perianth radially or slightly bilaterally symmetric."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): perianth limb 5-lobed, showy (the family's petaloid calyx; no corolla)."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): perianth campanulate to funnelform, a tube widening to a 5-lobed limb."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): chasmogamous perianth campanulate to funnelform; FOC vol. 5 calls the limb salverform. The vocabulary's corolla_shape is used for the petaloid perianth."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): limb 5-lobed; bracts 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): stamens 3-6, exserted; FOC vol. 5: 5 or 6."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): stamens exserted, the styles beyond them."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Nyctaginaceae (eFloras, read 2026-10-19): gynoecium 1-carpellate (family account)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): fruit the family's anthocarp, stiffly coriaceous, ribbed or not; read as achene."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Mirabilis (eFloras, read 2026-10-19): fruits obovoid, ellipsoid or nearly globose; FOC vol. 5: globose or obovoid."
+    }
+  }
+}

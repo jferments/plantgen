@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Basella",
+  "traits": {
+    "life_span": {
+      "annual": "usually",
+      "perennial": "sometimes"
+    },
+    "inflorescence": "spike",
+    "flowering_position": "lateral",
+    "pedicel_length_m": 0,
+    "perianth_fused": true,
+    "corolla_shape": "urceolate",
+    "stamen_exsertion": "included",
+    "fruit_shape": "globose",
+    "calyx_in_fruit": "accrescent"
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): twining herbs, annual or biennial; Wikipedia calls B. alba a perennial vine."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): spikes axillary, the rachis long and thick."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): spikes axillary."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): flowers sessile."
+    },
+    "traits.perianth_fused": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): urceolate perianth, the segments short; FNA family: petals basally connate."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): urceolate perianth that opens very little at anthesis (the vocabulary's corolla_shape is used for the perianth)."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): stamens included; filaments very short, near the top of the perianth tube."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): utricle globose, fleshy."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5, Basella (eFloras, read 2026-10-19): bracteoles and perianth grow fleshy and enclose the fruit after flowering, not winged; the whole looks like a berry."
+    }
+  }
+}

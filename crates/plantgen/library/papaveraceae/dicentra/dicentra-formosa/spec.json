@@ -35,7 +35,7 @@
       "bud_spacing": 0.5,
       "nod": 0,
       "bud_size": 0.01,
-      "leaf_area": 0.235,
+      "leaf_area": 0.193,
       "basal_area": 0.171,
       "basal_piece_area": 0.023,
       "flower_area": 0.292,
@@ -126,7 +126,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a delicate herb with lacy, fern-like, blue-green leaves and arching stems hung with pink, heart-shaped flowers. Each stalk ends in one nodding raceme drawn as a cluster (flowers 1, flower_size 0.1 within the 5 cm to 15 cm the species states; its look's inflorescence 8 flowers, each a fifth of its length, bent 60 degrees), now that Papaveraceae's flowers are mostly in racemes; before, the stalk bore 8 single flowers. Its basal leaves (poppies, 2026-10-19) 40 cm long with their stalks, so the blades come out about 17-26 cm, inside Flora of North America's (15-)25-40 cm while the plant stays under Jepson's 18 in scapes; rising 30 degrees from upright and turned 0.3 of the way flat, so the blades are held level over the stalks as a low mound. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a delicate herb with lacy, fern-like, blue-green leaves and arching stems hung with pink, heart-shaped flowers. Each stalk ends in one nodding raceme drawn as a cluster (flowers 1, flower_size 0.1 within the 5 cm to 15 cm the species states; its look's inflorescence 8 flowers, each a fifth of its length, bent 60 degrees), now that Papaveraceae's flowers are mostly in racemes; before, the stalk bore 8 single flowers. leaf_area 0.193 is what its lobed leaf card draws on an organ 1 m long since the lobed card takes its lobes, depth and width from the traits (nightshades round 5; re-measured with plantc atlas on the poppies' dissected leaves when the two merged). Its basal leaves (poppies, 2026-10-19) 40 cm long with their stalks, so the blades come out about 17-26 cm, inside Flora of North America's (15-)25-40 cm while the plant stays under Jepson's 18 in scapes; rising 30 degrees from upright and turned 0.3 of the way flat, so the blades are held level over the stalks as a low mound. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
