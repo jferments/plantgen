@@ -71,7 +71,7 @@ pub const GOLDEN_DEGREES: f64 = 137.507_764;
 /// a cluster of up to a dozen at the third. A cluster whose fruit then
 /// overrun its part mesh's cap is drawn a step coarser (`crate::parts`),
 /// where they take far fewer.
-const DRUPELET_BUDGET: [u32; 5] = [3000, 2000, 1300, 250, 120];
+const DRUPELET_BUDGET: [u32; 5] = [6400, 2000, 1300, 250, 120];
 
 /// The facets (around, rings) a drupelet is drawn with, the finest first:
 /// the finest whose triangles, over all the fruit's drupelets, fit its

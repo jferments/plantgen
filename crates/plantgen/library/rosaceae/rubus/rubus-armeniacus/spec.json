@@ -72,7 +72,6 @@
         "shape": {
           "template": "fruit"
         },
-        "inflorescence": { "flowers": 8, "size": 0.25, "spread": 40, "pedicel": 0.225 },
         "colour": [0.06, 0.04, 0.06],
         "season": {
           "ripening": 30,
@@ -134,7 +133,11 @@
     "fruit_hairs": "puberulent",
     "fruit_shape": "cylindric",
     "fruit_size_m": {"min": 0.01, "max": 0.02},
-    "fruit_colour_ripening": [150, 20, 30]
+    "fruit_colour_ripening": [150, 20, 30],
+    "units_per_inflorescence": {"min": 10, "max": 60, "high": 100},
+    "inflorescence_length_m": {"min": 0.08, "max": 0.2},
+    "flower_size_m": {"min": 0.02, "max": 0.03},
+    "inflorescence_branches": {"min": 4, "max": 10}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -234,7 +237,11 @@
     "traits.fruit_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): ovaries hairy at their tips, so the black drupelets carry a few fine hairs."},
     "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): fruit globose to subcylindric; drawn cylindric, as the blackberries' longer fruit on the torus they keep."},
     "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): fruit 1-2 cm."},
-    "traits.fruit_colour_ripening": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high), as no source read gives it: blackberries pass from green through red before they turn black; sRGB by eye for a dark red."}
+    "traits.fruit_colour_ripening": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high), as no source read gives it: blackberries pass from green through red before they turn black; sRGB by eye for a dark red."},
+    "traits.units_per_inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): inflorescences at the shoot tips, sometimes in the axils too, thyrse-like, 10-60 flowers, up to 100."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives its length: a thyrse of 10-60 flowers about 2 cm across, carried well beyond its leaves (FNA), is some 8-20 cm long."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): petals 10-15 mm, so an open flower of five spreading petals is about 2-3 cm across."},
+    "traits.inflorescence_branches": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium): a thyrse of 10-60 flowers (FNA) on some 4-10 side branches, the lower ones several-flowered."}
   },
   "provenance": {
     "sources": [
