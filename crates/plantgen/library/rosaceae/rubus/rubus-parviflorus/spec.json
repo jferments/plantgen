@@ -45,7 +45,7 @@
       "adult_age": 3,
       "bloom_angle": 50,
       "leaf_area": 0.517,
-      "bloom_area": 0.751,
+      "bloom_area": 0.412,
       "path_half": 0.74
     }
   },
@@ -232,7 +232,8 @@
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives its length: a loose cyme of 3-7 flowers 3-5 cm across (FNA) is some 4-10 cm long."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): petals white, broadly obovate, (10-)14-22(-28) mm, so an open flower of five spreading petals is about 3-5 cm across."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): petals white; sRGB by eye for the word."},
-    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruits red; sRGB by eye for the word."}
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus parviflorus (eFloras, read 2026-10-19): fruits red; sRGB by eye for the word."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.751)."}
   },
   "provenance": {
     "sources": [

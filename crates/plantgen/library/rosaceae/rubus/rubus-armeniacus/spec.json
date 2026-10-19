@@ -46,7 +46,7 @@
       "bloom_size": 0.08,
       "bloom_angle": 80,
       "leaf_area": 0.412,
-      "bloom_area": 0.185,
+      "bloom_area": 0.558,
       "path_half": 1.23
     }
   },
@@ -231,7 +231,7 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.521)."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.185)."},
     "traits.fruitlets_per_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): drupelets 15-40 (to 50) to a fruit."},
     "traits.fruitlet_coherence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): drupelets strongly coherent, the fruit falling with its torus inside."},
     "traits.fruit_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): ovaries hairy at their tips, so the black drupelets carry a few fine hairs."},

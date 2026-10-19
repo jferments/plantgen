@@ -38,7 +38,7 @@
     {
       "age": 30,
       "environment": "open",
-      "height": 7.0,
+      "height": 10.0,
       "tolerance": 0.35
     }
   ],
@@ -366,7 +366,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "7.0 m tall at 30 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+      "note": "10.0 m tall at 30 years in the open, the top of the floras' usual 5-10 m (it grows to 15), as grown taller than that (11.8 m) on 2026-10-19. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
