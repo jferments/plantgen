@@ -32,8 +32,12 @@
       "why": "The twigs on a limb's side shoots live about as long as their needles and are replaced from below; kept for ever, the fully branched crown passed the program's module limit before 200 years."
     },
     "generator.params.epi_years": {
-      "rule": "80",
-      "why": "A branch's dormant buds live for decades and resprout a thinning limb (the reiteration that keeps old crowns full); at 20 years old crowns thinned to a fishbone, kept for ever their buds passed the module limit."
+      "rule": "300",
+      "why": "A limb's dormant buds wait as long as the limb lives and resprout it where light reaches them: old Douglas-fir crowns keep their foliage by such epicormic shoots (Ishii & Ford 2001), as old firs, spruces and hemlocks reiterate theirs. Living 80 years, the buds were spent before the crown aged, and old crowns lost three quarters of their foliage between 150 and 300 years."
+    },
+    "generator.params.epi_order": {
+      "rule": "1",
+      "why": "The dormant buds that resprout an old limb wait along its main axis, where its epicormic shoots stand (Ishii & Ford 2001); buds kept on every side shoot as well filled the program's module limit before 300 years."
     },
     "generator.params.branch_floor": {
       "rule": "0.06",
@@ -43,9 +47,25 @@
       "rule": "0.5",
       "why": "Shade strengthens apical control: a shaded branch takes a smaller share of the leader's shoot than a lit one, so a tree grown in a stand keeps a narrow crown while its leader races up (forest-grown Douglas-fir about 3 m across its crown at 30 years, its trunk about 25 cm through). Taking the full share in any light, the shaded limbs of a stand-grown Douglas-fir spread 4 m and carried four times the needles, and its trunk grew twice as thick as stand-grown trees'."
     },
+    "generator.params.side_floor": {
+      "rule": "0.15",
+      "why": "Once the leader stops rising, a limb's side shoots still grow a few centimetres a year and set twigs, renewing the foliage along it. Held to the leader's dwindling growth with the limb's own tip, they shrank to millimetres and set almost no twigs, and old crowns lost their foliage after 150 years (grand fir, Douglas-fir, western hemlock)."
+    },
+    "generator.params.floor_ramp": {
+      "rule": "10",
+      "why": "The side shoots' floor comes in over the top 10 m of an old tree, so its top stays narrow: in full to the treetop, the short limbs of an old tree's top whorls carried side shoots longer than themselves, and the tops of 300-year Douglas-fir, Sitka spruce and subalpine fir were domes two to four times as wide as photographed ones (inaturalist-crowns-2026-10: the top tenth .06 to .12 of the height)."
+    },
     "generator.params.limb_light": {
-      "rule": "0.01",
-      "why": "A limb older than limb_age whose tips catch too little light for the wood it carries is shed, so Douglas-fir, western hemlock and Sitka spruce grow past 150 years under the program's module limit (pinidae revision 13); set for the family, as the yews and cypresses it was not fitted on keep their limbs as before."
+      "rule": "0.003",
+      "why": "An old limb is shed for want of light only when its tips catch little light for the wood they carry, a third as readily as the pines' 0.01: a fully branched old limb carries many segments, and at 0.01 limbs whose foliage was well lit were shed for their size, so subalpine fir and western larch lost four fifths of their foliage between 150 and 300 years."
+    },
+    "generator.params.limb_tip": {
+      "rule": "1",
+      "why": "A limb older than limb_age whose tips' mean light has fallen to the starving point is shed whatever its size, as a shaded limb dies once its foliage no longer pays for it (branch autonomy): with the per-segment rule eased, shaded limbs would otherwise linger and fill the program's module limit."
+    },
+    "generator.params.seg_min": {
+      "rule": "0.08",
+      "why": "An old limb's slow shoots, a centimetre or two a year, are laid down as one shoot every few years with the same needle area, so a fully branched old crown keeps its side shoots within the program's module and segment limits: laid down every year, old Douglas-fir and western hemlock passed them unless their inner side shoots were shed or cut short (side_years), which left their lower limbs bare whips. Young shoots, longer than 8 cm a year, grow as before."
     },
     "generator.params.bud_length": {
       "rule": "0.1",

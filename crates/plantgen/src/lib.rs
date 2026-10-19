@@ -974,4 +974,12 @@ pub mod venation;
 /// `glochid_colour`, also the stem's glochids); and a round fruit with no
 /// stated width is as wide as long (137 is #234; 138 and 139 are #167's
 /// nodding leaders and old-conifer refit).
-pub const GENERATOR_REVISION: u32 = 140;
+/// 141: old conifers keep their foliage from 150 to 300 years: a side
+/// shoot keeps growing at least `side_floor` once the leader stops rising
+/// (coming in over `floor_ramp` metres below the top), the family's
+/// dormant buds wait on the limbs' main axes for 300 years (`epi_order`),
+/// a limb is shed for the mean light of its tips (`limb_tip`) more than
+/// for its size, and slow shoots are laid down every few years
+/// (`seg_min`) so the fully branched old crowns fit the module limit (140
+/// is cactus pericarpels, #226).
+pub const GENERATOR_REVISION: u32 = 141;
