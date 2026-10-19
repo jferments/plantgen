@@ -925,4 +925,8 @@ pub mod venation;
 /// four, a tobacco's two), each turned out from half way down and lined
 /// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
 /// `fruit_armature` `hooked`) (134 is palm details, #223).
-pub const GENERATOR_REVISION: u32 = 135;
+/// 136: black cottonwood and wild fig draw single leaves at their flora's
+/// size on its petiole length, and young twigs in its colour, in place of
+/// hand-sized sprig cards; the fig's path_half is refitted to its height
+/// (135 is nightshades round 4, #227).
+pub const GENERATOR_REVISION: u32 = 136;
