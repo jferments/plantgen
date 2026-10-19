@@ -23,12 +23,12 @@
       "old_angle": 42,
       "open_years": 1.5,
       "angle_spread": 8,
-      "internode": 0.0012,
+      "internode": 0.0001,
       "trunk_rate": 0,
       "trunk_radius": 0.1,
       "flower_age": 8,
       "bloom": 0.35,
-      "stalk_height": 1.0,
+      "stalk_height": 0.55,
       "stalk_radius": 0.025,
       "stalk_head": 0.55,
       "stalk_branches": 14,
@@ -385,7 +385,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for banana yucca from FEIS (Groen 2005) and Flora of North America vol. 26: rosettes 60-75 cm high of erect, rigid leaves 51-102 cm long (leaf_length 0.7, old_angle 42), stemless or with stems under 0.3 m in var. baccata (trunk_rate 0), open colonies from rhizomes (pups 4), a dense panicle of 11 to 18 branches within or a quarter beyond the rosette (stalk_height 1.0), pendent flowers 5-13 cm (flower_angle 100, flower_size 0.07). FEIS: a 3-year reproductive cycle is likely (bloom 0.35). Leaf rate and life are estimates."
+      "note": "Set by hand for banana yucca from FEIS (Groen 2005) and Flora of North America vol. 26: rosettes 60-75 cm high of erect, rigid leaves 51-102 cm long (leaf_length 0.7, old_angle 42), stemless or with stems under 0.3 m in var. baccata (trunk_rate 0, internode 0.0001), open colonies from rhizomes (pups 4), a dense panicle of 11 to 18 branches within or a quarter beyond the rosette (stalk_height 0.55, so a plant in flower stands about 0.9 m), pendent flowers 5-13 cm (flower_angle 100, flower_size 0.07). FEIS: a 3-year reproductive cycle is likely (bloom 0.35). Leaf rate and life are estimates."
     },
     "appearance": {
       "evidence": "Authored",
