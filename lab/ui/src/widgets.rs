@@ -764,6 +764,135 @@ fn progress_filled(share: f32, width: f32) -> f32 {
     (share.min(1.0) * width).max(PROGRESS_TRACK).min(width)
 }
 
+/// A primary button's height, points.
+pub const PRIMARY_HEIGHT: f32 = 36.0;
+
+/// The one button that does a page's main work (`Generate`): as wide as
+/// the room, filled with the accent, `icon` (one of [`icons`]) before its
+/// text in the on-accent ink, and `key` faint at its right when given.
+/// Greyed and inert unless `enabled`. Returns whether it was clicked.
+pub fn primary_button(
+    ui: &mut Ui,
+    icon: &str,
+    text: &str,
+    key: Option<&str>,
+    enabled: bool,
+) -> Response {
+    let sense = if enabled {
+        Sense::click()
+    } else {
+        Sense::hover()
+    };
+    let (rect, response) =
+        ui.allocate_exact_size(vec2(ui.available_width(), PRIMARY_HEIGHT), sense);
+    response.widget_info(|| WidgetInfo::labeled(WidgetType::Button, enabled, text));
+    if ui.is_rect_visible(rect) {
+        let painter = ui.painter_at(rect);
+        let (fill, ink) = if !enabled {
+            (theme::SURFACE_3, theme::TEXT_3)
+        } else if response.is_pointer_button_down_on() {
+            (theme::ACCENT.gamma_multiply(0.85), theme::ON_ACCENT)
+        } else if response.hovered() {
+            (theme::ACCENT.gamma_multiply(1.08), theme::ON_ACCENT)
+        } else {
+            (theme::ACCENT, theme::ON_ACCENT)
+        };
+        painter.rect_filled(rect, theme::RADIUS_CONTROL, fill);
+        let label = text_galley(ui, text, theme::strong_font(ui, theme::BODY + 1.0), ink);
+        let icon_font = theme::icon_font(ui, ICON_SIZE + 2.0);
+        let icon_width = ICON_SIZE + 2.0;
+        let gap = 8.0;
+        let total = icon_width + gap + label.size().x;
+        let left = rect.center().x - total / 2.0;
+        painter.text(
+            pos2(left + icon_width / 2.0, rect.center().y),
+            Align2::CENTER_CENTER,
+            icon,
+            icon_font,
+            ink,
+        );
+        let at = pos2(
+            left + icon_width + gap,
+            rect.center().y - label.size().y / 2.0,
+        );
+        painter.galley(at, label, ink);
+        if let Some(key) = key {
+            painter.text(
+                pos2(rect.right() - 10.0, rect.center().y),
+                Align2::RIGHT_CENTER,
+                key,
+                FontId::monospace(theme::SMALL),
+                ink.gamma_multiply(0.7),
+            );
+        }
+    }
+    response
+}
+
+/// `text` laid out on one line in `font` and `ink`.
+fn text_galley(ui: &Ui, text: &str, font: FontId, ink: Color32) -> Arc<Galley> {
+    ui.painter().layout_no_wrap(text.to_owned(), font, ink)
+}
+
+/// A tab strip's height, points.
+pub const TAB_HEIGHT: f32 = 34.0;
+
+/// A row of tabs across the room, each an icon (one of [`icons`]) with
+/// its name as the tooltip, the chosen one in the text ink over an accent
+/// underline, the rest faint. Returns the tab clicked, when it is not the
+/// chosen one.
+pub fn tabs(ui: &mut Ui, tabs: &[(&str, &str)], chosen: usize) -> Option<usize> {
+    let mut picked = None;
+    #[allow(clippy::cast_precision_loss)]
+    let width = ui.available_width() / tabs.len().max(1) as f32;
+    let (strip, _) = ui.allocate_exact_size(vec2(ui.available_width(), TAB_HEIGHT), Sense::hover());
+    ui.painter().hline(
+        strip.x_range(),
+        strip.bottom() - 0.5,
+        Stroke::new(1.0, theme::LINE_STRONG),
+    );
+    for (index, (icon, tip)) in tabs.iter().enumerate() {
+        #[allow(clippy::cast_precision_loss)]
+        let rect = Rect::from_min_size(
+            pos2(strip.left() + width * index as f32, strip.top()),
+            vec2(width, TAB_HEIGHT),
+        );
+        let response = ui.interact(rect, ui.id().with(("lab-ui-tab", index)), Sense::click());
+        let on = index == chosen;
+        response.widget_info(|| WidgetInfo::selected(WidgetType::Button, true, on, *tip));
+        let ink = if on {
+            theme::TEXT
+        } else if response.hovered() {
+            theme::TEXT_2
+        } else {
+            theme::TEXT_3
+        };
+        if response.hovered() && !on {
+            ui.painter()
+                .rect_filled(rect.shrink(3.0), theme::RADIUS_SMALL, theme::SURFACE_2);
+        }
+        ui.painter().text(
+            rect.center() - vec2(0.0, 1.0),
+            Align2::CENTER_CENTER,
+            *icon,
+            theme::icon_font(ui, ICON_SIZE + 1.0),
+            ink,
+        );
+        if on {
+            let bar = Rect::from_min_max(
+                pos2(rect.left() + 8.0, rect.bottom() - 2.0),
+                pos2(rect.right() - 8.0, rect.bottom()),
+            );
+            ui.painter()
+                .rect_filled(bar, CornerRadius::same(1), theme::ACCENT);
+        }
+        if response.on_hover_text(*tip).clicked() && !on {
+            picked = Some(index);
+        }
+    }
+    picked
+}
+
 /// A key cap: one key's name in a small raised box (`Ctrl`).
 pub fn key_cap(ui: &mut Ui, key: &str) -> Response {
     Frame::new()

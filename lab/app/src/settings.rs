@@ -17,8 +17,12 @@ use serde_json::{Map, Value};
 /// One saved setting: its key in the file and the values it takes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Key {
-    /// Grow again whenever the settings change.
-    GrowOnChange,
+    /// The species chosen last, by id.
+    Species,
+    /// The species chosen lately, newest first.
+    Recent,
+    /// The library browser shows.
+    LibraryOpen,
     /// Show the plant growing.
     ShowGrowing,
     /// Draw it every this many steps, 1 to 100.
@@ -42,8 +46,10 @@ pub enum Key {
 }
 
 impl Key {
-    pub const ALL: [Self; 11] = [
-        Self::GrowOnChange,
+    pub const ALL: [Self; 13] = [
+        Self::Species,
+        Self::Recent,
+        Self::LibraryOpen,
         Self::ShowGrowing,
         Self::Every,
         Self::Follow,
@@ -60,7 +66,9 @@ impl Key {
     #[must_use]
     pub const fn name(self) -> &'static str {
         match self {
-            Self::GrowOnChange => "grow_on_change",
+            Self::Species => "species",
+            Self::Recent => "recent_species",
+            Self::LibraryOpen => "library_open",
             Self::ShowGrowing => "show_growing",
             Self::Every => "every_steps",
             Self::Follow => "follow",
@@ -84,7 +92,11 @@ impl Key {
         };
         let whole = |low: u64, high: u64| value.as_u64().is_some_and(|n| (low..=high).contains(&n));
         match self {
-            Self::GrowOnChange
+            Self::Species => value.as_str().is_some_and(|id| !id.is_empty()),
+            Self::Recent => value
+                .as_array()
+                .is_some_and(|ids| ids.len() <= 32 && ids.iter().all(Value::is_string)),
+            Self::LibraryOpen
             | Self::ShowGrowing
             | Self::Follow
             | Self::Grid
@@ -185,6 +197,26 @@ impl Settings {
     #[must_use]
     pub fn f64(&self, key: Key) -> Option<f64> {
         self.get(key).and_then(Value::as_f64)
+    }
+
+    #[must_use]
+    pub fn string(&self, key: Key) -> Option<&str> {
+        self.get(key).and_then(Value::as_str)
+    }
+
+    /// A list of strings; empty where the file has none.
+    #[must_use]
+    pub fn strings(&self, key: Key) -> Vec<String> {
+        self.get(key)
+            .and_then(Value::as_array)
+            .map(|values| {
+                values
+                    .iter()
+                    .filter_map(Value::as_str)
+                    .map(str::to_owned)
+                    .collect()
+            })
+            .unwrap_or_default()
     }
 
     /// Saves `value` as `key`: reads the file as it is now, sets that key,
