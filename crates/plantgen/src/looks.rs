@@ -946,6 +946,13 @@ pub struct Season {
     /// by default.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub opening: f64,
+    /// Days over which the plant's organs of this look begin their year
+    /// one after another, as a plant that flowers all year carries buds,
+    /// flowers and fruit at once: the organs of each of the look's
+    /// [`VARIETIES`] keep these days shifted by its share of it
+    /// ([`Self::cohort`]); 0, every organ on the same days, by default.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub stagger: f64,
     /// Its size in fruit as a share of its size as grown, 0.05 to 20; 1
     /// by default. A lone flower's organ is grown as wide as its flower, so
     /// its fruit is this share of it, and every stage's size is this share
@@ -1158,6 +1165,39 @@ impl Season {
         }
     }
 
+    /// The season of the organs of variety `variety` (of [`VARIETIES`]):
+    /// its days `variety / VARIETIES` of its `stagger` later, counted
+    /// from a bud within the year, so each variety's organs are a cohort
+    /// a share of the year behind the one before.
+    #[must_use]
+    pub fn cohort(&self, variety: usize) -> Season {
+        #[allow(clippy::cast_precision_loss)]
+        let mut shift = self.stagger * variety as f64 / VARIETIES as f64;
+        if self.bud + shift > 365.0 {
+            shift -= 365.0;
+        }
+        Season {
+            bud: self.bud + shift,
+            flower: self.flower + shift,
+            fruit: self.fruit + shift,
+            ripe: self.ripe + shift,
+            fall: self.fall + shift,
+            stagger: 0.0,
+            ..self.clone()
+        }
+    }
+
+    /// Its organs' seasons, a cohort for each variety where it is
+    /// staggered, else itself.
+    #[must_use]
+    pub fn cohorts(&self) -> Vec<Season> {
+        if self.stagger > 0.0 {
+            (0..VARIETIES).map(|variety| self.cohort(variety)).collect()
+        } else {
+            vec![self.clone()]
+        }
+    }
+
     /// Whether day `day` of the year is past its fall, not before its bud
     /// (both show nothing).
     #[must_use]
@@ -1196,6 +1236,7 @@ impl Season {
         }
         within("season ripening", self.ripening, 0.0, 200.0)?;
         within("season opening", self.opening, 0.0, 180.0)?;
+        within("season stagger", self.stagger, 0.0, 365.0)?;
         within("season fruit size", self.fruit_size, 0.05, 20.0)?;
         for look in [&self.bud_look, &self.flower_look].into_iter().flatten() {
             look.shape.validate()?;
@@ -2176,7 +2217,8 @@ pub struct Flower {
     pub open: f64,
     /// Tepals in each whorl: 0 for two whorls of half the tepals each, as
     /// a lily's stand; else as many whorls of this many as `petals` fill
-    /// (a magnolia's 9 to 15 in whorls of three), up to six.
+    /// (one, as an amaranth's five; a magnolia's 9 to 15 in whorls of
+    /// three), up to six.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub whorl: u32,
     /// Degrees its petals or tepals rise from the plane square to its
@@ -3780,7 +3822,7 @@ impl Shape {
                 check("stipe", s.stipe, 0.0, 0.6)
             }
             Self::Flower(s) => {
-                count("petals", s.petals, 3, 60)?;
+                count("petals", s.petals, 3, 160)?;
                 if s.petals > 12 && s.perianth != Perianth::Spiral {
                     return Err(format!(
                         "flower petals above 12 stand on a spiral: perianth must be spiral, found {}",
@@ -3882,10 +3924,10 @@ impl Shape {
                 if s.perianth == Perianth::Tepals {
                     let whorled = s.whorl > 0
                         && s.petals % s.whorl == 0
-                        && (2..=6).contains(&(s.petals / s.whorl));
+                        && (1..=6).contains(&(s.petals / s.whorl));
                     if s.whorl > 0 && !whorled {
                         return Err(format!(
-                            "tepals stand in 2 to 6 whorls of {}: petals must be a multiple \
+                            "tepals stand in 1 to 6 whorls of {}: petals must be a multiple \
                              of it, found {}",
                             s.whorl, s.petals
                         ));
@@ -4378,6 +4420,11 @@ pub struct Look {
     /// drawn as one ([`Look::of`]). Empty for a look that does not vary;
     /// its card is always drawn with the look itself.
     pub varieties: Vec<Look>,
+    /// Each variety's size that day as a share of the look's, where its
+    /// season is staggered ([`Season::cohort`]): 0 for a variety whose
+    /// organs are gone. Empty where every organ is drawn at the look's
+    /// size.
+    pub variety_sizes: Vec<f64>,
     /// The hairs on its face, where it has any to draw.
     pub hairs: Option<Hairs>,
     /// The hairs on its lower face, where it has any to draw.
@@ -4454,6 +4501,16 @@ impl Look {
     #[must_use]
     pub fn of(&self, id: u64) -> &Look {
         self.varieties.get(variety_of(id)).unwrap_or(self)
+    }
+
+    /// Organ `id`'s size that day as a share of the look's: its
+    /// variety's where the look's season is staggered, else 1.
+    #[must_use]
+    pub fn size_of(&self, id: u64) -> f64 {
+        self.variety_sizes
+            .get(variety_of(id))
+            .copied()
+            .unwrap_or(1.0)
     }
 
     /// Whether organs of this look are drawn one by one as solids near
@@ -4586,6 +4643,7 @@ pub fn resolve<'a>(
                     }),
                     shape: drawn,
                     varieties: Vec::new(),
+                    variety_sizes: Vec::new(),
                     hairs: look.hairs.clone().filter(Hairs::drawn),
                     hairs_beneath: look.hairs_beneath.clone().filter(Hairs::drawn),
                 }
@@ -4608,6 +4666,7 @@ pub fn resolve<'a>(
                 forms: Forms::default(),
                 inflorescence: None,
                 varieties: Vec::new(),
+                variety_sizes: Vec::new(),
                 hairs: None,
                 hairs_beneath: None,
             },
@@ -4710,16 +4769,23 @@ pub fn resolve_on<'a>(
         .unzip()
 }
 
-/// `graph` as drawn with each organ type's `sizes` from [`resolve_on`]:
-/// organs gone that day left out, the others at their stage's size; `None`
-/// when every size is 1, so the graph is drawn as it is.
+/// `graph` as drawn with each organ type's `sizes` from [`resolve_on`]
+/// and its `looks`' sizes by variety ([`Look::size_of`]): organs gone that
+/// day left out, the others at their stage's size; `None` when every size
+/// is 1, so the graph is drawn as it is.
 #[must_use]
-pub fn staged(graph: &crate::graph::PlantGraph, sizes: &[f64]) -> Option<crate::graph::PlantGraph> {
-    if sizes.iter().all(is_full_size) {
+pub fn staged(
+    graph: &crate::graph::PlantGraph,
+    sizes: &[f64],
+    looks: &[Look],
+) -> Option<crate::graph::PlantGraph> {
+    if sizes.iter().all(is_full_size) && looks.iter().all(|look| look.variety_sizes.is_empty()) {
         return None;
     }
     let size = |organ: &crate::graph::GraphOrgan| {
-        sizes.get(usize::from(organ.organ)).copied().unwrap_or(1.0)
+        let index = usize::from(organ.organ);
+        sizes.get(index).copied().unwrap_or(1.0)
+            * looks.get(index).map_or(1.0, |look| look.size_of(organ.id))
     };
     Some(crate::graph::PlantGraph {
         organs: graph
@@ -4985,6 +5051,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         // A stage look draws the whole organ.
         inflorescence: None,
         varieties: Vec::new(),
+        variety_sizes: Vec::new(),
         hairs: None,
         hairs_beneath: None,
     }

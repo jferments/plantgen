@@ -2458,7 +2458,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         false,
     )?;
     let (mut looks, sizes) = looks_of(&spec, &growth, day);
-    let graph = &*drawn(&growth.keyframes[0], &sizes);
+    let graph = &*drawn(&growth.keyframes[0], &sizes, &looks);
     let bodies = bodies_of(&spec, &growth);
     let mut bloom = None;
     let mut plant = if parted {
@@ -2509,7 +2509,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             host.age,
         )?;
         let (host_looks, host_sizes) = looks_of(&host_spec, &host_growth, day);
-        let host_graph = &*drawn(&host_growth.keyframes[0], &host_sizes);
+        let host_graph = &*drawn(&host_growth.keyframes[0], &host_sizes, &host_looks);
         let host_plant = mesh::build(
             host_graph,
             &host_looks,
@@ -2635,7 +2635,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
             .map(|graph| graph.height)
             .fold(0.0, f64::max);
         for graph in &growth.keyframes {
-            let graph = &*drawn(graph, &sizes);
+            let graph = &*drawn(graph, &sizes, &looks);
             out!(
                 "  {:<10} {}",
                 environment.name(),
@@ -3075,7 +3075,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
             .fold(0.0, f64::max);
         for (growth, &seed) in grown.iter().zip(&seeds) {
             let (looks, sizes) = looks_of(&spec, growth, day);
-            let graph = &*drawn(&growth.keyframes[0], &sizes);
+            let graph = &*drawn(&growth.keyframes[0], &sizes, &looks);
             let bodies = bodies_of(&spec, growth);
             let mut plant = mesh::build(
                 graph,
@@ -3251,8 +3251,8 @@ fn looks_of(spec: &PlantSpec, growth: &Growth, day: f64) -> (Vec<Look>, Vec<f64>
 
 /// `graph` as drawn with its organ types' `sizes` on a day: organs gone
 /// left out, the others at their stage's size (`looks::staged`).
-fn drawn<'a>(graph: &'a PlantGraph, sizes: &[f64]) -> Cow<'a, PlantGraph> {
-    looks::staged(graph, sizes).map_or(Cow::Borrowed(graph), Cow::Owned)
+fn drawn<'a>(graph: &'a PlantGraph, sizes: &[f64], looks: &[Look]) -> Cow<'a, PlantGraph> {
+    looks::staged(graph, sizes, looks).map_or(Cow::Borrowed(graph), Cow::Owned)
 }
 
 /// One body look per body type of a grown plant.

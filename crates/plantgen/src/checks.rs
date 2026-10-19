@@ -722,13 +722,14 @@ pub struct Grown<'a> {
 }
 
 impl Grown<'_> {
-    fn season(&self, organ: &GraphOrgan) -> Option<&Season> {
+    fn season(&self, organ: &GraphOrgan) -> Option<Season> {
         let kind = self.growth.organ_types.get(usize::from(organ.organ))?;
         self.spec
             .appearance
             .organs
             .get(&kind.name)
             .and_then(|look| look.season.as_ref())
+            .map(|season| season.cohort(crate::looks::variety_of(organ.id)))
     }
 
     /// Whether the organ is drawn as a cluster on some days, so a look
@@ -812,7 +813,7 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
     let mut ripening: Option<f64> = None;
     for day in days(&seasons) {
         let (looks, sizes) = crate::drawing::looks_of(grown.spec, grown.growth, day);
-        let drawn = crate::drawing::drawn(graph, &sizes);
+        let drawn = crate::drawing::drawn(graph, &sizes, &looks);
         leaves(grown, &drawn, &looks, &mut tally);
         for organ in &drawn.organs {
             let Some(look) = looks
@@ -821,7 +822,7 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
             else {
                 continue;
             };
-            let phase = organs::phase(organ, grown.season(organ), day, graph.age);
+            let phase = organs::phase(organ, grown.season(organ).as_ref(), day, graph.age);
             reproductive(grown, organ, look, phase, &mut tally);
             if let Shape::Needles(needles) = &look.shape {
                 needle_counts(needles, organ.id, &mut tally);
@@ -1043,8 +1044,9 @@ const UNIT_RANKS: u32 = 16;
 /// flower look in flower (its own, unless that is its fruit), and its own
 /// look in fruit, ripe once half ripened; a cluster's units, or a head's
 /// florets, each in its own stage. One with none shows its own look every
-/// day. A plant none of whose looks has a season draws no year, so its
-/// months are not read. Flowers are flowers, heads, umbels, spikes,
+/// day; a staggered season's organs each in its cohort's stage. A plant
+/// none of whose looks has a season draws no year, so its months are not
+/// read. Flowers are flowers, heads, umbels, spikes,
 /// panicles and spikelets; fruit is a fruit card that is no cone.
 fn year(grown: &Grown<'_>, tally: &mut Tally) {
     if grown
@@ -1081,10 +1083,11 @@ fn year(grown: &Grown<'_>, tally: &mut Tally) {
             } else {
                 vec![0.0]
             };
+        let cohorts = look.season.as_ref().map(Season::cohorts);
         for day in 1..=365_u16 {
-            let (flowers, ripe) = match &look.season {
+            let (flowers, ripe) = match &cohorts {
                 None => (own_flower, own_fruit),
-                Some(season) => ranks.iter().fold((false, false), |(flowers, ripe), &rank| {
+                Some(cohorts) => cohorts.iter().flat_map(|season| ranks.iter().map(move |&rank| (season, rank))).fold((false, false), |(flowers, ripe), (season, rank)| {
                     match season.unit_stage(f64::from(day), rank) {
                         crate::looks::Stage::Flower => (
                             flowers
