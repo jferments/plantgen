@@ -992,4 +992,16 @@ pub mod venation;
 /// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
 /// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (142 is
 /// palm trunks, #240).
-pub const GENERATOR_REVISION: u32 = 143;
+/// 144: a cactus's central spine form draws its spines: curved and twisted
+/// centrals bend (`curve`), a hooked principal central turns back as a
+/// fishhook (`hook`), in place of hooks and curves set by hand; a woolly
+/// pericarpel and fruit (`fruit_surface` woolly: Homalocephala,
+/// Astrophytum); a flat stem top (`stem_apex` flat); white hair flecks
+/// between the areoles (new trait `stem_flecks`, body `flecks`); an
+/// apex's woolly cap closes over the tip; a reduced flower with more than
+/// 12 stamens draws a ring of anthers; a cactus's floral tube wears its
+/// pericarpel's colour and skin and flares near its mouth, over a
+/// pericarpel shortened to the ovary's swelling; a column stem's sink follows
+/// its height curve, so a seedling's top shows (143 is branching
+/// form, #244).
+pub const GENERATOR_REVISION: u32 = 144;
