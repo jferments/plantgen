@@ -12,6 +12,7 @@
   "generator": {
     "params": {
       "stems": 1,
+      "adult_age": 1,
       "clump_radius": 0.02,
       "stem_lean": 10,
       "nodes": 8,
@@ -424,7 +425,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for Arizona lupine from its sources and the photos the traits cite, on the template of large-leaved lupine (lupinus-polyphyllus); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+      "note": "Set by hand for Arizona lupine from its sources and the photos the traits cite, on the template of large-leaved lupine (lupinus-polyphyllus); an annual, it flowers in its first year (adult_age 1); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

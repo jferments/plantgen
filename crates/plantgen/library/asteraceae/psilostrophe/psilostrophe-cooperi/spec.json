@@ -62,9 +62,9 @@
   },
   "allometry": [
     {
-      "age": 5,
+      "age": 15,
       "environment": "open",
-      "height": 0.3,
+      "height": 0.27,
       "tolerance": 0.4
     }
   ],
@@ -353,7 +353,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "0.3 m tall at 5 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+      "note": "0.27 m tall at 15 years in the open, within its sources' typical 25-30 cm, as grown (the drawn bush is 0.15-0.17 m at 5 years, still filling out). Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
