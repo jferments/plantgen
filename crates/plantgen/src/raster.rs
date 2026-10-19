@@ -90,6 +90,13 @@ pub enum Material {
     /// drops of resin, lit as clear beads are, a bright glint where they
     /// mirror the sun and a glow where it shines through them.
     Gland,
+    /// Drops of secretion on glandular heads (`crate::hairs::Strands::drops`):
+    /// clear liquid, drawn after everything else so what is already drawn
+    /// behind shows through, tinted by the vertex colour as much as the
+    /// vertex alpha (its clarity) says; the sky mirrored at the rim, a
+    /// sharp glint where the sun is, and the sun's light gathered on the
+    /// far side. Casts no shadow.
+    Drop,
 }
 
 impl Material {
@@ -185,6 +192,9 @@ pub fn render(
                 let size = options.shadow_texels.max(1);
                 let mut target = Target::new(size, size);
                 for (mesh, material) in meshes {
+                    if *material == Material::Drop {
+                        continue;
+                    }
                     draw(&mut target, mesh, *material, &camera, None, templates, None);
                 }
                 ShadowMap {
@@ -611,6 +621,30 @@ impl Surface<'_> {
                 target.color[at] = [light[0] as f32, light[1] as f32, light[2] as f32, 1.0];
             }
             target.normal[at] = view.to_f32();
+            return;
+        }
+        if self.material == Material::Drop {
+            if normal.dot(view) <= 0.0 {
+                return;
+            }
+            let clarity = f64::from(mesh.colors[corners[0]][3]).clamp(0.0, 1.0);
+            let lit = self
+                .shadow
+                .map_or(1.0, |map| map.visibility(world, normal, lighting.sun));
+            let behind = target.color[at];
+            let behind = if behind[3] > 0.0 {
+                [0, 1, 2].map(|c| f64::from(behind[c]))
+            } else {
+                lighting.sky.map(f64::from)
+            };
+            let light =
+                crate::hairs::drop_light(albedo, behind, clarity, normal, view, lit, lighting);
+            #[allow(clippy::cast_possible_truncation)]
+            {
+                target.color[at] = [light[0] as f32, light[1] as f32, light[2] as f32, 1.0];
+            }
+            target.depth[at] = depth;
+            target.normal[at] = normal.to_f32();
             return;
         }
         if self.material == Material::Gland {

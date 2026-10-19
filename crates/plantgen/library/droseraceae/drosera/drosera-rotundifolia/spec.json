@@ -1,0 +1,612 @@
+{
+  "schema": 1,
+  "id": "drosera-rotundifolia",
+  "taxon": {
+    "scientific_name": "Drosera rotundifolia",
+    "common_name": "round-leaved sundew",
+    "family": "Droseraceae",
+    "genus": "Drosera",
+    "plant_name_id": 64562
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {}
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {}
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.23,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "library_form": "forb",
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "basal",
+    "cauline_leaves": "none",
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.25,
+      "high": 0.35
+    },
+    "height_max_m": 0.35,
+    "crown_width_max_m": 0.15,
+    "stem_length_m": {
+      "min": 0.01,
+      "max": 0.02,
+      "high": 0.05
+    },
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_posture": {
+      "spreading": "usually",
+      "ascending": "often"
+    },
+    "leaf_shape": {
+      "orbicular": "usually",
+      "reniform": "sometimes"
+    },
+    "leaf_length_m": {
+      "min": 0.004,
+      "max": 0.01,
+      "low": 0.003
+    },
+    "leaf_width_m": {
+      "min": 0.005,
+      "max": 0.012,
+      "high": 0.02
+    },
+    "petiole_length_m": {
+      "min": 0.015,
+      "max": 0.05,
+      "low": 0.01,
+      "high": 0.07
+    },
+    "leaf_margin": "entire",
+    "stipules": true,
+    "glandular_hairs": "dense",
+    "glandular_hair_length_m": {
+      "min": 0.0005,
+      "max": 0.0009
+    },
+    "hair_colour": [
+      195,
+      35,
+      45
+    ],
+    "leaf_colour": [
+      150,
+      160,
+      70
+    ],
+    "vernation": "circinate",
+    "inflorescence": "scorpioid",
+    "inflorescence_posture": "erect",
+    "units_per_inflorescence": {
+      "min": 2,
+      "max": 15,
+      "high": 25
+    },
+    "peduncle_length_m": {
+      "min": 0.05,
+      "max": 0.3,
+      "high": 0.35
+    },
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "pedicel_length_m": {
+      "min": 0.001,
+      "max": 0.003
+    },
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.007
+    },
+    "flower_merosity": 5,
+    "perianth": "sepals_and_petals",
+    "sepal_length_m": {
+      "min": 0.004,
+      "max": 0.005
+    },
+    "petal_length_m": {
+      "min": 0.005,
+      "max": 0.006
+    },
+    "petal_shape": "spatulate",
+    "flower_colour": [
+      252,
+      250,
+      248
+    ],
+    "calyx_colour": [
+      110,
+      150,
+      70
+    ],
+    "stamens": 5,
+    "stamen_length_m": {
+      "min": 0.004,
+      "max": 0.005
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "high": 4
+    },
+    "fruit_type": "capsule",
+    "fruit_size_m": 0.005,
+    "capsule_valves": {
+      "min": 3,
+      "max": 4
+    },
+    "fruit_colour_ripe": [
+      150,
+      115,
+      70
+    ],
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "leaf_out_months": [
+      4,
+      5
+    ],
+    "leaf_fall_months": [
+      9,
+      10
+    ],
+    "leaf_colour_autumn": [
+      160,
+      40,
+      40
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 3000,
+    "light": [
+      "sun",
+      "part"
+    ],
+    "moisture": [
+      "wet"
+    ],
+    "soil_texture": [
+      "sand"
+    ],
+    "habitat_notes": "Sphagnum bogs, fens, swamps, peaty gravels, wet sand, lake and stream margins, seeps (FNA); forest understories, wet meadows, high moors (FOC).",
+    "rosette_leaves": {
+      "min": 4,
+      "max": 12,
+      "typical": 8
+    },
+    "flowering_stems": 1,
+    "marginal_gland_length_m": {
+      "min": 0.00127,
+      "max": 0.0032
+    },
+    "glandular_hairs_per_cm2": 410,
+    "gland_head_diameter_m": {
+      "min": 0.00011,
+      "max": 0.0002
+    },
+    "gland_drop_diameter_m": {
+      "min": 0.0003,
+      "max": 0.0006
+    },
+    "gland_secretion": "clear",
+    "gland_stalk_colour": [
+      150,
+      30,
+      70
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form chosen from the plant's habit: a tiny rosette of long-stalked round leaves fringed with red sticky glands, with a slender leafless scape of small white flowers."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.23 m tall at 3 years in the open, inside the floras' range of heights, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Every look comes from the characters through the library's rules: a tiny rosette of long-stalked round leaves fringed with red sticky glands, with a slender leafless scape of small white flowers."
+    },
+    "traits.library_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): a small perennial rosette herb: forb."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): herbs perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Droseraceae family account (eFloras, read 2026-10-19): herbs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): plants form winter hibernaculae (Wikipedia: a bud of tightly curled leaves at ground level); the summer rosette dies back."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): leaves basal, dense, long-petiolate."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): scapes 5-35 cm, glabrous (leafless)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): scapes 5-35 cm; Wikipedia: inflorescence 5-25 cm tall; FOC 8.5-30 cm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): scapes to 35 cm."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): rosettes (2-)4-10(-15) cm across; Wikipedia: a typical plant 3-5 cm across."
+    },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): stems 1-2 cm; FOC: stem short, to 5 cm when growing up through Sphagnum."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Droseraceae family account (eFloras, read 2026-10-19): leaves basal and rosulate (spirally set)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Droseraceae family account (eFloras, read 2026-10-19): rosulate basal leaves; spiral as in the order's default."
+    },
+    "traits.leaf_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): leaves erect to prostrate."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): blade suborbiculate, broader than long; FOC orbicular, suborbicular or weakly reniform."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): blade 0.4-1 cm long; FOC 3-10 mm, the 3 as low."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): blade 5-12 mm wide; FOC 0.5-2 cm, the 2 cm as high."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): petiole 1.5-5 cm, glandular-pilose; FOC flat, 1-7 cm (taken as low and high); Wikipedia 1.3-5 cm, narrow and hairy."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): blades unlobed; margin fringed only by the stalked glands."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): stipules adnate to the petiole for their whole length, 4-6 mm, fringed along the distal half; FOC 5-7-fid, 6-8 mm, scarious."
+    },
+    "traits.glandular_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): leaf blades with red, long, capitate, sticky glandular hairs; Wikipedia: the upper surface densely covered."
+    },
+    "traits.glandular_hair_length_m": {
+      "evidence": "Authored",
+      "source": "kozak-2026",
+      "note": "A model estimate: Darwin gives the disc tentacles as 'short' and no length (p.4); the central tentacles of the related D. intermedia measure 0.46-0.91 mm (Kozak et al. 2026, Table 1)."
+    },
+    "traits.hair_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): glandular hairs red; sRGB by eye for the word."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): leaf blades yellowish green or green to red (FNA genus: red on both faces in strong sun, greener in shade); sRGB by eye for 'yellowish green'."
+    },
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Droseraceae family account (eFloras, read 2026-10-19): juvenile leaf blade circinate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): cincinni 1 or 2, 3-30-flowered (one-sided coiled cymes); Wikipedia: flowers on one side of a single slender stalk."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): inflorescences erect, scapiform, slender."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): inflorescences 2-15(-25)-flowered; FOC 3-30."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): scapes 5-35 cm, glabrous (the scape is the bare stalk below the flowers)."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: the coiled flowering tip of the scape uncurls to about 2-6 cm with its 2-15 flowers on 1-3 mm pedicels."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): pedicels 1-3 mm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): flowers 4-7 mm across."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): sepals 5, petals 5 (Wikipedia five-petalled)."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): sepals 5, petals 5."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): sepals joined at the base, oblong, 4-5 x 1.5-2 mm; FOC about 4 mm."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): petals 5-6 x 3 mm."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): petals spatulate."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): petals white or pink (FOC white or tinged pink); sRGB by eye for 'white'."
+    },
+    "traits.calyx_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): sepals green, glandular; sRGB by eye for the word."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): stamens 5, 4-5 mm."
+    },
+    "traits.stamen_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): stamens 4-5 mm."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): placentas 3; styles 3 or 4, deeply parted."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): capsules 5 mm."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): capsules 5 mm."
+    },
+    "traits.capsule_valves": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 8 (2001), Drosera rotundifolia (eFloras, read 2026-10-19): capsule 3- or 4-valved."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: a ripe dry capsule pale brown, inside the persistent withered sepals and petals; sRGB by eye."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): flowering June-September."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripen some weeks after each flower, July to October, in the North American range."
+    },
+    "traits.leaf_out_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: rosettes unfold from the hibernaculum in spring after snowmelt, April-May."
+    },
+    "traits.leaf_fall_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: summer leaves die back as the hibernaculum forms in autumn, September-October."
+    },
+    "traits.leaf_colour_autumn": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: leaves redden in strong light and as they age; dying leaves dull red to brown before the winter bud forms; sRGB by eye."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): 0-3000 m."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): 0-3000 m (FOC sea level to 1500 m)."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera (eFloras, read 2026-10-19): leaves red in strong sunlight, greener in shade; FOC forest understories and wet sunny open areas."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): Sphagnum bogs, fens, swamps, wet sand, seeps."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): peaty gravels, sandy soil, wet sand (peat, the commonest substrate, has no state)."
+    },
+    "traits.habitat_notes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): habitats as listed; circumboreal, much commoner northward."
+    },
+    "traits.rosette_leaves": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read counts it: a rosette 2-10 cm across of long-stalked leaves."
+    },
+    "traits.flowering_stems": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Drosera rotundifolia (read 2026-10-19): a single flowering stalk from the centre of the rosette."
+    },
+    "traits.marginal_gland_length_m": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4-5: 'Towards the margin they become longer and longer and more inclined outwards'; p.253: an extreme marginal tentacle 'about 1/20 of an inch in length' (1.27 mm); the marginal tentacles of D. intermedia are 1.6-3.2 mm (Kozak et al. 2026)."
+    },
+    "traits.glandular_hairs_per_cm2": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4: tentacles counted on 31 leaves, 'the average number was 192; the greatest number being 260, and the least 130'. Over a blade 7 x 8.5 mm, the middle of FNA's 4-10 x 5-12 mm, about 0.47 square centimetres, that is about 410 to the square centimetre (the division is the model's)."
+    },
+    "traits.gland_head_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.6: the glands are oval, 'about 4/500 of an inch in length' (0.20 mm); their width is D. intermedia's, 0.11-0.17 mm (Kozak et al. 2026), the model drawing the oval as a ball between the two."
+    },
+    "traits.gland_drop_diameter_m": {
+      "evidence": "Authored",
+      "source": "darwin-1875",
+      "note": "A model estimate: Darwin, Insectivorous Plants (1875), p.4: the glands 'are surrounded by large drops of extremely viscid secretion, which, glittering in the sun, have given rise to the plant's poetical name of the sun-dew'; p.13: it 'appears colourless'. Its width is a model estimate, 1.5 to 3 times the gland's (no measurement found)."
+    },
+    "traits.gland_secretion": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.13: the secretion 'is extremely viscid, so that it can be drawn out into long threads. It appears colourless'."
+    },
+    "traits.gland_stalk_colour": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.4-5: the disc tentacles have green pedicels, the longer ones toward the margin purple, as nine to sixteen on a leaf of 252: the purple, the more, is drawn."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Added by the Caryophyllales thread (2026-10-19): characters from Flora of North America, Flora of China and other sources read that day (research/<family>.json in plantgen-claude project-files/caryophyllales); the drawing comes from the library's rules for those characters."
+  }
+}

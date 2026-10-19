@@ -163,6 +163,62 @@ pub struct Hairs {
     /// the soft hairs, in their own density, length and lie.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stings: Option<Box<Hairs>>,
+    /// A glandular hair's head across, metres, where a source measures it:
+    /// a sundew's oval gland, a hemp's resin head of 50 to 100 µm. Unstated,
+    /// about a fifth of the hair's height (a tomato's).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub head: Option<f64>,
+    /// The drop of secretion each head holds ([`Drop`]): the clear, sticky
+    /// mucilage round a sundew's gland that glitters in the sun, or the
+    /// resin a hemp's head is full of. Without one a head is drawn as
+    /// resin, glossy but not clear.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub drop: Option<Drop>,
+    /// How many stand on a square centimetre of the face, where a count is
+    /// known (Darwin's 192 tentacles on a sundew's leaf): then they stand
+    /// so many whatever `density` says, which still sets the card's cast.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub count: Option<f64>,
+    /// How many times as long they stand at the face's edge as at its
+    /// middle, grading between, and leaning out over the edge as they
+    /// lengthen, the outermost in the face's own plane: a sundew's short
+    /// upright central tentacles and long spreading marginal ones (Darwin
+    /// 1875). Absent, one length over the face.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub edge_length: Option<f64>,
+    /// The colour of each hair's own stalk, linear RGB, where it is
+    /// pigmented (a sundew's red tentacles): then it and the head are drawn
+    /// in it and in `colour`, not clear over the organ's colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stalk: Option<[f32; 3]>,
+}
+
+/// The drop of secretion on a glandular hair's head: drawn as a clear
+/// liquid bead, showing what lies behind it through its own colour,
+/// mirroring the sky at its rim and glinting where it mirrors the sun.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Drop {
+    /// Its width as a multiple of the head's: above 1 a bead round the
+    /// head, the head seen through it; 1 or less the head is itself the
+    /// drop (a resin head with no other cover).
+    pub size: f64,
+    /// The liquid's colour, linear RGB: near white for water-clear
+    /// mucilage, milky or amber for aging resin.
+    pub colour: [f32; 3],
+    /// How much of what lies behind shows through it, 0 (milky, opaque)
+    /// to 1 (water-clear).
+    pub clarity: f64,
+}
+
+impl Default for Drop {
+    fn default() -> Self {
+        Self {
+            size: 1.0,
+            colour: [0.95, 0.95, 0.92],
+            clarity: 0.9,
+        }
+    }
 }
 
 /// How a hair branches (Harris and Harris): a plain hair, a star of
@@ -198,6 +254,11 @@ impl Default for Hairs {
             branching: Branching::Simple,
             glands: None,
             stings: None,
+            head: None,
+            drop: None,
+            count: None,
+            edge_length: None,
+            stalk: None,
         }
     }
 }
@@ -216,7 +277,10 @@ impl Hairs {
     /// stinging hairs among them, are any to draw.
     #[must_use]
     pub fn own_drawn(&self) -> bool {
-        (self.density > 0.0 || self.edge.is_some_and(|edge| edge > 0.0)) && self.length > 0.0
+        (self.density > 0.0
+            || self.edge.is_some_and(|edge| edge > 0.0)
+            || self.count.is_some_and(|count| count > 0.0))
+            && self.length > 0.0
     }
 
     /// These hairs with `share` of each kind kept: young wood's, worn by
@@ -227,12 +291,14 @@ impl Hairs {
             hairs.as_ref().map(|hairs| {
                 Box::new(Self {
                     density: hairs.density * share,
+                    count: hairs.count.map(|count| count * share),
                     ..(**hairs).clone()
                 })
             })
         };
         Self {
             density: self.density * share,
+            count: self.count.map(|count| count * share),
             glands: thin(&self.glands),
             stings: thin(&self.stings),
             ..self.clone()
@@ -3663,7 +3729,9 @@ impl Shape {
                 count("parallel", s.parallel, 0, 12)?;
                 check("praemorse", s.praemorse, 0.0, 0.3)?;
                 check("midrib", s.midrib, 0.0, 1.0)?;
-                check("petiole", s.petiole, 0.0, 0.7)
+                // A sundew's or a violet's small blade sits on a petiole
+                // four to five times its length.
+                check("petiole", s.petiole, 0.0, 0.9)
             }
             Self::Lobed(s) => {
                 check("width", s.width, 0.1, 1.5)?;

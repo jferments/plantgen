@@ -1004,7 +1004,20 @@ pub mod venation;
 /// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
 /// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
 /// cactus genera, #239).
-/// 145: palm 15 and Phoenix's details. A Phoenix's dead frond hangs limp,
+/// 145: a simple leaf's petiole may be up to 0.9 of its card (a sundew's
+/// blade on a stalk four times its length); fleshy and succulent blades
+/// are drawn solid (`leaf_succulence`, `leaf_cross_section`); a herb's
+/// rosette and flowering stems are as many as its taxa count
+/// (`rosette_leaves`, `flowering_stems`), a leafless flowering stem is a
+/// scape in any flowering plant, and a compound inflorescence's branches
+/// take the kind its taxa name (`inflorescence_branch_kind`); smooth bark
+/// draws with a valid pattern; a shrub without short shoots has a short
+/// share; a glandular hair has a head, a count per square centimetre,
+/// a margin length that grades it from short and upright to long and
+/// spreading, a stalk colour and a drop of clear, milky or amber secretion,
+/// and strands draw on flower and cluster cards (fifteen Caryophyllales
+/// species, two more sundews and hemp, #243; 144 is #244).
+/// 146: palm 15 and Phoenix's details. A Phoenix's dead frond hangs limp,
 /// its leaflets folded up along the rachis and the rachis drooping, in
 /// place of a flat plank standing out below the crown. A boot wears shorter
 /// as it ages (`boot_wear`, `boot_wear_years`) and each is a little longer
@@ -1014,5 +1027,5 @@ pub mod venation;
 /// air (`roots`). An open sheath (`sheath_wedge`, Phoenix's) is drawn as a
 /// broad brown wedge along its petiole's base, so the crown's centre is
 /// clothed in leaf bases where the bare stem showed as a flat-topped
-/// cylinder (144 is branching form, #244).
-pub const GENERATOR_REVISION: u32 = 145;
+/// cylinder (145 is Caryophyllales, #243).
+pub const GENERATOR_REVISION: u32 = 146;
