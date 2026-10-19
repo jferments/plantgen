@@ -78,6 +78,10 @@
     "generator.params.ring_share": {
       "rule": "0.5",
       "why": "Once the leader passes half its full height, each square metre of foliage lays down less trunk wood, as (half the full height / height) squared, as taller trees grow less stem for their leaf area (Ryan and Yoder 1997, hydraulic limitation): with the same ring area per leaf at every height, 300-year open-grown trees drew trunks two to three times the floras' (Douglas-fir 5.2 m against Abrams' 1 to 3.5 m and FEIS's 1.5 to 1.8 m common in old growth; grand fir 3.0 m against 1 to 1.5 m, up to 2). Tried at 0.45 and 0.6, 300-year Douglas-fir drew 3.1 and 3.8 m, grand fir 1.7 and 2.1 m, Sitka spruce 2.1 and 2.7 m (to 5 m, Abrams), and the 60-year sizes stayed within 4% of before; 0.5 is between them."
+    },
+    "generator.params.reach_power": {
+      "rule": "4",
+      "why": "trial"
     }
   },
   "evidence": {
