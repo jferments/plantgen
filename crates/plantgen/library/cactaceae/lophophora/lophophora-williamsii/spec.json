@@ -97,7 +97,7 @@
     {
       "age": 25,
       "environment": "open",
-      "height": 0.03,
+      "height": 0.06,
       "tolerance": 0.6
     }
   ],
@@ -161,8 +161,8 @@
       "max": 0.005
     },
     "height_typical_m": {
-      "min": 0.01,
-      "max": 0.04
+      "min": 0.02,
+      "max": 0.075
     },
     "flowering_months": [
       3,
@@ -244,12 +244,12 @@
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "fna-online",
-      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Lophophora williamsii: plants 0-50-branched, nearly flush with the soil surface; stems flat or domelike with a deeply depressed centre; ribs to 25 mm broad. Inner tepals elliptic, margins white to greenish pink, midstripes darker; styles white. Flowering Mar-May(-Sep). Its stem 2-7.5 cm tall (the genus) stands mostly in the soil, its top 1 to 4 cm above it."
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Lophophora williamsii: plants 0-50-branched, nearly flush with the soil surface; stems flat or domelike with a deeply depressed centre; ribs to 25 mm broad. Inner tepals elliptic, margins white to greenish pink, midstripes darker; styles white. Flowering Mar-May(-Sep). Its height is the stem's, 2-7.5 cm (the genus), most of it in the soil: its top stands 1 to 4 cm above it."
     },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "fna-online",
-      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Lophophora williamsii: plants 0-50-branched, nearly flush with the soil surface; stems flat or domelike with a deeply depressed centre; ribs to 25 mm broad. Inner tepals elliptic, margins white to greenish pink, midstripes darker; styles white. Flowering Mar-May(-Sep). Its stem 2-7.5 cm tall (the genus) stands mostly in the soil, its top 1 to 4 cm above it."
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Lophophora williamsii: plants 0-50-branched, nearly flush with the soil surface; stems flat or domelike with a deeply depressed centre; ribs to 25 mm broad. Inner tepals elliptic, margins white to greenish pink, midstripes darker; styles white. Flowering Mar-May(-Sep). Its height is the stem's, 2-7.5 cm (the genus), most of it in the soil: its top stands 1 to 4 cm above it."
     },
     "generator.params": {
       "evidence": "Authored",
@@ -259,7 +259,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A rough height above ground: about 3 cm by 25 years. Wide tolerance."
+      "note": "A rough stem height, most of it below ground: about 6 cm by 25 years. Wide tolerance."
     },
     "appearance": {
       "evidence": "Authored",

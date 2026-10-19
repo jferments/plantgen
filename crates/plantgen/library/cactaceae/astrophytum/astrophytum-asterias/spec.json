@@ -86,7 +86,7 @@
     {
       "age": 15,
       "environment": "open",
-      "height": 0.03,
+      "height": 0.07,
       "tolerance": 0.6
     }
   ],
@@ -149,8 +149,9 @@
     },
     "fruit_width_m": 0.012,
     "height_typical_m": {
-      "min": 0.01,
-      "max": 0.04
+      "min": 0.06,
+      "max": 0.15,
+      "low": 0.025
     },
     "flowering_months": [
       3,
@@ -247,7 +248,7 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "fna-online",
-      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum asterias: plants flat-topped and usually flush with the soil surface, or at most the above-ground portion a low dome; stems shiny, sparsely speckled by bright white extra-areolar hair tufts 0.5-1 mm across; ribs usually 8, straight, very low, nearly flat or rounded; areoles 3-5 mm across, with yellow or gray wool. Flowers opening widely, externally long woolly; inner tepals lanceolate, acuminate. Flowering Mar-May and sporadically after summer rain. Its stem is 6-15 cm tall in the genus but mostly below ground, so it stands 1 to 4 cm above it."
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum asterias: plants flat-topped and usually flush with the soil surface, or at most the above-ground portion a low dome; stems shiny, sparsely speckled by bright white extra-areolar hair tufts 0.5-1 mm across; ribs usually 8, straight, very low, nearly flat or rounded; areoles 3-5 mm across, with yellow or gray wool. Flowers opening widely, externally long woolly; inner tepals lanceolate, acuminate. Flowering Mar-May and sporadically after summer rain. Its height is the stem's, (2.5-)6-15 cm in the genus, most of it below ground: only 1 to 4 cm stands above it."
     },
     "generator.params": {
       "evidence": "Authored",
@@ -257,7 +258,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A rough height above ground: about 3 cm by 15 years. Wide tolerance."
+      "note": "A rough stem height, most of it below ground: about 7 cm by 15 years. Wide tolerance."
     },
     "appearance": {
       "evidence": "Authored",
