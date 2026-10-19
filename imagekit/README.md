@@ -256,6 +256,8 @@ imagekit embed --model dinov2 --regions --taxon "Asimina triloba"
 imagekit search --model dinov2 --organ leaf --image leaf.jpg --by-species
 imagekit segment --taxon "Asimina triloba"                 # SAM 2.1 crown masks on the whole-plant boxes
 imagekit measure --taxon "Asimina triloba" --plantc target/release/plantc   # crown outline measures per mask
+imagekit count --taxon "Cornus nuttallii" --organ flower --what "the white petal-like bracts around this flower head"
+imagekit count --summary <analyzer>                         # counts per taxon, photos against renders
 ```
 
 `detect` asks Grounding DINO (`gdino-tiny` by default, `gdino-base` for
@@ -289,6 +291,19 @@ fit, see-through, width to height, where the crown is widest, solidity
 and large gaps. What covers the sky inside the outline is read from the
 image (`--cover sky`: bright bluish or colourless pixels are sky). The
 analyzer is plantc's commit, so a change to the measures measures again.
+
+`count` crops each kept region of one organ with a small margin and has a
+pointing model put one point on every part `--what` names (bracts, rays,
+tepals, stamens, leaflets). The count is the number of points, stored
+with the points and the crop's box, so any count can be checked by eye.
+Molmo2 (`--pointer molmo2-8b`, the default) runs on a local GPU; any
+vision backend works too (`--backend vllm --model Qwen/Qwen3-VL-8B-Instruct`,
+`openrouter`, `claude`), and `--backend chat --chat-dir D` writes the crops
+and one prompt for free observers, then reads their `<id>.json` answers
+back. A row or column of evenly spaced points is the model listing, not
+looking: it is kept as `degenerate` with no count. Each `--what` is its
+own analyzer. Counting from masks failed in the daisy pilot (rays merge
+into one mask), so counts come from pointing only.
 
 ## Render and compare
 
