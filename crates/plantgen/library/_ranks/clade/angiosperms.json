@@ -374,8 +374,8 @@
     },
     "appearance.organs.*.shape.petal_rise": {
       "template": "flower",
-      "map": {"corolla_lobe_posture": {"erect": 70, "spreading": 10, "reflexed": -40}},
-      "why": "Petals or corolla lobes stand up, out nearly flat, or bent back toward the stalk as their posture says."
+      "map": {"corolla_lobe_posture": {"erect": 70, "spreading": 10, "reflexed": -80}},
+      "why": "Petals or corolla lobes stand up, out nearly flat, or bent back toward the stalk as their posture says: reflexed ones sharply back, nearly along it, as a shooting star's are swept back from its beak of anthers."
     },
     "appearance.organs.*.shape.sepal_rise": {
       "template": "flower",
