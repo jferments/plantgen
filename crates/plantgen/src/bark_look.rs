@@ -1312,6 +1312,52 @@ fn whole(x: f64) -> usize {
     x.max(0.0) as usize
 }
 
+/// `tile` as glTF's standard metallic-roughness material in `document`,
+/// named `name`: base colour (sRGB), normal (+Y up the stem), and
+/// occlusion, roughness and metal in one map, each repeating; the tile's
+/// period and the bark's thickness are in its extras.
+#[allow(clippy::cast_possible_truncation)] // Extras are single precision.
+pub fn material(
+    document: &mut crate::gltf::Document,
+    tile: &Tile,
+    name: &str,
+) -> crate::gltf::Index {
+    use crate::gltf::{self, Document, number};
+    use serde_json::json;
+    let png =
+        |rgba: Vec<u8>| crate::raster::encode_png(tile.size, tile.size, &rgba).unwrap_or_default();
+    let sampler = document.sampler(json!({
+        "magFilter": gltf::LINEAR,
+        "minFilter": gltf::LINEAR_MIPMAP_LINEAR,
+        "wrapS": gltf::REPEAT,
+        "wrapT": gltf::REPEAT,
+    }));
+    let texture = |document: &mut Document, part: &str, rgba: Vec<u8>| {
+        let image = document.png(&format!("{name} {part}"), &png(rgba));
+        document.texture(image, sampler)
+    };
+    let colour = texture(document, "base colour", tile.base_colour_rgba());
+    let normal = texture(document, "normal", tile.normal_rgba());
+    let orm = texture(document, "occlusion roughness metal", tile.orm_rgba());
+    document.material(json!({
+        "name": name,
+        "pbrMetallicRoughness": {
+            "baseColorTexture": { "index": colour },
+            "metallicRoughnessTexture": { "index": orm },
+            "metallicFactor": 1,
+            "roughnessFactor": 1,
+        },
+        "normalTexture": { "index": normal },
+        "occlusionTexture": { "index": orm },
+        "extras": {
+            "plantgen_bark": {
+                "period_m": number(tile.period_m as f32),
+                "thickness_m": number(tile.thickness_m as f32),
+            },
+        },
+    }))
+}
+
 /// The tile period for a stem `diameter` metres across, near `wanted`:
 /// the stem's circumference over a whole number of tiles, so the tile
 /// wraps round it unstretched, and on stems thinner than `wanted / π` the
@@ -1333,7 +1379,7 @@ pub fn period_for(diameter: f64, wanted: f64) -> f64 {
 #[must_use]
 #[allow(clippy::cast_possible_truncation)] // Vertex data is single precision.
 pub fn glb(tile: &Tile, name: &str, diameter: f64, length: f64) -> Vec<u8> {
-    use crate::gltf::{self, Document, number};
+    use crate::gltf::{Document, number};
     use serde_json::json;
     let circumference = core::f64::consts::PI * diameter;
     let wraps = libm::round(circumference / tile.period_m).max(1.0);
@@ -1365,38 +1411,7 @@ pub fn glb(tile: &Tile, name: &str, diameter: f64, length: f64) -> Vec<u8> {
         }
     }
     let mut document = Document::new();
-    let png =
-        |rgba: Vec<u8>| crate::raster::encode_png(tile.size, tile.size, &rgba).unwrap_or_default();
-    let sampler = document.sampler(json!({
-        "magFilter": gltf::LINEAR,
-        "minFilter": gltf::LINEAR_MIPMAP_LINEAR,
-        "wrapS": gltf::REPEAT,
-        "wrapT": gltf::REPEAT,
-    }));
-    let texture = |document: &mut Document, part: &str, rgba: Vec<u8>| {
-        let image = document.png(&format!("{name} {part}"), &png(rgba));
-        document.texture(image, sampler)
-    };
-    let colour = texture(&mut document, "base colour", tile.base_colour_rgba());
-    let normal = texture(&mut document, "normal", tile.normal_rgba());
-    let orm = texture(&mut document, "occlusion roughness metal", tile.orm_rgba());
-    let material = document.material(json!({
-        "name": name,
-        "pbrMetallicRoughness": {
-            "baseColorTexture": { "index": colour },
-            "metallicRoughnessTexture": { "index": orm },
-            "metallicFactor": 1,
-            "roughnessFactor": 1,
-        },
-        "normalTexture": { "index": normal },
-        "occlusionTexture": { "index": orm },
-        "extras": {
-            "plantgen_bark": {
-                "period_m": number(tile.period_m as f32),
-                "thickness_m": number(tile.thickness_m as f32),
-            },
-        },
-    }));
+    let material = material(&mut document, tile, name);
     let primitive = json!({
         "attributes": {
             "POSITION": document.attribute(&positions, 3, true),

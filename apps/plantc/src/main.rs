@@ -337,6 +337,7 @@ Usage:
                 [--attributes all|wind|none]
                 [--triangles N[,N,N,N]] [--max-mib N]
                 [--profile static|motion]
+                [--bark-look FILE.json [--bark-texels N] [--bark-period M]]
       Write one variant at one age as glTF 2.0 binary files that need no
       PlantGen code, one per level of detail (STEM-lod0.glb to
       STEM-lod3.glb), and an index, STEM.json, in DIR (default `exports`);
@@ -372,6 +373,11 @@ Usage:
       plant's bones (JOINTS_0, WEIGHTS_0, _PLANTGEN_ALONG), lets its parts
       ride their bones' joints, and carries the bones and branches in the
       PLANTGEN_motion extension, as a motion package holds them.
+      --bark-look draws the bark from a bark record (`plantc bark`): each
+      stage baked to textures N texels a side (default 512), repeating
+      near every M metres (default 0.5), as a material of its own, with
+      the wood split by stage and given texture coordinates in tiles and
+      tangents.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
@@ -3496,6 +3502,9 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             "triangles",
             "max-mib",
             "profile",
+            "bark-look",
+            "bark-texels",
+            "bark-period",
         ],
     )?;
     match options.flags.get("format").map(String::as_str) {
@@ -3552,11 +3561,39 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             })
             .transpose()?,
     };
+    let bark = if let Some(path) = options.flags.get("bark-look") {
+        let text =
+            fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
+        let look =
+            plantgen::bark_look::BarkLook::from_json(&text).map_err(|error| error.to_string())?;
+        let texels = options.number::<usize>("bark-texels")?.unwrap_or(512);
+        if !(16..=4096).contains(&texels) || !texels.is_power_of_two() {
+            return Err("`--bark-texels` is a power of two from 16 to 4096".into());
+        }
+        let period_m = options.number::<f64>("bark-period")?.unwrap_or(0.5);
+        if period_m.is_nan() || period_m <= 0.0 {
+            return Err("`--bark-period` is a length above 0, in metres".into());
+        }
+        // The look lives as long as the run.
+        Some(export::BarkExport {
+            look: Box::leak(Box::new(look)),
+            texels,
+            period_m,
+        })
+    } else {
+        for flag in ["bark-texels", "bark-period"] {
+            if options.flags.contains_key(flag) {
+                return Err(format!("`--{flag}` needs `--bark-look`").into());
+            }
+        }
+        None
+    };
     let settings = export::Settings {
         shade,
         compression,
         attributes,
         budget,
+        bark,
     };
     let target = options.one_positional("a species or a package")?;
     let package_dir = Path::new(target);
