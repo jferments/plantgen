@@ -1129,4 +1129,22 @@ pub mod venation;
 /// is lost the trunk's fork stems spread as scaffold limbs (`fork_set`,
 /// from `leader`), and a flat-topped crown is flattened (`crown_form`
 /// `flat_topped`) (155 is Rosaceae, #236).
-pub const GENERATOR_REVISION: u32 = 156;
+/// 157: Caryophyllales gaps. A perianth may be one whorl of tepals (an
+/// amaranth's 5) and a spiral up to 160 parts (an ice plant's petal-like
+/// staminodes); a season may run all year (`stagger`: each look variety
+/// opens its flowers at its own time, so a plant flowers and fruits in
+/// every month); a herb woody at the base keeps its flowering stems
+/// (`stem_persists`); a lying stem keeps its leaf arrangement, a pair's
+/// upper leaf rising and its lower one along the ground; a stem's upper
+/// leaves may turn alternate (`alternate_above`, hemp's) and a crowded
+/// branch bears an inflorescence in each axil (`axil_racemes`); a cluster
+/// draws a ring of involucral bracts at its foot and a floral bract under
+/// each flower, leafy, petaloid or scale-like (`involucre`,
+/// `floral_bract`); a leaf card may be as narrow as 0.005 of its length; a
+/// shrub's crown spreads to its flora's greatest width; a climber's
+/// fruiting nodes may bear blooms (climber 8); a glandular head may be
+/// oval or elongated and its stalk shade from the disc's colour to the
+/// margin's, and glandular hairs stand on a petiole; a blade close-up
+/// frames the bent blade's middle (herb revision 19; 156 is growth-form
+/// language, #252).
+pub const GENERATOR_REVISION: u32 = 157;

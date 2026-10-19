@@ -223,7 +223,7 @@ fn measure(id: &str) -> Result<Value, String> {
     let mut parts = plantgen::parts::part_meshes(&looks);
     parts.retain(|part| sizes.get(part.template).is_none_or(|&size| size > 0.0));
     let part_types = plantgen::parts::types(&looks, &parts);
-    let staged = plantgen::looks::staged(graph, &sizes);
+    let staged = plantgen::looks::staged(graph, &sizes, &looks);
     let drawn = staged.as_ref().unwrap_or(graph);
     let build = |g: &PlantGraph, level: usize| {
         mesh::build_with(

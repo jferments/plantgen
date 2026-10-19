@@ -276,10 +276,10 @@ pub struct Floral {
 }
 
 /// The whorls a flower's tepals stand in: as many of its `whorl` as its
-/// tepals fill, else two.
+/// tepals fill (one, as an amaranth's single whorl of five), else two.
 fn tepal_whorls(flower: &Flower) -> u32 {
     if flower.whorl > 0 && flower.petals % flower.whorl == 0 {
-        (flower.petals / flower.whorl).clamp(2, 6)
+        (flower.petals / flower.whorl).clamp(1, 6)
     } else {
         2
     }
@@ -783,7 +783,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 (lobe_radius, lobe_length, lobe_width),
             );
             for j in 0..whorls {
-                let t = f64::from(j) / f64::from(whorls - 1);
+                let t = f64::from(j) / f64::from((whorls - 1).max(1));
                 let long = if whorls > 2 { 1.0 - 0.12 * t } else { 1.0 };
                 for k in 0..per {
                     let angle = TAU * f64::from(k) / h + PI / h * f64::from(j);

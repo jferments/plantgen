@@ -202,7 +202,13 @@
       "max": 30,
       "typical": 20
     },
-    "flowering_branches": 3
+    "flowering_branches": 3,
+    "fruit_seed_length_m": 0.003,
+    "fruit_seed_colour": [
+      16,
+      14,
+      16
+    ]
   },
   "evidence": {
     "taxon": {
@@ -544,6 +550,16 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read counts it: FNA: stems branched above, racemes opposite the leaves on the branches."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): seeds black, lenticular, 3 mm, shiny; FOC: about 3 mm."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4, Phytolacca americana (eFloras, read 2026-10-19): seeds black, shiny. sRGB by eye for the word."
     }
   },
   "provenance": {

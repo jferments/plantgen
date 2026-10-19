@@ -204,6 +204,15 @@
       "typical": 8
     },
     "flowering_stems": 1,
+    "fruit_seed_length_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "fruit_seed_colour": [
+      190,
+      155,
+      110
+    ],
     "marginal_gland_length_m": {
       "min": 0.0016,
       "max": 0.0032
@@ -213,6 +222,13 @@
       "min": 0.00011,
       "max": 0.0002
     },
+    "gland_head_shape": "oval",
+    "marginal_gland_head_shape": "elongated",
+    "disc_gland_stalk_colour": [
+      85,
+      135,
+      55
+    ],
     "gland_drop_diameter_m": {
       "min": 0.0003,
       "max": 0.0006
@@ -550,6 +566,16 @@
       "source": "wikipedia",
       "note": "As for round-leaved sundew, no other value having been found for Drosera anglica: Wikipedia, Drosera rotundifolia (read 2026-10-19): a single flowering stalk from the centre of the rosette."
     },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "As for round-leaved sundew, no other value having been found for Drosera anglica: Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): seeds 1-1.5 mm, fusiform."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "As for round-leaved sundew, no other value having been found for Drosera anglica: Flora of North America vol. 6 (2015), Drosera rotundifolia (eFloras, read 2026-10-19): seeds light brown with a metallic sheen; sRGB by eye for 'light brown'."
+    },
     "traits.marginal_gland_length_m": {
       "evidence": "Authored",
       "source": "kozak-2026",
@@ -564,6 +590,21 @@
       "evidence": "SourceInferred",
       "source": "darwin-1875",
       "note": "Darwin, Insectivorous Plants (1875), p.278: 'The glands of all the tentacles have the same structure' as in D. rotundifolia (0.20 mm long, p.6)."
+    },
+    "traits.gland_head_shape": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "Darwin, Insectivorous Plants (1875), p.278: 'The glands of all the tentacles have the same structure' as in D. rotundifolia, whose glands are oval (p.6)."
+    },
+    "traits.marginal_gland_head_shape": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "As for round-leaved sundew, no other value having been found for Drosera anglica: Darwin, Insectivorous Plants (1875), p.6-7: the glands of the extreme marginal tentacles are elongated, unlike the oval glands of the disc."
+    },
+    "traits.disc_gland_stalk_colour": {
+      "evidence": "SourceInferred",
+      "source": "darwin-1875",
+      "note": "As for round-leaved sundew, no other value having been found for Drosera anglica: Darwin, Insectivorous Plants (1875), p.4-5: the pedicels of the short tentacles on the disc are green; the colour is the model's leaf green, a little darker."
     },
     "traits.gland_drop_diameter_m": {
       "evidence": "Authored",

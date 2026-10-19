@@ -190,7 +190,16 @@
       "min": 1000,
       "max": 5000
     },
-    "flowering_branches": 4
+    "flowering_branches": 4,
+    "fruit_seed_length_m": {
+      "min": 0.001,
+      "max": 0.0013
+    },
+    "fruit_seed_colour": [
+      28,
+      20,
+      18
+    ]
   },
   "evidence": {
     "taxon": {
@@ -517,6 +526,16 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read counts it: FNA: stems branched in the upper part, the branches ending in spikes."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): seeds 1-1.3 mm; FOC about 1 mm across."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Amaranthus retroflexus (eFloras, read 2026-10-19): seeds black to dark reddish brown, shiny; sRGB by eye for the words."
     }
   },
   "provenance": {

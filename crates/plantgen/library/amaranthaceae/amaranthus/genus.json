@@ -39,7 +39,12 @@
       "capsule": "often",
       "achene": "often"
     },
-    "calyx_in_fruit": "persistent"
+    "calyx_in_fruit": "persistent",
+    "fruit_seed_colour": [
+      28,
+      22,
+      20
+    ]
   },
   "evidence": {
     "traits.life_span": {
@@ -111,6 +116,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (2003), Amaranthus (Mosyakin & Robertson) (eFloras, read 2026-10-19): utricles loosely enclosed by the inner tepals."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Amaranthus (eFloras, read 2026-10-19): seeds black or brown, smooth and shiny (FNA); sRGB by eye for the word."
     }
   }
 }

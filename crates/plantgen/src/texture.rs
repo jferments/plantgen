@@ -640,6 +640,7 @@ pub fn organ_templates(shapes: &[Shape]) -> Templates {
             forms: crate::looks::Forms::default(),
             inflorescence: None,
             varieties: Vec::new(),
+            variety_sizes: Vec::new(),
             hairs: None,
             hairs_beneath: None,
         })

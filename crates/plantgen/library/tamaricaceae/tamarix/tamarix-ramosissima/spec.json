@@ -124,11 +124,6 @@
       "max": 0.01
     },
     "bract_form": "scale",
-    "bract_length_m": {
-      "min": 0.0015,
-      "max": 0.002,
-      "high": 0.0028
-    },
     "pedicel_length_m": {
       "min": 0.0005,
       "max": 0.0007
@@ -220,6 +215,11 @@
     ],
     "habitat_notes": "Native from eastern Europe and Turkey across central Asia to western China and Mongolia on riversides, valleys, sandy or clayey saline plains and dunes; an aggressive invader of riverways, lakeshores and arroyos in western North America, 0-2500 m. A facultative phreatophyte and halophyte that excretes salt onto its leaves.",
     "habit_notes": "Many-stemmed deciduous shrub; long woody growing branches persist, the fine green leafy branchlets fall in autumn with the leaves, so the foliage looks feathery. Old branches dark grey, the year's branches red or orange-yellow. Leaves tiny scales pressed along the twigs, often frosted with excreted salt. Spring racemes come laterally from last year's wood, summer racemes in terminal panicles on new shoots; pink, 5-merous flowers with petals persisting in fruit; seeds minute with a tuft of hairs, wind-borne. Resprouts from the root crown after fire or cutting.",
+    "floral_bract_length_m": {
+      "min": 0.0015,
+      "max": 0.002,
+      "high": 0.0028
+    },
     "branchlet_length_m": {
       "min": 0.03,
       "max": 0.1
@@ -416,11 +416,6 @@
       "source": "flora-of-china",
       "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): bracts lanceolate to linear-subulate, small (scale)."
     },
-    "traits.bract_length_m": {
-      "evidence": "SourceInferred",
-      "source": "flora-of-china",
-      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): bracts 1.5-2(-2.8) mm, equalling or exceeding the calyx; FNA: exceeding the pedicel, not reaching the calyx tip."
-    },
     "traits.pedicel_length_m": {
       "evidence": "SourceInferred",
       "source": "flora-of-china",
@@ -590,6 +585,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 13, Tamarix (eFloras, read 2026-10-19): two branch kinds, the green branchlets falling in winter; salt glands; FEIS: two flowering seasons, wind-dispersed tufted seeds, sprouting from the root crown."
+    },
+    "traits.floral_bract_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13, Tamarix ramosissima (eFloras, read 2026-10-19): bracts 1.5-2(-2.8) mm, equalling or exceeding the calyx; FNA: exceeding the pedicel, not reaching the calyx tip. One bract stands under each flower (Flora of China vol. 13, Tamarix: bract 1 per flower), not at the raceme's foot."
     },
     "traits.branchlet_length_m": {
       "evidence": "Authored",
