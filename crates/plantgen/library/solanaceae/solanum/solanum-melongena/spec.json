@@ -63,7 +63,10 @@
       "min": 0.05,
       "max": 0.1
     },
-    "petiole_length_m": 0.025,
+    "petiole_length_m": {
+      "min": 0.02,
+      "max": 0.045
+    },
     "bark_colour": [
       115,
       135,
@@ -120,7 +123,13 @@
       8,
       9
     ],
-    "fruiting_calyx_posture": "clasping"
+    "fruiting_calyx_posture": "clasping",
+    "stem_hairs": "tomentose",
+    "hair_branching": "stellate",
+    "leaf_hairs": "pubescent",
+    "leaf_hairs_beneath": "tomentose",
+    "spines": "prickles",
+    "prickle_density": "sparse"
   },
   "provenance": {
     "sources": [
@@ -212,8 +221,8 @@
     },
     "traits.petiole_length_m": {
       "evidence": "SourceInferred",
-      "source": "flora-british-india-4",
-      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Solanum Melongena, p. 235 (read on the Internet Archive, 2026-10-17): petiole 1 in."
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): petiole 2-4.5 cm; Flora of British India (p. 235): petiole 1 in."
     },
     "traits.bark_colour": {
       "evidence": "SourceInferred",
@@ -289,6 +298,36 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia, 'Eggplant' (read 2026-10-18): the green part at the top of the fruit, the calyx, is cut away in cooking; Flora of British India (p. 235): the calyx lobes enlarge in fruit, much shorter than the fruit. Photographs (iNaturalist 296012680, 205124070) show it pressed over the fruit's shoulder as a cap."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): pubescent with stellate hairs; stems and branches minutely tomentose; Bailey (vol. 6): calyx and young parts woolly."
+    },
+    "traits.hair_branching": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): pubescent with stellate hairs, the leaves stellate-tomentose; Flora of British India (p. 235): star-shaped wool beneath."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): leaf blade stellate-tomentose, denser abaxially, so thinner above; Flora of British India (p. 235): the star-shaped wool beneath. 'Pubescent' is our reading of the thinner felt above."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): leaf blade stellate-tomentose, denser abaxially; Flora of British India (p. 235): star-shaped wool beneath."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): sparingly armed; stems and branches sometimes with stout recurved prickles; Flora of British India (p. 235): prickly, or sometimes nearly unarmed; Wikipedia 'Eggplant': often with a spiny stem."
+    },
+    "traits.prickle_density": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): herbs or subshrubs sparingly armed."
     }
   }
 }

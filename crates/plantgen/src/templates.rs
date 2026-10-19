@@ -1170,12 +1170,17 @@ fn simple_width(s: &Simple, length: f64, t: f64, margin: Option<&Margin>) -> f64
 }
 
 /// How far a lobe's margin falls back along its flank, from its tip (0)
-/// to its sinus (1): pointed lobes (`round` 0) narrow straight, rounded
-/// ones swell (`round` 1).
+/// to its sinus (1): pointed lobes (`round` 0) narrow fast from a sharp
+/// tip into an open sinus (a jimsonweed's "lobes acute"), rounded ones
+/// swell to a full tip over a narrow sinus (`round` 1).
 fn lobe_flank(share: f64, round: f64) -> f64 {
     let pointed = 1.0 - share;
     let rounded = math::cos(0.5 * PI * share);
-    1.0 - math::pow((pointed + (rounded - pointed) * round).max(0.0), 0.7)
+    let sharp = (1.0 - round.clamp(0.0, 1.0)).powi(2);
+    1.0 - math::pow(
+        (pointed + (rounded - pointed) * round).max(0.0),
+        0.7 + 0.9 * sharp,
+    )
 }
 
 /// A pinnately lobed leaf's outline over its lobes' tips, at `t` along

@@ -14,20 +14,20 @@
   },
   "rules": {
     "appearance.organs.leaf.shape.width": {
-      "template": ["simple", "sprig"],
+      "template": ["simple", "sprig", "lobed"],
       "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.35)"}, "cordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.8)"}, "reniform": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 1.3)"}, "deltate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.9)"}}},
       "else": {"rule": "clamp(leaf_width_m / leaf_length_m, 0.03, 1.5)"},
       "between": true,
       "why": "A blade is as broad for its length as its flora measures it, the middle of each range, up to one and a half times as broad as long, the broadest a card draws; where it gives no measures, as its shape word says; between two words, between their breadths."
     },
     "appearance.organs.leaf.shape.petiole": {
-      "template": "simple",
+      "template": ["simple", "lobed"],
       "needs": ["petiole_length_m"],
       "rule": "petiole_length_m / (leaf_length_m + petiole_length_m)",
       "why": "A leaf card holds the blade and its stalk end to end, so the stalk's share of the card is the flora's petiole over the two lengths together."
     },
     "appearance.organs.basal.shape.width": {
-      "template": ["simple", "sprig"],
+      "template": ["simple", "sprig", "lobed"],
       "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.35)"}, "cordate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.8)"}, "reniform": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 1.3)"}, "deltate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.03, 1.5), 0.9)"}}},
       "else": {"rule": "clamp(leaf_width_m / leaf_length_m, 0.03, 1.5)"},
       "between": true,
@@ -383,6 +383,18 @@
       "map": {"stinging_hairs": {"sparse": 0.6, "scattered": 0.6, "dense": 0.6}},
       "why": "The plant's stinging hairs stand out of the face as their kind does: glandular hairs nearly straight up, stinging hairs leaning toward its tip."
     },
+    "appearance.stem_hairs.prickles.density": {
+      "map": {"spines": {"prickles": {"map": {"prickle_density": {"sparse": 0.01, "scattered": 0.03, "dense": 0.1}}, "else": 0.03}}},
+      "why": "A plant armed with prickles bears them on its young stems and leaf stalks among its hairs, as thickly as its flora says: one every few centimetres up a stem where sparse, closer where it is called prickly, crowded where densely prickly."
+    },
+    "appearance.stem_hairs.prickles.length": {
+      "map": {"spines": {"prickles": {"rule": "first(prickle_length_m, 0.004)"}}},
+      "why": "A stem's prickles are as long as its flora states, or four millimetres where it states none."
+    },
+    "appearance.stem_hairs.prickles.lie": {
+      "map": {"spines": {"prickles": 0.9}},
+      "why": "A prickle stands out from the stem, its point bent back toward the stem's foot."
+    },
     "appearance.organs.leaf.shape.spread": {
       "template": "compound",
       "map": {"leaf_peltation": {"manifest": {"rule": "360 * (leaflets - 1) / leaflets"}}},
@@ -422,6 +434,21 @@
       "template": ["simple", "sprig"],
       "map": {"leaf_margin": {"serrate": 0, "dentate": 0.35, "crenate": 1, "spiny": 0}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: Serrate teeth are saw teeth pointing to the tip; dentate teeth point outward, so they are drawn blunter and more upright; crenate teeth are rounded scallops."
+    },
+    "appearance.organs.*.shape.lobes": {
+      "template": "lobed",
+      "rule": "clamp(round(leaf_lobes / 2), 1, 12)",
+      "why": "A pinnately lobed blade has half the lobes its flora counts up each side of its midrib."
+    },
+    "appearance.organs.*.shape.depth": {
+      "template": "lobed",
+      "map": {"leaf_incision": {"lobed": 0.35, "cleft": 0.55, "parted": 0.8, "dissected": 0.9}},
+      "why": "A lobed blade's sinuses cut about a third of the way to its midrib, a cleft one's past halfway, a parted one's most of the way and a dissected one's nearly to it (Harris and Harris)."
+    },
+    "appearance.organs.*.shape.round": {
+      "template": "lobed",
+      "map": {"leaf_lobe_apex": {"acute": 0, "obtuse": 0.5, "rounded": 1}},
+      "why": "A lobed blade's lobes end in points, blunt tips or round ones, as stated; rounded where no flora says."
     },
     "appearance.organs.leaf.shape.lobes": {
       "template": ["compound"],
@@ -572,6 +599,12 @@
     "rules.appearance.stem_hairs.glands.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "Glandular hairs are stalked hairs ending in a round head of secretion (Harris and Harris: glandular, stipitate-glandular). How densely they stand for each word, about 2, 5 and 12 to the square millimetre for sparse, scattered and dense (the tomato's capitate type VI hairs are 0.6 to 5.7 to the square millimetre on its leaves, Kaur et al. 2023, and more on its stems), their usual height 0.25 mm (type VI heads raised 0.2-0.3 mm, Bergau et al. 2015), standing nearly straight out, and their pale yellow-green head are the model's choices after those measurements."},
     "rules.appearance.stem_hairs.glands.lie": {"evidence": "Authored", "source": "plantgen-authors", "note": "Glandular hairs are stalked hairs ending in a round head of secretion (Harris and Harris: glandular, stipitate-glandular). How densely they stand for each word, about 2, 5 and 12 to the square millimetre for sparse, scattered and dense (the tomato's capitate type VI hairs are 0.6 to 5.7 to the square millimetre on its leaves, Kaur et al. 2023, and more on its stems), their usual height 0.25 mm (type VI heads raised 0.2-0.3 mm, Bergau et al. 2015), standing nearly straight out, and their pale yellow-green head are the model's choices after those measurements."},
     "rules.appearance.stem_hairs.glands.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "Glandular hairs are stalked hairs ending in a round head of secretion (Harris and Harris: glandular, stipitate-glandular). How densely they stand for each word, about 2, 5 and 12 to the square millimetre for sparse, scattered and dense (the tomato's capitate type VI hairs are 0.6 to 5.7 to the square millimetre on its leaves, Kaur et al. 2023, and more on its stems), their usual height 0.25 mm (type VI heads raised 0.2-0.3 mm, Bergau et al. 2015), standing nearly straight out, and their pale yellow-green head are the model's choices after those measurements."},
+    "rules.appearance.organs.*.shape.lobes": {"evidence": "Authored", "source": "plantgen-authors", "note": "A pinnately lobed blade is drawn with half the lobes its flora counts up each side (nightshades round 5, 2026-10-18)."},
+    "rules.appearance.organs.*.shape.depth": {"evidence": "Authored", "source": "plantgen-authors", "note": "How deep a lobed blade's sinuses are drawn (nightshades round 5, 2026-10-18), a choice of the model's from Harris and Harris's terms: lobed about a third of the way to the midrib, cleft past halfway, parted most of the way, dissected nearly to it."},
+    "rules.appearance.organs.*.shape.round": {"evidence": "Authored", "source": "plantgen-authors", "note": "How a lobed blade's lobe tips are drawn (nightshades round 5, 2026-10-18), a choice of the model's: acute 0 (narrowing fast to a point over an open sinus), obtuse half way, rounded 1."},
+    "rules.appearance.stem_hairs.prickles.density": {"evidence": "Authored", "source": "plantgen-authors", "note": "How densely prickles stand on young stems (nightshades round 5, 2026-10-18), a choice of the model's: with four-millimetre prickles, about one every 13, 4 and 1.3 square centimetres for sparse, scattered and dense; Flora of China's eggplant is sparingly armed."},
+    "rules.appearance.stem_hairs.prickles.lie": {"evidence": "Authored", "source": "plantgen-authors", "note": "A prickle stands out from the stem with its upper half bent back toward the stem's foot, as floras' recurved prickles do (nightshades round 5, 2026-10-18)."},
+    "rules.appearance.stem_hairs.prickles.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "A stem prickle is four millimetres where no length is stated (nightshades round 5, 2026-10-18), a choice of the model's near Flora of China's 3 mm calyx prickles on the eggplant."},
     "rules.appearance.stem_hairs.stings.density": {"evidence": "Authored", "source": "plantgen-authors", "note": "Stinging hairs (Urtica) are stiff, silica-tipped needles on a swollen multicellular foot. How densely they stand for each word, about 5, 16 and 50 to the square centimetre for sparse, scattered and dense (0 to 101 in populations of Urtica dioica, Pollard and Briggs 1984), their usual length 1.4 mm (U. dioica's 1.38 mm, Ensikat et al. 2021) and their lean, about 50 degrees from the face toward its tip, are the model's choices after those measurements."},
     "rules.appearance.stem_hairs.stings.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "Stinging hairs (Urtica) are stiff, silica-tipped needles on a swollen multicellular foot. How densely they stand for each word, about 5, 16 and 50 to the square centimetre for sparse, scattered and dense (0 to 101 in populations of Urtica dioica, Pollard and Briggs 1984), their usual length 1.4 mm (U. dioica's 1.38 mm, Ensikat et al. 2021) and their lean, about 50 degrees from the face toward its tip, are the model's choices after those measurements."},
     "rules.appearance.stem_hairs.stings.lie": {"evidence": "Authored", "source": "plantgen-authors", "note": "Stinging hairs (Urtica) are stiff, silica-tipped needles on a swollen multicellular foot. How densely they stand for each word, about 5, 16 and 50 to the square centimetre for sparse, scattered and dense (0 to 101 in populations of Urtica dioica, Pollard and Briggs 1984), their usual length 1.4 mm (U. dioica's 1.38 mm, Ensikat et al. 2021) and their lean, about 50 degrees from the face toward its tip, are the model's choices after those measurements."},

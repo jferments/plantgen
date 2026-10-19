@@ -480,6 +480,7 @@ enum Form {
     Dendritic,
     Gland,
     Sting,
+    Prickle,
 }
 
 impl Form {
@@ -493,6 +494,7 @@ impl Form {
             Self::Dendritic => 13.0,
             Self::Gland => 2.0,
             Self::Sting => 1.5,
+            Self::Prickle => 1.5,
         }
     }
 }
@@ -516,7 +518,11 @@ fn kinds(hairs: &Hairs) -> Vec<(&Hairs, Form)> {
         };
         out.push((hairs, form));
     }
-    for (among, form) in [(&hairs.glands, Form::Gland), (&hairs.stings, Form::Sting)] {
+    for (among, form) in [
+        (&hairs.glands, Form::Gland),
+        (&hairs.stings, Form::Sting),
+        (&hairs.prickles, Form::Prickle),
+    ] {
         if let Some(among) = among.as_deref().filter(|among| among.own_drawn()) {
             out.push((among, form));
         }
@@ -690,6 +696,7 @@ pub fn strand_mesh(
                     .sum(),
                 kinds
                     .iter()
+                    .filter(|(_, form)| *form != Form::Prickle)
                     .map(|(kind, _)| kind.length)
                     .fold(0.0, f64::max)
                     / middle,
@@ -734,7 +741,7 @@ pub fn strand_mesh(
                 let curl = hairs.curl.clamp(0.0, 1.0);
                 // The glandular and stinging hairs among a face's hairs
                 // stand where they please, not on its veins.
-                let gathered = if form == Form::Gland || form == Form::Sting {
+                let gathered = if matches!(form, Form::Gland | Form::Sting | Form::Prickle) {
                     0.0
                 } else {
                     face.veins.unwrap_or(0.0).clamp(0.0, 1.0)
@@ -869,7 +876,7 @@ pub fn strand_mesh(
     // and leaning toward its tip as a blade's lean toward its own.
     for (index, tube) in plant.hair_tubes.iter().enumerate() {
         let share = tube_shares[index];
-        if tube_wanted[index].0 <= 0.0 || share <= 0.0 {
+        if tube_wanted[index].0 <= 0.0 {
             continue;
         }
         let (start, end) = (vector(tube.start), vector(tube.end));
@@ -891,7 +898,10 @@ pub fn strand_mesh(
             let curl = hairs.curl.clamp(0.0, 1.0);
             let colours = colours_of(Some(&tube.hairs), form, tube.colour);
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let count = (hairs_on(hairs, form, area) * share).round() as u64;
+            // Prickles are few and stout: all of them stand wherever the
+            // budget thins the hairs round them.
+            let kept = if form == Form::Prickle { 1.0 } else { share };
+            let count = (hairs_on(hairs, form, area) * kept).round() as u64;
             let salt = (kind_index as u64).wrapping_mul(0x4b49_4e44_0000);
             for k in (0..count).map(|k| k ^ salt) {
                 let along = hash(k, 2, seed);
@@ -984,6 +994,7 @@ fn colours_of(face: Option<&Hairs>, form: Form, organ: [f32; 3]) -> [[f32; 3]; 2
     let kind = match form {
         Form::Gland => face.and_then(|face| face.glands.as_deref()),
         Form::Sting => face.and_then(|face| face.stings.as_deref()),
+        Form::Prickle => face.and_then(|face| face.prickles.as_deref()),
         _ => face,
     };
     let colour = of(kind);
@@ -991,6 +1002,9 @@ fn colours_of(face: Option<&Hairs>, form: Form, organ: [f32; 3]) -> [[f32; 3]; 2
     let mix = |weight: f32| std::array::from_fn(|c| weight * colour[c] + (1.0 - weight) * organ[c]);
     match form {
         Form::Sting => [mix(0.55), organ.map(|c| c * 1.08)],
+        // A prickle is the stem's own skin, hardened and paling to its
+        // point.
+        Form::Prickle => [mix(0.6), organ.map(|c| c * 0.95)],
         Form::Gland => [mix(0.45), mix(0.7)],
         // Branched hairs and wool are dead and full of air: white, not
         // clear.
@@ -1159,6 +1173,39 @@ fn push_hair(
                 tip + strand.second * radius * 0.8,
                 radius,
                 other,
+                lifetime,
+                segment,
+            );
+        }
+        Form::Prickle => {
+            // A stout cone of the skin, its foot a third of its height
+            // across, standing out from the face and bent back toward the
+            // stem's foot over its upper half: recurved, as floras say of
+            // a nightshade's or a rose's.
+            let normal = strand.normal.normalize_or(strand.first);
+            let tipward = (strand.first - normal * strand.first.dot(normal))
+                .normalize_or(math::any_perpendicular(normal));
+            let back = (normal - tipward * 0.9).normalize_or(normal);
+            let l = strand.length;
+            let at = |u: f64| {
+                strand.root + normal * (l * u * (1.0 - 0.5 * u)) + back * (l * 0.5 * u * u)
+            };
+            let along = |u: f64| (normal * (1.0 - u) + back * u).normalize_or(normal);
+            let rings: Vec<(Vec3, Vec3, f64, [f32; 3])> = [(0.0, 0.17), (0.3, 0.1), (0.65, 0.04)]
+                .into_iter()
+                .map(|(u, radius)| {
+                    (
+                        at(u),
+                        along(u),
+                        (radius * l).max(strand.radius),
+                        if u < 0.2 { other } else { colour },
+                    )
+                })
+                .collect();
+            push_profile(
+                &mut out.hairs,
+                &rings,
+                (at(1.0), along(1.0), colour),
                 lifetime,
                 segment,
             );

@@ -925,4 +925,16 @@ pub mod venation;
 /// four, a tobacco's two), each turned out from half way down and lined
 /// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
 /// `fruit_armature` `hooked`) (134 is palm details, #223).
-pub const GENERATOR_REVISION: u32 = 135;
+/// 136: an opened capsule shows its seeds (`seed_size`, from
+/// `fruit_seed_length_m`, where `fruit_seed_colour` is stated) packed
+/// round a placenta between its valves; a joined calyx is drawn from
+/// `sepal_length_m` and `calyx_lobe_length_m` (`sepals_fused`), a sheath
+/// standing close round the corolla tube, angled where `calyx_section`
+/// says so (`calyx_angled`), its teeth carrying on up its line; a calyx
+/// that breaks off round its base (`calyx_in_fruit` `circumscissile`)
+/// leaves a torn rim; a lobed blade takes its lobes, sinus depth, lobe
+/// tips (`leaf_lobe_apex`), width and petiole from its traits, acute lobes
+/// narrowing fast to a point; a herb's stem leaf card holds its petiole;
+/// prickles stand among the stem hairs (`prickles`, from `spines`
+/// `prickles` and `prickle_density`).
+pub const GENERATOR_REVISION: u32 = 136;

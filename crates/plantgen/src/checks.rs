@@ -2670,9 +2670,10 @@ fn unit_sizes(
 ) {
     match shape {
         Shape::Flower(flower) if in_stage(phase, Stage::Open) => {
-            // Across its sepals where they outreach its petals.
+            // Across its sepals where they outreach its petals: their free
+            // part, as a joined calyx sheathes the corolla.
             let reach = if flower.sepals > 0 {
-                flower.sepal_length.max(1.0)
+                (flower.sepal_length * (1.0 - flower.sepals_fused)).max(1.0)
             } else {
                 1.0
             };

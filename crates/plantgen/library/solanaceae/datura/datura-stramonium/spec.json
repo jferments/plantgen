@@ -109,8 +109,33 @@
       10
     ],
     "fruit_armature": "prickly",
-    "calyx_in_fruit": "persistent",
-    "capsule_valves": 4
+    "calyx_in_fruit": "circumscissile",
+    "capsule_valves": 4,
+    "fruit_seed_colour": [
+      30,
+      26,
+      24
+    ],
+    "fruit_seed_length_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "sepal_length_m": {
+      "min": 0.03,
+      "max": 0.05
+    },
+    "calyx_lobe_length_m": {
+      "min": 0.004,
+      "max": 0.007
+    },
+    "calyx_section": "angled",
+    "fruiting_calyx_posture": "reflexed",
+    "leaf_width_m": {
+      "min": 0.04,
+      "max": 0.14
+    },
+    "leaf_lobe_apex": "acute",
+    "stem_hairs": "glabrescent"
   },
   "provenance": {
     "sources": [
@@ -277,13 +302,58 @@
     },
     "traits.calyx_in_fruit": {
       "evidence": "SourceInferred",
-      "source": "britton-brown-1913",
-      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): the capsule held upright above the persistent calyx-base; Bentham: the calyx breaks off round its base, leaving a rim under the capsule."
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Datura (genus account) (eFloras, read 2026-10-18): calyx circumscissile in fruit, leaving a basal remnant that is slightly accrescent or not; Flora of China (genus): often circumscissile near the base, the capsule subtended by remnants of the persistent calyx; Bentham (p. 317): the calyx breaks off round its base, leaving a small rim under the capsule."
     },
     "traits.capsule_valves": {
       "evidence": "SourceInferred",
       "source": "gray-1908",
       "note": "Gray's New Manual, 7th ed. (1908), Datura (genus account), p. 717 (read on the Internet Archive, 2026-10-17): capsule prickly, more or less 4-celled, 4-valved; Britton and Brown (vol. 3, c. p. 170, genus account): 4-valved from the top, or bursting irregularly in other species."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Datura stramonium (eFloras, read 2026-10-18): seeds black, 3-4 mm, testa rugose; Flora of China: seeds black; King's American Dispensatory (vol. 2, p. 1838, the U.S.P. seed): dull brownish black. The colour is our reading of the words."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Datura stramonium (eFloras, read 2026-10-18): seeds 3-4 mm; Flora of China: ca. 4 mm in diameter; King's (the U.S.P. seed): about 4 mm long, kidney-shaped, flattened."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Datura stramonium (eFloras, read 2026-10-18): calyx tubular, 5-angular, 3-5 cm; Bentham (p. 317): loosely tubular, about 1.5 in; Britton and Brown: less than half the corolla."
+    },
+    "traits.calyx_lobe_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: teeth 4-7 mm: Flora of North America has the calyx tube cylindric and 5-toothed, Wikipedia 'Datura stramonium' surmounted by five sharp teeth, King's (vol. 2) 5-toothed; none measures them, and photographs show them a sixth to a tenth of the calyx."
+    },
+    "traits.calyx_section": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Datura stramonium (eFloras, read 2026-10-18): calyx tubular, 5-angular; Britton and Brown (vol. 3) and Gray (p. 717): prismatic; King's: 5-angled; Wikipedia: sharply angled."
+    },
+    "traits.fruiting_calyx_posture": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 99933529 (CC-licensed photograph, viewed 2026-10-17): the rim left under the capsule turned back from it as a frilled collar. No text read gives it."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Datura stramonium (eFloras, read 2026-10-18): leaf blade broadly ovate, 8-17 x 4-14 cm; Flora of North America: to 22 x 12 cm."
+    },
+    "traits.leaf_lobe_apex": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Datura stramonium, c. p. 170 (read on the Internet Archive, 2026-10-17): leaves irregularly sinuate-lobed, the lobes acute; Flora of North America: margins coarsely sinuate-dentate; King's: sharply sinuate-toothed."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Datura stramonium (eFloras, read 2026-10-18): stems sometimes purple, sparsely puberulent, glabrescent; Flora of China: glabrescent; Britton and Brown: glabrous or sparingly pubescent on young parts."
     }
   }
 }
