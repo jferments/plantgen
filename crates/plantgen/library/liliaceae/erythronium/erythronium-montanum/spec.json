@@ -33,7 +33,7 @@
       "flowers": 2,
       "flower_size": 0.065,
       "pedicel": 0.03,
-      "flower_angle": 110,
+      "flower_angle": 140,
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
@@ -136,7 +136,8 @@
     "leaf_apex": "acute",
     "leaf_length_m": {
       "min": 0.07,
-      "max": 0.12
+      "max": 0.15,
+      "high": 0.2
     },
     "leaf_width_m": {
       "min": 0.025,
@@ -154,8 +155,10 @@
     "flower_posture": "nodding",
     "perianth_reflexion": "recurved",
     "tepal_length_m": {
-      "min": 0.035,
-      "max": 0.04
+      "min": 0.03,
+      "max": 0.04,
+      "low": 0.025,
+      "high": 0.045
     },
     "flower_size_m": {
       "min": 0.055,
@@ -252,8 +255,8 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: leaves \"7-12 cm. long\"."
+      "source": "fna-26-liliaceae",
+      "note": "FNA vol. 26 (eFloras), Erythronium montanum: \"Leaves 10–20 cm\"; Abrams (1923 p. 428): leaves \"7-12 cm. long\"; drawn 7 cm to 15 cm, 20 cm the rare high."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
@@ -287,8 +290,8 @@
     },
     "traits.tepal_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 428, Erythronium montanum: \"perianth-segments white with an orange base\", \"lanceolate-acuminate 35-40 mm. long, 10-13 mm. wide\"."
+      "source": "fna-26-liliaceae",
+      "note": "FNA vol. 26 (eFloras), Erythronium montanum: tepals \"broadly ovate to broadly lanceolate, 25–45 mm\"; Abrams (1923 p. 428): \"35-40 mm. long, 10-13 mm. wide\"."
     },
     "traits.flower_size_m": {
       "evidence": "Authored",
@@ -333,7 +336,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Yellow trout lily's (erythronium-americanum) values, changed by hand for avalanche lily: two basal leaves under a taller, stouter leafless scape (Abrams 1923 p. 428: \"scape rather stout, 25-45 cm. long, 1-several-flowered\") with about two large nodding white flowers on short stalks. Not fitted to measurements."
+      "note": "Yellow trout lily's (erythronium-americanum) values, changed by hand for avalanche lily: two basal leaves under a taller, stouter leafless scape (Abrams 1923 p. 428: \"scape rather stout, 25-45 cm. long, 1-several-flowered\") with about two large nodding white flowers on short stalks. Not fitted to measurements. flower_angle corrected from 110 to 140 (2026-10-19), as glacier lily's, so the flowers hang: Abrams (1923 p. 426), Erythronium: \"Flowers large, nodding\"; FNA vol. 26 gives E. montanum's tepals as recurved from a nodding flower."
     },
     "appearance.organs.basal": {
       "evidence": "SourceInferred",

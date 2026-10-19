@@ -110,10 +110,6 @@
       195
     ],
     "inflorescence": "panicle",
-    "inflorescence_length_m": {
-      "min": 0.15,
-      "max": 0.4
-    },
     "flower_size_m": {
       "min": 0.03,
       "max": 0.05
@@ -280,11 +276,6 @@
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: inflorescence an open panicle; Kearney and Peebles (1942, p. 567): open panicle."
     },
-    "traits.inflorescence_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: panicles 15 cm to 40 cm long, the upper part of each stem."
-    },
     "traits.flower_size_m": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -363,7 +354,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for desert globemallow from its sources and the photos the traits cite, on the template of Cooley's hedge-nettle (stachys-chamissonis); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+      "note": "Set by hand for desert globemallow from its sources and the photos the traits cite, on the template of Cooley's hedge-nettle (stachys-chamissonis); the rest of its growth comes from the library's rules for the form. Not fitted to measurements. The panicle's length is drawn by the hand-set raceme share (0.45 of the stem) and its 14 flowers each on its own stalk; the unsourced inflorescence_length_m estimate (15-40 cm) was removed 2026-10-19, as the herb rule then drew each of the 14 flowers as a whole panicle 27 cm across. Kearney and Peebles (1942, p. 569): \"The inflorescence is typically an open, long-branched panicle\"."
     },
     "allometry": {
       "evidence": "Authored",

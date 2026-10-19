@@ -96,7 +96,8 @@
     "division_order": 1,
     "leaflets": {
       "min": 17,
-      "max": 31
+      "max": 21,
+      "high": 31
     },
     "terminal_leaflet": true,
     "leaf_incision": "dissected",
@@ -231,7 +232,7 @@
     "traits.leaflets": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): 8 to 10 pairs of pinnules; P. bracteosa (p. 805) about 15 pairs; with the terminal segment 17 to 31."
+      "note": "Abrams vol. 3 (1951) p. 806, Pedicularis latifolia (now P. bracteosa var. latifolia; type locality Paradise Inn, Mount Rainier): \"with 8 to 10 pairs of pinnules\"; with the terminal segment 17 to 21; P. bracteosa in the strict sense (p. 805) \"about 15 pairs\", kept as the rare high 31."
     },
     "traits.terminal_leaflet": {
       "evidence": "Authored",

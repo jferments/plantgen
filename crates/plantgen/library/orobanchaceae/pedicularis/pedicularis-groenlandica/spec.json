@@ -149,7 +149,11 @@
     "fruiting_months": [
       8,
       9
-    ]
+    ],
+    "leaflet_length_m": {
+      "min": 0.005,
+      "max": 0.01
+    }
   },
   "evidence": {
     "taxon": {
@@ -336,6 +340,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.55 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 809, Pedicularis groenlandica: leaves \"may reach 10-15 cm. long and 2 cm. wide, with 12-15 pairs of pinnules (all cut to the narrowly margined midrib)\": each pinnule about half the leaf's width, 5 mm to 1 cm."
     }
   },
   "provenance": {

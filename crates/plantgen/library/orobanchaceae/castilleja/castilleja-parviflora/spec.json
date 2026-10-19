@@ -45,16 +45,7 @@
   },
   "appearance": {
     "variation": 0.2,
-    "organs": {
-      "leaf": {
-        "shape": {
-          "width": 0.25,
-          "lobes": 1,
-          "depth": 0.5,
-          "round": 0.0
-        }
-      }
-    },
+    "organs": {},
     "foliage": [
       0.13,
       0.25,
@@ -264,7 +255,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, from the photos the traits cite: a clump of many erect, unbranched leafy stems, the narrow leaves with one or two pairs of slender lobes, each stem tipped by a short spike of magenta bracts."
+      "note": "By eye, from the photos the traits cite: a clump of many erect, unbranched leafy stems, the narrow leaves with one or two pairs of slender lobes, each stem tipped by a short spike of magenta bracts. The hand-set leaf outline (width 0.25, one lobe) was removed 2026-10-19 so the rules draw the leaf from its traits: Abrams (1951 p. 841): \"leaves lanceolate to ovate, with 1 or 2 pairs of spreading slenderly attenuate lobes\"."
     },
     "generator.params": {
       "evidence": "Authored",

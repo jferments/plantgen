@@ -127,7 +127,11 @@
     "moisture": [
       "dry",
       "mesic"
-    ]
+    ],
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.013
+    }
   },
   "evidence": {
     "taxon": {
@@ -324,6 +328,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.7 m tall at 3 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules 10 mm to 13 mm long, about two thirds the 15-20 mm corolla (Kearney and Peebles 1942, p. 807)."
     }
   },
   "provenance": {

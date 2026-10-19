@@ -151,9 +151,10 @@
     "flower_posture": "nodding",
     "perianth_reflexion": "reflexed",
     "tepal_length_m": {
-      "min": 0.03,
-      "max": 0.05,
-      "low": 0.02
+      "min": 0.025,
+      "max": 0.04,
+      "low": 0.02,
+      "high": 0.05
     },
     "flower_size_m": {
       "min": 0.04,
@@ -281,8 +282,8 @@
     },
     "traits.tepal_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 427, Erythronium grandiflorum: perianth-segments \"3-5 cm. long\"; Abrams's E. parviflorum, the subalpine Cascade plants (p. 427): \"2-3 cm. long\", kept as the rare low."
+      "source": "fna-26-liliaceae",
+      "note": "FNA vol. 26 (eFloras), Erythronium grandiflorum: tepals \"recurved, bright yellow … narrowly ovate, 20–35 mm\"; Abrams (1923 p. 427): perianth-segments \"3-5 cm. long\"; drawn 25 mm to 40 mm, the two floras' extremes kept as rare."
     },
     "traits.flower_size_m": {
       "evidence": "Authored",

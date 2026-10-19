@@ -156,16 +156,19 @@
       "acute": "sometimes"
     },
     "leaf_length_m": {
-      "min": 0.02,
-      "max": 0.03
+      "min": 0.01,
+      "max": 0.025,
+      "low": 0.007,
+      "high": 0.03
     },
     "leaf_width_m": {
       "min": 0.0015,
       "max": 0.002
     },
     "cone_length_m": {
-      "min": 0.09,
-      "max": 0.15
+      "min": 0.08,
+      "max": 0.1,
+      "high": 0.15
     },
     "cone_colour": [
       95,
@@ -286,8 +289,8 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 65, Abies amabilis: leaves \"2-3 cm. long\"."
+      "source": "fna-online",
+      "note": "FNA vol. 2 (eFloras), Abies amabilis: \"Leaves (0.7--)1--2.5cm\"; Abrams (1923 p. 65): \"2-3 cm. long\", kept as the rare high."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
@@ -296,8 +299,8 @@
     },
     "traits.cone_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923) p. 65, Abies amabilis: \"cones oblong, purple, 9-15 cm. long\"; FEIS (Cope 1992): \"barrel shaped, and 3.5 to 6 inches (8.9-15.2 cm) long\"."
+      "source": "fna-online",
+      "note": "FNA vol. 2 (eFloras), Abies amabilis: \"Seed cones cylindric, 8--10(--13) × 3.5--5cm, purple\"; Abrams (1923 p. 65): \"9-15 cm. long\" and FEIS (Cope 1992): to 15.2 cm, kept as the rare high."
     },
     "traits.cone_colour": {
       "evidence": "SourceInferred",

@@ -107,8 +107,9 @@
       "max": 0.011
     },
     "petal_length_m": {
-      "min": 0.0025,
-      "max": 0.004
+      "min": 0.004,
+      "max": 0.006,
+      "low": 0.002
     },
     "stamens": 4,
     "fruit_type": "nut",
@@ -127,12 +128,18 @@
       3,
       4,
       5,
+      6,
+      7,
       8,
-      9
+      9,
+      10
     ],
     "fruiting_months": [
+      4,
       5,
       6,
+      7,
+      8,
       9,
       10
     ],
@@ -285,8 +292,8 @@
     },
     "traits.petal_length_m": {
       "evidence": "SourceInferred",
-      "source": "abrams-1944",
-      "note": "Abrams vol. 2 (1944) p. 628, Krameria imparata: upper petals 4 mm. long, the lower 2.5 mm."
+      "source": "fna-online",
+      "note": "FNA vol. 12 (eFloras), Krameria erecta: \"secretory petals pink, 2–3 mm … petaloid petals 4–6 mm\"; the petaloid petals, the larger and showy pair, set the range, the secretory ones kept as the rare low."
     },
     "traits.stamens": {
       "evidence": "SourceInferred",
@@ -320,13 +327,13 @@
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",
-      "source": "kearney-peebles-1942",
-      "note": "Kearney and Peebles (1942, p. 422), Krameria parvifolia: 5,000 feet or lower, April to October; the Range Plant Handbook (p. B88): in spring and again in late summer. Here March to May and August and September."
+      "source": "fna-online",
+      "note": "FNA vol. 12 (eFloras), Krameria erecta: \"Flowering Mar–Oct\"; Kearney and Peebles (1942, p. 422), Krameria parvifolia: \"5,000 feet or lower, April to October\". FEIS (Griffith 1991) adds that in wet years it flowers \"twice, in the spring and again in the fall\"."
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
-      "note": "FEIS species review, Krameria erecta (Griffith 1991): fruiting on May 22, about 17 days after flowering (May 5); so May and June after the spring flowers, and September and October after the summer ones."
+      "note": "FEIS species review, Krameria erecta (Griffith 1991): fruiting on May 22, about 17 days after flowering (May 5); with flowers from March to October (FNA), fruits April to October."
     },
     "traits.elevation_min_m": {
       "evidence": "SourceInferred",

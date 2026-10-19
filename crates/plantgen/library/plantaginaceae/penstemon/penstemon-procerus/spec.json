@@ -129,7 +129,11 @@
     "fruiting_months": [
       8,
       9
-    ]
+    ],
+    "fruit_size_m": {
+      "min": 0.004,
+      "max": 0.007
+    }
   },
   "evidence": {
     "taxon": {
@@ -281,6 +285,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "0.2 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules 4 mm to 7 mm long, a little longer than the 3-6 mm calyx-lobes (Abrams 1951, p. 738)."
     }
   },
   "provenance": {

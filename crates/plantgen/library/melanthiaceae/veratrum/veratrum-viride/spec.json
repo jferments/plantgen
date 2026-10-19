@@ -35,7 +35,6 @@
       "nod": 30,
       "adult_age": 5,
       "basal_leaves": 0,
-      "flowering_share": 0.4,
       "flower_branches": 5,
       "branch_angle": 50,
       "branch_length": 0.15,
@@ -358,7 +357,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for green false hellebore from Abrams's description and the photos the traits cite, on beargrass's (xerophyllum-tenax) program values: one or two stout stems, very leafy, the broad sheathing leaves largest low on the stem and narrowing upward (Abrams 1923 p. 378), ending in a panicle about a third of the stem's height whose lower branches spread and droop (flower_branches 5, nod 30). Few stems flower in a year and only after several years' growth (adult_age 5, an estimate). Not fitted to measurements."
+      "note": "Set by hand for green false hellebore from Abrams's description and the photos the traits cite, on beargrass's (xerophyllum-tenax) program values: one or two stout stems, very leafy, the broad sheathing leaves largest low on the stem and narrowing upward (Abrams 1923 p. 378), ending in a panicle about a third of the stem's height whose lower branches spread and droop (flower_branches 5, nod 30). Few stems flower in a year and only after several years' growth (adult_age 5, an estimate). Not fitted to measurements. flowering_share 0.4 (beargrass's) removed 2026-10-19: with two stems it left no stem to flower in any year, though Abrams (1923 p. 378) describes every stem as ending in its \"panicle 2-6 dm. long\"; the melanthiaceae program's own value (every adult stem ends in its inflorescence) now applies."
     },
     "appearance.organs.leaf": {
       "evidence": "SourceInferred",
