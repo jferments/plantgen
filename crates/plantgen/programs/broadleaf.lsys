@@ -201,9 +201,34 @@
 # the old wood year after year. Both are off (0) unless a lineage sets
 # them, so every other plant grows as it did.
 #
+# Revision 23 (branching form): five habits that set one broadleaf's
+# branching apart from another's, each off unless a rule on the taxon's
+# characters turns it on, so every plant grows as it did until then.
+# - A shoot whose tip dies each year (tip_abort, from terminal_bud false:
+#   "branchlets without a terminal bud, lengthening by an upper axillary
+#   bud", Sargent) is carried on by its topmost lateral bud, turned
+#   abort_angle off the old line toward that bud's side, so its axes
+#   zigzag year by year where a terminal bud's run straight on.
+# - Shoots on limbs grow flat (plagio, from branch_orientation
+#   plagiotropic): a limb's own axis rises and arches as before, but each
+#   shoot it bears holds plagio_set from upright and sets its buds and
+#   leaves to either side in turn, level, so the limb carries flat sprays,
+#   as hazels' and alders' do, not shoots round it like a small trunk.
+# - The leader's hold on the crown breaks up from breakup_age: apical
+#   control (Borchert-Honda lambda) turns from apical toward apical_old
+#   over apical_years, so a few limbs compete with the stem and the crown
+#   spreads on several scaffolds, as a decurrent tree's does once grown.
+# - History: a long shoot's tip is lost with the chance tip_loss a year
+#   (frost, browsing, breakage) and the buds below carry the limb on; and
+#   with dead_keep a living tree's dead branches stand until they fall
+#   with the chance snag_fall a year, as a dead tree's do, where they were
+#   dropped the year they died.
+# The draws these make are the last rules', so every draw above keeps
+# its site.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 22;
+lsystem broadleaf 23;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -314,6 +339,16 @@ param suckers = 0;            # stems the base sends up besides the first; 0: no
 param sucker_rate = 2;        # new stems a year, until there are suckers
 param sucker_spread = 0.2;    # share of the crown's radius out to which they rise
 param sucker_lean = 15;       # the most a new stem leans out from upright
+# Branching form (revision 23).
+param tip_abort = 0;          # chance a year a long shoot's tip dies and its topmost lateral bud carries it on
+param abort_angle = 25;       # angle from the old line of the bud that carries a shoot on
+param abort_fork = 0.3;       # share of those years the two topmost lateral buds carry it on together, a fork
+param plagio = 0;             # 1: shoots on limbs grow flat, buds and leaves level to either side
+param plagio_set = 80;        # a flat shoot's held angle from straight up
+param breakup_age = 0;        # year from which the leader's hold on the crown relaxes toward apical_old; 0: never
+param apical_old = 0.5;       # Borchert-Honda lambda the crown relaxes toward once it breaks up
+param tip_loss = 0;           # chance a year a long shoot's tip is lost (frost, browsing, breakage)
+param dead_keep = 0;          # 1: a living tree's dead branches stand until they fall (snag_fall a year)
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -332,6 +367,9 @@ module Bt(n);                             # n blooms still to place at a long sh
 module K(s) queries light, vigour;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
 module D queries light, space;            # a dormant bud
 module R(n);                              # the base of a many-stemmed plant: n stems still to send up
+module Mp(n, u, l);                       # a flat shoot's nodes still to form this year, as M's
+module Ab(s, p);                          # a shoot's tip at the end of its year: lost, carried on by a lateral, or going on (p 1: a flat shoot)
+module Af(k);                             # k 1: the second of two lateral buds that carry a dead tip on, a fork; 0: none
 module Rs(m);                             # m stems still to send up this year
 
 organ leaf leaf area leaf_area;
@@ -355,7 +393,8 @@ tool space@4 {
     renew = space_renew
 };
 tool vigour@1 {
-    lambda = apical + (apical_young - apical) * max(0, 1 - t / apical_years),
+    lambda = apical + (apical_young - apical) * max(0, 1 - t / apical_years)
+             + (breakup_age > 0 ? (apical_old - apical) * min(1, max(0, (t - breakup_age) / apical_years)) : 0),
     alpha = flux,
     saturation = light_half
 };
@@ -422,6 +461,28 @@ rule A(split) : flat_top > 0 && split <= 0 && py > flat_top * crown_height * (1 
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) A(split);
+
+# Revision 23. A flat shoot on a limb (plagio) holds plagio_set and lays
+# its nodes level to either side; and a shoot whose tip may die or be lost
+# ends its year in Ab, which decides (the last rules). These make no draws
+# of their own, so every draw keeps its site.
+rule A(split) : plagio > 0 && limb > 0 && order >= 2 && vigour >= 1 && space > 0 ->
+    incline(plagio_set, incline_rate)
+    steer(sx, sy, sz, steer_weight)
+    Mp(min(floor(vigour), max_shoot) * unit_nodes,
+       min(floor(vigour), max_shoot) * unit_nodes,
+       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 1);
+rule A(split) : (tip_abort > 0 || tip_loss > 0) && limb_arch > 0 && limb > 0 && vigour >= 1 && space > 0 ->
+    incline(min(set_point + limb_arch * limb, limb_set_max), incline_rate)
+    steer(sx, sy, sz, steer_weight)
+    M(min(floor(vigour), max_shoot) * unit_nodes,
+      min(floor(vigour), max_shoot) * unit_nodes,
+      internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 0);
+rule A(split) : (tip_abort > 0 || tip_loss > 0) && vigour >= 1 && space > 0 ->
+    steer(sx, sy, sz, steer_weight)
+    M(min(floor(vigour), max_shoot) * unit_nodes,
+      min(floor(vigour), max_shoot) * unit_nodes,
+      internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 0);
 
 # On a limb, a shoot holds a set point that grows with the limb's wood
 # (limb_arch, revision 16), so limbs rise from the stem and arch outward.
@@ -492,7 +553,7 @@ rule S : bole_clear > 0 && age > 2
 
 # A branch with no living bud is shed; on a dead plant, one by one (the
 # last rules).
-rule S : age > 1 && ntip == 0 && (life <= 0 || t < life) -> %;
+rule S : age > 1 && ntip == 0 && (life <= 0 || t < life) && dead_keep <= 0 -> %;
 
 # Rules with random draws that later revisions add go last, so the draws of
 # the rules above keep their sites and species that do not use them grow as
@@ -716,3 +777,59 @@ decompose Rs(m) : m > 0 ->
       ^(90) &(sucker_lean * (0.382 * (m + 5 * t) - floor(0.382 * (m + 5 * t)))) S A(0) ]
     Rs(m - 1);
 decompose Rs(m) -> ;
+
+# Revision 23 (branching form). These rules go last, so the draws of every
+# rule above keep their sites.
+
+# A shoot's tip at the end of its year. Lost with the chance tip_loss (not
+# the first stem before it forks), the buds below it carry the limb on.
+# Dying with the chance tip_abort, its topmost lateral bud carries it on:
+# rolled back to that bud's side and turned abort_angle toward it, or on a
+# flat shoot turned level to the side its last node's bud stands on; and
+# with the chance abort_fork the next bud down grows on with it, turned as
+# far the other way, so the axis forks.
+decompose Ab(s, p) : tip_loss > 0 && s <= 0 && rand() < tip_loss -> ;
+decompose Ab(s, p) : tip_abort > 0 && p > 0 && rand() < tip_abort ->
+    $ [ +(abort_angle) Af(rand() < abort_fork ? 1 : 0) ] -(abort_angle) A(s);
+decompose Ab(s, p) : tip_abort > 0 && rand() < tip_abort ->
+    \(divergence) [ &(abort_angle) Af(rand() < abort_fork ? 1 : 0) ] /(180) &(abort_angle) A(s);
+decompose Ab(s, p) -> A(s);
+decompose Af(k) : k > 0 -> S A(0);
+decompose Af(k) -> ;
+
+# A flat shoot's node (plagio): turned a little at random, then levelled,
+# its bud and leaf to one side and the next node's to the other, so the
+# shoot's branches and leaves lie in one plane. Alternate leaves only; an
+# opposite or whorled species grows its flat shoots' nodes as M's. Its
+# buds grade as M's do: long-shoot buds at the unit's favoured end,
+# short-shoot buds next to them, latent buds on the rest.
+decompose Mp(n, u, l) : n > 0 && leaves_per_node >= 2 -> M(n, u, l);
+decompose Mp(n, u, l) : n > 0 && dormant_buds <= 0
+                     && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l) $
+    [ +(branch_angle * (frac(n / 2) < 0.25 ? 1 : -1)) incline(plagio_set, incline_rate) S B ]
+    [ +(leaf_angle * (frac(n / 2) < 0.25 ? 1 : -1)) $ leaf(leaf_size) ]
+    Mp(n - 1, u, l);
+decompose Mp(n, u, l) : n > 0 && dormant_buds <= 0 ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l) $
+    [ +(branch_angle * (frac(n / 2) < 0.25 ? 1 : -1)) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
+    [ +(leaf_angle * (frac(n / 2) < 0.25 ? 1 : -1)) $ leaf(leaf_size) ]
+    Mp(n - 1, u, l);
+decompose Mp(n, u, l) : n > 0
+                     && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l) $
+    [ +(branch_angle * (frac(n / 2) < 0.25 ? 1 : -1)) incline(plagio_set, incline_rate) S B ]
+    [ +(leaf_angle * (frac(n / 2) < 0.25 ? 1 : -1)) $ leaf(leaf_size) ]
+    [ &(dormant_angle) D ]
+    Mp(n - 1, u, l);
+decompose Mp(n, u, l) : n > 0 ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l) $
+    [ +(branch_angle * (frac(n / 2) < 0.25 ? 1 : -1)) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
+    [ +(leaf_angle * (frac(n / 2) < 0.25 ? 1 : -1)) $ leaf(leaf_size) ]
+    [ &(dormant_angle) D ]
+    Mp(n - 1, u, l);
+decompose Mp(n, u, l) : n <= 0 -> ;
+
+# A living tree's dead branch (dead_keep) stands until it falls, with the
+# chance snag_fall a year, as a dead tree's do (the dead plant's rule
+# above takes it).
