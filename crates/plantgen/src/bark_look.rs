@@ -52,8 +52,9 @@ pub struct BarkLook {
 
 /// How thick the bark is on a stem `d` metres across: `coefficient` × `d`
 /// (the fire models' single bark thickness, FOFEM), or `power[0]` ×
-/// `d`^`power[1]` (Rosell 2016), within `min_m` and `max_m`.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+/// `d`^`power[1]` (Rosell 2016), within `min_m` and `max_m`; 0.03 × `d`
+/// where neither is stated.
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Thickness {
     #[serde(default)]
@@ -115,10 +116,17 @@ pub struct Stage {
     pub until_diameter_m: Option<f64>,
     #[serde(default)]
     pub on: On,
-    pub architecture: Architecture,
+    /// How it grows; where none is stated, from its layers
+    /// ([`Stage::architecture`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub architecture: Option<Architecture>,
     /// The outer surface's colour, sRGB. A record states it; a spec may
     /// leave it to the species' bark colour ([`BarkSpec::look`]).
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "some_colour"
+    )]
     pub colour: Option<[u8; 3]>,
     /// PBR roughness of the surface.
     #[serde(default = "matte")]
@@ -149,6 +157,75 @@ impl Stage {
     pub fn surface(&self) -> [u8; 3] {
         self.colour.unwrap_or([128, 128, 128])
     }
+
+    /// How it grows: as stated, else from its layers (Shtein et al. 2023:
+    /// fissures and pieces that come away peel, fissures alone furrow,
+    /// pieces alone exfoliate, neither stretches).
+    #[must_use]
+    pub fn architecture(&self) -> Architecture {
+        self.architecture
+            .unwrap_or(match (&self.fissures, &self.exfoliation) {
+                (Some(_), Some(_)) => Architecture::Peeling,
+                (Some(_), None) => Architecture::Furrowed,
+                (None, Some(_)) => Architecture::Exfoliating,
+                (None, None) => Architecture::Stretched,
+            })
+    }
+
+    /// What a record leaves to its other values, filled in: its
+    /// architecture, and the colours of lenticels (paler than the surface)
+    /// and of fresh inner bark (redder and paler) where none is stated.
+    fn settle(&mut self) {
+        self.architecture = Some(self.architecture());
+        let surface = linear(self.surface());
+        if let Some(lenticels) = &mut self.lenticels
+            && lenticels.colour.is_none()
+        {
+            lenticels.colour = Some(srgb_of(blend(surface, [0.62, 0.55, 0.42], 0.5)));
+        }
+        if let Some(peel) = &mut self.exfoliation
+            && peel.inner_colour.is_none()
+        {
+            peel.inner_colour = Some(srgb_of(blend(surface, [0.45, 0.2, 0.1], 0.5)));
+        }
+    }
+}
+
+/// An sRGB colour from a linear one, 0 to 1.
+fn srgb_of(colour: [f64; 3]) -> [u8; 3] {
+    colour.map(crate::texture::linear_to_srgb)
+}
+
+/// A colour as a record writes it, sRGB 0 to 255, or as a spec's colour
+/// rule sets it, linear 0 to 1 ([`crate::inherit`]): a colour with a
+/// channel above 1 is sRGB, any other linear (so `[1, 1, 1]` is white).
+fn colour_value(channels: [f64; 3]) -> Option<[u8; 3]> {
+    if channels
+        .iter()
+        .any(|c| !c.is_finite() || *c < 0.0 || *c > 255.0)
+    {
+        return None;
+    }
+    Some(if channels.iter().any(|c| *c > 1.0) {
+        channels.map(|c| {
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let byte = c.round() as u8;
+            byte
+        })
+    } else {
+        srgb_of(channels)
+    })
+}
+
+fn some_colour<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<[u8; 3]>, D::Error> {
+    match Option::<[f64; 3]>::deserialize(deserializer)? {
+        None => Ok(None),
+        Some(channels) => colour_value(channels).map(Some).ok_or_else(|| {
+            serde::de::Error::custom("a colour's channels are 0 to 255, or 0 to 1 linear")
+        }),
+    }
 }
 
 const fn matte() -> f64 {
@@ -160,20 +237,31 @@ const fn matte() -> f64 {
 #[serde(deny_unknown_fields)]
 pub struct Mottle {
     /// Size of a patch, metres.
+    #[serde(default = "mottle_scale")]
     pub scale_m: f64,
     /// How far a patch moves toward `colour` (or lighter and darker), 0 to 1.
+    #[serde(default = "mottle_amount")]
     pub amount: f64,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "some_colour")]
     pub colour: Option<[u8; 3]>,
 }
 
+const fn mottle_scale() -> f64 {
+    0.1
+}
+
+const fn mottle_amount() -> f64 {
+    0.3
+}
+
 /// How the fissures run.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Network {
     /// Parallel furrows up the stem.
     Longitudinal,
     /// Ridges that merge and split (anastomosing): oaks, ash, Douglas fir.
+    #[default]
     Interlacing,
     /// A net of diamonds.
     Reticulate,
@@ -182,37 +270,47 @@ pub enum Network {
 }
 
 /// The cross-section of a ridge.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Profile {
+    #[default]
     Rounded,
     FlatTopped,
     Sharp,
 }
 
-/// Fissures between ridges or plates.
+/// Fissures between ridges or plates. A value not stated is a middling
+/// furrowed bark's: interlacing rounded ridges 5 cm apart, three times as
+/// long as wide, the furrows a quarter of the surface and half the bark's
+/// depth.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Fissures {
+    #[serde(default)]
     pub network: Network,
     /// Ridge centre to ridge centre round the stem, metres.
+    #[serde(default = "spacing")]
     pub spacing_m: f64,
     /// A ridge or plate's length along the stem over its width.
+    #[serde(default = "elongation")]
     pub elongation: f64,
     /// The share of the surface the fissures' floors take.
+    #[serde(default = "width_share")]
     pub width_share: f64,
     /// The share of the bark's thickness the fissures cut through.
+    #[serde(default = "depth_share")]
     pub depth_share: f64,
+    #[serde(default)]
     pub profile: Profile,
     /// How far ridges bridge their fissures, 0 to 1 ("ridges connected at
     /// intervals by narrower cross ridges").
     #[serde(default)]
     pub cross_ridges: f64,
     /// The fissure floor's colour, sRGB; darker surface colour if none.
-    #[serde(default)]
+    #[serde(default, deserialize_with = "some_colour")]
     pub floor_colour: Option<[u8; 3]>,
     /// The weathered ridge tops' colour, sRGB.
-    #[serde(default)]
+    #[serde(default, deserialize_with = "some_colour")]
     pub ridge_top_colour: Option<[u8; 3]>,
     /// Fine grain on the ridges, as a share of the depth.
     #[serde(default = "grain")]
@@ -223,16 +321,35 @@ const fn grain() -> f64 {
     0.12
 }
 
+const fn spacing() -> f64 {
+    0.05
+}
+
+const fn elongation() -> f64 {
+    3.0
+}
+
+const fn width_share() -> f64 {
+    0.25
+}
+
+const fn depth_share() -> f64 {
+    0.5
+}
+
 /// Small scales or flakes on the surface or the ridges, each lifted at its
 /// lower edge.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Scales {
-    /// A scale's width round the stem, metres.
+    /// A scale's width round the stem, metres (1.5 cm if none).
+    #[serde(default = "scale_size")]
     pub size_m: f64,
     /// Its length along the stem over its width.
+    #[serde(default = "one")]
     pub aspect: f64,
     /// How far its edge stands proud, metres.
+    #[serde(default = "scale_depth")]
     pub depth_m: f64,
     /// How much scales differ in shade, 0 to 1.
     #[serde(default = "scale_variation")]
@@ -246,8 +363,20 @@ const fn scale_variation() -> f64 {
     0.12
 }
 
+const fn scale_size() -> f64 {
+    0.015
+}
+
+const fn one() -> f64 {
+    1.0
+}
+
+const fn scale_depth() -> f64 {
+    0.002
+}
+
 /// How the outer bark comes away.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Mode {
     /// Thin sheets round the stem that curl at their edges (birch).
@@ -256,6 +385,7 @@ pub enum Mode {
     FibrousStrips,
     /// Pieces that fall and leave patches whose fresh colour ages
     /// (madrone, plane, pines' plates).
+    #[default]
     Patches,
 }
 
@@ -263,29 +393,48 @@ pub enum Mode {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Exfoliation {
+    #[serde(default)]
     pub mode: Mode,
-    /// A piece's long side, metres.
+    /// A piece's long side, metres (10 cm if none).
+    #[serde(default = "piece")]
     pub piece_m: f64,
     /// Its long side over its short side.
+    #[serde(default = "piece_aspect")]
     pub aspect: f64,
     /// The share of the surface where a piece has come away.
+    #[serde(default = "cover")]
     pub cover: f64,
     /// How far a loose edge lifts and curls, metres.
     #[serde(default)]
     pub curl_m: f64,
-    /// Bark freshly exposed, sRGB.
-    pub inner_colour: [u8; 3],
+    /// Bark freshly exposed, sRGB; redder and paler than the surface if
+    /// none.
+    #[serde(default, deserialize_with = "some_colour")]
+    pub inner_colour: Option<[u8; 3]>,
     /// The colours exposed bark passes through as it weathers, after
     /// `inner_colour`, toward the surface colour.
     #[serde(default)]
     pub aged: Vec<[u8; 3]>,
 }
 
+const fn piece() -> f64 {
+    0.1
+}
+
+const fn piece_aspect() -> f64 {
+    3.0
+}
+
+const fn cover() -> f64 {
+    0.25
+}
+
 /// The shape of a lenticel.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum LenticelShape {
     Dot,
+    #[default]
     Dash,
     Diamond,
 }
@@ -294,19 +443,25 @@ pub enum LenticelShape {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Lenticels {
+    #[serde(default)]
     pub shape: LenticelShape,
     /// Long side round the stem (true) or along it.
     #[serde(default = "yes")]
     pub horizontal: bool,
-    /// Length range when formed, metres.
+    /// Length range when formed, metres (2 to 6 mm if none).
+    #[serde(default = "lenticel_length")]
     pub length_m: [f64; 2],
     /// Width over length.
+    #[serde(default = "lenticel_width")]
     pub width_ratio: f64,
+    #[serde(default = "lenticel_count")]
     pub per_m2: f64,
     /// Raised (positive) or sunken, metres.
     #[serde(default)]
     pub relief_m: f64,
-    pub colour: [u8; 3],
+    /// Paler than the surface if none.
+    #[serde(default, deserialize_with = "some_colour")]
+    pub colour: Option<[u8; 3]>,
     /// They widen round the stem as it grows (cherries, birches): length
     /// times the diameter over `formed_diameter_m`, at most 6.
     #[serde(default)]
@@ -326,14 +481,29 @@ const fn formed() -> f64 {
     0.02
 }
 
+const fn lenticel_length() -> [f64; 2] {
+    [0.002, 0.006]
+}
+
+const fn lenticel_width() -> f64 {
+    0.25
+}
+
+const fn lenticel_count() -> f64 {
+    300.0
+}
+
 /// Round bumps: corky warts or resin blisters.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Bumps {
+    #[serde(default = "bump_count")]
     pub per_m2: f64,
+    #[serde(default = "bump_size")]
     pub diameter_m: [f64; 2],
+    #[serde(default = "bump_height")]
     pub height_m: f64,
-    #[serde(default)]
+    #[serde(default, deserialize_with = "some_colour")]
     pub colour: Option<[u8; 3]>,
     /// Set in bands round the stem.
     #[serde(default)]
@@ -341,6 +511,18 @@ pub struct Bumps {
     /// PBR roughness on the bump; the surface's if none.
     #[serde(default)]
     pub roughness: Option<f64>,
+}
+
+const fn bump_count() -> f64 {
+    100.0
+}
+
+const fn bump_size() -> [f64; 2] {
+    [0.002, 0.006]
+}
+
+const fn bump_height() -> f64 {
+    0.001
 }
 
 /// A problem with a record.
@@ -360,9 +542,10 @@ impl BarkLook {
     ///
     /// When the JSON does not parse or a value is out of range.
     pub fn from_json(text: &str) -> Result<Self, BarkLookError> {
-        let look: Self =
+        let mut look: Self =
             serde_json::from_str(text).map_err(|error| BarkLookError(error.to_string()))?;
         look.check()?;
+        look.settle();
         Ok(look)
     }
 
@@ -424,6 +607,12 @@ impl BarkLook {
         Ok(())
     }
 
+    fn settle(&mut self) {
+        for stage in &mut self.stages {
+            stage.settle();
+        }
+    }
+
     /// The stage a stem `diameter` metres across wears (where it shows).
     #[must_use]
     pub fn stage_at(&self, diameter: f64) -> &Stage {
@@ -460,6 +649,7 @@ impl BarkLook {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct BarkSpec {
+    #[serde(default)]
     pub thickness: Thickness,
     pub stages: std::collections::BTreeMap<String, Stage>,
 }
@@ -504,7 +694,7 @@ impl BarkSpec {
                 "{id}: two stages end at one diameter"
             )));
         }
-        let look = BarkLook {
+        let mut look = BarkLook {
             schema: BARK_LOOK_SCHEMA,
             id: id.to_owned(),
             thickness: self.thickness.clone(),
@@ -512,6 +702,7 @@ impl BarkSpec {
             evidence: std::collections::BTreeMap::new(),
         };
         look.check()?;
+        look.settle();
         Ok(look)
     }
 
@@ -587,7 +778,7 @@ pub fn from_pattern(
         width_ratio: 0.25,
         per_m2: pattern.lenticels,
         relief_m: 0.0002,
-        colour: paler,
+        colour: Some(paler),
         stretch: false,
         formed_diameter_m: formed(),
         rows: false,
@@ -615,7 +806,7 @@ pub fn from_pattern(
         name: name.to_owned(),
         until_diameter_m: None,
         on: On::All,
-        architecture,
+        architecture: Some(architecture),
         colour: Some(colour),
         roughness: matte(),
         bloom: 0.0,
@@ -664,7 +855,7 @@ pub fn from_pattern(
                 aspect: pattern.elongation.max(1.0),
                 cover: 0.25,
                 curl_m: 0.0015,
-                inner_colour: inner,
+                inner_colour: Some(inner),
                 aged: Vec::new(),
             }),
             ..stage("fibrous", Architecture::Peeling)
@@ -677,7 +868,7 @@ pub fn from_pattern(
                 aspect: pattern.elongation.clamp(1.0, 6.0),
                 cover: pattern.peeled.clamp(0.0, 1.0),
                 curl_m: 0.0008,
-                inner_colour: inner,
+                inner_colour: Some(inner),
                 aged: Vec::new(),
             }),
             ..stage("peeling", Architecture::Exfoliating)
@@ -1161,7 +1352,11 @@ fn draw(
             shape: lenticels.shape,
         };
         if let Some(inside) = pattern.at(draws.stream(LENTICELS), period, x, y) {
-            texel.colour = blend(texel.colour, linear(lenticels.colour), inside);
+            texel.colour = blend(
+                texel.colour,
+                linear(lenticels.colour.unwrap_or(stage.surface())),
+                inside,
+            );
             texel.height += lenticels.relief_m * inside;
         }
     }
@@ -1240,7 +1435,7 @@ fn exfoliate(
     let near = nearest(draws, nx, ny, period, jitter, stretch, x + wx, y + wy);
     let s = (near.second - near.first) / (near.second + near.first).max(1.0e-12);
     let age = draws.unit(near.id, 5);
-    let inner = linear(peel.inner_colour);
+    let inner = linear(peel.inner_colour.unwrap_or(stage.surface()));
     // The ramp of colours exposed bark weathers through, ending at the
     // surface's own.
     let mut ramp = vec![inner];
@@ -1774,7 +1969,7 @@ mod tests {
             aspect: 2.0,
             cover: 0.4,
             curl_m: 0.001,
-            inner_colour: [90, 160, 60],
+            inner_colour: Some([90, 160, 60]),
             aged: vec![[200, 120, 40]],
         });
         look.stages[1].lenticels = look.stages[0].lenticels.clone();

@@ -1024,6 +1024,10 @@ pub mod venation;
 /// add their colours; eleven reference genera state theirs (Acer, Alnus,
 /// Arbutus, Betula, Pinus, Populus, Prunus, Pseudotsuga, Quercus, Rosa,
 /// Thuja), and every other species with a bark pattern draws a look made
-/// from it; `plantc export --bark-look spec` bakes it (145 is
+/// from it; a species may instead describe its bark in a flora's words
+/// (28 new characters: `bark_architecture`, `fissure_network`,
+/// `fissure_depth`, `exfoliation`, `lenticel_shape` and the rest), which
+/// rules at phylum Tracheophyta turn into its young and grown stages;
+/// `plantc export --bark-look spec` bakes it (145 is
 /// Caryophyllales, #243).
 pub const GENERATOR_REVISION: u32 = 146;

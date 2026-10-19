@@ -3309,6 +3309,60 @@ mod tests {
     }
 
     #[test]
+    fn bark_stated_in_words_draws_its_look() {
+        // A genus that describes its bark in a flora's words: the
+        // library's rules (phylum Tracheophyta) turn them into its look.
+        let folder = Folder::new("bark-words");
+        folder.write(
+            "library/lauraceae/sassafras/genus.json",
+            r#"{"schema": 1, "rank": "genus", "name": "Sassafras",
+                "traits": {"bark_smooth_until_m": 0.08, "young_bark_colour": [120, 110, 90],
+                    "fissure_network": "tessellated", "fissure_depth": "deep",
+                    "fissure_width": "narrow", "ridge_profile": "flat_topped",
+                    "ridge_spacing_m": 0.04, "plate_aspect": 1.5,
+                    "fissure_colour": [60, 40, 30], "bark_thickness_share": 0.04},
+                "evidence": {"traits": {"evidence": "Authored",
+                    "source": "plantgen-authors", "note": "Test."}}}"#,
+        );
+        let library = Library::from_dir(&folder.0).unwrap();
+        let spec = library.spec("sassafras-albidum").unwrap();
+        let look = spec.appearance.bark_look(&spec.id).unwrap().unwrap();
+        let names: Vec<&str> = look
+            .stages
+            .iter()
+            .map(|stage| stage.name.as_str())
+            .collect();
+        assert_eq!(names, ["young", "grown"]);
+        let (young, grown) = (&look.stages[0], &look.stages[1]);
+        assert_eq!(young.until_diameter_m, Some(0.08));
+        assert_eq!(young.colour, Some([120, 110, 90]));
+        assert_eq!(
+            young.architecture,
+            Some(crate::bark_look::Architecture::Stretched)
+        );
+        let fissures = grown.fissures.as_ref().unwrap();
+        assert_eq!(fissures.network, crate::bark_look::Network::Tessellated);
+        assert_eq!(fissures.profile, crate::bark_look::Profile::FlatTopped);
+        assert!((fissures.depth_share - 0.75).abs() < 1e-9);
+        assert!((fissures.width_share - 0.15).abs() < 1e-9);
+        assert!((fissures.spacing_m - 0.04).abs() < 1e-9);
+        // A colour rule's linear colour comes back as the sRGB stated.
+        let floor = fissures.floor_colour.unwrap();
+        assert!(
+            floor
+                .iter()
+                .zip([60, 40, 30])
+                .all(|(a, b)| a.abs_diff(b) <= 1),
+            "{floor:?}"
+        );
+        assert_eq!(
+            grown.architecture,
+            Some(crate::bark_look::Architecture::Furrowed)
+        );
+        assert_eq!(look.thickness.coefficient, Some(0.04));
+    }
+
+    #[test]
     fn a_nearer_file_narrows_a_wider_one() {
         // A nearer file may narrow a wider one: bark stated for the
         // genus, and a herbaceous species in it, has no bark.
