@@ -1113,7 +1113,9 @@ pub mod venation;
 /// with more between the nodes (`internodal_prickles`, `aciculi`), and
 /// a shoot's thorns stand alone where they are shoots (`thorn_origin`),
 /// on as many nodes as its flora says (`thorn_frequency`), as long as its
-/// range runs (broadleaf 24), by rules for all flowering plants (151 is
+/// range runs, and falling from older stems where it says so
+/// (`thorn_persistence`; broadleaf 24), by rules for all flowering plants
+/// (151 is
 /// subalpine fir; the desk
 /// renumbers on landing).
 pub const GENERATOR_REVISION: u32 = 152;

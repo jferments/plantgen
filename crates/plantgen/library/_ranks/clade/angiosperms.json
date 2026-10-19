@@ -581,6 +581,10 @@
       "rule": "clamp((max(spine_length_m) - min(spine_length_m)) / (max(spine_length_m) + min(spine_length_m)), 0.05, 0.8)",
       "why": "A plant's thorns or prickles run from the shortest to the longest its flora measures, about its middle length (a hawthorn's 7 mm terminal thorns to its 24 mm lateral ones)."
     },
+    "generator.params.thorn_years": {
+      "map": {"thorn_persistence": {"young_stems": 2, "few_years": 5, "persistent": 0}},
+      "why": "A thorn or prickle stays on its stem as long as its flora says: two years where only the young stems are armed (the stem hairs' youth), five where they persist a few years (a hawthorn's), for good where they persist."
+    },
     "appearance.organs.thorn.form": {
       "map": {"spines": {"thorns": "thorn"}},
       "why": "A thorn, a shoot turned spine (a hawthorn's, a mesquite's), is drawn as a straight slender cone standing from the stem's surface beside its bud."

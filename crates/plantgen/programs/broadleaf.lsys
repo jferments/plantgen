@@ -230,8 +230,10 @@
 # thorn_share of its long shoots' nodes (a flora's "few to numerous"),
 # one beside each bud where its thorns are shoots (thorn_pair 0: a
 # hawthorn's) rather than a pair, and each runs thorn_spread shorter or
-# longer than thorn_length; with every one of these left at its default,
-# a thorny species grows as before. Its rules go last.
+# longer than thorn_length; a thorn or prickle falls thorn_years after it
+# formed, where its flora says the older stems lose theirs; with every
+# one of these left at its default, a thorny species grows as before. Its
+# rules go last.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -284,6 +286,7 @@ param thorn_area;             # leaf area of a thorn card 1 m long, m² (the def
 param thorn_share = 1;        # share of a thorny shoot's nodes that bear thorns (bark revision)
 param thorn_pair = 1;         # 1: a pair of thorns beside each bud; 0: one, beside the bud where a shoot thorn stands
 param thorn_spread = 0.2;     # thorns run this share shorter or longer than thorn_length
+param thorn_years = 0;        # years a thorn or prickle stays on its stem; 0: for good
 param wind;                   # strength of a steady wind toward +X; 0 none
 param wind_bend;              # extra downwind bending per unit of wind
 param wind_kill;              # a tip heading upwind beyond this dies
@@ -891,3 +894,7 @@ decompose M(n, u, l) : n > 0 && thorns > 0 && leaves_per_node < 2
     [ &(branch_angle) incline(set_point, incline_rate) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
     [ /(30) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
     /(divergence) M(n - 1, u, l);
+
+# A thorn or prickle falls thorn_years after it formed, as the older
+# stems of a raspberry or a nightshade lose theirs.
+rule thorn(s) : thorn_years > 0 && age + dt >= thorn_years -> ;

@@ -1181,6 +1181,14 @@
       "when": {"spines": ["thorns"]},
       "why": "what a thorn is: a shoot ending in a point, terminal or lateral and sometimes leafy (a hawthorn's, a blackthorn's: FNA's indeterminate thorns); a leafless thorn in a leaf's axil (FNA's determinate thorns, a citrus's); or a pair of spines in a leaf's stipules' place at the node (a black locust's, a mesquite's)"
     },
+    "thorn_persistence": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["young_stems", "few_years", "persistent"],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "how long a stem keeps its thorns or prickles: only while young (a flora's prickly young stems and petioles, older stems unarmed), a few years (FNA: a hawthorn's thorns persist a few years), or for good (a honey locust's trunk thorns)"
+    },
     "thorn_frequency": {
       "group": "stem_and_bark",
       "organ": "spine",
