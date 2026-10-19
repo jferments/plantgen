@@ -107,6 +107,7 @@ module Bd(a);                 # the joint between two pieces
 module Fl;                    # where a tiller may raise a culm
 module Cm;                    # the base of a culm
 module Cu(s, j);              # a culm: j leaves still to place, s between nodes
+module Cn(s, j);              # a branching culm's node: its internode and leaf
 module Cb(s, j);              # where a culm node may send out a branch culm
 
 organ blade leaf as piece area blade_area;
@@ -158,10 +159,11 @@ decompose Fl : t >= adult_age && rand() < flowering ->
           - panicle_length * (1 - exp(-t / maturity))) / (culm_leaves + 1),
          culm_leaves) ];
 decompose Fl -> ;
+decompose Cu(s, j) : culm_branches > 0 && j > 0 -> Cn(s, j) Cb(s, j) Cu(s, j - 1);
 decompose Cu(s, j) : j > 0 ->
     F(s) [ /(j * divergence + 0.75 * uniform(-roll_spread, roll_spread)) &(leaf_angle * 1.5) $
            Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ]
-    Cb(s, j) Cu(s, j - 1);
+    Cu(s, j - 1);
 decompose Cu(s, j) : dioecious >= 0.5 && sex < 0.5 ->
     F(s) &(panicle_nod * (0.5 + frac(s * 7.31 + j * 0.618)))
     panicle_male(panicle_length * (1 - exp(-t / maturity)));
@@ -177,8 +179,12 @@ rule Tl : age >= thatch_years + leaf_years - 1 -> %;
 
 # A branching culm (bush muhly, big galleta) sends a shorter branch culm
 # from some of its nodes, leaning out, with fewer leaves and a panicle of
-# its own. These rules come last, so their draws never move the sites of
-# the draws above, and a grass whose culms do not branch draws nothing.
+# its own. Its node is a rule of its own above, with no draws, so a grass
+# whose culms do not branch grows by the old node rule unchanged; the
+# draws are here at the end, so they never move the sites of those above.
+decompose Cn(s, j) ->
+    F(s) [ /(j * divergence + 0.75 * uniform(-roll_spread, roll_spread)) &(leaf_angle * 1.5) $
+           Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ];
 decompose Cb(s, j) : culm_branches > 0 && j > 1 && rand() < culm_branches ->
     [ /(j * divergence + 180 + uniform(-40, 40)) &(uniform(25, 45)) !(culm_radius * 0.7) Cu(s * 0.8, j - 1) ];
 decompose Cb(s, j) -> ;
