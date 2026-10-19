@@ -2780,6 +2780,38 @@
       "optional": true,
       "why": "whether a woody plant's long shoots end the year in a true terminal bud, or their tips die and the topmost lateral bud carries each on, as a winter key's 'terminal bud wanting; branchlets prolonged by an upper axillary bud' (a birch's or an elm's), so its twigs and limbs zigzag and fork"
     },
+    "limb_angle": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["fastigiate", "erect", "ascending", "spreading", "horizontal", "descending"],
+      "optional": true,
+      "why": "the angle a tree's or shrub's limbs hold from upright once grown, as floras word it ('erect branches', 'stout ascending or spreading branches', 'spreading almost at right angles'): the reaction wood of each limb holds it there against its weight"
+    },
+    "leader": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["persistent", "lost"],
+      "optional": true,
+      "why": "whether a tree's main stem runs on to its top (persistent: a tulip tree's or a magnolia's) or is lost where the trunk divides into a few large limbs that spread and build a broad head (lost: an oak's, a madrone's, a bay's 'divided near the ground into several large diverging stems')"
+    },
+    "limb_course": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["straight", "flexuous", "tortuous"],
+      "optional": true,
+      "why": "how a tree's limbs run along their length: straight, gently wavy (flexuous), or bent this way and that in long irregular curves (tortuous; a flora's 'contorted' or 'crooked' branches, a madrone's or a mesquite's)"
+    },
+    "branch_posture": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["erect", "spreading", "drooping", "pendulous"],
+      "optional": true,
+      "why": "how the branches and branchlets a tree's limbs carry stand, apart from the limbs themselves ('stout branches ... slender pendulous branchlets'): stiff and upright, spreading, drooping toward their ends, or hanging"
+    },
     "branch_orientation": {
       "group": "architecture",
       "organ": "stem",

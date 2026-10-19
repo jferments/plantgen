@@ -117,6 +117,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "limb_angle": "spreading",
     "leaf_colour_autumn": [190, 80, 60],
     "height_max_m": {
       "min": 4,
@@ -145,6 +146,7 @@
     "leaf_apex": "acuminate"
   },
   "evidence": {
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 787): 'small spreading branches forming an oblong conic or ultimately round-topped head'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cornus nuttallii (read 2026-10-18): the leaves \"turn orange to purplish in autumn\". Colour ours, between the two."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",

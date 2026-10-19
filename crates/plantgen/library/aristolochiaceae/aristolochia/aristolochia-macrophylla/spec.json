@@ -12,7 +12,7 @@
   "generator": {
     "params": {
       "shoots": 3,
-      "internode": 0.18,
+      "internode": 0.16,
       "max_shoot": 3,
       "cling": 0.3,
       "hug": 0.45,
@@ -270,7 +270,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "California wild grape's values (a deciduous woody liana that drapes its host), with longer internodes and a closer twining hold (FNA: lianas, twining). Not fitted to measurements. Its host is the grape's, an 80-year Oregon white oak, standing in for the forest trees it climbs."
+      "note": "California wild grape's values (a deciduous woody liana that drapes its host), with longer internodes and a closer twining hold (FNA: lianas, twining). Not fitted to measurements. Internode 0.16 (was 0.18) since the growth-form language (revision 145), when its host oak's ascending limbs left a shoot of two leaves. Its host is the grape's, an 80-year Oregon white oak, standing in for the forest trees it climbs."
     },
     "host": {
       "evidence": "Authored",

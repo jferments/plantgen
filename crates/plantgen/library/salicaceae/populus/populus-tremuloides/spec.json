@@ -81,6 +81,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "limb_course": "tortuous",
+    "branch_posture": "drooping",
     "leaf_colour_autumn": [235, 185, 40],
     "shade_tolerance": "intolerant",
     "height_max_m": {
@@ -109,6 +111,8 @@
     "leaf_apex": {"acuminate": "usually", "acute": "often"}
   },
   "evidence": {
+    "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 121): 'slender remote and often contorted branches somewhat pendulous toward the ends'."},
+    "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 121): 'slender remote and often contorted branches somewhat pendulous toward the ends'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Populus tremuloides (read 2026-10-18): the leaves \"become golden to yellow, rarely red, in autumn\". Colour ours."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Populus tremuloides: \"slender branchlets covered with scattered oblong orange-colored lenticels, bright red-brown and very lustrous during their first season, gradually turning light gray tinged with red, ultimately dark gray\". Colour chosen by eye for bright red-brown."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's quaking aspen review (Populus tremuloides, read 2026-10-16): \"Quaking aspen is shade intolerant and cannot reproduce beneath its own canopy.\""},

@@ -37,7 +37,7 @@
       "pipe_rings": 0.00015,
       "light_cell": 0.6,
       "space_reach": 3.5,
-      "space_kill": 1.0,
+      "space_kill": 0.6,
       "leaf_area": 0.27,
       "path_half": 30.9,
       "bole_clear": 1
@@ -126,7 +126,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a massive tree of the African savanna, 10 to 20 m tall, with a swollen, smooth grey bottle-shaped trunk storing water, a few thick, crooked branches high up and digitate leaves of five to seven leaflets, dropped in the dry season. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a massive tree of the African savanna, 10 to 20 m tall, with a swollen, smooth grey bottle-shaped trunk storing water, a few thick, crooked branches high up and digitate leaves of five to seven leaflets, dropped in the dry season. Not fitted to measurements. space_kill 0.6 (was 1.0) since the growth-form language (revision 145): at 1.0 a young tree crowded its own buds to death in some seeds (seed 1 at 6 to 8 years, then 5.9 m at 100 years against 15 m); at 0.6 seeds 1 to 9 reach 12.4 to 15.5 m."
     },
     "allometry": {
       "evidence": "Authored",

@@ -179,6 +179,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "limb_angle": "spreading",
     "height_max_m": {
       "min": 5,
       "max": 30,
@@ -213,6 +214,7 @@
     "leaf_apex": {"acute": "usually", "acuminate": "often"}
   },
   "evidence": {
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 235): 'stout spreading branches forming a broad compact round-topped or conic head'."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -81,6 +81,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
+    "limb_angle": "spreading",
     "height_max_m": {
       "min": 12,
       "max": 24,
@@ -139,6 +141,8 @@
     "fruits_per_inflorescence": {"min": 1, "max": 3}
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 361): 'sometimes tall and straight but usually divided near the ground into several large diverging stems'."},
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 361): 'stout spreading or rarely pendulous (var. pendula Redh.) branches forming a broad round-topped head'."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

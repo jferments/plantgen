@@ -1004,4 +1004,10 @@ pub mod venation;
 /// apart than a leaf (`unit_nodes`); crown break-up and chance tip loss
 /// are switches no rule turns on yet (`breakup_age`, `tip_loss`) (143 is
 /// cactus genera, #239).
-pub const GENERATOR_REVISION: u32 = 144;
+/// 145: growth-form language (broadleaf 24): limbs hold the angle floras
+/// give them (`set_point`, from `limb_angle`), a tree's branches droop
+/// apart from its limbs (`branch_droop`, from `branch_posture`), tortuous
+/// limbs bend year by year (`limb_turn`, from `limb_course`), and where
+/// the leader is lost the trunk's fork stems spread as scaffold limbs
+/// (`fork_set`, from `leader`).
+pub const GENERATOR_REVISION: u32 = 145;

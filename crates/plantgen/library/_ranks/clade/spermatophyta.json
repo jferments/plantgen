@@ -154,6 +154,22 @@
     "generator.params.plagio": {
       "map": {"branch_orientation": {"plagiotropic": 1, "orthotropic": 0}},
       "why": "Where a plant's side shoots lie flat, every shoot a limb bears holds itself near level and sets its buds and leaves to either side, so the limb carries level sprays."
+    },
+    "generator.params.set_point": {
+      "map": {"limb_angle": {"fastigiate": 12, "erect": 22, "ascending": 35, "spreading": 60, "horizontal": 80, "descending": 105}},
+      "why": "A limb's reaction wood holds it at the angle from upright its taxon's floras describe: near upright when erect, a third of the way to level when ascending, past half way when spreading, level when horizontal."
+    },
+    "generator.params.fork_set": {
+      "map": {"leader": {"persistent": 0, "lost": {"rule": "0.6 * set_point"}}},
+      "why": "Where a tree's leader is lost, the stems its trunk divides into lean out as scaffold limbs, at somewhat less than its limbs' own angle, instead of each rising as a leader; its head is broad and round, not a cluster of spires."
+    },
+    "generator.params.limb_turn": {
+      "map": {"limb_course": {"straight": 0, "flexuous": 12, "tortuous": 25}},
+      "why": "A tortuous limb turns its own way from year to year, each year's shoot setting off at a chance angle that its held angle only partly takes back, so the wood runs in long irregular curves."
+    },
+    "generator.params.branch_droop": {
+      "map": {"branch_posture": {"drooping": 0.06, "pendulous": 0.12}},
+      "why": "Branches and branchlets that droop or hang bend toward the ground more than the limbs that carry them, which reaction wood holds up."
     }
   },
   "evidence": {
@@ -274,6 +290,10 @@
       "source": "halle-oldeman-tomlinson-1978",
       "note": "Hall\u00e9, Oldeman and Tomlinson (1978): orthotropic axes grow upright with their leaves and buds all round them, plagiotropic ones near horizontal with leaves and buds in one plane, and a tree's architecture is told largely by which of its axes are which (Troll's, Roux's and Massart's models among them). Drawing every shoot a limb bears as flat (plagio_set 80 from upright, buds and leaves to either side in turn) while the limb's own axis rises and arches is the model's choice (branching form, 2026-10-19)."
     },
+    "rules.generator.params.set_point": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual words each tree's limbs by their angle ('erect branches', Populus trichocarpa p. 126; 'stout ascending or spreading branches', Quercus garryana p. 296; 'short stout ... branches spreading almost at right angles', Sassafras p. 363). The degrees for each word are the model's choice (growth-form language, 2026-10-19): Garry oak at 35 rises in a vase and sassafras at 80 holds its limbs out level, as written, where every tree held 50 before."},
+    "rules.generator.params.fork_set": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent describes trunks that divide into a few large limbs under broad heads ('usually divided near the ground into several large diverging stems ... forming a broad round-topped head', Umbellularia p. 361; tanoak 'in open positions spreading horizontally and forming a broad dense symmetrical round-topped crown', p. 237). Holding the divided stems at 0.6 of the limbs' angle is the model's choice (growth-form language trial, 2026-10-19): tanoak's two stems at 40 degrees grow its broad round crown with its leaf area kept, where held upright they grew two spires and where apical control was relaxed instead the tree starved (16 m to 10 m)."},
+    "rules.generator.params.limb_turn": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent calls some trees' limbs 'contorted' (Populus tremuloides p. 121; Sassafras p. 363) or 'crooked' (Prosopis juliflora var. velutina p. 602); Imagekit's woody-forms photo tallies (2026-10-19) find madrone's limbs wavy in 25 of 28 votes (tortuous in 9 of 23) and red-osier dogwood's straight in 48 of 49. A year's turn of 25 degrees spread kinks sassafras's and madrone's limbs visibly with their heights within 7% (growth-form language trial, 2026-10-19); flexuous is about half of it."},
+    "rules.generator.params.branch_droop": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent describes limbs and branchlets apart, often with opposite habits: 'stout often pendulous branches' (Acer macrophyllum p. 688), 'slender somewhat pendulous branches' (Alnus rubra p. 223), 'horizontal and often pendulous on older trees' (Betula p. 205). A branch droop of 0.12 hangs a paper birch's branchlets at its crown's edge with its limbs held as before and its height within 1% (growth-form language trial, 2026-10-19); drooping is half of it."},
     "rules.generator.params.short_share": {
       "evidence": "SourceInferred",
       "source": "barthelemy-caraglio-2007",
