@@ -51,13 +51,12 @@
     }
   },
   "growth": {
-    "years": 40,
+    "years": 20,
     "step": 1,
     "keyframes": [
       5,
       15,
-      30,
-      40
+      20
     ]
   },
   "variants": {
