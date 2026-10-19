@@ -287,11 +287,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "western white and ponderosa pines' cones fall as they ripen, but drawn ripe in their first season they read held a year (the late cut fixed by the conifer lives, #96)",
     ),
     (
-        "program:pinidae",
-        "leaf_life_years",
-        "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 85; the shed limbs carry them)",
-    ),
-    (
         "program:polypodiidae",
         "leaf_division",
         "a pinnatifid blade, simple and lobed nearly to its midrib (licorice fern's, Flora of North America vol. 2: blade pinnatifid), is drawn as free pinnae on its rachis, as the program has no wing joining them",
