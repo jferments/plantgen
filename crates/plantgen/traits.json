@@ -900,6 +900,25 @@
       "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
       "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
     },
+    "prickle_density": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["sparse", "scattered", "dense"],
+      "optional": true,
+      "when": {"spines": ["prickles"]},
+      "why": "how thickly prickles arm the young stems and stalks, as floras word it: sparse ('sparingly armed', 'a few prickles'), scattered ('prickly'), or dense ('densely prickly')"
+    },
+    "prickle_length_m": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.05],
+      "optional": true,
+      "when": {"spines": ["prickles"]},
+      "why": "a stem's prickle from its foot to its point"
+    },
     "stem_form": {
       "group": "form",
       "organ": "stem",
@@ -942,9 +961,9 @@
       "group": "stem_and_bark",
       "organ": "stem",
       "type": "enum",
-      "values": ["tapering", "rounded", "broad", "flat"],
+      "values": ["tapering", "rounded", "broad", "flat", "depressed"],
       "when": {"spines": ["areoles"]},
-      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, or flat, a low button or disc topped nearly level with its rim"
+      "why": "how a cactus stem closes at its tip: tapering over a length of its width to the apex, rounded as a half sphere, broad, a rounded shoulder under a wide flattish top that may sink at its centre, flat, a low button or disc topped nearly level with its rim, or depressed, a flat top sinking to a pit at its centre"
     },
     "stem_outline": {
       "group": "stem_and_bark",
@@ -1043,6 +1062,13 @@
       "values": ["straight", "curved", "hooked", "flattened", "twisted"],
       "when": {"spines": ["areoles"]},
       "why": "the main central spine's form: straight, curved, hooked at its tip (a fishhook's), flattened, or twisted"
+    },
+    "central_spines_twisted": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "bool",
+      "when": {"spines": ["areoles"]},
+      "why": "whether the central spines twist about their length like a wrung ribbon, as a flora's 'often twisted' centrals do, whatever their main form"
     },
     "spine_sheaths": {
       "group": "stem_and_bark",
@@ -1580,6 +1606,15 @@
       "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
       "why": "lobes on a lobed leaf"
     },
+    "leaf_lobe_apex": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["acute", "obtuse", "rounded"],
+      "optional": true,
+      "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
+      "why": "the tips of a lobed blade's lobes: pointed (a jimsonweed's 'lobes acute', Britton and Brown), blunt, or rounded (a white oak's)"
+    },
     "leaflets": {
       "group": "leaves",
       "organ": "leaflet",
@@ -2052,9 +2087,9 @@
       "group": "flowers",
       "organ": "petal",
       "type": "enum",
-      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular"],
+      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular", "flabellate"],
       "optional": true,
-      "why": "a petal's outline, or a tepal's: from a narrow strap (linear) to as broad as long (orbicular)"
+      "why": "a petal's outline, or a tepal's: from a narrow strap (linear) to as broad as long (orbicular), or fan-shaped, widest across its broad blunt tip from a wedge base (flabellate, obcuneate: a poppy's)"
     },
     "petal_apex": {
       "group": "flowers",
@@ -2081,12 +2116,44 @@
       "optional": true,
       "why": "how the sepals stand from the flower: up against the corolla, out flat, or bent back toward the stalk (a fuchsia's)"
     },
+    "calyx_lobe_length_m": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.2],
+      "optional": true,
+      "why": "a joined calyx's free lobes or teeth, from the sinus to the tip; the rest of `sepal_length_m` is its tube (a tobacco's 4-8 mm lobes on a 12-18 mm calyx)"
+    },
+    "calyx_section": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["terete", "angled"],
+      "optional": true,
+      "why": "a joined calyx's tube in cross-section: round, or angled with a ridge down each sepal's midrib (a jimsonweed's prismatic, 5-angled calyx)"
+    },
+    "calyx_base": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "enum",
+      "values": ["even", "swollen"],
+      "optional": true,
+      "why": "a joined calyx's tube along its length: even, or swollen at its base (a jimsonweed's)"
+    },
     "calyx_colour": {
       "group": "flowers",
       "organ": "sepal",
       "type": "colour",
       "optional": true,
       "why": "the sepals' colour where it is not leaf green, and a hypanthium's that bears them: a fuchsia's red sepals and floral tube"
+    },
+    "calyx_caducous": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the calyx falls as the flower opens (caducous): a poppy's two sepals, pushed off as a cap by the swelling petals, so an open flower shows none"
     },
     "pedicel_length_m": {
       "group": "flowers",
@@ -2107,8 +2174,8 @@
       "group": "flowers",
       "organ": "flower",
       "type": "enum",
-      "values": ["actinomorphic", "zygomorphic", "asymmetric"],
-      "why": "a flower's symmetry: radial, one plane, or none"
+      "values": ["actinomorphic", "disymmetric", "zygomorphic", "asymmetric"],
+      "why": "a flower's symmetry: radial, two planes at right angles (disymmetric: a bleeding heart's two pouched outer petals and two inner), one plane, or none"
     },
     "perianth": {
       "group": "flowers",
@@ -2165,6 +2232,23 @@
       "values": ["erect", "ascending", "spreading", "nodding", "pendent"],
       "optional": true,
       "why": "how an open flower holds itself on its stalk: facing up, rising at a slant, held out level, bent over to face down and out (a belladonna's bell, a pepper's star), or hanging (an angel's trumpet)"
+    },
+    "bud_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.3],
+      "optional": true,
+      "why": "a flower bud from its base to its tip just before it opens (an opium poppy's 1.5-3.5 cm)"
+    },
+    "bud_posture": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["erect", "nodding"],
+      "optional": true,
+      "why": "how a flower bud holds itself before it opens: upright, or hanging from a stalk hooked just below it (a poppy's), turning up as it opens"
     },
     "perianth_reflexion": {
       "group": "flowers",
@@ -2753,6 +2837,20 @@
       "type": "colour",
       "why": "a ripe fruit"
     },
+    "fruit_colour_unripe": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "colour",
+      "optional": true,
+      "why": "a fruit before it ripens, where it is not the leaves' green: an opium poppy's glaucous blue-green capsule"
+    },
+    "stigmatic_disc": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the stigmas radiate on a flat, lobed disc crowning the ovary and kept on the capsule, one ray a carpel (poppies)"
+    },
     "fruit_colour_ripening": {
       "group": "fruit_and_cones",
       "organ": "fruit",
@@ -2780,6 +2878,15 @@
       "type": "colour",
       "optional": true,
       "why": "the seeds a ripe fruit shows where it opens on them, as they are seen: a magnolia's red seeds hanging from its split follicles"
+    },
+    "fruit_seed_length_m": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.05],
+      "optional": true,
+      "why": "a ripe seed's longest measure, as an opened fruit shows its seeds: a jimsonweed's 3-4 mm black seeds between its valves"
     },
     "fruit_seed_thread_m": {
       "group": "fruit_and_cones",
@@ -2817,9 +2924,9 @@
       "group": "fruit_and_cones",
       "organ": "fruit",
       "type": "enum",
-      "values": ["falling", "persistent", "accrescent"],
+      "values": ["falling", "persistent", "accrescent", "circumscissile"],
       "optional": true,
-      "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), or grows on into a large spreading star (a belladonna's)"
+      "why": "what the calyx does as the fruit ripens: falls, stays as a small star or cup under it (a tomato's, a pepper's), grows on into a large spreading star (a belladonna's), or breaks off round its base, leaving the base as a rim or collar under it (circumscissile, a jimsonweed's)"
     },
     "fruiting_calyx_posture": {
       "group": "fruit_and_cones",

@@ -1018,16 +1018,89 @@ pub mod venation;
 /// spreading, a stalk colour and a drop of clear, milky or amber secretion,
 /// and strands draw on flower and cluster cards (fifteen Caryophyllales
 /// species, two more sundews and hemp, #243; 144 is #244).
-/// 146: a species' spec states its bark in the bark language
+/// 146: an opened capsule shows its seeds (`seed_size`, from
+/// `fruit_seed_length_m`, where `fruit_seed_colour` is stated) packed
+/// round a placenta between its valves; a joined calyx is drawn from
+/// `sepal_length_m` and `calyx_lobe_length_m` (`sepals_fused`), a sheath
+/// standing close round the corolla tube, angled where `calyx_section`
+/// says so (`calyx_angled`), its teeth carrying on up its line; a calyx
+/// that breaks off round its base (`calyx_in_fruit` `circumscissile`)
+/// leaves a torn rim; a lobed blade takes its lobes, sinus depth, lobe
+/// tips (`leaf_lobe_apex`), width and petiole from its traits, acute lobes
+/// narrowing fast to a point; a joined calyx may swell low down
+/// (`calyx_swell`, from `calyx_base` `swollen`); a herb's stem leaf card
+/// holds its petiole unless the herb has a basal rosette; a map whose
+/// states tie reads its `else` formula's names; a nightshade's prickles
+/// stand among its stem hairs (`prickles`, from `spines` `prickles` and
+/// `prickle_density`) (145 is the
+/// Caryophyllales families, #243).
+/// 147: old conifers keep their foliage from 150 to 300 years: a side
+/// shoot keeps growing at least `side_floor` once the leader stops rising
+/// (coming in over the top `floor_ramp` share of the height), the family's
+/// dormant buds wait on the limbs' main axes for 300 years (`epi_order`),
+/// a limb is shed for the mean light of its tips (`limb_tip`) more than
+/// for its size, and slow shoots are laid down every few years
+/// (`seg_min`) so the fully branched old crowns fit the module limit,
+/// each drawing its foliage at two places along it so its needles stay
+/// near one year's length; a
+/// tall tree lays down less trunk wood per square metre of foliage once
+/// its leader passes `ring_share` of its full height; and the top whorls'
+/// branch shoots lengthen over `top_ramp` years of the leader's growth in
+/// place of a fixed depth (146 is nightshades round 5, #233).
+/// 148: a depressed cactus top sinks to a pit at its centre, with its
+/// crown's flowers and fruit set down into it (`stem_apex` depressed,
+/// body and program `pit`: Lophophora); an apex's woolly cap reaches only
+/// the apical region, three fifths of the tip's radius, not the whole top
+/// of a rounded or broad stem; twisted centrals turn about their length
+/// (new trait `central_spines_twisted`, spine `twist`) (147 is old
+/// conifers, #251).
+/// 149: palm 15 and Phoenix's details. A Phoenix's dead frond hangs limp,
+/// its leaflets folded up along the rachis and the rachis drooping, in
+/// place of a flat plank standing out below the crown. A boot wears shorter
+/// as it ages (`boot_wear`, `boot_wear_years`) and each is a little longer
+/// or shorter (`boot_spread`), so a Phoenix trunk's lower stubs are shorter
+/// and its outline ragged. The foot puts out a mass of adventitious roots
+/// from a root zone that rises with age, about half stopping short in the
+/// air (`roots`). An open sheath (`sheath_wedge`, Phoenix's) is drawn as a
+/// broad brown wedge along its petiole's base, so the crown's centre is
+/// clothed in leaf bases where the bare stem showed as a flat-topped
+/// cylinder (148 is cacti, #248).
+/// 150: poppies. A corolla of merosity 2 in two whorls draws its four
+/// petals (a poppy's 2 + 2), where the petals rule clamped the merosity to
+/// 3 and drew six; a caducous calyx (`calyx_caducous`, Papaveraceae)
+/// falls as its flower opens, so a bud wears its sepals and an open flower
+/// shows none (`calyx_shed` on the flower card). California poppy grows
+/// leafy branched stems with larger flowers and a capsule beside them;
+/// opium poppy is new; Pacific bleeding heart's leaves are ternate and
+/// dissected, glaucous, held over the clump.
+/// Round 2: two crossed pairs of petals open as one cup; a disymmetric
+/// corolla (`flower_symmetry: disymmetric`, Dicentra) draws two pouched
+/// outer petals with turned-out tips around two narrow inner ones, a
+/// heart; a pendent or nodding flower of a cluster hangs from its pedicel
+/// (`nod`, from `flower_posture`); a capsule with a stigmatic disc
+/// (`stigmatic_disc`, Papaver) wears a dark rayed dome, one ray per
+/// carpel; a fruit's unripe share takes `fruit_colour_unripe` before the
+/// leaves' green. Round 3: a herb's flowering side branches flower after
+/// its stem, each a share of a raceme younger (`branch_lag`, herb
+/// revision 16; Papaveraceae a third); a nodding bud (`bud_posture`)
+/// hangs from a stalk hooked in its top quarter, as long as floras
+/// measure it (`bud_length_m`); a caducous calyx closed over a regular
+/// corolla's bud is drawn as an ovoid of its sepals; a heart's petal
+/// parts have curved sides. A herb that flowers on for months while its
+/// first fruit ripen, bearing fruit below its flowers (`fruit_below`),
+/// shows its earlier flowers' fruit from its first fruiting month and
+/// keeps flowering to its last (149 is palms, #250).
+/// 151: a species' spec states its bark in the bark language
 /// (`appearance.bark_look`, `crate::bark_look`): stages by stem diameter,
 /// keyed by name so a genus states how its bark breaks up and its species
 /// add their colours; eleven reference genera state theirs (Acer, Alnus,
 /// Arbutus, Betula, Pinus, Populus, Prunus, Pseudotsuga, Quercus, Rosa,
 /// Thuja), and every other species with a bark pattern draws a look made
 /// from it; a species may instead describe its bark in a flora's words
-/// (28 new characters: `bark_architecture`, `fissure_network`,
-/// `fissure_depth`, `exfoliation`, `lenticel_shape` and the rest), which
-/// rules at phylum Tracheophyta turn into its young and grown stages;
-/// `plantc export --bark-look spec` bakes it (145 is
-/// Caryophyllales, #243).
-pub const GENERATOR_REVISION: u32 = 146;
+/// (`bark_architecture`, `fissure_network`, `exfoliation`,
+/// `lenticel_shape`, `old_bark_on` and the rest), which rules at phylum
+/// Tracheophyta turn into its young, grown and old stages; an old stage
+/// shows up from the trunk's base, or on limbs' undersides, where stated;
+/// `plantc export --bark-look spec` bakes it (150 is poppies; the desk
+/// renumbers on landing).
+pub const GENERATOR_REVISION: u32 = 151;

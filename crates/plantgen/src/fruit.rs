@@ -301,10 +301,27 @@ pub(crate) fn draw_unit(
     one.draw(kind, body, accent, extras, part, mesh);
     one.dress(fruit, body, accent, part, mesh);
     one.open(first, first_index, mesh);
+    // An opened capsule's seeds, where their colour is stated, drawn
+    // after its valves turn out so they stay where they grew.
+    if let Some(seeds) = fruit.seeds.filter(|_| one.valves > 0) {
+        let size = if fruit.seed_size > 0.0 {
+            fruit.seed_size
+        } else {
+            1.0 / 12.0
+        };
+        one.seeds(size, seeds, part, mesh);
+    }
 }
 
 /// The silky white of the threads a magnolia's seeds hang on.
 const THREAD: [f32; 3] = [0.88, 0.86, 0.8];
+
+/// The most seeds an opened capsule is drawn showing: a jimsonweed's
+/// 40 to 120 (Flora of North America); dust-fine seeds stop at a few rings.
+const SEEDS: u32 = 140;
+
+/// The pale pith of a capsule's placenta, the seeds packed over it.
+const PLACENTA: [f32; 3] = [0.42, 0.36, 0.2];
 
 /// What a fruit shows beyond its body: the colour of its seeds where it
 /// opens on them (`None` while it is shut), and of its cup, if it has one.
@@ -813,6 +830,24 @@ impl One {
     /// prickles, bristles or hooked bristles over it, drawn only at the
     /// finer steps.
     fn dress(&self, fruit: &Fruit, body: [f32; 3], accent: [f32; 3], part: Part, mesh: &mut Mesh) {
+        // A poppy's stigmatic disc: a low dome capping the fruit, its rays
+        // radiating to a lobed rim a little wider than the dome, darker
+        // than the fruit.
+        if fruit.disc > 0 {
+            let colour = blooms::shade(body, 0.7);
+            let top = self.at(0.97);
+            blooms::dome(
+                top,
+                self.direction,
+                self.across,
+                self.width * 0.25,
+                self.width * 0.05,
+                colour,
+                part,
+                mesh,
+            );
+            self.calyx(0.98, fruit.disc, 0.3, 0.005, colour, part, mesh);
+        }
         if fruit.kept_calyx > 0.0 {
             let lobes = if fruit.kept_lobes == 0 {
                 5
@@ -985,6 +1020,88 @@ impl One {
             let pivot = self.at(HINGE) + out * (self.width * 0.5);
             let hinge = self.direction.cross(out).normalize_or(other);
             *p = (pivot + (point - pivot).rotate_about(hinge, turn)).to_f32();
+        }
+        leaves::smooth_normals(mesh, first, first_index);
+    }
+
+    /// The seeds an opened capsule shows between its valves (a
+    /// jimsonweed's "numerous black kidney-shaped seeds", King's): a pale
+    /// placenta up its middle, and over it flattened seeds `size` of the
+    /// length long, packed in rings round the axis over the opened half,
+    /// their faces outward. Drawn only at the finer steps.
+    fn seeds(&self, size: f64, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+        if self.detail.around < 8 {
+            return;
+        }
+        let seed = self.length * size;
+        let other = self.direction.cross(self.across);
+        let half = |along: f64| {
+            let z = 2.0 * along - 1.0;
+            self.width * 0.5 * math::sqrt((1.0 - z * z).max(0.0)) * (1.0 + self.flare * z)
+        };
+        let first = mesh.positions.len();
+        let first_index = mesh.indices.len();
+        Spheroid {
+            centre: self.at(0.62),
+            a: self.length * 0.3,
+            b: half(0.62) * 0.55,
+            c: half(0.62) * 0.55,
+            ribs: 0,
+            rib_depth: 0.0,
+            waves: 0,
+            wave_depth: 0.0,
+            detail: Detail {
+                around: 8,
+                rings: 4,
+                fine: None,
+            },
+        }
+        .draw(self.direction, self.across, PLACENTA, part, mesh);
+        let facets = Detail {
+            around: 5,
+            rings: 3,
+            fine: None,
+        };
+        let step = seed * 0.9 / self.length.max(1e-9);
+        // At most about [`SEEDS`] seeds, the rings from the hinge up.
+        let mut along = 0.42;
+        let mut ring = 0_u32;
+        let mut drawn = 0_u32;
+        while along < 0.9 && drawn < SEEDS {
+            // Just inside the wall, or on the placenta where the fruit
+            // narrows toward its tip.
+            let reach = (half(along) * 0.94 - seed * 0.2).max(half(0.62) * 0.55 + seed * 0.1);
+            let fit = math::floor_index(std::f64::consts::TAU * reach / (seed * 0.75));
+            let count = u32::try_from(fit.clamp(3, 32)).unwrap_or(3);
+            for k in 0..count {
+                let angle = std::f64::consts::TAU * (f64::from(k) + 0.5 * f64::from(ring % 2))
+                    / f64::from(count);
+                let radial = self.across * math::cos(angle) + other * math::sin(angle);
+                // Each seed a little bigger or smaller and turned its own
+                // way, as they pack, not a honeycomb.
+                let jitter =
+                    |salt: u64| unit(mix64(u64::from(ring) << 32 ^ u64::from(k) ^ salt)) - 0.5;
+                let spin = jitter(1) * 1.6;
+                let tangent = self.direction.cross(radial);
+                let long = self.direction * math::cos(spin) + tangent * math::sin(spin);
+                let grow = 1.0 + 0.3 * jitter(2);
+                let seed = seed * grow;
+                Spheroid {
+                    centre: self.at(along + jitter(3) * step * 0.4) + radial * reach,
+                    a: seed * 0.5,
+                    b: seed * 0.4,
+                    c: seed * 0.14,
+                    ribs: 0,
+                    rib_depth: 0.0,
+                    waves: 0,
+                    wave_depth: 0.0,
+                    detail: facets,
+                }
+                .draw(long, radial.cross(long), colour, part, mesh);
+            }
+            along += step;
+            ring += 1;
+            drawn += count;
         }
         leaves::smooth_normals(mesh, first, first_index);
     }

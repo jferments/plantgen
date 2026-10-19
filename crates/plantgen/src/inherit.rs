@@ -1166,6 +1166,10 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("sepals", Count),
                 ("sepal_length", Number),
                 ("sepals_fused", Number),
+                ("calyx_angled", Number),
+                ("calyx_swell", Number),
+                ("calyx_shed", Number),
+                ("nod", Number),
                 ("corolla", Word),
                 ("banner", Number),
                 ("lip", Number),
@@ -1305,6 +1309,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cup", Colour),
                 ("ripening", Colour),
                 ("threads", Number),
+                ("seed_size", Number),
+                ("disc", Count),
             ],
         ),
     ]
@@ -2514,7 +2520,13 @@ fn seasonal_looks(
             outcomes.insert(path, (file, None));
         }
         if organ == "flower" {
-            stage_seasons(spec, origins, &at, kept(traits));
+            stage_seasons(
+                spec,
+                origins,
+                &at,
+                kept(traits),
+                fruit_and_flower_ends(traits),
+            );
         }
     }
     let why = (!set_any).then(|| why.unwrap_or_else(|| "it draws no flowering look".to_string()));
@@ -2546,6 +2558,35 @@ fn kept(traits: &BTreeMap<String, (Value, usize)>) -> bool {
         })
 }
 
+/// The days a plant's first fruit are ripe and its last flowers close,
+/// where its flowering and fruiting months are stated: as the first month
+/// it is in fruit begins (in the next year where that month comes before
+/// its first flowers') and as the last month it flowers in ends, its year
+/// counted as the season rules count it (from the December before, for a
+/// plant that flowers from January).
+fn fruit_and_flower_ends(traits: &BTreeMap<String, (Value, usize)>) -> Option<(f64, f64)> {
+    let months = |name: &str| {
+        traits
+            .get(name)
+            .and_then(|(value, _)| value.as_array())
+            .map(|months| months.iter().filter_map(Value::as_f64).collect::<Vec<_>>())
+            .filter(|months| !months.is_empty())
+    };
+    let (flowers, fruits) = (months("flowering_months")?, months("fruiting_months")?);
+    let first = |months: &[f64]| months.iter().copied().fold(f64::MAX, f64::min);
+    let last = flowers.iter().copied().fold(f64::MIN, f64::max);
+    let wrap = if first(&fruits) < first(&flowers) {
+        12.0
+    } else {
+        0.0
+    };
+    let january = if first(&flowers) == 1.0 { 365.0 } else { 0.0 };
+    Some((
+        crate::formula::month_start(first(&fruits) + wrap) + january,
+        crate::formula::month_start(last + 1.0) + january,
+    ))
+}
+
 /// Give the program's `bud` and `fruit` organs, which stand for a
 /// herb's `flower` (at `at`) before it opens and once it has set fruit,
 /// its season, each showing only in its own stage: the bud, its flower's
@@ -2555,11 +2596,21 @@ fn kept(traits: &BTreeMap<String, (Value, usize)>) -> bool {
 /// chain-fruit cholla's, whose chains hang and flower again), the fruit
 /// organ, the fruit of earlier years, keeps no season: it is on the plant
 /// all year, as this year's flowers bud, open and fruit beside it.
+///
+/// Where the plant is ripe (`ends`, the first fruit ripe) before its last
+/// flowers close, no cluster opens on (`opening`) and its program bears
+/// fruit below its flowers (`fruit_below`), its flowers open
+/// one after another over its months, as a California poppy's do from
+/// February to September while its first pods ripen from April: its
+/// fruit organ, its earlier flowers' fruit, shows a month before it is
+/// ripe (though not before its first flowers open) and is ripe from then,
+/// and its flower and bud go on to its last flowers' end.
 fn stage_seasons(
     spec: &mut Map<String, Value>,
     origins: &mut BTreeMap<String, Origin>,
     at: &str,
     kept: bool,
+    ends: Option<(f64, f64)>,
 ) {
     let day = |spec: &Map<String, Value>, name: &str| {
         find(spec, &format!("{at}.season.{name}")).and_then(Value::as_f64)
@@ -2572,19 +2623,56 @@ fn stage_seasons(
     ) else {
         return;
     };
+    let ripe = fruit.max(day(spec, "ripe").unwrap_or(fruit));
+    let succession = ends
+        .filter(|&(ripe_from, closes)| {
+            ripe_from < fruit
+                && closes > fruit
+                && day(spec, "opening").is_none_or(|opening| opening <= 0.0)
+                && !kept
+                && find(spec, "generator.params.fruit_below")
+                    .and_then(Value::as_f64)
+                    .is_some_and(|share| share > 0.0)
+                && find(spec, "appearance.organs.fruit.shape.template").and_then(Value::as_str)
+                    == Some("fruit")
+                && find(spec, "appearance.organs.fruit")
+                    .and_then(Value::as_object)
+                    .is_some_and(|look| !look.contains_key("season"))
+                && by_hand(origins, "appearance.organs.fruit").is_none()
+        })
+        .map(|(ripe_from, closes)| {
+            let ripe_from = ripe_from.max(flower + 1.0);
+            (
+                (ripe_from - 30.0).max(flower + 1.0),
+                ripe_from,
+                closes.min(fall.max(closes)),
+            )
+        });
+    let (closes, fruit_days) = match succession {
+        Some((shows, ripe_from, closes)) => {
+            (closes, [shows, shows, shows, ripe_from, fall.max(closes)])
+        }
+        None => (fruit, [fruit, fruit, fruit, ripe, fall]),
+    };
+    if let Some((_, _, closes)) = succession {
+        // The flower itself goes on opening to its last flowers' end.
+        for (name, value) in [
+            ("fruit", closes),
+            ("ripe", ripe.max(closes)),
+            ("fall", fall.max(closes)),
+        ] {
+            #[allow(clippy::cast_possible_truncation)]
+            let value = if value.fract() == 0.0 {
+                Value::from(value as i64)
+            } else {
+                Value::from(value)
+            };
+            set(spec, &format!("{at}.season.{name}"), value);
+        }
+    }
     for (organ, draws, days) in [
-        (BUD, "flower", [bud, flower, fruit, fruit, fruit]),
-        (
-            "fruit",
-            "fruit",
-            [
-                fruit,
-                fruit,
-                fruit,
-                fruit.max(day(spec, "ripe").unwrap_or(fruit)),
-                fall,
-            ],
-        ),
+        (BUD, "flower", [bud, flower, closes, closes, closes]),
+        ("fruit", "fruit", fruit_days),
     ] {
         if kept && organ == "fruit" {
             continue;
@@ -2909,26 +2997,24 @@ impl Ruled<'_> {
                             picked_reads(key, table, &picks)?
                         }
                         // Its states tie for the most usual, or none says
-                        // how often: a map with an `else` gives that.
-                        Err(_) if self.rule.contains_key("else") => Vec::new(),
+                        // how often: a map with an `else` gives that. An
+                        // `else` formula reads its names; an `else` map
+                        // reads nothing more, so its trait goes unread and
+                        // a tie on the outer trait draws as a plant stating
+                        // neither (a family's flowers half regular, half not,
+                        // draw regular).
+                        Err(_) if self.rule.contains_key("else") => self
+                            .rule
+                            .get("else")
+                            .and_then(map_formula)
+                            .map(|_| else_reads(self.rule))
+                            .unwrap_or_default(),
                         Err(why) => return Err(why),
                     }
                 }
                 // Its trait unstated, a map with an `else` gives that, or
                 // what the map its `else` holds reads.
-                Err(_) if self.rule.contains_key("else") => self
-                    .rule
-                    .get("else")
-                    .map(
-                        |otherwise| match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
-                            Some(inner) => reads(inner),
-                            None => map_formula(otherwise)
-                                .and_then(|formula| Formula::parse(formula).ok())
-                                .map(|formula| formula.names().into_iter().collect())
-                                .unwrap_or_default(),
-                        },
-                    )
-                    .unwrap_or_default(),
+                Err(_) if self.rule.contains_key("else") => else_reads(self.rule),
                 Err(why) => return Err(why),
             }
         } else {
@@ -3398,6 +3484,22 @@ fn picked_reads(
 fn map_of(rule: &Map<String, Value>) -> Option<(&String, &Map<String, Value>)> {
     let (key, table) = rule.get("map")?.as_object()?.iter().next()?;
     Some((key, table.as_object()?))
+}
+
+/// What a map's `else` reads: the names of its formula, or what the map or
+/// colour it holds reads.
+fn else_reads(rule: &Map<String, Value>) -> Vec<String> {
+    rule.get("else")
+        .map(
+            |otherwise| match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
+                Some(inner) => reads(inner),
+                None => map_formula(otherwise)
+                    .and_then(|formula| Formula::parse(formula).ok())
+                    .map(|formula| formula.names().into_iter().collect())
+                    .unwrap_or_default(),
+            },
+        )
+        .unwrap_or_default()
 }
 
 /// A map's value that is a formula, `{"rule": formula}`, worked out only
