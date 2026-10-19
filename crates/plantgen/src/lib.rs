@@ -868,4 +868,9 @@ pub mod venation;
 /// perianth stands on, a floral cup or an inferior ovary such as a
 /// cactus's pericarpel, so the tepals no longer float above the joint; a
 /// pericarpel the tepals open straight from is globose, not a stalk.
-pub const GENERATOR_REVISION: u32 = 130;
+/// 131: ten Pacific Northwest natives in families short of three species
+/// (giant chain fern, licorice fern, scouring rush, fringecup, western dog
+/// violet, California poppy, blueblossom, spreading gooseberry, bush
+/// penstemon, orange honeysuckle); a climber bears its leaves in opposite
+/// pairs where its taxon states them so (climber program revision 7).
+pub const GENERATOR_REVISION: u32 = 131;

@@ -307,6 +307,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 85; the shed limbs carry them)",
     ),
     (
+        "program:polypodiidae",
+        "leaf_division",
+        "a pinnatifid blade, simple and lobed nearly to its midrib (licorice fern's, Flora of North America vol. 2: blade pinnatifid), is drawn as free pinnae on its rachis, as the program has no wing joining them",
+    ),
+    (
         "program:rosette",
         "shoot_leaves",
         "a rosette's crown adds its year's leaves where they stand (29 to 38 on common sotol's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
@@ -315,6 +320,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:sapindaceae",
         "crown_outline_fit",
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
+    ),
+    (
+        "ribes-divaricatum",
+        "inflorescence_length_m",
+        "its pendent raceme's axis bends over by half a turn to hang (the angiosperms' posture rule), and the length is read along its organ's axis, not along the bent axis, so FNA's 2 to 4 cm reads about 1 cm until the measure follows a drooping axis",
     ),
     (
         "sarcandra-glabra",
@@ -335,6 +345,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "solanum-melongena",
         "leaf_shape",
         "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Bailey and Wikipedia give",
+    ),
+    (
+        "tellima-grandiflora",
+        "leaf_habit",
+        "its leafy stems end in racemes, and the herb program keeps a stem's leaves through winter only on a stem bearing leaves alone, so fringecup's partly evergreen leaves are drawn as deciduous until a flowering stem can keep its leaves",
     ),
     (
         "tillandsia-usneoides",
