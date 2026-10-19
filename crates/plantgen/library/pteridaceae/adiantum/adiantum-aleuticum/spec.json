@@ -102,6 +102,7 @@
       "max": 14
     },
     "leaf_shape": "orbicular",
+    "pinnule_shape": "oblong",
     "leaf_margin": "dentate",
     "leaf_colour": [
       95,
@@ -235,6 +236,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923) p. 24, Adiantum pedatum aleuticum: pinnae pinnate, the pinnules cleft but not divided."
+    },
+    "traits.pinnule_shape": {
+      "evidence": "SourceInferred",
+      "source": "fern-growers-manual",
+      "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 148, figure 12.5b, Adiantum aleuticum: pinnules small oblong, closely set along the pinna."
     },
     "traits.pinnae": {
       "evidence": "SourceInferred",

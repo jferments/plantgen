@@ -184,6 +184,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "branch_posture": "drooping",
     "leaf_colour_autumn": [225, 180, 50],
     "height_max_m": {
       "min": 9.14,
@@ -206,6 +207,7 @@
     "fruit_size_m": {"min": 0.035, "max": 0.06}
   },
   "evidence": {
+    "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 688): 'stout often pendulous branches forming a compact handsome head'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Bigleaf maple (read 2026-10-18): \"In autumn, the leaves turn gold and yellow\". Colour ours."},
     "generator.params.sprout_light": {
       "evidence": "Authored",

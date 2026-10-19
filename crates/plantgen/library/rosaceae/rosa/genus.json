@@ -3,7 +3,40 @@
   "rank": "genus",
   "name": "Rosa",
   "traits": {
-    "wood_density_basic_kg_m3": 540
+    "wood_density_basic_kg_m3": 540,
+    "woodiness": "woody",
+    "life_span": "perennial",
+    "leaf_habit": {
+      "deciduous": "usually",
+      "evergreen": "rarely"
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "terminal_leaflet": true,
+    "leaflets": {
+      "min": 5,
+      "max": 11,
+      "low": 3,
+      "high": 13
+    },
+    "stem_clump": {
+      "many": "usually",
+      "thicket": "often"
+    },
+    "spines": {
+      "prickles": "usually",
+      "none": "rarely"
+    },
+    "petal_apex": "emarginate",
+    "stamens": {
+      "min": 35,
+      "max": 220
+    },
+    "fruit_type": "aggregate",
+    "fruitlets": "hip",
+    "flowering_position": "terminal"
   },
   "appearance": {
     "bark_look": {
@@ -40,6 +73,26 @@
       "evidence": "SourceInferred",
       "source": "gwdd-v2",
       "note": "GWDD v.2.2 genus aggregate for Rosa (gwddagg_v2.2_genus.csv, read): specific gravity 0.54 (wsg_est, the hierarchical-model genus mean, from 54 records in 5 sources); trunks 0.55, branches 0.54. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rosa by W. H. Lewis, B. Ertter and A. Bruneau (eFloras, read 2026-10-19): shrubs or subshrubs of 1 to 20 stems, often spreading by rhizomes or stolons; leaves alternate on the stems, deciduous (rarely kept), pinnate with (3-)5-11(-13) leaflets, the side ones nearly stalkless and the end one stalked, so the leaf ends in a leaflet; stems armed with prickles grown from the skin (paired or single below the stipules, others between the nodes), rarely unarmed; petals 5, their tips usually notched; stamens 35-220; the fruit a hip, achenes gathered inside the fleshy hypanthium."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rosa (eFloras, read 2026-10-19): 1-20 stems, rhizomatous or stoloniferous, so usually a clump of many stems, often a thicket; each species' account says which."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rosa (eFloras, read 2026-10-19): the genus's prickles and aciculi are outgrowths of the stem's skin, not thorns; a few species have stems nearly unarmed."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Rosa (eFloras, read 2026-10-19): inflorescences terminal, usually on the lateral branches, sometimes on the main stems and shoots."
     }
   }
 }

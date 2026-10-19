@@ -202,14 +202,16 @@ Usage:
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
       the plant, metres from its foot with +Y up; --focus leaf:F,
-      blade:F, bloom:F or stalk:F frames the middle of the leaf, of its
-      blade past its stalk, of the flower, fruit or cone, or of the
-      hairy young stem or leaf stalk, F of the
+      blade:F, bloom:F, stalk:F or stem:F frames the middle of the leaf,
+      of its blade past its stalk, of the flower, fruit or cone, of the
+      hairy young stem or leaf stalk, or of a piece of living stem (its
+      prickles and bark), F of the
       way up the plant's (0 lowest, 1 highest),
       SPAN 0.05 unless given; --view under looks up at it from below, at
       the lower faces of its leaves. --parts on (level 0)
       draws every flower, fruit, cone and needle shoot as its part mesh,
-      as WorldLab does near the camera. --conditions grows it in a place
+      as WorldLab does near the camera; with --focus, only those within
+      four spans (at least 1 m) of the focus, the rest as cards. --conditions grows it in a place
       as plantc grow does (the place itself is not drawn).
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
@@ -2295,13 +2297,15 @@ fn stand_command(args: &[String]) -> Result<(), Failure> {
 }
 
 #[allow(clippy::too_many_lines)]
-/// The point `--focus leaf:F`, `blade:F`, `bloom:F` or `stalk:F` names on
-/// `plant`: the middle of the leaf card (of its blade, past its stalk; of
-/// the flower, fruit or cone card; or of the piece of hairy young stem or
-/// leaf stalk, `mesh::PlantMesh::hair_tubes`) `F` of the way up the
-/// plant's, from 0 the lowest to 1 the highest.
+/// The point `--focus leaf:F`, `blade:F`, `bloom:F`, `stalk:F` or
+/// `stem:F` names on `plant`: the middle of the leaf card (of its blade,
+/// past its stalk; of the flower, fruit or cone card; of the piece of
+/// hairy young stem or leaf stalk, `mesh::PlantMesh::hair_tubes`; or of
+/// the piece of living wood in `graph`, where its prickles and bark show)
+/// `F` of the way up the plant's, from 0 the lowest to 1 the highest.
 fn named_point(
     plant: &mesh::PlantMesh,
+    graph: &plantgen::graph::PlantGraph,
     templates: Option<&Templates>,
     what: &str,
     at: f64,
@@ -2375,9 +2379,19 @@ fn named_point(
             .iter()
             .map(|tube| (vector(tube.start) + vector(tube.end)) * 0.5)
             .collect(),
+        "stem" => graph
+            .segments
+            .iter()
+            .filter(|segment| {
+                segment.body == 0
+                    && segment.shed.is_none_or(|shed| shed > graph.age)
+                    && segment.born <= graph.age
+            })
+            .map(|segment| (segment.start + segment.end) * 0.5)
+            .collect(),
         _ => {
             return Err(format!(
-                "`--focus` names leaf:F, blade:F, bloom:F or stalk:F, found `{what}`"
+                "`--focus` names leaf:F, blade:F, bloom:F, stalk:F or stem:F, found `{what}`"
             )
             .into());
         }
@@ -2495,10 +2509,25 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         );
         // The organs to draw as part meshes are known only until they
         // are placed.
-        if let Some((what, at)) = named.as_ref().filter(|(what, _)| what == "bloom") {
-            bloom = Some(named_point(&plant, None, what, *at)?);
+        // A blade's middle needs the leaf templates, drawn later; the
+        // close-up's parts are placed round its leaf card's middle.
+        if let Some((what, at)) = named.as_ref() {
+            let kind = if what == "blade" {
+                "leaf"
+            } else {
+                what.as_str()
+            };
+            bloom = Some(named_point(&plant, graph, None, kind, *at)?);
         }
-        plantgen::parts::place(&mut plant, &looks, &parts);
+        // A close-up swaps part meshes in round what it looks at only, as
+        // a renderer does near the camera; the rest keep their cards.
+        let span: f64 = options
+            .number("span")?
+            .unwrap_or(if named.is_some() { 0.05 } else { 0.5 });
+        let near = bloom
+            .or(focus.map(|(point, _)| point))
+            .map(|point| (point, (span * 4.0).max(1.0)));
+        plantgen::parts::place_near(&mut plant, &looks, &parts, near);
         plant
     } else {
         mesh::build(
@@ -2558,7 +2587,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             let span: f64 = options.number("span")?.unwrap_or(0.05);
             let point = match bloom {
                 Some(point) => point,
-                None => named_point(&plant, Some(&templates), &what, at)?,
+                None => named_point(&plant, graph, Some(&templates), &what, at)?,
             };
             Some((point, span))
         }

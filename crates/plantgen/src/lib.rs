@@ -1095,7 +1095,43 @@ pub mod venation;
 /// its shoots' floor growth fades past `floor_reach` of the height out
 /// from the trunk, down to `floor_keep` (Pinaceae rule on `crown_form`;
 /// subalpine fir; 150 is poppies, #242).
-/// 152: a species' spec states its bark in the bark language
+/// 152: palm 16, the date palm's foot. Its roots bend, leaving the trunk
+/// further out and turning down along their length (`root_bend`); each
+/// sucker has a root zone of its own; the root zone widens the foot into a
+/// collar that grows as the zone rises (`root_flare`)
+/// (151 is subalpine fir, #261).
+/// 153: broadleaf 24. A stalkless pendent bloom turns toward straight down
+/// (`bloom_hang`); a trunk that forks at a stated height grows no long shoot
+/// from below the fork (`fork_clear`) and blooms only above it
+/// (`bloom_floor`), as an angel's trumpet does. A once-pinnate leaf may
+/// carry small interjected leaflets between its pairs (`interjected`), as
+/// a tomato's does. A kept calyx is sized from its stated fruiting length
+/// (`kept_calyx`), and an armed one carries prickles up its lobes
+/// (`kept_prickles`), as an eggplant's cap does (152 is the date palm's foot, #263).
+/// 154: poppies round 4. Sepals a flora calls green are drawn in the
+/// plant's own leaf colour where it is stated (an opium poppy's glaucous
+/// bud), and a hooked bud's neck narrows over its bends (herb revision
+/// 17). Fern pinnules may be oblong (a maidenhair's broad pinnae), a
+/// capsule's large seeds sit one to a cell (a spindle's arils), and a
+/// freely branching lying stem spreads into a mat (herb revision 18)
+/// (153 is nightshades round 6, #262).
+/// 155: Rosaceae (#236): the family's shrub form, twig spacing, compound
+/// and lobed leaf cards from their outline words and leaflet sizes, herb
+/// leaf sizes, armed stems from `spines`, bramble fruit by its fruitlets,
+/// clusters of few flowers drawn whole; broadleaf 25's canes that die at
+/// `stem_life_years` while the base renews them (thimbleberry) and a stem
+/// that flowers every year and grows on from one bud (devil's club);
+/// hawthorn's inferior ovary, round petals and oval haws in twos and
+/// threes (154 is poppies round 4, #254).
+/// 156: growth-form language (broadleaf 26): limbs hold the angle floras
+/// give them (`set_point`, from `limb_angle`), a tree's branches droop
+/// apart from its limbs and hold their angle more or less firmly
+/// (`branch_droop`, `branch_hold`, from `branch_posture`), tortuous limbs
+/// bend year by year (`limb_turn`, from `limb_course`), where the leader
+/// is lost the trunk's fork stems spread as scaffold limbs (`fork_set`,
+/// from `leader`), and a flat-topped crown is flattened (`crown_form`
+/// `flat_topped`) (155 is Rosaceae, #236).
+/// 157: a species' spec states its bark in the bark language
 /// (`appearance.bark_look`, `crate::bark_look`): stages by stem diameter,
 /// keyed by name so a genus states how its bark breaks up and its species
 /// add their colours; eleven reference genera state theirs (Acer, Alnus,
@@ -1116,9 +1152,7 @@ pub mod venation;
 /// on as many nodes as its flora says (`thorn_frequency`), as long as its
 /// range runs, falling from older stems where it says so
 /// (`thorn_persistence`), and tipping its twigs where they are terminal
-/// (`thorn_position`: a palo verde's; broadleaf 24), by rules for all
+/// (`thorn_position`: a palo verde's; broadleaf 27), by rules for all
 /// flowering plants
-/// (151 is
-/// subalpine fir; the desk
-/// renumbers on landing).
-pub const GENERATOR_REVISION: u32 = 152;
+/// (156 is growth-form language, #252; the desk renumbers on landing).
+pub const GENERATOR_REVISION: u32 = 157;

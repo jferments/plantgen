@@ -132,12 +132,18 @@ pub fn span(look: &Look) -> f64 {
 }
 
 /// Whether organ type `index` of `looks` draws as a part mesh: its look
-/// draws a solid on level 0 and its card's frame follows its organ's.
+/// draws a solid on level 0 and its card's frame follows its organ's. A
+/// prickle look that sets prickles between the nodes does not: its organs
+/// draw them along the internode they stand on, which a part in its
+/// card's frame cannot carry, so they are drawn in the plant's mesh.
 #[must_use]
 pub fn drawn_as_part(looks: &[Look], index: usize) -> bool {
-    looks
-        .get(index)
-        .is_some_and(|look| look.solid.is_none() && look.form.solid_at(0) && look.face_up <= 0.0)
+    looks.get(index).is_some_and(|look| {
+        look.solid.is_none()
+            && look.form.solid_at(0)
+            && look.face_up <= 0.0
+            && !matches!(look.form, Form::Prickles(form) if form.between > 0.0 || form.bristles > 0.0)
+    })
 }
 
 /// Each organ type of `looks`, whether it has a part mesh in `parts`.
@@ -720,9 +726,26 @@ pub fn placements(plant: &PlantMesh, looks: &[Look], parts: &[PartMesh]) -> Vec<
 /// Each site draws the variant its index picks, in the part mesh's
 /// colours darkened with its card as the renderer darkens them.
 pub fn place(plant: &mut PlantMesh, looks: &[Look], parts: &[PartMesh]) {
+    place_near(plant, looks, parts, None);
+}
+
+/// As [`place`], but with `near` = (centre, radius) only the sites within
+/// `radius` of `centre` are drawn as part meshes and the rest keep their
+/// cards, as a renderer swaps part meshes in near the camera only: a
+/// close-up of a big tree then needs the parts round it, not the many
+/// million triangles of every flower and leaf on it.
+pub fn place_near(
+    plant: &mut PlantMesh,
+    looks: &[Look],
+    parts: &[PartMesh],
+    near: Option<(Vec3, f64)>,
+) {
     let to_vec = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
     let mut dropped = vec![false; plant.cards.len()];
     for placed in placements(plant, looks, parts) {
+        if near.is_some_and(|(centre, radius)| (placed.base - centre).length() > radius) {
+            continue;
+        }
         let mesh = &parts[placed.part].variants[placed.variant];
         let card = plant.cards[placed.card];
         let (base, left, heading, out) = (placed.base, placed.left, placed.heading, placed.out);

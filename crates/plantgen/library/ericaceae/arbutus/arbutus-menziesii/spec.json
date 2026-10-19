@@ -145,6 +145,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
+    "limb_course": "tortuous",
+    "limb_angle": "ascending",
     "crown_form": "rounded",
     "juvenile_period_years": {
       "min": 4,
@@ -174,6 +177,9 @@
     "leaf_apex": {"rounded": "usually", "acute": "often", "cuspidate": "rarely"}
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 2 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/): leader lost in 13 of 25 photo votes, kept in 6 of 7 render votes."},
+    "traits.limb_course": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 2 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/TALLY.md): limb course wavy in 25 of 28 votes and limb habit tortuous in 9 of 23; Sargent (p. 799) does not describe their course."},
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 799): 'stout upright or spreading branches forming a narrow oblong or broad round-topped head'."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Arbutus Menziesii: \"slender branchlets light red, pea-green, or orange-colored and glabrous when they first appear ... becoming in their first winter bright reddish brown\". Colour chosen by eye for bright reddish brown."},
     "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Grown stems stand bare of branches for several metres below the crown in iNaturalist photographs (observations 263721768, 1914072): the crown from 5 m (crown_base), the stem forking at 4 m (fork_height), leaning and crooked (lean 20, wiggle 12, were 15 and 8), with fewer, bigger limbs (space_density 4, was 7)."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs (observations 263721768, 1914072, 145154232): leaning, crooked red stems carry a rounded, irregular crown, clear of branches below."},

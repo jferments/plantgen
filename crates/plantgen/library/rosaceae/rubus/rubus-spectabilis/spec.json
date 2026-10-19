@@ -88,10 +88,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "fruit",
-          "kind": "drupelets",
-          "aspect": 0.9,
-          "unripe": 0.2
+          "template": "fruit"
         },
         "colour": [0.9, 0.45, 0.1],
         "accent": [0.4, 0.45, 0.15],
@@ -137,7 +134,11 @@
     "leaf_width_m": {"min": 0.08, "max": 0.16},
     "sexual_system": "hermaphrodite",
     "inflorescence": "solitary",
-    "fruit_size_m": {"min": 0.015, "max": 0.02},
+    "fruit_size_m": {"min": 0.01, "max": 0.02},
+    "fruitlets_per_fruit": {"min": 20, "max": 80},
+    "fruitlet_coherence": "strongly_coherent",
+    "fruit_hairs": "glabrous",
+    "fruit_shape": "globose",
     "spines": "prickles",
     "spine_length_m": {"min": 0.001, "max": 0.005},
     "spine_width_m": {"min": 0.0005, "max": 0.002},
@@ -228,8 +229,12 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): fruit 1-2 cm."},
     "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts and its trifoliolate leaf sets its lateral pair at the petiole's tip (was 0.152, before that 0.199)."},
+    "traits.fruitlets_per_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): drupelets 20-80 to a fruit."},
+    "traits.fruitlet_coherence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): drupelets strongly coherent, coming away from the torus."},
+    "traits.fruit_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): ovaries glabrous."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): fruit globose to ovoid; drawn globose."},
     "traits.spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): shrubs usually armed; prickles absent or sparse to dense."},
     "traits.spine_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): prickles erect, slender, 1-5 mm."},
     "traits.spine_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: two fifths of the prickle's length at its foot: the flora calls them slender, broad- to narrow-based, but gives no width."},

@@ -76,6 +76,7 @@
     "life_span": "perennial",
     "rosette": "none",
     "stem_posture": "prostrate",
+    "trailing_branches": true,
     "leaf_arrangement": "opposite",
     "leaf_habit": "deciduous",
     "leaf_length_m": {
@@ -194,6 +195,7 @@
       "source": "plantgen-authors",
       "note": "Leaves along reclining stems, with no rosette, set by hand from iNaturalist photos (observations 163232735, 6004860, 204233638, 207436697, 343023139, 10742793, 12537421, 7398): the sources read give no count or measure."
     },
+    "traits.trailing_branches": {"evidence": "SourceInferred", "source": "abrams-1944", "note": "Abrams vol. 2 (1944) p. 388, Whipplea: low spreading or trailing shrub with weak slender branches."},
     "traits.stem_posture": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",

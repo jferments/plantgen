@@ -140,6 +140,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "limb_angle": "ascending",
     "shade_tolerance": "intolerant",
     "wood_density_basic_kg_m3": 490,
     "flowering_months": [4, 5, 6],
@@ -155,6 +156,7 @@
     "fruit_size_m": {"min": 0.008, "max": 0.012}
   },
   "evidence": {
+    "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 572): 'slender rather upright branches forming a symmetric oblong head'."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's bitter cherry review (Prunus emarginata, read 2026-10-16): \"a generally shade intolerant species of sparse woods\"."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",

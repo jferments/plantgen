@@ -50,16 +50,6 @@
       0.3,
       0.2
     ],
-    "foliage": [
-      0.1,
-      0.15,
-      0.11
-    ],
-    "foliage_shade": [
-      0.03,
-      0.05,
-      0.03
-    ],
     "variation": 0.2,
     "organs": {
       "blade": {
@@ -159,6 +149,11 @@
       "min": 0.0005,
       "max": 0.0015
     },
+    "leaf_colour": [
+      140,
+      155,
+      138
+    ],
     "flowering_months": [
       5,
       6,
@@ -254,6 +249,11 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's Idaho fescue review (Zouhar 2000, read 2026-10-15): \"Leaves are fine, dense, and mostly basal\", the tuft \"6 to 10 inches (15-25 cm) high\"; the blade length stated here is the tuft's height."
+    },
+    "traits.leaf_colour": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "No flora read gives the blades' colour. Measured as the median of the green pixels of a sunlit tuft in iNaturalist photographs (imagekit batch c3-gaps-2026-10-19): a glaucous grey-green, about RGB 145, 155, 134; other tufts in the batch read 125, 132, 93 and 98, 103, 52 in shade or dry grass."
     },
     "traits.leaf_width_m": {
       "evidence": "Authored",

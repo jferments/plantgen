@@ -125,7 +125,12 @@
     },
     "stem_hairs": "pubescent",
     "glandular_hairs": "dense",
-    "leaf_hairs": "pilose"
+    "leaf_hairs": "pilose",
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.25
+    },
+    "interjected_leaflets": true
   },
   "provenance": {
     "sources": [
@@ -329,6 +334,16 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 17 (Solanaceae), Lycopersicon esculentum (eFloras, read 2026-10-18): leaflets sparingly glandular pilose."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Solanum lycopersicum (eFloras, read 2026-10-19): blade compound, elliptic, 10-30+ x 5-25 cm."
+    },
+    "traits.interjected_leaflets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (Solanaceae), Solanum lycopersicum (eFloras, read 2026-10-19): blade compound, elliptic, 10-30+ x 5-25 cm, margins divided with 3(-5) pairs of leaflets, interspersed with smaller interjected leaflets; Flora of China (Lycopersicon esculentum): leaflets mostly 5-9, unequal."
     }
   }
 }

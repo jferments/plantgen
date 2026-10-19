@@ -114,6 +114,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "limb_course": "tortuous",
+    "branch_posture": "drooping",
     "leaf_colour_autumn": [235, 185, 40],
     "shade_tolerance": "intolerant",
     "height_max_m": {
@@ -142,6 +144,8 @@
     "leaf_apex": {"acuminate": "usually", "acute": "often"}
   },
   "evidence": {
+    "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 121): 'slender remote and often contorted branches somewhat pendulous toward the ends'."},
+    "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 121): 'slender remote and often contorted branches somewhat pendulous toward the ends'."},
     "appearance.bark_look.stages.white": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "stage: text: 'greenish or yellowish white to gray and smooth' (FNA); 'roughened by horizontal bands of circular wart-like excrescences' (Sargent); white powder (summary of Rabinowitz & Tripp 2015). Branch-scar eyes come from the mesh, not the tile; until_diameter_m: inferred (photo)"},
     "appearance.bark_look.stages.furrowed": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "stage: text: 'near the base of old trees nearly black ... deeply divided into broad flat ridges broken on the surface into small appressed plate-like scales' (Sargent); 'shallowly furrowed only basally' (FNA)"},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Populus tremuloides (read 2026-10-18): the leaves \"become golden to yellow, rarely red, in autumn\". Colour ours."},

@@ -95,9 +95,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "fruit",
-          "aspect": 1.25,
-          "unripe": 0.8
+          "template": "fruit"
         },
         "inflorescence": {
           "flowers": 6,
@@ -108,11 +106,6 @@
           0.06,
           0.04,
           0.06
-        ],
-        "accent": [
-          0.6,
-          0.08,
-          0.08
         ],
         "season": {
           "ripening": 30,
@@ -166,10 +159,7 @@
       "max": 15
     },
     "fruit_type": "aggregate",
-    "fruit_size_m": {
-      "min": 0.01,
-      "max": 0.02
-    },
+    "fruit_size_m": {"min": 0.01, "max": 0.025},
     "height_max_m": {
       "min": 0.3,
       "max": 1.0
@@ -190,6 +180,10 @@
     "leaf_width_m": {"min": 0.05, "max": 0.12},
     "sexual_system": "dioecious",
     "inflorescence_length_m": {"min": 0.03, "max": 0.1},
+    "fruitlets_per_fruit": {"min": 20, "max": 50},
+    "fruitlet_coherence": "strongly_coherent",
+    "fruit_shape": "cylindric",
+    "fruit_colour_ripening": [150, 20, 30],
     "spines": "prickles",
     "spine_length_m": {"min": 0.004, "max": 0.01},
     "spine_width_m": {"min": 0.001, "max": 0.004},
@@ -259,11 +253,7 @@
       "source": "usfs-feis",
       "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): \"Aggregates of druplets, commonly referred to as 'berries'\"."
     },
-    "traits.fruit_size_m": {
-      "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): fruit \"oblong or conical, somewhat bristly, and up to 0.8 inches (2 cm) in length\"; the 1 cm least is the model estimate's."
-    },
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): fruit 1-2.5 cm."},
     "traits.height_max_m": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
@@ -300,6 +290,10 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2989958), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2989958), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2989958), as no source read gives it."},
+    "traits.fruitlets_per_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): drupelets 20-50 to a fruit."},
+    "traits.fruitlet_coherence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): drupelets strongly coherent, the fruit falling with its torus inside."},
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): fruit globose to cylindric, without bloom; drawn cylindric."},
+    "traits.fruit_colour_ripening": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high), as no source read gives it: blackberries pass from green through red before they turn black; sRGB by eye for a dark red."},
     "traits.spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): shrubs armed; prickles moderate to dense on the stems."},
     "traits.spine_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): prickles 4-10 mm."},
     "traits.spine_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: a quarter to two fifths of the prickle's length at its foot: the flora calls them weak to moderately stout, narrow- to broad-based, but gives no width."},

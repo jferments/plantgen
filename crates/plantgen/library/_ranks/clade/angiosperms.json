@@ -155,9 +155,33 @@
       "map": {"stem_clump": {"few": 0.1, "many": 0.2, "thicket": 0.6}},
       "why": "A clump's stems rise close round its crown at the ground, a few or many within a fifth of the crown's radius; a thicket's come up from roots and rhizomes running out under most of it."
     },
+    "generator.params.stem_life": {
+      "needs": ["stem_life_years"],
+      "rule": "max(stem_life_years)",
+      "why": "A clump's or thicket's stems that floras say live only a few years (biennial canes) die back whole at the longest age they give, a thimbleberry's most at two and some at three (FEIS, Gucker 2012), so the clump never holds a stem older than that."
+    },
+    "generator.params.sucker_rate": {
+      "needs": ["stem_life_years"],
+      "rule": "max(1, round(suckers / max(stem_life_years)))",
+      "why": "Where its stems die young the base goes on sending up new ones every year, as many a year as keep the clump at its stems: their number shared over the years each lives."
+    },
     "generator.params.fork_height": {
       "map": {"stem_clump": {"single": 0}},
-      "why": "A single-stemmed woody plant stands on one trunk that never divides into equal stems."
+      "else": {"rule": "trunk_fork_height_m"},
+      "why": "A single-stemmed woody plant stands on one trunk that never divides into equal stems; one whose flora says how high its young stem first divides forks there into its main stems."
+    },
+    "generator.params.fork_clear": {
+      "needs": ["trunk_fork_height_m"],
+      "rule": "1",
+      "why": "A woody plant whose flora says how high its young stem first divides grows that stem single up to the fork, with no limb below it."
+    },
+    "generator.params.bloom_floor": {
+      "map": {"flowers_above_fork": {"true": {"rule": "1.3 * fork_height"}}},
+      "why": "A woody plant that flowers only on its growth above its first fork has no bloom below the highest its fork stands."
+    },
+    "generator.params.bloom_hang": {
+      "map": {"flower_posture": {"pendent": 0.8}},
+      "why": "A hanging flower on its own stalk turns most of the way from its stalk toward straight down, whichever way its shoot points; floras' pendent flowers hang from straight down to nearly level."
     },
     "generator.params.scape": {"map": {"cauline_leaves": {"none": 1, "reduced": 0, "like_basal": 0}}, "why": "A flowering stem without leaves is drawn as a leafless scape above the leaves at its foot: a thrift's or a sundew's, as a lily's."},
     "appearance.organs.*.inflorescence.branch.kind": {
@@ -167,6 +191,10 @@
     "generator.params.lie": {
       "map": {"stem_posture": {"erect": 0, "ascending": 0, "decumbent": 0.5, "prostrate": 0.75}},
       "why": "A decumbent stem lies on the ground for its lower half and rises over the rest; a prostrate or trailing stem lies along the ground for most of its length, only its last quarter, which bears the flowers, raised."
+    },
+    "generator.params.lie_branch": {
+      "map": {"trailing_branches": {"true": 0.35, "false": 0}},
+      "why": "A lying stem that floras call freely branching puts out a branch at about every third of its lying nodes, each lying and rising as the stem does, so the plant spreads into a mat; one they do not call so lies unbranched."
     },
     "appearance.organs.flower.colour": {
       "colour": "flower_colour",
@@ -185,15 +213,15 @@
       "colour": "fruit_colour_ripe",
       "why": "A fruit is drawn in the colour it is stated to ripen to; its unripe share keeps the look's accent."
     },
-    "appearance.organs.fruit.shape.aspect": {
+    "appearance.organs.*.shape.aspect": {
       "template": "fruit",
-      "map": {"fruit_shape": {"globose": {"rule": "clamp(first(fruit_width_m / fruit_size_m, 1), 0.05, 2)"}, "ellipsoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "ovoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "obovoid": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "obconic": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}, "club_shaped": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"}}},
+      "map": {"fruit_shape": {"globose": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 1)"}, "ellipsoid": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.7)"}, "ovoid": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.75)"}, "obovoid": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.7)"}, "obconic": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.6)"}, "club_shaped": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.4)"}, "hemispheric": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 1.8)"}, "conic": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.85)"}, "cylindric": {"rule": "first(clamp(fruit_width_m / fruit_size_m, 0.05, 2), 0.55)"}}},
       "else": {"rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)"},
-      "why": "A fruit is as wide for its length as its flora measures it, and a round one as wide as long where its flora gives no width."
+      "why": "A fruit is as wide for its length as its flora measures it; where it gives no width, as its outline's word makes it: as wide as long where globose, about twice as wide as tall where hemispheric, and narrower where ellipsoid, ovoid, obovoid, conic, cylindric, obconic or club-shaped."
     },
     "appearance.organs.*.shape.flare": {
       "template": "fruit",
-      "map": {"fruit_shape": {"globose": 0, "ellipsoid": 0, "ovoid": -0.25, "obovoid": 0.3, "obconic": 0.55, "club_shaped": 0.45}},
+      "map": {"fruit_shape": {"globose": 0, "ellipsoid": 0, "ovoid": -0.25, "obovoid": 0.3, "obconic": 0.55, "club_shaped": 0.45, "hemispheric": -0.2, "conic": -0.45, "cylindric": 0}},
       "why": "A fruit is as much wider toward its tip than its base as its outline is stated: even where round or ellipsoid, widest below its middle where ovoid, above it where obovoid, and drawn to a narrow base where obconic or club-shaped."
     },
     "appearance.organs.*.shape.stigma": {
@@ -247,8 +275,8 @@
       "why": "Each kind of inflorescence is laid out as the cluster of its name, and a spadix as a spike; a solitary flower is no cluster."
     },
     "appearance.organs.*.inflorescence.flowers": {
-      "map": {"inflorescence": {"raceme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spike": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "catkin": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "corymb": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "umbel": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "compound_umbel": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "panicle": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "cyme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "scorpioid": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "head": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spadix": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}}},
-      "why": "A cluster bears the inflorescence's units, up to the 200 an axis can hold; a compound one shares them among its primary branches, so it needs their count."
+      "map": {"inflorescence": {"raceme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spike": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "catkin": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "corymb": {"rule": "clamp(round(units_per_inflorescence / max(first(inflorescence_branches, 1), 1)), 1, 200)"}, "umbel": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "compound_umbel": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "panicle": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "cyme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "scorpioid": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "head": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spadix": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}}},
+      "why": "A cluster bears the inflorescence's units, up to the 200 an axis can hold; a compound one (a compound umbel, a panicle, a compound corymb) shares them among its primary branches, so it needs their count."
     },
     "appearance.organs.*.inflorescence.branches": {
       "rule": "clamp(round(inflorescence_branches), 0, 60)",
@@ -271,6 +299,11 @@
       "template": "compound",
       "map": {"division_pattern": {"pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((pinnae - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnae / 2), 2, 40)) : (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))"}, "palmate": {"rule": "clamp(round(division_order >= 2 ? pinnae : leaflets), 3, 17)"}}},
       "why": "A compound leaf divided once draws its leaflets; one divided twice (or more), its pinnae. A pinnate leaf's count is the nearest odd one if it ends in a leaflet, else the nearest even one, up to 41; a palmate leaf draws 3 to 17."
+    },
+    "appearance.organs.*.shape.interjected": {
+      "template": "compound",
+      "map": {"interjected_leaflets": {"true": 0.25, "false": 0}},
+      "why": "An interruptedly pinnate leaf bears a small pair between each two of its pairs, and between its top pair and its end leaflet, each a quarter as long as the shorter pair beside it."
     },
     "appearance.organs.*.shape.pinnules": {
       "template": "compound",
@@ -384,8 +417,8 @@
     },
     "appearance.organs.*.shape.calyx": {
       "template": "flower",
-      "colour": "calyx_colour",
-      "why": "Sepals, and a floral tube that bears them, are drawn in their stated colour; leaf green where none is stated."
+      "colour": ["calyx_colour", "leaf_colour"],
+      "why": "Sepals, and a floral tube that bears them, are drawn in their stated colour; where none is stated, floras' green sepals are the plant's own green (an opium poppy's glaucous blue-green bud), and leaf green where no leaf colour is stated either."
     },
     "appearance.organs.*.shape.nod": {"template": "flower", "map": {"flower_posture": {"erect": 0, "ascending": 0, "spreading": 0, "nodding": 0.6, "pendent": 1}}, "why": "A cluster's flower faces along its pedicel; a nodding one turns most of the way down from where it is borne, and a pendent one hangs straight down (a bleeding heart's hearts)."},
     "appearance.organs.*.shape.disc": {"template": "fruit", "map": {"stigmatic_disc": {"true": {"rule": "clamp(round(carpels), 3, 24)"}, "false": 0}}, "why": "A capsule crowned by its stigmatic disc bears it as a low dome with a ray for each carpel, as many as floras count (a poppy's 5 to 18)."},
@@ -498,10 +531,32 @@
       "rule": "fruit_size_m",
       "why": "A fruit is as long as floras measure it at its longest."
     },
+    "appearance.organs.*.shape.fruitlets": {
+      "template": "fruit",
+      "needs": ["fruitlets_per_fruit"],
+      "rule": "clamp(round(fruitlets_per_fruit), 1, 500)",
+      "why": "An aggregate fruit is drawn with as many drupelets as floras count, each as large as that many need to cover it: a cloudberry's few large ones, a raspberry's many small ones."
+    },
+    "appearance.organs.*.shape.loose": {
+      "template": "fruit",
+      "map": {"fruitlet_coherence": {"strongly_coherent": 0, "coherent": 0.1, "moderately_coherent": 0.35, "weakly_coherent": 0.7}},
+      "why": "An aggregate's drupelets hold together as floras say: packed into one firm fruit where strongly coherent, each a separate bead round a small core where weakly coherent."
+    },
+    "appearance.organs.*.shape.hairs": {
+      "template": "fruit",
+      "map": {"fruit_hairs": {"glabrous": 0, "puberulent": 0.3, "pubescent": 0.6, "tomentose": 1}},
+      "why": "A hairy fruit's fine pale hairs dull and pale its colour, the more the denser they are: a little where puberulent, most where tomentose."
+    },
     "appearance.organs.*.shape.kept_calyx": {
       "template": "fruit",
-      "map": {"calyx_in_fruit": {"falling": 0, "persistent": 0.35, "accrescent": 0.9, "circumscissile": 0.2}},
-      "why": "A calyx that stays on the fruit is drawn under it, its lobes a third of the fruit's width and clasping its foot; one that grows on after flowering spreads in a star nearly as long as the fruit is wide; one that breaks off round its base leaves a rim a fifth of the fruit's width under it."
+      "map": {"calyx_in_fruit": {"falling": 0, "persistent": {"rule": "first(clamp(fruiting_calyx_length_m / first(fruit_width_m, fruit_size_m), 0.05, 2), 0.35)"}, "accrescent": {"rule": "first(clamp(fruiting_calyx_length_m / first(fruit_width_m, fruit_size_m), 0.05, 2), 0.9)"}, "circumscissile": 0.2}},
+      "why": "A calyx that stays on the fruit is drawn under it, its lobes as long, for the fruit's width, as floras measure the calyx in fruit; where they do not, a third of the fruit's width and clasping its foot, and one that grows on after flowering spreading in a star nearly as long as the fruit is wide; one that breaks off round its base leaves a rim a fifth of the fruit's width under it."
+    },
+    "appearance.organs.*.shape.kept_prickles": {
+      "template": "fruit",
+      "needs": ["calyx_in_fruit"],
+      "rule": "clamp(calyx_prickle_length_m / first(fruit_width_m, fruit_size_m), 0.005, 0.5)",
+      "why": "A prickly calyx kept as a cap on the fruit bears its prickles there, as long as floras measure them."
     },
     "appearance.organs.*.shape.kept_posture": {
       "template": "fruit",
@@ -540,8 +595,8 @@
     },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
-      "map": {"fruitlets": {"drupelets": "drupelets", "follicles": "follicles", "samaras": "samaras", "berries": "berries", "hip": "hip"}}, "else": {"map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}}},
-      "why": "A fruit whose flora says what its free pistils make is drawn as that: drupelets, follicles on a cone-like axis, samaras up a spindle, separate berries from one stalk, or achenes in a hip. Otherwise a berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
+      "map": {"fruitlets": {"drupelets": "drupelets", "follicles": "follicles", "samaras": "samaras", "berries": "berries", "hip": "hip", "achenes": "achenes"}}, "else": {"map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}}},
+      "why": "A fruit whose flora says what its free pistils make is drawn as that: drupelets, follicles on a cone-like axis, samaras up a spindle, separate berries from one stalk, achenes in a hip, or achenes on a fleshy receptacle (a strawberry). Otherwise a berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
     },
     "appearance.organs.*.inflorescence.peduncle": {
       "rule": "clamp(first(peduncle_length_m, 0) / (first(peduncle_length_m, 0) + inflorescence_length_m), 0, 0.9)",
@@ -557,7 +612,7 @@
       "why": "A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
     },
     "generator.params.thorns": {
-      "map": {"spines": {"thorns": {"map": {"thorn_position": {"terminal": 0}}, "else": 1}, "prickles": 1}},
+      "map": {"spines": {"none": 0, "thorns": {"map": {"thorn_position": {"terminal": 0}}, "else": 1}, "prickles": 1}},
       "why": "An armed tree or shrub carries its prickles or thorns at the nodes, beside each bud: a rose's below its stipules, a bramble's on its canes, a hawthorn's thorns in the leaf axils; one whose thorns only tip its twigs bears none there; programs that grow no thorns leave it unread."
     },
     "generator.params.thorn_length": {
@@ -670,6 +725,7 @@
     }
   },
   "evidence": {
+    "rules.generator.params.lie_branch": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a mat of trailing branches, a choice of the model's (2026-10-19): floras say only that lying stems branch freely (Abrams 1951 p. 412, Phlox diffusa: freely branching, the branches spreading or prostrate), so a branch at about a third of the lying nodes, to alternate sides at 55 degrees."},
     "rules.appearance.organs.*.inflorescence.pedicel": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's stalk in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): as long as floras measure the pedicel, for the cluster's length."},
     "rules.appearance.organs.flower.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.bloom.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
@@ -683,7 +739,10 @@
     "rules.generator.params.flower_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.generator.params.suckers": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a shrub's stems from the words floras use for them (shrub habit, phase C batch 3 gaps, 2026-10-18): a few-stemmed shrub sends up 3 stems beside its first, a many-stemmed one 10, a thicket 16 over its years, from its base or its roots and rhizomes; counts chosen by the model, as floras give words, not counts. Only species that state stem_clump change."},
     "rules.generator.params.sucker_spread": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a shrub's stems from the words floras use for them (shrub habit, 2026-10-18): a clump's stems rise within a tenth to a fifth of its crown's radius, a thicket's over six tenths of it, as FEIS describes thickets spread by rhizomes; shares chosen by the model."},
-    "rules.generator.params.fork_height": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a single-stemmed woody plant (shrub habit, 2026-10-18): one trunk that never forks into equal stems."},
+    "rules.generator.params.fork_height": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a single-stemmed woody plant (shrub habit, 2026-10-18): one trunk that never forks into equal stems. Where its flora gives the height of the first fork (nightshades round 6, 2026-10-19), the stem divides there, each plant within three tenths of it (broadleaf's draw)."},
+    "rules.generator.params.fork_clear": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, 'Brugmansia suaveolens' (read 2026-10-19): in the initial vegetative stage the young seedling grows straight up on usually a single stalk, until it reaches its first main fork. A flora that gives a first fork's height describes a stem single up to it, so no lateral bud below the lowest a fork stands (0.7 of its height, broadleaf's draw) grows out; broadleaf revision 24."},
+    "rules.generator.params.bloom_floor": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws flowers only above the first fork (nightshades round 6, 2026-10-19), a choice of the model's: a fork stands at 0.7 to 1.3 of its height, so no shoot below 1.3 of it blooms; broadleaf revision 24."},
+    "rules.generator.params.bloom_hang": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen hangs a stalked flower (nightshades round 6, 2026-10-19), a choice of the model's: four fifths of the turn from its stalk toward straight down, so most hang near vertical and a few lean out, as Wikipedia ('Brugmansia suaveolens') has them hang from fully pendulous to nearly horizontal; broadleaf revision 24."},
     "rules.generator.params.scape": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flowering stem without leaves, a choice of the model's: the monocots' rule (visual forms Skill 5, 2026-10-15), stated for all flowering plants (Caryophyllales families, 2026-10-19) as floras say the same of thrift's and sundews' scapes."},
     "rules.appearance.organs.*.inflorescence.branch.kind": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen lays out a compound inflorescence's branches from the kind its taxon names them (Caryophyllales families, 2026-10-19), a choice of the model's: floras call Amaranthus a panicle of spikes (FNA vol. 4, Amaranthus), and without the kind a panicle's branches are racemes."},
     "rules.generator.params.lie": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen lays a herb's stems from the words floras use for their posture (shrub habit, 2026-10-18): a decumbent stem lies along the ground for half its leafy length, a prostrate or trailing one for three quarters of it, and the rest turns up to stand nearly upright; shares chosen by the model. Only species that state stem_posture change."},
@@ -697,7 +756,8 @@
     "rules.generator.params.bloom_stalk": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen stalks a woody plant's solitary flower (nightshades round 2, 2026-10-17): its stated pedicel length; broadleaf revision 17."},
     "rules.appearance.organs.*.shape.tube_reach": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a measured corolla tube (nightshades, 2026-10-17): its stated length over half the flower's stated width, so a trumpet is as long as the flora says, its limb as wide."},
     "rules.appearance.organs.*.shape.hang": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen holds a fruit (nightshades round 3, 2026-10-18), a choice of the model's: the fruit's line turned toward straight down by 1 (pendent), 0.5 (deflexed) or toward straight up by 0.8 (erect)."},
-    "rules.appearance.organs.*.shape.kept_calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a calyx kept on the fruit (nightshades round 2, 2026-10-17), a choice of the model's: persistent lobes a third of the fruit's width clasping its foot, accrescent ones 0.9 of it spreading in a star; a circumscissile one's rim a fifth of it (round 5, 2026-10-18)."},
+    "rules.appearance.organs.*.shape.kept_calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a calyx kept on the fruit (nightshades round 2, 2026-10-17), a choice of the model's: persistent lobes a third of the fruit's width clasping its foot, accrescent ones 0.9 of it spreading in a star; a circumscissile one's rim a fifth of it (round 5, 2026-10-18). Where a flora measures the calyx in fruit (round 6, 2026-10-19), its length over the fruit's width."},
+    "rules.appearance.organs.*.shape.kept_prickles": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a prickly kept calyx (nightshades round 6, 2026-10-19), a choice of the model's: three prickles down each clasping lobe's middle, as long as stated, a fifth as thick at the foot, standing out and leaning toward the fruit's tip; Flora of China (Solanum melongena) has the calyx often with ca. 3 mm prickles, Flora of British India (p. 235) the enlarged lobes often prickly. Only a clasping calyx bears them."},
     "rules.appearance.organs.*.shape.kept_lobes": {"evidence": "Authored", "source": "plantgen-authors", "note": "A kept calyx's lobes are the flower's sepals (nightshades round 2, 2026-10-17); the rim a circumscissile calyx leaves is torn into twice as many (round 5, 2026-10-18), a choice of the model's from photographs of a jimsonweed's frilled collar."},
     "rules.appearance.organs.*.shape.calyx_swell": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a calyx tube swollen at its base (nightshades round 5, 2026-10-19), a choice of the model's: a bulge of 0.3 of the mouth's radius, greatest a third of the way up and fading to nothing at the foot and the mouth; Wikipedia's jimsonweed calyx, swollen at the base."},
     "rules.appearance.organs.*.shape.calyx_angled": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an angled calyx tube (nightshades round 5, 2026-10-18), a choice of the model's: a ridge down each sepal's midrib standing out a seventh of the radius, a groove between; Flora of China's 5-angular, Britton and Brown's prismatic."},
@@ -722,7 +782,10 @@
     "rules.appearance.organs.leaf.leafing.fall": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
     "rules.appearance.organs.leaf.leafing.autumn": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a deciduous woody plant's year in its leaves, a choice of the model's (leaf seasons, 2026-10-18): bare in winter, a spring flush of small pale leaves, full green in summer, turning and gone in autumn, where its leaves had stood green all year. April and October to November stand in where floras give no months, as for most temperate broadleaves of the north."},
     "rules.appearance.organs.fruit.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
-    "rules.appearance.organs.fruit.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect."},
+    "rules.appearance.organs.*.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect. Where no width is stated, the usual botanical sense of the outline words (Rosaceae, 2026-10-19): globose as wide as long, hemispheric a dome about half as tall as wide; the widths for ellipsoid, ovoid, obovoid, conic, cylindric, obconic and club-shaped are the model's choice. Every look drawn as fruit (a flower's organ in fruit too), not only an organ named fruit."},
+    "rules.appearance.organs.*.shape.fruitlets": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an aggregate fruit (Rosaceae, bramble fruits, 2026-10-19): as many drupelets as the stated count, as many as the solid's detail holds, each sized to cover the fruit. FNA vol. 9 (2014), genus Rubus (eFloras, read 2026-10-19), counts drupelets per fruit from (1-)5 to 100(-150) across the genus, the main difference between brambles up close."},
+    "rules.appearance.organs.*.shape.loose": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws the coherence floras give an aggregate's drupelets (FNA vol. 9 Rubus, 2014: strongly, moderately or weakly coherent; eFloras, read 2026-10-19); how far apart each word sets them is the model's choice."},
+    "rules.appearance.organs.*.shape.hairs": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a hairy fruit (Rosaceae, bramble fruits, 2026-10-19), a choice of the model's: fine pale hairs over the skin pale its colour by up to an eighth, glabrous none, puberulent 0.3 of that, pubescent 0.6, tomentose all of it."},
     "rules.appearance.organs.*.season": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a plant's year from the months floras give, a choice of the model's (seasonal looks, 2026-10-16): its flowers show in the months it flowers in and its fruit in the months it is ripe in, as the season rules set their days, where they had shown all year and never fruited."},
     "rules.appearance.organs.fruit.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours unripe fruit, a choice of the model's (seasonal looks, 2026-10-16): green as the leaves are, since floras state the ripe colour and seldom the unripe one."},
     "rules.appearance.organs.*.inflorescence.dome": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a corymb's outline, a choice of the model's (batch 3 review, 2026-10-18): floras word a corymb flat-topped, rounded (convex) or globose, as Dendrology (2019) p. 323 does a mophead hydrangea's; the three are drawn as tips level, on a half sphere and round a ball."},
@@ -745,6 +808,7 @@
       "source": "plantgen-authors",
       "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
     },
+    "rules.appearance.organs.*.shape.interjected": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an interruptedly pinnate leaf (nightshades round 6, 2026-10-19), a choice of the model's: Flora of North America (vol. 14, Solanum lycopersicum) has the tomato's 3(-5) pairs of leaflets interspersed with smaller interjected leaflets without measuring them; photographs show them a fifth to a third of the pairs beside them, so a quarter, one pair between each two pairs."},
     "rules.appearance.organs.*.shape.leaflets": {
       "evidence": "Authored",
       "source": "plantgen-authors",

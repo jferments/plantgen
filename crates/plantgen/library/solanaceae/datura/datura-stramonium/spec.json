@@ -136,7 +136,12 @@
       "max": 0.14
     },
     "leaf_lobe_apex": "acute",
-    "stem_hairs": "glabrescent"
+    "stem_hairs": "glabrescent",
+    "calyx_colour": [
+      160,
+      180,
+      90
+    ]
   },
   "provenance": {
     "sources": [
@@ -360,6 +365,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 14 (Solanaceae), Datura stramonium (eFloras, read 2026-10-18): stems sometimes purple, sparsely puberulent, glabrescent; Flora of China: glabrescent; Britton and Brown: glabrous or sparingly pubescent on young parts."
+    },
+    "traits.calyx_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observations 449093638 and 722884051 (CC-licensed photographs, viewed 2026-10-19 through imagekit, batch inat-datura-calyx-2026-10-19): the long angled calyx is a pale yellow-green (sunlit about 219, 217, 157), clearly paler and yellower than the leaves, which King's American Dispensatory (p. 1838) calls dark green. No flora read states the calyx colour. The colour is our reading of the photographs, toned down from the sunlit sample."
     }
   }
 }
