@@ -925,10 +925,14 @@ pub mod venation;
 /// four, a tobacco's two), each turned out from half way down and lined
 /// paler inside; a burr's bristles may be hooked (`armed` `hooks`, from
 /// `fruit_armature` `hooked`) (134 is palm details, #223).
-/// 136: ten Pacific Northwest natives in families short of three species
+/// 136: black cottonwood and wild fig draw single leaves at their flora's
+/// size on its petiole length, and young twigs in its colour, in place of
+/// hand-sized sprig cards; the fig's path_half is refitted to its height
+/// (135 is nightshades round 4, #227).
+/// 137: ten Pacific Northwest natives in families short of three species
 /// (giant chain fern, licorice fern, scouring rush, fringecup, western dog
 /// violet, California poppy, blueblossom, spreading gooseberry, bush
 /// penstemon, orange honeysuckle); a climber bears its leaves in opposite
-/// pairs where its taxon states them so (climber program revision 7) (135 is nightshade
-/// fruit, #224).
-pub const GENERATOR_REVISION: u32 = 136;
+/// pairs where its taxon states them so (climber program revision 7) (136 is single
+/// leaves for cottonwood and fig, #232).
+pub const GENERATOR_REVISION: u32 = 137;
