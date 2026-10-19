@@ -1173,6 +1173,22 @@
       "when": {"spines": ["prickles"]},
       "why": "needle-like prickles and stiff bristles mixed in among the prickles (a rose's aciculi, a raspberry's bristles): none, sparse, or dense, covering the stem's skin"
     },
+    "thorn_origin": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["shoot", "axillary", "stipular"],
+      "when": {"spines": ["thorns"]},
+      "why": "what a thorn is: a shoot ending in a point, terminal or lateral and sometimes leafy (a hawthorn's, a blackthorn's: FNA's indeterminate thorns); a leafless thorn in a leaf's axil (FNA's determinate thorns, a citrus's); or a pair of spines in a leaf's stipules' place at the node (a black locust's, a mesquite's)"
+    },
+    "thorn_frequency": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["few", "numerous", "every_node"],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "how many of a shoot's nodes bear their thorns or paired prickles, as floras say it: few, numerous (FNA's \"few to numerous\" for a hawthorn's twigs), or one at every node (a rose's infrastipular prickles, a locust's stipular spines)"
+    },
     "glochid_colour": {
       "group": "stem_and_bark",
       "organ": "areole",

@@ -1110,7 +1110,10 @@ pub mod venation;
 /// `plantc export --bark-look spec` bakes it; and a thorn or prickle
 /// stands on its stem's surface, a prickle as a flattened cone curving
 /// back as its flora says (`spine_curve`, `spine_angle`, `spine_width_m`)
-/// with more between the nodes (`internodal_prickles`, `aciculi`), by
-/// rules for all flowering plants (151 is subalpine fir; the desk
+/// with more between the nodes (`internodal_prickles`, `aciculi`), and
+/// a shoot's thorns stand alone where they are shoots (`thorn_origin`),
+/// on as many nodes as its flora says (`thorn_frequency`), as long as its
+/// range runs (broadleaf 24), by rules for all flowering plants (151 is
+/// subalpine fir; the desk
 /// renumbers on landing).
 pub const GENERATOR_REVISION: u32 = 152;

@@ -569,6 +569,18 @@
       "else": {"map": {"spines": {"prickles": 85}}},
       "why": "A prickle or thorn leaves its shoot at the angle its flora gives: leaning toward the shoot's tip where ascending, square to it where erect, back toward its base where declined (retrorse). A prickle whose flora does not say stands square to its stem, as most do."
     },
+    "generator.params.thorn_pair": {
+      "map": {"thorn_origin": {"shoot": 0, "axillary": 0, "stipular": 1}},
+      "why": "A thorn that is a shoot, or a leafless thorn in an axil, stands alone beside its bud (a hawthorn's, a citrus's); stipular spines stand in a pair at the node, one in each stipule's place (a black locust's)."
+    },
+    "generator.params.thorn_share": {
+      "map": {"thorn_frequency": {"few": 0.2, "numerous": 0.6, "every_node": 1}},
+      "why": "A shoot bears its thorns on as many of its nodes as its flora says: few, about one node in five; numerous, three in five; or every node (by eye from photographs of hawthorns and locusts; imagekit counts can set them)."
+    },
+    "generator.params.thorn_spread": {
+      "rule": "clamp((max(spine_length_m) - min(spine_length_m)) / (max(spine_length_m) + min(spine_length_m)), 0.05, 0.8)",
+      "why": "A plant's thorns or prickles run from the shortest to the longest its flora measures, about its middle length (a hawthorn's 7 mm terminal thorns to its 24 mm lateral ones)."
+    },
     "appearance.organs.thorn.form": {
       "map": {"spines": {"thorns": "thorn"}},
       "why": "A thorn, a shoot turned spine (a hawthorn's, a mesquite's), is drawn as a straight slender cone standing from the stem's surface beside its bud."
