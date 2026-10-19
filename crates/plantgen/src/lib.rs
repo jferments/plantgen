@@ -929,7 +929,7 @@ pub mod venation;
 /// size on its petiole length, and young twigs in its colour, in place of
 /// hand-sized sprig cards; the fig's path_half is refitted to its height
 /// (135 is nightshades round 4, #227).
-/// 137: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
+/// 138: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
 /// hemlocks) carries its year's needles in two sprays, one at the foot of
 /// each half of the shoot, so they follow the bend; the one spray at the
 /// shoot's foot had run on straight and left the nodding tip a bare
@@ -937,9 +937,8 @@ pub mod venation;
 /// several stems from one foot (`stems`, `stem_angle`), and a needle card
 /// may lean its needles forward (`lean`) and leave the foot of each axis
 /// bare (`bare`) so they crowd in a tuft near its end; both default to
-/// what was drawn before (136 is black cottonwood and
-/// wild fig, #225).
-/// 138: old conifers (`pinidae` revision 13): a limb whose tips catch too
+/// what was drawn before (137 is nightshades, #233).
+/// 139: old conifers (`pinidae` revision 13): a limb whose tips catch too
 /// little light for the wood it carries is shed (`limb_light`, scaled by
 /// `shade_death`), so Douglas-fir, western hemlock and Sitka spruce grow
 /// past 150 years under the module limit; a shoot shorter than
@@ -957,6 +956,6 @@ pub mod venation;
 /// control (`apical_light`, scaled by shade tolerance), so a stand-grown
 /// Douglas-fir keeps a narrow crown and a trunk of its reference size;
 /// limb shedding and short shoots' fewer buds are set for Pinaceae, not
-/// the program, so yews and cypresses grow as before (137 is nodding
+/// the program, so yews and cypresses grow as before (138 is nodding
 /// leaders, #167).
-pub const GENERATOR_REVISION: u32 = 138;
+pub const GENERATOR_REVISION: u32 = 139;
