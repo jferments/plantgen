@@ -192,7 +192,16 @@
       "min": 0.05,
       "max": 0.15
     },
-    "flowering_branches": 2
+    "flowering_branches": 2,
+    "fruit_seed_length_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "fruit_seed_colour": [
+      30,
+      28,
+      26
+    ]
   },
   "evidence": {
     "taxon": {
@@ -524,6 +533,16 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as no source read counts it: the cyme forks from the top one or two pairs of leaves."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): seeds 1-1.5 mm; FOC about 1.5 mm."
+    },
+    "traits.fruit_seed_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 5 (2005), Silene vulgaris (eFloras, read 2026-10-19): seeds black or nearly so, finely tuberculate; sRGB by eye for the word."
     }
   },
   "provenance": {

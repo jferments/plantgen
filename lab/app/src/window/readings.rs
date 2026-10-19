@@ -953,7 +953,7 @@ fn growth(ui: &Ui, page: &Page, rect: Rect) {
     let oldest = points
         .iter()
         .map(|[age, _, _]| *age)
-        .fold(page.lab.age.unwrap_or(0.0), f64::max)
+        .fold(page.lab.age(), f64::max)
         .max(0.1);
     #[allow(clippy::cast_possible_truncation)]
     let top = figures::nice_top(

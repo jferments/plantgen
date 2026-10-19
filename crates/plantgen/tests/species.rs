@@ -870,7 +870,7 @@ fn builtin_clusters_draw_as_part_meshes() {
         }
     }
     assert_eq!(
-        checked, 164,
+        checked, 170,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -897,7 +897,10 @@ fn builtin_clusters_draw_as_part_meshes() {
          and the twelve of the Caryophyllales families: bladder campion's and four o'clock's cymes, \
          pigweed's and jewels of Opar's panicles, thrift's and purslane's heads, sundew's coil, \
          carpetweed's umbels, the racemes of pokeweed, saltcedar and rougeplant, and greasewood's catkins, \
-         and the glands' great and thread-leaved sundews' coils and hemp's spikes"
+         and the glands' great and thread-leaved sundews' coils and hemp's spikes, \
+         and the blooms of six vines that state their inflorescences (climber revision 8): Malabar \
+         spinach's spikes, orange honeysuckle's and bittersweet's clusters, the wild grape's and ivy's \
+         panicles and umbels, and black pepper's spikes"
     );
 }
 
@@ -1091,9 +1094,11 @@ fn an_old_ivy_fruits_only_on_adult_shoots() {
     let fruit: Vec<_> = graph
         .organs
         .iter()
-        .filter(|organ| kind(organ) == "fruit")
+        .filter(|organ| matches!(kind(organ), "fruit" | "bloom"))
         .collect();
-    assert!(!fruit.is_empty(), "no fruit at {oldest} years");
+    // Its umbels are blooms (climber revision 8), which flower and then
+    // fruit as their season says.
+    assert!(!fruit.is_empty(), "no fruit or umbels at {oldest} years");
     assert!(fruit.iter().all(|organ| organ.adult == Some(1.0)));
 }
 

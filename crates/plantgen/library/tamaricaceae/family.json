@@ -142,12 +142,7 @@
     "rules.appearance.organs.leaf.shape.template": {
       "evidence": "SourceInferred",
       "source": "fna-online",
-      "note": "Flora of North America vol. 6, Tamaricaceae (read 2026-10-19): leaves alternate, scale-like, sessile, on slender green branchlets, many of which fall with the leaves in autumn. Drawing them as branchlet cards is the model's choice, as cedars' sprays are."
-    },
-    "rules.appearance.organs.leaf.shape.angle": {
-      "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America vol. 6, Tamarix (read 2026-10-19): leaves scale-like, clasping or sheathing at the base. The 20 degrees, the least a sprig card allows, is the model's."
+      "note": "Flora of North America vol. 6, Tamaricaceae (read 2026-10-19): leaves alternate, scale-like, sessile, clasping or sheathing at the base, on slender green branchlets, many of which fall with the leaves in autumn. Drawing them as scale-covered branchlet sprays, the card cypresses use, is the model's choice."
     },
     "rules.generator.defaults.leaf_size": {
       "evidence": "Authored",
@@ -159,19 +154,10 @@
     "appearance.organs.leaf.shape.template": {
       "map": {
         "leaf_form": {
-          "scale": "sprig"
+          "scale": "scales"
         }
       },
-      "why": "A tamarisk's scale leaves stand close along slender branchlets that fall whole, so a leaf card holds a branchlet, not one scale."
-    },
-    "appearance.organs.leaf.shape.angle": {
-      "template": "sprig",
-      "map": {
-        "leaf_form": {
-          "scale": 20
-        }
-      },
-      "why": "Scale leaves clasp the branchlet, their tips only a little free of it, at the least angle a sprig card draws."
+      "why": "A tamarisk's scale leaves clasp slender branchlets that fall whole, so a leaf card holds a spray of branchlets covered in scales, as a cypress's does, not one scale."
     },
     "generator.defaults.leaf_size": {
       "needs": [

@@ -636,7 +636,7 @@ impl Appearance {
     ) -> (Vec<Look>, Vec<f64>) {
         let organs: Vec<(&str, OrganKind)> = organs.into_iter().collect();
         let own = self.with_male(&organs);
-        let (mut looks, sizes) = looks::resolve_on(
+        let (mut looks, mut sizes) = looks::resolve_on(
             organs.iter().copied(),
             &own,
             self.foliage,
@@ -653,7 +653,97 @@ impl Appearance {
             )
             .0
         });
+        if let Some(day) = day {
+            self.stagger(&mut looks, &mut sizes, &organs, &own, day);
+        }
         (looks, sizes)
+    }
+
+    /// Draw each of `looks` whose season is staggered ([`looks::Season::cohort`])
+    /// as its cohorts are on day `day`: each variety the look its cohort
+    /// shows then, and its size as a share of the largest's, which becomes
+    /// the type's size; the look itself is the first cohort in flower, else
+    /// the first showing, so a card drawn from it shows flowers while any
+    /// are open.
+    fn stagger(
+        &self,
+        looks: &mut [Look],
+        sizes: &mut [f64],
+        organs: &[(&str, OrganKind)],
+        own: &BTreeMap<String, OrganLook>,
+        day: f64,
+    ) {
+        let staggered = |name: &str| {
+            own.get(name)
+                .and_then(|look| look.season.as_ref())
+                .is_some_and(|season| season.stagger > 0.0)
+        };
+        if !looks
+            .iter()
+            .take(organs.len())
+            .any(|look| staggered(&look.organ))
+        {
+            return;
+        }
+        let cohorts: Vec<(Vec<Look>, Vec<f64>, Vec<looks::Stage>)> = (0..looks::VARIETIES)
+            .map(|variety| {
+                let mut drawn = looks::variety(own, &self.spreads, variety);
+                let mut stages = Vec::new();
+                for look in drawn.values_mut() {
+                    if let Some(season) = look.season.as_mut()
+                        && season.stagger > 0.0
+                    {
+                        *season = season.cohort(variety);
+                    }
+                }
+                for (name, _) in organs {
+                    stages.push(
+                        drawn
+                            .get(*name)
+                            .and_then(|look| look.season.as_ref())
+                            .map_or(looks::Stage::Gone, |season| season.stage(day)),
+                    );
+                }
+                let (looks, sizes) = looks::resolve_on(
+                    organs.iter().copied(),
+                    &drawn,
+                    self.foliage,
+                    self.foliage_shade,
+                    Some(day),
+                );
+                (looks, sizes, stages)
+            })
+            .collect();
+        for (index, look) in looks.iter_mut().enumerate().take(organs.len()) {
+            if !staggered(&look.organ) {
+                continue;
+            }
+            let shares: Vec<f64> = cohorts
+                .iter()
+                .map(|(_, sizes, _)| sizes.get(index).copied().unwrap_or(0.0))
+                .collect();
+            let most = shares.iter().copied().fold(0.0, f64::max);
+            let drawn: Vec<Look> = cohorts
+                .iter()
+                .filter_map(|(looks, _, _)| looks.get(index).cloned())
+                .collect();
+            let shown = cohorts
+                .iter()
+                .position(|(_, _, stages)| stages.get(index) == Some(&looks::Stage::Flower))
+                .or_else(|| shares.iter().position(|&share| share > 0.0))
+                .unwrap_or(0);
+            if let Some(base) = drawn.get(shown) {
+                *look = base.clone();
+            }
+            look.varieties = drawn;
+            look.variety_sizes = shares
+                .iter()
+                .map(|&share| if most > 0.0 { share / most } else { 0.0 })
+                .collect();
+            if let Some(size) = sizes.get_mut(index) {
+                *size = most;
+            }
+        }
     }
 
     /// Give each of the first `types` of `looks` whose values vary
