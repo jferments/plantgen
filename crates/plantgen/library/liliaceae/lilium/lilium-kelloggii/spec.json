@@ -77,6 +77,11 @@
       160,
       190
     ],
+    "perianth_stripe_colour": [
+      240,
+      205,
+      60
+    ],
     "perianth_spots": "copious",
     "perianth_spot_colour": [
       110,
@@ -109,7 +114,11 @@
       6,
       7,
       8
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 6,
+      "max": 154
+    }
   },
   "provenance": {
     "sources": [
@@ -229,6 +238,11 @@
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): pink, less often white, and if so usually aging pink The colour is our reading of the words."
     },
+    "traits.perianth_stripe_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): usually with copious maroon spots and proximal median longitudinal yellow stripe extending from basal nectaries; the stripe's length is not given, so 'proximal' is drawn to half the tepal (the genus rule's reading) The colour is our reading of the words."
+    },
     "traits.perianth_spots": {
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
@@ -273,6 +287,11 @@
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): flowering summer (mid Jun-early Aug)"
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Derived: the stem's leaves are its 2-7 whorls times 3-22 leaves in each, 6-154, from the counts quoted for leaf_whorls (Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): leaves in 2-7 whorls. The typical value is our pick of a usual plant inside that range.) and leaves_per_whorl (Flora of North America vol. 26 (2002), Lilium kelloggii (efloras.org, read 2026-10-18): 3-22(-40) leaves per whorl. The typical value is our pick of a usual plant inside that range.)."
     }
   }
 }

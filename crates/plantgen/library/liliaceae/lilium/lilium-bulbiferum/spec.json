@@ -46,6 +46,10 @@
       "high": 1.2
     },
     "leaf_arrangement": "alternate",
+    "shoot_leaves": {
+      "min": 50,
+      "max": 75
+    },
     "leaf_length_m": {
       "min": 0.076,
       "max": 0.1
@@ -164,6 +168,11 @@
       "evidence": "SourceInferred",
       "source": "bailey-cyclopedia-1914",
       "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium bulbiferum, p. 1876 (read on the Internet Archive, 2026-10-18): leaves 50-75, horizontal or semi-erect, with no whorls named: read as scattered."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 4 (1916), Lilium bulbiferum, p. 1876 (read on the Internet Archive, 2026-10-18): leaves 50-75, horizontal or semi-erect; all on the one stem a bulb sends up in a year."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",

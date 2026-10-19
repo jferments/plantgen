@@ -83,6 +83,11 @@
       160,
       35
     ],
+    "perianth_abaxial_colour": [
+      225,
+      80,
+      35
+    ],
     "perianth_spots": "many",
     "perianth_spot_colour": [
       110,
@@ -114,7 +119,11 @@
     "flowering_months": [
       6,
       7
-    ]
+    ],
+    "shoot_leaves": {
+      "min": 12,
+      "max": 156
+    }
   },
   "provenance": {
     "sources": [
@@ -239,6 +248,11 @@
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): yellow-orange or sometimes orange-yellow or orange proximally The colour is our reading of the words."
     },
+    "traits.perianth_abaxial_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): red-orange or occasionally red or orange-red abaxially The colour is our reading of the words."
+    },
     "traits.perianth_spots": {
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
@@ -283,6 +297,11 @@
       "evidence": "SourceInferred",
       "source": "fna-26-liliaceae",
       "note": "Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): flowering summer (mid Jun-Jul)"
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-liliaceae",
+      "note": "Derived: the stem's leaves are its 4-12 whorls times 3-13 leaves in each, 12-156, from the counts quoted for leaf_whorls (Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): in 4-12 whorls. The typical value is our pick of a usual plant inside that range.) and leaves_per_whorl (Flora of North America vol. 26 (2002), Lilium michiganense (efloras.org, read 2026-10-18): 3-13 leaves per whorl. The typical value is our pick of a usual plant inside that range.)."
     }
   }
 }
