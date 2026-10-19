@@ -1113,8 +1113,10 @@ pub mod venation;
 /// with more between the nodes (`internodal_prickles`, `aciculi`), and
 /// a shoot's thorns stand alone where they are shoots (`thorn_origin`),
 /// on as many nodes as its flora says (`thorn_frequency`), as long as its
-/// range runs, and falling from older stems where it says so
-/// (`thorn_persistence`; broadleaf 24), by rules for all flowering plants
+/// range runs, falling from older stems where it says so
+/// (`thorn_persistence`), and tipping its twigs where they are terminal
+/// (`thorn_position`: a palo verde's; broadleaf 24), by rules for all
+/// flowering plants
 /// (151 is
 /// subalpine fir; the desk
 /// renumbers on landing).

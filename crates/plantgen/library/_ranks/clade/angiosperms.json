@@ -557,8 +557,8 @@
       "why": "A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
     },
     "generator.params.thorns": {
-      "map": {"spines": {"thorns": 1, "prickles": 1}},
-      "why": "An armed tree or shrub carries its prickles or thorns at the nodes, beside each bud: a rose's below its stipules, a bramble's on its canes, a hawthorn's thorns in the leaf axils; programs that grow no thorns leave it unread."
+      "map": {"spines": {"thorns": {"map": {"thorn_position": {"terminal": 0}}, "else": 1}, "prickles": 1}},
+      "why": "An armed tree or shrub carries its prickles or thorns at the nodes, beside each bud: a rose's below its stipules, a bramble's on its canes, a hawthorn's thorns in the leaf axils; one whose thorns only tip its twigs bears none there; programs that grow no thorns leave it unread."
     },
     "generator.params.thorn_length": {
       "rule": "spine_length_m",
@@ -584,6 +584,10 @@
     "generator.params.thorn_years": {
       "map": {"thorn_persistence": {"young_stems": 2, "few_years": 5, "persistent": 0}},
       "why": "A thorn or prickle stays on its stem as long as its flora says: two years where only the young stems are armed (the stem hairs' youth), five where they persist a few years (a hawthorn's), for good where they persist."
+    },
+    "generator.params.thorn_tips": {
+      "map": {"thorn_position": {"terminal": 0.5, "both": 0.25}},
+      "why": "A shoot whose twigs end in thorns ends about half its long shoots' years in one where they are terminal, a quarter where its thorns are both terminal and lateral (by eye from photographs of palo verdes and hawthorns; imagekit counts can set them)."
     },
     "appearance.organs.thorn.form": {
       "map": {"spines": {"thorns": "thorn"}},

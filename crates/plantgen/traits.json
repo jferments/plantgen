@@ -1189,6 +1189,14 @@
       "when": {"spines": ["thorns", "prickles"]},
       "why": "how long a stem keeps its thorns or prickles: only while young (a flora's prickly young stems and petioles, older stems unarmed), a few years (FNA: a hawthorn's thorns persist a few years), or for good (a honey locust's trunk thorns)"
     },
+    "thorn_position": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["lateral", "terminal", "both"],
+      "when": {"spines": ["thorns"]},
+      "why": "where a shoot bears its thorns: beside its buds (lateral), at its own tip, the twig ending in a thorn (terminal: a palo verde's spine-tipped branchlets, a hawthorn's indeterminate thorns), or both"
+    },
     "thorn_frequency": {
       "group": "stem_and_bark",
       "organ": "spine",
