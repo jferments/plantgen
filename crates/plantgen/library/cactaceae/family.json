@@ -104,15 +104,23 @@
       "why": "Nor is any place drawn as fruit all year: this year's flowers become its fruit, and older fruit hang below them in older rings or chains where the species keeps them."
     },
     "appearance.bodies.stem.dome": {
-      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8, "flat": 0.35}},
+      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8, "flat": 0.35, "depressed": 0.35}},
       "why": "A cactus stem closes over as many of its tip's radii as its tip's shape says: over a length and a half where it tapers to its apex, a half sphere where it is rounded, a short shoulder under a broad top, and a low rim round a flat top nearly level with it (Flora of North America's flat-topped Astrophytum asterias and Lophophora)."
     },
+    "appearance.bodies.stem.pit": {
+      "map": {"stem_apex": {"tapering": 0, "rounded": 0, "broad": 0, "flat": 0, "depressed": 0.3}},
+      "why": "A depressed top sinks to a pit at its centre, where the youngest areoles form: nearly a third of the tip's radius at its centre, below the low rim of a flat dome (Flora of North America's Lophophora, 'flat or domelike, with a deeply depressed centre'); other tops have none."
+    },
     "appearance.bodies.stem.shoulder": {
-      "map": {"stem_apex": {"tapering": 1.4, "rounded": 2.0, "broad": 2.8, "flat": 3.5}},
+      "map": {"stem_apex": {"tapering": 1.4, "rounded": 2.0, "broad": 2.8, "flat": 3.5, "depressed": 3.5}},
       "why": "A tapering tip narrows steadily toward its apex, a rounded one follows a quarter circle, a broad one keeps its width into a full shoulder before turning in under its flattish top, and a flat one keeps it nearly to the rim of its level top."
     },
+    "generator.params.pit": {
+      "map": {"stem_apex": {"tapering": 0, "rounded": 0, "broad": 0, "flat": 0, "depressed": 0.3}},
+      "why": "The program sets the crown's flowers and fruit down into the pit the body draws, so it takes the same depth."
+    },
     "generator.params.dome": {
-      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8, "flat": 0.35}},
+      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8, "flat": 0.35, "depressed": 0.35}},
       "why": "The program sets the crown's ring of flowers on the shoulder of the dome the body draws, so it takes the same length."
     },
     "generator.params.fill": {
@@ -214,11 +222,19 @@
     },
     "appearance.bodies.stem.spines.central.curve": {
       "map": {"central_spine_form": {"straight": 0, "curved": 40, "hooked": 0, "flattened": 0, "twisted": 25}},
-      "why": "A curved central bends back about 40° over its length, as the floras' 'curved' and 'curving' spines of a barrel or a hedgehog do; a twisted one, not drawn twisted, wanders about 25°. A hook is the principal central's (a fishhook's), so the other centrals stay unhooked where the form is hooked."
+      "why": "A curved central bends back about 40° over its length, as the floras' 'curved' and 'curving' spines of a barrel or a hedgehog do; a twisted one wanders about 25° as it turns (see twist). A hook is the principal central's (a fishhook's), so the other centrals stay unhooked where the form is hooked."
     },
     "appearance.bodies.stem.spines.main.curve": {
       "map": {"central_spine_form": {"straight": 0, "curved": 40, "hooked": 0, "flattened": 0, "twisted": 25}},
       "why": "The main central bends as the floras' central spine form says, as the other centrals do."
+    },
+    "appearance.bodies.stem.spines.central.twist": {
+      "map": {"central_spines_twisted": {"true": 180, "false": 0}},
+      "why": "A twisted central turns about its length like a wrung ribbon, which shows on a flattened spine: drawn as half a turn from base to tip (Flora of North America's Echinocactus polycephalus, centrals 'often twisted')."
+    },
+    "appearance.bodies.stem.spines.main.twist": {
+      "map": {"central_spines_twisted": {"true": 180, "false": 0}},
+      "why": "The main central twists as the other centrals do."
     },
     "appearance.bodies.stem.spines.main.hook": {
       "map": {"central_spine_form": {"straight": 0, "curved": 0, "hooked": 150, "flattened": 0, "twisted": 0}},
