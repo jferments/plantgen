@@ -40,9 +40,10 @@
       "leaf_angle": 50,
       "blooms": 1,
       "adult_age": 3,
-      "bloom_size": 0.008,
+      "bloom_size": 0.0065,
       "bloom_angle": 120,
-      "path_half": 0.3
+      "path_half": 0.3,
+      "crown_height": 0.2
     }
   },
   "growth": {
@@ -68,9 +69,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "widest": 0.5,
-          "tip": 0.2,
-          "base": 0.6,
           "petiole": 0.03
         }
       },

@@ -22,12 +22,13 @@
       "basal_leaves": 0,
       "bare": 0.35,
       "leaf_peak": 0.0,
-      "leaf_top": 0.5,
+      "leaf_top": 1.0,
       "raceme": 0.3,
       "flowers": 15,
       "flower_angle": 50,
       "pedicel": 0.003,
-      "flowering_share": 0.5
+      "flowering_share": 0.5,
+      "leaf_length": 0.02
     }
   },
   "growth": {

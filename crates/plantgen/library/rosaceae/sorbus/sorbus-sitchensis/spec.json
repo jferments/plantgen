@@ -13,9 +13,9 @@
     "params": {
       "crown_radius": 1.0,
       "crown_base": 0,
-      "crown_rate": 0.22,
+      "crown_rate": 0.18,
       "space_density": 90.9,
-      "internode": 0.1,
+      "internode": 0.08,
       "max_shoot": 4,
       "bud_break": 1.2,
       "branch_angle": 35,
@@ -44,7 +44,8 @@
       "adult_age": 4,
       "bloom_size": 0.07,
       "bloom_angle": 20,
-      "path_half": 2.35
+      "path_half": 2.35,
+      "crown_height": 2.0
     }
   },
   "growth": {
@@ -84,7 +85,7 @@
         },
         "inflorescence": {
           "flowers": 30,
-          "size": 0.4,
+          "size": 0.105,
           "spread": 60,
           "pedicel": 0.12
         },

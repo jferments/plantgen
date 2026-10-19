@@ -15,7 +15,7 @@
       "crown_base": 0,
       "crown_rate": 0.22,
       "space_density": 600,
-      "internode": 0.04,
+      "internode": 0.03,
       "max_shoot": 4,
       "bud_break": 1.2,
       "branch_angle": 30,
@@ -44,7 +44,8 @@
       "adult_age": 2,
       "bloom_size": 0.035,
       "bloom_angle": 5,
-      "path_half": 0.4
+      "path_half": 0.4,
+      "crown_height": 0.32
     }
   },
   "growth": {
@@ -70,9 +71,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "widest": 0.6,
-          "tip": 0.3,
-          "base": 0.2,
           "petiole": 0.04
         }
       },
@@ -85,18 +83,18 @@
           "centre": 0.3
         },
         "inflorescence": {
-          "branches": 10,
-          "flowers": 6,
-          "size": 0.3,
+          "branches": 6,
+          "flowers": 4,
+          "size": 0.4,
           "spread": 70,
           "branch": {
             "branches": 3,
-            "size": 0.4,
+            "size": 0.5,
             "spread": 50,
             "branch": {
-              "size": 0.3,
               "spread": 45,
-              "pedicel": 0.1
+              "pedicel": 0.1,
+              "size": 0.9
             }
           }
         },

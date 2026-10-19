@@ -81,13 +81,13 @@
       "bloom": {
         "shape": {
           "template": "fruit",
-          "kind": "crowned",
+          "kind": "capsule",
           "aspect": 1.0,
           "unripe": 0.9
         },
         "inflorescence": {
           "flowers": 6,
-          "size": 0.3,
+          "size": 0.1,
           "spread": 50,
           "pedicel": 0.5
         },
@@ -102,7 +102,7 @@
           0.25
         ],
         "season": {
-          "ripening": 30,
+          "ripening": 20,
           "opening": 14,
           "flower_look": {
             "shape": {
