@@ -1602,6 +1602,13 @@
       "optional": true,
       "why": "the sepals' colour where it is not leaf green, and a hypanthium's that bears them: a fuchsia's red sepals and floral tube"
     },
+    "calyx_caducous": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the calyx falls as the flower opens (caducous): a poppy's two sepals, pushed off as a cap by the swelling petals, so an open flower shows none"
+    },
     "pedicel_length_m": {
       "group": "flowers",
       "organ": "flower",

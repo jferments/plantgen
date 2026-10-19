@@ -935,4 +935,12 @@ pub mod venation;
 /// penstemon, orange honeysuckle); a climber bears its leaves in opposite
 /// pairs where its taxon states them so (climber program revision 7) (136 is single
 /// leaves for cottonwood and fig, #232).
-pub const GENERATOR_REVISION: u32 = 137;
+/// 138: poppies. A corolla of merosity 2 in two whorls draws its four
+/// petals (a poppy's 2 + 2), where the petals rule clamped the merosity to
+/// 3 and drew six; a caducous calyx (`calyx_caducous`, Papaveraceae)
+/// falls as its flower opens, so a bud wears its sepals and an open flower
+/// shows none (`calyx_shed` on the flower card). California poppy grows
+/// leafy branched stems with larger flowers and a capsule beside them;
+/// opium poppy is new; Pacific bleeding heart's leaves are ternate and
+/// dissected, glaucous, held over the clump.
+pub const GENERATOR_REVISION: u32 = 138;

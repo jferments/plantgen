@@ -356,11 +356,12 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     });
     let seat = floral_tube.map_or(seat, |t| t.height + t.length);
 
-    // Sepals, between the petals.
+    // Sepals, between the petals, unless they fell as it opened.
     let mut pieces = Vec::new();
     let mut calyx_tube = None;
     if flower.perianth == Perianth::Corolla
         && flower.sepals > 0
+        && open <= flower.calyx_shed
         && flower.corolla != Corolla::Labellate
     {
         let m = f64::from(flower.sepals);

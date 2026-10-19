@@ -1902,6 +1902,11 @@ pub struct Flower {
     /// Share of the sepals' length joined in a calyx cup.
     #[serde(skip_serializing_if = "is_zero")]
     pub sepals_fused: f64,
+    /// How far the flower has opened when its calyx falls: a poppy's
+    /// sepals, pushed off as a cap when its petals begin to spread, fall at
+    /// 0.1; at 1 the calyx stays.
+    #[serde(skip_serializing_if = "is_one")]
+    pub calyx_shed: f64,
     /// The sepals' colour, and a spiral's outer tepals'; a leaf green if
     /// absent. A labellate flower's sepals take the petals' colour.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -2114,6 +2119,7 @@ impl Default for Flower {
             sepals: 0,
             sepal_length: SEPAL_LENGTH,
             sepals_fused: 0.0,
+            calyx_shed: 1.0,
             calyx: None,
             filament: None,
             pistil: None,
@@ -3678,6 +3684,7 @@ impl Shape {
                 count("sepals", s.sepals, 0, 12)?;
                 check("sepal_length", s.sepal_length, 0.1, 3.0)?;
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
+                check("calyx_shed", s.calyx_shed, 0.0, 1.0)?;
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
                     check("filament", f64::from(channel), 0.0, 1.0)?;

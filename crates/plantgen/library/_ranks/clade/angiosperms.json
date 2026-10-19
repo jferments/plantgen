@@ -327,8 +327,8 @@
     "appearance.organs.*.shape.notch": {"template": "flower", "map": {"petal_apex": {"emarginate": 0.15, "bilobed": 0.45}}, "between": true, "why": "An emarginate petal's tip is notched; a bilobed one is cleft into two lobes."},
     "appearance.organs.*.shape.petals": {
       "template": "flower",
-      "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 3, 12) * clamp(round(first(petal_whorls, 1)), 1, 2)"}, "tepals": {"rule": "first(perianth_parts, 0) > 0 ? clamp(max(round(perianth_parts / clamp(round(flower_merosity), 2, 6)), 2), 2, 6) * clamp(round(flower_merosity), 2, 6) : clamp(2 * round(flower_merosity), 4, 12)"}, "spiral": {"rule": "clamp(round(perianth_parts), 3, 60)"}}},
-      "why": "A flower draws its merosity's petals in each whorl its corolla is stated to stand in; twice it in tepals, or the stated tepals rounded to whole whorls of its merosity (a magnolia's 12 as four whorls of three); or a spiral's tepals in all, up to 60."
+      "map": {"perianth": {"sepals_and_petals": {"rule": "max(3, clamp(round(flower_merosity), 2, 12) * clamp(round(first(petal_whorls, 1)), 1, 2))"}, "tepals": {"rule": "first(perianth_parts, 0) > 0 ? clamp(max(round(perianth_parts / clamp(round(flower_merosity), 2, 6)), 2), 2, 6) * clamp(round(flower_merosity), 2, 6) : clamp(2 * round(flower_merosity), 4, 12)"}, "spiral": {"rule": "clamp(round(perianth_parts), 3, 60)"}}},
+      "why": "A flower draws its merosity's petals in each whorl its corolla is stated to stand in, never fewer than three (a poppy's 2 + 2 draws four, a lone whorl of two draws three); twice it in tepals, or the stated tepals rounded to whole whorls of its merosity (a magnolia's 12 as four whorls of three); or a spiral's tepals in all, up to 60."
     },
     "appearance.organs.*.shape.sepals": {
       "template": "flower",
@@ -379,6 +379,11 @@
       "template": "flower",
       "colour": "calyx_colour",
       "why": "Sepals, and a floral tube that bears them, are drawn in their stated colour; leaf green where none is stated."
+    },
+    "appearance.organs.*.shape.calyx_shed": {
+      "template": "flower",
+      "map": {"calyx_caducous": {"true": 0.1, "false": 1}},
+      "why": "A caducous calyx falls as the flower opens (a poppy's two sepals, pushed off as a cap), so a bud wears it and an open flower shows none; any other calyx stays."
     },
     "appearance.organs.*.shape.sepal_length": {
       "template": "flower",
@@ -587,6 +592,7 @@
     "rules.appearance.organs.*.shape.tube_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours a corolla tube apart from its lobes (nightshades round 2, 2026-10-17): the stated tube colour on the tube, the flower's colour on the lobes."},
     "rules.appearance.organs.*.shape.petal_rise": {"evidence": "Authored", "source": "plantgen-authors", "note": "Angles PlantGen gives the three postures of petals or lobes (nightshades round 2, 2026-10-17), a choice of the model's: erect 70°, spreading 10°, reflexed -40° from the plane square to the axis."},
     "rules.appearance.organs.*.shape.sepal_rise": {"evidence": "Authored", "source": "plantgen-authors", "note": "Angles PlantGen gives the three postures of sepals (nightshades round 2, 2026-10-17), a choice of the model's: erect 60°, spreading 0°, reflexed -50°."},
+    "rules.appearance.organs.*.shape.calyx_shed": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a caducous calyx (poppies, 2026-10-19), a choice of the model's: the sepals are drawn on the bud and fall once the flower is a tenth open, as a poppy's calyptra is pushed off by the swelling petals (Flora of North America vol. 3, Eschscholzia: sepals connate, calyptrate, deciduous as unit)."},
     "rules.appearance.organs.*.shape.calyx": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours sepals and a floral tube (nightshades round 2, 2026-10-17): the stated calyx colour, else leaf green as before."},
     "rules.appearance.organs.*.shape.sepal_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes sepals against petals (nightshades round 2, 2026-10-17): the stated lengths' ratio."},
     "rules.appearance.organs.*.shape.floral_tube": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fuchsia's floral tube (nightshades round 2, 2026-10-17): its stated length over the radius the petals reach, the flower's width over its sepals' outreach."},
