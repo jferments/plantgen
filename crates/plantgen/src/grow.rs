@@ -448,8 +448,10 @@ impl Girth {
                     Some(pipes) => {
                         let rings = self.ring_area.entry(segment.id).or_insert(0.0);
                         let radius = pipes.radii[index].max(math::sqrt(*rings / math::PI));
-                        // This step's ring shows from the next step on.
-                        *rings += pipes.ring_rate * dt * pipes.leaf_area[index];
+                        // This step's ring goes on the wood already there and
+                        // shows from the next step on.
+                        *rings = math::PI * radius * radius
+                            + pipes.ring_rate * dt * pipes.leaf_area[index];
                         radius
                     }
                     None => segment.width,

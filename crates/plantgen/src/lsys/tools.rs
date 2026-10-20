@@ -2914,7 +2914,8 @@ pub struct Pipes {
 /// of area `rings · leaf area above` to every segment (Pressler's law: ring
 /// area is proportional to the foliage above), so stems keep thickening
 /// after their crowns stop growing. A segment's radius is the larger of
-/// the two, and never shrinks.
+/// the pipe radius and its last radius with this year's ring added, and
+/// never shrinks.
 ///
 /// # Errors
 ///

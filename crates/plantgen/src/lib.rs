@@ -1220,4 +1220,7 @@ pub mod venation;
 /// the ground to its top; past 160 years the stand opens to old-growth
 /// Douglas-fir's spacing (`STAND_THINNING`, Franklin et al. 1981); past its
 /// rings of crowns the stand goes on as a layer of foliage (`FarStand`).
+/// A year's ring now goes on the wood a stem already has, so a stand
+/// tree's trunk keeps thickening after its crown closes instead of waiting
+/// for its rings to pass the widest pipe.
 pub const GENERATOR_REVISION: u32 = 164;
