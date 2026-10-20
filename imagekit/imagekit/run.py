@@ -377,13 +377,18 @@ def collect(args, store: Store) -> None:
 
 # chat window
 
+# The ground rules name other rules files; a chat observer has only this folder. Not part of the analyzer:
+# the rules hash the files themselves, and this note only says where their text is.
+CHAT_FILES_NOTE = ("\n\n---\nThe rules above name other files (`02-observe.md`, `palette.yaml`, a schema). You do not "
+                   "need to open them: what your task needs from them is in each image's `.prompt.md`.\n")
+
 def chat(args, store: Store, job: Job, run: str) -> None:
     """First call: write prompts and images to --chat-dir. Later calls: read back <photo id>.json answers."""
     if not args.chat_dir:
         raise SystemExit("the chat backend needs --chat-dir")
     d = Path(args.chat_dir).expanduser()
     d.mkdir(parents=True, exist_ok=True)
-    (d / "00-system.md").write_text(job.rules.system())
+    (d / "00-system.md").write_text(job.rules.system() + CHAT_FILES_NOTE)
     got = 0
     for sha in job.todo:
         pid = job.photo_id(sha)

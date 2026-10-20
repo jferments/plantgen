@@ -176,6 +176,29 @@ class Detect(unittest.TestCase):
         again = json.loads(self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det2"))
         self.assertEqual(again["detected"], 0)
 
+    def test_within_looks_again_inside_parent_regions(self):
+        first = json.loads(self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det"))
+        again = json.loads(self.cli("detect", "--model", "fake", "--organs", "leaf", "--within", first["analyzer"],
+                                    "--run", "det-in"))
+        self.assertNotEqual(again["analyzer"], first["analyzer"])
+        self.assertEqual(again["detected"], 1)  # only a has a kept leaf region to look inside
+        rows = {r["sha256"]: r for r in jsonl(Path(self.store_dir) / "sources/image-analyses/det-in/analyses.jsonl")}
+        leaf = rows[self.sha["a.jpg"]]["out"]["regions"][0]
+        for got, want in zip(leaf["box"], self.boxes["a.jpg"]):
+            self.assertAlmostEqual(got, want, delta=0.05)  # back in the whole image's fractions
+        with Store(self.store_dir) as store:
+            self.assertEqual(analyzer_params(store, again["analyzer"])["within"]["detector"], first["analyzer"])
+
+    def test_a_box_holding_two_of_its_organ_is_a_mass(self):
+        found = [("flower", [0.0, 0.0, 1.0, 1.0], 0.9), ("flower", [0.1, 0.1, 0.3, 0.3], 0.5),
+                 ("flower", [0.6, 0.6, 0.8, 0.8], 0.5), ("leaf", [0.2, 0.2, 0.9, 0.9], 0.5)]
+        kept = regions.drop_nested(found)
+        self.assertEqual([b for _, b, _ in kept], [f[1] for f in found[1:]])
+        cut = regions.tiles([0.0, 0.0, 1.0, 0.5], 0.3, 0.3)
+        self.assertEqual(len(cut), 5 * 2)  # tiles a quarter overlapping cover the box, edge to edge
+        self.assertEqual((cut[0][:2], cut[-1][2:]), ([0.0, 0.0], [1.0, 0.5]))
+        self.assertEqual(regions.tiles([0.1, 0.1, 0.4, 0.4], 0.3, 0.3), [[0.1, 0.1, 0.4, 0.4]])
+
     def test_needs_a_triage_or_all(self):
         with Store(self.store_dir) as store:
             store.db.execute("delete from analyses where task='triage'")
@@ -242,6 +265,59 @@ class Detect(unittest.TestCase):
         rows = uniform([{"id": 3, "x": 1}, {"id": "a3", "x": 2.5}, {"y": True}])
         self.assertEqual([r["id"] for r in rows], ["3", "a3", None])
         self.assertEqual([r["x"] for r in rows], [1, 2.5, None])
+
+    @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
+    def test_count_points_at_parts_of_kept_regions_once(self):
+        from imagekit import count
+        self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det")
+        first = json.loads(self.cli("count", "--pointer", "fake", "--organ", "leaf", "--what", "the leaves",
+                                    "--run", "cnt"))
+        self.assertEqual(first["counted"], 1)  # a's leaf; b's triage saw no leaf, d is unusable
+        self.assertEqual(json.loads(self.cli("count", "--pointer", "fake", "--organ", "leaf", "--what",
+                                             "the leaves", "--run", "cnt2"))["counted"], 0)
+        other = json.loads(self.cli("count", "--pointer", "fake", "--organ", "leaf", "--what", "the leaflets",
+                                    "--run", "cnt3"))
+        self.assertNotEqual(other["analyzer"], first["analyzer"])  # each question is its own analyzer
+        with Store(self.store_dir) as store:
+            row = next(jsonl(store.run_dir("cnt") / "analyses.jsonl"))
+            self.assertEqual((row["sha256"], row["out"]["count"]), (self.sha["a.jpg"], 1))
+            self.assertEqual(len(row["out"]["points"]), 1)
+            self.assertTrue(all(0 <= v <= 1 for v in row["out"]["crop"]))
+            by = count.summary(count.counts(store, first["analyzer"]))
+            self.assertEqual(by["Asimina triloba"]["photos"]["median"], 1)
+            self.assertIsNone(by["Asimina triloba"]["renders"])
+
+    def test_count_answers(self):
+        from imagekit import count
+        status, out = count.answer('{"points": [[100, 200], [300, 400]], "count": 3}', "flower", "x", [0, 0, 1, 1])
+        self.assertEqual((status, out["count"], out["count_stated"], out["points"][0]), ("ok", 2, 3, [0.1, 0.2]))
+        row = json.dumps({"points": [[500, 100 + 50 * i] for i in range(8)], "count": 8})
+        status, out = count.answer(row, "flower", "x", [0, 0, 1, 1])
+        self.assertTrue(out["degenerate"])
+        self.assertIsNone(out["count"])
+        self.assertEqual(count.answer('{"points": [], "count": null}', "flower", "x", [0, 0, 1, 1])[0], "empty")
+        self.assertEqual(count.answer('{"points": [], "count": 0}', "flower", "x", [0, 0, 1, 1])[1]["count"], 0)
+        side = count.answer('{"points": [[1, 2], [5, 9]], "count": 2, "face_on": false}', "flower", "x", [0, 0, 1, 1])
+        self.assertIs(side[1]["face_on"], False)
+        cut = count.answer('{"points": [[10, 20], [30, 40], [5', "flower", "x", [0, 0, 1, 1])[1]
+        self.assertEqual(cut["count"], 2)  # a cut-off answer keeps its whole points
+
+    def test_count_chat_writes_crops_then_reads_answers(self):
+        self.cli("detect", "--model", "fake", "--organs", "plant,leaf", "--run", "det")
+        d = self.tmp / "chat"
+        args = ("count", "--backend", "chat", "--model", "observer", "--chat-dir", str(d), "--organ", "leaf",
+                "--what", "the leaves", "--run", "cc")
+        self.assertEqual(json.loads(self.cli(*args))["waiting"], 1)
+        crops = sorted(d.glob("*.jpg"))
+        self.assertEqual(len(crops), 1)
+        self.assertIn("Point to each of the leaves", (d / "prompt.md").read_text())
+        crops[0].with_suffix(".json").write_text('{"points": [[500, 500]], "count": 1, "face_on": true}')
+        res = json.loads(self.cli(*args))
+        self.assertEqual(res["counted"], 1)
+        with Store(self.store_dir) as store:
+            from imagekit import count
+            self.assertEqual(count.counts(store, res["analyzer"], face_on=True)["Asimina triloba"]["photos"], [1])
+        self.assertEqual(json.loads(self.cli(*args[:-1], "cc2"))["counted"], 0)
 
     @unittest.skipUnless(HAVE_NUMPY, "numpy not installed")
     def test_segment_masks_kept_regions_once(self):

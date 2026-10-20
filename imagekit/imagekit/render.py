@@ -156,11 +156,13 @@ def shots(sid: str, cactus: bool, size: dict, views: set, parts: list) -> list[t
         out.append(("oblique", ["--view", "oblique"], None))
     if "closeups" in views:
         h, r = size["height"], size["radius"]
-        if cactus:
-            out += [("ribs", ["--view", "side", "--focus", f"{r:.2f},{h / 2:.2f},0", "--span", "0.3", *parts], None),
-                    ("bloom", ["--view", "side", "--focus", "bloom:0.9", "--span", "0.3", *parts], None),
-                    ("apex", ["--view", "oblique", "--focus", f"0,{h:.2f},0", "--span", f"{max(0.2, 3 * r):.2f}", *parts],
-                     None)]
+        if cactus:  # a 3-15 cm globular cactus would be a speck in a 0.3 m frame, dropped as ground
+            span = min(0.3, max(0.12, 1.3 * max(h, 2 * r)))
+            out += [("ribs", ["--view", "side", "--focus", f"{r:.2f},{h / 2:.2f},0", "--span", f"{span:.2f}", *parts],
+                     None),
+                    ("bloom", ["--view", "side", "--focus", "bloom:0.9", "--span", f"{span:.2f}", *parts], None),
+                    ("apex", ["--view", "oblique", "--focus", f"0,{h:.2f},0", "--span",
+                              f"{min(max(0.2, 3 * r), span):.2f}", *parts], None)]
         else:  # frames scale with the plant, so a herb's shoot and flower fill them as a tree's do
             shoot, bloom = f"{min(1.0, max(0.2, 0.4 * h)):.2f}", f"{min(0.3, max(0.1, 0.25 * h)):.2f}"
             out += [("shoot", ["--view", "side", "--focus", "leaf:0.7", "--span", shoot, *parts], None),
