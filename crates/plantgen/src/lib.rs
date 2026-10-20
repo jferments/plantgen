@@ -1162,4 +1162,16 @@ pub mod venation;
 /// `schlumbergera` (flat joints toothed along their margins). A fruit set
 /// after New Year counts its season from the next year's start
 /// (158 is bramble leaves, #272).
-pub const GENERATOR_REVISION: u32 = 159;
+/// 160: cacti round 5, from a photo check. A joint that sprouts no
+/// daughters flowers every year (column 7, cactaceae 13: a beavertail
+/// clump flowers again) and a club joint's daughter turns toward upright
+/// (`joint_rise`: chollas no longer coil); a flat joint's areoles may keep
+/// to its margins (`areoles.margins`, from `areole_position`: Christmas
+/// cactus). Spines are drawn broad enough to hide the share of stem a
+/// flora's words give (`spine_cover`); hairy areoles carry erect tufts
+/// (`areole_hairs`: peyote); twisted centrals wander; thorns stand on the
+/// bark. Barrels widen from youth (`radius_height`), cacti sink as deep
+/// as `stem_buried` says, clumps take `basal_stems` and lean as their
+/// `limb_angle` words, ribs are spaced for the usual count, tepals take
+/// their stated width (159 is cacti of four more genera, #260).
+pub const GENERATOR_REVISION: u32 = 160;
