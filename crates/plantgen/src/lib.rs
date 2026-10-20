@@ -1162,10 +1162,16 @@ pub mod venation;
 /// `schlumbergera` (flat joints toothed along their margins). A fruit set
 /// after New Year counts its season from the next year's start
 /// (158 is bramble leaves, #272).
-/// 160: a rosette succulent's flowers are single flowers on its flowering
+/// 160: stemless rosettes (rosette revision 4). A basal rosette (an
+/// agave's, an aloe's, a hechtia's) keeps its crown on the ground: the
+/// stem below its living leaves goes with the leaves that fell, a pup's
+/// runner drops to the ground as its parent's stem goes, and the short
+/// stem the living leaves stand on is drawn inside their bases
+/// (`stemless`, from `rosette`) (159 is cacti of four more genera, #260).
+/// 161: a rosette succulent's flowers are single flowers on its flowering
 /// stalk, not clusters of their own (`inflorescence` from
 /// `inflorescence_length_m`); a lycophyte's program has bud defaults;
 /// grass 9: culms branch where floras say they do (`culm_branching`)
-/// (58 species for the Rainier and Saguaro scenes, #255; 159 is
-/// cacti of four more genera, #260).
-pub const GENERATOR_REVISION: u32 = 160;
+/// (58 species for the Rainier and Saguaro scenes, #255; 160 is
+/// stemless rosettes, #279).
+pub const GENERATOR_REVISION: u32 = 161;
