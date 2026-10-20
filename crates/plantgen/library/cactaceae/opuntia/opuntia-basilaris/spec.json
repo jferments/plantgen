@@ -88,7 +88,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "stem_colour": [115, 120, 140],
+    "stem_colour": [146, 146, 128],
     "flower_colour": [185, 30, 75],
     "flower_size_m": {"min": 0.05, "max": 0.075},
     "fruit_colour_ripe": [190, 160, 115],
@@ -109,7 +109,7 @@
     "stigma_colour": [240, 230, 205]
   },
   "evidence": {
-    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: stem segments blue-green, often tinged purple."},
+    "traits.stem_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Opuntia basilaris: 'Stem segments ... blue- to yellow-green, sometimes tinged maroon-purple ... papillose to puberulent'; Anderson, The Cactus Family (2001) p. 490: 'blue-green, often tinged purple'. A puberulent pad's blue-green reads grey in the sun; with no shade named it was measured: the median of the pixels inside sunlit pads of seven iNaturalist photographs (imagekit batch inat-cacti-2026-10-19, photos 0, 2, 4, 6, 7, 8, 10 in key order), the brighter three quarters of each, then the median of the photos: RGB 146, 146, 128, a grey-green (the purple-tinged pads of photo 10 read 109, 90, 87). Until 2026-10-19 a lavender blue, RGB 115, 120, 140, read from Anderson's words."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Opuntia basilaris: fruits maturing tan, 20 to 40 by 15 to 23 mm, dry at maturity, puberulent, spineless. Until 2026-10-18 a dull dry green from Anderson (2001) p. 490, 'fruit green, dry when ripe'."},
