@@ -73,8 +73,7 @@
         "appearance.organs.leaf.shape.aspect": {
           "template": "blade",
           "map": {"leaf_form": {"blade": 0.25, "needle": 0.25}},
-          "else": 0.25,
-          "why": "A lycophyte's blade or needle leaf is drawn a quarter as wide as long, as its leaf card's default."
+          "why": "A lycophyte whose leaves its flora calls blades or needles draws them a quarter as wide as long; one whose leaf form is unstated keeps its leaf card's default."
         },
         "appearance.organs.leaf.shape.template": {
           "map": {"leaf_form": {"scale": "scales"}},
