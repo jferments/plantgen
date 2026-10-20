@@ -51,6 +51,19 @@
     "seeds": [1]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "red": {
+          "colour": [132, 46, 32]
+        },
+        "retained grey": {
+          "colour": [88, 64, 56],
+          "fissures": {
+            "floor_colour": [50, 36, 32]
+          }
+        }
+      }
+    },
     "bark": [0.42, 0.13, 0.06],
     "twig": [0.4,  0.1,  0.03],
     "bark_pattern": {

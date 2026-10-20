@@ -52,6 +52,20 @@
     "seeds": [1]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "young": {
+          "colour": [150, 146, 138]
+        },
+        "mature": {
+          "colour": [165, 160, 150],
+          "fissures": {
+            "floor_colour": [72, 66, 60],
+            "ridge_top_colour": [182, 178, 168]
+          }
+        }
+      }
+    },
     "bark": [0.33, 0.32, 0.3],
     "twig": [0.3,  0.13,  0.06],
     "bark_pattern": {
@@ -163,6 +177,7 @@
   "evidence": {
     "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 1 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/): a few tortuous scaffold limbs (2) in the photos where renders draw about 6 straight ones; Sargent (p. 296): 'stout ascending or spreading branches forming a broad compact head'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 296): 'stout ascending or spreading branches forming a broad compact head'."},
+    "appearance.bark_look.stages.mature.colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'light gray or almost white' (FNA), 'light grayish-brown' (Sudworth)"},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"The leaves are deciduous\"."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"Its fall color is unspectacular, with many trees turning plain brown\". Colour ours."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Quercus Garryana: \"stout branchlets coated at first with thick pale rufous pubescence, pubescent or tomentose and light or dark orange color during their first winter, becoming glabrous and rather bright reddish brown in their second year and ultimately gray\". Colour chosen by eye between the pubescent orange and the reddish brown."},

@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PlantGen viewer conformance</title>
+<script type="importmap">
+{ "imports": {
+  "three": "/node_modules/three/build/three.module.js",
+  "three/addons/": "/node_modules/three/examples/jsm/"
+} }
+</script>
+<script src="/node_modules/babylonjs/babylon.js"></script>
+<script src="/node_modules/babylonjs-loaders/babylonjs.loaders.min.js"></script>
+</head>
+<body style="margin:0;background:#000">
+<script type="module">
+// Each renderer draws one GLB the same way: an orthographic camera 3 m
+// out on +Z looking at the middle of a metre of trunk, a square `2 half`
+// metres a side in view, one white directional light shining along -`light`, no ambient,
+// environment or tone mapping, output in sRGB. Returns the pixels, top
+// row first, RGBA.
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+function flip(pixels, size) {
+  const out = new Uint8Array(pixels.length);
+  const row = size * 4;
+  for (let y = 0; y < size; y++) {
+    out.set(pixels.subarray((size - 1 - y) * row, (size - y) * row), y * row);
+  }
+  return out;
+}
+
+async function three(file, light, size, HALF) {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  document.body.appendChild(canvas);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: true });
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NoToneMapping;
+  renderer.setClearColor(0x000000, 1);
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-HALF, HALF, HALF, -HALF, 0.1, 10);
+  camera.position.set(0, 0.5, 3);
+  camera.lookAt(0, 0.5, 0);
+  // three's lights are in candela-like units: π gives a white Lambertian
+  // surface facing the light a radiance of 1.
+  const sun = new THREE.DirectionalLight(0xffffff, Math.PI);
+  sun.position.set(...light);
+  sun.target.position.set(0, 0, 0);
+  scene.add(sun, sun.target);
+  const gltf = await new GLTFLoader().loadAsync('/glb/' + file);
+  scene.add(gltf.scene);
+  renderer.render(scene, camera);
+  const gl = renderer.getContext();
+  const pixels = new Uint8Array(size * size * 4);
+  gl.readPixels(0, 0, size, size, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+  renderer.dispose();
+  canvas.remove();
+  return flip(pixels, size);
+}
+
+async function babylon(file, light, size, HALF) {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  document.body.appendChild(canvas);
+  const engine = new BABYLON.Engine(canvas, false, { preserveDrawingBuffer: true, antialias: false });
+  engine.setHardwareScalingLevel(1);
+  const scene = new BABYLON.Scene(engine);
+  scene.useRightHandedSystem = true;
+  scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+  scene.ambientColor = new BABYLON.Color3(0, 0, 0);
+  scene.imageProcessingConfiguration.toneMappingEnabled = false;
+  scene.imageProcessingConfiguration.exposure = 1;
+  scene.imageProcessingConfiguration.contrast = 1;
+  const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(0, 0.5, 3), scene);
+  camera.setTarget(new BABYLON.Vector3(0, 0.5, 0));
+  camera.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
+  camera.orthoLeft = -HALF; camera.orthoRight = HALF;
+  camera.orthoTop = HALF; camera.orthoBottom = -HALF;
+  camera.minZ = 0.1; camera.maxZ = 10;
+  const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-light[0], -light[1], -light[2]), scene);
+  // Babylon's PBR lights divide by π where three's do not (measured with
+  // the probes): π here gives the same radiance as three's π.
+  sun.intensity = Math.PI;
+  await BABYLON.SceneLoader.ImportMeshAsync('', '/glb/', file, scene);
+  await scene.whenReadyAsync();
+  scene.render();
+  const pixels = new Uint8Array(await engine.readPixels(0, 0, size, size));
+  engine.dispose();
+  canvas.remove();
+  return flip(pixels, size);
+}
+
+window.draw = async (engine, file, light, size, half) => {
+  const pixels = await (engine === 'three' ? three : babylon)(file, light, size, half);
+  let text = '';
+  for (let i = 0; i < pixels.length; i += 0x8000) {
+    text += String.fromCharCode(...pixels.subarray(i, i + 0x8000));
+  }
+  return btoa(text);
+};
+// A PNG of pixels `draw` returned, as a data URL.
+window.png = (base64, size) => {
+  const bytes = Uint8ClampedArray.from(atob(base64), (c) => c.charCodeAt(0));
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  canvas.getContext('2d').putImageData(new ImageData(bytes, size, size), 0, 0);
+  return canvas.toDataURL('image/png');
+};
+window.ready = true;
+</script>
+</body>
+</html>

@@ -68,7 +68,41 @@
       "why": "Pines lay down every year's shoot, as the Pinidae program does, until their old crowns are fitted."
     }
   },
+  "appearance": {
+    "bark_look": {
+      "thickness": {
+        "coefficient": 0.063
+      },
+      "stages": {
+        "twig": {
+          "until_diameter_m": 0.03,
+          "architecture": "stretched",
+          "roughness": 0.8
+        },
+        "plates": {
+          "architecture": "furrowed",
+          "roughness": 0.88,
+          "fissures": {
+            "network": "tessellated",
+            "spacing_m": 0.06,
+            "elongation": 1.5,
+            "width_share": 0.12,
+            "depth_share": 0.7,
+            "profile": "flat_topped"
+          },
+          "scales": {
+            "size_m": 0.015,
+            "aspect": 0.8,
+            "depth_m": 0.002,
+            "variation": 0.2,
+            "on_ridges": true
+          }
+        }
+      }
+    }
+  },
   "evidence": {
+    "appearance.bark_look": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Pine bark: smooth on the young shoot, then broken into plates of thin scales, the plates small and thin in most pines (lodgepole, western white, whitebark) and large in the yellow pines, whose species state theirs. Reference: ponderosa pine's record (plantgen-claude project-files/bark/records/pinus-ponderosa.json); plate size and depth for the genus inferred from Sargent's descriptions of thin, scaly pine bark."},
     "traits.architectural_model": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 485 names Pinus among the trees of Rauh's model: a monopodial trunk with rhythmic tiers of branches built like the trunk; Ingrouille, Diversity and Evolution of Land Plants (1992) p. 207 says the same of pines."},
     "traits": {
       "evidence": "SourceInferred",

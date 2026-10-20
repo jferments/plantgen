@@ -38,7 +38,37 @@
     "fruitlets": "hip",
     "flowering_position": "terminal"
   },
+  "appearance": {
+    "bark_look": {
+      "thickness": {
+        "coefficient": 0.03,
+        "max_m": 0.003
+      },
+      "stages": {
+        "cane": {
+          "until_diameter_m": 0.012,
+          "architecture": "stretched",
+          "roughness": 0.6
+        },
+        "old wood": {
+          "architecture": "exfoliating",
+          "roughness": 0.85,
+          "exfoliation": {
+            "mode": "patches",
+            "piece_m": 0.015,
+            "aspect": 2,
+            "cover": 0.3,
+            "curl_m": 0.0003,
+            "inner_colour": [140, 92, 70]
+          }
+        }
+      }
+    }
+  },
   "evidence": {
+    "appearance.bark_look.thickness": {"evidence": "Authored", "source": "plantgen-authors", "note": "The genus's bark thickness as its reference species', rosa-nutkana (plantgen-claude project-files/bark/records/rosa-nutkana.json): inferred: thin bark, as the genus's shrubs have"},
+    "appearance.bark_look.stages.cane": {"evidence": "Authored", "source": "plantgen-authors", "note": "The genus's cane stage as its reference species, rosa-nutkana, shows it (plantgen-claude project-files/bark/records/rosa-nutkana.json); numbers inferred from photos."},
+    "appearance.bark_look.stages.old wood": {"evidence": "Authored", "source": "plantgen-authors", "note": "The genus's old wood stage as its reference species, rosa-nutkana, shows it (plantgen-claude project-files/bark/records/rosa-nutkana.json); numbers inferred from photos."},
     "traits.wood_density_basic_kg_m3": {
       "evidence": "SourceInferred",
       "source": "gwdd-v2",

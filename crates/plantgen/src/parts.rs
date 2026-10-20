@@ -132,12 +132,18 @@ pub fn span(look: &Look) -> f64 {
 }
 
 /// Whether organ type `index` of `looks` draws as a part mesh: its look
-/// draws a solid on level 0 and its card's frame follows its organ's.
+/// draws a solid on level 0 and its card's frame follows its organ's. A
+/// prickle look that sets prickles between the nodes does not: its organs
+/// draw them along the internode they stand on, which a part in its
+/// card's frame cannot carry, so they are drawn in the plant's mesh.
 #[must_use]
 pub fn drawn_as_part(looks: &[Look], index: usize) -> bool {
-    looks
-        .get(index)
-        .is_some_and(|look| look.solid.is_none() && look.form.solid_at(0) && look.face_up <= 0.0)
+    looks.get(index).is_some_and(|look| {
+        look.solid.is_none()
+            && look.form.solid_at(0)
+            && look.face_up <= 0.0
+            && !matches!(look.form, Form::Prickles(form) if form.between > 0.0 || form.bristles > 0.0)
+    })
 }
 
 /// Each organ type of `looks`, whether it has a part mesh in `parts`.
