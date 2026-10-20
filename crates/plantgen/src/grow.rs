@@ -873,7 +873,7 @@ impl<'a> Grower<'a> {
             // Its neighbours' crowns are its own as the last step left it.
             self.envelopes = self.conditions.envelopes().to_vec();
             if let Some(crown) = &self.crown {
-                self.envelopes.extend(layout.envelopes(crown));
+                self.envelopes.extend(layout.envelopes(crown, clock.t));
             }
         }
         let mut timer = self.times.is_some().then(Timer::start);

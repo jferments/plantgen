@@ -1217,5 +1217,6 @@ pub mod venation;
 /// plant's like, its own crown at each neighbour's place, the stems 0.115
 /// of its height apart as in fully stocked Douglas-fir stands
 /// (`STAND_SPACING`, McArdle et al. 1961), not shade of 0.12 a metre from
-/// the ground to its top.
+/// the ground to its top; past 160 years the stand opens to old-growth
+/// Douglas-fir's spacing (`STAND_THINNING`, Franklin et al. 1981).
 pub const GENERATOR_REVISION: u32 = 164;

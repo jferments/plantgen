@@ -237,14 +237,17 @@ impl Layout {
     /// The least distance between stems a layout takes, metres.
     pub const LEAST_SPACING_M: f64 = 0.25;
 
-    /// The neighbours' crowns when each is `crown`, the plant's own, as
-    /// envelopes in the plant's frame: every one within
+    /// The neighbours' crowns at `age_years` when each is `crown`, the
+    /// plant's own, as envelopes in the plant's frame: every one within
     /// [`Self::RINGS`] rings that can shade the plant or reach its crown
-    /// ([`Crown::reaches`]), in [`sort_envelopes`]' order.
+    /// ([`Crown::reaches`]), in [`sort_envelopes`]' order. A stand spaced
+    /// by height opens with age as old-growth stands do
+    /// ([`crate::spec::stand_spacing`]).
     #[must_use]
-    pub fn envelopes(&self, crown: &Crown) -> Vec<Envelope> {
+    pub fn envelopes(&self, crown: &Crown, age_years: f64) -> Vec<Envelope> {
         let rings = -Self::RINGS..=Self::RINGS;
-        let spacing_m = self.spacing_m.max(self.per_height * crown.top_m);
+        let opening = crate::spec::stand_spacing(age_years) / crate::spec::STAND_SPACING;
+        let spacing_m = self.spacing_m.max(self.per_height * opening * crown.top_m);
         let mut envelopes = Vec::new();
         for east in rings.clone() {
             for north in rings.clone() {
@@ -1098,7 +1101,7 @@ mod tests {
         // "per_height":0.115}}}.
         assert_eq!(
             interior.class().to_string(),
-            "c143493ffd03ae6b9d9d98672bdce44776b31d518cd03f324bb2d47252dd633b"
+            "0a66def241296c41e8a15f1a9356fdb8222a1efbc06cfa7a5c63db339e36adcb"
         );
     }
 
@@ -1300,7 +1303,7 @@ mod tests {
                 spacing_m,
                 per_height: 0.0,
             }
-            .envelopes(&crown)
+            .envelopes(&crown, 0.0)
             .iter()
             .map(|envelope| envelope.centre_m)
             .collect()
@@ -1343,7 +1346,7 @@ mod tests {
         );
         assert!(Conditions::preset(Environment::Open).layout().is_none());
         // The nearest neighbours stand STAND_SPACING of the plant's height away.
-        let nearest = |top_m: f64| {
+        let nearest_at = |top_m: f64, age_years: f64| {
             let crown = Crown {
                 base_m: 0.3 * top_m,
                 top_m,
@@ -1351,15 +1354,20 @@ mod tests {
                 leaf_area_m2: 100.0,
             };
             layout
-                .envelopes(&crown)
+                .envelopes(&crown, age_years)
                 .iter()
                 .map(|envelope| envelope.centre_m[0].hypot(envelope.centre_m[1]))
                 .fold(f64::INFINITY, f64::min)
         };
+        let nearest = |top_m: f64| nearest_at(top_m, 60.0);
         assert!((nearest(8.0) - 0.92).abs() < 1e-9);
         assert!((nearest(40.0) - 4.6).abs() < 1e-9);
         // Never nearer than the least spacing.
         assert!((nearest(0.4) - Layout::LEAST_SPACING_M).abs() < 1e-9);
+        // Past the yield tables' ages it opens as old growth does.
+        assert!((nearest_at(40.0, 160.0) - 4.6).abs() < 1e-9);
+        assert!((nearest_at(40.0, 450.0) - 0.204 * 40.0).abs() < 1e-9);
+        assert!((nearest_at(40.0, 850.0) - 0.204 * 40.0).abs() < 1e-9);
     }
 
     #[test]
