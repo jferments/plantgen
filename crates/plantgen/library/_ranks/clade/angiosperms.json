@@ -623,6 +623,77 @@
       "map": {"leaf_division": {"compound": "compound", "simple": {"map": {"leaf_incision": {"none": "simple", "lobed": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "cleft": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "parted": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "dissected": "lobed"}}, "else": "simple"}}},
       "why": "A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
     },
+    "generator.params.thorns": {
+      "map": {"spines": {"none": 0, "thorns": {"map": {"thorn_position": {"lateral": 1, "terminal": 0, "both": 1}}, "else": 1}, "prickles": 1}},
+      "why": "An armed tree or shrub carries its prickles or thorns at the nodes, beside each bud: a rose's below its stipules, a bramble's on its canes, a hawthorn's thorns in the leaf axils; one whose thorns only tip its twigs bears none there; programs that grow no thorns leave it unread."
+    },
+    "generator.params.thorn_length": {
+      "rule": "spine_length_m",
+      "why": "A prickle or thorn is drawn as long as its flora measures it."
+    },
+    "generator.params.thorn_angle": {
+      "map": {"spine_angle": {"ascending": 55, "erect": 85, "declined": 115}},
+      "else": {"map": {"spines": {"prickles": 85}}},
+      "why": "A prickle or thorn leaves its shoot at the angle its flora gives: leaning toward the shoot's tip where ascending, square to it where erect, back toward its base where declined (retrorse). A prickle whose flora does not say stands square to its stem, as most do."
+    },
+    "generator.params.thorn_pair": {
+      "map": {"thorn_origin": {"shoot": 0, "axillary": 0, "stipular": 1}},
+      "why": "A thorn that is a shoot, or a leafless thorn in an axil, stands alone beside its bud (a hawthorn's, a citrus's); stipular spines stand in a pair at the node, one in each stipule's place (a black locust's)."
+    },
+    "generator.params.thorn_share": {
+      "map": {"thorn_frequency": {"few": 0.2, "numerous": 0.6, "every_node": 1}},
+      "why": "A shoot bears its thorns on as many of its nodes as its flora says: few, about one node in five; numerous, three in five; or every node (by eye from photographs of hawthorns and locusts; imagekit counts can set them)."
+    },
+    "generator.params.thorn_spread": {
+      "rule": "clamp((max(spine_length_m) - min(spine_length_m)) / (max(spine_length_m) + min(spine_length_m)), 0.05, 0.8)",
+      "why": "A plant's thorns or prickles run from the shortest to the longest its flora measures, about its middle length (a hawthorn's 7 mm terminal thorns to its 24 mm lateral ones)."
+    },
+    "generator.params.thorn_years": {
+      "map": {"thorn_persistence": {"young_stems": 2, "few_years": 5, "persistent": 0}},
+      "why": "A thorn or prickle stays on its stem as long as its flora says: two years where only the young stems are armed (the stem hairs' youth), five where they persist a few years (a hawthorn's), for good where they persist."
+    },
+    "generator.params.thorn_tips": {
+      "map": {"thorn_position": {"terminal": 0.5, "both": 0.25}},
+      "why": "A shoot whose twigs end in thorns ends about half its long shoots' years in one where they are terminal, a quarter where its thorns are both terminal and lateral (by eye from photographs of palo verdes and hawthorns; imagekit counts can set them)."
+    },
+    "appearance.organs.thorn.form": {
+      "map": {"spines": {"thorns": "thorn"}},
+      "why": "A thorn, a shoot turned spine (a hawthorn's, a mesquite's), is drawn as a straight slender cone standing from the stem's surface beside its bud."
+    },
+    "appearance.organs.thorn.form.prickles.between": {
+      "map": {"spines": {"prickles": {"map": {"internodal_prickles": {"none": 0, "sparse": 15, "moderate": 50, "dense": 400}}, "else": 0}}},
+      "why": "A prickle grows from the stem's skin (a rose's, a bramble's, a devil's club's), so it is drawn as a flattened cone on the stem's surface at each node and, as thickly as its flora says, between the nodes: on a stem 1 cm across about one every 7 cm where sparse, one every 2 cm where moderate, about four a centimetre where dense (sparse and moderate by eye from photographs of roses and brambles; dense counted on devil's club's older stems, about 430 a metre at 1 cm, imagekit run devils-club-prickles-by-eye-2026-10-19, the young tips bearing three times that), and more on a stouter stem, as a flora's density is of the stem's skin."
+    },
+    "appearance.organs.thorn.form.prickles.bristles": {
+      "map": {"spines": {"prickles": {"map": {"aciculi": {"none": 0, "sparse": 40, "dense": 300}}, "else": 0}}},
+      "why": "Needle-like aciculi and bristles among the prickles are drawn as thin needles a third a prickle's length: on a stem 1 cm across about one every 2.5 cm where sparse, one every 3 mm where they cover it (a beach rose's young canes)."
+    },
+    "appearance.organs.thorn.form.prickles.between_only": {
+      "map": {"spines": {"prickles": {"map": {"prickle_position": {"scattered": true}}}}},
+      "why": "A stem whose prickles are scattered between its nodes, as a catclaw's are, bears none at the nodes themselves."
+    },
+    "appearance.organs.thorn.shape.template": {
+      "map": {"spines": {"thorns": "blade", "prickles": "blade"}},
+      "why": "A thorn or prickle is drawn from a blade card: its length the organ's, its foot's width the card's aspect, narrowing to a point."
+    },
+    "appearance.organs.thorn.shape.aspect": {
+      "template": "blade",
+      "map": {"spines": {"thorns": {"rule": "first(clamp(spine_width_m / spine_length_m, 0.05, 1.5), 0.12)"}, "prickles": {"rule": "first(clamp(spine_width_m / spine_length_m, 0.05, 1.5), 0.4)"}}},
+      "why": "A thorn's or prickle's foot is as wide for its length as its flora measures it; where it gives no width, a thorn's about an eighth of its length (a slender cone, as the legumes' thorns are drawn) and a prickle's two fifths (a flora's ordinary broad-based prickle; subulate ones are narrower, deltoid ones as wide as long)."
+    },
+    "appearance.organs.thorn.shape.taper": {
+      "template": "blade",
+      "map": {"spines": {"thorns": 1, "prickles": 1}},
+      "why": "A thorn or prickle narrows from its foot to a sharp tip."
+    },
+    "appearance.organs.thorn.bend.droop": {
+      "map": {"spines": {"prickles": {"map": {"spine_curve": {"straight": 0, "curved": 35, "hooked": 80}}, "else": 0}}},
+      "why": "A prickle bends back toward the stem's base from foot to tip as its flora says: not at all where straight (erect, subulate), about a third of a right angle where curved, nearly a right angle where hooked, as a blackberry's and a dog rose's are."
+    },
+    "appearance.organs.thorn.colour": {
+      "colour": ["spine_colour", "bark_colour"],
+      "why": "A thorn or prickle is drawn in the colour its flora gives it, or else in its bark's: the young stem's skin it grows from."
+    },
     "appearance.organs.basal.shape.template": {
       "map": {"leaf_division": {"compound": "compound", "simple": {"map": {"leaf_incision": {"none": "simple", "lobed": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "cleft": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "parted": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "dissected": "lobed"}}, "else": "simple"}}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated. A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."

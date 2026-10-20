@@ -25,6 +25,7 @@
 //! ([`math`]).
 
 pub mod bark;
+pub mod bark_look;
 pub mod bend;
 pub mod blooms;
 pub mod body;
@@ -68,6 +69,7 @@ pub mod organs;
 pub mod package;
 pub mod parts;
 pub mod preview;
+pub mod prickles;
 pub mod quality;
 pub mod raster;
 pub mod rng;
@@ -1168,4 +1170,30 @@ pub mod venation;
 /// runner drops to the ground as its parent's stem goes, and the short
 /// stem the living leaves stand on is drawn inside their bases
 /// (`stemless`, from `rosette`) (159 is cacti of four more genera, #260).
-pub const GENERATOR_REVISION: u32 = 160;
+/// 161: a species' spec states its bark in the bark language
+/// (`appearance.bark_look`, `crate::bark_look`): stages by stem diameter,
+/// keyed by name so a genus states how its bark breaks up and its species
+/// add their colours; eleven reference genera state theirs (Acer, Alnus,
+/// Arbutus, Betula, Pinus, Populus, Prunus, Pseudotsuga, Quercus, Rosa,
+/// Thuja), and every other species with a bark pattern draws a look made
+/// from it; a species may instead describe its bark in a flora's words
+/// (`bark_architecture`, `fissure_network`, `exfoliation`,
+/// `lenticel_shape`, `old_bark_on` and the rest), which rules at phylum
+/// Tracheophyta turn into its young, grown and old stages; an old stage
+/// shows up from the trunk's base, or on limbs' undersides, where stated,
+/// and each stage gives way to the next in mixed steps;
+/// `plantc export --bark-look spec` bakes it; and a thorn or prickle
+/// stands on its stem's surface, a prickle as a flattened cone curving
+/// back as its flora says (`spine_curve`, `spine_angle`, `spine_width_m`)
+/// with more between the nodes (`internodal_prickles`, `aciculi`) or
+/// only there (`prickle_position`), and
+/// a shoot's thorns stand alone where they are shoots (`thorn_origin`),
+/// on as many nodes as its flora says (`thorn_frequency`), as long as its
+/// range runs, falling from older stems where it says so
+/// (`thorn_persistence`), and tipping its twigs where they are terminal
+/// (`thorn_position`: a palo verde's; broadleaf 27), by rules for all
+/// flowering plants; an armed herb bears prickles at its leafy nodes
+/// (herb 20: a nightshade's, from Solanaceae's words), and a prickle look
+/// with prickles between the nodes is drawn in the plant's mesh, not as a
+/// part, so exports keep them (160 is stemless rosettes, #279).
+pub const GENERATOR_REVISION: u32 = 161;

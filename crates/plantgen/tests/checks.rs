@@ -298,6 +298,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "sarcobatus-vermiculatus",
+        "crown_width_max_m",
+        "greasewood's crown sat just inside FNA's greatest 1.8 m across; its spines (broadleaf 27's thorns, from its spines word) add draws, and one of the three plants now spreads to 1.85 m: the shrub program sizes the crown from its height, and no rule yet takes a flora's greatest width",
+    ),
+    (
+        "sarcobatus-vermiculatus",
         "height_typical_m",
         "grown 20 years in the open it reaches 2.1 to 3.0 m, past the 1 to 2 m FNA gives as usual but within its 5 m at most: the shrubs' internode rule (a tenth of the usual height) is calibrated to their 12-year growth, and a rule cannot read the age a species is grown to",
     ),

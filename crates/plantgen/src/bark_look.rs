@@ -1,0 +1,2438 @@
+//! The bark language's drawing record and the bark tiles drawn from it
+//! (bark plan step 3; `plantgen-claude` `project-files/bark/LANGUAGE.md`).
+//!
+//! A [`BarkLook`] describes a species' bark as floras do: a list of
+//! [`Stage`]s by stem diameter ("smooth with resin blisters when young,
+//! becoming thick and deeply furrowed"), each a stack of layers in physical
+//! units: the surface and its mottling, a fissure network with its ridge
+//! profile, finer scales on the ridges, exfoliation (papery strips,
+//! fibrous strips, flakes and patches whose exposed colour ages),
+//! lenticels, warts and resin blisters. Fissure depth is a share of the
+//! bark's thickness at the stem's diameter ([`Thickness`]), so furrows
+//! deepen as a trunk grows.
+//!
+//! [`bake`] draws one stage at one diameter as a square tile that repeats
+//! every `period` metres both round the stem and along it: height in
+//! metres, linear albedo, roughness and occlusion, from which [`Tile`]
+//! gives the glTF set (base colour, a tangent-space normal map with +Y up
+//! the stem, occlusion-roughness-metallic) and a lit preview. Every cell,
+//! strip and lenticel wraps round the tile's edges, so the tile has no
+//! seam; every random number is a hash of the seed and what it is for, and
+//! the transcendental functions go through `libm`, so the same record
+//! draws the same bytes on every machine.
+//!
+//! A species' spec states its bark as a [`BarkSpec`]
+//! (`appearance.bark_look`), its stages keyed by name so a genus can state
+//! them and its species add their colours; a species that states only an
+//! older bark pattern draws one made from it ([`from_pattern`]). `plantc
+//! bark` also draws a record from a file, for review.
+
+use serde::{Deserialize, Serialize};
+
+use crate::rng::{hash_words, mix64, unit};
+
+/// How many of the stem's own diameters a stage on the base climbs where
+/// its record gives no height: birch's black base, about 2 m up a 50 cm
+/// trunk (inferred from photos; imagekit will measure it).
+pub const BASE_RISE: f64 = 4.0;
+
+/// How far down a surface faces, as the downward share of its normal,
+/// before a stage on the underside shows there: the lower third of a
+/// level limb.
+pub const UNDERSIDE: f64 = 0.35;
+
+/// How far either side of where a stage ends the next one comes in, as a
+/// share of that diameter or height: gradually, over [`BLEND_STEPS`]
+/// textures that mix the two, as plates and dark base bark spread over a
+/// trunk (inferred; imagekit will measure it).
+pub const BLEND: f64 = 0.3;
+
+/// How far either side of [`UNDERSIDE`] an underside stage comes in, in
+/// the downward share of the normal.
+pub const UNDERSIDE_BLEND: f64 = 0.15;
+
+/// How many steps a blend between two stages takes: the later stage
+/// covers a quarter, a half, then three quarters of the bark.
+pub const BLEND_STEPS: u8 = 4;
+
+/// How much the stem's patches ([`patch`]) move a blend's step, at most,
+/// in its middle: neighbouring faces of one ring take different steps.
+pub const PATCH_JITTER: f64 = 0.25;
+
+/// The size of those patches, in metres (inferred).
+pub const PATCH_M: f64 = 0.4;
+
+/// The record's schema.
+pub const BARK_LOOK_SCHEMA: u32 = 1;
+
+/// A species' bark, in the bark language's drawing terms.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BarkLook {
+    pub schema: u32,
+    /// The species' id.
+    pub id: String,
+    pub thickness: Thickness,
+    /// The stages from the youngest, each until a stem diameter; the last
+    /// has none.
+    pub stages: Vec<Stage>,
+    /// Where each value comes from, by its path in the record.
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    pub evidence: std::collections::BTreeMap<String, String>,
+}
+
+/// How thick the bark is on a stem `d` metres across: `coefficient` × `d`
+/// (the fire models' single bark thickness, FOFEM), or `power[0]` ×
+/// `d`^`power[1]` (Rosell 2016), within `min_m` and `max_m`; 0.03 × `d`
+/// where neither is stated.
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Thickness {
+    #[serde(default)]
+    pub coefficient: Option<f64>,
+    #[serde(default)]
+    pub power: Option<[f64; 2]>,
+    #[serde(default)]
+    pub min_m: f64,
+    #[serde(default)]
+    pub max_m: Option<f64>,
+}
+
+impl Thickness {
+    /// Metres of bark on a stem `diameter` metres across.
+    #[must_use]
+    pub fn at(&self, diameter: f64) -> f64 {
+        let d = diameter.max(0.0);
+        let t = match (self.coefficient, self.power) {
+            (Some(c), _) => c * d,
+            (None, Some([a, b])) => a * libm::pow(d, b),
+            (None, None) => 0.03 * d,
+        };
+        let t = t.max(self.min_m);
+        self.max_m.map_or(t, |most| t.min(most))
+    }
+}
+
+/// Where on a plant a stage shows first.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum On {
+    #[default]
+    All,
+    Base,
+    Underside,
+}
+
+/// The four kinds of bark by how they grow (Shtein et al. 2023): whether
+/// the outer layer keeps whole as the stem widens, and whether it has
+/// layers that let pieces come away.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Architecture {
+    Stretched,
+    Exfoliating,
+    Furrowed,
+    Peeling,
+}
+
+/// One stage of a bark's life.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Stage {
+    /// Its name; in a spec, its key in [`BarkSpec::stages`].
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub name: String,
+    /// The stem diameter where the next stage takes over, metres.
+    #[serde(default)]
+    pub until_diameter_m: Option<f64>,
+    #[serde(default)]
+    pub on: On,
+    /// How far up the stem a stage `on` the base climbs, metres; where
+    /// none is stated, [`BASE_RISE`] times the stem's diameter there.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub base_height_m: Option<f64>,
+    /// How it grows; where none is stated, from its layers
+    /// ([`Stage::architecture`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub architecture: Option<Architecture>,
+    /// The outer surface's colour, sRGB. A record states it; a spec may
+    /// leave it to the species' bark colour ([`BarkSpec::look`]).
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "some_colour"
+    )]
+    pub colour: Option<[u8; 3]>,
+    /// PBR roughness of the surface.
+    #[serde(default = "matte")]
+    pub roughness: f64,
+    /// A waxy or chalky bloom: how far the surface whitens, 0 to 1.
+    #[serde(default)]
+    pub bloom: f64,
+    #[serde(default)]
+    pub mottle: Option<Mottle>,
+    #[serde(default)]
+    pub fissures: Option<Fissures>,
+    #[serde(default)]
+    pub scales: Option<Scales>,
+    #[serde(default)]
+    pub exfoliation: Option<Exfoliation>,
+    #[serde(default)]
+    pub lenticels: Option<Lenticels>,
+    #[serde(default)]
+    pub warts: Option<Bumps>,
+    #[serde(default)]
+    pub blisters: Option<Bumps>,
+}
+
+impl Stage {
+    /// The outer surface's colour, sRGB (mid grey where a record that
+    /// failed its check left it out).
+    #[must_use]
+    pub fn surface(&self) -> [u8; 3] {
+        self.colour.unwrap_or([128, 128, 128])
+    }
+
+    /// How it grows: as stated, else from its layers (Shtein et al. 2023:
+    /// fissures and pieces that come away peel, fissures alone furrow,
+    /// pieces alone exfoliate, neither stretches).
+    #[must_use]
+    pub fn architecture(&self) -> Architecture {
+        self.architecture
+            .unwrap_or(match (&self.fissures, &self.exfoliation) {
+                (Some(_), Some(_)) => Architecture::Peeling,
+                (Some(_), None) => Architecture::Furrowed,
+                (None, Some(_)) => Architecture::Exfoliating,
+                (None, None) => Architecture::Stretched,
+            })
+    }
+
+    /// What a record leaves to its other values, filled in: its
+    /// architecture, and the colours of lenticels (paler than the surface)
+    /// and of fresh inner bark (redder and paler) where none is stated.
+    fn settle(&mut self) {
+        self.architecture = Some(self.architecture());
+        let surface = linear(self.surface());
+        if let Some(lenticels) = &mut self.lenticels
+            && lenticels.colour.is_none()
+        {
+            lenticels.colour = Some(srgb_of(blend(surface, [0.62, 0.55, 0.42], 0.5)));
+        }
+        if let Some(peel) = &mut self.exfoliation
+            && peel.inner_colour.is_none()
+        {
+            peel.inner_colour = Some(srgb_of(blend(surface, [0.45, 0.2, 0.1], 0.5)));
+        }
+    }
+}
+
+/// An sRGB colour from a linear one, 0 to 1.
+fn srgb_of(colour: [f64; 3]) -> [u8; 3] {
+    colour.map(crate::texture::linear_to_srgb)
+}
+
+/// A colour as a record writes it, sRGB 0 to 255, or as a spec's colour
+/// rule sets it, linear 0 to 1 ([`crate::inherit`]): a colour with a
+/// channel above 1 is sRGB, any other linear (so `[1, 1, 1]` is white).
+fn colour_value(channels: [f64; 3]) -> Option<[u8; 3]> {
+    if channels
+        .iter()
+        .any(|c| !c.is_finite() || *c < 0.0 || *c > 255.0)
+    {
+        return None;
+    }
+    Some(if channels.iter().any(|c| *c > 1.0) {
+        channels.map(|c| {
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let byte = c.round() as u8;
+            byte
+        })
+    } else {
+        srgb_of(channels)
+    })
+}
+
+fn some_colour<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<[u8; 3]>, D::Error> {
+    match Option::<[f64; 3]>::deserialize(deserializer)? {
+        None => Ok(None),
+        Some(channels) => colour_value(channels).map(Some).ok_or_else(|| {
+            serde::de::Error::custom("a colour's channels are 0 to 255, or 0 to 1 linear")
+        }),
+    }
+}
+
+const fn matte() -> f64 {
+    0.85
+}
+
+/// Soft patches of a different shade or colour.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Mottle {
+    /// Size of a patch, metres.
+    #[serde(default = "mottle_scale")]
+    pub scale_m: f64,
+    /// How far a patch moves toward `colour` (or lighter and darker), 0 to 1.
+    #[serde(default = "mottle_amount")]
+    pub amount: f64,
+    #[serde(default, deserialize_with = "some_colour")]
+    pub colour: Option<[u8; 3]>,
+}
+
+const fn mottle_scale() -> f64 {
+    0.1
+}
+
+const fn mottle_amount() -> f64 {
+    0.3
+}
+
+/// How the fissures run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Network {
+    /// Parallel furrows up the stem.
+    Longitudinal,
+    /// Ridges that merge and split (anastomosing): oaks, ash, Douglas fir.
+    #[default]
+    Interlacing,
+    /// A net of diamonds.
+    Reticulate,
+    /// Square or oblong blocks: checkered bark, plates.
+    Tessellated,
+}
+
+/// The cross-section of a ridge.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Profile {
+    #[default]
+    Rounded,
+    FlatTopped,
+    Sharp,
+}
+
+/// Fissures between ridges or plates. A value not stated is a middling
+/// furrowed bark's: interlacing rounded ridges 5 cm apart, three times as
+/// long as wide, the furrows a quarter of the surface and half the bark's
+/// depth.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Fissures {
+    #[serde(default)]
+    pub network: Network,
+    /// Ridge centre to ridge centre round the stem, metres.
+    #[serde(default = "spacing")]
+    pub spacing_m: f64,
+    /// A ridge or plate's length along the stem over its width.
+    #[serde(default = "elongation")]
+    pub elongation: f64,
+    /// The share of the surface the fissures' floors take.
+    #[serde(default = "width_share")]
+    pub width_share: f64,
+    /// The share of the bark's thickness the fissures cut through.
+    #[serde(default = "depth_share")]
+    pub depth_share: f64,
+    #[serde(default)]
+    pub profile: Profile,
+    /// How far ridges bridge their fissures, 0 to 1 ("ridges connected at
+    /// intervals by narrower cross ridges").
+    #[serde(default)]
+    pub cross_ridges: f64,
+    /// The fissure floor's colour, sRGB; darker surface colour if none.
+    #[serde(default, deserialize_with = "some_colour")]
+    pub floor_colour: Option<[u8; 3]>,
+    /// The weathered ridge tops' colour, sRGB.
+    #[serde(default, deserialize_with = "some_colour")]
+    pub ridge_top_colour: Option<[u8; 3]>,
+    /// Fine grain on the ridges, as a share of the depth.
+    #[serde(default = "grain")]
+    pub grain: f64,
+}
+
+const fn grain() -> f64 {
+    0.12
+}
+
+const fn spacing() -> f64 {
+    0.05
+}
+
+const fn elongation() -> f64 {
+    3.0
+}
+
+const fn width_share() -> f64 {
+    0.25
+}
+
+const fn depth_share() -> f64 {
+    0.5
+}
+
+/// Small scales or flakes on the surface or the ridges, each lifted at its
+/// lower edge.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Scales {
+    /// A scale's width round the stem, metres (1.5 cm if none).
+    #[serde(default = "scale_size")]
+    pub size_m: f64,
+    /// Its length along the stem over its width.
+    #[serde(default = "one")]
+    pub aspect: f64,
+    /// How far its edge stands proud, metres.
+    #[serde(default = "scale_depth")]
+    pub depth_m: f64,
+    /// How much scales differ in shade, 0 to 1.
+    #[serde(default = "scale_variation")]
+    pub variation: f64,
+    /// Only on ridge tops (true) or everywhere.
+    #[serde(default)]
+    pub on_ridges: bool,
+}
+
+const fn scale_variation() -> f64 {
+    0.12
+}
+
+const fn scale_size() -> f64 {
+    0.015
+}
+
+const fn one() -> f64 {
+    1.0
+}
+
+const fn scale_depth() -> f64 {
+    0.002
+}
+
+/// How the outer bark comes away.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Mode {
+    /// Thin sheets round the stem that curl at their edges (birch).
+    PaperyStrips,
+    /// Long strips up the stem (cedars).
+    FibrousStrips,
+    /// Pieces that fall and leave patches whose fresh colour ages
+    /// (madrone, plane, pines' plates).
+    #[default]
+    Patches,
+}
+
+/// Exfoliation.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Exfoliation {
+    #[serde(default)]
+    pub mode: Mode,
+    /// A piece's long side, metres (10 cm if none).
+    #[serde(default = "piece")]
+    pub piece_m: f64,
+    /// Its long side over its short side.
+    #[serde(default = "piece_aspect")]
+    pub aspect: f64,
+    /// The share of the surface where a piece has come away.
+    #[serde(default = "cover")]
+    pub cover: f64,
+    /// How far a loose edge lifts and curls, metres.
+    #[serde(default)]
+    pub curl_m: f64,
+    /// Bark freshly exposed, sRGB; redder and paler than the surface if
+    /// none.
+    #[serde(default, deserialize_with = "some_colour")]
+    pub inner_colour: Option<[u8; 3]>,
+    /// The colours exposed bark passes through as it weathers, after
+    /// `inner_colour`, toward the surface colour.
+    #[serde(default)]
+    pub aged: Vec<[u8; 3]>,
+    /// One colour exposed bark weathers to before the surface's, where
+    /// `aged` lists none (a flora's "weathering to dark red").
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        deserialize_with = "some_colour"
+    )]
+    pub weathered: Option<[u8; 3]>,
+}
+
+const fn piece() -> f64 {
+    0.1
+}
+
+const fn piece_aspect() -> f64 {
+    3.0
+}
+
+const fn cover() -> f64 {
+    0.25
+}
+
+/// The shape of a lenticel.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum LenticelShape {
+    Dot,
+    #[default]
+    Dash,
+    Diamond,
+}
+
+/// Lenticels.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Lenticels {
+    #[serde(default)]
+    pub shape: LenticelShape,
+    /// Long side round the stem (true) or along it.
+    #[serde(default = "yes")]
+    pub horizontal: bool,
+    /// Length range when formed, metres (2 to 6 mm if none).
+    #[serde(default = "lenticel_length")]
+    pub length_m: [f64; 2],
+    /// Width over length.
+    #[serde(default = "lenticel_width")]
+    pub width_ratio: f64,
+    #[serde(default = "lenticel_count")]
+    pub per_m2: f64,
+    /// Raised (positive) or sunken, metres.
+    #[serde(default)]
+    pub relief_m: f64,
+    /// Paler than the surface if none.
+    #[serde(default, deserialize_with = "some_colour")]
+    pub colour: Option<[u8; 3]>,
+    /// They widen round the stem as it grows (cherries, birches): length
+    /// times the diameter over `formed_diameter_m`, at most 6.
+    #[serde(default)]
+    pub stretch: bool,
+    #[serde(default = "formed")]
+    pub formed_diameter_m: f64,
+    /// Set in rows round the stem.
+    #[serde(default)]
+    pub rows: bool,
+}
+
+const fn yes() -> bool {
+    true
+}
+
+const fn formed() -> f64 {
+    0.02
+}
+
+const fn lenticel_length() -> [f64; 2] {
+    [0.002, 0.006]
+}
+
+const fn lenticel_width() -> f64 {
+    0.25
+}
+
+const fn lenticel_count() -> f64 {
+    300.0
+}
+
+/// Round bumps: corky warts or resin blisters.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Bumps {
+    #[serde(default = "bump_count")]
+    pub per_m2: f64,
+    #[serde(default = "bump_size")]
+    pub diameter_m: [f64; 2],
+    #[serde(default = "bump_height")]
+    pub height_m: f64,
+    #[serde(default, deserialize_with = "some_colour")]
+    pub colour: Option<[u8; 3]>,
+    /// Set in bands round the stem.
+    #[serde(default)]
+    pub rows: bool,
+    /// PBR roughness on the bump; the surface's if none.
+    #[serde(default)]
+    pub roughness: Option<f64>,
+}
+
+const fn bump_count() -> f64 {
+    100.0
+}
+
+const fn bump_size() -> [f64; 2] {
+    [0.002, 0.006]
+}
+
+const fn bump_height() -> f64 {
+    0.001
+}
+
+/// A problem with a record.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BarkLookError(pub String);
+
+impl std::fmt::Display for BarkLookError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+/// What a piece of stem wears ([`BarkLook::wear_where`]): stage `over`
+/// covering `step` of [`BLEND_STEPS`] of stage `under`; one stage alone
+/// is both, at step 0.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Wear {
+    pub under: usize,
+    pub over: usize,
+    pub step: u8,
+}
+
+impl Wear {
+    /// Stage `stage` alone.
+    #[must_use]
+    pub fn plain(stage: usize) -> Self {
+        Self {
+            under: stage,
+            over: stage,
+            step: 0,
+        }
+    }
+
+    /// The stage that covers most of it (at half, the later one).
+    #[must_use]
+    pub fn most(self) -> usize {
+        if 2 * self.step >= BLEND_STEPS {
+            self.over
+        } else {
+            self.under
+        }
+    }
+
+    /// The share of the bark the later stage covers.
+    #[must_use]
+    pub fn share(self) -> f64 {
+        f64::from(self.step) / f64::from(BLEND_STEPS)
+    }
+}
+
+/// `over` covering `share` of `under`, two tiles of one size and period:
+/// it takes first the texels where its own bark stands highest (plates,
+/// ridges and lifted pieces come first) in patches about a fifth of the
+/// tile across, so a larger share covers all a smaller one did.
+#[must_use]
+pub fn mix(under: &Tile, over: &Tile, share: f64, seed: u64) -> Tile {
+    let size = under.size;
+    let count = size * size;
+    let (low, high) = over.relief();
+    let span = (high - low).max(1.0e-9);
+    let draws = crate::texture::Draws(hash_words(&[seed, 0x006d_6978]));
+    let mut order: Vec<(f64, usize)> = (0..count)
+        .map(|texel| {
+            let (x, y) = (
+                crate::texture::to_f64(texel % size),
+                crate::texture::to_f64(texel / size),
+            );
+            let noise = crate::texture::fbm(draws, 5, 3, x, y, size);
+            let raised = (over.height[texel] - low) / span;
+            (0.65 * noise + 0.35 * raised, texel)
+        })
+        .collect();
+    order.sort_by(|a, b| b.0.total_cmp(&a.0).then(a.1.cmp(&b.1)));
+    let mut tile = under.clone();
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let taken = libm::round(share.clamp(0.0, 1.0) * crate::texture::to_f64(count)) as usize;
+    for &(_, texel) in &order[..taken.min(count)] {
+        tile.albedo[texel] = over.albedo[texel];
+        tile.height[texel] = over.height[texel];
+        tile.roughness[texel] = over.roughness[texel];
+        tile.occlusion[texel] = over.occlusion[texel];
+    }
+    tile.thickness_m = under.thickness_m.max(over.thickness_m);
+    tile
+}
+
+/// A smooth noise, 0 to 1, over the stem's surface at `position` (metres):
+/// patches about [`PATCH_M`] across with ragged edges a third that size,
+/// the same everywhere for one position.
+#[must_use]
+pub fn patch(position: [f64; 3]) -> f64 {
+    let coarse = lattice_noise(position, PATCH_M, 1);
+    let fine = lattice_noise(position, PATCH_M / 3.0, 2);
+    // Value noise gathers near a half; spread it back over 0 to 1.
+    (0.5 + 1.6 * (0.75 * coarse + 0.25 * fine - 0.5)).clamp(0.0, 1.0)
+}
+
+/// Value noise on a cubic lattice `cell` metres across, smoothly
+/// interpolated; `salt` picks the lattice values.
+fn lattice_noise(position: [f64; 3], cell: f64, salt: u64) -> f64 {
+    let scaled = position.map(|x| x / cell);
+    let base = scaled.map(libm::floor);
+    let fraction: Vec<f64> = (0..3)
+        .map(|axis| {
+            let t = scaled[axis] - base[axis];
+            t * t * (3.0 - 2.0 * t)
+        })
+        .collect();
+    let mut total = 0.0;
+    for corner in 0..8_u64 {
+        let mut weight = 1.0;
+        let mut words = [salt, 0, 0, 0];
+        for axis in 0..3 {
+            let up = (corner >> axis) & 1 == 1;
+            weight *= if up {
+                fraction[axis]
+            } else {
+                1.0 - fraction[axis]
+            };
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            {
+                words[axis + 1] = (base[axis] as i64 + i64::from(up)) as u64;
+            }
+        }
+        total += weight * unit(mix64(hash_words(&words)));
+    }
+    total
+}
+
+impl BarkLook {
+    /// A record from its JSON, checked.
+    ///
+    /// # Errors
+    ///
+    /// When the JSON does not parse or a value is out of range.
+    pub fn from_json(text: &str) -> Result<Self, BarkLookError> {
+        let mut look: Self =
+            serde_json::from_str(text).map_err(|error| BarkLookError(error.to_string()))?;
+        look.check()?;
+        look.settle();
+        Ok(look)
+    }
+
+    fn check(&self) -> Result<(), BarkLookError> {
+        let fail = |what: String| Err(BarkLookError(format!("{}: {what}", self.id)));
+        if self.schema != BARK_LOOK_SCHEMA {
+            return fail(format!("schema {} is not {BARK_LOOK_SCHEMA}", self.schema));
+        }
+        if self.stages.is_empty() {
+            return fail("no stages".into());
+        }
+        let mut last = 0.0;
+        for (index, stage) in self.stages.iter().enumerate() {
+            let final_stage = index + 1 == self.stages.len();
+            if stage.name.is_empty() {
+                return fail(format!("stage {index} has no name"));
+            }
+            if stage.colour.is_none() {
+                return fail(format!("stage {} has no colour", stage.name));
+            }
+            match (stage.until_diameter_m, final_stage) {
+                (Some(_), true) => return fail(format!("the last stage, {}, ends", stage.name)),
+                (None, false) => return fail(format!("stage {} has no end", stage.name)),
+                (Some(until), false) if until <= last => {
+                    return fail(format!(
+                        "stage {} ends before the one before it",
+                        stage.name
+                    ));
+                }
+                (Some(until), false) => last = until,
+                (None, true) => {}
+            }
+            if let Some(fissures) = &stage.fissures
+                && !(fissures.spacing_m > 0.0
+                    && fissures.elongation > 0.0
+                    && (0.0..1.0).contains(&fissures.width_share)
+                    && (0.0..=1.0).contains(&fissures.depth_share))
+            {
+                return fail(format!("stage {}: fissures out of range", stage.name));
+            }
+            if let Some(scales) = &stage.scales
+                && !(scales.size_m > 0.0 && scales.aspect > 0.0)
+            {
+                return fail(format!("stage {}: scales out of range", stage.name));
+            }
+            if let Some(peel) = &stage.exfoliation
+                && !(peel.piece_m > 0.0 && peel.aspect >= 1.0 && (0.0..=1.0).contains(&peel.cover))
+            {
+                return fail(format!("stage {}: exfoliation out of range", stage.name));
+            }
+            if let Some(lenticels) = &stage.lenticels
+                && !(lenticels.per_m2 > 0.0
+                    && lenticels.length_m[0] > 0.0
+                    && lenticels.length_m[1] >= lenticels.length_m[0])
+            {
+                return fail(format!("stage {}: lenticels out of range", stage.name));
+            }
+        }
+        Ok(())
+    }
+
+    fn settle(&mut self) {
+        for stage in &mut self.stages {
+            stage.settle();
+        }
+    }
+
+    /// What a piece of stem wears: the stage its `diameter` reaches
+    /// ([`BarkLook::stage_at`]) where that stage shows (a stage on the
+    /// base only below its height, `height` metres above the ground; a
+    /// stage on the underside only where the surface faces down, `down`
+    /// being the share of its normal pointing down, above [`UNDERSIDE`]),
+    /// elsewhere the stage before it. Near each of those edges, within
+    /// [`BLEND`] of it, the two stages blend in [`BLEND_STEPS`]; `patch`
+    /// (0 to 1, [`patch`] at the piece) moves the step by up to
+    /// [`PATCH_JITTER`] so the steps break up into patches.
+    #[must_use]
+    pub fn wear_where(&self, diameter: f64, height: f64, down: f64, patch: f64) -> Wear {
+        let spread = libm::log(1.0 + BLEND);
+        let ramp =
+            |x: f64, middle: f64, half: f64| ((x - middle + half) / (2.0 * half)).clamp(0.0, 1.0);
+        let ln = |x: f64| libm::log(x.max(1.0e-9));
+        // How much of the bark each stage covers, by itself.
+        let presence: Vec<f64> = self
+            .stages
+            .iter()
+            .enumerate()
+            .map(|(index, stage)| {
+                let reach = match index
+                    .checked_sub(1)
+                    .and_then(|before| self.stages[before].until_diameter_m)
+                {
+                    Some(start) => ramp(ln(diameter), ln(start), spread),
+                    None => 1.0,
+                };
+                let shows = match stage.on {
+                    On::All => 1.0,
+                    On::Base => {
+                        let top = stage.base_height_m.unwrap_or(BASE_RISE * diameter);
+                        if height <= 0.0 {
+                            1.0
+                        } else {
+                            1.0 - ramp(ln(height), ln(top), spread)
+                        }
+                    }
+                    On::Underside => ramp(down, UNDERSIDE, UNDERSIDE_BLEND),
+                };
+                reach * shows
+            })
+            .collect();
+        let Some(over) = (1..self.stages.len()).rev().find(|&i| presence[i] > 0.0) else {
+            return Wear::plain(0);
+        };
+        let under = (1..over).rev().find(|&i| presence[i] > 0.0).unwrap_or(0);
+        let share = presence[over];
+        let moved = share + PATCH_JITTER * (2.0 * patch - 1.0) * 4.0 * share * (1.0 - share);
+        let steps = f64::from(BLEND_STEPS);
+        // Within 0 to BLEND_STEPS.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let step = libm::round(moved.clamp(0.0, 1.0) * steps) as u8;
+        match step {
+            0 => Wear::plain(under),
+            s if s >= BLEND_STEPS => Wear::plain(over),
+            step => Wear { under, over, step },
+        }
+    }
+
+    /// The stage that covers most of a piece of stem ([`BarkLook::wear_where`]).
+    #[must_use]
+    pub fn stage_where(&self, diameter: f64, height: f64, down: f64, patch: f64) -> &Stage {
+        &self.stages[self.wear_where(diameter, height, down, patch).most()]
+    }
+
+    /// The stage a stem `diameter` metres across wears (where it shows).
+    #[must_use]
+    pub fn stage_at(&self, diameter: f64) -> &Stage {
+        self.stages
+            .iter()
+            .find(|stage| stage.until_diameter_m.is_none_or(|until| diameter < until))
+            .unwrap_or_else(|| &self.stages[self.stages.len() - 1])
+    }
+
+    /// A diameter typical of each stage, for previews: the geometric mean
+    /// of where it starts and ends (from 1 cm; the last runs to 2.5 times
+    /// its start, at least 0.6 m).
+    #[must_use]
+    pub fn typical_diameters(&self) -> Vec<f64> {
+        let mut from = 0.01_f64;
+        self.stages
+            .iter()
+            .map(|stage| {
+                let until = stage.until_diameter_m.unwrap_or((from * 2.5).max(0.6));
+                let typical = libm::sqrt(from.max(0.01) * until);
+                from = until;
+                typical
+            })
+            .collect()
+    }
+}
+
+/// A species' bark as its spec states it (`appearance.bark_look`): the
+/// record without its id, schema and evidence, its stages keyed by name so
+/// that the files of a species' chain merge stage by stage ([`crate::inherit`]):
+/// a genus states the stages its species pass through and how each breaks
+/// up, and a species adds its colours, a stage of its own, or `null` for
+/// one it lacks. A stage with no colour is the species' bark colour.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BarkSpec {
+    #[serde(default)]
+    pub thickness: Thickness,
+    pub stages: std::collections::BTreeMap<String, Stage>,
+}
+
+impl BarkSpec {
+    /// The record it states for species `id` whose bark is `bark` (linear
+    /// RGB): its stages in order of where they end, the one that never
+    /// ends last, each named by its key, checked.
+    ///
+    /// # Errors
+    ///
+    /// When two stages end at the same diameter, more than one never ends,
+    /// or a value is out of range.
+    pub fn look(&self, id: &str, bark: [f32; 3]) -> Result<BarkLook, BarkLookError> {
+        let colour = srgb8(bark);
+        let mut stages: Vec<Stage> = self
+            .stages
+            .iter()
+            .map(|(name, stage)| Stage {
+                name: name.clone(),
+                colour: stage.colour.or(Some(colour)),
+                ..stage.clone()
+            })
+            .collect();
+        stages.sort_by(|a, b| {
+            let end = |stage: &Stage| stage.until_diameter_m.unwrap_or(f64::INFINITY);
+            end(a).total_cmp(&end(b))
+        });
+        if let [.., before, last] = stages.as_slice()
+            && before.until_diameter_m.is_none()
+        {
+            return Err(BarkLookError(format!(
+                "{id}: stages {} and {} both never end",
+                before.name, last.name
+            )));
+        }
+        if stages.windows(2).any(|pair| {
+            pair[0].until_diameter_m.is_some()
+                && pair[0].until_diameter_m == pair[1].until_diameter_m
+        }) {
+            return Err(BarkLookError(format!(
+                "{id}: two stages end at one diameter"
+            )));
+        }
+        let mut look = BarkLook {
+            schema: BARK_LOOK_SCHEMA,
+            id: id.to_owned(),
+            thickness: self.thickness.clone(),
+            stages,
+            evidence: std::collections::BTreeMap::new(),
+        };
+        look.check()?;
+        look.settle();
+        Ok(look)
+    }
+
+    /// The spec form of a record: its stages keyed by name.
+    #[must_use]
+    pub fn of(look: &BarkLook) -> Self {
+        Self {
+            thickness: look.thickness.clone(),
+            stages: look
+                .stages
+                .iter()
+                .map(|stage| {
+                    (
+                        stage.name.clone(),
+                        Stage {
+                            name: String::new(),
+                            ..stage.clone()
+                        },
+                    )
+                })
+                .collect(),
+        }
+    }
+}
+
+/// An sRGB colour from a linear one.
+fn srgb8(colour: [f32; 3]) -> [u8; 3] {
+    colour.map(|c| crate::texture::linear_to_srgb(f64::from(c)))
+}
+
+/// A linear colour `amount` of the way to `to` (linear), as sRGB.
+fn toward(colour: [f32; 3], to: [f64; 3], amount: f64) -> [u8; 3] {
+    let mut out = [0; 3];
+    for (k, channel) in out.iter_mut().enumerate() {
+        let c = f64::from(colour[k]);
+        *channel = crate::texture::linear_to_srgb(c + (to[k] - c) * amount);
+    }
+    out
+}
+
+/// The library's bark look for a species whose spec states a bark pattern
+/// ([`crate::bark::BarkPattern`]) and no bark look: the drawing rule that
+/// turns the six pattern kinds into the bark language, so every woody
+/// species draws baked bark until its genus states its own. A pattern smooth
+/// below a radius is smooth (`young`) on stems thinner than three times
+/// it, halfway through the pattern's own grow-in; the pattern's cells are
+/// the ridges, plates, scales or strips, its fissure share their floors,
+/// its depth their share of the bark's thickness (FOFEM's middle
+/// coefficient, 0.03 of the diameter), its contrast how much darker the
+/// floors are, its variation a mottle three cells across, and its lenticels
+/// horizontal dashes on the smooth bark. Ringed bark (a palm's leaf scars)
+/// has none: its rings are the stem's nodes, not a tile.
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn from_pattern(
+    id: &str,
+    pattern: &crate::bark::BarkPattern,
+    bark: [f32; 3],
+) -> Option<BarkLook> {
+    use crate::bark::BarkKind;
+    let colour = srgb8(bark);
+    let floor = toward(bark, [0.0; 3], 0.7 * pattern.contrast);
+    let paler = toward(bark, [0.8, 0.75, 0.65], 0.45);
+    let mottle = (pattern.variation > 0.0).then_some(Mottle {
+        scale_m: 3.0 * pattern.scale,
+        amount: pattern.variation,
+        colour: None,
+    });
+    let lenticels = (pattern.lenticels > 0.0).then(|| Lenticels {
+        shape: LenticelShape::Dash,
+        horizontal: true,
+        length_m: [0.002, 0.006],
+        width_ratio: 0.25,
+        per_m2: pattern.lenticels,
+        relief_m: 0.0002,
+        colour: Some(paler),
+        stretch: false,
+        formed_diameter_m: formed(),
+        rows: false,
+    });
+    let fissures = |network: Network, profile: Profile| Fissures {
+        network,
+        spacing_m: pattern.scale,
+        elongation: pattern.elongation.max(0.5),
+        width_share: pattern.fissure.clamp(0.02, 0.6),
+        depth_share: pattern.depth.clamp(0.0, 1.0),
+        profile,
+        cross_ridges: 0.0,
+        floor_colour: Some(floor),
+        ridge_top_colour: None,
+        grain: if pattern.roughness > 0.0 {
+            pattern.roughness
+        } else {
+            grain()
+        },
+    };
+    let inner = pattern
+        .inner
+        .map_or(toward(bark, [0.55, 0.25, 0.12], 0.5), srgb8);
+    let stage = |name: &str, architecture: Architecture| Stage {
+        name: name.to_owned(),
+        until_diameter_m: None,
+        on: On::All,
+        base_height_m: None,
+        architecture: Some(architecture),
+        colour: Some(colour),
+        roughness: matte(),
+        bloom: 0.0,
+        mottle: mottle.clone(),
+        fissures: None,
+        scales: None,
+        exfoliation: None,
+        lenticels: None,
+        warts: None,
+        blisters: None,
+    };
+    let grown = match pattern.kind {
+        BarkKind::Ringed => return None,
+        BarkKind::Smooth => Stage {
+            roughness: 0.6,
+            lenticels: lenticels.clone(),
+            ..stage("smooth", Architecture::Stretched)
+        },
+        BarkKind::Furrowed => Stage {
+            fissures: Some(fissures(Network::Interlacing, Profile::Rounded)),
+            ..stage("furrowed", Architecture::Furrowed)
+        },
+        BarkKind::Plated => Stage {
+            fissures: Some(fissures(Network::Tessellated, Profile::FlatTopped)),
+            ..stage("plated", Architecture::Furrowed)
+        },
+        BarkKind::Scaly => Stage {
+            fissures: Some(Fissures {
+                depth_share: (0.5 * pattern.depth).clamp(0.0, 1.0),
+                ..fissures(Network::Reticulate, Profile::Rounded)
+            }),
+            scales: Some(Scales {
+                size_m: 0.5 * pattern.scale,
+                aspect: pattern.elongation.clamp(0.5, 3.0),
+                depth_m: 0.002,
+                variation: scale_variation(),
+                on_ridges: false,
+            }),
+            ..stage("scaly", Architecture::Peeling)
+        },
+        BarkKind::Fibrous => Stage {
+            fissures: Some(fissures(Network::Longitudinal, Profile::FlatTopped)),
+            exfoliation: Some(Exfoliation {
+                mode: Mode::FibrousStrips,
+                piece_m: pattern.scale * pattern.elongation,
+                aspect: pattern.elongation.max(1.0),
+                cover: 0.25,
+                curl_m: 0.0015,
+                inner_colour: Some(inner),
+                aged: Vec::new(),
+                weathered: None,
+            }),
+            ..stage("fibrous", Architecture::Peeling)
+        },
+        BarkKind::Peeling => Stage {
+            roughness: 0.5,
+            exfoliation: Some(Exfoliation {
+                mode: Mode::Patches,
+                piece_m: pattern.scale * pattern.elongation.max(1.0),
+                aspect: pattern.elongation.clamp(1.0, 6.0),
+                cover: pattern.peeled.clamp(0.0, 1.0),
+                curl_m: 0.0008,
+                inner_colour: Some(inner),
+                aged: Vec::new(),
+                weathered: None,
+            }),
+            ..stage("peeling", Architecture::Exfoliating)
+        },
+    };
+    let mut stages = Vec::new();
+    if pattern.smooth_below > 0.0 && pattern.kind != BarkKind::Smooth {
+        stages.push(Stage {
+            until_diameter_m: Some(3.0 * pattern.smooth_below),
+            roughness: 0.7,
+            lenticels,
+            ..stage("young", Architecture::Stretched)
+        });
+    }
+    stages.push(grown);
+    let look = BarkLook {
+        schema: BARK_LOOK_SCHEMA,
+        id: id.to_owned(),
+        thickness: Thickness {
+            coefficient: Some(0.03),
+            power: None,
+            min_m: 0.0,
+            max_m: None,
+        },
+        stages,
+        evidence: std::collections::BTreeMap::new(),
+    };
+    look.check().ok().map(|()| look)
+}
+
+/// One stage drawn as a square tile.
+#[derive(Debug, Clone)]
+pub struct Tile {
+    /// Texels along each side.
+    pub size: usize,
+    /// Metres the tile covers before it repeats, round and along the stem.
+    pub period_m: f64,
+    /// Row by row from the top (the highest point along the stem): linear
+    /// albedo.
+    pub albedo: Vec<[f64; 3]>,
+    /// Metres above the outer bark's top (0 or below; lifted edges above).
+    pub height: Vec<f64>,
+    pub roughness: Vec<f64>,
+    pub occlusion: Vec<f64>,
+    /// The bark's thickness the tile was drawn for, metres.
+    pub thickness_m: f64,
+}
+
+/// A stream of draws for one purpose.
+#[derive(Clone, Copy)]
+struct Draws(u64);
+
+impl Draws {
+    fn unit(self, index: u64, what: u64) -> f64 {
+        unit(mix64(hash_words(&[self.0, index, what])))
+    }
+
+    fn stream(self, name: u64) -> Self {
+        Self(hash_words(&[self.0, name]))
+    }
+}
+
+/// Streams, one for each layer.
+const FISSURES: u64 = 1;
+const WARP: u64 = 2;
+const GRAIN: u64 = 3;
+const SCALES: u64 = 4;
+const PEEL: u64 = 5;
+const LENTICELS: u64 = 6;
+const WARTS: u64 = 7;
+const BLISTERS: u64 = 8;
+const MOTTLE: u64 = 9;
+const BRIDGES: u64 = 10;
+
+/// Whole cells along `period` of `size` metres each, at least `least`.
+fn cells_in(period: f64, size: f64, least: u64) -> u64 {
+    // A tile holds at most a few thousand cells a side.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let n = libm::round(period / size.max(1.0e-6)) as u64;
+    n.clamp(least, 4096)
+}
+
+#[allow(clippy::cast_precision_loss)] // Cell counts and indices are small.
+fn float(n: u64) -> f64 {
+    n as f64
+}
+
+/// Index `i` wrapped into `0..n`.
+#[allow(clippy::cast_possible_wrap, clippy::cast_sign_loss)] // Small.
+fn wrap(i: i64, n: u64) -> u64 {
+    i.rem_euclid(n as i64) as u64
+}
+
+/// The nearest two feature points of a periodic grid of `nx` × `ny`
+/// cells over a `period`-metre tile, one point a cell jittered by `jitter`,
+/// with distances measured `stretch` times shorter along the stem.
+struct Near {
+    first: f64,
+    second: f64,
+    /// The nearest point's cell.
+    id: u64,
+    /// From the nearest point to the place, metres (round, along).
+    offset: [f64; 2],
+    /// From each of the nine points searched to the place.
+    points: [[f64; 2]; 9],
+    nearest: usize,
+    stretch: f64,
+}
+
+impl Near {
+    /// Distance in metres from the place to the nearest edge of its cell,
+    /// measured straight across the edge on the bark, so a fissure is as
+    /// wide where it crosses the stem as where it runs up it.
+    #[allow(clippy::many_single_char_names)]
+    fn edge(&self) -> f64 {
+        let s = self.stretch;
+        let o = self.points[self.nearest];
+        let a = [o[0], o[1] / s];
+        let mut least = f64::INFINITY;
+        for (k, o) in self.points.iter().enumerate() {
+            if k == self.nearest {
+                continue;
+            }
+            let b = [o[0], o[1] / s];
+            let d = [a[0] - b[0], a[1] - b[1]];
+            let len = libm::hypot(d[0], d[1]).max(1.0e-12);
+            let across = (b[0] * b[0] + b[1] * b[1] - a[0] * a[0] - a[1] * a[1]) / (2.0 * len);
+            least = least.min(across / libm::hypot(d[0] / len, d[1] / len / s).max(1.0e-12));
+        }
+        least
+    }
+}
+
+#[allow(clippy::too_many_arguments, clippy::many_single_char_names)]
+fn nearest(
+    draws: Draws,
+    nx: u64,
+    ny: u64,
+    period: f64,
+    jitter: f64,
+    stretch: f64,
+    x: f64,
+    y: f64,
+) -> Near {
+    let (cw, ch) = (period / float(nx), period / float(ny));
+    // The grid holds a few thousand cells a side.
+    #[allow(clippy::cast_possible_truncation)]
+    let (gx, gy) = (libm::floor(x / cw) as i64, libm::floor(y / ch) as i64);
+    let mut near = Near {
+        first: f64::INFINITY,
+        second: f64::INFINITY,
+        id: 0,
+        offset: [0.0; 2],
+        points: [[0.0; 2]; 9],
+        nearest: 0,
+        stretch,
+    };
+    let mut k = 0;
+    for dy in -1..=1_i64 {
+        for dx in -1..=1_i64 {
+            let (i, j) = (gx + dx, gy + dy);
+            let id = wrap(i, nx) * 65_537 + wrap(j, ny);
+            #[allow(clippy::cast_precision_loss)]
+            let px = (i as f64 + 0.5 + jitter * (draws.unit(id, 1) - 0.5)) * cw;
+            #[allow(clippy::cast_precision_loss)]
+            let py = (j as f64 + 0.5 + jitter * (draws.unit(id, 2) - 0.5)) * ch;
+            let (ox, oy) = (x - px, y - py);
+            let d = libm::hypot(ox, oy / stretch);
+            near.points[k] = [ox, oy];
+            if d < near.first {
+                near.second = near.first;
+                near.first = d;
+                near.id = id;
+                near.offset = [ox, oy];
+                near.nearest = k;
+            } else if d < near.second {
+                near.second = d;
+            }
+            k += 1;
+        }
+    }
+    near
+}
+
+/// Periodic value noise on `nx` × `ny` cells over the tile, 0 to 1.
+fn noise(draws: Draws, nx: u64, ny: u64, period: f64, x: f64, y: f64) -> f64 {
+    let (gx, gy) = (x / period * float(nx), y / period * float(ny));
+    let (fx, fy) = (libm::floor(gx), libm::floor(gy));
+    // Small grid indices.
+    #[allow(clippy::cast_possible_truncation)]
+    let (ix, iy) = (fx as i64, fy as i64);
+    let at = |i: i64, j: i64| draws.unit(wrap(i, nx) * 65_537 + wrap(j, ny), 0);
+    let smooth = |t: f64| t * t * (3.0 - 2.0 * t);
+    let (sx, sy) = (smooth(gx - fx), smooth(gy - fy));
+    let top = at(ix, iy) + (at(ix + 1, iy) - at(ix, iy)) * sx;
+    let bottom = at(ix, iy + 1) + (at(ix + 1, iy + 1) - at(ix, iy + 1)) * sx;
+    top + (bottom - top) * sy
+}
+
+/// Three octaves of [`noise`], 0 to 1.
+fn fbm(draws: Draws, nx: u64, ny: u64, period: f64, x: f64, y: f64) -> f64 {
+    let mut sum = 0.0;
+    let mut weight = 1.0;
+    let mut total = 0.0;
+    for octave in 0..3_u64 {
+        sum += weight
+            * noise(
+                draws.stream(octave),
+                nx << octave,
+                ny << octave,
+                period,
+                x,
+                y,
+            );
+        total += weight;
+        weight *= 0.5;
+    }
+    sum / total
+}
+
+fn smoothstep(low: f64, high: f64, x: f64) -> f64 {
+    let t = ((x - low) / (high - low)).clamp(0.0, 1.0);
+    t * t * (3.0 - 2.0 * t)
+}
+
+fn linear(colour: [u8; 3]) -> [f64; 3] {
+    colour.map(crate::texture::srgb_to_linear)
+}
+
+fn blend(a: [f64; 3], b: [f64; 3], t: f64) -> [f64; 3] {
+    [0, 1, 2].map(|i| a[i] + (b[i] - a[i]) * t)
+}
+
+fn times(a: [f64; 3], k: f64) -> [f64; 3] {
+    a.map(|c| c * k)
+}
+
+/// What one texel holds while the layers are drawn.
+#[derive(Clone, Copy)]
+struct Texel {
+    colour: [f64; 3],
+    height: f64,
+    roughness: f64,
+    /// 0 in a fissure's floor, 1 on a ridge top.
+    ridge: f64,
+}
+
+/// Draw `stage` of `look` on a stem `diameter` metres across as a tile
+/// `size` texels a side repeating every `period` metres, from `seed`.
+#[must_use]
+pub fn bake(
+    look: &BarkLook,
+    stage: &Stage,
+    diameter: f64,
+    size: usize,
+    period: f64,
+    seed: u64,
+) -> Tile {
+    let draws = Draws(hash_words(&[seed, 0x6261_726b]));
+    let thickness = look.thickness.at(diameter);
+    let surface = linear(stage.surface());
+    let texel_m = period / crate::texture::to_f64(size);
+    let mut texels = Vec::with_capacity(size * size);
+    for row in 0..size {
+        for column in 0..size {
+            let x = (crate::texture::to_f64(column) + 0.5) * texel_m;
+            // Row 0 is the top of the tile, the highest point up the stem.
+            let y = (crate::texture::to_f64(size - 1 - row) + 0.5) * texel_m;
+            texels.push(draw(
+                stage, draws, thickness, diameter, period, surface, x, y,
+            ));
+        }
+    }
+    let deepest = texels
+        .iter()
+        .map(|t| t.height)
+        .fold(0.0_f64, f64::min)
+        .min(-1.0e-6);
+    let occlusion = texels
+        .iter()
+        .map(|t| 1.0 - 0.65 * libm::pow((t.height / deepest).clamp(0.0, 1.0), 0.8))
+        .collect();
+    Tile {
+        size,
+        period_m: period,
+        albedo: texels.iter().map(|t| t.colour).collect(),
+        height: texels.iter().map(|t| t.height).collect(),
+        roughness: texels.iter().map(|t| t.roughness).collect(),
+        occlusion,
+        thickness_m: thickness,
+    }
+}
+
+/// Every layer of `stage` at `(x, y)` metres on the tile.
+#[allow(
+    clippy::too_many_arguments,
+    clippy::too_many_lines,
+    clippy::many_single_char_names
+)]
+fn draw(
+    stage: &Stage,
+    draws: Draws,
+    thickness: f64,
+    diameter: f64,
+    period: f64,
+    surface: [f64; 3],
+    x: f64,
+    y: f64,
+) -> Texel {
+    let mut texel = Texel {
+        colour: surface,
+        height: 0.0,
+        roughness: stage.roughness,
+        ridge: 1.0,
+    };
+    // Fissures, ridges and plates.
+    if let Some(fissures) = &stage.fissures {
+        let depth = fissures.depth_share * thickness;
+        let along = fissures.spacing_m * fissures.elongation;
+        let nx = cells_in(period, fissures.spacing_m, 3);
+        let ny = cells_in(period, along, 1);
+        let (jitter, warp) = match fissures.network {
+            Network::Longitudinal => (0.45, 0.25),
+            Network::Interlacing => (0.85, 0.55),
+            Network::Reticulate => (0.9, 0.2),
+            Network::Tessellated => (0.6, 0.1),
+        };
+        // Ridges wander round the stem as they run up it.
+        let wander = warp
+            * fissures.spacing_m
+            * (2.0
+                * noise(
+                    draws.stream(WARP),
+                    nx.max(2) / 2,
+                    ny.max(1) * 2,
+                    period,
+                    x,
+                    y,
+                )
+                - 1.0);
+        let stretch = fissures.elongation.max(0.05);
+        let near = nearest(
+            draws.stream(FISSURES),
+            nx,
+            ny,
+            period,
+            jitter,
+            stretch,
+            x + wander,
+            y,
+        );
+        // The fissure, floor and walls, takes `width_share` of the spacing;
+        // the ridge keeps the rest.
+        let edge = near.edge();
+        let half = 0.5 * period / float(nx);
+        let w = fissures.width_share.max(0.01);
+        // Plates are cells with fissures round them. Running ridges are the
+        // other way round: each fissure is a long lens inside a cell, and
+        // the ridges are the network between, splitting and joining.
+        let lenses = matches!(
+            fissures.network,
+            Network::Longitudinal | Network::Interlacing
+        );
+        // 0 on the fissure's centre line, 1 where the ridge begins; and
+        // 0 at the ridge's edge, 1 along its middle.
+        let (mut wall, across) = if lenses {
+            // Each lens tapers to a point toward its cell's ends.
+            let reach = 0.5 * period / float(ny);
+            let taper = libm::sqrt((1.0 - (near.offset[1] / reach).powi(2)).max(0.0));
+            let w = (1.3 * w * taper).max(1.0e-3);
+            let rim = half * (1.0 - w);
+            (
+                1.0 - ((edge - rim) / (w * half)).clamp(0.0, 1.0),
+                (1.0 - edge / rim.max(1.0e-12)).clamp(0.0, 1.0),
+            )
+        } else {
+            (
+                (edge / (w * half)).clamp(0.0, 1.0),
+                (edge / half).clamp(0.0, 1.0),
+            )
+        };
+        // Cross ridges bridge a fissure here and there.
+        if fissures.cross_ridges > 0.0 && wall < 1.0 {
+            let bridge = noise(draws.stream(BRIDGES), nx * 2, ny * 6, period, x, y);
+            let bridged = smoothstep(1.0 - 0.6 * fissures.cross_ridges, 1.0, bridge);
+            wall = wall.max(0.75 * bridged);
+        }
+        // The floor is the inner third of the fissure.
+        let rise = smoothstep(0.3, 1.0, wall);
+        let mut h = match fissures.profile {
+            Profile::Rounded => {
+                rise * (0.75 + 0.25 * libm::sqrt((1.0 - (1.0 - across) * (1.0 - across)).max(0.0)))
+            }
+            Profile::FlatTopped => rise,
+            Profile::Sharp => rise * (0.6 + 0.4 * across),
+        };
+        // Fine grain on the ridges, deeper on rougher bark.
+        let grain = fbm(
+            draws.stream(GRAIN),
+            cells_in(period, fissures.spacing_m / 4.0, 4),
+            cells_in(
+                period,
+                fissures.spacing_m * fissures.elongation.sqrt() / 4.0,
+                4,
+            ),
+            period,
+            x,
+            y,
+        ) - 0.5;
+        h = (h * (1.0 + 2.0 * fissures.grain * grain)).clamp(0.0, 1.2);
+        texel.height = (h - 1.0) * depth;
+        texel.ridge = h.min(1.0);
+        let cell = draws.stream(FISSURES).unit(near.id, 3);
+        let floor = fissures
+            .floor_colour
+            .map_or_else(|| times(surface, 0.35), linear);
+        let top = fissures.ridge_top_colour.map_or(surface, linear);
+        let mut colour = blend(floor, surface, smoothstep(0.02, 0.45, h));
+        colour = blend(colour, top, smoothstep(0.75, 1.0, h));
+        texel.colour = times(colour, 1.0 + 0.16 * (cell - 0.5));
+        texel.roughness = (stage.roughness + 0.1 * (1.0 - h)).min(1.0);
+    } else {
+        // Smooth bark still has a faint grain.
+        let grain = fbm(draws.stream(GRAIN), 24, 12, period, x, y) - 0.5;
+        texel.height = 0.0002 * grain;
+    }
+    // Scales on the surface or on the ridges, each lifted at its lower edge.
+    if let Some(scales) = &stage.scales {
+        let weight = if scales.on_ridges {
+            smoothstep(0.35, 0.7, texel.ridge)
+        } else {
+            1.0
+        };
+        if weight > 0.0 {
+            let stretch = scales.aspect.max(0.05);
+            let nx = cells_in(period, scales.size_m, 3);
+            let ny = cells_in(period, scales.size_m * stretch, 2);
+            let near = nearest(draws.stream(SCALES), nx, ny, period, 0.8, stretch, x, y);
+            let ch = period / float(ny);
+            let s = (near.second - near.first) / (near.second + near.first).max(1.0e-12);
+            // Highest at its lower edge, where it stands off the one below.
+            let lift = (0.5 - near.offset[1] / ch).clamp(0.0, 1.0);
+            let edge = smoothstep(0.0, 0.12, s);
+            texel.height += weight * scales.depth_m * lift * edge;
+            let shade = 1.0
+                + scales.variation * (draws.stream(SCALES).unit(near.id, 4) - 0.5) * 2.0
+                - 0.15 * (1.0 - edge);
+            texel.colour = times(texel.colour, 1.0 + weight * (shade - 1.0));
+        }
+    }
+    // Exfoliation.
+    if let Some(peel) = &stage.exfoliation {
+        exfoliate(peel, stage, draws, period, surface, x, y, &mut texel);
+    }
+    // Soft mottling.
+    if let Some(mottle) = &stage.mottle {
+        let n = cells_in(period, mottle.scale_m, 2);
+        let m = fbm(draws.stream(MOTTLE), n, n, period, x, y);
+        let t = mottle.amount * smoothstep(0.35, 0.75, m);
+        texel.colour = match mottle.colour {
+            Some(colour) => blend(texel.colour, linear(colour), t),
+            None => times(texel.colour, 1.0 + 2.0 * mottle.amount * (m - 0.5)),
+        };
+    }
+    // Lenticels, stretched round the stem as it grows.
+    if let Some(lenticels) = &stage.lenticels {
+        let stretch = if lenticels.stretch {
+            (diameter / lenticels.formed_diameter_m).clamp(1.0, 6.0)
+        } else {
+            1.0
+        };
+        let pattern = Marks {
+            per_m2: lenticels.per_m2,
+            length: [
+                lenticels.length_m[0] * stretch,
+                lenticels.length_m[1] * stretch,
+            ],
+            width_ratio: lenticels.width_ratio,
+            horizontal: lenticels.horizontal,
+            rows: lenticels.rows,
+            shape: lenticels.shape,
+        };
+        if let Some(inside) = pattern.at(draws.stream(LENTICELS), period, x, y) {
+            texel.colour = blend(
+                texel.colour,
+                linear(lenticels.colour.unwrap_or(stage.surface())),
+                inside,
+            );
+            texel.height += lenticels.relief_m * inside;
+        }
+    }
+    // Warts and blisters: domes.
+    for (bumps, stream) in [(&stage.warts, WARTS), (&stage.blisters, BLISTERS)] {
+        if let Some(bumps) = bumps {
+            let pattern = Marks {
+                per_m2: bumps.per_m2,
+                length: bumps.diameter_m,
+                width_ratio: 1.0,
+                horizontal: true,
+                rows: bumps.rows,
+                shape: LenticelShape::Dot,
+            };
+            if let Some(inside) = pattern.at(draws.stream(stream), period, x, y) {
+                let dome = libm::sqrt(inside.clamp(0.0, 1.0));
+                texel.height += bumps.height_m * dome;
+                if let Some(colour) = bumps.colour {
+                    texel.colour = blend(texel.colour, linear(colour), inside);
+                } else {
+                    texel.colour = times(texel.colour, 1.0 + 0.12 * dome);
+                }
+                if let Some(roughness) = bumps.roughness {
+                    texel.roughness += (roughness - texel.roughness) * inside;
+                }
+            }
+        }
+    }
+    // A bloom whitens and dulls the surface (not the fissures' floors).
+    if stage.bloom > 0.0 {
+        let t = stage.bloom * texel.ridge;
+        texel.colour = blend(texel.colour, [0.75, 0.75, 0.72], t);
+        texel.roughness = texel.roughness.max(0.9 * t + texel.roughness * (1.0 - t));
+    }
+    texel
+}
+
+/// Exfoliation on one texel.
+#[allow(clippy::too_many_arguments)]
+fn exfoliate(
+    peel: &Exfoliation,
+    stage: &Stage,
+    draws: Draws,
+    period: f64,
+    surface: [f64; 3],
+    x: f64,
+    y: f64,
+    texel: &mut Texel,
+) {
+    let draws = draws.stream(PEEL);
+    let (round, along, jitter) = match peel.mode {
+        Mode::PaperyStrips => (peel.piece_m, peel.piece_m / peel.aspect, 0.7),
+        Mode::FibrousStrips => (peel.piece_m / peel.aspect, peel.piece_m, 0.5),
+        Mode::Patches => (
+            peel.piece_m / libm::sqrt(peel.aspect),
+            peel.piece_m / libm::sqrt(peel.aspect) * peel.aspect,
+            0.95,
+        ),
+    };
+    let nx = cells_in(period, round, 2);
+    // Fibrous strips may run the whole tile's height.
+    let ny = cells_in(
+        period,
+        along,
+        u64::from(peel.mode != Mode::FibrousStrips) + 1,
+    );
+    let stretch = (period / float(ny)) / (period / float(nx));
+    // Pieces tear along ragged, rounded edges, not straight cuts.
+    let (wx, wy) = if peel.mode == Mode::FibrousStrips {
+        (0.0, 0.0)
+    } else {
+        let (rx, ry) = (period / float(nx), period / float(ny));
+        let warp = |stream: u64| fbm(draws.stream(stream), nx * 2, ny * 2, period, x, y) - 0.5;
+        (0.6 * rx * warp(WARP), 0.6 * ry * warp(GRAIN))
+    };
+    let near = nearest(draws, nx, ny, period, jitter, stretch, x + wx, y + wy);
+    let s = (near.second - near.first) / (near.second + near.first).max(1.0e-12);
+    let age = draws.unit(near.id, 5);
+    let inner = linear(peel.inner_colour.unwrap_or(stage.surface()));
+    // The ramp of colours exposed bark weathers through, ending at the
+    // surface's own.
+    let mut ramp = vec![inner];
+    ramp.extend(peel.aged.iter().copied().map(linear));
+    if peel.aged.is_empty() {
+        ramp.extend(peel.weathered.map(linear));
+    }
+    ramp.push(surface);
+    match peel.mode {
+        Mode::FibrousStrips => {
+            // Each strip its own shade; dark gaps between strips; some
+            // strips loose and lifted.
+            let shade = 0.82 + 0.36 * age;
+            let gap = smoothstep(0.0, 0.18, s);
+            texel.colour = times(texel.colour, shade * (0.55 + 0.45 * gap));
+            texel.height +=
+                peel.curl_m * smoothstep(0.2, 0.8, s) * f64::from(u8::from(age < peel.cover));
+            if age < peel.cover {
+                let fresh = blend(inner, surface, age / peel.cover.max(1.0e-6));
+                // Bright inner bark shows where a loose strip lifts.
+                texel.colour = blend(texel.colour, fresh, 0.6 * (1.0 - gap));
+            }
+        }
+        Mode::PaperyStrips | Mode::Patches => {
+            if age < peel.cover {
+                // Exposed: its colour by how long ago its piece came away.
+                let t = age / peel.cover.max(1.0e-6);
+                let colour = along_ramp(&ramp, t);
+                let edge = smoothstep(0.0, 0.08, s);
+                texel.colour = blend(texel.colour, colour, edge);
+                texel.height -= 0.0003 * edge;
+                texel.roughness = stage.roughness.min(texel.roughness);
+            }
+            // Loose edges curl up: a light lip with a shadow inside it.
+            if peel.curl_m > 0.0 {
+                let lip = 1.0 - smoothstep(0.0, 0.1, s);
+                let side = draws.unit(near.id, 6) < 0.5;
+                if age < peel.cover && lip > 0.0 {
+                    texel.height += peel.curl_m * lip;
+                    let k = if side { 1.12 } else { 0.7 };
+                    texel.colour = times(texel.colour, 1.0 + (k - 1.0) * lip);
+                }
+            } else {
+                let line = 1.0 - smoothstep(0.0, 0.05, s);
+                texel.colour = times(texel.colour, 1.0 - 0.3 * line);
+            }
+        }
+    }
+}
+
+/// The colour `t` (0 to 1) of the way along `ramp`.
+fn along_ramp(ramp: &[[f64; 3]], t: f64) -> [f64; 3] {
+    let steps = ramp.len().saturating_sub(1).max(1);
+    let at = t.clamp(0.0, 1.0) * crate::texture::to_f64(steps);
+    // Few steps.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let i = (libm::floor(at) as usize).min(steps - 1);
+    blend(
+        ramp[i],
+        ramp[(i + 1).min(ramp.len() - 1)],
+        at - crate::texture::to_f64(i),
+    )
+}
+
+/// Small marks scattered over the bark: lenticels, warts, blisters.
+struct Marks {
+    per_m2: f64,
+    length: [f64; 2],
+    width_ratio: f64,
+    horizontal: bool,
+    rows: bool,
+    shape: LenticelShape,
+}
+
+impl Marks {
+    /// How far inside a mark `(x, y)` lies, 0 at its edge to 1 at its
+    /// heart, or `None` outside every mark.
+    #[allow(clippy::many_single_char_names)]
+    fn at(&self, draws: Draws, period: f64, x: f64, y: f64) -> Option<f64> {
+        let cell = 1.0 / libm::sqrt(self.per_m2.max(1.0e-6));
+        let n = cells_in(period, cell, 1);
+        let cw = period / float(n);
+        // Rows: marks share a few heights per cell row, as in bands.
+        let reach_cells = libm::ceil(self.length[1] / cw * 0.5) + 1.0;
+        // A handful of cells.
+        #[allow(clippy::cast_possible_truncation)]
+        let reach = reach_cells.min(6.0) as i64;
+        #[allow(clippy::cast_possible_truncation)]
+        let (gx, gy) = (libm::floor(x / cw) as i64, libm::floor(y / cw) as i64);
+        // On a tile smaller than a mark's share of bark (a twig's), only
+        // some cells hold one, so the density stays per_m2.
+        let share = (self.per_m2 * cw * cw).min(1.0);
+        let mut best: Option<f64> = None;
+        for dy in -reach..=reach {
+            for dx in -reach..=reach {
+                let (i, j) = (gx + dx, gy + dy);
+                let id = wrap(i, n) * 65_537 + wrap(j, n);
+                if draws.unit(id, 4) >= share {
+                    continue;
+                }
+                #[allow(clippy::cast_precision_loss)]
+                let px = (i as f64 + draws.unit(id, 1)) * cw;
+                let row_offset = if self.rows {
+                    0.5 + 0.15 * (draws.unit(wrap(j, n), 7) - 0.5)
+                } else {
+                    draws.unit(id, 2)
+                };
+                #[allow(clippy::cast_precision_loss)]
+                let py = (j as f64 + row_offset) * cw;
+                let length = self.length[0] + (self.length[1] - self.length[0]) * draws.unit(id, 3);
+                let (half_long, half_short) =
+                    (length / 2.0, (length * self.width_ratio / 2.0).max(1.0e-5));
+                let (mut ox, mut oy) = (x - px, y - py);
+                if !self.horizontal {
+                    std::mem::swap(&mut ox, &mut oy);
+                }
+                let (a, b) = (ox / half_long, oy / half_short);
+                let reach = match self.shape {
+                    LenticelShape::Dot | LenticelShape::Dash => a * a + b * b,
+                    LenticelShape::Diamond => (a.abs() + b.abs()) * (a.abs() + b.abs()),
+                };
+                if reach < 1.0 {
+                    let inside = 1.0 - reach;
+                    best = Some(best.map_or(inside, |b: f64| b.max(inside)));
+                }
+            }
+        }
+        best
+    }
+}
+
+impl Tile {
+    fn index(&self, x: usize, y: usize) -> usize {
+        (y % self.size) * self.size + x % self.size
+    }
+
+    /// The surface's slope round the stem and up it at each texel, metres
+    /// per metre: a central difference that wraps round the tile.
+    #[must_use]
+    pub fn slopes(&self) -> Vec<[f64; 2]> {
+        let texel = self.period_m / crate::texture::to_f64(self.size);
+        let n = self.size;
+        let mut out = Vec::with_capacity(n * n);
+        for y in 0..n {
+            for x in 0..n {
+                let round = (self.height[self.index(x + 1, y)]
+                    - self.height[self.index(x + n - 1, y)])
+                    / (2.0 * texel);
+                // Row 0 is the top, so up the stem is up the rows.
+                let up = (self.height[self.index(x, y + n - 1)]
+                    - self.height[self.index(x, y + 1)])
+                    / (2.0 * texel);
+                out.push([round, up]);
+            }
+        }
+        out
+    }
+
+    /// The base colour map: sRGB, opaque.
+    #[must_use]
+    pub fn base_colour_rgba(&self) -> Vec<u8> {
+        self.albedo
+            .iter()
+            .flat_map(|c| {
+                let [r, g, b] = c.map(crate::texture::linear_to_srgb);
+                [r, g, b, 255]
+            })
+            .collect()
+    }
+
+    /// The tangent-space normal map: x round the stem, +y up it, z out
+    /// (glTF's convention), each in 0 to 255.
+    #[must_use]
+    pub fn normal_rgba(&self) -> Vec<u8> {
+        self.slopes()
+            .iter()
+            .flat_map(|[round, up]| {
+                let n = [-round, -up, 1.0];
+                let length = libm::sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+                let [x, y, z] = n.map(|c| crate::texture::to_byte(0.5 + 0.5 * c / length));
+                [x, y, z, 255]
+            })
+            .collect()
+    }
+
+    /// The occlusion-roughness-metallic map (glTF's channels).
+    #[must_use]
+    pub fn orm_rgba(&self) -> Vec<u8> {
+        self.occlusion
+            .iter()
+            .zip(&self.roughness)
+            .flat_map(|(o, r)| {
+                [
+                    crate::texture::to_byte(*o),
+                    crate::texture::to_byte(*r),
+                    0,
+                    255,
+                ]
+            })
+            .collect()
+    }
+
+    /// The height map: 255 at the highest texel, 0 at the lowest.
+    #[must_use]
+    pub fn height_rgba(&self) -> Vec<u8> {
+        let (low, high) = self.relief();
+        let span = (high - low).max(1.0e-9);
+        self.height
+            .iter()
+            .flat_map(|h| {
+                let v = crate::texture::to_byte((h - low) / span);
+                [v, v, v, 255]
+            })
+            .collect()
+    }
+
+    /// The lowest and highest heights, metres.
+    #[must_use]
+    pub fn relief(&self) -> (f64, f64) {
+        self.height
+            .iter()
+            .fold((f64::INFINITY, f64::NEG_INFINITY), |(low, high), h| {
+                (low.min(*h), high.max(*h))
+            })
+    }
+
+    /// The tile's mean linear albedo.
+    #[must_use]
+    pub fn mean_albedo(&self) -> [f64; 3] {
+        let n = crate::texture::to_f64(self.albedo.len().max(1));
+        let sum = self.albedo.iter().fold([0.0; 3], |sum, c| {
+            [sum[0] + c[0], sum[1] + c[1], sum[2] + c[2]]
+        });
+        sum.map(|s| s / n)
+    }
+
+    /// The tile lit flat by a low sun from the upper left, sRGB.
+    #[must_use]
+    pub fn lit_rgba(&self) -> Vec<u8> {
+        let sun = normalized([-0.55, 0.55, 0.63]);
+        self.slopes()
+            .iter()
+            .zip(&self.albedo)
+            .zip(&self.occlusion)
+            .flat_map(|((slope, albedo), occlusion)| {
+                let n = normalized([-slope[0], -slope[1], 1.0]);
+                let light = (n[0] * sun[0] + n[1] * sun[1] + n[2] * sun[2]).max(0.0);
+                let lit = 0.2 * occlusion + 0.95 * light * (0.4 + 0.6 * occlusion);
+                let [r, g, b] = albedo.map(|c| crate::texture::linear_to_srgb(c * lit * 1.6));
+                [r, g, b, 255]
+            })
+            .collect()
+    }
+
+    /// A trunk `diameter` metres across seen from the side, `width` × `height`
+    /// pixels showing `span` metres of it, lit from the upper left, sRGB:
+    /// the tile wrapped round it as a renderer wraps it.
+    #[must_use]
+    pub fn trunk_rgba(&self, diameter: f64, span: f64, width: usize, height: usize) -> Vec<u8> {
+        let radius = diameter / 2.0;
+        let slopes = self.slopes();
+        let sun = normalized([-0.55, 0.45, 0.7]);
+        let texel = self.period_m / crate::texture::to_f64(self.size);
+        let (low, _) = self.relief();
+        let mut out = Vec::with_capacity(width * height * 4);
+        let metres_per_pixel = span / crate::texture::to_f64(height);
+        let half_width = crate::texture::to_f64(width) / 2.0;
+        for row in 0..height {
+            for column in 0..width {
+                let across = (crate::texture::to_f64(column) + 0.5 - half_width) * metres_per_pixel;
+                if across.abs() >= radius {
+                    out.extend_from_slice(&[235, 235, 230, 255]);
+                    continue;
+                }
+                let angle = libm::asin(across / radius);
+                let round = radius * (angle + core::f64::consts::FRAC_PI_2);
+                let up = (crate::texture::to_f64(height - row) - 0.5) * metres_per_pixel;
+                let tx = round / texel;
+                let ty = up / texel;
+                // Rows of the tile run down from its top.
+                let size = crate::texture::to_f64(self.size);
+                let fx = tx.rem_euclid(size);
+                let fy = (size - ty.rem_euclid(size)).rem_euclid(size);
+                // Inside the tile.
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let at = self.index(fx as usize, fy as usize);
+                let [sr, su] = slopes[at];
+                let tangent = [libm::cos(angle), 0.0, -libm::sin(angle)];
+                let normal = [libm::sin(angle), 0.0, libm::cos(angle)];
+                let n = normalized([
+                    normal[0] - tangent[0] * sr,
+                    -su,
+                    normal[2] - tangent[2] * sr,
+                ]);
+                let light = (n[0] * sun[0] + n[1] * sun[1] + n[2] * sun[2]).max(0.0);
+                let occlusion = self.occlusion[at];
+                // Deeper texels sit a little in their own shadow.
+                let depth = if low < 0.0 {
+                    (self.height[at] / low).clamp(0.0, 1.0)
+                } else {
+                    0.0
+                };
+                let lit = 0.22 * occlusion + 0.95 * light * (1.0 - 0.5 * depth);
+                let [r, g, b] =
+                    self.albedo[at].map(|c| crate::texture::linear_to_srgb(c * lit * 1.6));
+                out.extend_from_slice(&[r, g, b, 255]);
+            }
+        }
+        out
+    }
+}
+
+fn normalized(v: [f64; 3]) -> [f64; 3] {
+    let length = libm::sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]).max(1.0e-12);
+    v.map(|c| c / length)
+}
+
+/// Waves on a probe tile, each way.
+pub const PROBE_WAVES: f64 = 4.0;
+
+/// A probe for checking how a renderer reads the maps: mid-grey (linear
+/// 0.5), fully rough, with `PROBE_WAVES` sine waves of relief a period,
+/// running up the stem when `up` (height varies along it) or round it,
+/// sloping at most one in two. Height at texel row (or column) `t` of the
+/// tile's `size` is `period / (4π waves) sin(2π waves t / size)`.
+#[must_use]
+pub fn probe(size: usize, period: f64, up: bool) -> Tile {
+    let amplitude = period / (4.0 * core::f64::consts::PI * PROBE_WAVES);
+    let mut height = Vec::with_capacity(size * size);
+    for y in 0..size {
+        for x in 0..size {
+            let t = crate::texture::to_f64(if up { y } else { x }) / crate::texture::to_f64(size);
+            height.push(amplitude * libm::sin(2.0 * core::f64::consts::PI * PROBE_WAVES * t));
+        }
+    }
+    Tile {
+        size,
+        period_m: period,
+        albedo: vec![[0.5; 3]; size * size],
+        height,
+        roughness: vec![1.0; size * size],
+        occlusion: vec![1.0; size * size],
+        thickness_m: 0.0,
+    }
+}
+
+/// `x` (0 or more, a few thousand at most) as a count.
+#[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+fn whole(x: f64) -> usize {
+    x.max(0.0) as usize
+}
+
+/// `tile` as glTF's standard metallic-roughness material in `document`,
+/// named `name`: base colour (sRGB), normal (+Y up the stem), and
+/// occlusion, roughness and metal in one map, each repeating; the tile's
+/// period and the bark's thickness are in its extras.
+#[allow(clippy::cast_possible_truncation)] // Extras are single precision.
+pub fn material(
+    document: &mut crate::gltf::Document,
+    tile: &Tile,
+    name: &str,
+) -> crate::gltf::Index {
+    use crate::gltf::{self, Document, number};
+    use serde_json::json;
+    let png =
+        |rgba: Vec<u8>| crate::raster::encode_png(tile.size, tile.size, &rgba).unwrap_or_default();
+    let sampler = document.sampler(json!({
+        "magFilter": gltf::LINEAR,
+        "minFilter": gltf::LINEAR_MIPMAP_LINEAR,
+        "wrapS": gltf::REPEAT,
+        "wrapT": gltf::REPEAT,
+    }));
+    let texture = |document: &mut Document, part: &str, rgba: Vec<u8>| {
+        let image = document.png(&format!("{name} {part}"), &png(rgba));
+        document.texture(image, sampler)
+    };
+    let colour = texture(document, "base colour", tile.base_colour_rgba());
+    let normal = texture(document, "normal", tile.normal_rgba());
+    let orm = texture(document, "occlusion roughness metal", tile.orm_rgba());
+    document.material(json!({
+        "name": name,
+        "pbrMetallicRoughness": {
+            "baseColorTexture": { "index": colour },
+            "metallicRoughnessTexture": { "index": orm },
+            "metallicFactor": 1,
+            "roughnessFactor": 1,
+        },
+        "normalTexture": { "index": normal },
+        "occlusionTexture": { "index": orm },
+        "extras": {
+            "plantgen_bark": {
+                "period_m": number(tile.period_m as f32),
+                "thickness_m": number(tile.thickness_m as f32),
+            },
+        },
+    }))
+}
+
+/// The tile period for a stem `diameter` metres across, near `wanted`:
+/// the stem's circumference over a whole number of tiles, so the tile
+/// wraps round it unstretched, and on stems thinner than `wanted / π` the
+/// circumference itself.
+#[must_use]
+pub fn period_for(diameter: f64, wanted: f64) -> f64 {
+    let circumference = core::f64::consts::PI * diameter;
+    circumference / libm::round(circumference / wanted).max(1.0)
+}
+
+/// A length of trunk `diameter` metres across and `length` long, drawn
+/// with `tile` as glTF's standard metallic-roughness material: base
+/// colour (sRGB), normal (+Y up the stem), and occlusion, roughness and
+/// metal in one map. The tile wraps a whole number of times round the
+/// trunk (stretched round it by at most half a tile) and once every
+/// period up it; texture coordinates count tiles, the image's top row up
+/// the stem. Tangents run round the trunk, to the right seen from outside,
+/// with `w` 1, so the bitangent glTF derives points up it.
+#[must_use]
+#[allow(clippy::cast_possible_truncation)] // Vertex data is single precision.
+pub fn glb(tile: &Tile, name: &str, diameter: f64, length: f64) -> Vec<u8> {
+    use crate::gltf::{Document, number};
+    use serde_json::json;
+    let circumference = core::f64::consts::PI * diameter;
+    let wraps = libm::round(circumference / tile.period_m).max(1.0);
+    let around = 16 * whole(wraps).clamp(2, 16);
+    let rings = (whole(libm::ceil(length / (diameter / 4.0))) + 1).clamp(2, 256);
+    let (mut positions, mut normals, mut tangents, mut uvs) = (vec![], vec![], vec![], vec![]);
+    for ring in 0..rings {
+        let along = crate::texture::to_f64(ring) / crate::texture::to_f64(rings - 1);
+        let y = along * length;
+        for step in 0..=around {
+            let share = crate::texture::to_f64(step) / crate::texture::to_f64(around);
+            // Counter to the angle, so round the trunk is to the right.
+            let angle = -2.0 * core::f64::consts::PI * share;
+            let (sin, cos) = (libm::sin(angle), libm::cos(angle));
+            positions.extend([0.5 * diameter * cos, y, 0.5 * diameter * sin].map(|v| v as f32));
+            normals.extend([cos, 0.0, sin].map(|v| v as f32));
+            // Along increasing u: the derivative of the position by `share`.
+            tangents.extend([sin, 0.0, -cos, 1.0].map(|v| v as f32));
+            uvs.extend([share * wraps, -y / tile.period_m].map(|v| v as f32));
+        }
+    }
+    let row = u32::try_from(around + 1).unwrap_or(u32::MAX);
+    let mut indices = vec![];
+    for ring in 0..u32::try_from(rings - 1).unwrap_or(0) {
+        for step in 0..u32::try_from(around).unwrap_or(0) {
+            let (a, b) = (ring * row + step, (ring + 1) * row + step);
+            // Counter-clockwise seen from outside, as glTF's front faces are.
+            indices.extend([a, a + 1, b, a + 1, b + 1, b]);
+        }
+    }
+    let mut document = Document::new();
+    let material = material(&mut document, tile, name);
+    let primitive = json!({
+        "attributes": {
+            "POSITION": document.attribute(&positions, 3, true),
+            "NORMAL": document.attribute(&normals, 3, false),
+            "TANGENT": document.attribute(&tangents, 4, false),
+            "TEXCOORD_0": document.attribute(&uvs, 2, false),
+        },
+        "indices": document.indices(&indices),
+        "material": material,
+    });
+    let mesh = document.mesh(name, vec![primitive]);
+    let node = document.node(json!({ "name": name, "mesh": mesh }));
+    document.glb(
+        json!({ "version": "2.0", "generator": "PlantGen bark" }),
+        &[node],
+        json!({ "diameter_m": number(diameter as f32), "length_m": number(length as f32) }),
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn look() -> BarkLook {
+        BarkLook::from_json(
+            r#"{
+                "schema": 1,
+                "id": "test",
+                "thickness": {"coefficient": 0.063},
+                "stages": [
+                    {"name": "young", "until_diameter_m": 0.3, "architecture": "stretched",
+                     "colour": [120, 110, 100],
+                     "lenticels": {"shape": "dash", "length_m": [0.003, 0.008],
+                                   "width_ratio": 0.25, "per_m2": 900, "colour": [200, 180, 150],
+                                   "stretch": true}},
+                    {"name": "old", "architecture": "furrowed", "colour": [90, 70, 55],
+                     "fissures": {"network": "interlacing", "spacing_m": 0.06, "elongation": 5,
+                                  "width_share": 0.3, "depth_share": 0.8, "profile": "flat_topped",
+                                  "cross_ridges": 0.4, "floor_colour": [140, 70, 45]}}
+                ]
+            }"#,
+        )
+        .expect("a record")
+    }
+
+    #[test]
+    fn stages_by_diameter() {
+        let look = look();
+        assert_eq!(look.stage_at(0.1).name, "young");
+        assert_eq!(look.stage_at(0.3).name, "old");
+        assert_eq!(look.stage_at(2.0).name, "old");
+    }
+
+    #[test]
+    fn furrows_deepen_with_thickness() {
+        let look = look();
+        let old = &look.stages[1];
+        let thin = bake(&look, old, 0.4, 64, 0.5, 1);
+        let thick = bake(&look, old, 1.2, 64, 0.5, 1);
+        let (low_thin, _) = thin.relief();
+        let (low_thick, _) = thick.relief();
+        assert!(low_thick < low_thin * 2.5, "{low_thick} vs {low_thin}");
+        // Deepest furrow within its thickness share.
+        assert!(-low_thick <= 0.8 * 0.063 * 1.2 * 1.25);
+    }
+
+    #[test]
+    fn tiles_wrap_without_a_seam() {
+        // Every layer is periodic: a point and the same point a period on,
+        // round the stem or along it, draw alike.
+        let mut look = look();
+        look.stages[1].scales = Some(Scales {
+            size_m: 0.02,
+            aspect: 1.5,
+            depth_m: 0.002,
+            variation: 0.1,
+            on_ridges: true,
+        });
+        look.stages[1].exfoliation = Some(Exfoliation {
+            mode: Mode::Patches,
+            piece_m: 0.1,
+            aspect: 2.0,
+            cover: 0.4,
+            curl_m: 0.001,
+            inner_colour: Some([90, 160, 60]),
+            aged: vec![[200, 120, 40]],
+            weathered: None,
+        });
+        look.stages[1].lenticels = look.stages[0].lenticels.clone();
+        let stage = &look.stages[1];
+        let draws = Draws(5);
+        let period = 0.5;
+        let surface = linear(stage.surface());
+        for k in 0..40 {
+            let (x, y) = (0.0123 * f64::from(k), 0.0371 * f64::from(k) % period);
+            let at = |x, y| draw(stage, draws, 0.05, 0.8, period, surface, x, y);
+            let (here, round, along) = (at(x, y), at(x + period, y), at(x, y + period));
+            for other in [round, along] {
+                assert!((here.height - other.height).abs() < 1.0e-9, "{k}");
+                assert!((here.colour[0] - other.colour[0]).abs() < 1.0e-9, "{k}");
+            }
+        }
+    }
+
+    #[test]
+    fn same_seed_same_bytes() {
+        let look = look();
+        let a = bake(&look, &look.stages[0], 0.1, 32, 0.25, 3).base_colour_rgba();
+        let b = bake(&look, &look.stages[0], 0.1, 32, 0.25, 3).base_colour_rgba();
+        assert_eq!(a, b);
+    }
+
+    #[test]
+    fn rejects_unordered_stages() {
+        let text = r#"{"schema": 1, "id": "x", "thickness": {},
+            "stages": [{"name": "a", "until_diameter_m": 0.5, "architecture": "stretched", "colour": [1,2,3]},
+                       {"name": "b", "until_diameter_m": 0.2, "architecture": "stretched", "colour": [1,2,3]},
+                       {"name": "c", "architecture": "stretched", "colour": [1,2,3]}]}"#;
+        assert!(BarkLook::from_json(text).is_err());
+    }
+
+    #[test]
+    fn trunk_glb_checks_and_carries_the_maps() {
+        let look = look();
+        let stage = look.stage_at(0.5);
+        let tile = bake(&look, stage, 0.5, 32, 0.25, 1);
+        let bytes = glb(&tile, "test", 0.5, 1.0);
+        let summary = crate::gltf::check(&bytes).unwrap();
+        assert_eq!(
+            (summary.meshes, summary.materials, summary.images),
+            (1, 1, 3)
+        );
+        let read = crate::gltf::Glb::read(&bytes).unwrap();
+        let material = &read.json["materials"][0];
+        assert_eq!(material["normalTexture"]["index"], 1);
+        assert_eq!(material["occlusionTexture"]["index"], 2);
+        assert_eq!(read.json["samplers"][0]["wrapS"], crate::gltf::REPEAT);
+        // Whole wraps round the trunk: 0.5 m across at a 0.25 m period.
+        let (uvs, width) = read.accessor(3).unwrap();
+        assert_eq!(width, 2);
+        let most = uvs.chunks(2).map(|uv| uv[0]).fold(0.0, f64::max);
+        assert!((most - 6.0).abs() < 1.0e-6, "{most}");
+    }
+
+    #[test]
+    fn a_spec_s_stages_are_ordered_by_where_they_end() {
+        let spec: BarkSpec = serde_json::from_str(
+            r#"{"thickness": {"coefficient": 0.05},
+                "stages": {"old": {"architecture": "furrowed",
+                                   "fissures": {"network": "interlacing", "spacing_m": 0.05,
+                                                "elongation": 4, "width_share": 0.3,
+                                                "depth_share": 0.6, "profile": "rounded"}},
+                           "twig": {"until_diameter_m": 0.01, "architecture": "stretched",
+                                    "colour": [10, 20, 30]},
+                           "young": {"until_diameter_m": 0.2, "architecture": "stretched"}}}"#,
+        )
+        .unwrap();
+        let look = spec.look("x", [0.2, 0.1, 0.05]).unwrap();
+        let names: Vec<&str> = look
+            .stages
+            .iter()
+            .map(|stage| stage.name.as_str())
+            .collect();
+        assert_eq!(names, ["twig", "young", "old"]);
+        // A stage with no colour is the bark's.
+        assert_eq!(look.stages[0].colour, Some([10, 20, 30]));
+        let bark = [0.2_f32, 0.1, 0.05].map(|c| crate::texture::linear_to_srgb(f64::from(c)));
+        assert_eq!(look.stages[2].colour, Some(bark));
+        assert_eq!(BarkSpec::of(&look).look("x", [0.0; 3]).unwrap(), look);
+        // Two stages that never end, or end together, are no record.
+        let mut two = spec.clone();
+        two.stages.get_mut("young").unwrap().until_diameter_m = None;
+        assert!(two.look("x", [0.5; 3]).unwrap_err().0.contains("never end"));
+        let mut together = spec;
+        together.stages.get_mut("young").unwrap().until_diameter_m = Some(0.01);
+        assert!(
+            together
+                .look("x", [0.5; 3])
+                .unwrap_err()
+                .0
+                .contains("one diameter")
+        );
+    }
+
+    #[test]
+    fn every_bark_pattern_makes_a_look() {
+        use crate::bark::{BarkKind, BarkPattern};
+        let kinds = [
+            BarkKind::Furrowed,
+            BarkKind::Plated,
+            BarkKind::Fibrous,
+            BarkKind::Scaly,
+            BarkKind::Smooth,
+            BarkKind::Peeling,
+        ];
+        for kind in kinds {
+            let pattern = BarkPattern {
+                kind,
+                lenticels: 200.0,
+                peeled: 0.4,
+                ..BarkPattern::default()
+            };
+            let look = from_pattern("x", &pattern, [0.3, 0.2, 0.15]).unwrap();
+            // Smooth below 2 cm across a little over 6 cm, then the pattern.
+            let last = look.stages.last().unwrap();
+            if kind == BarkKind::Smooth {
+                assert_eq!(look.stages.len(), 1);
+                assert!(last.lenticels.is_some());
+            } else {
+                assert_eq!(look.stages.len(), 2, "{kind:?}");
+                assert!((look.stages[0].until_diameter_m.unwrap() - 0.06).abs() < 1.0e-12);
+                assert!(look.stages[0].lenticels.is_some());
+            }
+            let tile = bake(&look, last, 0.4, 32, period_for(0.4, 0.3), 1);
+            let (low, high) = tile.relief();
+            assert!(high >= low, "{kind:?}");
+        }
+        let ringed = BarkPattern {
+            kind: BarkKind::Ringed,
+            ..BarkPattern::default()
+        };
+        assert!(from_pattern("x", &ringed, [0.3; 3]).is_none());
+    }
+
+    #[test]
+    fn base_and_underside_stages_show_only_there() {
+        let mut look = BarkLook::from_json(
+            r#"{"schema": 1, "id": "x", "thickness": {"coefficient": 0.03},
+                "stages": [
+                    {"name": "smooth", "until_diameter_m": 0.3, "colour": [200, 200, 200]},
+                    {"name": "base", "on": "base", "colour": [40, 40, 40],
+                     "fissures": {"network": "reticulate"}}]}"#,
+        )
+        .unwrap();
+        // A 50 cm trunk: dark to 2 m up, smooth above; thin wood smooth.
+        assert_eq!(look.stage_where(0.5, 1.0, 0.0, 0.5).name, "base");
+        assert_eq!(look.stage_where(0.5, 2.5, 0.0, 0.5).name, "smooth");
+        assert_eq!(look.stage_where(0.1, 0.5, 0.0, 0.5).name, "smooth");
+        look.stages[1].base_height_m = Some(5.0);
+        assert_eq!(look.stage_where(0.5, 4.0, 0.0, 0.5).name, "base");
+        // On the underside: only where the surface faces down.
+        look.stages[1].on = On::Underside;
+        assert_eq!(look.stage_where(0.5, 8.0, 0.9, 0.5).name, "base");
+        assert_eq!(look.stage_where(0.5, 8.0, 0.0, 0.5).name, "smooth");
+        assert_eq!(look.stages[1].architecture, Some(Architecture::Furrowed));
+    }
+
+    #[test]
+    fn one_stage_gives_way_to_the_next_in_steps() {
+        let look = BarkLook::from_json(
+            r#"{"schema": 1, "id": "x", "thickness": {"coefficient": 0.03},
+                "stages": [
+                    {"name": "smooth", "until_diameter_m": 0.3, "colour": [200, 200, 200]},
+                    {"name": "plates", "colour": [90, 80, 70],
+                     "fissures": {"network": "tessellated"}}]}"#,
+        )
+        .unwrap();
+        // Well clear of the edge, every spot wears one stage.
+        for patch in [0.0, 0.5, 1.0] {
+            assert_eq!(look.wear_where(0.2, 9.0, 0.0, patch), Wear::plain(0));
+            assert_eq!(look.wear_where(0.45, 9.0, 0.0, patch), Wear::plain(1));
+        }
+        // Across it, plates cover more and more of the bark.
+        let plates = |wear: Wear| {
+            if wear.step == 0 {
+                f64::from(u8::from(wear.under == 1))
+            } else {
+                wear.share()
+            }
+        };
+        let shares: Vec<f64> = [0.24, 0.27, 0.3, 0.33, 0.37]
+            .iter()
+            .map(|&d| plates(look.wear_where(d, 9.0, 0.0, 0.5)))
+            .collect();
+        assert!(shares.windows(2).all(|w| w[0] <= w[1]), "{shares:?}");
+        assert_eq!(
+            look.wear_where(0.3, 9.0, 0.0, 0.5),
+            Wear {
+                under: 0,
+                over: 1,
+                step: 2
+            }
+        );
+        // Patches move the step: one ring of a stem wears neighbouring steps.
+        let mut steps = std::collections::BTreeSet::new();
+        for step in 0..400 {
+            let at = [0.1 * f64::from(step % 20), 0.1 * f64::from(step / 20), 0.0];
+            let value = patch(at);
+            assert!((0.0..=1.0).contains(&value));
+            assert_eq!(value.to_bits(), patch(at).to_bits());
+            steps.insert(look.wear_where(0.3, 9.0, 0.0, value).step);
+        }
+        assert!(steps.len() >= 2, "{steps:?}");
+        // A mixed tile takes the later stage's highest texels first, and
+        // a larger share keeps all a smaller one took.
+        let (under, over) = (
+            bake(&look, &look.stages[0], 0.3, 32, 0.3, 1),
+            bake(&look, &look.stages[1], 0.3, 32, 0.3, 1),
+        );
+        let taken = |share: f64| -> Vec<bool> {
+            let tile = mix(&under, &over, share, 1);
+            (0..32 * 32)
+                .map(|t| {
+                    let bits = |c: [f64; 3]| c.map(f64::to_bits);
+                    bits(tile.albedo[t]) == bits(over.albedo[t])
+                        && bits(tile.albedo[t]) != bits(under.albedo[t])
+                })
+                .collect()
+        };
+        let (quarter, half) = (taken(0.25), taken(0.5));
+        let count = |v: &[bool]| v.iter().filter(|&&b| b).count();
+        assert!(
+            (200..=260).contains(&count(&quarter)),
+            "{}",
+            count(&quarter)
+        );
+        assert!(quarter.iter().zip(&half).all(|(&q, &h)| !q || h));
+    }
+}

@@ -46,9 +46,6 @@
       "bloom_size": 0.05,
       "bloom_angle": 80,
       "path_half": 0.45,
-      "thorns": 4,
-      "thorn_length": 0.003,
-      "thorn_angle": 60,
       "lean": 40
     }
   },
@@ -186,7 +183,14 @@
     "fruitlets_per_fruit": {"min": 20, "max": 50},
     "fruitlet_coherence": "strongly_coherent",
     "fruit_shape": "cylindric",
-    "fruit_colour_ripening": [150, 20, 30]
+    "fruit_colour_ripening": [150, 20, 30],
+    "spines": "prickles",
+    "spine_length_m": {"min": 0.004, "max": 0.01},
+    "spine_width_m": {"min": 0.001, "max": 0.004},
+    "spine_curve": {"curved": "often", "hooked": "often", "straight": "sometimes"},
+    "spine_angle": "declined",
+    "internodal_prickles": "dense",
+    "aciculi": "none"
   },
   "evidence": {
     "taxon": {
@@ -289,7 +293,14 @@
     "traits.fruitlets_per_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): drupelets 20-50 to a fruit."},
     "traits.fruitlet_coherence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): drupelets strongly coherent, the fruit falling with its torus inside."},
     "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): fruit globose to cylindric, without bloom; drawn cylindric."},
-    "traits.fruit_colour_ripening": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high), as no source read gives it: blackberries pass from green through red before they turn black; sRGB by eye for a dark red."}
+    "traits.fruit_colour_ripening": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high), as no source read gives it: blackberries pass from green through red before they turn black; sRGB by eye for a dark red."},
+    "traits.spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): shrubs armed; prickles moderate to dense on the stems."},
+    "traits.spine_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): prickles 4-10 mm."},
+    "traits.spine_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: a quarter to two fifths of the prickle's length at its foot: the flora calls them weak to moderately stout, narrow- to broad-based, but gives no width."},
+    "traits.spine_curve": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): prickles erect to retrorse or hooked."},
+    "traits.spine_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): prickles erect to retrorse: drawn leaning back toward the stem's base."},
+    "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): prickles moderate to dense on the creeping stems."},
+    "traits.aciculi": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus ursinus (eFloras, read 2026-10-19): no bristles described on the stems."}
   },
   "provenance": {
     "sources": [

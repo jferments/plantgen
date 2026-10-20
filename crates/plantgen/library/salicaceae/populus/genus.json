@@ -6,7 +6,48 @@
     "short_shoots": true,
     "perianth": "absent"
   },
+  "appearance": {
+    "bark_look": {
+      "thickness": {
+        "coefficient": 0.044
+      },
+      "stages": {
+        "twig": {
+          "until_diameter_m": 0.01,
+          "architecture": "stretched",
+          "roughness": 0.35,
+          "lenticels": {
+            "shape": "dash",
+            "length_m": [0.001, 0.003],
+            "width_ratio": 0.35,
+            "per_m2": 2500,
+            "colour": [200, 130, 70]
+          }
+        },
+        "furrowed": {
+          "architecture": "furrowed",
+          "roughness": 0.92,
+          "fissures": {
+            "network": "longitudinal",
+            "spacing_m": 0.05,
+            "elongation": 4,
+            "width_share": 0.25,
+            "depth_share": 0.5,
+            "profile": "flat_topped"
+          },
+          "scales": {
+            "size_m": 0.015,
+            "aspect": 1.0,
+            "depth_m": 0.0015,
+            "variation": 0.12,
+            "on_ridges": true
+          }
+        }
+      }
+    }
+  },
   "evidence": {
+    "appearance.bark_look": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Poplar bark: shoots with dash lenticels, and trunks furrowed into long flat ridges as they age (cottonwoods all over; aspens at the base, their species adding their smooth white stage). Reference: quaking aspen's record (plantgen-claude project-files/bark/records/populus-tremuloides.json); the genus furrows as the aspen's base does, inferred."},
     "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, p. 60: short shoots live a limited time and often fall cleanly at a scar, as in Populus."},
     "traits.perianth": {
       "evidence": "SourceInferred",

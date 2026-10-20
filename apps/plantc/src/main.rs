@@ -129,6 +129,7 @@ fn run() -> Result<(), Failure> {
         "mechanics" => mechanics_command(&args),
         "validate" => validate_command(&args),
         "ground" => ground_command(&args),
+        "bark" => bark_command(&args),
         "build" => build_command(&args),
         "export" => export_command(&args),
         "inspect" => inspect_command(&args),
@@ -315,6 +316,15 @@ Usage:
       twigs, moss, sphagnum, grass, tussock and cushion), seven to a row,
       or with `--looks litter` the 23 canopy species' litters: each look's
       colour above its relief.
+  plantc bark --look FILE.json|--species ID --out DIR [--size N] [--period M] [--seed N]
+      (each stage's tile wraps its stem a whole number of times, near M)
+  plantc bark --probe up|round --out DIR [--size N] [--period M]
+      Draw a bark look (the bark language's drawing record), from a file
+      or a species' spec (written beside the tiles as ID.json), stage by
+      stage, each at a diameter typical of it, as tiles repeating every
+      M metres (default 0.5) of N texels a side (default 512): base
+      colour, normal, occlusion-roughness-metallic and height maps, and a
+      sheet with each stage's tile lit and a trunk wearing it.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
                [--threads N] [--profile static|motion]
       Build a .afterplant package in DIR (default `plants`) and print its
@@ -331,6 +341,7 @@ Usage:
                 [--attributes all|wind|none]
                 [--triangles N[,N,N,N]] [--max-mib N]
                 [--profile static|motion]
+                [--bark-look spec|FILE.json [--bark-texels N] [--bark-period M]]
       Write one variant at one age as glTF 2.0 binary files that need no
       PlantGen code, one per level of detail (STEM-lod0.glb to
       STEM-lod3.glb), and an index, STEM.json, in DIR (default `exports`);
@@ -366,6 +377,13 @@ Usage:
       plant's bones (JOINTS_0, WEIGHTS_0, _PLANTGEN_ALONG), lets its parts
       ride their bones' joints, and carries the bones and branches in the
       PLANTGEN_motion extension, as a motion package holds them.
+      --bark-look draws the bark from the plant's spec (`spec`: its
+      stated bark look, else one made from its bark pattern) or a bark
+      record (`plantc bark`): each stage baked to textures N texels a side (default 512), repeating
+      near every M metres (default 0.5), as a material of its own, with
+      the wood split by stage and given texture coordinates in tiles and
+      tangents. Where one stage gives way to the next, the wood wears
+      textures that mix them in steps of a quarter, in patches.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
@@ -3204,6 +3222,171 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+#[allow(clippy::too_many_lines)]
+fn bark_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::bark_look::{self, BarkLook};
+    let options = Options::parse(
+        args,
+        &["look", "species", "probe", "out", "size", "period", "seed"],
+    )?;
+    let out = Path::new(options.flags.get("out").ok_or("missing `--out DIR`")?);
+    let size = options.number::<usize>("size")?.unwrap_or(512);
+    if !(16..=4096).contains(&size) || !size.is_power_of_two() {
+        return Err("`--size` is a power of two from 16 to 4096".into());
+    }
+    let period = options.number::<f64>("period")?.unwrap_or(0.5);
+    let seed = options.number::<u64>("seed")?.unwrap_or(1);
+    // A probe: a metre of trunk a metre across, for checking renderers.
+    if let Some(way) = options.flags.get("probe") {
+        let up = match way.as_str() {
+            "up" => true,
+            "round" => false,
+            _ => return Err("`--probe` is `up` or `round`".into()),
+        };
+        fs::create_dir_all(out)
+            .map_err(|error| format!("cannot make {}: {error}", out.display()))?;
+        let name = format!("probe-{way}");
+        let file = out.join(format!("{name}.glb"));
+        let glb = bark_look::glb(&bark_look::probe(size, period, up), &name, 1.0, 1.0);
+        fs::write(&file, glb)
+            .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+        out!("wrote {}", file.display());
+        return Ok(());
+    }
+    let look = match (options.flags.get("look"), options.flags.get("species")) {
+        (Some(path), None) => {
+            let text =
+                fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))?;
+            BarkLook::from_json(&text).map_err(|error| error.to_string())?
+        }
+        (None, Some(name)) => {
+            let spec = load_spec(name)?;
+            spec.appearance
+                .bark_look(&spec.id)
+                .map_err(|error| error.to_string())?
+                .ok_or_else(|| format!("{} states no bark", spec.id))?
+        }
+        _ => {
+            return Err(
+                "give one of `--look FILE.json`, `--species ID` or `--probe up|round`".into(),
+            );
+        }
+    };
+    fs::create_dir_all(out).map_err(|error| format!("cannot make {}: {error}", out.display()))?;
+    // The record drawn, as the bark language writes it.
+    let file = out.join(format!("{}.json", look.id));
+    let json = serde_json::to_string_pretty(&look).map_err(|error| error.to_string())?;
+    fs::write(&file, json + "\n")
+        .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+    let write = |name: String, width: usize, height: usize, rgba: &[u8]| -> Result<(), Failure> {
+        let file = out.join(name);
+        let png = raster::encode_png(width, height, rgba)
+            .map_err(|error| format!("cannot encode PNG: {error}"))?;
+        fs::write(&file, png)
+            .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+        Ok(())
+    };
+    // The sheet: a row a stage, the lit tile, a trunk wearing it, and its
+    // base colour above its normal map at half size.
+    let half = size / 2;
+    let (width, row_height) = (size * 2 + half, size);
+    let mut sheet = vec![255_u8; width * row_height * look.stages.len() * 4];
+    let place = |sheet: &mut Vec<u8>,
+                 rgba: &[u8],
+                 w: usize,
+                 h: usize,
+                 left: usize,
+                 top: usize,
+                 step: usize| {
+        for y in 0..h {
+            for x in 0..w {
+                let from = ((y * step) * (w * step) + x * step) * 4;
+                let to = ((top + y) * width + left + x) * 4;
+                sheet[to..to + 4].copy_from_slice(&rgba[from..from + 4]);
+            }
+        }
+    };
+    out!(
+        "{} ({} stages), tiles of {size} texels over {period} m, seed {seed}:",
+        look.id,
+        look.stages.len()
+    );
+    for (index, (stage, diameter)) in look.stages.iter().zip(look.typical_diameters()).enumerate() {
+        let period = bark_look::period_for(diameter, period);
+        let tile = bark_look::bake(&look, stage, diameter, size, period, seed);
+        let stem = format!("{}-{index}-{}", look.id, stage.name);
+        write(
+            format!("{stem}-basecolor.png"),
+            size,
+            size,
+            &tile.base_colour_rgba(),
+        )?;
+        write(
+            format!("{stem}-normal.png"),
+            size,
+            size,
+            &tile.normal_rgba(),
+        )?;
+        write(format!("{stem}-orm.png"), size, size, &tile.orm_rgba())?;
+        // A metre of trunk wearing it, as glTF.
+        let file = out.join(format!("{stem}.glb"));
+        fs::write(&file, bark_look::glb(&tile, &stem, diameter, 1.0))
+            .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+        write(
+            format!("{stem}-height.png"),
+            size,
+            size,
+            &tile.height_rgba(),
+        )?;
+        let top = index * row_height;
+        place(&mut sheet, &tile.lit_rgba(), size, size, 0, top, 1);
+        // The trunk: as tall as the sheet's row shows, about 1.6 diameters
+        // of it, at least 0.25 m.
+        let span = (diameter * 1.6).max(0.25);
+        let trunk = tile.trunk_rgba(diameter, span, size, size);
+        place(&mut sheet, &trunk, size, size, size, top, 1);
+        place(
+            &mut sheet,
+            &tile.base_colour_rgba(),
+            half,
+            half,
+            2 * size,
+            top,
+            2,
+        );
+        place(
+            &mut sheet,
+            &tile.normal_rgba(),
+            half,
+            half,
+            2 * size,
+            top + half,
+            2,
+        );
+        let (low, high) = tile.relief();
+        let [r, g, b] = tile.mean_albedo().map(plantgen::texture::linear_to_srgb);
+        out!(
+            "  {index} {:<14} at {:>5.0} cm: tile {:>4.0} mm, bark {:>5.1} mm thick, relief {:>5.1} mm, mean colour sRGB {r} {g} {b}",
+            stage.name,
+            diameter * 100.0,
+            period * 1000.0,
+            tile.thickness_m * 1000.0,
+            (high - low) * 1000.0
+        );
+    }
+    write(
+        format!("{}-sheet.png", look.id),
+        width,
+        row_height * look.stages.len(),
+        &sheet,
+    )?;
+    out!(
+        "wrote {}: a row a stage: lit tile, trunk, base colour over normal",
+        out.join(format!("{}-sheet.png", look.id)).display()
+    );
+    Ok(())
+}
+
 fn ground_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(args, &["out", "seed", "looks"])?;
     if !options.positional.is_empty() {
@@ -3430,6 +3613,9 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             "triangles",
             "max-mib",
             "profile",
+            "bark-look",
+            "bark-texels",
+            "bark-period",
         ],
     )?;
     match options.flags.get("format").map(String::as_str) {
@@ -3486,11 +3672,31 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             })
             .transpose()?,
     };
-    let settings = export::Settings {
+    // Bark from a record, or `spec` for the plant's own; the look is found
+    // once the plant is.
+    let bark_source = options.flags.get("bark-look").cloned();
+    let bark_texels = options.number::<usize>("bark-texels")?.unwrap_or(512);
+    let bark_period = options.number::<f64>("bark-period")?.unwrap_or(0.5);
+    if bark_source.is_some() {
+        if !(16..=4096).contains(&bark_texels) || !bark_texels.is_power_of_two() {
+            return Err("`--bark-texels` is a power of two from 16 to 4096".into());
+        }
+        if bark_period.is_nan() || bark_period <= 0.0 {
+            return Err("`--bark-period` is a length above 0, in metres".into());
+        }
+    } else {
+        for flag in ["bark-texels", "bark-period"] {
+            if options.flags.contains_key(flag) {
+                return Err(format!("`--{flag}` needs `--bark-look`").into());
+            }
+        }
+    }
+    let mut settings = export::Settings {
         shade,
         compression,
         attributes,
         budget,
+        bark: None,
     };
     let target = options.one_positional("a species or a package")?;
     let package_dir = Path::new(target);
@@ -3521,6 +3727,24 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
         (profiled(&spec, inputs, &options)?, None)
     };
     let spec = &inputs.spec;
+    if let Some(source) = &bark_source {
+        let look = if source == "spec" {
+            spec.appearance
+                .bark_look(&spec.id)
+                .map_err(|error| error.to_string())?
+                .ok_or_else(|| format!("{} states no bark", spec.id))?
+        } else {
+            let text = fs::read_to_string(source)
+                .map_err(|error| format!("cannot read {source}: {error}"))?;
+            plantgen::bark_look::BarkLook::from_json(&text).map_err(|error| error.to_string())?
+        };
+        // The look lives as long as the run.
+        settings.bark = Some(export::BarkExport {
+            look: Box::leak(Box::new(look)),
+            texels: bark_texels,
+            period_m: bark_period,
+        });
+    }
     let variants = spec.variant_list();
     let mut variant = export::typical_variant(spec, library());
     let environment = options

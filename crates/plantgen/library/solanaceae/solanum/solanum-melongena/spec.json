@@ -135,6 +135,7 @@
     "leaf_hairs_beneath": "tomentose",
     "spines": "prickles",
     "prickle_density": "sparse",
+    "spine_curve": "curved",
     "calyx_prickle_length_m": 0.003,
     "fruiting_calyx_length_m": {
       "min": 0.015,
@@ -338,6 +339,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): sparingly armed; stems and branches sometimes with stout recurved prickles; Flora of British India (p. 235): prickly, or sometimes nearly unarmed; Wikipedia 'Eggplant': often with a spiny stem."
+    },
+    "traits.spine_curve": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 17 (Solanaceae), Solanum melongena (eFloras, read 2026-10-18): stems and branches sometimes with stout recurved prickles."
     },
     "traits.prickle_density": {
       "evidence": "SourceInferred",

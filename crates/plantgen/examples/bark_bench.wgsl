@@ -1,0 +1,428 @@
+// The cost of drawing bark on a GPU, for `examples/bark_bench.rs`: a close
+// trunk filling the screen, drawn with PlantGen's bark pattern evaluated
+// pixel by pixel (the functions below are PlantLab's `wood.wgsl`, as After
+// and PlantLab run them today), or with the pattern read from textures.
+
+struct Bark {
+    inner: vec4<f32>,
+    kind: u32,
+    scale: f32,
+    elongation: f32,
+    fissure: f32,
+    depth: f32,
+    contrast: f32,
+    variation: f32,
+    mean: f32,
+    smooth_below: f32,
+    lenticels: f32,
+    peeled: f32,
+    roughness: f32,
+}
+
+// The view: the target's size, the trunk's radius, the metres of trunk the
+// screen shows from top to bottom, and the bark tile's period, metres.
+struct View {
+    size: vec2<f32>,
+    radius: f32,
+    span: f32,
+    period: f32,
+    pad0: f32,
+    pad1: f32,
+    pad2: f32,
+}
+
+@group(0) @binding(0) var<uniform> bark: Bark;
+@group(0) @binding(1) var<uniform> view: View;
+@group(0) @binding(2) var tile_a: texture_2d<f32>;
+@group(0) @binding(3) var tile_b: texture_2d<f32>;
+@group(0) @binding(4) var tile_c: texture_2d<f32>;
+@group(0) @binding(5) var tiles: sampler;
+
+const BARK_SCALY: u32 = 4u;
+const BARK_SMOOTH: u32 = 5u;
+const BARK_PEELING: u32 = 6u;
+const BARK_RINGED: u32 = 7u;
+const BARK_CELL_SALT: u32 = 0x68e31da4u;
+const BARK_SHADE_SALT: u32 = 0x5bd1e995u;
+const BARK_PEEL_SALT: u32 = 0x2c1b3c6du;
+const BARK_MOTTLE_SALT: u32 = 0x297a2d39u;
+const BARK_LENTICEL_SALT: u32 = 0x7feb352du;
+const BARK_GRAIN_SALT: u32 = 0x1b873593u;
+const BARK_FINE_SALT: u32 = 0xcc9e2d51u;
+const BARK_RING_SALT: u32 = 0x3c6ef372u;
+const BARK_TAU: f32 = 6.2831855;
+
+fn pcg(value: u32) -> u32 {
+    let state = value * 747796405u + 2891336453u;
+    let word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
+    return (word >> 22u) ^ word;
+}
+
+fn bark_unit(hash: u32) -> f32 {
+    return f32(hash >> 8u) / 16777216.0;
+}
+
+fn bark_hash(cell: vec3<i32>, salt: u32) -> u32 {
+    return pcg(bitcast<u32>(cell.x) ^ pcg(bitcast<u32>(cell.y) ^ pcg(bitcast<u32>(cell.z) ^ salt)));
+}
+
+struct Cells {
+    near: f32,
+    second: f32,
+    near_point: vec3<f32>,
+    second_point: vec3<f32>,
+    id: u32,
+}
+
+// bark.rs `cells`.
+fn bark_cells(q: vec3<f32>, salt: u32) -> Cells {
+    let base = vec3<i32>(floor(q));
+    var found: Cells;
+    found.near = 1.0e9;
+    found.second = 1.0e9;
+    found.near_point = q;
+    found.second_point = q;
+    found.id = 0u;
+    for (var dz = -1; dz <= 1; dz++) {
+        for (var dy = -1; dy <= 1; dy++) {
+            for (var dx = -1; dx <= 1; dx++) {
+                let cell = base + vec3<i32>(dx, dy, dz);
+                let hash = bark_hash(cell, salt);
+                let a = pcg(hash);
+                let b = pcg(a);
+                let point = vec3<f32>(cell) + 0.1
+                    + 0.8 * vec3<f32>(bark_unit(hash), bark_unit(a), bark_unit(b));
+                let distance = length(q - point);
+                if distance < found.near {
+                    found.second = found.near;
+                    found.second_point = found.near_point;
+                    found.near = distance;
+                    found.near_point = point;
+                    found.id = hash;
+                } else if distance < found.second {
+                    found.second = distance;
+                    found.second_point = point;
+                }
+            }
+        }
+    }
+    return found;
+}
+
+// bark.rs `noise`.
+fn bark_noise(q: vec3<f32>, salt: u32) -> f32 {
+    let base = vec3<i32>(floor(q));
+    let f = q - floor(q);
+    let w = f * f * (3.0 - 2.0 * f);
+    var corner: array<f32, 8>;
+    for (var k = 0; k < 8; k++) {
+        corner[k] = bark_unit(bark_hash(base + vec3<i32>(k & 1, (k >> 1u) & 1, (k >> 2u) & 1), salt));
+    }
+    let xa = corner[0] + (corner[1] - corner[0]) * w.x;
+    let xb = corner[2] + (corner[3] - corner[2]) * w.x;
+    let xc = corner[4] + (corner[5] - corner[4]) * w.x;
+    let xd = corner[6] + (corner[7] - corner[6]) * w.x;
+    let ya = xa + (xb - xa) * w.y;
+    let yb = xc + (xd - xc) * w.y;
+    return ya + (yb - ya) * w.z;
+}
+
+// bark.rs `noise_gradient`: (value, gradient).
+fn bark_noise_gradient(q: vec3<f32>, salt: u32) -> vec4<f32> {
+    let base = vec3<i32>(floor(q));
+    let f = q - floor(q);
+    let w = f * f * (3.0 - 2.0 * f);
+    let dw = 6.0 * f * (1.0 - f);
+    var corner: array<f32, 8>;
+    for (var k = 0; k < 8; k++) {
+        corner[k] = bark_unit(bark_hash(base + vec3<i32>(k & 1, (k >> 1u) & 1, (k >> 2u) & 1), salt));
+    }
+    let kx = corner[1] - corner[0];
+    let ky = corner[2] - corner[0];
+    let kz = corner[4] - corner[0];
+    let kxy = corner[0] - corner[1] - corner[2] + corner[3];
+    let kxz = corner[0] - corner[1] - corner[4] + corner[5];
+    let kyz = corner[0] - corner[2] - corner[4] + corner[6];
+    let kxyz = -corner[0] + corner[1] + corner[2] - corner[3] + corner[4] - corner[5] - corner[6]
+        + corner[7];
+    let value = corner[0] + kx * w.x + ky * w.y + kz * w.z + kxy * w.x * w.y + kxz * w.x * w.z
+        + kyz * w.y * w.z + kxyz * w.x * w.y * w.z;
+    return vec4<f32>(
+        value,
+        dw.x * (kx + kxy * w.y + kxz * w.z + kxyz * w.y * w.z),
+        dw.y * (ky + kxy * w.x + kyz * w.z + kxyz * w.x * w.z),
+        dw.z * (kz + kxz * w.x + kyz * w.y + kxyz * w.x * w.y),
+    );
+}
+
+// bark.rs `octave`.
+fn bark_octave(
+    c: vec3<f32>,
+    sine: f32,
+    cosine: f32,
+    footprint: f32,
+    frequency: f32,
+    weight: f32,
+    salt: u32,
+) -> vec3<f32> {
+    let fade = 1.0 - smoothstep(0.3, 0.8, footprint * frequency / bark.scale);
+    if fade <= 0.0 {
+        return vec3<f32>(0.0);
+    }
+    let k = frequency / bark.scale;
+    let stretch = sqrt(max(bark.elongation, 1.0e-3));
+    let g = vec3<f32>(c.x * k, c.y * k, c.z * k / stretch);
+    let n = bark_noise_gradient(g, salt);
+    let a = weight * fade;
+    return vec3<f32>(a * (n.x - 0.5), a * k * (-sine * n.y + cosine * n.z), a * k / stretch * n.w);
+}
+
+struct Height {
+    h: f32,
+    gradient: vec3<f32>,
+    id: u32,
+}
+
+// bark.rs `rings`.
+fn bark_rings(q: vec3<f32>) -> Height {
+    let wave = bark_noise_gradient(vec3<f32>(0.7 * q.x, 0.7 * q.y, 0.5), BARK_RING_SALT);
+    let z = q.z + 0.3 * (wave.x - 0.5);
+    let offset = z - round(z);
+    let edge = 2.0 * abs(offset);
+    let w = max(bark.fissure, 1.0e-4);
+    let t = clamp(edge / w, 0.0, 1.0);
+    var out: Height;
+    out.h = t * t * (3.0 - 2.0 * t);
+    var slope = 0.0;
+    if t > 0.0 && t < 1.0 {
+        slope = 6.0 * t * (1.0 - t) / w * 2.0 * sign(offset);
+    }
+    out.gradient = vec3<f32>(slope * 0.21 * wave.y, slope * 0.21 * wave.z, slope);
+    out.id = bark_hash(vec3<i32>(0, 0, i32(floor(z))), BARK_CELL_SALT);
+    return out;
+}
+
+// bark.rs `height`.
+fn bark_height(q: vec3<f32>) -> Height {
+    if bark.kind == BARK_RINGED {
+        return bark_rings(q);
+    }
+    let found = bark_cells(q, BARK_CELL_SALT);
+    let edge = found.second - found.near;
+    let w = max(bark.fissure, 1.0e-4);
+    let t = clamp(edge / w, 0.0, 1.0);
+    var out: Height;
+    out.h = t * t * (3.0 - 2.0 * t);
+    let to_near = q - found.near_point;
+    let to_second = q - found.second_point;
+    let near_length = max(length(to_near), 1.0e-6);
+    let second_length = max(length(to_second), 1.0e-6);
+    var slope = 0.0;
+    if t > 0.0 && t < 1.0 {
+        slope = 6.0 * t * (1.0 - t) / w;
+    }
+    out.gradient = slope * (to_second / second_length - to_near / near_length);
+    if bark.kind == BARK_SCALY {
+        let rise = clamp(0.5 - to_near.z, 0.0, 1.0);
+        let factor = 0.65 + 0.35 * rise;
+        var inside = 0.0;
+        if 0.5 - to_near.z > 0.0 && 0.5 - to_near.z < 1.0 {
+            inside = -0.35 * out.h;
+        }
+        out.gradient = out.gradient * factor;
+        out.gradient.z += inside;
+        out.h *= factor;
+    }
+    out.id = found.id;
+    return out;
+}
+
+struct Sample {
+    shade: f32,
+    inner: f32,
+    slope: vec2<f32>,
+}
+
+// bark.rs `sample`.
+fn bark_sample(u: f32, v: f32, r: f32, footprint: f32) -> Sample {
+    var none: Sample;
+    none.shade = 1.0;
+    none.inner = 0.0;
+    none.slope = vec2<f32>(0.0);
+    if bark.kind == 0u || r <= 0.0 || bark.scale <= 0.0 {
+        return none;
+    }
+    var young = 1.0;
+    if bark.smooth_below > 0.0 {
+        young = smoothstep(bark.smooth_below, 2.0 * bark.smooth_below, r);
+    }
+    let fade = 1.0 - smoothstep(0.3, 0.8, footprint / bark.scale);
+    let amount = young * fade;
+    if amount <= 0.0 {
+        return none;
+    }
+    let theta = BARK_TAU * u;
+    let sine = sin(theta);
+    let cosine = cos(theta);
+    let c = vec3<f32>(r * cosine, r * sine, v);
+    let s = bark.scale;
+    let along = s * max(bark.elongation, 1.0e-3);
+    let q = vec3<f32>(c.x / s, c.y / s, c.z / along);
+    var shade = 1.0;
+    var inner = 0.0;
+    var gradient = vec3<f32>(0.0);
+    var grain_slope = vec2<f32>(0.0);
+    if bark.kind == BARK_SMOOTH {
+        shade = 1.0 + bark.variation * (bark_noise(q, BARK_MOTTLE_SALT) - 0.5);
+    } else {
+        var height = bark_height(q);
+        let cell = bark_unit(pcg(height.id ^ BARK_SHADE_SALT));
+        let peeled = bark.kind == BARK_PEELING
+            && bark_unit(pcg(height.id ^ BARK_PEEL_SALT)) < bark.peeled;
+        // Peeling bark is flat but where a patch has peeled (`surface`).
+        if bark.kind == BARK_PEELING && !peeled {
+            height.h = 1.0;
+            height.gradient = vec3<f32>(0.0);
+        }
+        var rough = height.h;
+        if bark.roughness > 0.0 {
+            let d = bark_octave(c, sine, cosine, footprint, 4.0, 1.0, BARK_GRAIN_SALT)
+                + bark_octave(c, sine, cosine, footprint, 9.0, 0.5, BARK_FINE_SALT);
+            let rise = 1.0 + bark.roughness * d.x;
+            rough = height.h * rise;
+            height.gradient = height.gradient * rise;
+            grain_slope = vec2<f32>(height.h * bark.roughness * d.y, height.h * bark.roughness * d.z);
+        }
+        shade = (1.0 + bark.contrast * (rough - bark.mean)) * (1.0 + bark.variation * (cell - 0.5));
+        if peeled {
+            inner = height.h;
+        }
+        gradient = height.gradient;
+    }
+    if bark.lenticels > 0.0 {
+        let spacing = 1.0 / sqrt(bark.lenticels);
+        let found = bark_cells(c / spacing, BARK_LENTICEL_SALT);
+        let offset = c / spacing - found.near_point;
+        let round = -sine * offset.x + cosine * offset.y;
+        let reach = (round / 0.22) * (round / 0.22) + (offset.z / 0.035) * (offset.z / 0.035);
+        shade *= 1.0 - 0.45 * (1.0 - smoothstep(0.6, 1.0, reach));
+    }
+    let relief = bark.depth * s;
+    let round_q = vec3<f32>(-sine / s, cosine / s, 0.0);
+    var out: Sample;
+    out.shade = 1.0 + (shade - 1.0) * amount;
+    out.inner = inner * amount;
+    out.slope = vec2<f32>(
+        relief * (gradient.x * round_q.x + gradient.y * round_q.y) + relief * grain_slope.x,
+        relief * gradient.z / along + relief * grain_slope.y,
+    ) * amount;
+    return out;
+}
+
+fn unit_or_zero(a: vec3<f32>) -> vec3<f32> {
+    let length_squared = dot(a, a);
+    if length_squared < 1.0e-20 {
+        return vec3<f32>(0.0);
+    }
+    return a * inverseSqrt(length_squared);
+}
+
+
+@vertex
+fn vertex(@builtin(vertex_index) index: u32) -> @builtin(position) vec4<f32> {
+    let x = f32(i32(index & 1u) * 4 - 1);
+    let y = f32(i32(index >> 1u) * 4 - 1);
+    return vec4<f32>(x, y, 0.0, 1.0);
+}
+
+// Where a pixel lies on the trunk: u round it (the screen shows the half
+// facing the camera), v metres along it, and the surface's normal.
+struct Place {
+    u: f32,
+    v: f32,
+    footprint: f32,
+    normal: vec3<f32>,
+}
+
+fn place(position: vec4<f32>) -> Place {
+    var out: Place;
+    let x = position.x / view.size.x;
+    out.u = 0.25 * x + 0.125;
+    out.v = (1.0 - position.y / view.size.y) * view.span;
+    out.footprint = view.span / view.size.y;
+    let theta = BARK_TAU * (out.u - 0.25);
+    out.normal = vec3<f32>(sin(theta), 0.0, cos(theta));
+    return out;
+}
+
+fn light(colour: vec3<f32>, normal: vec3<f32>) -> vec4<f32> {
+    let sun = normalize(vec3<f32>(0.4, 0.5, 0.75));
+    let lit = colour * (0.25 + 0.75 * max(dot(normal, sun), 0.0));
+    return vec4<f32>(lit, 1.0);
+}
+
+// The tangents round and along the trunk at a pixel.
+fn tilted(normal: vec3<f32>, slope: vec2<f32>) -> vec3<f32> {
+    let round = vec3<f32>(normal.z, 0.0, -normal.x);
+    let along = vec3<f32>(0.0, 1.0, 0.0);
+    return normalize(normal - round * slope.x - along * slope.y);
+}
+
+const BARK_COLOUR: vec3<f32> = vec3<f32>(0.3, 0.2, 0.14);
+
+// Today: the pattern evaluated per pixel.
+@fragment
+fn procedural(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
+    let at = place(position);
+    let sample = bark_sample(at.u, at.v, view.radius, at.footprint);
+    let colour = mix(BARK_COLOUR * sample.shade, bark.inner.rgb, sample.inner);
+    return light(colour, tilted(at.normal, sample.slope));
+}
+
+// The tile's coordinates: metres round and along the trunk over the period.
+fn tile_uv(at: Place) -> vec2<f32> {
+    return vec2<f32>(at.u * BARK_TAU * view.radius, at.v) / view.period;
+}
+
+// Proposal B: one RGBA16F tile holding shade, inner, slope round, slope
+// along, with mipmaps.
+@fragment
+fn tile(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
+    let at = place(position);
+    let sample = textureSample(tile_a, tiles, tile_uv(at));
+    let colour = mix(BARK_COLOUR * sample.x, bark.inner.rgb, sample.y);
+    return light(colour, tilted(at.normal, sample.zw));
+}
+
+// The glTF path: base colour, normal and occlusion-roughness-metallic
+// maps, RGBA8 each, as a standard material reads them.
+fn pbr_sample(at: Place, uv: vec2<f32>) -> vec4<f32> {
+    let base = textureSample(tile_a, tiles, uv).rgb;
+    let n = textureSample(tile_b, tiles, uv).xy * 2.0 - 1.0;
+    let orm = textureSample(tile_c, tiles, uv);
+    let colour = base * orm.r;
+    return light(colour, tilted(at.normal, n)) * (1.0 - 0.1 * orm.g);
+}
+
+@fragment
+fn pbr(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
+    let at = place(position);
+    return pbr_sample(at, tile_uv(at));
+}
+
+// Two bark stages cross-faded on the same pixel (only in a fade band on a
+// real trunk; everywhere here, so the worst case).
+@fragment
+fn pbr_two(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
+    let at = place(position);
+    let uv = tile_uv(at);
+    let blend = fract(at.v);
+    return mix(pbr_sample(at, uv), pbr_sample(at, uv * 1.37 + 0.5), blend);
+}
+
+// No pattern: the lighting alone, the floor every variant pays.
+@fragment
+fn plain(@builtin(position) position: vec4<f32>) -> @location(0) vec4<f32> {
+    let at = place(position);
+    return light(BARK_COLOUR, at.normal);
+}
