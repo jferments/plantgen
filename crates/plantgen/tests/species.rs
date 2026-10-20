@@ -870,7 +870,7 @@ fn builtin_clusters_draw_as_part_meshes() {
         }
     }
     assert_eq!(
-        checked, 191,
+        checked, 190,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -894,8 +894,8 @@ fn builtin_clusters_draw_as_part_meshes() {
          blueblossom, spreading gooseberry and bush penstemon (phase A's first ten), ten of the \
          Rosaceae: the corymbs of rowan, hawthorn, Catalina ironwood, Woods' and dog roses, woodland \
          strawberry and whitebark raspberry, red raspberry's racemes, and the panicles of loquat and meadowsweet, \
-         the fourteen of the Mount Rainier subalpine batch, and the thirteen of the Saguaro desert \
-         batch (beargrass's and banana yucca's flowering stalks are drawn whole, not as clusters), \
+         the fourteen of the Mount Rainier subalpine batch, and the twelve of the Saguaro desert \
+         batch (beargrass's and banana yucca's flowering stalks are drawn whole, and desert globemallow's flowers stand along its stems), \
          and the twelve of the Caryophyllales families: bladder campion's and four o'clock's cymes, \
          pigweed's and jewels of Opar's panicles, thrift's and purslane's heads, sundew's coil, \
          carpetweed's umbels, the racemes of pokeweed, saltcedar and rougeplant, and greasewood's catkins, \
