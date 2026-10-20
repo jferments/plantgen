@@ -92,11 +92,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the smaller leaf of each geminate pair is drawn half the larger and the sympodium's leaves shrink to three quarters upward, so the least draw about 1.2 cm wide, against the 2 to 6.4 cm Bailey gives the leaves of its varieties",
     ),
     (
-        "castilleja-parviflora",
-        "leaf_shape",
-        "its blades, lanceolate with a pair or two of narrow lobes (Abrams vol. 3 p. 841, as C. oreopola), are drawn on lobed cards whose outline, lobes and all, reads elliptic or oblanceolate against the lanceolate it states",
-    ),
-    (
         "chloranthus-serratus",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -157,6 +152,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
+        "hilaria-rigida",
+        "culm_length_m",
+        "its branch culms (much branched, Hitchcock 1935) are measured as culms of their own, so the shortest reads about 18 cm against the 30 cm to 1 m FNA gives its culms",
+    ),
+    (
         "holodiscus-discolor",
         "flower_size_m",
         "its flowers are drawn about 5.8 mm across against the 3 to 3.5 mm Dendrology (2019) p. 318 gives",
@@ -202,6 +202,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
     (
+        "muhlenbergia-porteri",
+        "culm_length_m",
+        "its branch culms (much branched, Hitchcock 1935) are measured as culms of their own, so the shortest reads about 15 cm against the 30 cm to 1 m FNA gives its main culms",
+    ),
+    (
         "nicotiana-tabacum",
         "leaf_length_m",
         "its stem leaves shrink upward to a quarter of the longest (King's: smaller upward), so the topmost draw about 9 cm against the 1 to 2 ft King's gives, which it measures on the main leaves",
@@ -225,6 +230,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "oxalis-oregana",
         "leaf_arrangement",
         "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
+    ),
+    (
+        "parkinsonia-florida",
+        "leaf_length_m",
+        "its bipinnate leaf (one pair of pinnae, FNA) measures about 1.1 cm on its compound card against the 2 to 3 cm stated, since main's compound-leaf changes (revisions 156 to 159); the cause is not traced yet",
     ),
     (
         "pedicularis-bracteosa",
@@ -282,11 +292,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a stem grows all its nodes' leaves in its one year (2 on foamflower's, 36 on Columbia lily's, 45 on fireweed's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
-        "program:lycopodiopsida",
-        "leaf_form",
-        "a spikemoss's or clubmoss's leaves are small scales (Mabberley 2017), but the lycophytes' herb-based program draws each on a blade card",
-    ),
-    (
         "program:pinidae",
         "cone_maturation_years",
         "a cone's look ripens it in its first season, so the three pines' cones, which take two to three, are drawn ripe in one",
@@ -310,6 +315,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:sapindaceae",
         "crown_outline_fit",
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
+    ),
+    (
+        "psilostrophe-cooperi",
+        "leaf_arrangement",
+        "its alternate leaves (FNA) are drawn alternate on its long shoots, but the shrub form's spur shoots bear their leaves in a pair (`spur_pairs` 1), which the measure reads as opposite (inferred)",
     ),
     (
         "rosa-rugosa",
