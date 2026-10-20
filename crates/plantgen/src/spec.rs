@@ -584,6 +584,11 @@ pub struct Appearance {
     /// pixel by pixel on the wood (plant roadmap P4, `crate::bark`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bark_pattern: Option<crate::bark::BarkPattern>,
+    /// The bark in the bark language (`crate::bark_look`): its stages by
+    /// stem diameter, each baked to a tile for export. Where none is
+    /// stated, the bark pattern's ([`Appearance::bark_look`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bark_look: Option<crate::bark_look::BarkSpec>,
     /// How each fleshy body of the program looks, by body name: ribs,
     /// areoles, spines (see [`crate::body`]). Bodies not listed get the
     /// default look.
@@ -605,6 +610,25 @@ impl Appearance {
         self.bark_pattern
             .as_ref()
             .map(|pattern| pattern.params(self.bark))
+    }
+
+    /// The bark look species `id` draws: the one it states, else the one
+    /// made from its bark pattern ([`crate::bark_look::from_pattern`]);
+    /// none for a plant with neither, or a palm's ringed stem.
+    ///
+    /// # Errors
+    ///
+    /// When the stated look's stages do not make a record
+    /// ([`crate::bark_look::BarkSpec::look`]).
+    pub fn bark_look(
+        &self,
+        id: &str,
+    ) -> Result<Option<crate::bark_look::BarkLook>, crate::bark_look::BarkLookError> {
+        match (&self.bark_look, &self.bark_pattern) {
+            (Some(stated), _) => stated.look(id, self.bark).map(Some),
+            (None, Some(pattern)) => Ok(crate::bark_look::from_pattern(id, pattern, self.bark)),
+            (None, None) => Ok(None),
+        }
     }
 
     /// The look of each of a program's organ types, in its declaration
@@ -802,16 +826,35 @@ impl Appearance {
 
     /// Its looks by organ name, with a look for each of `organs` that is a
     /// male plant's ([`MALE`]) and has none of its own: the look of the
-    /// organ it stands for, as [`male_look`] draws it.
+    /// organ it stands for, as [`male_look`] draws it. A thorn or prickle
+    /// whose look states no colour takes the bark's: the young stem's skin
+    /// it grows from (Rosaceae, 2026-10-19).
     fn with_male(
         &self,
         organs: &[(&str, OrganKind)],
     ) -> std::borrow::Cow<'_, BTreeMap<String, OrganLook>> {
         let males = self.males(organs.iter().map(|(name, _)| *name));
-        if males.is_empty() {
+        let bare: Vec<&String> = self
+            .organs
+            .iter()
+            .filter(|(_, look)| {
+                look.colour.is_none()
+                    && matches!(
+                        look.form,
+                        Some(crate::blooms::Form::Thorn | crate::blooms::Form::Prickles(_))
+                    )
+            })
+            .map(|(name, _)| name)
+            .collect();
+        if males.is_empty() && bare.is_empty() {
             return std::borrow::Cow::Borrowed(&self.organs);
         }
         let mut own = self.organs.clone();
+        for name in bare {
+            if let Some(look) = own.get_mut(name) {
+                look.colour = Some(self.bark);
+            }
+        }
         for (male, of) in males {
             if let Some(look) = self.organs.get(&of) {
                 own.insert(male, male_look(look));
@@ -893,6 +936,10 @@ impl Appearance {
             pattern
                 .validate()
                 .map_err(|message| format!("appearance: {message}"))?;
+        }
+        if let Some(look) = &self.bark_look {
+            look.look("bark_look", self.bark)
+                .map_err(|error| format!("appearance: {error}"))?;
         }
         if let Some(bottle) = &self.bottle {
             bottle
@@ -1270,6 +1317,7 @@ impl PlantSpec {
     /// # Errors
     ///
     /// Describes the first problem found.
+    #[allow(clippy::too_many_lines)]
     pub fn validate_in(&self, library: &Library) -> Result<(), SpecError> {
         let fail = |message: String| Err(SpecError(format!("species `{}`: {message}", self.id)));
         if self.schema != SPEC_SCHEMA {

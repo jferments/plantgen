@@ -46,6 +46,7 @@ const ELEMENT_ARRAY_BUFFER: u32 = 34963;
 pub const LINEAR: u32 = 9729;
 pub const LINEAR_MIPMAP_LINEAR: u32 = 9987;
 pub const CLAMP_TO_EDGE: u32 = 33071;
+pub const REPEAT: u32 = 10497;
 
 /// A single-precision number as JSON, in its shortest form.
 #[must_use]

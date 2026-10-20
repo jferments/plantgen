@@ -37,8 +37,6 @@
       "extinction": 0.45,
       "pipe_rings": 1.2e-05,
       "path_half": 8.0,
-      "thorns": 2,
-      "thorn_length": 0.018,
       "thorn_angle": 50
     }
   },
@@ -181,6 +179,8 @@
       "max": 4
     },
     "spines": "thorns",
+    "spine_length_m": {"min": 0.01, "max": 0.025},
+    "spine_curve": "straight",
     "leaf_length_m": {
       "min": 0.03,
       "max": 0.06
@@ -238,6 +238,16 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's black hawthorn review (Habeck 1991, read 2026-10-15): \"a large shrub or small tree ranging from 3.5 to 13.0 feet (1-4 m) tall\"."
+    },
+    "traits.spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's black hawthorn review (Habeck 1991, read 2026-10-15): \"possessing straight, strong thorns 0.5 to 1.0 inch (1.00-2.50 cm) long\"."
+    },
+    "traits.spine_curve": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's black hawthorn review (Habeck 1991, read 2026-10-15): \"straight, strong thorns\"."
     },
     "traits.spines": {
       "evidence": "SourceInferred",

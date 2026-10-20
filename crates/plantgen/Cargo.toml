@@ -27,3 +27,7 @@ serde_json = "=1.0.145"
 
 [lints]
 workspace = true
+
+[[example]]
+name = "bark_bench"
+required-features = ["gpu"]

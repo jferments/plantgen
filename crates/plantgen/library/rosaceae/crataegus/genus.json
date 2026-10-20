@@ -5,7 +5,11 @@
   "traits": {
     "ovary_position": "inferior",
     "petal_shape": "orbicular",
-    "petal_apex": "rounded"
+    "petal_apex": "rounded",
+    "thorn_origin": "shoot",
+    "thorn_frequency": "numerous",
+    "thorn_persistence": "few_years",
+    "thorn_position": "both"
   },
   "evidence": {
     "traits.ovary_position": {
@@ -22,6 +26,26 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 9 (2014), genus Crataegus by J. B. Phipps (eFloras, read 2026-10-19): petals more or less circular, so their tips are rounded."
+    },
+    "traits.thorn_origin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Crataegus by J. B. Phipps (eFloras, read 2026-10-19, as quoted in the Rosaceae thread's hawthorn note): thorns are modified shoots; indeterminate ones start as lateral or terminal growths and may grow into thorn-tipped shoot systems."
+    },
+    "traits.thorn_frequency": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Crataegus by J. B. Phipps (eFloras, read 2026-10-19, as quoted in the Rosaceae thread's hawthorn note): thorns on twigs, few to numerous (var. monogyna); numerous taken as the hawthorns' usual."
+    },
+    "traits.thorn_persistence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Crataegus by J. B. Phipps (eFloras, read 2026-10-19, as quoted in the Rosaceae thread's hawthorn note): thorns develop with the new growth and persist a few years."
+    },
+    "traits.thorn_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (2014), genus Crataegus by J. B. Phipps (eFloras, read 2026-10-19, as quoted in the Rosaceae thread's hawthorn note): thorns terminal on short shoots (indeterminate) and lateral (determinate)."
     }
   }
 }

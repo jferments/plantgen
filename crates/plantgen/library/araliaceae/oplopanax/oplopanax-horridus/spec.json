@@ -40,10 +40,7 @@
       "leaf_angle": 70,
       "blooms": 1,
       "bloom_angle": 10,
-      "path_half": 1.42,
-      "thorns": 6,
-      "thorn_length": 0.008,
-      "thorn_angle": 60
+      "path_half": 1.42
     }
   },
   "growth": {
@@ -136,7 +133,14 @@
     "flower_size_m": {"min": 0.004, "max": 0.007},
     "units_per_inflorescence": {"min": 100, "max": 300},
     "inflorescence_branches": {"min": 8, "max": 20},
-    "stem_clump": "few"
+    "stem_clump": "few",
+    "spines": "prickles",
+    "spine_length_m": {"min": 0.005, "max": 0.01},
+    "spine_curve": "straight",
+    "spine_angle": "erect",
+    "internodal_prickles": "dense",
+    "aciculi": "dense",
+    "spine_colour": [214, 190, 96]
   },
   "evidence": {
     "taxon": {
@@ -226,7 +230,14 @@
     "traits.flower_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: flowers 4-7 mm across: small, five-petalled (Wikipedia), up to 7 mm long (Lake Country Museum's wildflower page, read 2026-10-19)."},
     "traits.units_per_inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: 100-300 flowers: dense umbels gathered in a panicle 10-20 cm across (Wikipedia), each umbel of some ten to twenty flowers."},
     "traits.inflorescence_branches": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: 8-20 branches, each ending in its umbels, in a pyramidal panicle as photographs show it."},
-    "traits.stem_clump": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's devilsclub review (Howard 1993, read 2026-10-19): sparsely branched; it reproduces vegetatively by rhizomes and/or layering and may sprout from the root crown, so a plant stands on a few stems from its base."}
+    "traits.stem_clump": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's devilsclub review (Howard 1993, read 2026-10-19): sparsely branched; it reproduces vegetatively by rhizomes and/or layering and may sprout from the root crown, so a plant stands on a few stems from its base."},
+    "traits.spines": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS (Oplopanax horridus, read 2026-10-19): sparsely branched, with sharp, dense prickles on the stems and the prominent leaf veins."},
+    "traits.spine_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence low), as no source read gives it: prickles 5-10 mm: the sources read call them long and dense but give no length; the hand value drawn before was 8 mm."},
+    "traits.spine_curve": {"evidence": "SourceInferred", "source": "gleason-cronquist-1991", "note": "Gleason and Cronquist (1991), Oplopanax horridus (read via NYBG, 2026-10-19): shrub densely prickly on the stem, petioles and leaf veins; OregonFlora (quoted by Friends of Silver Falls) has the prickles sticking straight out: straight."},
+    "traits.spine_angle": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: square to the stem: OregonFlora, as quoted by Friends of Silver Falls (read 2026-10-19), has the dense long prickles sticking straight out; Oregon State University's Landscape Plants calls them firm and erect."},
+    "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS (Oplopanax horridus, read 2026-10-19): sharp, dense prickles on the stems."},
+    "traits.aciculi": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Counted by eye on iNaturalist photographs (imagekit batch inat-devils-club-stems-2026-10-19, run devils-club-prickles-by-eye-2026-10-19, 2026-10-19): long yellow prickles stand among many short fine ones, about 1400 a metre on a young tip and 430 on older stems normalised to a 1 cm stem, so the fine ones are dense. FEIS: sharp, dense prickles."},
+    "traits.spine_colour": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: yellow, as OregonFlora calls the prickles (quoted by Friends of Silver Falls, read 2026-10-19); sRGB by eye for the word."}
   },
   "provenance": {
     "sources": [

@@ -16,7 +16,10 @@
 //!   own colour: the darkening `PlantGen` draws for the sky a piece of wood
 //!   sees through the plant's own leaves (`crate::occlusion`) is an
 //!   attribute of its own, `_PLANTGEN_SHADE`, unless [`Shade::Baked`] puts
-//!   it in the colour as packages hold it.
+//!   it in the colour as packages hold it. With [`Settings::bark`], the
+//!   bark is drawn from a bark record instead: a baked material per stage
+//!   ([`BarkExport`]), the vertex colour keeping only the shade when
+//!   baked in.
 //! - **Cards**: each organ card as a quad, a bent card as its grid (its
 //!   shared corners stored once), with one primitive and material per
 //!   organ type. Its texture is the type's
@@ -86,9 +89,8 @@
 //! keeps and the size of its leaf clusters, which an engine can set its
 //! switch distances by.
 //!
-//! Not yet: the bark's
-//! pattern (a tile per species or a bake per tree, waiting on the owner's
-//! call), normal and roughness maps, tangents, impostors,
+//! Not yet: bark records in the specs themselves (exports take one with
+//! [`Settings::bark`]), impostors,
 //! coverage-preserving mipmaps (PNG holds no mipmaps), wind and growth
 //! animation (a motion export carries the skeleton and tables a host
 //! sways it by), and other formats.
@@ -240,7 +242,35 @@ pub struct Settings {
     pub compression: Compression,
     pub attributes: Attributes,
     pub budget: Budget,
+    /// Bark baked into textures on the wood; plain colours without.
+    pub bark: Option<BarkExport>,
 }
+
+/// Bark drawn on the wood from a bark record ([`crate::bark_look`]): each
+/// of its stages baked once to a tile of `texels` a side repeating every
+/// [`crate::bark_look::period_for`] its typical diameter and `period_m`,
+/// as a material of its own (glTF's metallic-roughness: base colour,
+/// normal, occlusion-roughness-metal), and the wood's bark split into a
+/// primitive per stage by each triangle's stem diameter, with texture
+/// coordinates in tiles (a whole number of them round each axis, at its
+/// base) and tangents. Wood off the bark (fleshy bodies, solid organs)
+/// keeps its plain material.
+#[derive(Debug, Clone, Copy)]
+pub struct BarkExport {
+    pub look: &'static crate::bark_look::BarkLook,
+    pub texels: usize,
+    pub period_m: f64,
+}
+
+impl PartialEq for BarkExport {
+    fn eq(&self, other: &Self) -> bool {
+        std::ptr::eq(self.look, other.look)
+            && self.texels == other.texels
+            && self.period_m.to_bits() == other.period_m.to_bits()
+    }
+}
+
+impl Eq for BarkExport {}
 
 impl Default for Settings {
     fn default() -> Self {
@@ -249,6 +279,7 @@ impl Default for Settings {
             compression: Compression::None,
             attributes: Attributes::All,
             budget: Budget::default(),
+            bark: None,
         }
     }
 }
@@ -912,6 +943,8 @@ struct Arrays {
     positions: Vec<f32>,
     normals: Vec<f32>,
     uvs: Vec<f32>,
+    /// Four a vertex, `w` last; bark only.
+    tangents: Vec<f32>,
     colours: Vec<f32>,
     births: Vec<f32>,
     sheds: Vec<f32>,
@@ -999,6 +1032,115 @@ impl Arrays {
         }
     }
 
+    /// The vertices `triangles` (indices into [`Self::indices`], three a
+    /// triangle) use, in the order first used, with those triangles.
+    fn subset(&self, triangles: &[usize]) -> Self {
+        let mut index = HashMap::new();
+        let mut kept = Vec::new();
+        let mut indices = Vec::with_capacity(triangles.len() * 3);
+        for &triangle in triangles {
+            for &vertex in &self.indices[triangle * 3..triangle * 3 + 3] {
+                let next = u32::try_from(kept.len()).unwrap_or(u32::MAX);
+                let at = *index.entry(vertex).or_insert_with(|| {
+                    kept.push(vertex as usize);
+                    next
+                });
+                indices.push(at);
+            }
+        }
+        let pick = |values: &Vec<f32>, width: usize| -> Vec<f32> {
+            if values.is_empty() {
+                return Vec::new();
+            }
+            kept.iter()
+                .flat_map(|&v| values[v * width..v * width + width].iter().copied())
+                .collect()
+        };
+        let pick_int = |values: &Vec<i32>, width: usize| -> Vec<i32> {
+            if values.is_empty() {
+                return Vec::new();
+            }
+            kept.iter()
+                .flat_map(|&v| values[v * width..v * width + width].iter().copied())
+                .collect()
+        };
+        Self {
+            positions: pick(&self.positions, 3),
+            normals: pick(&self.normals, 3),
+            uvs: pick(&self.uvs, 2),
+            tangents: pick(&self.tangents, 4),
+            colours: pick(&self.colours, 3),
+            births: pick(&self.births, 1),
+            sheds: pick(&self.sheds, 1),
+            winds: pick(&self.winds, 1),
+            radii: pick(&self.radii, 1),
+            shades: pick(&self.shades, 1),
+            joints: pick_int(&self.joints, 4),
+            weights: pick_int(&self.weights, 4),
+            alongs: pick(&self.alongs, 1),
+            indices,
+        }
+    }
+
+    /// Tangents from the texture coordinates, `w` set so the bitangent
+    /// glTF derives points up the image (toward smaller `v`), as normal
+    /// maps' +Y does ([`crate::bark_look::Tile::normal_rgba`]).
+    #[allow(clippy::many_single_char_names)]
+    fn add_tangents(&mut self) {
+        let count = self.positions.len() / 3;
+        let at = |values: &[f32], v: usize, width: usize| -> Vec3 {
+            Vec3::new(
+                f64::from(values[v * width]),
+                f64::from(values[v * width + 1]),
+                if width > 2 {
+                    f64::from(values[v * width + 2])
+                } else {
+                    0.0
+                },
+            )
+        };
+        let mut along_u = vec![Vec3::ZERO; count];
+        let mut along_v = vec![Vec3::ZERO; count];
+        for triangle in self.indices.as_chunks::<3>().0 {
+            let [a, b, c] = triangle.map(|v| v as usize);
+            let (pa, pb, pc) = (
+                at(&self.positions, a, 3),
+                at(&self.positions, b, 3),
+                at(&self.positions, c, 3),
+            );
+            let (ta, tb, tc) = (
+                at(&self.uvs, a, 2),
+                at(&self.uvs, b, 2),
+                at(&self.uvs, c, 2),
+            );
+            let (e1, e2) = (pb - pa, pc - pa);
+            let (d1, d2) = (tb - ta, tc - ta);
+            let det = d1.x * d2.y - d2.x * d1.y;
+            if det.abs() < 1.0e-12 {
+                continue;
+            }
+            let u = (e1 * d2.y - e2 * d1.y) * (1.0 / det);
+            let v = (e2 * d1.x - e1 * d2.x) * (1.0 / det);
+            for vertex in [a, b, c] {
+                along_u[vertex] += u;
+                along_v[vertex] += v;
+            }
+        }
+        self.tangents = Vec::with_capacity(count * 4);
+        for vertex in 0..count {
+            let n = at(&self.normals, vertex, 3);
+            let t = along_u[vertex] - n * n.dot(along_u[vertex]);
+            let t = t.normalize_or_else(|| n.cross(Vec3::Y).normalize_or(n.cross(Vec3::X)));
+            let w = if n.cross(t).dot(along_v[vertex]) > 0.0 {
+                -1.0
+            } else {
+                1.0
+            };
+            self.tangents.extend(t.to_f32());
+            self.tangents.push(w);
+        }
+    }
+
     /// Write them into `document` as a primitive drawn with `material`;
     /// with a `grid`, positions, normals, texture coordinates and colours
     /// as integers (`KHR_mesh_quantization`).
@@ -1029,6 +1171,18 @@ impl Arrays {
                     false,
                 ),
             );
+            if !self.tangents.is_empty() {
+                insert(
+                    "TANGENT",
+                    document.integer_attribute(
+                        &signed_bytes(&self.tangents),
+                        4,
+                        gltf::BYTE,
+                        true,
+                        false,
+                    ),
+                );
+            }
             if !self.uvs.is_empty() {
                 let uvs = if self.uvs.iter().all(|uv| (0.0..=1.0).contains(uv)) {
                     let shorts = unsigned_shorts(&self.uvs);
@@ -1046,6 +1200,9 @@ impl Arrays {
         } else {
             insert("POSITION", document.attribute(&self.positions, 3, true));
             insert("NORMAL", document.attribute(&self.normals, 3, false));
+            if !self.tangents.is_empty() {
+                insert("TANGENT", document.attribute(&self.tangents, 4, false));
+            }
             if !self.uvs.is_empty() {
                 insert("TEXCOORD_0", document.attribute(&self.uvs, 2, false));
             }
@@ -1223,6 +1380,153 @@ fn append(out: &mut Mesh, other: &Mesh, bearer: u32) {
 }
 
 /// A plain material: vertex colours times white, not metallic.
+/// The representative of `v`'s set in a union-find forest, halving the
+/// path to it.
+fn root(parent: &mut [usize], mut v: usize) -> usize {
+    while parent[v] != v {
+        parent[v] = parent[parent[v]];
+        v = parent[v];
+    }
+    v
+}
+
+/// The wood's `arrays` split by bark stage ([`BarkExport`]): a
+/// primitive per stage drawn, with its baked material, and one in `plain`
+/// for wood off the bark.
+fn bark_primitives(
+    document: &mut Document,
+    arrays: &Arrays,
+    plain: Index,
+    bark: BarkExport,
+    shade: &dyn Fn(usize) -> f32,
+) -> Vec<(Arrays, Index)> {
+    let look = bark.look;
+    let count = arrays.positions.len() / 3;
+    // Each tube (an axis) is one piece of the mesh; its widest ring sets
+    // how many tiles go round it.
+    let mut parent: Vec<usize> = (0..count).collect();
+    for triangle in arrays.indices.as_chunks::<3>().0 {
+        let a = root(&mut parent, triangle[0] as usize);
+        for &other in &triangle[1..] {
+            let b = root(&mut parent, other as usize);
+            parent[b] = a;
+        }
+    }
+    let mut widest = vec![0.0_f64; count];
+    for vertex in 0..count {
+        let r = root(&mut parent, vertex);
+        widest[r] = widest[r].max(f64::from(arrays.radii.get(vertex).copied().unwrap_or(0.0)));
+    }
+    let diameters = look.typical_diameters();
+    let periods: Vec<f64> = diameters
+        .iter()
+        .map(|&diameter| crate::bark_look::period_for(diameter, bark.period_m))
+        .collect();
+    // Triangles by what they wear; off the bark, nothing.
+    let mut groups: BTreeMap<Option<crate::bark_look::Wear>, Vec<usize>> = BTreeMap::new();
+    for (triangle, corners) in arrays.indices.as_chunks::<3>().0.iter().enumerate() {
+        let radii: Vec<f64> = corners
+            .iter()
+            .map(|&v| f64::from(arrays.radii.get(v as usize).copied().unwrap_or(0.0)))
+            .collect();
+        let stage = if radii.iter().any(|&r| r <= 0.0) {
+            None
+        } else {
+            let diameter = 2.0 * radii.iter().sum::<f64>() / 3.0;
+            // Its height above the ground and how far it faces down, for
+            // stages on the base or the underside.
+            let mean = |of: &[f32], axis: usize| {
+                corners
+                    .iter()
+                    .map(|&v| f64::from(of.get(v as usize * 3 + axis).copied().unwrap_or(0.0)))
+                    .sum::<f64>()
+                    / 3.0
+            };
+            let (height, down) = (mean(&arrays.positions, 1), -mean(&arrays.normals, 1));
+            let centre = [0, 1, 2].map(|axis| mean(&arrays.positions, axis));
+            Some(look.wear_where(diameter, height, down, crate::bark_look::patch(centre)))
+        };
+        groups.entry(stage).or_default().push(triangle);
+    }
+    let mut out = Vec::new();
+    for (wear, triangles) in groups {
+        let mut part = arrays.subset(&triangles);
+        let Some(wear) = wear else {
+            out.push((part, plain));
+            continue;
+        };
+        let (name, tile, period) = bark_tile(look, wear, &diameters, &periods, &bark);
+        // The source vertex of each kept one, for its tube.
+        let mut sources = Vec::new();
+        let mut seen = std::collections::HashSet::new();
+        for &triangle in &triangles {
+            for &vertex in &arrays.indices[triangle * 3..triangle * 3 + 3] {
+                if seen.insert(vertex) {
+                    sources.push(vertex as usize);
+                }
+            }
+        }
+        for (kept, &source) in sources.iter().enumerate() {
+            let tube = root(&mut parent, source);
+            let wraps = libm::round(2.0 * math::PI * widest[tube] / period).max(1.0);
+            // The wood's own coordinates: once round, and metres along.
+            let (round, along) = (arrays.uvs[source * 2], arrays.uvs[source * 2 + 1]);
+            #[allow(clippy::cast_possible_truncation)]
+            {
+                part.uvs[kept * 2] = (f64::from(round) * wraps) as f32;
+                part.uvs[kept * 2 + 1] = (-f64::from(along) / period) as f32;
+            }
+            part.colours[kept * 3..kept * 3 + 3].fill(shade(source));
+        }
+        part.add_tangents();
+        let material = crate::bark_look::material(document, &tile, &name);
+        out.push((part, material));
+    }
+    out
+}
+
+/// The name and tile a piece of wood wearing `wear` takes, and the tile's
+/// period: one stage's at its typical diameter, or a blend's at a
+/// diameter between its two stages'.
+fn bark_tile(
+    look: &crate::bark_look::BarkLook,
+    wear: crate::bark_look::Wear,
+    diameters: &[f64],
+    periods: &[f64],
+    bark: &BarkExport,
+) -> (String, crate::bark_look::Tile, f64) {
+    let diameter = if wear.step == 0 {
+        diameters[wear.under]
+    } else {
+        libm::sqrt(diameters[wear.under] * diameters[wear.over])
+    };
+    let period = if wear.step == 0 {
+        periods[wear.under]
+    } else {
+        crate::bark_look::period_for(diameter, bark.period_m)
+    };
+    let bake = |stage: usize| {
+        crate::bark_look::bake(look, &look.stages[stage], diameter, bark.texels, period, 1)
+    };
+    let (name, tile) = if wear.step == 0 {
+        (
+            format!("bark {}", look.stages[wear.under].name),
+            bake(wear.under),
+        )
+    } else {
+        let name = format!(
+            "bark {} {}/{} over {}",
+            look.stages[wear.over].name,
+            wear.step,
+            crate::bark_look::BLEND_STEPS,
+            look.stages[wear.under].name
+        );
+        let tile = crate::bark_look::mix(&bake(wear.under), &bake(wear.over), wear.share(), 1);
+        (name, tile)
+    };
+    (name, tile, period)
+}
+
 fn plain_material(name: &str, roughness: f32, factor: f32) -> Value {
     json!({
         "name": name,
@@ -1725,13 +2029,19 @@ fn level_glb(
         arrays.keep(settings.attributes);
         bind(&mut arrays, wood, Some(&bound.wood));
         let material = document.material(plain_material("wood", 0.9, 1.0));
-        let (node, step) = mesh_node(
-            &mut document,
-            "wood",
-            &[(arrays, material)],
-            quantize,
-            skeleton,
-        );
+        let primitives = match settings.bark {
+            Some(bark) => {
+                // The texture carries the bark's colour; the vertex colour
+                // only the shade, when baked in.
+                let shade = |vertex: usize| match settings.shade {
+                    Shade::Attribute => 1.0,
+                    Shade::Baked => shades.get(vertex).copied().unwrap_or(1.0),
+                };
+                bark_primitives(&mut document, &arrays, material, bark, &shade)
+            }
+            None => vec![(arrays, material)],
+        };
+        let (node, step) = mesh_node(&mut document, "wood", &primitives, quantize, skeleton);
         if skeleton.is_some() {
             skinned.push(node);
         } else {

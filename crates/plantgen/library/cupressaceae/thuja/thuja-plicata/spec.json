@@ -38,6 +38,24 @@
     "seeds": [1, 2]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "young": {
+          "colour": [140, 82, 56],
+          "fissures": {
+            "floor_colour": [92, 50, 36],
+            "ridge_top_colour": [132, 114, 100]
+          }
+        },
+        "old": {
+          "colour": [128, 92, 72],
+          "fissures": {
+            "floor_colour": [100, 55, 38],
+            "ridge_top_colour": [140, 126, 114]
+          }
+        }
+      }
+    },
     "bark": [0.16, 0.075, 0.045],
     "bark_pattern": {
       "kind": "fibrous",

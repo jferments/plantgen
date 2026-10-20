@@ -7,7 +7,50 @@
     "cone_maturation_years": 1,
     "cone_posture": "pendent"
   },
+  "appearance": {
+    "bark_look": {
+      "thickness": {
+        "coefficient": 0.063
+      },
+      "stages": {
+        "young": {
+          "until_diameter_m": 0.33,
+          "architecture": "stretched",
+          "roughness": 0.7,
+          "mottle": {
+            "scale_m": 0.08,
+            "amount": 0.35,
+            "colour": [178, 172, 162]
+          },
+          "blisters": {
+            "per_m2": 60,
+            "diameter_m": [0.004, 0.012],
+            "height_m": 0.002,
+            "colour": [150, 138, 120],
+            "roughness": 0.35
+          }
+        },
+        "mature": {
+          "architecture": "furrowed",
+          "roughness": 0.92,
+          "fissures": {
+            "network": "interlacing",
+            "spacing_m": 0.07,
+            "elongation": 5,
+            "width_share": 0.35,
+            "depth_share": 0.8,
+            "profile": "flat_topped",
+            "cross_ridges": 0.5,
+            "grain": 0.2
+          }
+        }
+      }
+    }
+  },
   "evidence": {
+    "appearance.bark_look.thickness": {"evidence": "SourceInferred", "source": "ffe-fvs-guide", "note": "The genus's bark thickness as its reference species', pseudotsuga-menziesii (plantgen-claude project-files/bark/records/pseudotsuga-menziesii.json): text: FOFEM 0.063; checks FEIS 2.5 cm at 30 cm, 6 cm at 60 cm"},
+    "appearance.bark_look.stages.young": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "The genus's young stage as its reference species, pseudotsuga-menziesii, shows it (plantgen-claude project-files/bark/records/pseudotsuga-menziesii.json): until_diameter_m: text: Sudworth 'little broken ... until 12 to 14 inches'; mottle: text: 'often chalky in patches' (Sudworth); size inferred; blisters: text: 'numerous resin blisters' (FEIS); size and density inferred (photo)"},
+    "appearance.bark_look.stages.mature": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "The genus's mature stage as its reference species, pseudotsuga-menziesii, shows it (plantgen-claude project-files/bark/records/pseudotsuga-menziesii.json): fissures.network: text: 'great ridges, which are connected at intervals by narrower cross ridges' (Sudworth); fissures.width_share: word: 'deep, wide furrows' (Sudworth); fissures.depth_share: word: 'deeply-furrowed' (FEIS); fissures.spacing_m: inferred (photo)"},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

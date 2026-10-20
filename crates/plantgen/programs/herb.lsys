@@ -164,9 +164,17 @@
 # proximally and alternate distally. With axil_racemes 1 a side branch's
 # last-order leaf nodes each bear a sessile raceme, crowding its top.
 #
+# Revision 20 (bark armature): an armed herb (thorns 1: a nightshade's
+# prickly stems) carries two prickles at each leafy node, thorn_length
+# long at thorn_angle to its stem, on either side of its leaves; the
+# prickles' look draws those between the nodes (a flora's "scattered").
+# They draw nothing at random and come last at the node, so every herb's
+# draws and modules keep their sites; with thorns 0, as every lineage
+# gives it unless its words arm it, a herb grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 19;
+lsystem herb 20;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -260,6 +268,10 @@ param axil_racemes = 0;       # 1: a side branch's last-order leaf nodes each be
 param alternate_above = 0;    # share of a stem's leafy nodes, from the top, bearing one leaf where those below bear leaves_per_node
 param rise = 80;              # degrees a lying stem turns up over its other nodes
 param lie_branch = 0;         # share of a lying stem's nodes that put out a lying branch; 0: none
+param thorns = 0;             # 1: prickles at each leafy node (bark armature)
+param thorn_length = 0.004;   # a prickle's length
+param thorn_angle = 85;       # angle of a prickle to its stem
+param thorn_area = 0.235;     # leaf area of a prickle card 1 m long, m² (the default leaf card's)
 
 module Y;                     # the crown: sends up a cohort each year
 module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
@@ -276,6 +288,7 @@ module Lb(i, h, r);           # the lying branch, if any, at leaf node i of a st
 module Ln(i, m, h, r);        # leaf nodes i to i + m - 1 of a lying branch, which branches no further
 module Rc(i, m, h, r, g);     # raceme nodes i to i + m - 1, g of a raceme younger
 module Lf(s);                 # the leaves at one node
+module Th;                    # an armed node's prickles
 module Br(a);                 # a floral bract, a degrees from the axis
 module Bx(i, h, r, s);        # the side branch, if any, at leaf node i of a stem, whose leaf is s long
 module Bh(len, o, s, g);      # a flowering side branch len long, o orders of branching to it, leaves s long, its raceme g younger
@@ -299,6 +312,7 @@ organ flower flower area flower_area;
 organ bud fruit as flower area bud_area;
 organ fruit fruit area fruit_area;
 organ bract leaf as inflorescence_bract area bract_area;
+organ thorn leaf as spine area thorn_area;
 
 structure basal_leaf leaf;    # one basal leaf: its pieces and tip
 
@@ -391,7 +405,7 @@ decompose Nd(i, m, h, r) : m == 1 && lie_branch == 0 ->
 decompose Nd(i, m, h, r) : m < 1 -> ;
 # The leaves at a node, spread evenly round the stem.
 decompose Lf(s) ->
-    ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
+    ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ] Th;
 
 # A flowering stem's top flower_branches nodes each bear a side branch in
 # the axil of their leaf, shorter toward the top, ending in a raceme. A
@@ -586,3 +600,9 @@ decompose Ly(g, s) : g > 0 && leaves_per_node == 2 ->
 # it draws nothing at random either.
 decompose Ly(g, s) : g < 0 -> [ &(leaf_angle) $ leaf(s) ];
 decompose Ly(g, s) -> Lf(s);
+
+# An armed node's prickles (bark armature): one each side of its leaves,
+# square to the leaves' plane. They draw nothing at random.
+decompose Th : thorns > 0 ->
+    [ /(90) &(thorn_angle) thorn(thorn_length) ] [ /(270) &(thorn_angle) thorn(thorn_length) ];
+decompose Th -> ;
