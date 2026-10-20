@@ -1129,10 +1129,43 @@ pub mod venation;
 /// is lost the trunk's fork stems spread as scaffold limbs (`fork_set`,
 /// from `leader`), and a flat-topped crown is flattened (`crown_form`
 /// `flat_topped`) (155 is Rosaceae, #236).
-/// 157: stemless rosettes (rosette revision 4). A basal rosette (an
+/// 157: Caryophyllales gaps. A perianth may be one whorl of tepals (an
+/// amaranth's 5) and a spiral up to 160 parts (an ice plant's petal-like
+/// staminodes); a season may run all year (`stagger`: each look variety
+/// opens its flowers at its own time, so a plant flowers and fruits in
+/// every month); a herb woody at the base keeps its flowering stems
+/// (`stem_persists`); a lying stem keeps its leaf arrangement, a pair's
+/// upper leaf rising and its lower one along the ground; a stem's upper
+/// leaves may turn alternate (`alternate_above`, hemp's) and a crowded
+/// branch bears an inflorescence in each axil (`axil_racemes`); a cluster
+/// draws a ring of involucral bracts at its foot and a floral bract under
+/// each flower, leafy, petaloid or scale-like (`involucre`,
+/// `floral_bract`); a leaf card may be as narrow as 0.005 of its length; a
+/// shrub's crown spreads to its flora's greatest width; a climber's
+/// fruiting nodes may bear blooms (climber 8); a glandular head may be
+/// oval or elongated and its stalk shade from the disc's colour to the
+/// margin's, and glandular hairs stand on a petiole; a blade close-up
+/// frames the bent blade's middle (herb revision 19; 156 is growth-form
+/// language, #252).
+/// 158: a compound leaf whose lowest leaflets hang back below its
+/// junction is lifted on a longer petiole and shrunk only as much as its
+/// whole height needs, so its blade keeps its flora's size (brambles);
+/// a Rosaceae herb's compound leaf card is as long as its blade, not its
+/// width (157 is Caryophyllales gaps, #267).
+/// 159: cacti of four more genera. A cactus's tubercles stand out along
+/// the skin's normal, sized by the body's radius and smaller toward a young
+/// apex, so they show on flat tops; a flat-faced, fissured plate
+/// (`tubercles.face`, `fissures`: Ariocarpus); wool and bristles in the
+/// tubercles' axils (`axils`: Mammillaria); crinkled radials (spine
+/// `crinkle`); fine dome rings. New programs `pereskia` (a leafy cactus on
+/// the broadleaf base, its areoles adding spines as they age) and
+/// `schlumbergera` (flat joints toothed along their margins). A fruit set
+/// after New Year counts its season from the next year's start
+/// (158 is bramble leaves, #272).
+/// 160: stemless rosettes (rosette revision 4). A basal rosette (an
 /// agave's, an aloe's, a hechtia's) keeps its crown on the ground: the
 /// stem below its living leaves goes with the leaves that fell, a pup's
 /// runner drops to the ground as its parent's stem goes, and the short
 /// stem the living leaves stand on is drawn inside their bases
-/// (`stemless`, from `rosette`) (156 is growth-form language, #252).
-pub const GENERATOR_REVISION: u32 = 157;
+/// (`stemless`, from `rosette`) (159 is cacti of four more genera, #260).
+pub const GENERATOR_REVISION: u32 = 160;

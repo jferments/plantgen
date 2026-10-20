@@ -1159,7 +1159,7 @@ pub(crate) fn level_meshes(
 ) -> Vec<(PlantMesh, Vec<f32>)> {
     // The package's graph object keeps every organ; the meshes draw them as
     // they are on the inputs' day.
-    let staged = crate::looks::staged(graph, &inputs.sizes);
+    let staged = crate::looks::staged(graph, &inputs.sizes, &inputs.looks);
     let drawn = staged.as_ref().unwrap_or(graph);
     let mut meshes: Vec<(PlantMesh, Vec<f32>)> = Vec::with_capacity(inputs.quality.lods.len());
     for (level, lod) in inputs.quality.lods.iter().enumerate() {

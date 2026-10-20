@@ -349,6 +349,15 @@ pub fn expand(tuft: &Tuft, look: &BodyLook, out: &mut Vec<Spine>) {
                 scale(toward, felt * 0.45),
             );
             let bend = |share: f32| radians(curve * share);
+            // A crinkled spine also bends about an axis of its own, by a
+            // share that changes along it, so it arcs or waves its own way.
+            let crinkle = single(set.crinkle);
+            let wander = rotate(axis, direction, TAU * draw(tuft.seed, index, i, 5));
+            let waves = [
+                crinkle * (draw(tuft.seed, index, i, 6) - 0.5),
+                crinkle * (draw(tuft.seed, index, i, 7) - 0.5) * 2.0,
+                crinkle * (draw(tuft.seed, index, i, 8) - 0.5) * 2.0,
+            ];
             let hook = single(set.hook);
             let joints = hook_joints(hook);
             let pieces = [
@@ -371,8 +380,15 @@ pub fn expand(tuft: &Tuft, look: &BodyLook, out: &mut Vec<Spine>) {
                 ),
             ];
             let mut points = [base; 4];
+            let mut turned = 0.0;
             for (piece, (share, heading)) in pieces.iter().enumerate() {
-                points[piece + 1] = add(points[piece], scale(*heading, length * share));
+                turned += waves[piece];
+                let heading = if crinkle > 0.0 {
+                    rotate(*heading, wander, radians(turned))
+                } else {
+                    *heading
+                };
+                points[piece + 1] = add(points[piece], scale(heading, length * share));
             }
             out.push(Spine {
                 points,

@@ -33,15 +33,35 @@
     }
   },
   "rules": {
+    "generator.params.joints": {
+      "map": {"stem_form": {"cylindric_joints": 1, "flat_joints": 1}},
+      "why": "Chollas, prickly pears and the jointed epiphytes grow as chains of joints."
+    },
+    "generator.params.pad": {
+      "map": {"stem_form": {"flat_joints": 1}},
+      "why": "A prickly pear's or a Christmas cactus's joints are flat."
+    },
+    "generator.params.joint_length": {
+      "rule": "joint_length_m",
+      "why": "A grown joint's length."
+    },
+    "generator.params.joint_radius": {
+      "rule": "joint_width_m / 2",
+      "why": "A joint's radius, or a pad's half width."
+    },
+    "generator.params.teeth": {
+      "rule": "joint_teeth",
+      "why": "A toothed joint's margins are cut into as many saw teeth a side as its flora gives."
+    },
     "appearance.organs.flower.form.flower.cup": {
       "map": {"corolla_shape": {"rotate": 10, "cupped": 35, "campanulate": 45, "funnelform": 50, "tubular": 65, "salverform": 15, "urceolate": 70}}, "between": true,
       "why": "A cactus's tepals are free, on a spiral that runs from the spreading outer ones to the upright inner ones about this mean rise: flat in a wheel, a bowl in a cup, a bell, a funnel, a narrow tube, a flat limb on a tube, an urn."
     },
     "appearance.organs.*.shape.tube": {
       "template": "flower",
-      "map": {"corolla_shape": {"rotate": 0.1, "cupped": 0.2, "campanulate": 0.5, "funnelform": 0.8, "tubular": 1.4, "salverform": 1.6, "urceolate": 0.6}}, "between": true,
-      "else": 0.4,
-      "why": "A cactus's tepals stand on the rim of a floral tube, the hypanthium grown up round the ovary: barely any in a wheel or a cup, as Opuntia's flowers have none above the pericarpel, short in a bell, longer in a funnel, longest in a tube or under a salver's limb; in flower radii."
+      "map": {"corolla_shape": {"rotate": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.1)"}, "cupped": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.2)"}, "campanulate": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.5)"}, "funnelform": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.8)"}, "tubular": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 1.4)"}, "salverform": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 1.6)"}, "urceolate": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.6)"}}}, "between": true,
+      "else": {"rule": "first(clamp((flower_length_m - 0.6 * tepal_length_m) / (flower_size_m / 2), 0.1, 2), 0.4)"},
+      "why": "A cactus's tepals stand on the rim of a floral tube, the hypanthium grown up round the ovary: barely any in a wheel or a cup, as Opuntia's flowers have none above the pericarpel, short in a bell, longer in a funnel, longest in a tube or under a salver's limb; in flower radii. Where the flora gives the flower's length as well as its width (its 'flowers 1.5-5 × 1.5-5 cm', length by width), the tube is what the length leaves beyond the tepals' rise, so a flower 'two times wider than long' (Flora of North America's Ariocarpus fissuratus) sits low in its wool."
     },
     "appearance.organs.*.shape.petal_width": {
       "template": "flower",
@@ -132,11 +152,11 @@
       "why": "A tubercle stands from the stem as far as a flora's word for it says, as a share of the stem's radius: barely a swelling under each areole of a ribbed barrel (Anderson's Ferocactus wislizeni), low knobs along undulate ribs (F. cylindraceus), distinct knobs, or the prominent ones a cholla's joint is knobbly with."
     },
     "appearance.bodies.stem.tubercles.stretch": {
-      "map": {"tubercle_shape": {"rounded": 1.2, "conical": 1.0, "cylindrical": 1.0, "elongate": 2.2, "broad": 1.5}},
+      "map": {"tubercle_shape": {"rounded": 1.2, "conical": 1.0, "cylindrical": 1.0, "elongate": 2.2, "broad": 1.5, "deltoid": 0.75}},
       "why": "A tubercle is as long along the stem, for its width, as its shape says: an ovoid one a little longer, an elongate one two to three times, a broadly oval one half as long again."
     },
     "appearance.bodies.stem.tubercles.point": {
-      "map": {"tubercle_shape": {"rounded": 0.9, "conical": 1.6, "cylindrical": 1.3, "elongate": 0.9, "broad": 0.8}},
+      "map": {"tubercle_shape": {"rounded": 0.9, "conical": 1.6, "cylindrical": 1.3, "elongate": 0.9, "broad": 0.8, "deltoid": 0.8}},
       "why": "A conical tubercle comes to a point, a cylindrical one stands steep-sided, and rounded, elongate and broad ones are low mounds."
     },
     "appearance.bodies.stem.spines.radial.distal": {
@@ -152,8 +172,49 @@
       "why": "The main central keeps to the upper areoles as the other centrals do."
     },
     "generator.params.flank": {
-      "map": {"flower_zone": {"crown": 0, "crown_and_flanks": 6, "upper_half": 15}},
+      "map": {"flower_zone": {"crown": 0, "crown_and_flanks": 6, "upper_half": 15, "ring_below_apex": 0}},
       "why": "A column's flowers open in a ring round its apex, or also down its flank: near the tip and along the upper sides, on the last six years' growth, or from the upper half of a short, slow stem, on its last fifteen years'."
+    },
+    "generator.params.ring_angle": {
+      "map": {"flower_zone": {"ring_below_apex": 55}},
+      "why": "A mammillaria's flowers open 'in ring distant from stem apex' (Flora of North America's Mammillaria), from the axils of tubercles grown the year before, so the ring sits most of the way down the dome rather than round the tip."
+    },
+    "generator.params.crown_rings": {
+      "map": {"flower_zone": {"ring_below_apex": 2}},
+      "why": "Its fruit ripen the year after flowering, while the stem grows on, so last year's ring of fruit stands below this year's flowers: 'subsequent apical growth displacing fruits even farther away from apex' (Flora of North America's Mammillaria)."
+    },
+    "generator.params.ring_step": {
+      "map": {"flower_zone": {"ring_below_apex": 15}},
+      "why": "Each older ring sits a year's growth farther down the dome."
+    },
+    "appearance.bodies.stem.tubercles.face": {
+      "map": {"tubercle_shape": {"rounded": 0, "conical": 0, "cylindrical": 0, "elongate": 0, "broad": 0, "deltoid": 1}},
+      "why": "A deltoid tubercle is a flat-faced triangular plate, its tip pointing down and out, with its areole's woolly groove down the middle of its face (Flora of North America's Ariocarpus: 'tubercles arranged in rosettes or mosaics, ± triangular', 'exposed faces of tubercles strongly differentiated from sides', 'areoles elongate, forming a wide woolly groove on each tubercle'); it is wider than long ('8-20 × 11-25 mm')."
+    },
+    "appearance.bodies.stem.tubercles.fissures": {
+      "map": {"tubercle_face": {"smooth": 0, "wrinkled": 0.3, "fissured": 0.8}},
+      "why": "A plate's face is nearly smooth, wrinkled, or 'deeply fissured on either side of central areolar groove, coarsely rugose' (Flora of North America's Ariocarpus fissuratus var. fissuratus)."
+    },
+    "appearance.bodies.stem.spines.radial.crinkle": {
+      "map": {"radial_spine_texture": {"needlelike": 0, "bristlelike": 12, "hairlike": 70}},
+      "why": "Stiff needlelike radials run straight; bristles waver a little; hairlike, soft radials curl and lie every which way (Flora of North America's Mammillaria prolifera var. texana, 'hairlike, soft')."
+    },
+    "appearance.bodies.stem.axils.wool": {
+      "map": {"tubercle_axils": {"naked": 0, "woolly": {"rule": "areole_spacing_m * 0.13"}, "bristly": 0, "woolly_and_bristly": {"rule": "areole_spacing_m * 0.09"}}},
+      "why": "Wool in a tubercle's axil makes a tuft in the crease above the tubercle about an eighth as wide as the tubercles stand apart ('axils with short wool', Flora of North America's Mammillaria heyderi), thinner where bristles share the axil."
+    },
+    "appearance.bodies.stem.axils.bristles": {
+      "map": {"tubercle_axils": {"naked": [0, 0], "woolly": [0, 0], "bristly": [3, 8], "woolly_and_bristly": [2, 6]}},
+      "why": "A bristly axil bears a few slender bristles ('sparse white hairs and slender bristles', Flora of North America's Mammillaria prolifera var. texana)."
+    },
+    "appearance.bodies.stem.axils.bristle_length": {
+      "needs": ["axil_bristle_length_m"],
+      "rule": "max(axil_bristle_length_m)",
+      "why": "The axil's bristles are as long as the flora says."
+    },
+    "appearance.bodies.stem.axils.colour": {
+      "colour": ["axil_hair_colour", "areole_wool_colour"],
+      "why": "The axils' wool and bristles take the colour the flora gives them, or else the areoles' wool's."
     },
     "appearance.bodies.stem.colour": {
       "colour": "stem_colour",
@@ -267,7 +328,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role."
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role. The joints of chollas, prickly pears and the jointed epiphytes from their stated form and size, for any cactus whose stem is a chain of joints."
     },
     "traits.perianth_parts": {
       "evidence": "SourceInferred",

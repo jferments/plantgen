@@ -13,23 +13,6 @@
       "template": "flower",
       "rule": "1.2",
       "why": "A prickly pear's or a cholla's flower has no floral tube: its tepals open straight from the top of the pericarpel, a globose to top-shaped joint of stem that grows into the fruit, a little longer than the flower's radius (Anderson, The Cactus Family pp. 25 to 27 and 486)."
-    },
-    "generator.params.joints": {
-      "map": {
-        "stem_form": {
-          "cylindric_joints": 1,
-          "flat_joints": 1
-        }
-      },
-      "why": "Chollas and prickly pears grow as chains of joints."
-    },
-    "generator.params.joint_length": {
-      "rule": "joint_length_m",
-      "why": "A grown joint's length."
-    },
-    "generator.params.joint_radius": {
-      "rule": "joint_width_m / 2",
-      "why": "A joint's radius, or a pad's half width."
     }
   },
   "evidence": {
@@ -42,7 +25,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Spec rework E6c: the joints of chollas and prickly pears from their stated form and size. The flower seated on its pericarpel with no floral tube: Anderson, The Cactus Family pp. 25 to 27 and 486; how much longer than the flower's radius is the model's choice."
+      "note": "The flower seated on its pericarpel with no floral tube: Anderson, The Cactus Family pp. 25 to 27 and 486; how much longer than the flower's radius is the model's choice."
     }
   }
 }

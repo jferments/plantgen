@@ -248,7 +248,53 @@ pub struct Cluster {
     pub spathe_cup: f64,
     /// The look's colour where unset.
     pub spathe_colour: Option<[f32; 3]>,
+    /// Bracts in the involucre at its foot; 0 where there is none
+    /// (always on a branch).
+    pub involucre: u32,
+    /// Each involucral bract's length, a share of the axis.
+    pub involucre_length: f64,
+    /// Degrees from the axis.
+    pub involucre_spread: f64,
+    pub involucre_form: BractForm,
+    /// Each unit's floral bract's length, a share of the axis; 0 where
+    /// there is none.
+    pub floral_bract: f64,
 }
+
+/// What a cluster's bracts are, as floras name them (`bract_form`): green
+/// and leafy, showy like petals, or small dry scales.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum BractForm {
+    #[default]
+    Leafy,
+    Petaloid,
+    Scale,
+}
+
+impl BractForm {
+    /// Its bracts' widest width over their length.
+    fn width(self) -> f64 {
+        match self {
+            Self::Leafy => 0.3,
+            Self::Petaloid => 0.5,
+            Self::Scale => 0.4,
+        }
+    }
+
+    /// Its bracts' colour: green as the stalks are, the look's own, or a
+    /// dry scale's straw brown.
+    fn colour(self, stalk: [f32; 3]) -> Option<[f32; 3]> {
+        match self {
+            Self::Leafy => Some(stalk),
+            Self::Petaloid => None,
+            Self::Scale => Some(SCALE),
+        }
+    }
+}
+
+/// A dry scale's colour, straw brown, linear RGB.
+const SCALE: [f32; 3] = [0.32, 0.24, 0.13];
 
 impl Cluster {
     /// The cluster `spec` describes, its defaults filled in.
@@ -364,6 +410,15 @@ impl Cluster {
             spathe_hood: spec.spathe_hood.unwrap_or(20.0),
             spathe_cup: spec.spathe_cup.unwrap_or(0.5),
             spathe_colour: spec.spathe_colour,
+            involucre: if level == 1 {
+                spec.involucre.unwrap_or(0)
+            } else {
+                0
+            },
+            involucre_length: spec.involucre_length.unwrap_or(0.3),
+            involucre_spread: spec.involucre_spread.unwrap_or(60.0),
+            involucre_form: spec.involucre_form.unwrap_or_default(),
+            floral_bract: spec.floral_bract.unwrap_or(0.0),
         }
     }
 
@@ -504,6 +559,9 @@ impl Cluster {
             ("spathe_width", spec.spathe_width, 0.1, 1.5),
             ("spathe_hood", spec.spathe_hood, 0.0, 120.0),
             ("spathe_cup", spec.spathe_cup, 0.0, 1.0),
+            ("involucre_length", spec.involucre_length, 0.005, 3.0),
+            ("involucre_spread", spec.involucre_spread, 0.0, 120.0),
+            ("floral_bract", spec.floral_bract, 0.0, 3.0),
         ];
         for (key, value, low, high) in values {
             if let Some(value) = value {
@@ -515,6 +573,15 @@ impl Cluster {
         }
         for channel in spec.spathe_colour.into_iter().flatten() {
             within("inflorescence spathe_colour", f64::from(channel), 0.0, 1.0)?;
+        }
+        if spec.involucre.is_some_and(|bracts| bracts > 24) {
+            return Err(format!(
+                "inflorescence involucre is 0 to 24 bracts, found {}",
+                spec.involucre.unwrap_or_default()
+            ));
+        }
+        if level > 1 && spec.involucre.is_some_and(|bracts| bracts > 0) {
+            return Err("only an inflorescence's own axis bears an involucre".to_string());
         }
         if level > 1 && spec.spathe.is_some_and(|spathe| spathe > 0.0) {
             return Err("only an inflorescence's own axis bears a spathe".to_string());
@@ -1042,6 +1109,32 @@ pub struct Sheet {
     pub cup: f64,
     /// The look's colour where `None`.
     pub colour: Option<[f32; 3]>,
+    /// What it is: a spathe, an involucral bract of a form, or a unit's
+    /// floral bract.
+    pub kind: SheetKind,
+}
+
+/// What a cluster's bract is.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SheetKind {
+    Spathe,
+    Involucral(BractForm),
+    Floral(BractForm),
+}
+
+impl SheetKind {
+    /// The `bract_form` state it draws.
+    #[must_use]
+    pub fn form(self) -> &'static str {
+        match self {
+            Self::Spathe => "spathe",
+            Self::Involucral(form) | Self::Floral(form) => match form {
+                BractForm::Leafy => "leafy",
+                BractForm::Petaloid => "petaloid",
+                BractForm::Scale => "scale",
+            },
+        }
+    }
 }
 
 impl Sheet {
@@ -1379,11 +1472,71 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
             hood: cluster.spathe_hood,
             cup: cluster.spathe_cup,
             colour: cluster.spathe_colour,
+            kind: SheetKind::Spathe,
         });
+    }
+    // An involucre: its bracts in a ring round the axis where the lowest
+    // unit leaves it, each spreading from the axis, its upper face toward
+    // the units.
+    if cluster.involucre > 0 {
+        let lowest = layout
+            .units
+            .iter()
+            .map(|p| p.attach.y)
+            .fold(cluster.peduncle, f64::min);
+        let radius = axis_radius(cluster, unit);
+        let spread = math::radians(cluster.involucre_spread);
+        let form = cluster.involucre_form;
+        let count = cluster.involucre;
+        for k in 0..count {
+            let angle = std::f64::consts::TAU * (f64::from(k) + 0.5) / f64::from(count) + turn;
+            let out = Vec3::new(math::cos(angle), 0.0, math::sin(angle));
+            let up = Vec3::Y * math::cos(spread) + out * math::sin(spread);
+            let back = out * math::cos(spread) - Vec3::Y * math::sin(spread);
+            layout.sheets.push(Sheet {
+                foot: Vec3::new(0.0, lowest, 0.0) + out * radius,
+                up,
+                back,
+                length: cluster.involucre_length,
+                width: cluster.involucre_length * form.width(),
+                hood: 0.0,
+                cup: 0.2,
+                colour: form.colour(cluster.stalk),
+                kind: SheetKind::Involucral(form),
+            });
+        }
+    }
+    // A floral bract under each unit, along its pedicel's way out from
+    // the axis, its upper face toward it.
+    if cluster.floral_bract > 0.0 {
+        let form = cluster.involucre_form;
+        let bracts: Vec<Sheet> = layout
+            .units
+            .iter()
+            .map(|p| {
+                let out = (p.base - p.attach).normalize_or(p.direction);
+                let back = (out * out.y - Vec3::Y).normalize_or(-p.bearing);
+                let length = cluster.floral_bract;
+                Sheet {
+                    foot: p.attach,
+                    up: out,
+                    back,
+                    length,
+                    width: length * form.width(),
+                    hood: 0.0,
+                    cup: 0.3,
+                    colour: form.colour(cluster.stalk),
+                    kind: SheetKind::Floral(form),
+                }
+            })
+            .collect();
+        layout.sheets.extend(bracts);
     }
     // A bent cluster can reach past its organ's tip (a nodding corymb's
     // long lower pedicels turn upright), and a spathe past its units: it
-    // shrinks to fit its organ.
+    // shrinks to fit its organ. Bracts round its foot or under its flowers
+    // spread out past it as petals do, and leave its units their size (a
+    // dogwood's 4-7 cm bracts round its 2 cm head).
     let high = layout
         .units
         .iter()
@@ -1398,6 +1551,7 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
             layout
                 .sheets
                 .iter()
+                .filter(|sheet| matches!(sheet.kind, SheetKind::Spathe))
                 .map(|sheet| sheet.foot.y + sheet.length),
         )
         .fold(1.0, f64::max);
@@ -3559,6 +3713,7 @@ mod tests {
             ripening: 20.0,
             fall: 245.0,
             opening: 40.0,
+            stagger: 0.0,
             fruit_size: 1.0,
             bud_look: None,
             flower_look: Some(crate::looks::StageLook {
