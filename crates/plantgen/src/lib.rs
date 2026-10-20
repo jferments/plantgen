@@ -1209,8 +1209,7 @@ pub mod venation;
 /// to its margins (`areoles.margins`, from `areole_position`: Christmas
 /// cactus). Spines are drawn broad enough to hide the share of stem a
 /// flora's words give (`spine_cover`); hairy areoles carry erect tufts
-/// (`areole_hairs`: peyote); twisted centrals wander; thorns stand on the
-/// bark. Barrels widen from youth (`radius_height`), cacti sink as deep
+/// (`areole_hairs`: peyote); twisted centrals wander. Barrels widen from youth (`radius_height`), cacti sink as deep
 /// as `stem_buried` says, clumps take `basal_stems` and lean as their
 /// `limb_angle` words, ribs are spaced for the usual count, tepals take
 /// their stated width.
