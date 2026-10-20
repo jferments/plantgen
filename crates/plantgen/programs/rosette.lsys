@@ -132,11 +132,11 @@ rule Y(v, n, p) : fork > 0 && age * v >= flower_age && rand() < bloom ->
     [ Sm Sk ] Fk(round(uniform(forks_low, forks_high + 0.999) - 0.5));
 # A crown in flower that goes on.
 rule Y(v, n, p) : once == 0 && fork == 0 && age * v >= flower_age && rand() < bloom ->
-    [ Sm Sk ] !(trunk_radius * (stemless > 0 ? 0.5 : 1)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p);
+    [ Sm Sk ] !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p);
 # A pup.
 rule Y(v, n, p) : pups > p && age >= pup_age && rand() < pup_rate ->
-    [ Pp ] !(trunk_radius * (stemless > 0 ? 0.5 : 1)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
-rule Y(v, n, p) -> !(trunk_radius * (stemless > 0 ? 0.5 : 1)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
+    [ Pp ] !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
+rule Y(v, n, p) -> !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
 
 # This year's leaves, a little apart up the stem, each turned on round
 # the spiral and opening out. Leaves are sized by the crown's age.
@@ -191,9 +191,10 @@ decompose Pp : stemless == 0 ->
 # with them: an internode lasts as long as its leaf, dead or alive. The
 # leaves' broad bases wrap the short stem they stand on, so it is drawn
 # half as thick, inside them (by eye: at full thickness it showed as a
-# tan collar between the lowest leaves).
+# tan collar between the lowest leaves), but never thinner than the
+# flowering stalk it carries.
 decompose Lc(i, m, c) : m == 1 ->
-    !(trunk_radius * 0.5) In /(divergence + gauss() * 3)
+    !(max(0.5 * trunk_radius, stalk_radius)) In /(divergence + gauss() * 3)
     [ Lv(leaf_length * (leaf_seed + (1 - leaf_seed) * (1 - exp(-c / size_years)))
          * uniform(1 - leaf_spread, 1 + leaf_spread),
          gauss() * angle_spread) ];

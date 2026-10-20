@@ -67,14 +67,14 @@ param pup_pups = 0;         # most pups a pup sends out in its turn
 # then flowering alone, then a pup alone, then neither.
 rule Y(v, n, p) : bloom_pup > 0 && once == 0 && fork == 0 && age * v >= flower_age
         && pups > p && age >= pup_age && rand() < bloom * pup_rate ->
-    [ Sm Sk ] [ Pp ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p + 1);
+    [ Sm Sk ] [ Pp ] !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p + 1);
 rule Y(v, n, p) : bloom_pup > 0 && once == 0 && fork == 0 && age * v >= flower_age
         && rand() < (pups > p && age >= pup_age ? bloom * (1 - pup_rate) / max(1e-9, 1 - bloom * pup_rate) : bloom) ->
-    [ Sm Sk ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p);
+    [ Sm Sk ] !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p);
 rule Y(v, n, p) : bloom_pup > 0 && once == 0 && fork == 0 && pups > p && age >= pup_age && rand() < pup_rate ->
-    [ Pp ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
+    [ Pp ] !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
 rule Y(v, n, p) : bloom_pup > 0 && once == 0 && fork == 0 ->
-    !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
+    !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
 
 # A pup that may send out pups of its own (pup_pups above 0).
 decompose Pp : pup_pups > 0 ->
