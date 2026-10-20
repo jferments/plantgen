@@ -1,0 +1,335 @@
+{
+  "schema": 1,
+  "id": "ariocarpus-fissuratus",
+  "taxon": {
+    "scientific_name": "Ariocarpus fissuratus",
+    "common_name": "living-rock cactus",
+    "family": "Cactaceae",
+    "genus": "Ariocarpus",
+    "plant_name_id": 2651075
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 1,
+      "sink": 0.032,
+      "stems": 1,
+      "seedling": 0.004,
+      "height_max": 0.045,
+      "height_rate": 0.05,
+      "height_shape": 1.5,
+      "radius_min": 0.006,
+      "radius_height": 0.025,
+      "fill": 0.97,
+      "fill_years": 8,
+      "wiggle": 0.05,
+      "bend": 0.1,
+      "bloom_age": 10,
+      "flowers": 3,
+      "ring_angle": 25,
+      "flower_angle": 15
+    }
+  },
+  "growth": {
+    "years": 50,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30,
+      50
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "tubercles": {
+          "width": 0.75
+        },
+        "areoles": {
+          "felt_radius": 0.0015,
+          "felt": [
+            0.86,
+            0.83,
+            0.74
+          ],
+          "apex_wool": 0.0015
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 0.04,
+      "tolerance": 0.6
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "stem_apex": "flat",
+    "tubercle_face": "fissured",
+    "areole_spacing_m": {
+      "min": 0.007,
+      "max": 0.015
+    },
+    "stem_colour": [
+      125,
+      135,
+      115
+    ],
+    "stem_diameter_max_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "areole_wool_colour": [
+      225,
+      215,
+      190
+    ],
+    "corolla_shape": "funnelform",
+    "tepal_length_m": {
+      "min": 0.021,
+      "max": 0.03
+    },
+    "flower_colour": [
+      215,
+      110,
+      170
+    ],
+    "perianth_abaxial_colour": [
+      170,
+      130,
+      110
+    ],
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.05
+    },
+    "flower_length_m": {
+      "min": 0.0125,
+      "max": 0.025
+    },
+    "stigma_colour": [
+      245,
+      242,
+      235
+    ],
+    "carpels": {
+      "min": 5,
+      "max": 10
+    },
+    "fruit_colour_ripe": [
+      230,
+      228,
+      200
+    ],
+    "fruit_shape": "club_shaped",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "fruit_width_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "height_typical_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "flowering_months": [
+      9,
+      10,
+      11
+    ]
+  },
+  "evidence": {
+    "traits.stem_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. The areoles stand about two thirds of a tubercle's width apart, the plates overlapping in the mosaic; the grey-green of a limestone chip by hand."
+    },
+    "traits.tubercle_face": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. The areoles stand about two thirds of a tubercle's width apart, the plates overlapping in the mosaic; the grey-green of a limestone chip by hand."
+    },
+    "traits.areole_spacing_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. The areoles stand about two thirds of a tubercle's width apart, the plates overlapping in the mosaic; the grey-green of a limestone chip by hand."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. The areoles stand about two thirds of a tubercle's width apart, the plates overlapping in the mosaic; the grey-green of a limestone chip by hand."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. The areoles stand about two thirds of a tubercle's width apart, the plates overlapping in the mosaic; the grey-green of a limestone chip by hand."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. The areoles stand about two thirds of a tubercle's width apart, the plates overlapping in the mosaic; the grey-green of a limestone chip by hand."
+    },
+    "traits.areole_wool_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. The wool's colour (not stated) a pale tan by hand."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.perianth_abaxial_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.flower_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Ariocarpus: plants erect, unbranched, deep-seated in the substrate. Roots taproots. Stem unsegmented, gray-green (yellow-green or purplish with age or stress), above-ground portion flat, concave, or weakly hemispheric, usually flush with soil surface and cryptic, strongly tuberculate, 0-2(-10) × [3-]5-10(-15) cm, hard, rigid, tough skinned; tubercles arranged in rosettes or mosaics, ± triangular, 8-20 × [3-]11-25 mm, hard, exposed faces of tubercles strongly differentiated from sides, prominently fissured [wrinkled, roughened, or nearly smooth]; areoles elongate, forming a wide woolly groove on each tubercle; areolar glands absent. Spines absent. Flowers diurnal, borne in axils of tubercles near stem apex, broadly funnelform to almost salverform, 1.5-5 × 1.5-5 cm; outer tepals brownish or greenish with pink tinge; inner tepals pink or magenta, 13-34 × 4-10 mm; ovary smooth (scales, hairs, and spines absent); stigma lobes 5-10, white. Fruits indehiscent, white or cream to pale greenish, spheric to clavate or cylindric, proximally or almost completely buried in copious wool of stem apex, 10-25 × 5-10 mm, scales and spines absent. Ariocarpus fissuratus var. fissuratus: plants protruding above ground 0-2(-10) cm. Stems: tubercles forming coarse mosaic, closely packed, exposed faces of tubercles deltoid to hemispheric, deeply fissured on either side of central areolar groove, coarsely rugose, often sharply angled apically; areoles to 3 mm wide, sometimes confined to middle of tubercle faces instead of extending to tips. Flowers 2.5-5 cm diam., 2 times wider than long when fully expanded; inner tepals 21-30 × 5.5-7.5(-10) mm. Flowering Sep-Nov. The stems are normally flush with the soil surface and resemble limestone chips in shape, color, and texture. Inner tepals about four times as long as wide, so lanceolate; the flower half as long as it is wide; the carpels as many as the stigma lobes; colours by hand from the words."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from the flora's words: one flat, hard top flush with the soil, sunk to within a centimetre of it, a few magenta flowers from the wool at its centre in autumn. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A rough stem height, most of it below ground: about 4 cm by 30 years. Wide tolerance."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Tubercle width by eye for the 'closely packed' mosaic; a thin woolly cap by eye for the 'copious wool of stem apex' the fruits sit in, its felt a pale tan."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific names as WCVP v16 accepts them, common names as the Flora of North America gives them, and the genus the scientific name is written in."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America, vol. 4 (Cactaceae), on eFloras",
+        "url": "http://www.efloras.org/flora_page.aspx?flora_id=1",
+        "licence": "quoted facts; the treatment's text is not copied"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Procedural proxy drawn from the Flora of North America's text (2026-10-19). Calibration against measurements and photographs comes later."
+  }
+}

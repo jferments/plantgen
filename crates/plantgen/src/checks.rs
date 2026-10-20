@@ -159,7 +159,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 43] = [
+pub const SIZES: [(&str, Judged); 44] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -178,6 +178,7 @@ pub const SIZES: [(&str, Judged); 43] = [
     ("inflorescence_length_m", Judged::Organs),
     ("peduncle_length_m", Judged::Organs),
     ("bract_length_m", Judged::Organs),
+    ("floral_bract_length_m", Judged::Organs),
     ("flower_size_m", Judged::Organs),
     ("spur_length_m", Judged::Organs),
     ("involucre_diameter_m", Judged::Organs),
@@ -722,13 +723,14 @@ pub struct Grown<'a> {
 }
 
 impl Grown<'_> {
-    fn season(&self, organ: &GraphOrgan) -> Option<&Season> {
+    fn season(&self, organ: &GraphOrgan) -> Option<Season> {
         let kind = self.growth.organ_types.get(usize::from(organ.organ))?;
         self.spec
             .appearance
             .organs
             .get(&kind.name)
             .and_then(|look| look.season.as_ref())
+            .map(|season| season.cohort(crate::looks::variety_of(organ.id)))
     }
 
     /// Whether the organ is drawn as a cluster on some days, so a look
@@ -812,7 +814,7 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
     let mut ripening: Option<f64> = None;
     for day in days(&seasons) {
         let (looks, sizes) = crate::drawing::looks_of(grown.spec, grown.growth, day);
-        let drawn = crate::drawing::drawn(graph, &sizes);
+        let drawn = crate::drawing::drawn(graph, &sizes, &looks);
         leaves(grown, &drawn, &looks, &mut tally);
         for organ in &drawn.organs {
             let Some(look) = looks
@@ -821,7 +823,7 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
             else {
                 continue;
             };
-            let phase = organs::phase(organ, grown.season(organ), day, graph.age);
+            let phase = organs::phase(organ, grown.season(organ).as_ref(), day, graph.age);
             reproductive(grown, organ, look, phase, &mut tally);
             if let Shape::Needles(needles) = &look.shape {
                 needle_counts(needles, organ.id, &mut tally);
@@ -1043,19 +1045,11 @@ const UNIT_RANKS: u32 = 16;
 /// flower look in flower (its own, unless that is its fruit), and its own
 /// look in fruit, ripe once half ripened; a cluster's units, or a head's
 /// florets, each in its own stage. One with none shows its own look every
-/// day. A plant none of whose looks has a season draws no year, so its
-/// months are not read. Flowers are flowers, heads, umbels, spikes,
+/// day; a staggered season's organs each in its cohort's stage. A plant
+/// none of whose looks has a season draws no year, so its months are not
+/// read. Flowers are flowers, heads, umbels, spikes,
 /// panicles and spikelets; fruit is a fruit card that is no cone.
 fn year(grown: &Grown<'_>, tally: &mut Tally) {
-    if grown
-        .spec
-        .appearance
-        .organs
-        .values()
-        .all(|look| look.season.is_none())
-    {
-        return;
-    }
     let graph = grown.graph;
     let standing: BTreeSet<u16> = graph
         .organs
@@ -1063,6 +1057,22 @@ fn year(grown: &Grown<'_>, tally: &mut Tally) {
         .filter(|organ| organ.size > 0.0 && !organ.shed.is_some_and(|shed| shed <= graph.age))
         .map(|organ| organ.organ)
         .collect();
+    // Only the looks of organs it draws: a program's organ it never grows
+    // (a climber's blooms where it bears lone fruit) gives it no year.
+    let look_of = |index: &u16| {
+        grown
+            .growth
+            .organ_types
+            .get(usize::from(*index))
+            .and_then(|kind| grown.spec.appearance.organs.get(&kind.name))
+    };
+    if standing
+        .iter()
+        .filter_map(look_of)
+        .all(|look| look.season.is_none())
+    {
+        return;
+    }
     for index in standing {
         let Some(kind) = grown.growth.organ_types.get(usize::from(index)) else {
             continue;
@@ -1081,23 +1091,30 @@ fn year(grown: &Grown<'_>, tally: &mut Tally) {
             } else {
                 vec![0.0]
             };
+        let cohorts = look.season.as_ref().map(Season::cohorts);
         for day in 1..=365_u16 {
-            let (flowers, ripe) = match &look.season {
+            let (flowers, ripe) = match &cohorts {
                 None => (own_flower, own_fruit),
-                Some(season) => ranks.iter().fold((false, false), |(flowers, ripe), &rank| {
-                    match season.unit_stage(f64::from(day), rank) {
-                        crate::looks::Stage::Flower => (
-                            flowers
-                                || season.flower_look.is_some()
-                                || !matches!(look.shape, Shape::Fruit(_)),
-                            ripe,
-                        ),
-                        crate::looks::Stage::Fruit { unripe } => {
-                            (flowers || own_flower, ripe || (own_fruit && unripe < 0.5))
-                        }
-                        _ => (flowers, ripe),
-                    }
-                }),
+                Some(cohorts) => cohorts
+                    .iter()
+                    .flat_map(|season| ranks.iter().map(move |&rank| (season, rank)))
+                    .fold(
+                        (false, false),
+                        |(flowers, ripe), (season, rank)| match season
+                            .unit_stage(f64::from(day), rank)
+                        {
+                            crate::looks::Stage::Flower => (
+                                flowers
+                                    || season.flower_look.is_some()
+                                    || !matches!(look.shape, Shape::Fruit(_)),
+                                ripe,
+                            ),
+                            crate::looks::Stage::Fruit { unripe } => {
+                                (flowers || own_flower, ripe || (own_fruit && unripe < 0.5))
+                            }
+                            _ => (flowers, ripe),
+                        },
+                    ),
             };
             let month = month_of(day).to_string();
             if flowers {
@@ -2497,15 +2514,36 @@ fn reproductive(
                 0,
                 u32::try_from(layout.units.len()).unwrap_or(u32::MAX),
             );
+            // Its bracts at its foot, a spathe or an involucre: a unit's
+            // own floral bract is no inflorescence bract.
+            let bracts: Vec<&crate::clusters::Sheet> = layout
+                .sheets
+                .iter()
+                .filter(|sheet| !matches!(sheet.kind, crate::clusters::SheetKind::Floral(_)))
+                .collect();
             tally.count(
                 "inflorescence_bracts",
                 organ.id,
                 0,
-                u32::try_from(layout.sheets.len()).unwrap_or(u32::MAX),
+                u32::try_from(bracts.len()).unwrap_or(u32::MAX),
             );
-            for (index, sheet) in (0_u32..).zip(&layout.sheets) {
+            for (index, sheet) in (0_u32..).zip(&bracts) {
                 tally.add("bract_length_m", organ.id, index, organ.size * sheet.length);
-                tally.kind("bract_form", "spathe");
+                tally.kind("bract_form", sheet.kind.form());
+            }
+            for (index, sheet) in (0_u32..).zip(
+                layout
+                    .sheets
+                    .iter()
+                    .filter(|sheet| matches!(sheet.kind, crate::clusters::SheetKind::Floral(_))),
+            ) {
+                tally.add(
+                    "floral_bract_length_m",
+                    organ.id,
+                    index,
+                    organ.size * sheet.length,
+                );
+                tally.kind("bract_form", sheet.kind.form());
             }
             if matches!(
                 cluster.cluster.kind,
@@ -2611,7 +2649,12 @@ fn cluster_kinds(
         ClusterKind::Raceme | ClusterKind::Spike | ClusterKind::Catkin | ClusterKind::Corymb
     ) && cluster.cluster.branches == 0
         && (2..=cluster.cluster.per_node.clamp(1, 8) as usize).contains(&layout.units.len());
-    let kind = if cluster.cluster.kind == ClusterKind::Spike && !layout.sheets.is_empty() {
+    let kind = if cluster.cluster.kind == ClusterKind::Spike
+        && layout
+            .sheets
+            .iter()
+            .any(|sheet| sheet.kind == crate::clusters::SheetKind::Spathe)
+    {
         "spadix".to_owned()
     } else if one_node {
         format!("{}|cyme|umbel", cluster.cluster.kind.name())

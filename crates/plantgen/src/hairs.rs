@@ -451,6 +451,11 @@ struct Strand {
     form: Form,
     head: f64,
     drop: Option<crate::looks::Drop>,
+    /// A glandular head's length along the hair as a multiple of its width.
+    long: f64,
+    /// Its stalk's colour where the face's grading sets it apart from its
+    /// kind's.
+    stalk: Option<[f32; 3]>,
 }
 
 /// An edge texel: its `u`, `v` and its outward normal across and along
@@ -845,9 +850,14 @@ pub fn strand_mesh(
                         let at = texel_index(templates.size, u, v);
                         field[at]
                     });
-                    if inward.is_some_and(|(depth, _, _)| depth < 0.0) {
+                    // On the stalk, past the blade, a third of them stand
+                    // ungraded, as long as at the blade's middle: a
+                    // sundew's glandular-pilose petiole (FNA).
+                    let on_stalk = inward.is_some_and(|(depth, _, _)| depth < 0.0);
+                    if on_stalk && hash(k, 11, seed) >= 1.0 / 3.0 {
                         continue;
                     }
+                    let inward = inward.filter(|_| !on_stalk);
                     if let Some(veins) = veins {
                         let on_vein = f64::from(veins[texel_index(templates.size, u, v)]);
                         if hash(k, 10, seed) >= 1.0 - gathered * (1.0 - on_vein) {
@@ -868,11 +878,25 @@ pub fn strand_mesh(
                     let spread_of = if graded.is_some() { 0.3 } else { 0.8 };
                     let mut length =
                         hairs.length * (1.0 - spread_of * 0.5 + spread_of * hash(k, 1, seed));
+                    let mut long = hairs.head_length.unwrap_or(1.0);
+                    let mut stalk = None;
                     if let (Some(ratio), Some((depth, du, dv))) = (graded, inward) {
                         // Toward the edge they lengthen and lean out over
                         // it, the outermost lying in the face's plane with
-                        // their tips turned up a little.
+                        // their tips turned up a little; their heads
+                        // lengthen and their stalks colour as they do.
                         let edgeward = 1.0 - depth;
+                        let weight = edgeward * edgeward;
+                        if let Some(edge) = hairs.edge_head_length {
+                            long += (edge - long) * weight;
+                        }
+                        if let (Some(inner), Some(outer)) = (hairs.stalk_inner, hairs.stalk) {
+                            #[allow(clippy::cast_possible_truncation)]
+                            let w = weight as f32;
+                            stalk = Some(std::array::from_fn(|c| {
+                                inner[c] + (outer[c] - inner[c]) * w
+                            }));
+                        }
                         length *= 1.0 + (ratio - 1.0) * edgeward * edgeward;
                         let (right, _) = card_point(card, (u + 0.01).min(1.0), v);
                         let (left, _) = card_point(card, (u - 0.01).max(0.0), v);
@@ -895,6 +919,8 @@ pub fn strand_mesh(
                         form,
                         head: hairs.head.unwrap_or(0.0),
                         drop: hairs.drop,
+                        long,
+                        stalk,
                     });
                 }
             }
@@ -942,6 +968,8 @@ pub fn strand_mesh(
                         form: Form::Plain,
                         head: 0.0,
                         drop: None,
+                        long: 1.0,
+                        stalk: None,
                     });
                 }
             }
@@ -1023,6 +1051,8 @@ pub fn strand_mesh(
                     form,
                     head: hairs.head.unwrap_or(0.0),
                     drop: hairs.drop,
+                    long: hairs.head_length.unwrap_or(1.0),
+                    stalk: None,
                 };
                 push_hair(
                     &mut out,
@@ -1137,6 +1167,7 @@ fn push_hair(
     seed: u64,
 ) {
     let [colour, other] = *colours;
+    let colour = strand.stalk.unwrap_or(colour);
     let arm = |k: u64, salt: u64| hash(k, salt, seed);
     match strand.form {
         Form::Plain => push_strand(&mut out.hairs, strand, colour, lifetime, segment),
@@ -1286,7 +1317,10 @@ fn push_hair(
                 strand.length * 0.22
             };
             let radius = (across * 0.5).max(strand.radius * 1.8);
-            let centre = tip + strand.second * radius * 0.8;
+            // An oval or elongated head is as wide, longer along its hair.
+            let long = strand.long.clamp(1.0, 4.0);
+            let axis = strand.second.normalize_or(strand.normal);
+            let centre = tip + axis * radius * (0.8 * long);
             match strand.drop {
                 // The head is itself the drop: resin seen through.
                 Some(drop) if drop.size <= 1.0 => {
@@ -1294,6 +1328,7 @@ fn push_hair(
                         &mut out.drops,
                         centre,
                         radius,
+                        (axis, long),
                         drop_colour(&drop, other),
                         lifetime,
                         segment,
@@ -1305,6 +1340,7 @@ fn push_hair(
                         &mut out.heads,
                         centre,
                         radius,
+                        (axis, long),
                         other,
                         lifetime,
                         segment,
@@ -1316,6 +1352,7 @@ fn push_hair(
                         &mut out.drops,
                         centre + strand.second * (outer - radius) * 0.5,
                         outer,
+                        (axis, 1.0 + (long - 1.0) * 0.5),
                         drop_colour(&drop, drop.colour),
                         lifetime,
                         segment,
@@ -1326,6 +1363,7 @@ fn push_hair(
                     &mut out.heads,
                     centre,
                     radius,
+                    (axis, long),
                     other,
                     lifetime,
                     segment,
@@ -1583,6 +1621,7 @@ fn push_sphere(
     mesh: &mut Mesh,
     centre: Vec3,
     radius: f64,
+    (axis, long): (Vec3, f64),
     colour: impl Into<Rgba>,
     (born, shed): (f64, Option<f64>),
     segment: u32,
@@ -1599,9 +1638,14 @@ fn push_sphere(
                 math::cos(polar),
                 math::sin(polar) * math::sin(azimuth),
             );
+            // Stretched `long` times along `axis`; its normal squeezed
+            // the other way so it still points out of the surface.
+            let along = axis * direction.dot(axis);
+            let position = centre + (direction + along * (long - 1.0)) * radius;
+            let normal = (direction + along * (1.0 / long - 1.0)).normalize_or(direction);
             mesh.push(Vertex {
-                position: centre + direction * radius,
-                normal: direction,
+                position,
+                normal,
                 uv: [0.0, 0.0],
                 color,
                 born,

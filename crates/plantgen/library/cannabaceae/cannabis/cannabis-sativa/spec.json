@@ -59,6 +59,7 @@
       "alternate": "often"
     },
     "phyllotaxis_pattern": "decussate",
+    "upper_leaf_arrangement": "alternate",
     "leaf_division": "compound",
     "division_pattern": "palmate",
     "division_order": 1,
@@ -145,6 +146,12 @@
       "min": 0.02,
       "max": 0.08
     },
+    "floral_bract_length_m": {
+      "min": 0.0025,
+      "max": 0.004
+    },
+    "bract_form": "leafy",
+    "inflorescence_spacing": "crowded",
     "flowering_branches": 10,
     "flowering_branch_orders": 2,
     "flower_size_m": {
@@ -400,6 +407,26 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 3 (1997), Cannabis sativa (eFloras, read 2026-10-19): plants dioecious, sometimes monoecious."
+    },
+    "traits.inflorescence_spacing": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 5 (2003), Cannabis (eFloras, read 2026-10-19): female inflorescences axillary, crowded at the stem tips; FNA vol. 3: pistillate pseudospikes congested."
+    },
+    "traits.upper_leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabaceae (eFloras, read 2026-10-19): leaves decussate proximally, often alternate distally; Hesami et al. 2023: nodes 1-11 opposite, alternate from node 12."
+    },
+    "traits.floral_bract_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis (eFloras, read 2026-10-19): pistillate flowers in pairs, each enclosed in a bracteole 2.5-4 mm, in congested pseudospikes among leaflike bracts."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Cannabis (eFloras, read 2026-10-19): each pistillate flower in a green, glandular bracteole, the pseudospikes among leaflike bracts."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",

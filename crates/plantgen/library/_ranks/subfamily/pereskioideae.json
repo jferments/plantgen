@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Pereskioideae",
+  "parent": "family/cactaceae",
+  "traits": {
+    "glochids": false,
+    "spine_sheaths": false,
+    "corolla_shape": "rotate",
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": "alternate",
+    "leaf_margin": "entire",
+    "woodiness": "woody"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 13 (read on eFloras 2026-10-19), Pereskia (the subfamily's one genus in the flora): Shrubs or climbers, or trees to 20 m tall. Branches terete, slightly fleshy when young; areoles with spines; glochids absent. Leaves somewhat fleshy, sessile or petiolate, broad, flat, pinnately veined, estipulate. Flowers solitary, or in fasciculate, subcorymbose, racemose or paniculate inflorescences, stalked or sessile. Receptacle not produced into a tube beyond ovary, with numerous, ± leafy, often persistent scales. Perianth multiseriate; segments free, spreading or rotate, white to red, magenta or orange. Stamens numerous. Fruit globose, pear-shaped, or obovoid, fleshy, with or without scattered, leaflike scales. Family key: plants terrestrial; leaves present; flowers diurnal, rotate, without elongated tube; areoles without glochids; leaves broad and flat, pinnately nerved, ± persistent; flowers solitary or in inflorescences, mostly stalked. So no glochids or sheathed spines, rotate flowers, broad entire persistent alternate leaves, woody stems."
+    }
+  }
+}

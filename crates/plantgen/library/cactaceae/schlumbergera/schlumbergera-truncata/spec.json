@@ -1,0 +1,341 @@
+{
+  "schema": 1,
+  "id": "schlumbergera-truncata",
+  "taxon": {
+    "scientific_name": "Schlumbergera truncata",
+    "common_name": "Christmas cactus",
+    "family": "Cactaceae",
+    "genus": "Schlumbergera",
+    "plant_name_id": 2486321
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 10,
+      "stems": 5,
+      "stem_rate": 0.2,
+      "clump_radius": 0.03,
+      "stem_lean": 25,
+      "joint_spread": 0.15,
+      "daughters_low": 1.4,
+      "daughters_high": 2.8,
+      "generations": 8,
+      "margin": 20,
+      "twist": 30,
+      "sag": 12.0,
+      "dome": 0.25,
+      "bloom_age": 2,
+      "joint_flowers": 1,
+      "flower_angle": 60,
+      "bud_rate": 0.8
+    }
+  },
+  "growth": {
+    "years": 10,
+    "step": 1,
+    "keyframes": [
+      2,
+      5,
+      10
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "flatten": 0.12,
+        "dome": 0.25,
+        "base": 0.6,
+        "areoles": {
+          "spacing": 0.009,
+          "felt_radius": 0.0003,
+          "felt": [
+            0.45,
+            0.32,
+            0.22
+          ]
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.25,
+      "tolerance": 0.6
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "joint_length_m": {
+      "min": 0.025,
+      "max": 0.035
+    },
+    "joint_width_m": {
+      "min": 0.015,
+      "max": 0.025
+    },
+    "joint_teeth": {
+      "min": 2,
+      "max": 3
+    },
+    "stem_colour": [
+      40,
+      85,
+      35
+    ],
+    "areole_wool_colour": [
+      115,
+      80,
+      55
+    ],
+    "flower_length_m": {
+      "min": 0.06,
+      "max": 0.07
+    },
+    "flower_size_m": {
+      "min": 0.035,
+      "max": 0.05
+    },
+    "tepal_length_m": {
+      "min": 0.03,
+      "max": 0.04
+    },
+    "corolla_shape": "funnelform",
+    "flower_colour": [
+      215,
+      40,
+      80
+    ],
+    "perianth_abaxial_colour": [
+      200,
+      55,
+      95
+    ],
+    "filament_colour": [
+      245,
+      240,
+      240
+    ],
+    "stigma_colour": [
+      130,
+      40,
+      110
+    ],
+    "fruit_colour_ripe": [
+      120,
+      35,
+      80
+    ],
+    "fruit_shape": "obovoid",
+    "fruit_size_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "fruit_width_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.3
+    },
+    "flowering_months": [
+      11,
+      12
+    ],
+    "fruiting_months": [
+      1,
+      2,
+      3
+    ]
+  },
+  "evidence": {
+    "traits.joint_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Joints about 3 cm long; 'sharply serrate, with two prominent teeth' at the apex read as two or three teeth a side, the top pair included; the colours by hand from 'dark glossy green' and 'brown wool'."
+    },
+    "traits.joint_teeth": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Joints about 3 cm long; 'sharply serrate, with two prominent teeth' at the apex read as two or three teeth a side, the top pair included; the colours by hand from 'dark glossy green' and 'brown wool'."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Joints about 3 cm long; 'sharply serrate, with two prominent teeth' at the apex read as two or three teeth a side, the top pair included; the colours by hand from 'dark glossy green' and 'brown wool'."
+    },
+    "traits.areole_wool_colour": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Joints about 3 cm long; 'sharply serrate, with two prominent teeth' at the apex read as two or three teeth a side, the top pair included; the colours by hand from 'dark glossy green' and 'brown wool'."
+    },
+    "traits.joint_width_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. The joints' width and the plant's size are not stated: a joint about two thirds as wide as long, and a plant 15 to 30 cm high, by inference from the 3 cm joints of a 'dichotomously much branched' household plant."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. The joints' width and the plant's size are not stated: a joint about two thirds as wide as long, and a plant 15 to 30 cm high, by inference from the 3 cm joints of a 'dichotomously much branched' household plant."
+    },
+    "traits.flower_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.perianth_abaxial_colour": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.filament_colour": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus: Stems dichotomously much branched, flattened, divided into short joints; flowers terminal, polychromic, irregular; ovary terete, smooth, gradually broadening from base, bearing minute scales at top; flower-tube abruptly bent just above the ovary, ending in a serrate mouth, bearing petaloid spreading scales scattered along its sides; stamens slender, white, arranged in 2 clusters; style purple, slender, as long as stamens; stigma-lobes linear, purple, erect; fruit purple, turgid, not at all angled. Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. Flowers 6-7 cm long with a 2 cm tube, so the tepals about 3-4 cm and a funnel; the flower's width, not stated, about 3.5-5 cm by inference from the reflexed tepals; the scarlet of the wild form, the tube and the tepals' outer faces coloured as the tepals for the 'petaloid spreading scales scattered along its sides', the white filaments, the purple style and stigma and purple fruit by hand from the words; fruit about two thirds as wide as long by inference from 'obovoid, 1.5 to 2 cm. long'."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. 'Blooming freely about the end of the year': November and December; the fruit, not dated, ripening in the months after, by inference."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose, The Cactaceae vol. 4 (1923), pp. 177-178, as Zygocactus (read at the Internet Archive, cactaceaedescri04brit, 2026-10-19): Zygocactus truncatus: Joints dark glossy green, about 3 cm. long, sharply serrate, with two prominent teeth at otherwise truncate apex; terminal areole broad and thin, filled with brown wool and bristles; flowers 6 to 7 cm. long; tube 2 cm. long; inner perianth-segments scarlet to white, oblong, obtuse to acute, reflexed; filaments white; style purple throughout; fruit obovoid, 1.5 to 2 cm. long. Distribution: Mountains, state of Rio de Janeiro, Brazil. ... a great favorite as a household plant, blooming freely about the end of the year, hence the name Christmas cactus. 'Blooming freely about the end of the year': November and December; the fruit, not dated, ripening in the months after, by inference."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from the words: a few stems from the base, each a chain of short joints forking at each joint's tip, arching over and hanging under their own weight; one flower at the tip of each young joint, held out to the side. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A rough height for a household plant of 10 years: about 25 cm. Wide tolerance."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Joint thickness, areole spacing and felt by eye for thin, flat, glossy joints with brown-woolled areoles in the notches."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific names as WCVP v16 accepts them, common names as the Flora of North America gives them, and the genus the scientific name is written in."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America, vol. 4 (Cactaceae), on eFloras",
+        "url": "http://www.efloras.org/flora_page.aspx?flora_id=1",
+        "licence": "quoted facts; the treatment's text is not copied"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Procedural proxy drawn from the Flora of North America's text (2026-10-19). Calibration against measurements and photographs comes later."
+  }
+}

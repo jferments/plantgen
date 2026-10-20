@@ -184,7 +184,11 @@
     "habitat_notes": "Alkaline or saline soils of semiarid and arid plains, alkali flats and playa margins, dry washes and desert-shrub and sagebrush communities, often in pure stands where the water table is shallow (a phreatophyte), western North America from Alberta and Saskatchewan to Sonora, 600-2400 m.",
     "perianth": "tepals",
     "leaf_succulence": "succulent",
-    "leaf_cross_section": "terete"
+    "leaf_cross_section": "terete",
+    "fruit_seed_length_m": {
+      "min": 0.0018,
+      "max": 0.0021
+    }
   },
   "evidence": {
     "taxon": {
@@ -506,6 +510,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (2003), Sarcobatus (read 2026-10-19): leaves nearly round to somewhat flattened in section."
+    },
+    "traits.fruit_seed_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (2003), Sarcobatus vermiculatus (eFloras flora_id=1 taxon_id=242415620, read 2026-10-19): seeds 1.8-2.1 mm."
     }
   },
   "provenance": {
