@@ -46,7 +46,11 @@ fn maple() -> Maple {
 /// The maple grown in `layout` with its neighbours `spacing_m` apart.
 fn in_layout(maple: &Maple, kind: LayoutKind, spacing_m: f64) -> Growth {
     let mut neighbours = Neighbours::of(Environment::Open.neighbourhood());
-    neighbours.layout = Some(Layout { kind, spacing_m });
+    neighbours.layout = Some(Layout {
+        kind,
+        spacing_m,
+        per_height: 0.0,
+    });
     let settings = GrowthSettings {
         conditions: Conditions {
             neighbours: Some(neighbours),

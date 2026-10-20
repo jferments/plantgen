@@ -381,6 +381,22 @@ pub struct GrowthPlan {
     pub keyframes: Vec<f64>,
 }
 
+/// How far apart the stems of a stand of the same age stand, as a share of
+/// their height (the stand's relative spacing, Hart's index), so the stand
+/// thins as its trees grow. Each neighbour is the plant's own crown
+/// ([`crate::conditions::Layout`]), so the shade over a crown is what crowns
+/// like it cast and lifts as it lifts. A quarter is the model's choice
+/// (tree shape, 2026-10-20), fitted to Douglas-fir: grown in it to 300
+/// years it stands 60 m on a trunk 1.5 m across with a crown from about
+/// 24 m up, where old-growth trees are 150-180 cm across with a crown
+/// starting 20-40 m up on a clear bole (FEIS, Hermann and Lavender 1990,
+/// Franklin et al. 1981); at a fifth the trunk was 1.2 m and at 0.15
+/// 0.9 m. Before it a stand was shade of 0.12 a metre from the ground to
+/// the plant's top, which deepened as the plant grew and left any tree
+/// only its top 8-10 m of foliage: a 55 cm Douglas-fir with its crown
+/// from 51 m up.
+pub const STAND_SPACING: f64 = 0.25;
+
 /// The synthetic stand a variant grows in.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -418,12 +434,15 @@ impl Environment {
     /// The default neighbourhood for this environment.
     #[must_use]
     pub fn neighbourhood(self) -> Neighbourhood {
+        // A stand of the same age is a stand of the plant's like, its
+        // crowns spaced by its height (STAND_SPACING).
         let stand = Neighbourhood {
-            density: 0.12,
+            density: 0.0,
             relative_height: 1.0,
             canopy: 0.0,
-            spacing: 5.0,
+            spacing: 0.0,
             one_sided: false,
+            like: STAND_SPACING,
         };
         match self {
             Self::Open => Neighbourhood::OPEN,
@@ -434,8 +453,11 @@ impl Environment {
             Self::Interior => stand,
             Self::Suppressed => Neighbourhood {
                 density: 0.15,
+                relative_height: 1.0,
                 canopy: 30.0,
-                ..stand
+                spacing: 5.0,
+                one_sided: false,
+                like: 0.0,
             },
         }
     }

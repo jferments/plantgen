@@ -95,7 +95,7 @@
       "age": 80,
       "environment": "interior",
       "height": 9,
-      "dbh": 0.25,
+      "dbh": 0.12,
       "tolerance": 0.4
     }
   ],
@@ -151,9 +151,9 @@
       "note": "Hand-set from general knowledge of the species: a small, slow, often crooked understory tree with long, drooping branches and flat sprays of soft, pointed needles. Not fitted to measurements. Cones (plant forms F3): seeds in a red fleshy aril about 8 mm; set from general knowledge of the species, not measured. Spec rework E6d: `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `branch_ageing` is gone with the calendar ageing it set."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 9 m tall and 25 cm across at breast height at 80 years in a closed stand. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "busing-spies-1995",
+      "note": "Trunk: Busing and Spies (1995) measured Pacific yew in mature and old-growth stands of western Oregon and Washington growing 0 to 3 cm in diameter at breast height a decade; at the middle of that, 1.5 cm a decade, a yew is 12 cm across at 80 years. The 25 cm before was a rough size from general knowledge. Height: still a rough size from general knowledge, 9 m at 80 years, inside FEIS's 6 to 12 m at maturity (250 to 350 years); replace with measured data."
     },
     "appearance": {
       "evidence": "Authored",

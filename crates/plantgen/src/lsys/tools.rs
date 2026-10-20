@@ -71,6 +71,16 @@ pub struct Neighbourhood {
     pub spacing: f64,
     /// Neighbours stand only on the −X side (a stand edge).
     pub one_sided: bool,
+    /// A stand of the plant's like: neighbours whose crowns are its own
+    /// stand this many times its height apart, and at least `spacing`
+    /// (`crate::conditions::Layout`). 0: none.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub like: f64,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f64) -> bool {
+    *value == 0.0
 }
 
 impl Neighbourhood {
@@ -80,6 +90,7 @@ impl Neighbourhood {
         canopy: 0.0,
         spacing: 0.0,
         one_sided: false,
+        like: 0.0,
     };
 
     /// Fraction of the sky light arriving along `direction` (a unit vector
@@ -3671,6 +3682,7 @@ mod tests {
             canopy: 0.0,
             spacing: 4.0,
             one_sided: false,
+            like: 0.0,
         };
         let up = Vec3::Y;
         let top = stand.transmission(Vec3::new(0.0, 20.0, 0.0), 20.0, up);
@@ -3851,6 +3863,7 @@ mod tests {
             canopy: 0.0,
             spacing: 4.0,
             one_sided: true,
+            like: 0.0,
         };
         let region = |settings: &[f64], around: &Neighbourhood| {
             let mut state = ToolState::default();

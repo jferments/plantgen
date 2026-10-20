@@ -183,6 +183,10 @@ pub struct Neighbours {
     pub spacing: f64,
     /// Neighbours stand only on the −X side.
     pub one_sided: bool,
+    /// A stand of the plant's like whose stems stand this many times its
+    /// height apart, at least `spacing`; 0: none.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub like: f64,
     /// Neighbours' crowns, besides the stand above: each shades the light
     /// that passes through it and takes its room, so no attraction point
     /// of space colonization lies inside it.
@@ -203,8 +207,13 @@ pub struct Neighbours {
 #[serde(deny_unknown_fields)]
 pub struct Layout {
     pub kind: LayoutKind,
-    /// Distance between neighbouring stems, metres.
+    /// Distance between neighbouring stems, metres: the least, when
+    /// `per_height` sets it.
     pub spacing_m: f64,
+    /// Distance between neighbouring stems as a share of the plant's
+    /// height, so the stand thins as it grows; 0: `spacing_m` always.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub per_height: f64,
 }
 
 /// Where a layout's neighbours stand, on a square grid of its spacing.
@@ -225,6 +234,9 @@ impl Layout {
     /// The most rings of neighbours round the plant a layout places.
     pub const RINGS: i32 = 3;
 
+    /// The least distance between stems a layout takes, metres.
+    pub const LEAST_SPACING_M: f64 = 0.25;
+
     /// The neighbours' crowns when each is `crown`, the plant's own, as
     /// envelopes in the plant's frame: every one within
     /// [`Self::RINGS`] rings that can shade the plant or reach its crown
@@ -232,6 +244,7 @@ impl Layout {
     #[must_use]
     pub fn envelopes(&self, crown: &Crown) -> Vec<Envelope> {
         let rings = -Self::RINGS..=Self::RINGS;
+        let spacing_m = self.spacing_m.max(self.per_height * crown.top_m);
         let mut envelopes = Vec::new();
         for east in rings.clone() {
             for north in rings.clone() {
@@ -240,10 +253,7 @@ impl Layout {
                     LayoutKind::Interior => east != 0 || north != 0,
                     LayoutKind::Row => east != 0 && north == 0,
                 };
-                let centre = [
-                    f64::from(east) * self.spacing_m,
-                    f64::from(north) * self.spacing_m,
-                ];
+                let centre = [f64::from(east) * spacing_m, f64::from(north) * spacing_m];
                 if placed && crown.reaches(centre, crown.radius_m) {
                     envelopes.push(crown.envelope(centre));
                 }
@@ -254,7 +264,13 @@ impl Layout {
     }
 
     fn validate(&self) -> Result<(), String> {
-        within("layout spacing_m", self.spacing_m, 0.25, 100.0)
+        within(
+            "layout spacing_m",
+            self.spacing_m,
+            Self::LEAST_SPACING_M,
+            100.0,
+        )?;
+        within("layout per_height", self.per_height, 0.0, 10.0)
     }
 }
 
@@ -453,6 +469,7 @@ impl Neighbours {
             canopy: neighbourhood.canopy,
             spacing: neighbourhood.spacing,
             one_sided: neighbourhood.one_sided,
+            like: neighbourhood.like,
             envelopes: Vec::new(),
             layout: None,
         }
@@ -467,6 +484,7 @@ impl Neighbours {
             canopy: self.canopy,
             spacing: self.spacing,
             one_sided: self.one_sided,
+            like: self.like,
         }
     }
 }
@@ -803,6 +821,18 @@ impl Conditions {
         self.neighbours
             .as_ref()
             .and_then(|neighbours| neighbours.layout)
+            .or_else(|| {
+                let neighbourhood = self.neighbourhood();
+                (neighbourhood.like > 0.0).then(|| Layout {
+                    kind: if neighbourhood.one_sided {
+                        LayoutKind::Edge
+                    } else {
+                        LayoutKind::Interior
+                    },
+                    spacing_m: neighbourhood.spacing.max(Layout::LEAST_SPACING_M),
+                    per_height: neighbourhood.like,
+                })
+            })
     }
 
     /// The document with its preset expanded into `neighbours` and left
@@ -911,6 +941,7 @@ impl Neighbours {
         )?;
         within("neighbours canopy", self.canopy, 0.0, 150.0)?;
         within("neighbours spacing", self.spacing, 0.0, 100.0)?;
+        within("neighbours like", self.like, 0.0, 10.0)?;
         if let Some(layout) = &self.layout {
             layout.validate()?;
         }
@@ -991,6 +1022,11 @@ fn version(section: &str, found: u32) -> Result<(), String> {
     }
 }
 
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f64) -> bool {
+    *value == 0.0
+}
+
 fn within(what: &str, value: f64, low: f64, high: f64) -> Result<(), String> {
     if (low..=high).contains(&value) {
         Ok(())
@@ -1056,11 +1092,13 @@ mod tests {
             Conditions::from_json(text).unwrap().class()
         );
         // The key is the same on every run and machine: the SHA-256 of
-        // {"schema":1,"neighbours":{"version":1,"density":0.12,
-        // "relative_height":1.0,"canopy":0.0,"spacing":5.0,"one_sided":false}}.
+        // {"schema":1,"neighbours":{"version":1,"density":0.0,
+        // "relative_height":1.0,"canopy":0.0,"spacing":0.0,"one_sided":false,
+        // "like":0.25,"layout":{"kind":"interior","spacing_m":0.25,
+        // "per_height":0.25}}}.
         assert_eq!(
             interior.class().to_string(),
-            "2ffbeb9dd5ed42be0d179e8bb53e76065b7baf7d9404b91c371402947dd706aa"
+            "c143493ffd03ae6b9d9d98672bdce44776b31d518cd03f324bb2d47252dd633b"
         );
     }
 
@@ -1257,11 +1295,15 @@ mod tests {
             leaf_area_m2: 200.0,
         };
         let placed = |kind, spacing_m| -> Vec<[f64; 2]> {
-            Layout { kind, spacing_m }
-                .envelopes(&crown)
-                .iter()
-                .map(|envelope| envelope.centre_m)
-                .collect()
+            Layout {
+                kind,
+                spacing_m,
+                per_height: 0.0,
+            }
+            .envelopes(&crown)
+            .iter()
+            .map(|envelope| envelope.centre_m)
+            .collect()
         };
         // It reaches neighbours whose stems stand within 26 m: at 5 m apart,
         // all three rings.
@@ -1292,6 +1334,35 @@ mod tests {
     }
 
     #[test]
+    fn a_stand_of_the_plants_like_thins_as_it_grows() {
+        let layout = Conditions::preset(Environment::Interior).layout().unwrap();
+        assert_eq!(layout.kind, LayoutKind::Interior);
+        assert_eq!(
+            Conditions::preset(Environment::Edge).layout().unwrap().kind,
+            LayoutKind::Edge
+        );
+        assert!(Conditions::preset(Environment::Open).layout().is_none());
+        // The nearest neighbours stand a quarter of the plant's height away.
+        let nearest = |top_m: f64| {
+            let crown = Crown {
+                base_m: 0.3 * top_m,
+                top_m,
+                radius_m: 0.15 * top_m,
+                leaf_area_m2: 100.0,
+            };
+            layout
+                .envelopes(&crown)
+                .iter()
+                .map(|envelope| envelope.centre_m[0].hypot(envelope.centre_m[1]))
+                .fold(f64::INFINITY, f64::min)
+        };
+        assert!((nearest(8.0) - 2.0).abs() < 1e-9);
+        assert!((nearest(40.0) - 10.0).abs() < 1e-9);
+        // Never nearer than the least spacing.
+        assert!((nearest(0.4) - Layout::LEAST_SPACING_M).abs() < 1e-9);
+    }
+
+    #[test]
     fn a_layout_is_read_checked_and_part_of_the_class() {
         let text = |spacing: &str| {
             format!(
@@ -1305,7 +1376,8 @@ mod tests {
             row.layout(),
             Some(Layout {
                 kind: LayoutKind::Row,
-                spacing_m: 6.0
+                spacing_m: 6.0,
+                per_height: 0.0
             })
         );
         assert_eq!(row.resolve().layout(), row.layout());

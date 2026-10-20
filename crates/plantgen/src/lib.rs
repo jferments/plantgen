@@ -1213,4 +1213,8 @@ pub mod venation;
 /// as `stem_buried` says, clumps take `basal_stems` and lean as their
 /// `limb_angle` words, ribs are spaced for the usual count, tepals take
 /// their stated width.
-pub const GENERATOR_REVISION: u32 = 163;
+/// 164: a stand of the same age (`interior`, `edge`) is a stand of the
+/// plant's like, its own crown at each neighbour's place, the stems a
+/// quarter of its height apart (`STAND_SPACING`), not shade of 0.12 a
+/// metre from the ground to its top.
+pub const GENERATOR_REVISION: u32 = 164;
