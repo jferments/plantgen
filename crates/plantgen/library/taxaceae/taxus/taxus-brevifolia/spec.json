@@ -34,7 +34,6 @@
       "shade_death": 0.03,
       "shade_years": 8,
       "min_shoot": 0.015,
-      "pipe_rings": 1.4e-06,
       "pipe_organ": 0.003,
       "pipe_tip": 0.0015,
       "branch_reach": 2.6

@@ -68,6 +68,10 @@
     "generator.params.wood_modulus": {
       "rule": "wood_modulus_green_mpa",
       "why": "Green wood's stiffness, which holds a limb up against its weight (bend@1)."
+    },
+    "generator.params.pipe_rings": {
+      "rule": "0.000025",
+      "why": "Trunk wood laid down a year per m² of foliage above, one rate for every conifer, so a trunk answers to its crown's foliage and nothing hand-set: fitted to the average tree of fully stocked Douglas-fir in McArdle et al. (1961), 28.2 cm at 60 years and 42.9 cm at 100 (site index 140), grown in the stand of its like; on seeds 1 and 2 it draws 30-32 and 41-44 cm. Before, each species set its own rate, 1.2e-6 to 3e-5, fitted to rough sizes, and stand-grown trunks stalled."
     }
   },
   "evidence": {
@@ -85,6 +89,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state."
+    },
+    "rules.generator.params.pipe_rings": {
+      "evidence": "SourceInferred",
+      "source": "mcardle-1961",
+      "note": "McArdle, Meyer and Bruce (1961), The yield of Douglas fir in the Pacific Northwest, USDA Technical Bulletin 201, Table 2 (average-tree diameter of fully stocked stands): 11.1 in (28.2 cm) at 60 years and 16.9 in (42.9 cm) at 100 on site index 140. The rate is the one that grows the model's Douglas-fir to them in the stand of its like; it is applied to every conifer. The trunks it gives follow the foliage the model's crowns carry as Gholz et al. (1979) foliage-diameter equations have it."
     }
   }
 }

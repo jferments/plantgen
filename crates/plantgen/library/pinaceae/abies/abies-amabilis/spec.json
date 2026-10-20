@@ -23,7 +23,6 @@
       "shade_death": 0.05,
       "shade_years": 4,
       "pipe_organ": 0.004,
-      "pipe_rings": 1.2e-06,
       "branch_reach": 3,
       "bole": 0.05
     }
