@@ -1,0 +1,10 @@
+{
+  "id": "ffe-fvs-guide",
+  "title": "The Fire and Fuels Extension to the Forest Vegetation Simulator: updated model documentation (bark thickness multipliers from FOFEM 5.0, Reinhardt 2003)",
+  "authors": "Rebain, S. A. (compiler), USDA Forest Service",
+  "year": 2010,
+  "url": "https://www.fs.usda.gov/fmsc/ftp/fvs/docs/gtr/FFEguide.pdf",
+  "licence": "public domain (US Government work)",
+  "tier": 2,
+  "kind": "text"
+}

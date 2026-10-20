@@ -1,0 +1,16 @@
+{
+  "name": "plantgen-viewer-conformance",
+  "private": true,
+  "description": "Checks that PlantGen's glTF bark draws the same in other renderers",
+  "type": "module",
+  "scripts": {
+    "check": "node run.mjs"
+  },
+  "dependencies": {
+    "babylonjs": "9.27.1",
+    "babylonjs-loaders": "9.27.1",
+    "gltf-validator": "2.0.0-dev.3.10",
+    "playwright-core": "1.56.1",
+    "three": "0.186.0"
+  }
+}

@@ -14,9 +14,6 @@
       "fork_stems": 5,
       "branch_angle": 50,
       "fork_angle": 35,
-      "thorns": 1,
-      "thorn_length": 0.006,
-      "thorn_angle": 75,
       "crown_height": 2.6
     }
   },
@@ -40,19 +37,6 @@
   "appearance": {
     "variation": 0.2,
     "organs": {
-      "thorn": {
-        "shape": {
-          "template": "blade",
-          "taper": 1,
-          "aspect": 0.12
-        },
-        "colour": [
-          0.1473,
-          0.0835,
-          0.047
-        ],
-        "form": "thorn"
-      },
       "bloom": {
         "inflorescence": {
           "unit": 0.032
@@ -106,6 +90,12 @@
       100
     ],
     "spines": "prickles",
+    "spine_length_m": {"min": 0.003, "max": 0.004},
+    "spine_curve": "curved",
+    "spine_angle": "declined",
+    "internodal_prickles": "moderate",
+    "prickle_position": "scattered",
+    "spine_colour": [107, 81, 61],
     "leaf_arrangement": "alternate",
     "leaf_division": "compound",
     "division_pattern": "pinnate",
@@ -277,6 +267,36 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\": internodal prickles, not thorns at the nodes."
+    },
+    "traits.spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\"."
+    },
+    "traits.spine_curve": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\": curved, the word FEIS uses (the common name says hooked)."
+    },
+    "traits.internodal_prickles": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\": heavily armed between the nodes, drawn moderate as the scale's middle (inferred)."
+    },
+    "traits.prickle_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\": at the internodes, so scattered, none standing at a node."
+    },
+    "traits.spine_angle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: the prickles' points turn back toward the stem's base (catclaw)."
+    },
+    "traits.spine_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: dark red-brown prickles; the sRGB of the hand thorn colour this replaces."
     },
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",

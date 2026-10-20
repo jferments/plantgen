@@ -6,7 +6,94 @@
     "terminal_bud": false,
     "short_shoots": true
   },
+  "appearance": {
+    "bark_look": {
+      "thickness": {
+        "coefficient": 0.027
+      },
+      "stages": {
+        "twig": {
+          "until_diameter_m": 0.015,
+          "architecture": "stretched",
+          "roughness": 0.35,
+          "lenticels": {
+            "shape": "dash",
+            "length_m": [0.001, 0.003],
+            "width_ratio": 0.3,
+            "per_m2": 3000,
+            "colour": [205, 140, 80],
+            "relief_m": 0.0002
+          }
+        },
+        "young": {
+          "until_diameter_m": 0.06,
+          "architecture": "stretched",
+          "roughness": 0.45,
+          "lenticels": {
+            "shape": "dash",
+            "length_m": [0.002, 0.006],
+            "width_ratio": 0.25,
+            "per_m2": 1500,
+            "colour": [195, 170, 145],
+            "relief_m": 0.0003
+          }
+        },
+        "white": {
+          "until_diameter_m": 0.35,
+          "architecture": "exfoliating",
+          "roughness": 0.55,
+          "bloom": 0.12,
+          "exfoliation": {
+            "mode": "papery_strips",
+            "piece_m": 0.12,
+            "aspect": 5,
+            "cover": 0.2,
+            "curl_m": 0.0015,
+            "inner_colour": [216, 150, 105],
+            "aged": [
+              [226, 192, 166]
+            ]
+          },
+          "lenticels": {
+            "shape": "dash",
+            "length_m": [0.004, 0.01],
+            "width_ratio": 0.12,
+            "per_m2": 250,
+            "colour": [52, 42, 40],
+            "relief_m": 0.0005,
+            "stretch": true,
+            "formed_diameter_m": 0.03
+          }
+        },
+        "black base": {
+          "on": "base",
+          "architecture": "furrowed",
+          "roughness": 0.92,
+          "fissures": {
+            "network": "reticulate",
+            "spacing_m": 0.04,
+            "elongation": 2.5,
+            "width_share": 0.25,
+            "depth_share": 0.8,
+            "profile": "sharp"
+          },
+          "scales": {
+            "size_m": 0.02,
+            "aspect": 1.0,
+            "depth_m": 0.002,
+            "variation": 0.15,
+            "on_ridges": true
+          }
+        }
+      }
+    }
+  },
   "evidence": {
+    "appearance.bark_look.thickness": {"evidence": "SourceInferred", "source": "ffe-fvs-guide", "note": "The genus's bark thickness as its reference species', betula-papyrifera (plantgen-claude project-files/bark/records/betula-papyrifera.json): text: FOFEM 0.027; base of old trunks to 1/2 in (Sargent)"},
+    "appearance.bark_look.stages.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's twig stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): stage: text: twigs dark orange to dull red to 'dark orange-brown, lustrous', 'orange-colored oblong lenticels' (Sargent)"},
+    "appearance.bark_look.stages.young": {"evidence": "SourceInferred", "source": "fna-online", "note": "The genus's young stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): stage: text: 'young trunks and branches dark reddish brown, smooth ... lenticels pale, horizontal' (FNA); until_diameter_m: inferred (photo): white at ~3 y (Wikipedia) or 10-12 y (Silvics)"},
+    "appearance.bark_look.stages.white": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's white stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): exfoliation: text: 'readily exfoliating in paper-thin sheets' (FNA); 'fine horizontal strips' (Wikipedia); inner 'pale orange color when first exposed' (Sargent); sizes inferred; lenticels: text: 'in maturity dark, much expanded, horizontal' (FNA); 'long narrow ... raised' (Sargent); sizes inferred; until_diameter_m: inferred (photo)"},
+    "appearance.bark_look.stages.black base": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's black base stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): stage: text: 'on old trunks for a few feet above the ground ... dull brown or nearly black, sharply and irregularly furrowed and broken on the surface into thick closely appressed scales' (Sargent)"},
     "traits.terminal_bud": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, analytical key to the genera, pp. xxiii-xxiv): 'Terminal buds wanting; branchlets prolonged by an upper axillary bud' leads, with Carpinus and Ostrya, to Betula (p. 205)."},
     "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: Acer, Betula, Corylus, Fagus and rosaceous fruit trees such as Pyrus have a well-developed short-shoot system, whose short shoots fill most of the crown and bear most of its leaves (Wilson's red maple)."}
   }

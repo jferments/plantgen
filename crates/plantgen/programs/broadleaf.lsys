@@ -259,11 +259,22 @@
 # - Where the leader is lost, the stems a fork divides the trunk into hold
 #   fork_set from upright as spreading scaffold limbs, where each was held
 #   upright as a leader of its own.
-# Their draws are the program's last.
+# Their draws are the program's last but the armature's.
+# Revision 27 (bark armature): a thorny species bears its thorns on
+# thorn_share of its long shoots' nodes (a flora's "few to numerous"),
+# one beside each bud where its thorns are shoots (thorn_pair 0: a
+# hawthorn's) rather than a pair, and each runs thorn_spread shorter or
+# longer than thorn_length; a thorn or prickle falls thorn_years after it
+# formed, where its flora says the older stems lose theirs; a long
+# shoot's tip ends its year in a thorn with the chance thorn_tips (a
+# spine-tipped twig: a palo verde's, a hawthorn's terminal thorns), the
+# bud below it carrying the shoot on, turned abort_angle; with every
+# one of these left at its default, a thorny species grows as before. Its
+# rules go last.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 26;
+lsystem broadleaf 27;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -309,6 +320,11 @@ param thorns;                 # 1: a thorn beside each bud
 param thorn_length;
 param thorn_angle;            # angle of a thorn to its shoot
 param thorn_area;             # leaf area of a thorn card 1 m long, m² (the default leaf card's)
+param thorn_share = 1;        # share of a thorny shoot's nodes that bear thorns (bark revision)
+param thorn_pair = 1;         # 1: a pair of thorns beside each bud; 0: one, beside the bud where a shoot thorn stands
+param thorn_spread = 0.2;     # thorns run this share shorter or longer than thorn_length
+param thorn_years = 0;        # years a thorn or prickle stays on its stem; 0: for good
+param thorn_tips = 0;         # chance a year that a long shoot's tip ends in a thorn, its topmost bud carrying it on
 param wind;                   # strength of a steady wind toward +X; 0 none
 param wind_bend;              # extra downwind bending per unit of wind
 param wind_kill;              # a tip heading upwind beyond this dies
@@ -535,13 +551,13 @@ rule A(split) : plagio > 0 && limb > 0 && order >= 2 && vigour >= 1 && space > 0
     Mp(min(floor(vigour), max_shoot) * unit_nodes,
        min(floor(vigour), max_shoot) * unit_nodes,
        internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 1);
-rule A(split) : (tip_abort > 0 || tip_loss > 0) && limb_arch > 0 && limb > 0 && vigour >= 1 && space > 0 ->
+rule A(split) : (tip_abort > 0 || tip_loss > 0 || thorn_tips > 0) && limb_arch > 0 && limb > 0 && vigour >= 1 && space > 0 ->
     incline(min(set_point + limb_arch * limb, limb_set_max), incline_rate)
     steer(sx, sy, sz, steer_weight) Cat(order)
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 0);
-rule A(split) : (tip_abort > 0 || tip_loss > 0) && vigour >= 1 && space > 0 ->
+rule A(split) : (tip_abort > 0 || tip_loss > 0 || thorn_tips > 0) && vigour >= 1 && space > 0 ->
     steer(sx, sy, sz, steer_weight) Cat(order)
     M(min(floor(vigour), max_shoot) * unit_nodes,
       min(floor(vigour), max_shoot) * unit_nodes,
@@ -653,7 +669,7 @@ decompose Bo(n) : bloom_stalk <= 0 -> ;
 
 # Revision 4 (plant forms F5). A thorny species' internodes: as above, with
 # a thorn beside each bud.
-decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || (dormant_buds <= 0 && leaves_per_node < 3))
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && ((thorns > 0 && thorn_share >= 1 && thorn_pair > 0) || (thorns <= 0 && dormant_buds <= 0 && leaves_per_node < 3))
                     && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) incline(set_point, incline_rate) S B ] [ /(180) &(branch_angle) incline(set_point, incline_rate) S B ]
@@ -661,7 +677,7 @@ decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || (dormant_
     [ /(90) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     [ /(270) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u, l);
-decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && (thorns > 0 || dormant_buds <= 0)
+decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && ((thorns > 0 && thorn_share >= 1 && thorn_pair > 0) || (thorns <= 0 && dormant_buds <= 0))
                     && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) incline(set_point, incline_rate) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
@@ -754,14 +770,15 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0 ->
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] leaf(leaf_size, 0, leaf_angle, 1)
     [ /(180) &(dormant_angle) D ]
     /(divergence) M(n - 1, u, l);
-decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || dormant_buds > 0 || leaves_per_node < 3) ->
+decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || dormant_buds > 0 || leaves_per_node < 3)
+                    && (thorns <= 0 || (thorn_share >= 1 && thorn_pair > 0)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
     [ /(90) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     [ /(270) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u, l);
-decompose M(n, u, l) : n > 0 && leaves_per_node < 2 ->
+decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && (thorns <= 0 || (thorn_share >= 1 && thorn_pair > 0)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ &(leaf_angle) $ leaf(leaf_size) ]
     [ /(70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
@@ -874,7 +891,7 @@ decompose Ab(s, p) : tip_abort > 0 && p > 0 && rand() < tip_abort ->
     $ [ +(abort_angle) Af(rand() < abort_fork ? 1 : 0) ] -(abort_angle) A(s);
 decompose Ab(s, p) : tip_abort > 0 && rand() < tip_abort ->
     \(divergence) [ &(abort_angle) Af(rand() < abort_fork ? 1 : 0) ] /(180) &(abort_angle) A(s);
-decompose Ab(s, p) -> A(s);
+decompose Ab(s, p) : thorn_tips <= 0 -> A(s);
 decompose Af(k) : k > 0 -> S A(0);
 decompose Af(k) -> ;
 
@@ -932,3 +949,97 @@ decompose Cb(o) -> ;
 # irregular curves rather than the fine jitter of wiggle.
 decompose Ct(o) : o >= 1 && limb_turn > 0 -> ^(gauss() * limb_turn) +(gauss() * limb_turn);
 decompose Ct(o) -> ;
+
+# Armature (bark revision). A thorny species whose flora says its thorns
+# are few bears them on thorn_share of its nodes, the rest unarmed; one
+# whose thorns are shoots (thorn_pair 0: a hawthorn's, a blackthorn's, a
+# sea buckthorn's, each a short shoot ending in a point) bears one beside
+# each bud, not a pair; each runs thorn_spread shorter or longer than
+# thorn_length, as a flora's range does. The long shoots' nodes first,
+# then those whose buds grow short shoots or wait. These go last, so the
+# draws above keep their sites.
+decompose M(n, u, l) : n > 0 && thorns > 0 && thorn_share < 1 && leaves_per_node >= 2 && leaves_per_node < 3 && rand() >= thorn_share
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) incline(set_point, incline_rate) S B ] [ /(180) &(branch_angle) incline(set_point, incline_rate) S B ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && thorn_share < 1 && leaves_per_node < 2 && rand() >= thorn_share
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) incline(set_point, incline_rate) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && thorn_pair > 0 && leaves_per_node >= 2 && leaves_per_node < 3
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) incline(set_point, incline_rate) S B ] [ /(180) &(branch_angle) incline(set_point, incline_rate) S B ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(90) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    [ /(270) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && thorn_pair > 0 && leaves_per_node < 2
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) incline(set_point, incline_rate) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(70) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && leaves_per_node >= 2 && leaves_per_node < 3
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) incline(set_point, incline_rate) S B ] [ /(180) &(branch_angle) incline(set_point, incline_rate) S B ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(30) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    [ /(210) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && leaves_per_node < 2
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) incline(set_point, incline_rate) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(30) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && thorn_share < 1 && leaves_per_node >= 2 && leaves_per_node < 3 && rand() >= thorn_share ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && thorn_share < 1 && leaves_per_node < 2 && rand() >= thorn_share ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && thorn_pair > 0 && leaves_per_node >= 2 && leaves_per_node < 3 ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(90) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    [ /(270) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && thorn_pair > 0 && leaves_per_node < 2 ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(70) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && leaves_per_node >= 2 && leaves_per_node < 3 ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(30) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    [ /(210) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    /(divergence) M(n - 1, u, l);
+decompose M(n, u, l) : n > 0 && thorns > 0 && leaves_per_node < 2 ->
+    ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(30) &(thorn_angle) thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ]
+    /(divergence) M(n - 1, u, l);
+
+# A thorn or prickle falls thorn_years after it formed, as the older
+# stems of a raspberry or a nightshade lose theirs.
+rule thorn(s) : thorn_years > 0 && age + dt >= thorn_years -> ;
+
+# A long shoot's tip that ends its year in a thorn (thorn_tips): the thorn
+# carries on its line, and the topmost bud below it carries the shoot on,
+# turned abort_angle, as a tip that aborts does.
+decompose Ab(s, p) : thorn_tips > 0 && s <= 0 && rand() < thorn_tips ->
+    [ thorn(thorn_length * uniform(1 - thorn_spread, 1 + thorn_spread)) ] &(abort_angle) A(s);
+decompose Ab(s, p) -> A(s);

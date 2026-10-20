@@ -138,7 +138,14 @@
     "fruitlets_per_fruit": {"min": 20, "max": 80},
     "fruitlet_coherence": "strongly_coherent",
     "fruit_hairs": "glabrous",
-    "fruit_shape": "globose"
+    "fruit_shape": "globose",
+    "spines": "prickles",
+    "spine_length_m": {"min": 0.001, "max": 0.005},
+    "spine_width_m": {"min": 0.0005, "max": 0.002},
+    "spine_curve": "straight",
+    "spine_angle": "erect",
+    "internodal_prickles": "sparse",
+    "aciculi": "none"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -227,7 +234,14 @@
     "traits.fruitlets_per_fruit": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): drupelets 20-80 to a fruit."},
     "traits.fruitlet_coherence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): drupelets strongly coherent, coming away from the torus."},
     "traits.fruit_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): ovaries glabrous."},
-    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): fruit globose to ovoid; drawn globose."}
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): fruit globose to ovoid; drawn globose."},
+    "traits.spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): shrubs usually armed; prickles absent or sparse to dense."},
+    "traits.spine_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): prickles erect, slender, 1-5 mm."},
+    "traits.spine_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: two fifths of the prickle's length at its foot: the flora calls them slender, broad- to narrow-based, but gives no width."},
+    "traits.spine_curve": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): prickles erect, slender: straight."},
+    "traits.spine_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): prickles erect."},
+    "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): prickles absent or sparse to dense: drawn sparse, as the upper stems are often unarmed."},
+    "traits.aciculi": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus spectabilis (eFloras, read 2026-10-19): no bristles described on the stems."}
   },
   "provenance": {
     "sources": [
