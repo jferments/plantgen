@@ -365,7 +365,7 @@
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Stenocereus thurberi: shrubs, branching basal, 3-6[-12+] m; stems erect; the genus: trees or shrubs, erect, arching, or procumbent, mostly branched from base. Its stems are its limbs, erect from its base, so the family's rule fans them out to a vase of columns that hold their angle. Until round 5 they leaned out by hand 25 degrees and turned upright within a metre (bend 0.35), a bundle narrowing upward against photographs of a vase."
     },
     "traits.flowering_months": {
-      "evidence": "SourceStated",
+      "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-20), Stenocereus thurberi: 'Flowering (Mar)Apr-Jul[-Dec]; fruiting mostly Jul-Aug.' The usual months kept, the bracketed range outside the flora area left out. Until 2026-10-20 a model estimate of May to July and July to September."
     },
@@ -375,7 +375,7 @@
       "note": "A model estimate (confidence high, record L2486740), as no source read gives it."
     },
     "traits.fruiting_months": {
-      "evidence": "SourceStated",
+      "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-20), Stenocereus thurberi: 'Flowering (Mar)Apr-Jul[-Dec]; fruiting mostly Jul-Aug.' The usual months kept, the bracketed range outside the flora area left out. Until 2026-10-20 a model estimate of May to July and July to September."
     },
