@@ -1164,7 +1164,7 @@ pub mod venation;
 /// `schlumbergera` (flat joints toothed along their margins). A fruit set
 /// after New Year counts its season from the next year's start
 /// (158 is bramble leaves, #272).
-/// 160: a species' spec states its bark in the bark language
+/// 161: a species' spec states its bark in the bark language
 /// (`appearance.bark_look`, `crate::bark_look`): stages by stem diameter,
 /// keyed by name so a genus states how its bark breaks up and its species
 /// add their colours; eleven reference genera state theirs (Acer, Alnus,
@@ -1189,6 +1189,5 @@ pub mod venation;
 /// flowering plants; an armed herb bears prickles at its leafy nodes
 /// (herb 20: a nightshade's, from Solanaceae's words), and a prickle look
 /// with prickles between the nodes is drawn in the plant's mesh, not as a
-/// part, so exports keep them (159 is cacti of four more genera, #260; the desk
-/// renumbers on landing).
-pub const GENERATOR_REVISION: u32 = 160;
+/// part, so exports keep them (160 is stemless rosettes, #279).
+pub const GENERATOR_REVISION: u32 = 161;
