@@ -105,6 +105,21 @@ pub struct BodyLook {
     /// tubercle and the one above it: a mammillaria's.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub axils: Option<Axils>,
+    /// Share of the skin, 0 to 0.95, that a flora says the spines hide
+    /// ('nearly obscuring the stem'): where the spines as their counts,
+    /// lengths and the areoles' spacing draw them hide less, every set
+    /// but the glochids is drawn that much broader, as a sheath, a flat
+    /// spine or a mass of glinting bristles reads ([`Self::drawn`]). 0
+    /// leaves them as they are.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spine_cover: f64,
+    /// Length, metres, of the hairs standing in a compact erect tuft
+    /// from each areole, as a peyote's 'copiously hairy' areoles carry
+    /// them (Flora of North America's Lophophora: 'the hairs in compact
+    /// erect tufts to 7-10 mm'): drawn as one more set of fine, crinkled
+    /// hairs in the felt's colour ([`Self::drawn`]). 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub areole_hairs: f64,
 }
 
 impl Default for BodyLook {
@@ -125,6 +140,8 @@ impl Default for BodyLook {
             cork: None,
             flecks: None,
             axils: None,
+            spine_cover: 0.0,
+            areole_hairs: 0.0,
         }
     }
 }
@@ -522,6 +539,49 @@ impl BodyLook {
         }
     }
 
+    /// The look as it is drawn: its spine sets broadened to hide the
+    /// share of the skin [`Self::spine_cover`] states, and its areoles'
+    /// erect tufts of hairs ([`Self::areole_hairs`]) added as a last set,
+    /// after the stated ones, so no stated spine's draws change.
+    #[must_use]
+    pub fn drawn(mut self) -> Self {
+        if self.spine_cover > 0.0 && self.areoles.spacing > 0.0 {
+            let spacing = self.areoles.spacing;
+            let width = self
+                .ribs
+                .as_ref()
+                .map_or(spacing, |ribs| ribs.spacing.max(spacing));
+            let factor = spines::cover_factor(&self, spacing * width, self.spine_cover);
+            for set in &mut self.spines {
+                if set.role != Some(SpineRole::Glochid) {
+                    set.width *= factor;
+                }
+            }
+        }
+        if self.areole_hairs > 0.0 && self.spines.len() < MAX_SPINE_SETS {
+            self.spines.push(SpineSet {
+                role: None,
+                count: [40, 60],
+                angle: 80.0,
+                angle_spread: 10.0,
+                aim: 0.0,
+                arc: 360.0,
+                length: self.areole_hairs,
+                length_spread: 0.3,
+                curve: 0.0,
+                hook: 0.0,
+                twist: 0.0,
+                crinkle: 45.0,
+                distal: 0.0,
+                width: 0.0001,
+                flat: 1.0,
+                colour: self.areoles.felt,
+                tip: None,
+            });
+        }
+        self
+    }
+
     /// Colour at the bottom of a valley.
     #[must_use]
     pub fn valley_colour(&self) -> [f32; 3] {
@@ -573,6 +633,8 @@ impl BodyLook {
         within("areoles felt_radius", areoles.felt_radius, 0.0, 0.05)?;
         within("areoles apex_wool", areoles.apex_wool, 0.0, 0.1)?;
         within("areoles margins", areoles.margins, 0.0, 1.0)?;
+        within("spine_cover", self.spine_cover, 0.0, 0.95)?;
+        within("areole_hairs", self.areole_hairs, 0.0, 0.05)?;
         colour_ok("areoles felt", areoles.felt)?;
         if self.spines.len() > MAX_SPINE_SETS {
             return Err(format!(

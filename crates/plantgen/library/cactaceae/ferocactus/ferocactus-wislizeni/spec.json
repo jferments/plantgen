@@ -73,7 +73,6 @@
             "role": "radial",
             "angle": 15,
             "width": 0.0003,
-            "colour": [0.7, 0.68, 0.62],
             "angle_spread": 10,
             "length_spread": 0.3
           },
@@ -83,30 +82,22 @@
             "angle": 35,
             "length": 0.08,
             "width": 0.0018,
-            "colour": [0.45, 0.12, 0.06],
             "angle_spread": 10,
             "length_spread": 0.2,
-            "flat": 0.6,
-            "tip": [0.3, 0.25, 0.2]
+            "flat": 0.6
           },
           {
             "role": "main",
             "count": [1, 1],
             "angle": 30,
             "width": 0.0028,
-            "colour": [0.5, 0.13, 0.06],
             "angle_spread": 8,
             "aim": 180,
             "arc": 0,
             "length_spread": 0.15,
-            "flat": 0.35,
-            "tip": [0.25, 0.08, 0.05]
+            "flat": 0.35
           }
-        ],
-        "greying": {
-          "colour": [0.35, 0.33, 0.3],
-          "years": 25
-        }
+        ]
       }
     }
   },
@@ -120,6 +111,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "central_spine_colour": [145, 114, 94],
+    "spine_colour": [235, 232, 225],
     "fruit_shape": "ovoid",
     "tubercle_relief": "barely",
     "flower_colour": [220, 130, 30],
@@ -143,6 +136,8 @@
     "fruit_width_m": {"min": 0.018, "max": 0.04}
   },
   "evidence": {
+    "traits.central_spine_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus wislizeni: 'Spines 16-25(-29) per areole, central spines and larger radial spines dull pink, gray, or tan; smallest spines per areole white, slender, often bristlelike, less than 1 mm diam., strongly contrasting with central spines'; it says nothing of greying. With three colours named for the centrals, the colour was measured: the median of the non-green pixels inside the spine cover of seven iNaturalist photographs (imagekit batch inat-cacti-2026-10-19, photos 1, 2, 5, 6, 9, 10, 11 in key order), the brighter three quarters of each, then the median of the photos: RGB 145, 114, 94, a grey-brown with a pink cast. Until 2026-10-19 the centrals were a bright red by hand, greying over 25 years."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus wislizeni: 'Spines 16-25(-29) per areole, central spines and larger radial spines dull pink, gray, or tan; smallest spines per areole white, slender, often bristlelike, less than 1 mm diam., strongly contrasting with central spines'; it says nothing of greying. The radial set here is the white bristles; their white by hand from the word."},
     "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: fruit ovoid, yellow, to 5 cm long."},
     "generator.params.sun_tilt": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) p. 195: Ferocactus wislizenii stems lean 17 degrees toward the equator at 33 degrees north."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: barely tuberculate, the ribs with at most a swelling under each areole."},

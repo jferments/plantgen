@@ -838,6 +838,33 @@
       "optional": true,
       "why": "the colour of the wool and bristles in the tubercles' axils, where it differs from the areoles' wool"
     },
+    "spine_cover": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["not_obscuring", "partly_obscuring", "nearly_obscuring", "obscuring"],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "how much of the stem a cactus's spines hide, in a flora's words: the skin plain between them, partly hidden, 'nearly obscuring stem surfaces', or hidden ('obscuring stems')"
+    },
+    "spine_sheath_colour": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "colour",
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "the colour of a cholla's papery spine sheaths, which is what its spines show where they wear them"
+    },
+    "areole_hair_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.05],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "how long the hairs standing in a tuft from each areole are, where the areoles are hairy rather than felted (a peyote's 'hairs in compact erect tufts to 7-10 mm')"
+    },
     "spine_sheaths": {
       "group": "stem_and_bark",
       "organ": "spine",

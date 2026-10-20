@@ -66,7 +66,6 @@
             "role": "radial",
             "angle": 20,
             "width": 0.0005,
-            "colour": [0.75, 0.7, 0.55],
             "angle_spread": 10,
             "length_spread": 0.3
           },
@@ -75,7 +74,6 @@
             "count": [4, 5],
             "angle": 45,
             "width": 0.0009,
-            "colour": [0.55, 0.45, 0.3],
             "angle_spread": 15,
             "arc": 300,
             "length_spread": 0.35,
@@ -86,18 +84,13 @@
             "count": [1, 1],
             "angle": 30,
             "width": 0.0013,
-            "colour": [0.65, 0.6, 0.5],
             "angle_spread": 10,
             "aim": 180,
             "arc": 0,
             "length_spread": 0.25,
             "flat": 0.5
           }
-        ],
-        "greying": {
-          "colour": [0.5, 0.48, 0.45],
-          "years": 10
-        }
+        ]
       }
     }
   },
@@ -117,6 +110,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "central_spines_twisted": {"true": "often"},
+    "spine_colour": [155, 128, 112],
     "stigma_colour": [30, 100, 45],
     "stem_colour": [85, 120, 60],
     "flower_colour": [170, 30, 110],
@@ -142,6 +137,8 @@
     "anther_colour": [235, 200, 50]
   },
   "evidence": {
+    "traits.central_spines_twisted": {"evidence": "SourceInferred", "source": "britton-rose-1919", "note": "Britton and Rose's The Cactaceae (vol. 3, 1922, p. 38): '5 or 6 very stout centrals, curved and twisted, up to 7 cm long'; the Flora of North America (vol. 4, read on eFloras 2026-10-19): spines 'usually straight (curved and twisted in desert mountains and peninsular ranges of California)'. Read as often twisted, with the form's 'usually curved' already stated."},
+    "traits.spine_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocereus engelmannii: 'individual spines with broad zones of different colors: whitish or grayish, dull golden-yellow, or reddish brown to nearly black ... abaxial central spine often fading whitish'. With so many colours named, the colour was measured: the median of the non-green pixels inside the spine cover of eight iNaturalist photographs (imagekit batch inat-cacti-2026-10-19, photos 0, 1, 3, 5, 6, 7, 8, 11 in key order), the brighter three quarters of each, then the median of the photos: RGB 155, 128, 112, a dull tan (the photos ranged from 135, 116, 112 to 183, 177, 166). Until 2026-10-19 the spines were coloured by hand and greyed over 10 years to a light grey, which drew a grown plant's spines white."},
     "traits.stigma_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: stigma deep green; a dark leaf green by hand."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: stems green (the spines extremely variable in colour, so they stay set by hand)."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},

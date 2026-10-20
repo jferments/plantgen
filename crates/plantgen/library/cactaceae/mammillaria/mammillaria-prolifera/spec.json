@@ -127,6 +127,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "spine_cover": "nearly_obscuring",
     "stem_apex": "rounded",
     "tubercle_axils": "woolly_and_bristly",
     "axil_bristle_length_m": {
@@ -239,6 +240,7 @@
     "fruiting_months": [8, 9, 10, 11, 12, 1, 2, 3]
   },
   "evidence": {
+    "traits.spine_cover": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Mammillaria prolifera var. texana, 'hair-covered cactus': 'tubercles 7-10 × 3.4-5 mm; axils mostly bearing sparse white hairs and slender bristles equaling or exceeding tubercle length. Spines 30-50 per areole ... radial spines 25-40 per areole, white to pale yellow, hairlike, 3-12 × 0.01-0.02 mm, soft'; Britton and Rose, The Cactaceae vol. 4 (1923), p. 124, Neomammillaria prolifera: 'axils of tubercles with long, hair-like bristles; radial spines many, hair-like', and Plumier's 'Melocactus minimus, lanuginosus' (woolly). Thirty to fifty hairlike spines up to 12 mm long on tubercles 3.4-5 mm wide, with axillary hairs and bristles, nearly hide the stem, as the plant's name says; the share is the model's reading of the words."},
     "traits.stem_apex": {
       "evidence": "SourceInferred",
       "source": "fna-online",

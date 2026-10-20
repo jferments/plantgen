@@ -878,6 +878,36 @@ pub fn cover(look: &BodyLook, area: f64) -> f64 {
     (hidden / area).clamp(0.0, 0.85)
 }
 
+/// How many times broader `look`'s spines (all but its glochids) must be
+/// drawn to hide `target` of the skin, `area` square metres of it per
+/// areole: 1 where they hide that much already, at most 4. Spines laid
+/// at random over the skin hide `1 - exp(-a / area)` of it, `a` the
+/// area their outlines cover, each spine its length by its width, as
+/// much as it lies along the skin.
+#[must_use]
+pub fn cover_factor(look: &BodyLook, area: f64, target: f64) -> f64 {
+    if area <= 0.0 || target <= 0.0 {
+        return 1.0;
+    }
+    let outline: f64 = look
+        .spines
+        .iter()
+        .filter(|set| set.role != Some(crate::body::SpineRole::Glochid))
+        .map(|set| {
+            let count = f64::from(set.count[0] + set.count[1].max(set.count[0]))
+                * 0.5
+                * mean_thinning(set.distal);
+            let lying = crate::math::cos(crate::math::radians(set.angle)).max(0.2);
+            count * set.length * set.width * lying
+        })
+        .sum();
+    if outline <= 0.0 {
+        return 1.0;
+    }
+    let needed = -crate::math::ln(1.0 - target.min(0.95)) * area;
+    (needed / outline).clamp(1.0, 4.0)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

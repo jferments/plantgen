@@ -221,8 +221,8 @@
       "why": "A cactus's skin is drawn in the colour its flora gives the stem or joints; its ribs' valleys darken it."
     },
     "appearance.bodies.stem.spines.radial.colour": {
-      "colour": "spine_colour",
-      "why": "The radial spines are drawn in the colour the flora gives the spines."
+      "colour": ["spine_sheath_colour", "spine_colour"],
+      "why": "The radial spines are drawn in the colour the flora gives the spines; a cholla's, in the colour of the papery sheaths they wear, where it gives one."
     },
     "appearance.bodies.stem.spines.central.colour": {
       "colour": ["central_spine_colour", "spine_colour"],
@@ -278,8 +278,8 @@
       "why": "An areole bears as many central spines as its flora counts. Where one central stands apart as the main one, the others are set by hand, so the two sets together make the count."
     },
     "appearance.bodies.stem.spines.central.length": {
-      "rule": "max(central_spine_length_m) / 1.25",
-      "why": "As for the radials: the longest central stands about a quarter above the set's length."
+      "rule": "first(max(central_spine_length_m), max(radial_spine_length_m)) / 1.25",
+      "why": "As for the radials: the longest central stands about a quarter above the set's length. A flora that gives the centrals no length of its own (FNA's Echinocactus polycephalus: 'central spines 4, abaxial frequently longest') leaves them no shorter than the radials, so they are drawn as long."
     },
     "appearance.bodies.stem.flecks.share": {
       "map": {"stem_flecks": {"sparse": 0.12, "numerous": 0.3, "covering": 0.85}},
@@ -306,8 +306,8 @@
       "why": "A hooked principal central turns back at its tip as a fishhook does, 120° to 180° (Anderson's Ferocactus wislizeni and Cochemiea), drawn at the middle of that span."
     },
     "appearance.bodies.stem.spines.main.length": {
-      "rule": "max(central_spine_length_m) / 1.25",
-      "why": "The main central is the longest a flora gives, about a quarter above its set's length."
+      "rule": "first(max(central_spine_length_m), max(radial_spine_length_m)) / 1.25",
+      "why": "The main central is the longest a flora gives, about a quarter above its set's length; without a central length, as long as the radials."
     },
     "generator.params.radius_height": {
       "map": {"stem_form": {"globose": {"rule": "stem_diameter_max_m / 3"}}},
@@ -340,6 +340,22 @@
       "needs": ["tepal_width_m", "tepal_length_m"],
       "rule": "clamp(tepal_width_m / tepal_length_m, 0.08, 1)",
       "why": "A cactus's inner tepals are as broad for their length as its flora measures them ('inner tepals 37-75 x (8-)14-25 mm', Flora of North America's Echinocereus engelmannii), drawn among as many tepals as the flower bears."
+    },
+    "appearance.bodies.stem.spine_cover": {
+      "map": {"spine_cover": {"not_obscuring": 0, "partly_obscuring": 0.5, "nearly_obscuring": 0.85, "obscuring": 0.95}},
+      "why": "How much of the stem a flora says the spines hide ('nearly obscuring stem surfaces', 'nearly completely obscuring stem'): where the spines its counts and lengths give, at its areoles' spacing, would hide less, they are drawn broader until they hide that much, as sheaths, flattened spines and masses of fine bristles read broader than a needle in a photograph. The shares are the model's reading of the words."
+    },
+    "appearance.bodies.stem.areole_hairs": {
+      "rule": "max(areole_hair_length_m) / 1.25",
+      "why": "A hairy areole's erect tuft (FNA's Lophophora: 'areoles ... copiously hairy, the hairs in compact erect tufts to 7-10 mm'), drawn about as long as its grown hairs, in the felt's colour."
+    },
+    "appearance.bodies.stem.spines.central.crinkle": {
+      "map": {"central_spines_twisted": {"true": 20, "false": 0}},
+      "why": "A round central that floras call twisted (Britton and Rose's Echinocereus engelmannii, centrals 'curved and twisted') shows it as a spine that wanders from its line, each its own way, as well as by its ribbon's turn on a flattened one; drawn as a fifth of a hairlike spine's wander."
+    },
+    "appearance.bodies.stem.spines.main.crinkle": {
+      "map": {"central_spines_twisted": {"true": 20, "false": 0}},
+      "why": "The main central wanders as the other centrals do."
     }
   },
   "evidence": {

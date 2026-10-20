@@ -73,28 +73,20 @@
             "angle": 25,
             "length": 0.035,
             "width": 0.0008,
-            "colour": [0.55, 0.15, 0.08],
             "angle_spread": 12,
             "length_spread": 0.3,
-            "flat": 0.7,
-            "tip": [0.6, 0.5, 0.25]
+            "flat": 0.7
           },
           {
             "role": "central",
             "count": [4, 7],
             "angle": 40,
             "width": 0.0016,
-            "colour": [0.6, 0.18, 0.08],
             "angle_spread": 15,
             "length_spread": 0.3,
-            "flat": 0.5,
-            "tip": [0.7, 0.6, 0.3]
+            "flat": 0.5
           }
-        ],
-        "greying": {
-          "colour": [0.4, 0.38, 0.34],
-          "years": 20
-        }
+        ]
       }
     }
   },
@@ -108,6 +100,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "spine_colour": [162, 129, 113],
     "tubercle_relief": "low",
     "areole_wool_colour": [175, 145, 100],
     "flower_colour": [225, 185, 40],
@@ -131,6 +124,7 @@
     "stigma_colour": [230, 200, 50]
   },
   "evidence": {
+    "traits.spine_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus cylindraceus (the name it gives this plant): 'central spines and larger radial spines whitish, yellow, pink, dull red, or brown; smallest spines per areole slender, sometimes bristlelike'; it says nothing of their greying. With five colours named, the colour was measured: the median of the non-green pixels inside the spine cover of thirteen iNaturalist photographs filed as Ferocactus cylindraceus (imagekit batch inat-cacti-2026-10-19, photos 2, 3, 5-12, 17-19 in key order), the brighter three quarters of each, then the median of the photos: RGB 162, 129, 113, a dull red-brown seen with the skin between (the red plants read 145-165, 89-116, 81-125, the straw ones 131-177, 125-156, 105-147). Until 2026-10-19 the spines were coloured by hand a bright red greying over 20 years, which drew an old plant's spines grey."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 328 to 329, Ferocactus cylindraceus: tuberculate, the ribs sometimes undulate with transverse creases."},
     "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 118 to 121: a very thick tannish mat of wool over the apex (Anderson p. 328 gives the spines white, red, yellow or brown, too variable to state one colour)."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 328 to 329, as Ferocactus cylindraceus (F. acanthodes is its synonym): flowers funnelform, yellow, sometimes tinged red, 4 to 6 cm across; fruit globose, yellow, fleshy, to 3 cm long (typical a little short of it, by hand)."},
