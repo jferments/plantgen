@@ -1,0 +1,380 @@
+{
+  "schema": 1,
+  "id": "muhlenbergia-porteri",
+  "taxon": {
+    "scientific_name": "Muhlenbergia porteri",
+    "common_name": "bush muhly",
+    "family": "Poaceae",
+    "genus": "Muhlenbergia",
+    "plant_name_id": 425206
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "params": {
+      "tillers": 50,
+      "tiller_rate": 0.45,
+      "tussock_radius": 0.12,
+      "tiller_lean": 35,
+      "leaves": 3,
+      "leaf_spread": 0.3,
+      "leaf_angle": 40,
+      "arch": 4,
+      "pieces": 4,
+      "flowering": 0.5,
+      "culm_radius": 0.0008,
+      "culm_leaves": 3,
+      "culm_lean": 35,
+      "panicle_nod": 10
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.3,
+      0.2
+    ],
+    "foliage": [
+      0.14,
+      0.17,
+      0.1
+    ],
+    "foliage_shade": [
+      0.042,
+      0.051,
+      0.03
+    ],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "template": "blade",
+          "taper": 1
+        }
+      },
+      "thatch": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        },
+        "colour": [
+          0.1473,
+          0.1065,
+          0.0509
+        ],
+        "shade": [
+          0.1344,
+          0.1152,
+          0.08
+        ]
+      },
+      "panicle": {
+        "shape": {
+          "template": "spikelet"
+        },
+        "inflorescence": {
+          "branches": 10,
+          "per_node": 2,
+          "size": 0.45,
+          "spread": 60,
+          "taper": 0.3,
+          "peduncle": 0.05,
+          "stalk": [
+            0.1329,
+            0.0732,
+            0.0835
+          ],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 4,
+            "pedicel": 0.3,
+            "peduncle": 0.3,
+            "size": 0.118,
+            "spread": 40
+          }
+        },
+        "colour": [
+          0.2623,
+          0.0802,
+          0.1878
+        ],
+        "accent": [
+          0.5,
+          0.35,
+          0.4
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "semi",
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.8
+    },
+    "height_max_m": 1,
+    "culm_length_m": {
+      "min": 0.3,
+      "max": 1.0
+    },
+    "rhizome_habit": "none",
+    "clonal": false,
+    "leaf_habit": "deciduous",
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_width_m": 0.001,
+    "inflorescence": "panicle",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "florets_per_spikelet": 1,
+    "glumes": 2,
+    "upper_glume_length_m": 0.002,
+    "lemma_length_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "spikelet_length_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "awns": true,
+    "awn_length_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "awn_insertion": "apical",
+    "fruit_type": "caryopsis",
+    "flowering_months": [
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      9,
+      10,
+      11
+    ],
+    "culm_branching": "much_branched"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 18973867, 4706451, 192934618, 184760982, 19983391, 111591905, 184599582, 253321042): a wiry, much-branched mound of thin culms, woody at the base, few tiny blades, and airy, widely spreading pinkish-purple panicles. The panicle's colour is set by hand (Hitchcock (1935) p. 380, 381: lemma purple; pinkish purple in the photos; sRGB 140, 80, 120 by eye), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: perennial; culms woody or persistent at base."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: culms woody or persistent at base, numerous, wiry."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: culms 30 to 100 cm tall or more, widely spreading or ascending through bushes; most 30 cm to 80 cm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Muhlenbergia porteri: plants reach up to 3 feet (1 m) in height and are often highly branched."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: culms 30 to 100 cm tall or more, mostly branching from all the nodes."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Muhlenbergia porteri: a drought-resistant, native perennial bunchgrass."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Muhlenbergia porteri: a bunchgrass; regenerates by seed."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: blades early deciduous from the sheaths."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: blades mostly about 1 mm wide, flat, 2 to 5 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: blades mostly about 1 mm wide."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: panicle 5 to 10 cm long, open, the slender branches and branchlets brittle, widely spreading."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Airy panicles held up at the culm tips, set by hand from iNaturalist photos (observations 18973867, 4706451, 192934618, 184760982, 19983391, 111591905, 184599582, 253321042): the sources read give no count or measure."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: panicle 5 to 10 cm long."
+    },
+    "traits.florets_per_spikelet": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: one floret to a spikelet, as in every Muhlenbergia."
+    },
+    "traits.glumes": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: glumes narrow, acuminate, slightly unequal, the second about 2 mm long."
+    },
+    "traits.upper_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: the second glume about 2 mm long."
+    },
+    "traits.lemma_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: lemma purple, acuminate, sparsely pubescent, 3 to 4 mm long."
+    },
+    "traits.spikelet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: lemma 3 to 4 mm long, longer than the glumes: the spikelet as long."
+    },
+    "traits.awns": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: lemma with a delicate awn about 5 to 8 mm long."
+    },
+    "traits.awn_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 380, 381, Muhlenbergia porteri: a delicate awn about 5 to 8 mm long."
+    },
+    "traits.awn_insertion": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the awn leaves the lemma's acuminate tip."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a grain (caryopsis), as in every grass."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (1942) p. 119, Muhlenbergia porteri: mesas and rocky slopes, 1,800 to 5,000 feet, August to October. FEIS (northern Chihuahuan Desert, New Mexico): flowers April-May."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: grains ripe September to November."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for bush muhly from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.6 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.culm_branching": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), Muhlenbergia porteri: culms woody or persistent at base, numerous, wiry, widely spreading or ascending through bushes, mostly branching from all the nodes; FEIS: often highly branched."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

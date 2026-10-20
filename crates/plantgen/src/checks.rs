@@ -2748,14 +2748,16 @@ fn unit_sizes(
             }
             // A head's fruit are its cypselae, ripe once most of its
             // florets are in seed (a head's phase is its drawn opening
-            // where its organ has none).
+            // where its organ has none). A cypsela is an achene from an
+            // inferior ovary, and many floras call it an achene, so it
+            // reads as either.
             let ripe = match phase {
                 None => head.open >= 1.5,
                 Some(_) => in_stage(phase, Stage::Ripe),
             };
             if ripe {
                 tally.add("fruit_size_m", organ, part, length * d.cypsela);
-                tally.kind("fruit_type", "cypsela");
+                tally.kind("fruit_type", "cypsela|achene");
             }
         }
         Shape::Spikelet(spikelet) if in_stage(phase, Stage::Open) => {
@@ -2841,7 +2843,9 @@ fn unit_sizes(
 /// wing a samara, or the pair of them a maple's schizocarp splits into;
 /// a nut in a cup or a husk a nut; a pod a legume or another pod; a
 /// ribbed fruit a capsule, a follicle or a schizocarp of ribbed mericarps;
-/// a cactus fruit with scales or areoles on its skin a berry.
+/// a cactus fruit with scales or areoles on its skin a berry; a head of
+/// follicles an aggregate, or the follicles a flora names it by (Abrams
+/// gives Caltha's fruit as follicles); a spindle of samaras an aggregate.
 fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
     use crate::looks::FruitKind;
     match kind {
@@ -2855,7 +2859,8 @@ fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
         FruitKind::Pod => "legume|pod",
         FruitKind::Capsule => "capsule|follicle|schizocarp",
         FruitKind::Scaly | FruitKind::Areolate | FruitKind::Spiny | FruitKind::Woolly => "berry",
-        FruitKind::Follicles | FruitKind::Samaras => "aggregate",
+        FruitKind::Follicles => "aggregate|follicle",
+        FruitKind::Samaras => "aggregate",
         FruitKind::Berries => "berry|aggregate",
         FruitKind::Achenes => "aggregate|achene",
     }

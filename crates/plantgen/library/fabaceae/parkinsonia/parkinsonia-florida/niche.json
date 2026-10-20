@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "parkinsonia-florida",
+  "layers": {
+    "subcanopy": 0.3
+  },
+  "moisture": [
+    0.02,
+    0.12,
+    0.75,
+    0.85
+  ],
+  "heat_load": [
+    0.3,
+    0.6,
+    1.7,
+    2.1
+  ],
+  "elevation_m": [
+    -50,
+    0,
+    1220,
+    1450
+  ],
+  "max_slope_deg": 30,
+  "shade_tolerance": 0.25,
+  "coldest_c": [
+    4,
+    7,
+    22,
+    25
+  ],
+  "hard_freeze_c": [
+    -11,
+    -7,
+    10,
+    14
+  ],
+  "warmest_c": [
+    26,
+    28,
+    38,
+    41
+  ],
+  "degree_days_0": [
+    4500,
+    5800,
+    12500,
+    13500
+  ],
+  "degree_days_5": [
+    3000,
+    4000,
+    10500,
+    11500
+  ],
+  "moisture_index": [
+    0.01,
+    0.03,
+    0.3,
+    0.4
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.8,
+    0.9
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A small tree along washes and on lower bajadas; on the upper bajada it keeps to the washes, above the shrubs."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Washes and flood plains where runoff gathers; less often on open uplands."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sea level to about 1,220 m (FEIS; Kearney and Peebles: 3,500 feet or lower)."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Wash banks, flood plains and gentle bajadas."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A tree of open washes; seedlings start under nurse shrubs."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 7 to 22 °C; gone below 4 °C and above 25 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −7 °C borne, gone where the year's coldest night falls below about −11 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 28 to 38 °C; gone below 26 °C, where summers are too short, and above 41 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 5,800 to 12,500 degree-days above 0 °C, none below 4,500."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 4,000 to 10,500 degree-days above 5 °C, none below 3,000."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.03, gone by 0.01."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: it grows where winter rain falls alone (the Mojave and the low Colorado Desert) as well as where the July to September monsoon brings summer rain, as on the bajada (about half the year's); up to about 0.8 of the year's precipitation in summer, gone by 0.9."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA Forest Service Fire Effects Information System (FEIS): species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m) from general knowledge of the species, the ranges and elevations in Kearney and Peebles (1942) and, where one exists, the FEIS species review. Blue palo verde grows in central and southwestern Arizona, southeastern California, Sonora and Baja California, a desert wash tree from sea level to about 1,220 m (FEIS). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

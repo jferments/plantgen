@@ -570,3 +570,82 @@ fn levels_drawn_to_a_byte_budget_fit_it_together() {
     let index: Value = serde_json::from_slice(&exported.index).unwrap();
     assert_eq!(index["budget"]["fits"], false);
 }
+
+/// A two-stage bark record: smooth, then furrowed past 5 mm.
+const BARK: &str = r#"{
+    "schema": 1,
+    "id": "test",
+    "thickness": {"coefficient": 0.063},
+    "stages": [
+        {"name": "smooth", "until_diameter_m": 0.005, "architecture": "stretched",
+         "colour": [120, 110, 100]},
+        {"name": "furrowed", "architecture": "furrowed", "colour": [80, 60, 50],
+         "fissures": {"network": "interlacing", "spacing_m": 0.03, "elongation": 4,
+                      "width_share": 0.3, "depth_share": 0.8, "profile": "flat_topped"}}
+    ]
+}"#;
+
+#[test]
+fn bark_draws_as_a_baked_material_per_stage() {
+    let inputs = Inputs::new(&small_spec(), &TINY).unwrap();
+    let plant = export::grow(&inputs, 0, 8.0).unwrap();
+    let look = plantgen::bark_look::BarkLook::from_json(BARK).unwrap();
+    for compression in [Compression::None, Compression::Quantize] {
+        let settings = Settings {
+            compression,
+            bark: Some(export::BarkExport {
+                look: Box::leak(Box::new(look.clone())),
+                texels: 32,
+                period_m: 0.1,
+            }),
+            ..Settings::default()
+        };
+        let exported = export::export(&inputs, &plant, &settings, None).unwrap();
+        let nearest = &exported.levels[0].glb;
+        gltf::check(nearest).unwrap();
+        let glb = Glb::read(nearest).unwrap();
+        let wood = mesh(&glb, "wood").unwrap();
+        let materials = glb.json["materials"].as_array().unwrap();
+        let mut stages = Vec::new();
+        for primitive in wood["primitives"].as_array().unwrap() {
+            let material =
+                &materials[usize::try_from(primitive["material"].as_u64().unwrap()).unwrap()];
+            let name = material["name"].as_str().unwrap();
+            if let Some(stage) = name.strip_prefix("bark ") {
+                stages.push(stage.to_string());
+                assert!(primitive["attributes"].get("TANGENT").is_some());
+                assert!(material.get("normalTexture").is_some());
+            }
+        }
+        stages.sort();
+        // Each stage, and the steps of the blend between them.
+        assert_eq!(
+            stages,
+            [
+                "furrowed",
+                "furrowed 1/4 over smooth",
+                "furrowed 2/4 over smooth",
+                "furrowed 3/4 over smooth",
+                "smooth"
+            ],
+            "{compression:?}"
+        );
+        // Without a look, the wood is as it was: one plain primitive.
+        let plain = export::export(
+            &inputs,
+            &plant,
+            &Settings {
+                compression,
+                ..Settings::default()
+            },
+            None,
+        )
+        .unwrap();
+        let plain = Glb::read(&plain.levels[0].glb).unwrap();
+        let primitives = mesh(&plain, "wood").unwrap()["primitives"]
+            .as_array()
+            .unwrap()
+            .len();
+        assert_eq!(primitives, 1);
+    }
+}

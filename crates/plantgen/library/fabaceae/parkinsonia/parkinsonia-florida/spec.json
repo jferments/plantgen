@@ -1,0 +1,443 @@
+{
+  "schema": 1,
+  "id": "parkinsonia-florida",
+  "taxon": {
+    "scientific_name": "Parkinsonia florida",
+    "common_name": "blue palo verde",
+    "family": "Fabaceae",
+    "genus": "Parkinsonia",
+    "plant_name_id": 2531022
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_base": 0.5,
+      "branch_angle": 45,
+      "lean": 10,
+      "fork_height": 0.4,
+      "fork_stems": 4,
+      "fork_angle": 35,
+      "thorns": 1,
+      "thorn_length": 0.01,
+      "thorn_angle": 50,
+      "space_kill": 0.3,
+      "space_reach": 1.2,
+      "light_cell": 0.25,
+      "internode": 0.2,
+      "crown_height": 5.0,
+      "spur_leaf": 0.074,
+      "leaf_size": 0.084,
+      "crown_radius": 1.8
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [
+      5,
+      20,
+      40
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "leaflet_width": 0.6,
+          "petiole": 0.2,
+          "angle": 22,
+          "pinnule_angle": 60
+        }
+      },
+      "thorn": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.12
+        },
+        "colour": [
+          0.1706,
+          0.2633,
+          0.1329
+        ],
+        "form": "thorn"
+      },
+      "bloom": {
+        "colour": [
+          0.9551,
+          0.6739,
+          0.01
+        ]
+      }
+    },
+    "foliage": [
+      0.1065,
+      0.1789,
+      0.055
+    ],
+    "foliage_shade": [
+      0.0373,
+      0.0751,
+      0.0303
+    ],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.05,
+      "variation": 0.12,
+      "smooth_below": 0.0
+    }
+  },
+  "allometry": [
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 5.0,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 4,
+      "max": 6
+    },
+    "height_max_m": {
+      "min": 8,
+      "max": 10
+    },
+    "stem_diameter_max_m": 0.5,
+    "crown_width_max_m": {
+      "min": 4,
+      "max": 5
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "drought_deciduous",
+    "rosette": "none",
+    "bark_texture": "smooth",
+    "bark_colour": [
+      130,
+      160,
+      125
+    ],
+    "spines": "thorns",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "pinnae": 2,
+    "leaflets": {
+      "min": 4,
+      "max": 6,
+      "low": 2
+    },
+    "terminal_leaflet": false,
+    "leaflet_length_m": {
+      "min": 0.004,
+      "max": 0.008
+    },
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.03
+    },
+    "leaf_shape": "oblong",
+    "leaf_margin": "entire",
+    "inflorescence": "corymb",
+    "inflorescence_length_m": {
+      "min": 0.04,
+      "max": 0.12
+    },
+    "flower_colour": [
+      250,
+      215,
+      30
+    ],
+    "flower_merosity": 5,
+    "stamens": 10,
+    "fruit_type": "legume",
+    "fruit_size_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "fruit_width_m": 0.01,
+    "flowering_months": [
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      5,
+      6,
+      7
+    ],
+    "leaf_out_months": [
+      7,
+      8,
+      9
+    ],
+    "elevation_min_m": 0,
+    "elevation_max_m": 1220,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry",
+      "xeric"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: small tree 4-6 m. high."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"Blue paloverde grows to 32.8 feet (10 m) tall\"; Kearney and Peebles (1942, p. 426) give the genus up to about 8 m."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"with a trunk diameter of 1.5 feet (0.5 m)\"."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"a crown spread of 163.4 square feet (15.2 sq m)\": a round crown about 4.4 m across."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"a native, spiny, small tree or subtree\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"a native, spiny, small tree or subtree\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"Its pinnately compound leaves are about 1 inch (2.5 cm) long and drought-deciduous\"; \"remains leafless throughout most of the year\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: a small tree with leafy branchlets, no rosette."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: bark smooth, pale grey-green."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 426), Cercidium floridum: young bark bluish green (FEIS: \"thin-barked, photosynthetic stems\"); sRGB by eye from the photos."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: branches with short simple spines; Kearney and Peebles (1942, p. 427): rudimentary branchlets become spines."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves alternate (or clustered at the nodes), as in the genus."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 426), Cercidium floridum: leaves evidently bipinnate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 426), Cercidium floridum: leaves evidently bipinnate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 426), Cercidium floridum: bipinnate: divided twice."
+    },
+    "traits.pinnae": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: primary rachis 1-2 cm. long, with 2 pinnae."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: leaflets mostly 2 or 3 pairs on each pinna; Kearney and Peebles (1942, p. 426) give 1-3 pairs, kept as the low."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: leaflets in pairs, even-pinnate."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 426), Cercidium floridum: leaflets 4-8 mm long (Abrams 1944 p. 480: 4-7 mm)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"pinnately compound leaves are about 1 inch (2.5 cm) long\"."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: leaflets oblong-oblanceolate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaflets entire, as in the genus."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 479, Cercidium: flowers in short corymbose clusters."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"Inflorescences of blue paloverde are 1.5 to 4.7 inches (4-12 cm) long\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 426), Cercidium floridum: flowers bright yellow, all the petals alike; sRGB by eye from the photos."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 479, Cercidium: petals 5, yellow."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 479, Cercidium: stamens 10."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"The fruits are flat legumes\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"flat legumes, 1.5 to 4 inches (4-10 cm) long\"."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 480, Cercidium floridum: pods flat, about 1 cm. wide."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"flowers sporadically after rains from late March to May\"; Kearney and Peebles (1942, p. 426): April and May."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"Fruits mature about 1 month after flowering, typically from May to July\"."
+    },
+    "traits.leaf_out_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"Leaves are produced between mid-July and late November, depending on the summer rains\"."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"found at elevations from sea level to 4,000 feet (0-1,220 m)\"."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"found at elevations from sea level to 4,000 feet (0-1,220 m)\"; Kearney and Peebles (1942, p. 426): 3,500 feet or lower."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Parkinsonia florida (Pavek 1994): \"a major component in creosotebush ... and white bursage ... climax communities on lower bajadas\": open desert scrub."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 426), Cercidium floridum: along washes and on flood plains, where runoff gathers in the desert."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low-branched, multi-stemmed tree with smooth blue-green bark on trunk and twigs, a sparse spreading crown of tiny leaflets, smothered in bright yellow flowers in spring. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for blue palo verde from its sources and the photos the traits cite, on the template of foothill palo verde (parkinsonia-microphylla); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "5.0 m tall at 40 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

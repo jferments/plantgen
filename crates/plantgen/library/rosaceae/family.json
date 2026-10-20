@@ -41,10 +41,6 @@
     "fruit_type": {"aggregate": "often", "pome": "sometimes", "achene": "sometimes", "drupe": "sometimes", "follicle": "rarely", "capsule": "rarely"}
   },
   "rules": {
-    "generator.params.thorns": {
-      "map": {"spines": {"none": 0, "thorns": 1, "prickles": 1}},
-      "why": "An armed tree or shrub of the family carries its prickles or thorns at the nodes, beside each bud: a rose's below its stipules, a bramble's on its canes, a hawthorn's thorns in the leaf axils."
-    },
     "appearance.organs.*.shape.blade_width": {
       "template": "compound",
       "rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 3), clamp(1.7 * leaflet_length_m / leaf_length_m, 0.2, 1.5))",
@@ -85,10 +81,6 @@
     "generator.params.leaf_base": {
       "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
       "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures; its basal leaves are drawn apart."
-    },
-    "generator.params.thorn_length": {
-      "rule": "spine_length_m",
-      "why": "A prickle or thorn is drawn as long as its flora measures it."
     }
   },
   "forms": {

@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "ambrosia-deltoidea",
+  "layers": {
+    "shrub": 0.9
+  },
+  "moisture": [
+    0,
+    0.1,
+    0.55,
+    0.7
+  ],
+  "heat_load": [
+    0.3,
+    0.6,
+    1.6,
+    2.0
+  ],
+  "elevation_m": [
+    0,
+    250,
+    950,
+    1200
+  ],
+  "max_slope_deg": 35,
+  "shade_tolerance": 0.3,
+  "coldest_c": [
+    4,
+    7,
+    20,
+    24
+  ],
+  "hard_freeze_c": [
+    -12,
+    -8,
+    8,
+    12
+  ],
+  "warmest_c": [
+    25,
+    28,
+    35,
+    38
+  ],
+  "degree_days_0": [
+    4500,
+    5800,
+    11000,
+    12500
+  ],
+  "degree_days_5": [
+    3000,
+    4000,
+    9000,
+    10500
+  ],
+  "moisture_index": [
+    0.03,
+    0.06,
+    0.3,
+    0.4
+  ],
+  "summer_rain": [
+    0.1,
+    0.2,
+    0.75,
+    0.85
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The dominant low shrub of the Arizona Upland bajadas, often in nearly pure stands between the palo verdes and saguaros."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dry, gravelly bajada and pediment soils over caliche."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect; often on the cooler north slopes, and the principal nurse plant for saguaro."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 300 to 900 m (FEIS; Kearney and Peebles: 1,000 to 2,800 feet)."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Bajadas, pediments and gentle rocky slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A plant of open spaces; seedlings establish in the open."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 7 to 20 °C; gone below 4 °C and above 24 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −8 °C borne, gone where the year's coldest night falls below about −12 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 28 to 35 °C; gone below 25 °C, where summers are too short, and above 38 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 5,800 to 11,000 degree-days above 0 °C, none below 4,500."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 4,000 to 9,000 degree-days above 5 °C, none below 3,000."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.06, gone by 0.03."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Needs the summer monsoon: from about 0.2 of the year's precipitation falling in the July to September storms, gone below 0.1, where winter rain falls alone; the bajada gets about half its rain then. Up to about 0.75, gone by 0.85."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA Forest Service Fire Effects Information System (FEIS): species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m) from general knowledge of the species, the ranges and elevations in Kearney and Peebles (1942) and, where one exists, the FEIS species review. Triangle-leaf bursage grows in the Sonoran Desert of south-central and southwestern Arizona, Sonora and Baja California, a dominant of the Arizona Upland with bimodal rain of 100 to 300 mm (FEIS). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

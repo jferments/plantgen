@@ -38,7 +38,6 @@
       "pipe_rings": 6e-06,
       "light_cell": 0.25,
       "space_reach": 1.2,
-      "thorns": 1,
       "thorn_length": 0.03,
       "thorn_angle": 50,
       "blooms": 3,
@@ -117,6 +116,7 @@
     "life_span": "perennial",
     "leaf_habit": "drought_deciduous",
     "spines": "thorns",
+    "thorn_position": "terminal",
     "leaflet_length_m": {"min": 0.001, "max": 0.002, "high": 0.003},
     "leaf_shape": "elliptic",
     "leaf_length_m": {"min": 0.01, "max": 0.03},
@@ -205,6 +205,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaf drawn as a twice-divided compound leaf (spec rework P4): its one pair of pinnae and their leaflets counted from its characters by the rules at the flowering plants; before, a fern's frond stood in for it. By eye from photographs: the pinnae forking narrowly, about 22 degrees either side; the leaflets ovate and blunt, about 0.6 as wide as long."
+    },
+    "traits.thorn_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 479), as Cercidium microphyllum: branchlets spine-tipped but without side spines, so its thorns tip its twigs and none stand beside its buds."
     },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",

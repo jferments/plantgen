@@ -61,6 +61,16 @@
     "seeds": [1]
   },
   "appearance": {
+    "bark_look": {
+      "stages": {
+        "cane": {
+          "colour": [112, 50, 40]
+        },
+        "old wood": {
+          "colour": [130, 125, 118]
+        }
+      }
+    },
     "bark": [0.35, 0.15, 0.1],
     "foliage": [0.07, 0.15, 0.04],
     "foliage_shade": [0.022, 0.045, 0.012],
@@ -122,7 +132,14 @@
     "leaf_length_m": {"min": 0.05, "max": 0.12},
     "leaf_width_m": {"min": 0.03, "max": 0.07},
     "sexual_system": "hermaphrodite",
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "spines": "prickles",
+    "spine_length_m": {"min": 0.003, "max": 0.015, "low": 0.002, "high": 0.02},
+    "spine_width_m": {"min": 0.002, "max": 0.01, "high": 0.015},
+    "spine_curve": {"straight": "often", "curved": "often", "hooked": "sometimes"},
+    "spine_angle": "erect",
+    "internodal_prickles": "sparse",
+    "aciculi": "sparse"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -197,7 +214,14 @@
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2972067), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2972067), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2972067), as no source read gives it."},
-    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.351)."}
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.351)."},
+    "traits.spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rosa nutkana (eFloras, read 2026-10-19): prickles below the stipules 0-2, stout; smaller ones between the nodes, usually sparse or absent."},
+    "traits.spine_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rosa nutkana (eFloras, read 2026-10-19): prickles below the stipules (2-)3-15(-20) mm long."},
+    "traits.spine_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rosa nutkana (eFloras, read 2026-10-19): prickles below the stipules (2-)3-15(-20) x 2-10(-15) mm, often flattened, sometimes deltoid."},
+    "traits.spine_curve": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rosa nutkana (eFloras, read 2026-10-19): prickles below the stipules erect, curved, or hooked; on the fertile branches usually curved or hooked in subsp. nutkana, erect in subsp. macdougalii."},
+    "traits.spine_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rosa nutkana (eFloras, read 2026-10-19): prickles erect, curved, or hooked: standing square to the stem."},
+    "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rosa nutkana (eFloras, read 2026-10-19): internodal prickles usually sparse or absent, smaller."},
+    "traits.aciculi": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rosa nutkana (eFloras, read 2026-10-19): internodal prickles mixed with aciculi, sometimes absent."}
   },
   "provenance": {
     "sources": [

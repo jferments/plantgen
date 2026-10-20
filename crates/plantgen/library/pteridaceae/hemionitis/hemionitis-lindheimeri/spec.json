@@ -1,0 +1,281 @@
+{
+  "schema": 1,
+  "id": "hemionitis-lindheimeri",
+  "taxon": {
+    "scientific_name": "Hemionitis lindheimeri",
+    "common_name": "fairy swords",
+    "family": "Pteridaceae",
+    "genus": "Hemionitis",
+    "plant_name_id": 3218683
+  },
+  "growth_form": "fern",
+  "generator": {
+    "params": {
+      "frond_seed": 0.2,
+      "size_years": 2,
+      "open_years": 0.5,
+      "angle_spread": 12,
+      "frond_radius": 0.0008,
+      "pinna_angle": 55,
+      "pinna_lift": 10,
+      "season": 0.5,
+      "emerge_spread": 0.3,
+      "unroll": 0.3,
+      "droop_years": 1,
+      "crown_age": 3
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      8
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.24,
+      0.27,
+      0.19
+    ],
+    "foliage_shade": [
+      0.0768,
+      0.0864,
+      0.0608
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.15,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.07,
+      "max": 0.3
+    },
+    "height_max_m": 0.3,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "evergreen",
+    "reproduction": "spores",
+    "perennation": "rhizome",
+    "rhizome_habit": "long_creeping",
+    "clonal": true,
+    "leaf_posture": "erect",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.15
+    },
+    "petiole_length_m": {
+      "min": 0.03,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 4,
+    "leaf_shape": "lanceolate",
+    "leaf_colour": [
+      150,
+      155,
+      130
+    ],
+    "stipe_colour": [
+      60,
+      40,
+      30
+    ],
+    "stipe_scales": "sparse",
+    "sorus_position": "marginal",
+    "indusium": "margin"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: leaves scattered, 7-30 cm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: leaves 7-30 cm."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: stems long-creeping, 0.7-3 mm diam."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: a fern."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: the fronds stay on through the year, curling in drought and opening after rain, as lip ferns' do."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: sori more or less continuous around segment margins; sporangia containing 32 spores."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: stems long-creeping, scaly."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: stems long-creeping; Hoshizaki and Moran (2001 p. 242): rhizome long-creeping."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: stems long-creeping, the leaves scattered along them."
+    },
+    "traits.leaf_posture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fronds stiffly erect, set by hand from iNaturalist photos (observations 268301191, 265729568, 18735718, 323773489, 270922834, 91883660, 262074746, 35026541): the sources read give no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades 4 cm to 15 cm long, a little over half the 7-30 cm leaf (FNA), as in the photos."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fern-growers-manual",
+      "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 242, Cheilanthes lindheimeri: the habit drawing shows a long hairy stipe longer than the blade; 3 cm to 15 cm drawn."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: blade oblong-lanceolate to ovate-deltate, 4-pinnate at base, 2-5 cm wide."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: blade 4-pinnate at base."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: blade 4-pinnate at base; pinnae not articulate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: blade 4-pinnate at base."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: blade oblong-lanceolate to ovate-deltate; the photos show the narrower outline."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: the adaxial blade surface appears to be densely gray tomentose, an illusion of the curly cilia of the costal scales; grey-green in the photos; sRGB by eye."
+    },
+    "traits.stipe_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: petiole usually dark brown, rounded adaxially; sRGB by eye."
+    },
+    "traits.stipe_scales": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: stem scales often deciduous on older portions; rachis with scattered linear-lanceolate scales and sparse pubescence."
+    },
+    "traits.sorus_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: sori more or less continuous around segment margins."
+    },
+    "traits.indusium": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Cheilanthes lindheimeri: false indusia marginal, weakly differentiated, 0.05-0.25 mm wide."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for fairy swords against the template, a small lip fern of dry rock: fronds rising one by one along a long-creeping rhizome (the subclass's rules for rhizome_habit), slender stipes, pinnae angled up (pinna_angle 55). Not fitted to measurements."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 268301191, 265729568, 18735718, 323773489, 270922834, 91883660, 262074746, 35026541): erect, narrow, finely divided fronds that look grey and woolly, on dark stalks scattered along a creeping rhizome among rocks."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.15 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

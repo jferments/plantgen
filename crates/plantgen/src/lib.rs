@@ -25,6 +25,7 @@
 //! ([`math`]).
 
 pub mod bark;
+pub mod bark_look;
 pub mod bend;
 pub mod blooms;
 pub mod body;
@@ -68,6 +69,7 @@ pub mod organs;
 pub mod package;
 pub mod parts;
 pub mod preview;
+pub mod prickles;
 pub mod quality;
 pub mod raster;
 pub mod rng;
@@ -1162,7 +1164,45 @@ pub mod venation;
 /// `schlumbergera` (flat joints toothed along their margins). A fruit set
 /// after New Year counts its season from the next year's start
 /// (158 is bramble leaves, #272).
-/// 160: cacti round 5, from a photo check. A joint that sprouts no
+/// 160: stemless rosettes (rosette revision 4). A basal rosette (an
+/// agave's, an aloe's, a hechtia's) keeps its crown on the ground: the
+/// stem below its living leaves goes with the leaves that fell, a pup's
+/// runner drops to the ground as its parent's stem goes, and the short
+/// stem the living leaves stand on is drawn inside their bases
+/// (`stemless`, from `rosette`) (159 is cacti of four more genera, #260).
+/// 161: a species' spec states its bark in the bark language
+/// (`appearance.bark_look`, `crate::bark_look`): stages by stem diameter,
+/// keyed by name so a genus states how its bark breaks up and its species
+/// add their colours; eleven reference genera state theirs (Acer, Alnus,
+/// Arbutus, Betula, Pinus, Populus, Prunus, Pseudotsuga, Quercus, Rosa,
+/// Thuja), and every other species with a bark pattern draws a look made
+/// from it; a species may instead describe its bark in a flora's words
+/// (`bark_architecture`, `fissure_network`, `exfoliation`,
+/// `lenticel_shape`, `old_bark_on` and the rest), which rules at phylum
+/// Tracheophyta turn into its young, grown and old stages; an old stage
+/// shows up from the trunk's base, or on limbs' undersides, where stated,
+/// and each stage gives way to the next in mixed steps;
+/// `plantc export --bark-look spec` bakes it; and a thorn or prickle
+/// stands on its stem's surface, a prickle as a flattened cone curving
+/// back as its flora says (`spine_curve`, `spine_angle`, `spine_width_m`)
+/// with more between the nodes (`internodal_prickles`, `aciculi`) or
+/// only there (`prickle_position`), and
+/// a shoot's thorns stand alone where they are shoots (`thorn_origin`),
+/// on as many nodes as its flora says (`thorn_frequency`), as long as its
+/// range runs, falling from older stems where it says so
+/// (`thorn_persistence`), and tipping its twigs where they are terminal
+/// (`thorn_position`: a palo verde's; broadleaf 27), by rules for all
+/// flowering plants; an armed herb bears prickles at its leafy nodes
+/// (herb 20: a nightshade's, from Solanaceae's words), and a prickle look
+/// with prickles between the nodes is drawn in the plant's mesh, not as a
+/// part, so exports keep them (160 is stemless rosettes, #279).
+/// 162: a rosette succulent's flowers are single flowers on its flowering
+/// stalk, not clusters of their own (`inflorescence` from
+/// `inflorescence_length_m`); a lycophyte's program has bud defaults;
+/// grass 9: culms branch where floras say they do (`culm_branching`)
+/// (58 species for the Rainier and Saguaro scenes, #255; 161 is
+/// bark and armature, #280).
+/// 163: cacti round 5, from a photo check. A joint that sprouts no
 /// daughters flowers every year (column 7, cactaceae 13: a beavertail
 /// clump flowers again) and a club joint's daughter turns toward upright
 /// (`joint_rise`: chollas no longer coil); a flat joint's areoles may keep
@@ -1173,5 +1213,5 @@ pub mod venation;
 /// bark. Barrels widen from youth (`radius_height`), cacti sink as deep
 /// as `stem_buried` says, clumps take `basal_stems` and lean as their
 /// `limb_angle` words, ribs are spaced for the usual count, tepals take
-/// their stated width (159 is cacti of four more genera, #260).
-pub const GENERATOR_REVISION: u32 = 160;
+/// their stated width.
+pub const GENERATOR_REVISION: u32 = 163;

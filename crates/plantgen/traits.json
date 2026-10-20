@@ -358,6 +358,14 @@
       "type": "bool",
       "why": "whether it spreads by its own shoots, runners or roots"
     },
+    "culm_branching": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["simple", "branched", "much_branched"],
+      "optional": true,
+      "why": "whether a grass's flowering culms branch above the base as floras word it: unbranched, branching at some nodes, or branching from most nodes into a bushy, tangled mound (bush muhly, big galleta)"
+    },
     "stem_clump": {
       "group": "form",
       "organ": "plant",
@@ -565,9 +573,359 @@
       "group": "stem_and_bark",
       "organ": "bark",
       "type": "colour",
-      "when": {"bark_texture": ["peeling"]},
+      "when": {"bark_texture": ["peeling", "fibrous"]},
       "optional": true,
-      "why": "the colour a peeling bark shows where its outer layer has come away: a tree fuchsia's pale green under its orange-brown flakes, a madrone's green"
+      "why": "the colour a peeling or fibrous bark shows where its outer layer has come away: a redcedar's red-brown between its strips, a tree fuchsia's pale green under its orange-brown flakes, a madrone's green"
+    },
+    "bark_architecture": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["stretched", "exfoliating", "furrowed", "peeling"],
+      "optional": true,
+      "why": "how a grown stem's bark grows (Shtein et al. 2023): stretched (keeps whole and smooth as the stem widens: beech, aspen), exfoliating (keeps whole but sheds thin pieces: madrone, birch), furrowed (splits into fissures and ridges: oaks, Douglas fir) or peeling (fissured, with outer pieces coming away: redcedar, ponderosa's plates); where unstated, from its fissures and pieces"
+    },
+    "fissure_network": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["longitudinal", "interlacing", "reticulate", "tessellated"],
+      "optional": true,
+      "why": "how a grown bark's fissures run, in the floras' words: longitudinal (parallel furrows, 'fissured', 'seamed'), interlacing ('anastomosing', 'braided', 'ridges connected by cross ridges'), reticulate ('diamond'), tessellated ('checkered', 'cross-checked', 'blocky', 'plated')"
+    },
+    "fissure_depth": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["shallow", "moderate", "deep"],
+      "optional": true,
+      "why": "how far a grown bark's fissures cut into it: 'shallowly' (0.1 to 0.3 of its thickness), moderately, 'deeply' (0.6 to 0.9)"
+    },
+    "fissure_width": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["narrow", "moderate", "wide"],
+      "optional": true,
+      "why": "how wide a grown bark's fissures are beside its ridges: 'narrow' or 'fissured' (ridges three or more times as wide), 'furrowed', or 'wide furrows'"
+    },
+    "ridge_profile": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["rounded", "flat_topped", "sharp"],
+      "optional": true,
+      "why": "the cross-section of a grown bark's ridges or plates: rounded, 'flat-topped' or 'flat', 'sharp'"
+    },
+    "ridge_spacing_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.003, 0.5],
+      "optional": true,
+      "why": "ridge centre to ridge centre round a grown stem's bark, or a plate's width"
+    },
+    "plate_aspect": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0.5, 40],
+      "optional": true,
+      "why": "a grown bark's ridge or plate, its length along the stem over its width: near 1 for square plates, 5 and more for long ridges"
+    },
+    "fissure_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the floor of a grown bark's fissures, often redder or darker than its surface: Douglas fir's 'red-brown within'"
+    },
+    "ridge_top_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the weathered tops of a grown bark's ridges or plates, where they differ from its surface"
+    },
+    "bark_scale_size_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.002, 0.075],
+      "optional": true,
+      "why": "the width of the scales a 'scaly' bark is made of (at most 7.5 cm, Junikka 1994; 'lepidote' about 1 cm or less)"
+    },
+    "exfoliation": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["papery_strips", "fibrous_strips", "flakes", "patches"],
+      "optional": true,
+      "why": "how a grown bark's outer layer comes away: 'papery' strips round the stem (birch, cherry), 'fibrous', 'stringy' or 'shreddy' strips up it (cedars), thin 'flakes', or pieces leaving 'patches' of fresh bark (madrone, plane)"
+    },
+    "exfoliation_piece_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.005, 10],
+      "optional": true,
+      "why": "the long side of a strip, flake or patch of bark that comes away"
+    },
+    "exfoliation_cover": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "share",
+      "range": [0, 1],
+      "optional": true,
+      "why": "the share of a grown bark's surface where its outer layer has come away"
+    },
+    "lenticel_shape": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["dot", "dash", "diamond"],
+      "optional": true,
+      "why": "the shape of the lenticels on a smooth bark: dots, dashes ('oblong', 'long narrow') or diamonds"
+    },
+    "lenticel_orientation": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["horizontal", "vertical"],
+      "optional": true,
+      "why": "which way a smooth bark's lenticels are long: 'horizontal' (round the stem: cherries, birches) or 'longitudinal'"
+    },
+    "lenticel_length_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0003, 0.05],
+      "optional": true,
+      "why": "a lenticel's long side on a smooth bark ('minute': about 1 mm or less)"
+    },
+    "lenticel_width_ratio": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0.05, 1],
+      "optional": true,
+      "why": "a lenticel's width over its length: 'oblong' 0.2 to 0.5, 'long narrow' 0.15 or less, a dot 1"
+    },
+    "lenticel_density": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["sparse", "scattered", "dense"],
+      "optional": true,
+      "why": "how many lenticels a smooth bark shows: 'sparse' or 'inconspicuous', scattered, or 'dense' ('lenticellate' throughout)"
+    },
+    "lenticel_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the lenticels on a smooth bark, where they differ from it ('conspicuous' ones contrast)"
+    },
+    "bark_gloss": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["glossy", "satiny", "matte"],
+      "optional": true,
+      "why": "how a bark's surface shines: 'lustrous', 'shiny' or 'polished', a 'satin sheen', or 'dull'"
+    },
+    "bark_bloom": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["powdery"],
+      "optional": true,
+      "why": "a 'chalky', 'powdery', 'pruinose' or 'glaucous' bloom on a bark, whitening it (aspen)"
+    },
+    "bark_mottling": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["faint", "blotched"],
+      "optional": true,
+      "why": "patches of a different shade on a bark: faintly 'mottled', or 'blotched' (alder, madrone)"
+    },
+    "bark_smooth_until_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.005, 2],
+      "optional": true,
+      "why": "the stem diameter where a bark stops being young and smooth and takes on its grown look ('smooth until 30 cm', 'little broken until 12 to 14 inches')"
+    },
+    "bark_thickness_share": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "share",
+      "range": [0.005, 0.15],
+      "optional": true,
+      "why": "a bark's thickness over its stem's diameter, the fire models' single bark thickness coefficient (FOFEM: Douglas fir 0.063, bigleaf maple 0.024)"
+    },
+    "exfoliation_aspect": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "ratio",
+      "range": [1, 200],
+      "optional": true,
+      "why": "a strip, flake or patch of bark that comes away, its long side over its short: 3 to 10 for papery strips round the stem, 20 to 200 for fibrous strips up it (bark glossary, inferred)"
+    },
+    "lenticel_stretch": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a smooth bark's lenticels widen round the stem as it grows ('much expanded' in maturity: cherries, birches)"
+    },
+    "young_bark_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "a young stem's smooth bark, before it takes on its grown look, where its colour differs from the grown bark's: a Douglas fir's grey before its brown furrows"
+    },
+    "bark_thickness_max_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.6],
+      "optional": true,
+      "why": "the thickest a bark grows, on the oldest trunks ('rarely more than 1/4 inch', 'to 30 cm')"
+    },
+    "bark_inner_colour_weathered": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour freshly bared bark weathers to before it takes the surface's: a madrone's green 'soon weathering to dark red'"
+    },
+    "lenticel_rows": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a smooth bark's lenticels stand in rows round the stem (cherries)"
+    },
+    "bark_mottle_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of a mottled bark's patches, where floras give one: an alder's whitish lichen patches, an aspen's grey"
+    },
+    "old_bark_from_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.02, 5],
+      "optional": true,
+      "why": "the stem diameter where a bark takes on its old look ('on old trunks', 'at the base of large trees'): its grown look ends there"
+    },
+    "old_bark_on": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["all", "base", "underside"],
+      "optional": true,
+      "why": "where an old bark shows first: all over, at the 'base' of the trunk (birch's black base, aspen's), or on the 'abaxial sides of larger lateral axes' (madrone)"
+    },
+    "old_bark_height_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.1, 30],
+      "optional": true,
+      "why": "how far up the trunk an old bark at the base climbs ('to 2 m')"
+    },
+    "old_bark_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "an old bark's surface, where it differs from the grown bark's"
+    },
+    "old_fissure_network": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["longitudinal", "interlacing", "reticulate", "tessellated"],
+      "optional": true,
+      "why": "how an old bark's fissures run, in the words of fissure_network"
+    },
+    "old_fissure_depth": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["shallow", "moderate", "deep"],
+      "optional": true,
+      "why": "how far an old bark's fissures cut into it, in the words of fissure_depth"
+    },
+    "old_fissure_width": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["narrow", "moderate", "wide"],
+      "optional": true,
+      "why": "how wide an old bark's fissures are, in the words of fissure_width"
+    },
+    "old_ridge_profile": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "enum",
+      "values": ["rounded", "flat_topped", "sharp"],
+      "optional": true,
+      "why": "an old bark's ridge or plate cross-section"
+    },
+    "old_ridge_spacing_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.003, 0.5],
+      "optional": true,
+      "why": "ridge centre to ridge centre on an old bark"
+    },
+    "old_plate_aspect": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0.5, 40],
+      "optional": true,
+      "why": "an old bark's ridge or plate, its length over its width"
+    },
+    "old_fissure_colour": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "colour",
+      "optional": true,
+      "why": "the floor of an old bark's fissures"
+    },
+    "old_bark_scale_size_m": {
+      "group": "stem_and_bark",
+      "organ": "bark",
+      "type": "number",
+      "unit": "m",
+      "range": [0.002, 0.075],
+      "optional": true,
+      "why": "the scales of a scaly old bark"
     },
     "twig_colour": {
       "group": "stem_and_bark",
@@ -915,8 +1273,98 @@
       "group": "stem_and_bark",
       "organ": "spine",
       "type": "colour",
-      "when": {"spines": ["areoles"]},
-      "why": "a grown spine's colour before it greys"
+      "when": {"spines": ["areoles", "thorns", "prickles"]},
+      "why": "a grown spine's colour before it greys: a cactus's spines, or a thorn's or prickle's"
+    },
+    "spine_length_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "the length of a thorn or prickle on the woody stems, base to tip, as floras measure it (a rose's prickles below the stipules, a hawthorn's thorns on its twigs)"
+    },
+    "spine_width_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.05],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "the width of a thorn's or prickle's foot along the stem, as floras give it after the length (a dog rose's prickles 6-7 x 4-9 mm: 4 to 9 mm); a broad-based prickle is nearly as wide as long, a subulate one a fraction of it"
+    },
+    "spine_curve": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["straight", "curved", "hooked"],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "how a thorn or prickle bends from its foot to its tip, back toward the stem's base: straight (a flora's erect, subulate or needle-like prickle), curved, or hooked, its tip turned back nearly square to where it began"
+    },
+    "spine_angle": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["ascending", "erect", "declined"],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "the angle a thorn or prickle leaves the stem at: ascending, leaning toward the shoot's tip; erect, standing square to the stem; or declined (retrorse), leaning back toward its base"
+    },
+    "internodal_prickles": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["none", "sparse", "moderate", "dense"],
+      "when": {"spines": ["prickles"]},
+      "why": "how thickly prickles stand on the stem between its nodes, besides the ones at the nodes (a rose's infrastipular prickles): none, sparse, moderate or dense, as floras say it"
+    },
+    "aciculi": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["none", "sparse", "dense"],
+      "when": {"spines": ["prickles"]},
+      "why": "needle-like prickles and stiff bristles mixed in among the prickles (a rose's aciculi, a raspberry's bristles): none, sparse, or dense, covering the stem's skin"
+    },
+    "prickle_position": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["infrastipular", "scattered", "both"],
+      "when": {"spines": ["prickles"]},
+      "why": "where a stem's prickles stand: at the nodes, below the stipules (a rose's infrastipular prickles, often paired); scattered between the nodes and not at them (a catclaw's, \"distributed along branches at the internodes\"); or both"
+    },
+    "thorn_origin": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["shoot", "axillary", "stipular"],
+      "when": {"spines": ["thorns"]},
+      "why": "what a thorn is: a shoot ending in a point, terminal or lateral and sometimes leafy (a hawthorn's, a blackthorn's: FNA's indeterminate thorns); a leafless thorn in a leaf's axil (FNA's determinate thorns, a citrus's); or a pair of spines in a leaf's stipules' place at the node (a black locust's, a mesquite's)"
+    },
+    "thorn_persistence": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["young_stems", "few_years", "persistent"],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "how long a stem keeps its thorns or prickles: only while young (a flora's prickly young stems and petioles, older stems unarmed), a few years (FNA: a hawthorn's thorns persist a few years), or for good (a honey locust's trunk thorns)"
+    },
+    "thorn_position": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["lateral", "terminal", "both"],
+      "when": {"spines": ["thorns"]},
+      "why": "where a shoot bears its thorns: beside its buds (lateral), at its own tip, the twig ending in a thorn (terminal: a palo verde's spine-tipped branchlets, a hawthorn's indeterminate thorns), or both"
+    },
+    "thorn_frequency": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["few", "numerous", "every_node"],
+      "when": {"spines": ["thorns", "prickles"]},
+      "why": "how many of a shoot's nodes bear their thorns or paired prickles, as floras say it: few, numerous (FNA's \"few to numerous\" for a hawthorn's twigs), or one at every node (a rose's infrastipular prickles, a locust's stipular spines)"
     },
     "spine_length_m": {
       "group": "size",

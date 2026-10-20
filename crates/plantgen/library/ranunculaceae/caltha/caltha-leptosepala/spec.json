@@ -1,0 +1,336 @@
+{
+  "schema": 1,
+  "id": "caltha-leptosepala",
+  "taxon": {
+    "scientific_name": "Caltha leptosepala",
+    "common_name": "white marsh marigold",
+    "family": "Ranunculaceae",
+    "genus": "Caltha",
+    "plant_name_id": 2693825
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.08,
+      "stem_lean": 12,
+      "nodes": 1,
+      "bare": 0.75,
+      "scape": 0,
+      "basal_leaves": 7,
+      "basal_angle": 50,
+      "raceme": 0.15,
+      "flowers": 2,
+      "flower_angle": 25,
+      "pedicel": 0.04,
+      "leaf_length": 0.025,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_peak": 0.5
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "petiole": 0.55
+        }
+      }
+    },
+    "foliage": [
+      0.12,
+      0.27,
+      0.09
+    ],
+    "foliage_shade": [
+      0.038,
+      0.086,
+      0.029
+    ]
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.22,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.3
+    },
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "basal",
+    "cauline_leaves": "reduced",
+    "leaf_shape": "cordate",
+    "leaf_margin": "crenate",
+    "leaf_hairs": "glabrous",
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.03,
+      "max": 0.11
+    },
+    "petiole_length_m": {
+      "min": 0.04,
+      "max": 0.15
+    },
+    "inflorescence": "cyme",
+    "perianth": "spiral",
+    "perianth_parts": {
+      "min": 6,
+      "max": 12
+    },
+    "tepal_length_m": {
+      "min": 0.0085,
+      "max": 0.023
+    },
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.04
+    },
+    "flower_colour": [
+      248,
+      248,
+      240
+    ],
+    "anther_colour": [
+      240,
+      205,
+      50
+    ],
+    "fruit_type": "follicle",
+    "fruitlets": "follicles",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "flowering_months": [
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ],
+    "leaf_apex": "rounded",
+    "carpels": {
+      "min": 4,
+      "max": 15
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: flowering scapes 5 cm to 30 cm high, as in the photos."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: glabrous succulent perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 175, Caltha: fleshy perennial herbs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leaves die back each winter under the snow."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: the stems scapose, the leaves from the base."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: stems scapose and 1-flowered or bearing a solitary leaf or bract at the node."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: leaves cordate, varying from oblong-ovate to ovate-orbicular, longer than broad."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: repand-dentate to coarsely crenate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: glabrous."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades 3 cm to 10 cm long; Abrams (1944 p. 175) gives the related C. biflora's blades 5-8 cm broad."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Caltha leptosepala: \"blade oblong-ovate to orbiculate-reniform, largest 1.5-11.5(-15) × 1-13cm\"; the Coast Range and Washington plants have \"broader-than-long leaves with large, overlapping basal lobes\" (leaf L:W 0.4-1.5), so as wide as long or wider."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 4 cm to 15 cm long, as in the photos; Abrams (1944 p. 175) calls C. biflora's long-petioled."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: the stems 1-flowered or usually 2-flowered; drawn as a two-flowered cyme."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 175, Caltha: sepals petaloid, large, deciduous; petals none: drawn as one loose series of tepals."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: sepals 6-12."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Caltha leptosepala: \"sepals white to yellow (abaxially bluish), 8.5-23 mm\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Caltha leptosepala: \"Flowers 15-40 mm diam.\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: sepals white, varying from oblong-obovate to oblong-linear; sRGB by eye from the photos."
+    },
+    "traits.anther_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Stamens a yellow boss; sRGB by eye, set by hand from iNaturalist photos (observations 234971859, 173262810, 870944, 59545751, 9328, 368257400, 366410234, 13780174): the sources read give no count or measure."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 175, Caltha: fruit follicles, dehiscent on the ventral suture."
+    },
+    "traits.fruitlets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 175, Caltha: carpels several to many: a head of follicles."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Caltha leptosepala: follicle \"bodies 10-20 × 3-4.5 mm\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 176, Caltha leptosepala: June-July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: follicles ripe in August and September."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low tuft of glossy, heart-shaped, scalloped leaves on long stalks, with leafless stalks each bearing one or two white, many-sepalled flowers with yellow centres. The basal leaves' petiole share is set by hand from the leaf and petiole lengths the traits give, as no rule sets a rosette leaf's."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for white marsh marigold from its sources and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). The rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.22 m tall at 3 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Caltha leptosepala: blade \"oblong-ovate to orbiculate-reniform\": the tip rounded, not pointed."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (eFloras, read 2026-10-19), Caltha leptosepala: \"Follicles 4-15, spreading\"."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (Paradise, 2026-10-19): sizes and forms from Abrams (vols. 2 to 4) and the Range Plant Handbook where it treats the species, counts and colours from iNaturalist photos."
+  }
+}

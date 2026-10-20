@@ -1,0 +1,377 @@
+{
+  "schema": 1,
+  "id": "sphaeralcea-ambigua",
+  "taxon": {
+    "scientific_name": "Sphaeralcea ambigua",
+    "common_name": "desert globemallow",
+    "family": "Malvaceae",
+    "genus": "Sphaeralcea",
+    "plant_name_id": 2601950
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 25,
+      "clump_radius": 0.2,
+      "stem_lean": 18,
+      "nodes": 10,
+      "basal_leaves": 0,
+      "bare": 0.1,
+      "leaf_peak": 0.3,
+      "leaf_top": 0.8,
+      "leaf_base": 0.85,
+      "leaf_angle": 50,
+      "raceme": 0.45,
+      "flowers": 14,
+      "pedicel": 0.01,
+      "flower_angle": 45,
+      "fruit_below": 0.2,
+      "buds_above": 1,
+      "nod": 0,
+      "leaf_length": 0.05,
+      "stem_height": 0.72
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {},
+    "foliage": [
+      0.1706,
+      0.214,
+      0.1193
+    ],
+    "foliage_shade": [
+      0.0597,
+      0.0899,
+      0.0656
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.8,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1
+    },
+    "height_max_m": 1.2,
+    "life_span": "perennial",
+    "woodiness": "semi",
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_incision": "lobed",
+    "leaf_lobes": 3,
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.03
+    },
+    "leaf_shape": {
+      "ovate": "often",
+      "orbicular": "often"
+    },
+    "leaf_margin": "crenate",
+    "leaf_hairs": "tomentose",
+    "hair_branching": "stellate",
+    "hair_colour": [
+      225,
+      220,
+      195
+    ],
+    "inflorescence": "panicle",
+    "flower_size_m": {
+      "min": 0.03,
+      "max": 0.05
+    },
+    "petal_length_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "flower_colour": [
+      240,
+      110,
+      40
+    ],
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "cupped",
+    "sepal_length_m": {
+      "min": 0.006,
+      "max": 0.02
+    },
+    "fruit_type": "schizocarp",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.012
+    },
+    "flowering_months": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      4,
+      5,
+      6
+    ],
+    "elevation_max_m": 910,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry",
+      "xeric"
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: numerous erect stems 6-10 dm. high from a woody crown."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: stems rarely over 1.2 m."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: suffrutescent, from a woody crown: a perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 568), Sphaeralcea ambigua: stems woody below; suffrutescent (Abrams 1951 p. 88)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: numerous leafy erect stems: no rosette."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves alternate, as in the family."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: leaves broadly ovate to orbicular, shallowly 3-lobed: simple."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: leaves shallowly 3-lobed; Kearney and Peebles (1942, p. 566): blades semiorbicular, shallowly lobed."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: shallowly 3-lobed."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades 2 cm to 5 cm long; the length in Abrams (1951 p. 88) is unreadable in the copy read."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: blades about as wide as long, 2 cm to 5 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 1 cm to 3 cm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: leaves broadly ovate to orbicular, cordate at base."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: leaves crenate."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: white or yellowish canescent throughout."
+    },
+    "traits.hair_branching": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 86, Sphaeralcea: herbage stellate-pubescent, as in the genus."
+    },
+    "traits.hair_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: white or yellowish canescent; sRGB by eye from the photos (a pale grey-green felt)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: inflorescence an open panicle; Kearney and Peebles (1942, p. 567): open panicle."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Open flowers 3 cm to 5 cm across (petals 1.5-3.5 cm long in Abrams 1951 p. 88), set by hand from iNaturalist photos (observations 262643371, 151962086, 18433679, 5422347, 336885570, 260315388, 151654134, 114013056): the sources read give no count or measure."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 569), Sphaeralcea ambigua: petals up to 3 cm long (Abrams 1951 p. 88: 15-35 mm)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 569), Sphaeralcea ambigua: petals apricot or grenadine (var. rosacea mauve); sRGB by eye from the photos (apricot orange)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 86, Sphaeralcea: petals 5."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 86, Sphaeralcea: regular flowers."
+    },
+    "traits.corolla_shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Petals forming a shallow open cup, set by hand from iNaturalist photos (observations 262643371, 151962086, 18433679, 5422347, 336885570, 260315388, 151654134, 114013056): the sources read give no count or measure."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: calyx 6-20 mm. long."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 86, Sphaeralcea: fruit of several one-seeded carpels, separating at maturity: a schizocarp."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 88, Sphaeralcea ambigua: fruit 6-12 mm. wide."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 569), Sphaeralcea ambigua: 3,000 feet or lower, February to May (Abrams 1951 p. 88: April to July)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fruits ripe from April to June."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 569), Sphaeralcea ambigua: 3,000 feet or lower: about 910 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 569), Sphaeralcea ambigua: dry plains and slopes, in the open."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 569), Sphaeralcea ambigua: dry plains, mesas and slopes."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a mound of many erect, grey-felted stems from a woody base, pale grey-green shallowly three-lobed leaves, and open sprays of cupped apricot-orange flowers. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for desert globemallow from its sources and the photos the traits cite, on the template of Cooley's hedge-nettle (stachys-chamissonis); the rest of its growth comes from the library's rules for the form. Not fitted to measurements. The panicle's length is drawn by the hand-set raceme share (0.45 of the stem) and its 14 flowers each on its own stalk; the unsourced inflorescence_length_m estimate (15-40 cm) was removed 2026-10-19, as the herb rule then drew each of the 14 flowers as a whole panicle 27 cm across. Kearney and Peebles (1942, p. 569): \"The inflorescence is typically an open, long-branched panicle\"."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.8 m tall at 4 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

@@ -1,0 +1,385 @@
+{
+  "schema": 1,
+  "id": "zinnia-acerosa",
+  "taxon": {
+    "scientific_name": "Zinnia acerosa",
+    "common_name": "desert zinnia",
+    "family": "Asteraceae",
+    "genus": "Zinnia",
+    "plant_name_id": 3124679
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 14,
+      "branch_angle": 45,
+      "leaf_years": 2
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      2,
+      5,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "bloom": {
+        "shape": {
+          "template": "head"
+        }
+      }
+    },
+    "bark": [
+      0.1706,
+      0.1706,
+      0.1329
+    ],
+    "foliage": [
+      0.2,
+      0.28,
+      0.15
+    ],
+    "foliage_shade": [
+      0.064,
+      0.0896,
+      0.048
+    ]
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.12,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.08,
+      "max": 0.16
+    },
+    "height_max_m": 0.22,
+    "life_span": "perennial",
+    "woodiness": "semi",
+    "rosette": "none",
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.008,
+      "max": 0.02
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "petiole_length_m": 0,
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrescent",
+    "leaf_division": "simple",
+    "inflorescence": "solitary",
+    "peduncle_length_m": {
+      "min": 0.005,
+      "max": 0.035
+    },
+    "capitulum_kind": "radiate",
+    "involucre_height_m": {
+      "min": 0.003,
+      "max": 0.005
+    },
+    "involucre_diameter_m": {
+      "min": 0.005,
+      "max": 0.007
+    },
+    "phyllary_series": {
+      "min": 3,
+      "max": 4
+    },
+    "ray_florets": {
+      "min": 4,
+      "max": 7
+    },
+    "ray_length_m": {
+      "min": 0.007,
+      "max": 0.01
+    },
+    "ray_width_m": {
+      "min": 0.004,
+      "max": 0.007
+    },
+    "ray_apex": "rounded",
+    "ray_colour": [
+      246,
+      244,
+      234
+    ],
+    "disc_colour": [
+      232,
+      182,
+      40
+    ],
+    "disc_florets": {
+      "min": 8,
+      "max": 13
+    },
+    "pappus": "awns",
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.0024,
+      "max": 0.004
+    },
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: subshrubs, to 16 cm (rounded or flat-topped); 8 cm to 16 cm drawn."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 71 (eFloras, read 2026-10-19), Zinnia (genus): key to species: subshrubs, to 22 cm (the perennial zinnias); the species itself to 16 cm."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: subshrubs."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: subshrubs, stems much branched: woody at the base only."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: leaves along much-branched stems; FNA genus: leaves cauline."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves persist through the year, the little mounds green to grey-green in winter photos."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 71 (eFloras, read 2026-10-19), Zinnia (genus): leaves cauline; opposite or subopposite; sessile."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: leaf blades 1-nerved, linear to acerose, 8-20 x 1-2 mm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: leaf blades 8-20 x 1-2 mm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 71 (eFloras, read 2026-10-19), Zinnia (genus): leaves sessile."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: leaf blades linear to acerose."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 71 (eFloras, read 2026-10-19), Zinnia (genus): margins entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: leaf blades scabrous to glabrescent."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 71 (eFloras, read 2026-10-19), Zinnia (genus): blades acerose to ovate, margins entire."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 71 (eFloras, read 2026-10-19), Zinnia (genus): heads usually radiate, borne singly."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: peduncles 5-35 mm."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 71 (eFloras, read 2026-10-19), Zinnia (genus): heads usually radiate."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: involucres campanulate, 3-5 x 5-7 mm."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: involucres campanulate, 3-5 x 5-7 mm."
+    },
+    "traits.phyllary_series": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 71 (eFloras, read 2026-10-19), Zinnia (genus): phyllaries persistent, 12-30+ in 3-4+ series."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: ray florets 4-7."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: ray laminae oblong to suborbiculate, 7-10 mm."
+    },
+    "traits.ray_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: ray laminae 4 mm to 7 mm wide, oblong to nearly round, as in the photos."
+    },
+    "traits.ray_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: laminae oblong to suborbiculate: drawn rounded."
+    },
+    "traits.ray_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: ray corollas usually white, sometimes pale yellow; white in the photos; sRGB by eye."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: disc corollas yellow or tinged with purple; sRGB by eye from the photos."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: disc florets 8-13."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: pappi usually of 1-3 unequal awns, sometimes reduced to teeth."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: cypselae 2.4-4 mm, 3-angled (ray) or compressed (disc)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 72, 73 (eFloras, read 2026-10-19), Zinnia acerosa: cypselae 2.4-4 mm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (1942) p. 949, Zinnia pumila: dry mesas and slopes, commonly in caliche soil, April to October; FNA: flowering spring-fall."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cypselae ripe May to November, a month behind the flowers."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, rounded cushion of stiff, much-branched grey-green stems and needle-like leaves, dotted with small white-rayed heads with yellow centres. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for desert zinnia from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.12 m tall at 5 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "schema": 1,
+  "id": "carex-nigricans",
+  "taxon": {
+    "scientific_name": "Carex nigricans",
+    "common_name": "black alpine sedge",
+    "family": "Cyperaceae",
+    "genus": "Carex",
+    "plant_name_id": 229046
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "params": {
+      "tillers": 50,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.15,
+      "tiller_lean": 15,
+      "leaves": 6,
+      "leaf_length": 0.07,
+      "leaf_spread": 0.3,
+      "leaf_angle": 25,
+      "arch": 8,
+      "pieces": 4,
+      "flowering": 0.5,
+      "culm_radius": 0.0008,
+      "culm_leaves": 0,
+      "culm_lean": 8,
+      "panicle_length": 0.012,
+      "panicle_nod": 5
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 0,
+          "aspect": 0.105
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.105
+        }
+      },
+      "thatch": {
+        "shape": {
+          "template": "blade",
+          "taper": 0,
+          "aspect": 0.105
+        },
+        "colour": [
+          0.38,
+          0.31,
+          0.18
+        ],
+        "shade": [
+          0.12,
+          0.1,
+          0.05
+        ]
+      },
+      "panicle": {
+        "shape": {
+          "template": "spikelet",
+          "florets": 25,
+          "glumes": 0,
+          "lemma": 0.3,
+          "aspect": 0.6,
+          "gape": 12
+        },
+        "colour": [
+          0.22,
+          0.14,
+          0.09
+        ],
+        "accent": [
+          0.45,
+          0.36,
+          0.24
+        ],
+        "shade": [
+          0.08,
+          0.05,
+          0.03
+        ]
+      }
+    },
+    "bark": [
+      0.3,
+      0.28,
+      0.18
+    ],
+    "foliage": [
+      0.1,
+      0.18,
+      0.06
+    ],
+    "foliage_shade": [
+      0.032,
+      0.058,
+      0.019
+    ]
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.12,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 0.05,
+      "max": 0.2,
+      "typical": 0.12,
+      "high": 0.3
+    },
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.2
+    },
+    "height_max_m": 0.3,
+    "life_span": "perennial",
+    "perennation": "rhizome",
+    "rhizome_habit": "short_creeping",
+    "clonal": true,
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.002,
+      "max": 0.004,
+      "low": 0.0015
+    },
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.008,
+      "max": 0.015
+    },
+    "sexual_system": "monoecious",
+    "flowering_months": [
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 23 p. 529 (eFloras, read 2026-10-19), Carex nigricans: \"Culms 5-30 cm\"; Abrams (1923 p. 290): \"the culms 5-20 cm. high\", kept as the usual range, FNA's 30 cm as the high."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: culms \"5-20 cm. high\", \"exceeding leaves\", so the plant is as tall as its culms."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 23 p. 529 (eFloras, read 2026-10-19), Carex nigricans: \"Culms 5-30 cm\", the culms exceeding the leaves (Abrams 1923 p. 290)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: \"Rootstocks stout, lignescent, creeping\": a perennial."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: \"Rootstocks stout, lignescent, creeping\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 23 p. 529 (eFloras, read 2026-10-19), Carex nigricans: \"Plants loosely cespitose, mat-forming; rhizomes short, stout.\" Abrams (1923 p. 290): \"Rootstocks stout, lignescent, creeping\"."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: \"Rootstocks stout, lignescent, creeping\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: \"Leaves 4-9 to a fertile culm, the blades 4-10 cm. long\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 23 p. 529 (eFloras, read 2026-10-19), Carex nigricans: \"Leaves flat to the tip, (1.5-)2-4 mm wide\"; Abrams (1923 p. 290): \"1.5-3 mm. wide\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: \"spike solitary, androgynous, bractless\"."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: spike \"narrow, 8-15 mm. long, 6-9 mm. wide\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: spike \"androgynous\", \"the upper half staminate, the lower with 10-25 perigynia\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Spikes in flower and fruit in July and August, set by hand from iNaturalist photos (observations 194485205, 366727583, 306576441, 30777234, 90253154, 384777041, 89024785, 31999712): the sources read give no count or measure."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Long-stoloned sedge's (carex-inops) values, changed by hand for black alpine sedge: a close turf from creeping rootstocks, short flat blades (Abrams 1923 p. 290: \"the blades 4-10 cm. long\", 4-9 to a culm) under stiff culms ending in one small, erect, dark spike 1.2 cm long. Not fitted to measurements."
+    },
+    "appearance.organs.panicle": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 290, Carex nigricans: \"spike solitary, androgynous, bractless, narrow, 8-15 mm. long, 6-9 mm. wide, densely many-flowered\"; scales \"dark brown tinged with hyaline margins\"; perigynia \"brownish\". Drawn as one dark brown spike with pale-edged scales and no cluster."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, close turf of short green blades with stiff culms, each tipped by a single small, near-black spike. Organ cards from long-stolon sedge's (carex-inops), recoloured and resized by hand."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.12 m tall at 4 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

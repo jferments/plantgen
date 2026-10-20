@@ -1858,10 +1858,26 @@ fn stem_tubes(
     hairs: &crate::looks::Hairs,
     tubes: &mut Vec<crate::hairs::Tube>,
 ) {
+    // A plant whose prickles stand as organs on its stems (the armature,
+    // `crate::prickles`) bears none among its stems' hairs, so none are
+    // drawn twice; its leaf stalks keep theirs.
+    let armed = appearance
+        .organs
+        .values()
+        .any(|look| matches!(look.form, Some(crate::blooms::Form::Prickles(_))));
+    let unarmed = crate::looks::Hairs {
+        prickles: None,
+        ..hairs.clone()
+    };
     for (index, segment) in graph.segments.iter().enumerate() {
         if segment.body != 0 || (segment.radius < lod.min_radius && segment.parent.is_some()) {
             continue;
         }
+        let hairs = if armed && segment.within.is_none() {
+            &unarmed
+        } else {
+            hairs
+        };
         let colour = appearance
             .leaf_axis
             .filter(|_| segment.within.is_some())
@@ -3382,6 +3398,7 @@ mod tests {
             bottle: None,
             roots: None,
             bark_pattern: None,
+            bark_look: None,
             leaf_axis: None,
             young_axis: None,
             stem_hairs: None,

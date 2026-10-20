@@ -137,7 +137,14 @@
     "units_per_inflorescence": {"min": 10, "max": 60, "high": 100},
     "inflorescence_length_m": {"min": 0.08, "max": 0.2},
     "flower_size_m": {"min": 0.02, "max": 0.03},
-    "inflorescence_branches": {"min": 4, "max": 10}
+    "inflorescence_branches": {"min": 4, "max": 10},
+    "spines": "prickles",
+    "spine_length_m": {"min": 0.004, "max": 0.01},
+    "spine_width_m": {"min": 0.003, "max": 0.007},
+    "spine_curve": "hooked",
+    "spine_angle": "declined",
+    "internodal_prickles": "moderate",
+    "aciculi": "none"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -241,7 +248,14 @@
     "traits.units_per_inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): inflorescences at the shoot tips, sometimes in the axils too, thyrse-like, 10-60 flowers, up to 100."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives its length: a thyrse of 10-60 flowers about 2 cm across, carried well beyond its leaves (FNA), is some 8-20 cm long."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): petals 10-15 mm, so an open flower of five spreading petals is about 2-3 cm across."},
-    "traits.inflorescence_branches": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium): a thyrse of 10-60 flowers (FNA) on some 4-10 side branches, the lower ones several-flowered."}
+    "traits.inflorescence_branches": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium): a thyrse of 10-60 flowers (FNA) on some 4-10 side branches, the lower ones several-flowered."},
+    "traits.spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): shrubs armed; prickles moderately dense on the stems."},
+    "traits.spine_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): prickles stout, 4-10 mm."},
+    "traits.spine_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium), as no source read gives it: two thirds of the prickle's length at its foot: the flora calls them stout, broad- or narrow-based, but gives no width; the blackberry's are broad-based in photographs."},
+    "traits.spine_curve": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): prickles hooked, retrorse, or erect."},
+    "traits.spine_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): prickles hooked, retrorse, or erect: drawn leaning back toward the stem's base."},
+    "traits.internodal_prickles": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): prickles moderately dense."},
+    "traits.aciculi": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 9 (2014), Rubus bifrons (R. armeniacus a synonym) (eFloras, read 2026-10-19): no bristles described on the stems."}
   },
   "provenance": {
     "sources": [

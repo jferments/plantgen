@@ -30,6 +30,7 @@ Keys are only ever read from the environment. `--backend NAME` picks one;
 from __future__ import annotations
 
 import base64
+import http.client
 import json
 import os
 import tomllib
@@ -133,8 +134,8 @@ class OpenAICompat:
                     self.json_mode = modes[modes.index(mode) + 1]  # this server cannot constrain; remember it
                     continue
                 raise BackendError(f"HTTP {err.code}: {detail}") from err
-            except (urllib.error.URLError, TimeoutError) as err:
-                raise BackendError(str(err)) from err
+            except (OSError, http.client.HTTPException, ValueError) as err:  # a reset, a timeout or a cut-off body
+                raise BackendError(f"connection: {err}") from err  # this image only; a rerun sends it again
             if data.get("error"):  # OpenRouter passes an upstream failure on with HTTP 200
                 detail = json.dumps(data["error"])[:500]
                 code = data["error"].get("code") if isinstance(data["error"], dict) else None

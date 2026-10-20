@@ -1,0 +1,153 @@
+{
+  "schema": 2,
+  "species": "penstemon-procerus",
+  "layers": {
+    "herb": 0.4
+  },
+  "moisture": [
+    0.15,
+    0.3,
+    0.8,
+    0.92
+  ],
+  "heat_load": [
+    0.3,
+    0.6,
+    1.8,
+    2.2
+  ],
+  "elevation_m": [
+    300,
+    800,
+    3600,
+    4000
+  ],
+  "max_slope_deg": 50,
+  "shade_tolerance": 0.2,
+  "coldest_c": [
+    -30,
+    -20,
+    1,
+    5
+  ],
+  "hard_freeze_c": [
+    -50,
+    -42,
+    -2,
+    3
+  ],
+  "warmest_c": [
+    4,
+    6,
+    20,
+    23
+  ],
+  "degree_days_0": [
+    300,
+    600,
+    3800,
+    4600
+  ],
+  "degree_days_5": [
+    50,
+    150,
+    2100,
+    2800
+  ],
+  "moisture_index": [
+    0.2,
+    0.35,
+    1,
+    1.01
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.6,
+    0.8
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A low herb of meadows and open slopes, in tufts among the meadow forbs."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Moderately dry to moist ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect; often on open, sunny slopes."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Foothills to alpine; the Rainier form is subalpine to alpine."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Meadow slopes and rocky ground."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Full sun to light shade."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about −20 to 1 °C; gone below −30 °C and above 5 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −42 °C borne, gone where the year's coldest night falls below about −50 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 6 to 20 °C; gone below 4 °C, where summers are too short, and above 23 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 600 to 3,800 degree-days above 0 °C, none below 300."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 150 to 2,100 degree-days above 5 °C, none below 50."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.35, gone by 0.2."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: summer-dry Cascade summers suit it; up to about 0.6 of the year's precipitation in summer, gone by 0.8."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Mount Rainier subalpine meadow scene (Paradise, about 1,650 m) from general knowledge of the species; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Small-flowered penstemon grows from Alaska and Yukon to California and Colorado, in meadows and open slopes (the PLANTS Database). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

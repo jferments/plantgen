@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "id": "selaginella-arizonica",
+  "taxon": {
+    "scientific_name": "Selaginella arizonica",
+    "common_name": "Arizona spikemoss",
+    "family": "Selaginellaceae",
+    "genus": "Selaginella",
+    "plant_name_id": 3138457
+  },
+  "growth_form": "fern",
+  "generator": {
+    "params": {
+      "stems": 30,
+      "clump_radius": 0.1,
+      "stem_lean": 80,
+      "raceme": 0.07,
+      "leaf_angle": 25,
+      "lie": 0.85,
+      "leaf_years": 3,
+      "leaf_length": 0.0023,
+      "leaf_top": 1,
+      "leaf_base": 1
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.15,
+      0.22,
+      0.08
+    ],
+    "foliage": [
+      0.1,
+      0.19,
+      0.07
+    ],
+    "foliage_shade": [
+      0.032,
+      0.0608,
+      0.0224
+    ],
+    "variation": 0.15,
+    "organs": {
+      "flower": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.5,
+          "aspect": 0.8
+        },
+        "colour": [
+          0.5,
+          0.5,
+          0.3
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.02,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.01,
+      "max": 0.03
+    },
+    "stem_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "woodiness": "herbaceous",
+    "leaf_habit": "evergreen",
+    "clonal": true,
+    "leaf_length_m": {
+      "min": 0.0019,
+      "max": 0.0025
+    },
+    "leaf_width_m": {
+      "min": 0.0004,
+      "max": 0.0006
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_colour": [
+      105,
+      135,
+      80
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown to six years, as the lycophytes' class form grows a clubmoss; the mat is full by then."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a mat 1 cm to 3 cm deep, its stems prostrate (FNA)."
+    },
+    "traits.stem_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives it: stems 5 cm to 15 cm long, irregularly forked, as in the photos; FNA gives no length."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Selaginella arizonica: plants on rock or terrestrial, forming rather loose mats; stems prostrate."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the leaves stay on, the mats greying and curling when dry and greening after rain."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Selaginella arizonica: forming rather loose mats; rhizophores borne on upperside of stem throughout."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Selaginella arizonica: underside leaves lanceolate, 2-2.5 x 0.5-0.6 mm; upperside leaves 1.9-2.25 x 0.4-0.55 mm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Selaginella arizonica: underside leaves 2-2.5 x 0.5-0.6 mm; upperside leaves 1.9-2.25 x 0.4-0.55 mm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Selaginella arizonica: underside leaves lanceolate; upperside leaves linear-lanceolate to slightly falcate."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 2 (eFloras, read 2026-10-19), Selaginella arizonica: leaves green; mid green in the photos; sRGB by eye."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Arizona spikemoss from Flora of North America vol. 2: a loose mat (stems 30, clump_radius 0.1) of prostrate stems (stem_lean 80, lying for most of their length, lie 0.85) whose leaves are tightly appressed to ascending (leaf_angle 25), each fertile stem ending in a solitary strobilus 5-10 mm long, about a fourteenth of its length (raceme 0.07). The stem's length comes from stem_length_m through the class's rules; its leaves are all one size (leaf_length 0.0023, leaf_top and leaf_base 1) within the 1.9-2.5 mm, and kept three years as an evergreen's (leaf_years 3)."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 138303368, 71591499, 88458739, 260222302, 87003901, 107919872, 58060547, 136357257): a loose, flat mat of forking, prostrate green stems clothed in tiny appressed leaves, short pale strobili at the tips. The leaf and strobilus cards are the lycophytes' class form's."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.02 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

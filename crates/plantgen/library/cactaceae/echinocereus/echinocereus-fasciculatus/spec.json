@@ -1,0 +1,426 @@
+{
+  "schema": 1,
+  "id": "echinocereus-fasciculatus",
+  "taxon": {
+    "scientific_name": "Echinocereus fasciculatus",
+    "common_name": "pinkflower hedgehog cactus",
+    "family": "Cactaceae",
+    "genus": "Echinocereus",
+    "plant_name_id": 2782611
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 5,
+      "stems": 15,
+      "stem_rate": 0.06,
+      "clump_radius": 0.2,
+      "stem_lean": 25,
+      "seedling": 0.01,
+      "height_max": 0.4,
+      "height_rate": 0.06,
+      "height_shape": 1.5,
+      "radius_min": 0.008,
+      "radius_height": 0.08,
+      "fill": 0.95,
+      "fill_years": 8,
+      "pinch": 0.02,
+      "pinch_depth": 0.06,
+      "wiggle": 1.2,
+      "bend": 1.5,
+      "bloom_age": 6,
+      "flowers": 3,
+      "ring_angle": 85,
+      "flower_angle": 55
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "ribs": {
+          "spacing": 0.02,
+          "depth": 0.18,
+          "sharpness": 0.5
+        },
+        "areoles": {
+          "felt_radius": 0.002,
+          "felt": [
+            0.6,
+            0.55,
+            0.45
+          ]
+        },
+        "spines": [
+          {
+            "role": "radial",
+            "angle": 20,
+            "width": 0.0005,
+            "angle_spread": 10,
+            "length_spread": 0.3
+          },
+          {
+            "role": "central",
+            "count": [
+              0,
+              2
+            ],
+            "angle": 45,
+            "width": 0.0009,
+            "angle_spread": 15,
+            "arc": 300,
+            "length_spread": 0.35,
+            "tip": [
+              0.2,
+              0.15,
+              0.12
+            ]
+          },
+          {
+            "role": "main",
+            "count": [
+              1,
+              1
+            ],
+            "angle": 20,
+            "width": 0.0012,
+            "angle_spread": 10,
+            "aim": 180,
+            "arc": 0,
+            "length_spread": 0.25,
+            "tip": [
+              0.2,
+              0.15,
+              0.12
+            ]
+          }
+        ],
+        "greying": {
+          "years": 10
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.4
+    },
+    "height_max_m": 0.45,
+    "woodiness": "semi",
+    "rosette": "none",
+    "stem_colour": [
+      80,
+      115,
+      60
+    ],
+    "stem_diameter_max_m": {
+      "min": 0.045,
+      "max": 0.08
+    },
+    "ribs": {
+      "min": 10,
+      "max": 15
+    },
+    "areole_spacing_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "radial_spines": {
+      "min": 7,
+      "max": 15
+    },
+    "radial_spine_length_m": {
+      "min": 0.005,
+      "max": 0.015
+    },
+    "central_spines": {
+      "min": 1,
+      "max": 3
+    },
+    "central_spine_length_m": {
+      "min": 0.015,
+      "max": 0.075
+    },
+    "central_spine_form": "straight",
+    "spine_colour": [
+      215,
+      200,
+      170
+    ],
+    "central_spine_colour": [
+      185,
+      160,
+      125
+    ],
+    "spine_colour_aged": [
+      140,
+      138,
+      132
+    ],
+    "flower_colour": [
+      215,
+      50,
+      150
+    ],
+    "flower_size_m": {
+      "min": 0.08,
+      "max": 0.1
+    },
+    "anther_colour": [
+      235,
+      200,
+      50
+    ],
+    "stigma_colour": [
+      40,
+      120,
+      50
+    ],
+    "fruit_colour_ripe": [
+      200,
+      35,
+      35
+    ],
+    "fruit_size_m": {
+      "min": 0.02,
+      "max": 0.03
+    },
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      5,
+      6,
+      7
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: stems mostly erect, cylindric, (5-)10-40 x 4.5-8 cm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 237, Echinocereus fasciculatus: stems 16-45 cm long."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fleshy stems, woody only in the core at the base, as the template's."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: stems ribbed and spiny, without leaves."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 237, Echinocereus fasciculatus: stems green; mid green in the photos; sRGB by eye."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: stems (5-)10-40 x 4.5-8 cm."
+    },
+    "traits.ribs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: ribs 10-15, crests slightly undulate."
+    },
+    "traits.areole_spacing_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: areoles 10-15 mm apart."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: radial spines 7-15 per areole, 5-15 mm."
+    },
+    "traits.radial_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: radial spines 5-15 mm."
+    },
+    "traits.central_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: central spines 1-3 per areole, divergent-porrect, 15-75 mm, all terete; one main central and up to two more are drawn."
+    },
+    "traits.central_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: central spines 15-75 mm."
+    },
+    "traits.central_spine_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: spines usually straight."
+    },
+    "traits.spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: individual spines with broad zones of different colors: yellowish, reddish brown, or gray to black, or white to black, becoming gray; pale tan in the photos; sRGB by eye."
+    },
+    "traits.central_spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 237, Echinocereus fasciculatus: centrals pale with dark tips; radials whitish or greyish; sRGB by eye."
+    },
+    "traits.spine_colour_aged": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: spines becoming gray; sRGB by eye."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: inner tepals rose-pink to magenta, with midstripes darker; sRGB by eye from the photos."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: flowers 6-10 x 8-10 cm."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: anthers yellow."
+    },
+    "traits.stigma_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Stigma lobes green, set by hand from iNaturalist photos (observations 322317171, 40195026, 219261024, 266049792, 231226335, 214190215, 99942291, 153169686): the sources read give no count or measure."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: fruits bright red or orange-red, 20-30 mm; sRGB by eye."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: fruits 20-30 mm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: flowering Mar-Jun."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 p. 161, 164, 165 (eFloras, read 2026-10-19), Echinocereus fasciculatus: fruiting May-Jul."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for pinkflower hedgehog cactus from Flora of North America vol. 4 pp. 161-165: open clumps of 5-30 erect stems (stems 15, clump_radius 0.2), stems to 40 cm (height_max 0.4). Their girth comes from stem_diameter_max_m through the column's rule; growth rates and the flower ring are kept from the template, a close relative (FNA: once treated as E. engelmannii subsp. fasciculatus)."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 322317171, 40195026, 219261024, 266049792, 231226335, 214190215, 99942291, 153169686): an open clump of green ribbed stems bristling with long, straight, pale tan spines, the main central longest and dark-tipped, large magenta flowers with a green stigma. Spine counts, lengths and colours and the ribs come from the traits through the family's rules; the main central is one of the 1 to 3 centrals FNA counts, and up to two more are set by hand."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 20 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

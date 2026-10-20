@@ -1,0 +1,374 @@
+{
+  "schema": 1,
+  "id": "spiraea-splendens",
+  "taxon": {
+    "scientific_name": "Spiraea splendens",
+    "common_name": "subalpine spiraea",
+    "family": "Rosaceae",
+    "genus": "Spiraea",
+    "plant_name_id": 2993734
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 0.35,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 600,
+      "internode": 0.03,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 30,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 10,
+      "fork_angle": 20,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 0.35,
+      "space_kill": 0.09,
+      "leaf_size": 0.03,
+      "spur_leaf": 0.025,
+      "spur_pairs": 1,
+      "leaf_angle": 45,
+      "blooms": 1,
+      "adult_age": 2,
+      "bloom_size": 0.035,
+      "bloom_angle": 5,
+      "path_half": 0.4,
+      "crown_height": 0.32
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.04
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 1.0,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.3
+        },
+        "colour": [
+          0.7106,
+          0.1473,
+          0.3672
+        ],
+        "accent": [
+          0.8481,
+          0.3424,
+          0.5542
+        ]
+      }
+    },
+    "bark": [
+      0.1473,
+      0.0509,
+      0.0245
+    ],
+    "foliage": [
+      0.09,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.029,
+      0.054,
+      0.019
+    ]
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 0.45,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
+    "height_max_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "leaf_shape": "elliptic",
+    "leaf_apex": "rounded",
+    "leaf_base_shape": "rounded",
+    "leaf_margin": "serrate",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "leaf_width_m": {
+      "min": 0.008,
+      "max": 0.018
+    },
+    "inflorescence": "corymb",
+    "inflorescence_outline": "flat_topped",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.04
+    },
+    "units_per_inflorescence": {
+      "min": 100,
+      "max": 1000
+    },
+    "petal_length_m": {
+      "min": 0.001,
+      "max": 0.0025
+    },
+    "flower_size_m": {
+      "min": 0.002,
+      "max": 0.004
+    },
+    "flower_colour": [
+      230,
+      120,
+      175
+    ],
+    "stamen_exsertion": "exserted",
+    "fruit_type": "follicle",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "flowering_months": [
+      6,
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ],
+    "stem_clump": "many",
+    "stamens": {
+      "min": 35,
+      "max": 40
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"A low shrub with ascending branches, 2-6 dm. high\"."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"2-6 dm. high\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"A low shrub\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"A low shrub with ascending branches\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 408, Spiraea: key: \"Leaves deciduous; carpels dehiscent on the ventral suture. 3. Spiraea\"."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"Leaves oval or elliptical, rounded at both ends\"."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"rounded at both ends\"."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"rounded at both ends\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"crenate or serrate above the middle\"; read as serrate, as most photos show sharp teeth."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: leaves \"1.5-3 cm. long\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: leaves 8 mm to 18 mm wide, about half to two thirds as wide as long as in the photos."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"inflorescence flat-topped or rounded\"; the genus key: \"Panicle flat-topped\"; drawn as a corymb."
+    },
+    "traits.inflorescence_outline": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: \"inflorescence flat-topped or rounded\"."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 410, Spiraea densiflora: inflorescence \"2-4 cm. broad\"."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"Inflorescences mostly terminal, corymbiform or hemispheric panicles, 100–1000+-flowered, 2–4 × 2–4 cm\"."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"petals light to dark pink, ovate to obovate, 1–2.5 mm\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"Flowers 2–4 mm diam.\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 411, Spiraea densiflora: \"petals rose-colored\"; sRGB by eye from the photos."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Stamens standing well out of the flowers, so the clusters look fuzzy, set by hand from iNaturalist photos (observations 71501350, 13742396, 136606818, 233507514, 382337049, 386273598, 386152994, 383833706): the sources read give no count or measure."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 411, Spiraea densiflora: \"follicles oblanceolate\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"Follicles oblanceoloid, 2–3 mm\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 411, Spiraea densiflora: \"June-Aug.\"."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: follicles ripe in August and September, after the June to August flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Douglas spiraea's (spiraea-douglasii) values, changed by hand for subalpine spiraea: a low clump of many ascending stems (Abrams 1944 p. 410: \"A low shrub with ascending branches, 2-6 dm. high\"), small leaves and short internodes, and one flat-topped cluster 3.5 cm long at each shoot's tip. Not fitted to measurements."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low, twiggy clump of ascending stems with small oval leaves toothed toward the tip, topped by flat, fuzzy clusters of rose-pink flowers. Organ cards from hardhack's (spiraea-douglasii), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.45 m tall at 8 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"Shrubs, 2–10 dm. Stems spreading to ascending, branched\"; Abrams (1944 p. 410): \"A low shrub with ascending branches\"."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Spiraea splendens: \"stamens 35–40, 2 times petal length\"."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

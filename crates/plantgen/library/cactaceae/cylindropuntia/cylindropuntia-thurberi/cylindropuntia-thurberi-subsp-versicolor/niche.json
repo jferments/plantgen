@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "cylindropuntia-thurberi-subsp-versicolor",
+  "layers": {
+    "shrub": 0.35
+  },
+  "moisture": [
+    0,
+    0.05,
+    0.55,
+    0.7
+  ],
+  "heat_load": [
+    0.3,
+    0.6,
+    1.8,
+    2.2
+  ],
+  "elevation_m": [
+    300,
+    500,
+    1300,
+    1500
+  ],
+  "max_slope_deg": 35,
+  "shade_tolerance": 0.2,
+  "coldest_c": [
+    5,
+    8,
+    14,
+    17
+  ],
+  "hard_freeze_c": [
+    -12,
+    -9,
+    10,
+    14
+  ],
+  "warmest_c": [
+    26,
+    28,
+    33,
+    35
+  ],
+  "degree_days_0": [
+    5500,
+    6500,
+    9500,
+    10500
+  ],
+  "degree_days_5": [
+    3800,
+    4700,
+    7600,
+    8600
+  ],
+  "moisture_index": [
+    0.04,
+    0.08,
+    0.3,
+    0.4
+  ],
+  "summer_rain": [
+    0.25,
+    0.35,
+    0.7,
+    0.8
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A tree cholla to 2 m, one of the commonest chollas of the Tucson basin's bajadas and flats."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dry flats, washes, rocky hillsides and canyons."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect; open ground."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "600 to 1,300 m (Flora of North America); 1,200 to 4,000 feet in Pinal and Pima Counties (Kearney and Peebles)."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flats to rocky hillsides."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Full sun."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 8 to 14 °C; gone below 5 °C and above 17 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −9 °C borne, gone where the year's coldest night falls below about −12 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 28 to 33 °C; gone below 26 °C, where summers are too short, and above 35 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 6,500 to 9,500 degree-days above 0 °C, none below 5,500."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 4,700 to 7,600 degree-days above 5 °C, none below 3,800."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.08 to 0.3, gone by 0.04 and above 0.4."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Needs the monsoon's summer rain: from about 0.35 of the year's precipitation in summer, gone below 0.25; up to about 0.7, gone by 0.8."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Flora of North America (eFloras): habitat, elevation and distribution",
+        "url": "http://www.efloras.org",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m, 32.25 N 111.17 W) from general knowledge of the species and the ranges, habitats and elevations in the sources read for its spec (2026-10-19). Staghorn cholla grows only in south-central Arizona (Pinal and Pima Counties) and Sonora, in the Sonoran Desert (Flora of North America, as Cylindropuntia versicolor; Kearney and Peebles). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records; every full range holds the bajada's climate (coldest month about 11 °C, warmest about 31 °C, about 7,600 degree-days above 0 °C, coldest night about −4 °C, moisture index about 0.15, about half the year's rain in summer)."
+  }
+}

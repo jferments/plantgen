@@ -1,0 +1,484 @@
+{
+  "schema": 1,
+  "id": "senegalia-greggii",
+  "taxon": {
+    "scientific_name": "Senegalia greggii",
+    "common_name": "catclaw acacia",
+    "family": "Fabaceae",
+    "genus": "Senegalia",
+    "plant_name_id": 2590657
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 5,
+      "branch_angle": 50,
+      "fork_angle": 35,
+      "crown_height": 2.6
+    }
+  },
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [
+      3,
+      10,
+      25
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "bloom": {
+        "inflorescence": {
+          "unit": 0.032
+        }
+      }
+    },
+    "foliage": [
+      0.0732,
+      0.1329,
+      0.0397
+    ],
+    "foliage_shade": [
+      0.0256,
+      0.0558,
+      0.0218
+    ]
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 2.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1,
+      "max": 3
+    },
+    "height_max_m": {
+      "min": 6,
+      "max": 9
+    },
+    "stem_diameter_max_m": {
+      "min": 0.2,
+      "max": 0.3
+    },
+    "age_max_years": {
+      "min": 100,
+      "max": 120
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "bark_colour": [
+      120,
+      112,
+      100
+    ],
+    "spines": "prickles",
+    "spine_length_m": {"min": 0.003, "max": 0.004},
+    "spine_curve": "curved",
+    "spine_angle": "declined",
+    "internodal_prickles": "moderate",
+    "prickle_position": "scattered",
+    "spine_colour": [107, 81, 61],
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "pinnae": {
+      "min": 4,
+      "max": 6,
+      "low": 2
+    },
+    "leaflets": {
+      "min": 8,
+      "max": 14,
+      "low": 4
+    },
+    "terminal_leaflet": false,
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaflet_length_m": {
+      "min": 0.003,
+      "max": 0.006,
+      "high": 0.012
+    },
+    "leaf_shape": "obovate",
+    "leaf_margin": "entire",
+    "leaf_hairs": "pilose",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.06
+    },
+    "peduncle_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "flower_colour": [
+      240,
+      230,
+      170
+    ],
+    "stamen_exsertion": "strongly_exserted",
+    "fruit_type": "legume",
+    "fruit_size_m": {
+      "min": 0.05,
+      "max": 0.12
+    },
+    "fruit_width_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "fruit_colour_ripe": [
+      140,
+      75,
+      50
+    ],
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ],
+    "elevation_max_m": 1370,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry",
+      "xeric"
+    ],
+    "stem_clump": "thicket",
+    "flower_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "petal_length_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "stamen_length_m": {
+      "min": 0.004,
+      "max": 0.006
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B2, Catclaw: typically 3 to 10 feet (1-3 m) high, at times 25 to 30 feet."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 415), Acacia greggii: a large shrub or small tree, up to 6 m high with a stem 20 cm thick; FEIS: \"typically ranges from 3.3 to 29.5 feet (1-9 m) tall\"."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"The main trunk can be 12 inches (30.5 cm) in diameter\"; Kearney and Peebles (1942, p. 415): stem up to 20 cm."
+    },
+    "traits.age_max_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): from Grand Canyon repeat photographs, \"85% of the plants on the sites were at least 104 years old ... 5 of 6 plants were at least 120 years old\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"a native, long-lived, deciduous, spreading shrub or small tree\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"a native, long-lived, deciduous, spreading shrub or small tree\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"a native, long-lived, deciduous, spreading shrub\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 475, Acacia greggii: a shrub with rigid branches, no rosette."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B2, Catclaw: bark grey; Abrams (1944 p. 475): branches grey-brown. sRGB by eye from the photos."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\": internodal prickles, not thorns at the nodes."
+    },
+    "traits.spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\"."
+    },
+    "traits.spine_curve": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\": curved, the word FEIS uses (the common name says hooked)."
+    },
+    "traits.internodal_prickles": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\": heavily armed between the nodes, drawn moderate as the scale's middle (inferred)."
+    },
+    "traits.prickle_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"heavily armed with stout, curved spines (3-4 mm long) distributed along branches at the internodes\": at the internodes, so scattered, none standing at a node."
+    },
+    "traits.spine_angle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: the prickles' points turn back toward the stem's base (catclaw)."
+    },
+    "traits.spine_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: dark red-brown prickles; the sRGB of the hand thorn colour this replaces."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"Alternate leaves are bipinnate\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"Alternate leaves are bipinnate\"."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"leaves are bipinnate\"."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"leaves are bipinnate\": divided twice."
+    },
+    "traits.pinnae": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B2, Catclaw: pinnae 2 or 3 pairs; Kearney and Peebles (1942, p. 415): 1 to 3 pairs, kept as the low."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"bipinnate with 4 to 7 leaflet pairs\" on each pinna; Kearney and Peebles (1942, p. 415): leaflets 2 to 7 pairs."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): leaflets in pairs."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"Leaves measure 0.8 to 2 inches (2-5 cm) long\"."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 475, Acacia greggii: leaflets oblong-obovate, 3-6 mm. long; FEIS gives 2 to 12 mm, kept as the high."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 475, Acacia greggii: leaflets oblong-obovate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaflets entire, as in the genus."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 415), Acacia greggii: leaflets pilose; FEIS: \"Leaflets ... are normally hairy\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 415), Acacia greggii: inflorescence spicate, the flowers cream-coloured."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 475, Acacia greggii: spikes 3-5 cm. long; the Range Plant Handbook (p. B2) gives 3/4 to 2 1/2 inches."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 475, Acacia greggii: spikes about equalling the peduncles."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B2, Catclaw: creamy-yellow, fragrant flowers in cylindrical spikes; sRGB by eye from the photos."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Many long stamens standing well out of the small corollas, giving the spikes their fuzzy look, set by hand from iNaturalist photos (observations 15289452, 213157447, 112849403, 355894070, 263520520, 324733965, 32086229, 32876201): the sources read give no count or measure."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"Catclaw acacia's legume fruits\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"straight to twisted, constricted between the seeds, and measure 2 to 4.7 inches (5-12 cm) long\"."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"by 0.4 to 0.8 inches (1-2 cm) wide\"."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pods ripen red-brown, twisted; sRGB by eye, set by hand from iNaturalist photos (observations 15289452, 213157447, 112849403, 355894070, 263520520, 324733965, 32086229, 32876201): the sources read give no count or measure."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 415), Acacia greggii: 4,500 feet or lower, April to October; the Range Plant Handbook (p. B2) gives May and June as the main flowering, FEIS April to September in New Mexico."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-range-plant-handbook-1937",
+      "note": "Range Plant Handbook (1937) p. B2, Catclaw: pods ripen July to September."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): in Arizona below 4,500 feet (1,372 m); Kearney and Peebles (1942, p. 415): 4,500 feet or lower."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Senegalia greggii (Gucker 2005): \"highly adapted to harsh desert conditions\", on open desert sites."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 415), Acacia greggii: often forming thickets along washes."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a spreading, many-stemmed shrub of grey zigzag branches armed with small hooked prickles, feathery pale green leaves, creamy fuzzy spikes in late spring and twisted red-brown pods. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for catclaw acacia from its sources and the photos the traits cite, on the template of Scotch broom (cytisus-scoparius); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.5 m tall at 25 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 415), Acacia greggii: \"4,500 feet or lower, often forming thickets along streams and washes\"; FEIS (Gucker 2005): \"a native, long-lived, deciduous, spreading shrub or small tree\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives a measure: Abrams (1944 p. 475) for Acacia: \"Flowers small ... in heads or spikes\"; a corolla 2 mm to 3 mm long, the spike 3-5 cm long and fuzzy with its stamens."
+    },
+    "traits.petal_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives a measure: petals 2 mm to 3 mm, the corolla small (Abrams 1944 p. 475: \"Flowers small\")."
+    },
+    "traits.stamen_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives a measure: stamens 4 mm to 6 mm, about twice the corolla, standing out of it (Abrams 1944 p. 475, Acacia: \"Stamens many, exserted; filaments filiform, distinct\")."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence low), as no source read gives a measure: the spike's flowers drawn at the stated 2-3 mm corolla (flower_size_m), so the unit is 0.032 of the 8 cm bloom card (it was 0.05, drawing 4 mm flowers). Left by hand because the unit rule reads fruit_size_m, the 5-12 cm pod, and would draw the spike too long."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}
