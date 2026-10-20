@@ -3930,6 +3930,7 @@ mod tests {
         crate::conditions::Around {
             neighbourhood: &Neighbourhood::OPEN,
             envelopes: &[],
+            far: None,
             host: None,
             substrate,
             sun: None,

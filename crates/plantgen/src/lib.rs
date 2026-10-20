@@ -1218,5 +1218,6 @@ pub mod venation;
 /// of its height apart as in fully stocked Douglas-fir stands
 /// (`STAND_SPACING`, McArdle et al. 1961), not shade of 0.12 a metre from
 /// the ground to its top; past 160 years the stand opens to old-growth
-/// Douglas-fir's spacing (`STAND_THINNING`, Franklin et al. 1981).
+/// Douglas-fir's spacing (`STAND_THINNING`, Franklin et al. 1981); past its
+/// rings of crowns the stand goes on as a layer of foliage (`FarStand`).
 pub const GENERATOR_REVISION: u32 = 164;

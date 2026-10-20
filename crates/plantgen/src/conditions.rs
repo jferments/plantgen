@@ -100,6 +100,8 @@ pub struct Around<'a> {
     pub neighbourhood: &'a Neighbourhood,
     /// Neighbours' crowns, which shade the plant and take their room.
     pub envelopes: &'a [Envelope],
+    /// The rest of a layout's stand, past its envelopes' rings.
+    pub far: Option<&'a FarStand>,
     pub host: Option<&'a Host>,
     pub substrate: Option<&'a SubstrateField>,
     /// The latitude of the sun, degrees, when the sky has one.
@@ -108,14 +110,17 @@ pub struct Around<'a> {
 
 impl Surroundings for Around<'_> {
     fn transmission(&self, point: Vec3, height: f64, direction: Vec3) -> f64 {
+        let far = self
+            .far
+            .map_or(1.0, |far| far.transmission(point, direction));
         self.envelopes.iter().fold(
-            self.neighbourhood.transmission(point, height, direction),
+            self.neighbourhood.transmission(point, height, direction) * far,
             |light, envelope| light * envelope.transmission(point, direction),
         )
     }
 
     fn clear_sky(&self) -> bool {
-        self.neighbourhood.density <= 0.0 && self.envelopes.is_empty()
+        self.neighbourhood.density <= 0.0 && self.envelopes.is_empty() && self.far.is_none()
     }
 
     fn occupied(&self, point: Vec3) -> bool {
@@ -246,8 +251,7 @@ impl Layout {
     #[must_use]
     pub fn envelopes(&self, crown: &Crown, age_years: f64) -> Vec<Envelope> {
         let rings = -Self::RINGS..=Self::RINGS;
-        let opening = crate::spec::stand_spacing(age_years) / crate::spec::STAND_SPACING;
-        let spacing_m = self.spacing_m.max(self.per_height * opening * crown.top_m);
+        let spacing_m = self.spacing_m(crown, age_years);
         let mut envelopes = Vec::new();
         for east in rings.clone() {
             for north in rings.clone() {
@@ -264,6 +268,37 @@ impl Layout {
         }
         sort_envelopes(&mut envelopes);
         envelopes
+    }
+
+    /// The rest of the stand when each neighbour is `crown`: past the
+    /// [`Self::RINGS`] rings of envelopes the stand goes on, a layer of
+    /// foliage from its crowns' base to their top with their leaf area
+    /// spread over each stem's ground, so light low in the sky does not
+    /// pass under the nearest crowns. `None` in a row, or where the rings
+    /// already reach as far as a crown shades ([`Crown::reaches`]).
+    #[must_use]
+    pub fn far(&self, crown: &Crown, age_years: f64) -> Option<FarStand> {
+        let spacing_m = self.spacing_m(crown, age_years);
+        let reach_m = (f64::from(Self::RINGS) + 0.5) * spacing_m;
+        let depth = crown.top_m - crown.base_m;
+        (self.kind != LayoutKind::Row
+            && depth > 0.0
+            && crown.reaches([reach_m, 0.0], crown.radius_m))
+        .then(|| FarStand {
+            reach_m,
+            base_m: crown.base_m,
+            top_m: crown.top_m,
+            density: (Crown::EXTINCTION * crown.leaf_area_m2 / (spacing_m * spacing_m * depth))
+                .min(10.0),
+            one_sided: self.kind == LayoutKind::Edge,
+        })
+    }
+
+    /// The distance between stems at `age_years` when each crown is
+    /// `crown`.
+    fn spacing_m(&self, crown: &Crown, age_years: f64) -> f64 {
+        let opening = crate::spec::stand_spacing(age_years) / crate::spec::STAND_SPACING;
+        self.spacing_m.max(self.per_height * opening * crown.top_m)
     }
 
     fn validate(&self) -> Result<(), String> {
@@ -304,6 +339,38 @@ pub struct Envelope {
     pub radius_m: f64,
     /// Shade per metre of this crown, 1/m.
     pub density: f64,
+}
+
+/// The part of a stand of the plant's like beyond its rings of envelopes
+/// ([`Layout::far`]): a level layer of foliage from `base_m` to `top_m`
+/// that begins `reach_m` out from the plant, all round or, at an edge, on
+/// the −X side.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct FarStand {
+    pub reach_m: f64,
+    pub base_m: f64,
+    pub top_m: f64,
+    /// Shade per metre of the layer, 1/m.
+    pub density: f64,
+    pub one_sided: bool,
+}
+
+impl FarStand {
+    /// The fraction of light along `direction` (a unit vector toward the
+    /// sky) that reaches `point` through the layer: the ray's path in it
+    /// once it has gone `reach_m` out, in plan, from the plant's axis.
+    #[must_use]
+    pub fn transmission(&self, point: Vec3, direction: Vec3) -> f64 {
+        let flat = math::sqrt(direction.x * direction.x + direction.z * direction.z);
+        if direction.y <= 1e-9 || flat < 1e-9 || (self.one_sided && direction.x >= 0.0) {
+            return 1.0;
+        }
+        let out = math::sqrt(point.x * point.x + point.z * point.z);
+        let past = (self.reach_m - out).max(0.0) / flat;
+        let low = past.max((self.base_m - point.y) / direction.y);
+        let high = (self.top_m - point.y) / direction.y;
+        math::exp(-self.density * (high - low).max(0.0))
+    }
 }
 
 /// A plant's crown as its neighbours see it: an upright cylinder round its
@@ -1235,6 +1302,7 @@ mod tests {
         let around = Around {
             neighbourhood: &Neighbourhood::OPEN,
             envelopes: &crowns,
+            far: None,
             host: None,
             substrate: None,
             sun: None,
@@ -1368,6 +1436,31 @@ mod tests {
         assert!((nearest_at(40.0, 160.0) - 4.6).abs() < 1e-9);
         assert!((nearest_at(40.0, 450.0) - 0.204 * 40.0).abs() < 1e-9);
         assert!((nearest_at(40.0, 850.0) - 0.204 * 40.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn the_stand_past_its_rings_shades_light_low_in_the_sky() {
+        let crown = Crown {
+            base_m: 20.0,
+            top_m: 40.0,
+            radius_m: 3.0,
+            leaf_area_m2: 150.0,
+        };
+        let layout = Conditions::preset(Environment::Interior).layout().unwrap();
+        let far = layout.far(&crown, 60.0).unwrap();
+        // 4.6 m apart, so the layer starts 3.5 rings out.
+        assert!((far.reach_m - 3.5 * 4.6).abs() < 1e-9);
+        let foot = Vec3::new(0.0, 1.0, 0.0);
+        // Straight up the ray never leaves the rings.
+        assert_eq!(far.transmission(foot, Vec3::new(0.0, 1.0, 0.0)), 1.0);
+        // Low in the sky it crosses the layer and is shaded.
+        let low = Vec3::new(0.894, 0.447, 0.0);
+        assert!(far.transmission(foot, low) < 0.01);
+        // At an edge, light from the open side passes.
+        let edge = Conditions::preset(Environment::Edge).layout().unwrap();
+        let open_side = edge.far(&crown, 60.0).unwrap();
+        assert_eq!(open_side.transmission(foot, low), 1.0);
+        assert!(open_side.transmission(foot, Vec3::new(-0.894, 0.447, 0.0)) < 0.01);
     }
 
     #[test]

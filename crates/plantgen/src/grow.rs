@@ -642,6 +642,8 @@ pub struct Grower<'a> {
     /// a stand sets ([`Self::set_envelopes`]), or with a layout those and
     /// its own crown at its neighbours' places.
     envelopes: Vec<crate::conditions::Envelope>,
+    /// With a layout, the rest of its stand past the envelopes.
+    far: Option<crate::conditions::FarStand>,
     layout: Option<crate::conditions::Layout>,
     substrate: Option<std::sync::Arc<crate::substrate::SubstrateField>>,
     // What wood rests on: the substrate, or level soil without one.
@@ -701,6 +703,7 @@ impl<'a> Grower<'a> {
             conditions: settings.conditions.clone(),
             neighbourhood: settings.conditions.neighbourhood(),
             envelopes: Vec::new(),
+            far: None,
             layout: None,
             substrate: None,
             ground: std::sync::Arc::new(crate::substrate::SubstrateField::flat()),
@@ -874,6 +877,7 @@ impl<'a> Grower<'a> {
             self.envelopes = self.conditions.envelopes().to_vec();
             if let Some(crown) = &self.crown {
                 self.envelopes.extend(layout.envelopes(crown, clock.t));
+                self.far = layout.far(crown, clock.t);
             }
         }
         let mut timer = self.times.is_some().then(Timer::start);
@@ -948,6 +952,7 @@ impl<'a> Grower<'a> {
         let around = Around {
             neighbourhood: &self.neighbourhood,
             envelopes: &self.envelopes,
+            far: self.far.as_ref(),
             host: settings.host.as_deref(),
             substrate: self.substrate.as_deref(),
             sun: self.sun,
