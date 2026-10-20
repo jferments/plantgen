@@ -38,16 +38,40 @@
   "growth": {
     "years": 120,
     "step": 1,
-    "keyframes": [8, 30, 70, 120]
+    "keyframes": [
+      8,
+      30,
+      70,
+      120
+    ]
   },
   "variants": {
-    "environments": ["open"],
-    "seeds": [1, 2, 3, 4]
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
   },
   "appearance": {
-    "bark": [0.2, 0.17, 0.13],
-    "foliage": [0.1, 0.17, 0.06],
-    "foliage_shade": [0.045, 0.077, 0.027],
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
     "variation": 0.1,
     "bodies": {
       "stem": {
@@ -63,7 +87,10 @@
         "spines": [
           {
             "role": "radial",
-            "count": [7, 9],
+            "count": [
+              7,
+              9
+            ],
             "angle": 20,
             "length": 0.01,
             "width": 0.0006,
@@ -72,17 +99,28 @@
           },
           {
             "role": "central",
-            "count": [1, 3],
+            "count": [
+              1,
+              3
+            ],
             "angle": 45,
             "length": 0.025,
             "width": 0.0009,
             "angle_spread": 15,
             "length_spread": 0.35,
-            "tip": [0.05, 0.04, 0.035]
+            "tip": [
+              0.05,
+              0.04,
+              0.035
+            ]
           }
         ],
         "greying": {
-          "colour": [0.32, 0.31, 0.3],
+          "colour": [
+            0.32,
+            0.31,
+            0.3
+          ],
           "years": 8
         }
       }
@@ -104,52 +142,158 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "carpels": {"min": 11, "max": 12},
-    "stamens": {"min": 200, "max": 400},
+    "carpels": {
+      "min": 11,
+      "max": 12
+    },
+    "stamens": {
+      "min": 200,
+      "max": 400
+    },
     "flower_zone": "crown_and_flanks",
-    "stem_colour": [70, 100, 55],
-    "spine_colour": [140, 138, 132],
-    "central_spine_colour": [85, 82, 78],
-    "areole_wool_colour": [150, 40, 30],
+    "stem_colour": [
+      70,
+      100,
+      55
+    ],
+    "spine_colour": [
+      140,
+      138,
+      132
+    ],
+    "central_spine_colour": [
+      85,
+      82,
+      78
+    ],
+    "areole_wool_colour": [
+      150,
+      40,
+      30
+    ],
     "corolla_shape": "funnelform",
-    "flower_colour": [228, 220, 205],
-    "fruit_colour_ripe": [165, 35, 35],
+    "flower_colour": [
+      228,
+      220,
+      205
+    ],
+    "fruit_colour_ripe": [
+      165,
+      35,
+      35
+    ],
     "height_max_m": {
       "min": 3,
       "max": 7
     },
     "wood_density_basic_kg_m3": 490,
-    "ribs": {"min": 12, "max": 17},
-    "stem_diameter_max_m": {"min": 0.15, "max": 0.2},
-    "areole_spacing_m": {"min": 0.01, "max": 0.015, "high": 0.03},
-    "height_typical_m": {"min": 3, "max": 7},
+    "ribs": {
+      "min": 12,
+      "max": 17
+    },
+    "stem_diameter_max_m": {
+      "min": 0.15,
+      "max": 0.2
+    },
+    "areole_spacing_m": {
+      "min": 0.01,
+      "max": 0.015,
+      "high": 0.03
+    },
+    "height_typical_m": {
+      "min": 3,
+      "max": 7
+    },
     "woodiness": "woody",
     "rosette": "none",
     "limb_angle": "erect",
-    "flowering_months": [5, 6, 7],
-    "fruit_size_m": {"min": 0.04, "max": 0.075},
-    "fruiting_months": [7, 8, 9],
-    "anther_colour": [245, 240, 225],
-    "filament_colour": [245, 240, 225],
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "fruit_size_m": {
+      "min": 0.04,
+      "max": 0.075
+    },
+    "fruiting_months": [
+      7,
+      8
+    ],
+    "anther_colour": [
+      245,
+      240,
+      225
+    ],
+    "filament_colour": [
+      245,
+      240,
+      225
+    ],
     "fruit_shape": "globose"
   },
   "evidence": {
-    "traits.carpels": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: 11 to 12 stigma lobes on a white style slightly exserted through the stamens; the carpels are as many as the lobes."},
-    "traits.stamens": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: hundreds of white stamens, all about 2 cm long, the upper ones exserted evenly like a shaving brush."},
-    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: stems green; dark green, as Anderson's photograph shows them."},
-    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: radial spines greyish, to 1 cm."},
-    "traits.central_spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: central spines greyish to blackish."},
-    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) p. 14: the areoles' hairs red at first, turning black."},
-    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."},
-    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."},
-    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."},
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: 11 to 12 stigma lobes on a white style slightly exserted through the stamens; the carpels are as many as the lobes."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: hundreds of white stamens, all about 2 cm long, the upper ones exserted evenly like a shaving brush."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: stems green; dark green, as Anderson's photograph shows them."
+    },
+    "traits.spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: radial spines greyish, to 1 cm."
+    },
+    "traits.central_spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: central spines greyish to blackish."
+    },
+    "traits.areole_wool_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986) p. 14: the areoles' hairs red at first, turning black."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) p. 649, Stenocereus thurberi: flowers funnelform, white, 4 to 8 cm long; fruit red. Gibson and Nobel, The Cactus Primer pp. 22 to 25: flowers whitish to pinkish, 6 to 8 cm, with 25 or more perianth parts (as the family's default). Neither gives the flower's width or the fruit's size, so those stay set by hand."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
       "note": "Britton and Rose vol. 2 (1920), as Lemaireocereus thurberi: usually trunkless, with 5 to 20 or more erect stems 3 m to 7 m tall."
     },
-    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Stenocereus thurberi (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.49, branches 0.49. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
-    "traits.flower_zone": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) p. 22, organ pipe cactus: showy sessile flowers, each from a single areole, near the apex and along the sides of the branches."},
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 species aggregate for Stenocereus thurberi (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.49, branches 0.49. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."
+    },
+    "traits.flower_zone": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986) p. 22, organ pipe cactus: showy sessile flowers, each from a single areole, near the apex and along the sides of the branches."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
@@ -165,7 +309,11 @@
       "source": "plantgen-authors",
       "note": "Rough stem heights from general knowledge: a few metres by 70 years, about 5 m by 120. Wide tolerances."
     },
-    "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "Colours chosen by eye from photographs: dark green stems with 12 to 19 ribs, areoles 2 cm apart with dark felt, short dark radial spines and one to three longer centrals that grey with age; creamy white to lavender flowers. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."},
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours chosen by eye from photographs: dark green stems with 12 to 19 ribs, areoles 2 cm apart with dark felt, short dark radial spines and one to three longer centrals that grey with age; creamy white to lavender flowers. Its flower, bud and fruit are drawn from its characters by the rules at Cactaceae and the flowering plants: tepals on a spiral, as many and as broad as the family's rules give, on a floral cup above the inferior ovary, its stamens, style and stigma lobes, and its fruit from its stated colour, size and surface. Until 2026-10-18 its flower and fruit looks were partly set by hand (round tepal tips, a centre and an accent colour by eye), and a look set by hand keeps the rule that gives it the year its months state from running, so it flowered and fruited all year."
+    },
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -196,16 +344,56 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
-    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
-    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
-    "traits.limb_angle": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Stenocereus thurberi: shrubs, branching basal, 3-6[-12+] m; stems erect; the genus: trees or shrubs, erect, arching, or procumbent, mostly branched from base. Its stems are its limbs, erect from its base, so the family's rule fans them out to a vase of columns that hold their angle. Until round 5 they leaned out by hand 25 degrees and turned upright within a metre (bend 0.35), a bundle narrowing upward against photographs of a vase."},
-    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
-    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486740), as no source read gives it."},
-    "traits.anther_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: stamens in hundreds, white, all about 2 cm long, the upper ones exserted evenly like a shaving brush."},
-    "traits.filament_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: stamens white; style white, slightly exserted through the stamen mass."},
-    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Stenocereus: fruits spheric; the Cactus Primer (pp. 23 to 25) draws the organ pipe's globose, densely spiny fruit."}
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2486740), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2486740), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2486740), as no source read gives it."
+    },
+    "traits.limb_angle": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Stenocereus thurberi: shrubs, branching basal, 3-6[-12+] m; stems erect; the genus: trees or shrubs, erect, arching, or procumbent, mostly branched from base. Its stems are its limbs, erect from its base, so the family's rule fans them out to a vase of columns that hold their angle. Until round 5 they leaned out by hand 25 degrees and turned upright within a metre (bend 0.35), a bundle narrowing upward against photographs of a vase."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceStated",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-20), Stenocereus thurberi: 'Flowering (Mar)Apr-Jul[-Dec]; fruiting mostly Jul-Aug.' The usual months kept, the bracketed range outside the flora area left out. Until 2026-10-20 a model estimate of May to July and July to September."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2486740), as no source read gives it."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceStated",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-20), Stenocereus thurberi: 'Flowering (Mar)Apr-Jul[-Dec]; fruiting mostly Jul-Aug.' The usual months kept, the bracketed range outside the flora area left out. Until 2026-10-20 a model estimate of May to July and July to September."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: stamens in hundreds, white, all about 2 cm long, the upper ones exserted evenly like a shaving brush."
+    },
+    "traits.filament_colour": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 23 to 25, Stenocereus thurberi: stamens white; style white, slightly exserted through the stamen mass."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-18), Stenocereus: fruits spheric; the Cactus Primer (pp. 23 to 25) draws the organ pipe's globose, densely spiny fruit."
+    }
   },
   "provenance": {
     "sources": [
@@ -214,7 +402,9 @@
         "licence": "project contribution under the repository's terms"
       }
     ],
-    "contributors": ["Project After"],
+    "contributors": [
+      "Project After"
+    ],
     "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later."
   }
 }
