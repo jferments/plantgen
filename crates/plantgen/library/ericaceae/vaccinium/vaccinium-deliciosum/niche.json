@@ -1,0 +1,153 @@
+{
+  "schema": 2,
+  "species": "vaccinium-deliciosum",
+  "layers": {
+    "shrub": 0.5
+  },
+  "moisture": [
+    0.3,
+    0.45,
+    0.85,
+    0.95
+  ],
+  "heat_load": [
+    0.2,
+    0.5,
+    1.6,
+    2.0
+  ],
+  "elevation_m": [
+    500,
+    900,
+    2100,
+    2500
+  ],
+  "max_slope_deg": 45,
+  "shade_tolerance": 0.3,
+  "coldest_c": [
+    -15,
+    -9,
+    0,
+    4
+  ],
+  "hard_freeze_c": [
+    -35,
+    -30,
+    -3,
+    3
+  ],
+  "warmest_c": [
+    7,
+    9,
+    16,
+    19
+  ],
+  "degree_days_0": [
+    600,
+    900,
+    2800,
+    3500
+  ],
+  "degree_days_5": [
+    150,
+    300,
+    1300,
+    1900
+  ],
+  "moisture_index": [
+    0.5,
+    0.7,
+    1,
+    1.01
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.45,
+    0.65
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A low deciduous shrub that forms patches in subalpine meadows and heath, red in autumn."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Moist, acid ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Open slopes of any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Subalpine, about 1,000 to 2,100 m in the Washington Cascades and Olympics."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Meadow slopes and benches."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sun to light shade."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about −9 to 0 °C; gone below −15 °C and above 4 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −30 °C borne, gone where the year's coldest night falls below about −35 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 9 to 16 °C; gone below 7 °C, where summers are too short, and above 19 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 900 to 2,800 degree-days above 0 °C, none below 600."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 300 to 1,300 degree-days above 5 °C, none below 150."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.7, gone by 0.5."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: summer-dry Cascade summers suit it; up to about 0.45 of the year's precipitation in summer, gone by 0.65."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Mount Rainier subalpine meadow scene (Paradise, about 1,650 m) from general knowledge of the species; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Cascade blueberry grows in the mountains of southern British Columbia, the Olympics and the Cascades of Washington and Oregon, and locally east to Idaho (general range knowledge; not checked against PLANTS). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

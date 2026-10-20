@@ -1,0 +1,395 @@
+{
+  "schema": 1,
+  "id": "veratrum-viride",
+  "taxon": {
+    "scientific_name": "Veratrum viride",
+    "common_name": "green false hellebore",
+    "family": "Melanthiaceae",
+    "genus": "Veratrum",
+    "plant_name_id": 291258
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 2,
+      "stem_rate": 0.3,
+      "clump_radius": 0.1,
+      "stem_lean": 5,
+      "maturity": 3,
+      "stem_radius": 0.012,
+      "wiggle": 1,
+      "nodes": 9,
+      "bare": 0.05,
+      "leaf_length": 0.28,
+      "leaf_peak": 0.15,
+      "leaf_top": 0.55,
+      "leaf_base": 0.8,
+      "leaf_angle": 35,
+      "raceme": 0.3,
+      "flowers": 40,
+      "flower_size": 0.018,
+      "pedicel": 0.004,
+      "flower_angle": 60,
+      "fruit_below": 0.3,
+      "buds_above": 0.3,
+      "nod": 30,
+      "adult_age": 5,
+      "basal_leaves": 0,
+      "flower_branches": 5,
+      "branch_angle": 50,
+      "branch_length": 0.15,
+      "branch_nodes": 0,
+      "branch_leaf": 0.1
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [
+      3,
+      5,
+      8
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "widest": 0.5,
+          "tip": 0.6,
+          "base": 0.5,
+          "teeth": 0,
+          "petiole": 0,
+          "parallel": 8
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.7,
+          "point": 0.4,
+          "notch": 0.0,
+          "centre": 0.25,
+          "sepal_length": 1.0
+        },
+        "colour": [
+          0.42,
+          0.5382,
+          0.1329
+        ],
+        "accent": [
+          0.214,
+          0.3424,
+          0.0509
+        ]
+      }
+    },
+    "bark": [
+      0.1706,
+      0.2633,
+      0.0732
+    ],
+    "foliage": [
+      0.047,
+      0.1193,
+      0.0153
+    ],
+    "foliage_shade": [
+      0.0164,
+      0.0501,
+      0.0084
+    ]
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 1.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 2.0
+    },
+    "height_max_m": 2.0,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "perennation": "rhizome",
+    "rhizome_habit": "erect",
+    "rosette": "none",
+    "leaf_arrangement": "alternate",
+    "leaf_habit": "deciduous",
+    "leaf_shape": "elliptic",
+    "leaf_apex": "acute",
+    "leaf_venation": "parallel",
+    "leaf_length_m": {
+      "min": 0.15,
+      "max": 0.3
+    },
+    "leaf_width_m": {
+      "min": 0.07,
+      "max": 0.15
+    },
+    "inflorescence": "panicle",
+    "inflorescence_posture": "nodding",
+    "inflorescence_length_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
+    "pedicel_length_m": {
+      "min": 0.002,
+      "max": 0.006
+    },
+    "perianth": "tepals",
+    "perianth_parts": 6,
+    "tepal_length_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "flower_size_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "flower_colour": [
+      180,
+      195,
+      105
+    ],
+    "sexual_system": "polygamous",
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.02,
+      "max": 0.025
+    },
+    "flowering_months": [
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"Stems stout, 5-20 dm. tall, very leafy\"."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: stems \"5-20 dm. tall\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 377, Veratrum: \"Tall perennial herbs, with thick short poisonous rootstocks\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 377, Veratrum: \"Tall perennial herbs\"."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"rootstock erect, 5-8 cm. long, 2.5-5 cm. thick, with numerous fibrous-fleshy roots\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"rootstock erect\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: stems \"very leafy\", the leaves along the stem, with no basal rosette."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves borne singly up the stem, spirally, set by hand from iNaturalist photos (observations 67994916, 392001108, 241925248, 299734528, 390147558, 238421038, 177023123, 135388654): the sources read give no count or measure."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the shoots die back to the rootstock each autumn, as the photos' late-season yellowing leaves show."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"the lower broadly oval or elliptic\", \"the upper successively narrower and acuminate\"."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"Leaves acute\"."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 377, Veratrum: \"the leaves mostly broad, clasping, strongly veined and plaited\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: lower leaves \"15-30 cm. long\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: lower leaves \"7-15 cm. wide\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"panicle 2-6 dm. long, the lower branches spreading and more or less drooping\"."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 377, Veratrum: key: \"Panicle drooping; flowers green. 1. V. viride\"."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"panicle 2-6 dm. long\"."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"pedicels 2-6 mm. long, mostly shorter than the bracts\"."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 377, Veratrum: \"Perianth-segments 6\", alike."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 377, Veratrum: \"Perianth-segments 6\"."
+    },
+    "traits.tepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"perianth-segments oblong or oblanceolate, acute, 8-10 mm. long, woolly-pubescent\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 1.5 cm to 2 cm across, about twice the 8-10 mm perianth segments Abrams gives."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"flowers yellowish green\"; sRGB by eye from the photos."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 377, Veratrum: \"Flowers greenish, white or purple, rather large, polygamous or monoecious\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"capsule 20-25 mm. long, 8-12 mm. thick, many-seeded\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"capsule 20-25 mm. long\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "In flower in July and August at Paradise and in the Cascades, set by hand from iNaturalist photos (observations 67994916, 392001108, 241925248, 299734528, 390147558, 238421038, 177023123, 135388654): the sources read give no count or measure."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: capsules ripe in August and September, after the July and August flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for green false hellebore from Abrams's description and the photos the traits cite, on beargrass's (xerophyllum-tenax) program values: one or two stout stems, very leafy, the broad sheathing leaves largest low on the stem and narrowing upward (Abrams 1923 p. 378), ending in a panicle about a third of the stem's height whose lower branches spread and droop (flower_branches 5, nod 30). Few stems flower in a year and only after several years' growth (adult_age 5, an estimate). Not fitted to measurements. flowering_share 0.4 (beargrass's) removed 2026-10-19: with two stems it left no stem to flower in any year, though Abrams (1923 p. 378) describes every stem as ending in its \"panicle 2-6 dm. long\"; the melanthiaceae program's own value (every adult stem ends in its inflorescence) now applies."
+    },
+    "appearance.organs.leaf": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 377, Veratrum: \"the leaves mostly broad, clasping, strongly veined and plaited\"; Abrams (1923 p. 378): \"sessile or short-petioled, sheathing\". Drawn as a broad, sessile, elliptic leaf with strong parallel veins."
+    },
+    "appearance.organs.flower": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 378, Veratrum viride: \"flowers yellowish green; perianth-segments oblong or oblanceolate, acute\". Drawn as a star of six pointed, yellowish green tepals."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a tall, stout, very leafy stem of broad, pleated, yellow-green leaves, crowned by a drooping panicle of small yellowish green flowers. Organ cards from common beargrass's (xerophyllum-tenax), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.3 m tall at 8 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

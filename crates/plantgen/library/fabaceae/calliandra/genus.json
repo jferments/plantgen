@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Calliandra",
+  "traits": {"flower_symmetry": "actinomorphic", "stamens": {"min": 20, "max": 60}, "stamen_exsertion": "strongly_exserted"},
+  "evidence": {
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 475), Mimosaceae: small regular mostly perfect flowers, in heads; Calliandra: stamens numerous, long-exserted, filaments united below into a tube. Kearney and Peebles (1942, pp. 412-413) for Calliandra: stamens very numerous."
+    },
+    "traits.stamens": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as the floras read give words, not counts: Abrams (vol. 2, 1944, p. 475) 'stamens numerous', Kearney and Peebles (1942, p. 412) 'stamens very numerous'; 20 to 60 is the usual count in the genus."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 475), Calliandra: stamens numerous, long-exserted; C. eriophylla's corolla 4-6 mm long and its stamens about 2 cm, so they hang far out of the flower as a tassel."
+    }
+  }
+}

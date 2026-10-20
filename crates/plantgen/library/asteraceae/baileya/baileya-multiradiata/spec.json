@@ -1,0 +1,444 @@
+{
+  "schema": 1,
+  "id": "baileya-multiradiata",
+  "taxon": {
+    "scientific_name": "Baileya multiradiata",
+    "common_name": "desert marigold",
+    "family": "Asteraceae",
+    "genus": "Baileya",
+    "plant_name_id": 3115635
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 15,
+      "stem_rate": 0.6,
+      "clump_radius": 0.15,
+      "stem_lean": 25,
+      "nodes": 4,
+      "basal_leaves": 10,
+      "basal_angle": 60,
+      "bare": 0.05,
+      "leaf_peak": 0.1,
+      "leaf_top": 0.4,
+      "leaf_angle": 45,
+      "raceme": 0.05,
+      "flowers": 1,
+      "pedicel": 0.06,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "leaf_length": 0.045,
+      "stem_height": 0.27
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "lobed",
+          "width": 0.5,
+          "lobes": 3,
+          "depth": 0.6,
+          "round": 0.5,
+          "petiole": 0.05
+        }
+      },
+      "flower": {
+        "shape": {
+          "ray_width": 0.9
+        },
+        "colour": [
+          0.9551,
+          0.6739,
+          0.01
+        ],
+        "accent": [
+          0.89,
+          0.448,
+          0.0039
+        ]
+      }
+    },
+    "foliage": [
+      0.2633,
+      0.3185,
+      0.214
+    ],
+    "foliage_shade": [
+      0.0922,
+      0.1338,
+      0.1177
+    ]
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.4
+    },
+    "height_max_m": 0.5,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "rosette": "basal",
+    "cauline_leaves": "reduced",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_incision": "lobed",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.05
+    },
+    "leaf_shape": {
+      "ovate": "often",
+      "obovate": "often"
+    },
+    "leaf_margin": "entire",
+    "leaf_hairs": "lanate",
+    "hair_colour": [
+      235,
+      235,
+      228
+    ],
+    "inflorescence": "solitary",
+    "inflorescence_unit": "capitulum",
+    "peduncle_length_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "capitulum_kind": "radiate",
+    "involucre_height_m": {
+      "min": 0.007,
+      "max": 0.008
+    },
+    "involucre_diameter_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "ray_florets": {
+      "min": 34,
+      "max": 55,
+      "low": 25
+    },
+    "ray_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "ray_colour": [
+      250,
+      210,
+      25
+    ],
+    "disc_colour": [
+      240,
+      190,
+      20
+    ],
+    "pappus": "absent",
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "elevation_max_m": 1520,
+    "light": [
+      "sun"
+    ],
+    "soil_texture": [
+      "sand"
+    ],
+    "ray_apex": "toothed"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: stems 3-4 dm. high, floccose-woolly."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: a stem with its head rarely over 50 cm, just over Abrams and Ferris's 3-4 dm."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: from a perennial or biennial base; drawn as a perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya: woolly herbs."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: the basal leaves persisting, the stem leaves few and toward the base."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: stem leaves few, mostly near the base, smaller than the basal."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Stem leaves alternate, set by hand from iNaturalist photos (observations 148404358, 106628792, 72916633, 140306081, 158777342, 212945763, 161642925, 18473959): the sources read give no count or measure."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya: leaves pinnatifid to entire: simple blades, often deeply cut."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: basal (rosette) leaves ... blades ovate, usually pedately to pinnately lobed."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya: leaves pinnatifid."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya: leaves pinnatifid: cut once."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: basal (rosette) leaves mostly 3-10 x 1-5 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: basal (rosette) leaves mostly 3-10 x 1-5 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Basal blades ovate to obovate in outline, pinnately cut, set by hand from iNaturalist photos (observations 148404358, 106628792, 72916633, 140306081, 158777342, 212945763, 161642925, 18473959): the sources read give no count or measure."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Lobes entire, rounded, set by hand from iNaturalist photos (observations 148404358, 106628792, 72916633, 140306081, 158777342, 212945763, 161642925, 18473959): the sources read give no count or measure."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: floccose-woolly throughout."
+    },
+    "traits.hair_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Wool white, giving the plant a silver-grey look; sRGB by eye, set by hand from iNaturalist photos (observations 148404358, 106628792, 72916633, 140306081, 158777342, 212945763, 161642925, 18473959): the sources read give no count or measure."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: heads solitary on peduncles 1-3 dm. long."
+    },
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya: heads long-peduncled."
+    },
+    "traits.peduncle_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: peduncles 1-3 dm. long."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: rays bright yellow, 25-50."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960) p. 196, Baileya multiradiata: involucre 7-8 mm. high."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: involucres hemispheric (vernal forms), mostly 5-10 x 10-25 mm."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: rays (vernal forms) mostly 34-55; Abrams and Ferris vol. 4 (1960) p. 196: rays 25-50."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: laminae linear-oblanceolate, mostly 10-20 x 5 mm."
+    },
+    "traits.ray_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rays bright lemon yellow, papery and reflexed in age; sRGB by eye, set by hand from iNaturalist photos (observations 148404358, 106628792, 72916633, 140306081, 158777342, 212945763, 161642925, 18473959): the sources read give no count or measure."
+    },
+    "traits.disc_colour": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Disc deep yellow; sRGB by eye, set by hand from iNaturalist photos (observations 148404358, 106628792, 72916633, 140306081, 158777342, 212945763, 161642925, 18473959): the sources read give no count or measure."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya: pappus none."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a cypsela without pappus."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cypselae 3 mm to 4 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya multiradiata: up to 5,000 feet, very common on sandy plains and mesas and along roadsides, March to October (Abrams and Ferris 1960 p. 196: April to October)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: cypselae ripen from April to November, a month behind the flowers."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya multiradiata: up to 5,000 feet: about 1,520 m."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya multiradiata: sandy plains and mesas, in the open."
+    },
+    "traits.soil_texture": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 970), Baileya multiradiata: sandy plains and mesas."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a silvery woolly clump of pinnately cut basal leaves sending up many slender grey stems, each ending in one bright yellow daisy with papery rays. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for desert marigold from its sources and the photos the traits cite, on the template of Oregon sunshine (eriophyllum-lanatum); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.35 m tall at 3 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.ray_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 21 p. 445-447 (eFloras, read 2026-10-19), Baileya multiradiata: laminae ... apices moderately to deeply 3-toothed."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

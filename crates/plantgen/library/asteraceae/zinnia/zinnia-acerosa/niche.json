@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "zinnia-acerosa",
+  "layers": {
+    "herb": 0.2
+  },
+  "moisture": [
+    0,
+    0.05,
+    0.5,
+    0.65
+  ],
+  "heat_load": [
+    0.2,
+    0.5,
+    1.8,
+    2.2
+  ],
+  "elevation_m": [
+    500,
+    700,
+    1900,
+    2200
+  ],
+  "max_slope_deg": 35,
+  "shade_tolerance": 0.2,
+  "coldest_c": [
+    0,
+    3,
+    13,
+    16
+  ],
+  "hard_freeze_c": [
+    -20,
+    -15,
+    8,
+    12
+  ],
+  "warmest_c": [
+    22,
+    24,
+    32,
+    34
+  ],
+  "degree_days_0": [
+    3600,
+    4400,
+    8500,
+    9800
+  ],
+  "degree_days_5": [
+    2000,
+    2800,
+    6500,
+    7800
+  ],
+  "moisture_index": [
+    0.04,
+    0.07,
+    0.35,
+    0.45
+  ],
+  "summer_rain": [
+    0.3,
+    0.4,
+    0.75,
+    0.85
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A low cushion subshrub, to 16 cm, of open desert and desert grassland."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dry rocky slopes and flats, often on caliche."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Open, sunny ground; any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "700 to 1,900 m (Flora of North America); 2,500 to 5,000 feet in Arizona (Kearney and Peebles). The bajada is at its lower edge."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rocky open slopes and flats."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Full sun."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 3 to 13 °C; gone below 0 °C and above 16 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −15 °C borne, gone where the year's coldest night falls below about −20 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 24 to 32 °C; gone below 22 °C, where summers are too short, and above 34 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 4,400 to 8,500 degree-days above 0 °C, none below 3,600."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 2,800 to 6,500 degree-days above 5 °C, none below 2,000."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.07 to 0.35, gone by 0.04 and above 0.45."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Needs the monsoon's summer rain: from about 0.4 of the year's precipitation in summer, gone below 0.3; up to about 0.75, gone by 0.85."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Flora of North America (eFloras): habitat, elevation and distribution",
+        "url": "http://www.efloras.org",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m, 32.25 N 111.17 W) from general knowledge of the species and the ranges, habitats and elevations in the sources read for its spec (2026-10-19). Desert zinnia grows from southern Arizona to Texas and northern Mexico, the Chihuahuan Desert and its grasslands at its heart, on rocky open slopes and calcareous soils (Flora of North America). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records; every full range holds the bajada's climate (coldest month about 11 °C, warmest about 31 °C, about 7,600 degree-days above 0 °C, coldest night about −4 °C, moisture index about 0.15, about half the year's rain in summer)."
+  }
+}

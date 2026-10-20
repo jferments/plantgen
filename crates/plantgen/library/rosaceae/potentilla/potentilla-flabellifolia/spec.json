@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "id": "potentilla-flabellifolia",
+  "taxon": {
+    "scientific_name": "Potentilla flabellifolia",
+    "common_name": "fan-leaf cinquefoil",
+    "family": "Rosaceae",
+    "genus": "Potentilla",
+    "plant_name_id": 2954687
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.05,
+      "stem_lean": 25,
+      "nodes": 2,
+      "basal_leaves": 6,
+      "basal_angle": 55,
+      "bare": 0.3,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.7,
+      "raceme": 0.15,
+      "flowers": 3,
+      "flower_angle": 35,
+      "pedicel": 0.03,
+      "leaf_length": 0.035
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.3
+        }
+      },
+      "basal": {
+        "shape": {
+          "petiole": 0.52
+        }
+      }
+    },
+    "bark": [
+      0.1005,
+      0.1473,
+      0.0509
+    ],
+    "foliage": [
+      0.12,
+      0.26,
+      0.08
+    ],
+    "foliage_shade": [
+      0.038,
+      0.083,
+      0.026
+    ]
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.22,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.3
+    },
+    "life_span": "perennial",
+    "perennation": "rhizome",
+    "rosette": "basal",
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": 3,
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.12
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.15
+    },
+    "leaflet_length_m": {
+      "min": 0.01,
+      "max": 0.05
+    },
+    "leaf_shape": "obovate",
+    "leaf_margin": "serrate",
+    "cauline_leaves": "reduced",
+    "stem_hairs": "puberulent",
+    "inflorescence": "cyme",
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 6
+    },
+    "flower_merosity": 5,
+    "petal_length_m": {
+      "min": 0.008,
+      "max": 0.01
+    },
+    "sepal_length_m": {
+      "min": 0.004,
+      "max": 0.008
+    },
+    "flower_size_m": {
+      "min": 0.018,
+      "max": 0.025
+    },
+    "flower_colour": [
+      250,
+      205,
+      35
+    ],
+    "fruit_type": "achene",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "pedicel_length_m": {
+      "min": 0.003,
+      "max": 0.045
+    },
+    "carpels": {
+      "min": 20,
+      "max": 50
+    },
+    "fruit_size_m": {
+      "min": 0.0012,
+      "max": 0.0015
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawn as a forb on the herb program: Abrams (1944 p. 434) gives \"Stems from a scaly branching rootstock, slender, 15-30 cm. high\" over long-stalked basal leaves. No Rosaceae forb is built in, so its template is showy Jacob's-ladder (polemonium-pulcherrimum), another subalpine forb with a tuft of divided basal leaves under few-flowered stems."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"Stems from a scaly branching rootstock, slender, 15-30 cm. high\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: stems \"from a scaly branching rootstock\": a perennial."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"from a scaly branching rootstock\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"Basal leaves usually with long slender petioles\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: basal leaves \"ternate\"."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: basal leaves \"ternate\": three leaflets from one point."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"ternate\", the leaflets \"deeply incised-serrate\" but not divided again."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: basal leaves \"ternate\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"Basal leaves 2-ranked, ternate, (1–)3–12(–20) cm\"."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"petiole (0.5–)1–15(–18) cm\"."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"leaflets 3, central widely obovate to flabellate, (0.5–)1–5 × (0.4–)1–3(–3.5) cm\"."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"leaflets cuneate-flabelliform\", fan-shaped and widest near the tip; read as obovate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: leaflets \"deeply incised-serrate\"."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Stem leaves few and smaller than the basal ones, set by hand from iNaturalist photos (observations 145624511, 40901066, 296521191, 8438199, 182887878, 366919469, 392046, 232901042): the sources read give no count or measure."
+    },
+    "traits.stem_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: stems \"minutely puberulent\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"cymes few-flowered\"."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"Inflorescences 1–6-flowered\"."
+    },
+    "traits.flower_merosity": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five petals to a flower, set by hand from iNaturalist photos (observations 145624511, 40901066, 296521191, 8438199, 182887878, 366919469, 392046, 232901042): the sources read give no count or measure."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"petals yellow, 8-10 mm. long\"."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"sepals 4–8 mm, apex acute to obtuse\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: open flowers 1.8 cm to 2.5 cm across, a little over twice the 8-10 mm petals Abrams gives, as in the photos."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"petals yellow\"; sRGB by eye from the photos (a warm, bright yellow)."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Achenes, as in Abrams's key to Potentilleae (1944 p. 408): \"Fruit of indehiscent achenes\", \"Ovaries 1-ovuled\"; the species account does not describe its fruit."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 434, Potentilla flabellifolia: \"June-Sept.\"."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for fan-leaf cinquefoil from Abrams's description and the photos the traits cite, on showy Jacob's-ladder's (polemonium-pulcherrimum) structure: a tuft of six long-stalked, three-parted basal leaves, a few slender stems with two small leaves each, ending in one to five yellow flowers on short stalks (Abrams 1944 p. 434). Not fitted to measurements."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a low tuft of long-stalked leaves of three fan-shaped, deeply toothed leaflets under slender stems with a few bright yellow, five-petalled flowers. Organ cards from showy Jacob's-ladder's (polemonium-pulcherrimum), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.22 m tall at 3 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"Pedicels straight, 0.3–4.5(–5) cm\"."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"carpels 20–50\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 9 (eFloras, read 2026-10-19), Potentilla flabellifolia: \"Achenes 1.2–1.5 mm\"."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

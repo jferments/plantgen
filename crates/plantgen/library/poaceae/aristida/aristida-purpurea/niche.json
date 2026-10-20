@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "aristida-purpurea",
+  "layers": {
+    "herb": 0.3
+  },
+  "moisture": [
+    0,
+    0.05,
+    0.55,
+    0.7
+  ],
+  "heat_load": [
+    0.2,
+    0.5,
+    1.8,
+    2.2
+  ],
+  "elevation_m": [
+    -50,
+    0,
+    2300,
+    2700
+  ],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.2,
+  "coldest_c": [
+    -18,
+    -12,
+    14,
+    18
+  ],
+  "hard_freeze_c": [
+    -40,
+    -34,
+    10,
+    14
+  ],
+  "warmest_c": [
+    17,
+    20,
+    32,
+    35
+  ],
+  "degree_days_0": [
+    2200,
+    3000,
+    9000,
+    10500
+  ],
+  "degree_days_5": [
+    1000,
+    1500,
+    7000,
+    8500
+  ],
+  "moisture_index": [
+    0.03,
+    0.06,
+    0.8,
+    1.0
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.8,
+    0.9
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A bunchgrass of open desert, grassland and prairie."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dry hills and plains (Hitchcock; Kearney and Peebles)."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "305 to 1,525 m in Arizona (FEIS); up to 5,000 feet (Kearney and Peebles); higher further north."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dry rocky hills and plains."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Full sun."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about −12 to 14 °C; gone below −18 °C and above 18 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −34 °C borne, gone where the year's coldest night falls below about −40 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 20 to 32 °C; gone below 17 °C, where summers are too short, and above 35 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 3,000 to 9,000 degree-days above 0 °C, none below 2,200."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 1,500 to 7,000 degree-days above 5 °C, none below 1,000."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.06 to 0.8, gone by 0.03 and above 1."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: it also grows where winter rain dominates, as in the Mojave Desert; where the monsoon brings summer rain, as on the bajada, up to about 0.8 of the year's precipitation in summer, gone by 0.9."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Fire Effects Information System (FEIS), USDA Forest Service",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m, 32.25 N 111.17 W) from general knowledge of the species and the ranges, habitats and elevations in the sources read for its spec (2026-10-19). Purple threeawn grows from the Great Plains (Arkansas and Kansas) to Utah, Arizona, southern California and northern Mexico (FEIS; Hitchcock; Kearney and Peebles). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records; every full range holds the bajada's climate (coldest month about 11 °C, warmest about 31 °C, about 7,600 degree-days above 0 °C, coldest night about −4 °C, moisture index about 0.15, about half the year's rain in summer)."
+  }
+}

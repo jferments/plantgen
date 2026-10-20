@@ -1,0 +1,338 @@
+{
+  "schema": 1,
+  "id": "abies-amabilis",
+  "taxon": {
+    "scientific_name": "Abies amabilis",
+    "common_name": "Pacific silver fir",
+    "family": "Pinaceae",
+    "genus": "Abies",
+    "plant_name_id": 381632
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "params": {
+      "apical": 0.9,
+      "cone_chance": 0.12,
+      "height_rate": 0.0115,
+      "height_shape": 1.5,
+      "whorl": 5,
+      "interwhorl": 2,
+      "branch_angle": 85,
+      "upturn": 0.005,
+      "spray_droop": 10,
+      "shade_death": 0.05,
+      "shade_years": 4,
+      "pipe_organ": 0.004,
+      "pipe_rings": 1.2e-06,
+      "branch_reach": 3,
+      "bole": 0.05
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30,
+      60
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open",
+      "interior"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.4,
+          "cone": 1
+        },
+        "colour": [
+          0.3,
+          0.16,
+          0.34
+        ]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "twigs": 6,
+          "aspect": 0.85,
+          "twig_angle": 55,
+          "width": 0.055
+        },
+        "accent": [
+          0.25,
+          0.2,
+          0.12
+        ]
+      }
+    },
+    "foliage": [
+      0.05,
+      0.14,
+      0.05
+    ],
+    "foliage_shade": [
+      0.016,
+      0.045,
+      0.016
+    ],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.05,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.1,
+      "contrast": 0.2,
+      "variation": 0.15,
+      "smooth_below": 0.12,
+      "roughness": 0.35
+    },
+    "ridges": {
+      "spacing": 0.12,
+      "depth": 0.02,
+      "twist": 0,
+      "contrast": 0.25
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 16,
+      "tolerance": 0.35,
+      "dbh": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 30,
+      "max": 70,
+      "high": 85
+    },
+    "stem_diameter_max_m": {
+      "min": 0.9,
+      "max": 1.1,
+      "high": 2
+    },
+    "age_max_years": {
+      "min": 250,
+      "max": 500,
+      "high": 540
+    },
+    "juvenile_period_years": {
+      "min": 20,
+      "max": 30
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "crown_form": "conical",
+    "shade_tolerance": "tolerant",
+    "bark_texture": "smooth",
+    "bark_colour": [
+      150,
+      150,
+      144
+    ],
+    "foliage_ranks": "two_ranked",
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "leaf_apex": {
+      "obtuse": "usually",
+      "emarginate": "often",
+      "acute": "sometimes"
+    },
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.025,
+      "low": 0.007,
+      "high": 0.03
+    },
+    "leaf_width_m": {
+      "min": 0.0015,
+      "max": 0.002
+    },
+    "cone_length_m": {
+      "min": 0.08,
+      "max": 0.1,
+      "high": 0.15
+    },
+    "cone_colour": [
+      95,
+      50,
+      105
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"At maturity, it can reach heights of 100 to 230 feet (30-70 m)\"; Abrams (1923 p. 65): \"A large tree attaining a maximum height of 85 m.\""
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"diameters of 36 to 44 inches (90-110 cm)\"; Abrams (1923 p. 65) gives \"a trunk 1.5-2 m. in diameter\", kept as the rare high."
+    },
+    "traits.age_max_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"The average maximum age for Pacific silver fir is 400 to 500 years on good sites, and 250 to 350 years on more adverse sites. The maximum recorded age is 540 years\"."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"Seed production begins at 20 to 30 years of age\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"a monoecious, long-lived, native conifer\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies amabilis: \"A large tree\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies: \"Pyramidal trees\" with leaves along the branchlets: no rosette."
+    },
+    "traits.crown_form": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"The crown is rigid and symmetrical with lateral branches perpendicular to the stem\"; read as conical, with Abrams's genus (1923 p. 65): \"Pyramidal trees\"."
+    },
+    "traits.shade_tolerance": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"Pacific silver fir is very shade tolerant and has low spatial requirements\"."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"Young trees have resin-filled blisters protruding from the smooth, thin bark. The bark of older trees is rough textured and flaky\"; drawn smooth, as the young and middle-aged trees of the scene."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies amabilis: \"bark thin, smooth, and pale\"; sRGB by eye from the photos (a pale ash grey)."
+    },
+    "traits.foliage_ranks": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Abies amabilis (Cope 1992): \"The needles grow from opposite sides of the branch, spreading horizontally or brushed forward\"; Abrams (1923 p. 65): \"Leaves erect on the branches by the curving of those on the lower side\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies: \"Leaves linear, sessile, appearing 2-ranked by a twist at the base, or spreading from all sides\": single along the twig."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies: \"Leaves linear, sessile\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies amabilis: leaves \"recurved on the margins\", not toothed."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies amabilis: \"obtuse or notched at the apex on sterile branches, acute on the fertile branches\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 2 (eFloras), Abies amabilis: \"Leaves (0.7--)1--2.5cm\"; Abrams (1923 p. 65): \"2-3 cm. long\", kept as the rare high."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies amabilis: leaves \"1.5-2 mm. wide\"."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 2 (eFloras), Abies amabilis: \"Seed cones cylindric, 8--10(--13) × 3.5--5cm, purple\"; Abrams (1923 p. 65): \"9-15 cm. long\" and FEIS (Cope 1992): to 15.2 cm, kept as the rare high."
+    },
+    "traits.cone_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 65, Abies amabilis: \"cones oblong, purple\"; FEIS (Cope 1992): \"Cones change from green to purple at maturity\"; sRGB by eye from the photos."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grand fir's (abies-grandis) values, changed by hand for Pacific silver fir: first-order branches set at right angles to the stem (FEIS, Cope 1992: \"lateral branches perpendicular to the stem\"), and a shorter reach than grand fir's for the narrower crown of the subalpine trees in the photos. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: 16 m tall and 35 cm through at 60 years in open subalpine parkland: FEIS (Cope 1992) gives juvenile growth of 10-40 cm a year and says it \"is more common at higher elevations but grows faster at lower elevations\". Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a symmetrical, narrowly conical fir with level branches, dark glossy green needles silvery beneath, smooth pale grey bark and erect purple cones near the top. Organ cards from grand fir's (abies-grandis), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "schema": 2,
+  "species": "abies-amabilis",
+  "layers": {
+    "canopy": 0.3,
+    "subcanopy": 0.5,
+    "shrub": 0.3
+  },
+  "moisture": [
+    0.4,
+    0.55,
+    0.9,
+    0.97
+  ],
+  "heat_load": [
+    0.2,
+    0.4,
+    1.3,
+    1.7
+  ],
+  "elevation_m": [
+    -50,
+    0,
+    2120,
+    2400
+  ],
+  "max_slope_deg": 45,
+  "shade_tolerance": 0.8,
+  "coldest_c": [
+    -15,
+    -8,
+    4,
+    7
+  ],
+  "hard_freeze_c": [
+    -40,
+    -30,
+    -2,
+    4
+  ],
+  "warmest_c": [
+    8,
+    10,
+    17,
+    20
+  ],
+  "degree_days_0": [
+    600,
+    1000,
+    3800,
+    4500
+  ],
+  "degree_days_5": [
+    150,
+    350,
+    2200,
+    2800
+  ],
+  "moisture_index": [
+    0.55,
+    0.75,
+    1,
+    1.01
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.45,
+    0.65
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A tree of the closed montane forest below Paradise; at the meadows' lower edge it grows in tree clumps with subalpine fir and mountain hemlock, and as saplings under them."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Moist, deep, well-drained ground in a wet maritime climate; not in standing water."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Cool, moist aspects more than hot, dry slopes."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sea level in the north of its range; up to about 2,120 m in the south (FEIS, Cope 1992). Near its upper limit at Paradise."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grows on slopes and benches."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Very shade tolerant: regenerates under closed canopy (FEIS, Cope 1992)."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about −8 to 4 °C; gone below −15 °C and above 7 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −30 °C borne, gone where the year's coldest night falls below about −40 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 10 to 17 °C; gone below 8 °C, where summers are too short, and above 20 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 1,000 to 3,800 degree-days above 0 °C, none below 600."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 350 to 2,200 degree-days above 5 °C, none below 150."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.75, gone by 0.55."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: summer-dry Cascade summers suit it; up to about 0.45 of the year's precipitation in summer, gone by 0.65."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Mount Rainier subalpine meadow scene (Paradise, about 1,650 m) from general knowledge of the species; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Pacific silver fir grows from extreme southeastern Alaska through western British Columbia and the Olympic Mountains and the Cascade Range of Washington and Oregon to northwestern California (FEIS, Cope 1992), in wet maritime climates with deep snow. Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

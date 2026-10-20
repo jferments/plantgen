@@ -2,7 +2,8 @@
 # cohort of tillers on a sunflower spiral; their number and the width of
 # the tussock grow with age, and the outer tillers lean out. A tiller
 # carries a few arching leaf blades. In a plant old enough to flower, some
-# tillers raise a culm with a leaf at each node and a panicle at the top.
+# tillers raise a culm with a leaf at each node and a panicle at the top;
+# a branching grass's culms send branch culms from some nodes (revision 9).
 # The next year the cohort is dead: its blades stay on as straw-coloured
 # thatch that has lost its tips and flops outward, its culms are gone, and
 # a year later the thatch is gone too.
@@ -58,7 +59,7 @@
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 8;
+lsystem grass 9;
 
 param tillers;                # living tillers in a mature tussock
 param tiller_rate;            # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -84,6 +85,7 @@ param panicle_length;
 param dioecious;              # 1: each plant is male or female; 0: every plant bears both
 param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param panicle_nod;            # degrees a panicle tips over
+param culm_branches = 0;      # chance a culm node sends out a branch culm with its own panicle
 param leaf_years = 1;         # years a blade stays green: more than 1 for wintergreens
 param thatch_years;           # years dead blades stay on
 param thatch_droop;           # extra degrees a dead blade bends at each joint
@@ -105,6 +107,8 @@ module Bd(a);                 # the joint between two pieces
 module Fl;                    # where a tiller may raise a culm
 module Cm;                    # the base of a culm
 module Cu(s, j);              # a culm: j leaves still to place, s between nodes
+module Cn(s, j);              # a branching culm's node: its internode and leaf
+module Cb(s, j);              # where a culm node may send out a branch culm
 
 organ blade leaf as piece area blade_area;
 organ blade_tip leaf as piece area tip_area;
@@ -155,6 +159,7 @@ decompose Fl : t >= adult_age && rand() < flowering ->
           - panicle_length * (1 - exp(-t / maturity))) / (culm_leaves + 1),
          culm_leaves) ];
 decompose Fl -> ;
+decompose Cu(s, j) : culm_branches > 0 && j > 0 -> Cn(s, j) Cb(s, j) Cu(s, j - 1);
 decompose Cu(s, j) : j > 0 ->
     F(s) [ /(j * divergence + 0.75 * uniform(-roll_spread, roll_spread)) &(leaf_angle * 1.5) $
            Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ]
@@ -171,3 +176,15 @@ rule blade(s) : age + dt >= leaf_years -> thatch(s);
 rule blade_tip(s) : age + dt >= leaf_years -> ;
 rule Cm -> %;
 rule Tl : age >= thatch_years + leaf_years - 1 -> %;
+
+# A branching culm (bush muhly, big galleta) sends a shorter branch culm
+# from some of its nodes, leaning out, with fewer leaves and a panicle of
+# its own. Its node is a rule of its own above, with no draws, so a grass
+# whose culms do not branch grows by the old node rule unchanged; the
+# draws are here at the end, so they never move the sites of those above.
+decompose Cn(s, j) ->
+    F(s) [ /(j * divergence + 0.75 * uniform(-roll_spread, roll_spread)) &(leaf_angle * 1.5) $
+           Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ];
+decompose Cb(s, j) : culm_branches > 0 && j > 1 && rand() < culm_branches ->
+    [ /(j * divergence + 180 + uniform(-40, 40)) &(uniform(25, 45)) !(culm_radius * 0.7) Cu(s * 0.8, j - 1) ];
+decompose Cb(s, j) -> ;

@@ -1,0 +1,451 @@
+{
+  "schema": 1,
+  "id": "cylindropuntia-thurberi-subsp-versicolor",
+  "taxon": {
+    "scientific_name": "Cylindropuntia thurberi subsp. versicolor",
+    "common_name": "staghorn cholla",
+    "family": "Cactaceae",
+    "genus": "Cylindropuntia",
+    "plant_name_id": 3238345
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 4,
+      "joint_spread": 0.35,
+      "daughters_low": 0.8,
+      "daughters_high": 2.4,
+      "generations": 12,
+      "branch_angle": 40,
+      "twist": 0,
+      "trunk_joints": 8,
+      "leader_lean": 8,
+      "resprout": 0.12,
+      "crown": 0.6,
+      "sag": 0.3,
+      "joint_life": 0,
+      "swell": 1.2,
+      "swell_years": 12,
+      "bloom_age": 6,
+      "joint_flowers": 1,
+      "flower_angle": 30,
+      "flower_size": 0.04,
+      "chains": 0,
+      "chain_max": 4,
+      "bud_rate": 0.55
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "foliage": [
+      0.12,
+      0.1,
+      0.11
+    ],
+    "foliage_shade": [
+      0.054,
+      0.045,
+      0.0495
+    ],
+    "variation": 0.1,
+    "bodies": {
+      "stem": {
+        "dome": 1.0,
+        "base": 0.8,
+        "tubercles": {
+          "width": 0.55
+        },
+        "areoles": {
+          "spacing": 0.015,
+          "felt_radius": 0.002
+        },
+        "spines": [
+          {
+            "role": "radial",
+            "angle": 45,
+            "width": 0.0006,
+            "angle_spread": 30,
+            "length_spread": 0.35,
+            "tip": [
+              0.55,
+              0.4,
+              0.15
+            ]
+          },
+          {
+            "role": "glochid",
+            "count": [
+              8,
+              16
+            ],
+            "angle": 55,
+            "length": 0.001,
+            "width": 0.0001,
+            "angle_spread": 20,
+            "length_spread": 0.3
+          }
+        ],
+        "greying": {
+          "years": 6
+        },
+        "cork": {
+          "colour": [
+            0.12,
+            0.1,
+            0.08
+          ],
+          "start": 8,
+          "rate": 0.05,
+          "height": 0.6,
+          "spines": 0.4
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 1.4,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 1,
+      "max": 1.8
+    },
+    "height_max_m": 2,
+    "woodiness": "woody",
+    "rosette": "none",
+    "stem_colour": [
+      118,
+      98,
+      112
+    ],
+    "joint_length_m": {
+      "min": 0.04,
+      "max": 0.18
+    },
+    "joint_width_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "tubercle_relief": "prominent",
+    "tubercle_shape": "elongate",
+    "areole_wool_colour": [
+      170,
+      135,
+      95
+    ],
+    "radial_spines": {
+      "min": 6,
+      "max": 8
+    },
+    "radial_spine_length_m": {
+      "min": 0.01,
+      "max": 0.018
+    },
+    "spine_colour": [
+      165,
+      105,
+      80
+    ],
+    "spine_colour_aged": [
+      140,
+      136,
+      130
+    ],
+    "glochids": true,
+    "glochid_colour": [
+      200,
+      165,
+      60
+    ],
+    "flower_colour": [
+      172,
+      88,
+      62
+    ],
+    "flower_size_m": {
+      "min": 0.03,
+      "max": 0.05
+    },
+    "anther_colour": [
+      232,
+      200,
+      60
+    ],
+    "filament_colour": [
+      190,
+      200,
+      110
+    ],
+    "stigma_colour": [
+      236,
+      232,
+      212
+    ],
+    "fruit_surface": "areolate",
+    "fruit_shape": "obovoid",
+    "fruit_colour_ripe": [
+      150,
+      160,
+      90
+    ],
+    "fruit_size_m": {
+      "min": 0.025,
+      "max": 0.04
+    },
+    "fruit_width_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "fruit_persistence": "persistent",
+    "flowering_months": [
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: most plants 1 m to 1.8 m tall, below the 2 m FNA gives as the greatest."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: trees or shrubs, openly branching at acute angles, to 2 m."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: trees or shrubs; the old trunks woody, as in every tree cholla."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: stem segments whorled or subwhorled; no leaves to speak of."
+    },
+    "traits.stem_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: stem segments purple to green-purple; purplish green in the photos; sRGB by eye."
+    },
+    "traits.joint_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: stem segments 4-18 x 1-2 cm; Anderson (2001 p. 215): joints 4-18 cm."
+    },
+    "traits.joint_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: stem segments 4-18 x 1-2 cm."
+    },
+    "traits.tubercle_relief": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: tubercles prominent, elongate-oval, 1-2(-2.5) cm."
+    },
+    "traits.tubercle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: tubercles prominent, elongate-oval."
+    },
+    "traits.areole_wool_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: wool tan to brown, aging gray; sRGB by eye."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: spines 6-8 per areole (1-2 bristlelike spines), abaxial reflexed and adaxial erect; FNA does not tell radials from centrals, so all are counted here."
+    },
+    "traits.radial_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: abaxial spines the longest 10-18 mm; adaxial spines 6-11 mm."
+    },
+    "traits.spine_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: abaxial spines whitish, pinkish to red-brown; adaxial spines rich red-brown, gray coated basally; sRGB by eye from the photos."
+    },
+    "traits.spine_colour_aged": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: old spines grey, as the areoles' wool ages grey (FNA)."
+    },
+    "traits.glochids": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: glochids in small adaxial tuft or crescent, dark yellow, to 1 mm."
+    },
+    "traits.glochid_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: glochids dark yellow; sRGB by eye."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: inner tepals yellow-green, yellow to gold or bronze, or red to rose or magenta; drawn bronze-red, one of the colours the photos show; sRGB by eye."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: flowers 3 cm to 5 cm across."
+    },
+    "traits.anther_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: anthers yellow."
+    },
+    "traits.filament_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: filaments yellowish green."
+    },
+    "traits.stigma_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: style whitish to pale bronze; stigma lobes whitish."
+    },
+    "traits.fruit_surface": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: fruits leathery-fleshy, tuberculate or smooth, essentially spineless; areoles 20-30."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: fruits often stipitate, obovate."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: fruits yellowish green or tinged red to purple; sRGB by eye."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: fruits obovate, 25-40 x 10-20 mm."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: fruits 25-40 x 10-20 mm."
+    },
+    "traits.fruit_persistence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: fruits often proliferating; Anderson (2001 p. 215): fruit chains."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 4 (eFloras, read 2026-10-19), Cylindropuntia versicolor: flowering spring (Apr-Jun); Kearney and Peebles (1942 p. 616, as Opuntia versicolor): May."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: fruits ripe from early summer and hanging on through the year in chains."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for staghorn cholla from Flora of North America vol. 4 and Anderson (2001 p. 215): a tree or shrub to 2 m, openly branching at acute angles (branch_angle 40) on a short trunk (trunk_joints 8), whorled segments, fruits sometimes proliferating into short chains, not drawn (chains 0): a chain holds its fruit from year to year, which would draw the fruit all year against the June to December it states. The joints' size comes from the traits through the subfamily's rules; daughters, generations, sag and swell are set by eye against the template, a tree cholla."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 11556537, 213819327, 12770022, 254023137, 256891380, 254222123, 128468707, 219039708): purplish green joints of long prominent tubercles, short red-brown spines in papery greyish sheaths, a tuft of dark yellow glochids, short chains of spineless green-purple fruit. Colours, counts and lengths come from the traits through the family's rules."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.4 m tall at 20 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

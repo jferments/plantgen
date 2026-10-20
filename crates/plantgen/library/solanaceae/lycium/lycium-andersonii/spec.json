@@ -1,0 +1,408 @@
+{
+  "schema": 1,
+  "id": "lycium-andersonii",
+  "taxon": {
+    "scientific_name": "Lycium andersonii",
+    "common_name": "Anderson's wolfberry",
+    "family": "Solanaceae",
+    "genus": "Lycium",
+    "plant_name_id": 2496345
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 8,
+      "branch_angle": 55,
+      "fork_angle": 40,
+      "wiggle": 14,
+      "thorns": 1,
+      "thorn_length": 0.012,
+      "thorn_angle": 60
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "thorn": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.12
+        },
+        "colour": [
+          0.3185,
+          0.2957,
+          0.233
+        ],
+        "form": "thorn"
+      }
+    },
+    "bark": [
+      0.3424,
+      0.3185,
+      0.2633
+    ],
+    "foliage": [
+      0.0835,
+      0.1473,
+      0.047
+    ],
+    "foliage_shade": [
+      0.0292,
+      0.0619,
+      0.0259
+    ]
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 2
+    },
+    "height_max_m": {
+      "min": 2.7,
+      "max": 3
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "drought_deciduous",
+    "rosette": "none",
+    "spines": "thorns",
+    "twig_colour": [
+      200,
+      195,
+      180
+    ],
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_length_m": {
+      "min": 0.003,
+      "max": 0.035
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.008
+    },
+    "leaf_shape": {
+      "spatulate": "usually",
+      "linear": "often"
+    },
+    "leaf_margin": "entire",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "flower_colour": [
+      235,
+      225,
+      230
+    ],
+    "corolla_shape": "tubular",
+    "corolla_tube_length_m": {
+      "min": 0.01,
+      "max": 0.016
+    },
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamen_exsertion": "exserted",
+    "fruit_type": "berry",
+    "fruit_shape": "ovoid",
+    "fruit_size_m": {
+      "min": 0.004,
+      "max": 0.008
+    },
+    "fruit_colour_ripe": [
+      205,
+      30,
+      25
+    ],
+    "flowering_months": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      4,
+      5
+    ],
+    "elevation_min_m": 457,
+    "elevation_max_m": 1830,
+    "light": [
+      "sun"
+    ],
+    "moisture": [
+      "dry",
+      "xeric"
+    ],
+    "units_per_inflorescence": {
+      "min": 1,
+      "max": 2
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a shrub (FEIS, Anderson 2001)."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: most plants 0.5 m to 2 m high, inside FEIS's 0.3 m to 2.7 m."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"obtaining a height of 1 to 9 feet (0.30-2.7 m)\"; Abrams (1951 p. 667): a straggly shrub up to 3 m high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"a native desert shrub\"."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"spiny, rounded, and much branched\" shrub."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"This species is drought deciduous, meaning it loses foliage in response to low moisture availability\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"rounded, and much branched\", leafy along the twigs: no rosette."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"spines are numerous and slender, 0.20 to 0.80 inch (5-20 mm) long\"."
+    },
+    "traits.twig_colour": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"Twigs are light barked\"; sRGB by eye from the photos (pale grey)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves alternate, often clustered on short spurs, as in the genus."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: leaves linear-terete to narrowly oblanceolate: simple."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: leaves entire, succulent."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"Leaves: blade spatulate, 3–35 × 1–8 mm, fleshy to succulent\"; Abrams (1951 p. 667): 3-15 mm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"blade spatulate, 3–35 × 1–8 mm\"."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"blade spatulate\"; Abrams (1951 p. 667): \"linear-terete to narrowly oblanceolate\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: leaves entire."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves glabrous and fleshy."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flowers borne singly or two together along the twigs, set by hand from iNaturalist photos (observations 38852659, 141752536, 71578132, 7864093, 402609099, 21422212, 89733889, 39435825): the sources read give no count or measure."
+    },
+    "traits.flowering_position": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flowers along the twigs in the leaf clusters, set by hand from iNaturalist photos (observations 38852659, 141752536, 71578132, 7864093, 402609099, 21422212, 89733889, 39435825): the sources read give no count or measure."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: corolla whitish suffused with lavender; Kearney and Peebles (1942, p. 788): ochroleucous with pale lavender lobes. sRGB by eye."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: corolla tube 10-16 mm. long, the lobes short: tubular."
+    },
+    "traits.corolla_tube_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: corolla tube 10-16 mm. long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: corolla lobes 1.5-2.5 mm. long, the open mouth 5 to 8 mm across."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: corolla lobes 4-5."
+    },
+    "traits.stamen_exsertion": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: stamens exserted 2-3 mm."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 788), Lycium: fruit a berry."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: fruit ovoid-ellipsoid."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: fruit bright red, 4-8 mm. long."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 667, Lycium andersonii: fruit bright red; Kearney and Peebles (1942, p. 788): scarlet. sRGB by eye from the photos."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"Flowering Feb–May\"; Kearney and Peebles (1942, p. 789): February to April."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: berries ripe in April and May, before the plant goes dormant in late May (FEIS)."
+    },
+    "traits.elevation_min_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): on washes, flats, mesas and slopes \"generally from 1,500 to 6,000 feet (457-1,829 m) in elevation\"."
+    },
+    "traits.elevation_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"generally from 1,500 to 6,000 feet (457-1,829 m) in elevation\"; Kearney and Peebles (1942, p. 789): up to 5,600 feet."
+    },
+    "traits.light": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): \"commonly grows on sandy or gravelly washes, sandy or alkali flats, mesas and slopes\"."
+    },
+    "traits.moisture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Lycium andersonii (Tesky 1992): on sites with about 128 to 162 mm of annual precipitation."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: a rounded, much-branched shrub of pale grey spiny twigs, clusters of small fleshy green leaves, pale lavender-white tubular flowers and bright red berries in spring. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Anderson's wolfberry from its sources and the photos the traits cite, on the template of snowbrush ceanothus (ceanothus-velutinus); the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.2 m tall at 15 years in the open, within its sources' range, as it grows on a Sonoran Desert bajada. Replace with measured data before calling this species calibrated."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 14 (eFloras, read 2026-10-19), Lycium andersonii: \"Inflorescences 2-flowered fascicles or solitary flowers\"."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada, Tucson Mountain District, 2026-10-19): sizes and forms from FEIS, Kearney and Peebles (1942) and Abrams, counts and colours from iNaturalist photos, drawing values from the library's rules for the form."
+  }
+}

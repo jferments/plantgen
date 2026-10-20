@@ -28,13 +28,6 @@
         "foliage_shade": [0.04, 0.09, 0.025],
         "variation": 0.15,
         "organs": {
-          "leaf": {
-            "shape": {
-              "template": "blade",
-              "taper": 1,
-              "aspect": 0.25
-            }
-          },
           "flower": {
             "shape": {
               "template": "blade",
@@ -76,6 +69,16 @@
         "generator.params.leaf_length": {
           "rule": "leaf_length_m",
           "why": "A lycophyte's leaf is drawn as long as its flora gives it."
+        },
+        "appearance.organs.leaf.shape.aspect": {
+          "template": "blade",
+          "map": {"leaf_form": {"blade": 0.25, "needle": 0.25}},
+          "why": "A lycophyte whose leaves its flora calls blades or needles draws them a quarter as wide as long; one whose leaf form is unstated keeps its leaf card's default."
+        },
+        "appearance.organs.leaf.shape.template": {
+          "map": {"leaf_form": {"scale": "scales"}},
+          "else": "blade",
+          "why": "A lycophyte whose leaves are scales, a spikemoss's pressed to its stems in ranks, is drawn with the scale-leaf card of a cedar's sprays, its shoots forking in flat sprays; one with blades keeps its blade card."
         }
       }
     }

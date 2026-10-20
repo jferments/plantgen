@@ -1,0 +1,436 @@
+{
+  "schema": 1,
+  "id": "vaccinium-membranaceum",
+  "taxon": {
+    "scientific_name": "Vaccinium membranaceum",
+    "common_name": "big huckleberry",
+    "family": "Ericaceae",
+    "genus": "Vaccinium",
+    "plant_name_id": 2457688
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 0.6,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 106.1,
+      "internode": 0.06,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.02,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 7,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.02,
+      "space_kill": 0.252,
+      "spur_pairs": 1,
+      "leaf_angle": 50,
+      "blooms": 2,
+      "adult_age": 4,
+      "bloom_size": 0.011,
+      "bloom_angle": 120,
+      "path_half": 0.8,
+      "crown_height": 0.85
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.03
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "crowned",
+          "aspect": 1.0,
+          "unripe": 0.3
+        },
+        "colour": [
+          0.22,
+          0.08,
+          0.16
+        ],
+        "accent": [
+          0.35,
+          0.25,
+          0.25
+        ],
+        "season": {
+          "ripening": 30,
+          "flower_look": {
+            "shape": {
+              "template": "fruit",
+              "kind": "crowned",
+              "aspect": 0.85
+            },
+            "colour": [
+              0.8481,
+              0.6921,
+              0.448
+            ],
+            "accent": [
+              0.6921,
+              0.3801,
+              0.2633
+            ],
+            "size": 0.4
+          }
+        }
+      }
+    },
+    "bark": [
+      0.1473,
+      0.0835,
+      0.0397
+    ],
+    "foliage": [
+      0.1,
+      0.21,
+      0.07
+    ],
+    "foliage_shade": [
+      0.032,
+      0.067,
+      0.022
+    ]
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 0.8,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1.2
+    },
+    "height_max_m": {
+      "min": 1,
+      "max": 2
+    },
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "clonal": true,
+    "rhizome_habit": "long_creeping",
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "ovate",
+    "leaf_apex": {
+      "acute": "usually",
+      "obtuse": "sometimes"
+    },
+    "leaf_margin": "serrate",
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.06,
+      "low": 0.018,
+      "high": 0.07
+    },
+    "leaf_width_m": {
+      "min": 0.011,
+      "max": 0.023,
+      "low": 0.01,
+      "high": 0.03
+    },
+    "petiole_length_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "leaf_colour_autumn": [
+      190,
+      40,
+      35
+    ],
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "flower_posture": "nodding",
+    "corolla_shape": "urceolate",
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.005
+    },
+    "flower_colour": [
+      235,
+      215,
+      175
+    ],
+    "fruit_type": "berry",
+    "fruit_shape": "globose",
+    "fruit_size_m": {
+      "min": 0.009,
+      "max": 0.013,
+      "low": 0.007
+    },
+    "fruit_colour_ripe": [
+      60,
+      25,
+      45
+    ],
+    "flowering_months": [
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ],
+    "stem_clump": "many",
+    "twig_colour": [
+      150,
+      165,
+      85
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Vaccinium membranaceum (Simonin 2000): \"shrub with stems ranging from 12 to 47 inches (30-120 cm) in height\"."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"Erect branching shrub, 1-2 m. high\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Vaccinium membranaceum (Simonin 2000): \"individual stems are capable of producing fruit for 14 years\", from long-lived clones."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"Erect branching shrub\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Vaccinium membranaceum (Simonin 2000): \"Leaf fall is initiated in mid-August\"; Abrams's key (1951 p. 327): \"Leaves not coriaceous, deciduous\"."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Vaccinium membranaceum (Simonin 2000): \"Populations are usually maintained through lateral expansion of vegetative clones\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Vaccinium membranaceum (Simonin 2000): \"Thinleaf huckleberry is rhizomatous\"; \"Rhizomes are usually found within the 3.15 to 11.8 inch (8-30 cm) range of a soil profile\", spreading the clone sideways."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Vaccinium membranaceum (Simonin 2000): \"Leaves are alternate, elliptic to oblong\"."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"Leaves ovate to oval or obovate\"; FEIS (Simonin 2000): \"elliptic to oblong\"; read as ovate, as most photos show."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: leaves \"varying from acute to obtuse or occasionally rounded at apex\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: leaves \"serrulate, thin and rather membranaceous\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: leaves \"2-6 cm. long\"; FEIS (Simonin 2000): \"ranging from 0.7 to 2.75 inches (1.8-7 cm) long\", kept as the rare extremes."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Leaf blades usually green, broadly elliptic to ovate, 25-50 x 11-23 mm, margins sharply serrate\"."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"petioles 1-2 mm. long\"."
+    },
+    "traits.leaf_colour_autumn": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves turning red to crimson in autumn, colouring whole slopes; sRGB by eye, set by hand from iNaturalist photos (observations 247203028, 87283178, 54277742, 187333298, 57290374, 294264226, 58885991, 58885923): the sources read give no count or measure."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"flowers solitary in the axils\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"flowers solitary in the axils\"."
+    },
+    "traits.flower_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"pedicels recurved in flower, erect in fruit\"."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"corolla yellowish, depressed-globose or globose-urceolate\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: corolla \"4-5 mm. in diameter\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"corolla yellowish\"; sRGB by eye, a pale creamy yellow tinged pink."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Vaccinium membranaceum (Simonin 2000): \"The fruit is a berry\"."
+    },
+    "traits.fruit_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: berry \"globose\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Berries shiny or dull black or deep purple, rarely red or white, 9-13 mm diam.\"; Abrams (1951 p. 328): \"7-10 mm. in diameter\", kept as the low."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"berry dark wine-colored or purplish black, without bloom\"; sRGB by eye."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"June-July\"; FEIS (Simonin 2000): in Montana \"flowering begins the 1st week of June\"."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Ripe berries in August and September, set by hand from iNaturalist photos (observations 247203028, 87283178, 54277742, 187333298, 57290374, 294264226, 58885991, 58885923): the sources read give no count or measure."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Red huckleberry's (vaccinium-parvifolium) values, changed by hand for big huckleberry: a smaller, knee- to waist-high shrub (FEIS: stems 30-120 cm) with shorter internodes and single nodding flowers in the leaf axils. Not fitted to measurements."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 328, Vaccinium membranaceum: \"flowers solitary in the axils; pedicels recurved in flower\"; \"corolla yellowish, depressed-globose or globose-urceolate, 4-5 mm. in diameter\"; \"berry dark wine-colored or purplish black, without bloom, globose, 7-10 mm.\". Drawn as a creamy urn about half the dark berry's size. Resized 2026-10-19 to Flora of North America vol. 8 p. 516 (eFloras): berries \"9-13 mm diam.\", corolla \"3-5 x 5-7 mm\": the urn is 0.4 of the 11 mm berry."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: an erect, open shrub of thin, bright green, finely toothed ovate leaves on angled twigs, with small creamy urns and dark purple-black berries, crimson in autumn. Organ cards from red huckleberry's (vaccinium-parvifolium), recoloured and resized by hand. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.8 m tall at 12 years in the open, within its sources' range, as it grows in subalpine parkland. Replace with measured data before calling this species calibrated."
+    },
+    "traits.stem_clump": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Plants forming small to extensive clumps, rarely crown-forming, 2-30 dm\"."
+    },
+    "traits.twig_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"twigs of current season yellow-green or reddish green, terete to slightly angled\"; sRGB a model estimate (confidence medium) of a yellow-green."
+    },
+    "generator.params.bloom_size": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 8 p. 516 (eFloras, read 2026-10-19), Vaccinium membranaceum: \"Berries ... 9-13 mm diam.\": the bloom card is drawn as the ripe berry, 11 mm across, its flower look 0.4 of that (corolla \"3-5 x 5-7 mm\"; Abrams 1951 p. 328: \"4-5 mm. in diameter\")."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Mount Rainier subalpine meadow scene (2026-10-19): sizes and forms from Abrams and FEIS, counts and colours from iNaturalist photos, drawing values from a built-in template."
+  }
+}

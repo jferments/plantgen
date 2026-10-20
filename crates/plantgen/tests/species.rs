@@ -265,8 +265,8 @@ fn fronds_and_pads_lie_on_the_ground() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n"));
     assert_eq!(
-        checked, 52,
-        "ten ferns, seven palms, a tree fern, fifteen cycads and nineteen cacti"
+        checked, 56,
+        "eleven ferns, seven palms, a tree fern, fifteen cycads and twenty-two cacti"
     );
 }
 
@@ -520,8 +520,8 @@ fn growth_history_is_consistent_between_keyframes() {
 fn woody_species_bear_their_fruit_when_old() {
     // Plant roadmap P4: every tree and shrub whose blooms are fruit (as in
     // mid-July) carries them at its oldest keyframe, at sizes from a small
-    // berry to a long raceme of samaras, unless its stated months put it
-    // out of flower and fruit then.
+    // capsule (white mountain-heather's, 2.5 to 3.5 mm) to a long raceme of
+    // samaras, unless its stated months put it out of flower and fruit then.
     let mut checked = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
@@ -569,7 +569,7 @@ fn woody_species_bear_their_fruit_when_old() {
             .collect();
         assert!(!sizes.is_empty(), "{id}: no fruit at {oldest} years");
         assert!(
-            sizes.iter().all(|&size| size > 0.005 && size < 0.25),
+            sizes.iter().all(|&size| size > 0.002 && size < 0.25),
             "{id}: fruit sizes {:?}",
             &sizes[..sizes.len().min(5)]
         );
@@ -662,8 +662,8 @@ fn conifers_bear_cones_once_old() {
         );
     }
     assert_eq!(
-        checked, 17,
-        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir and western larch"
+        checked, 19,
+        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir, western larch, Pacific silver fir and common juniper"
     );
 }
 
@@ -747,8 +747,8 @@ fn open_conifers_keep_their_lower_crowns() {
         );
     }
     assert_eq!(
-        checked, 12,
-        "the open-grown conifers that are not pines, Alaska and incense cedars, mountain hemlock, subalpine fir and western larch among them"
+        checked, 14,
+        "the open-grown conifers that are not pines, Alaska and incense cedars, mountain hemlock, subalpine fir, western larch, Pacific silver fir and common juniper among them"
     );
 }
 
@@ -786,8 +786,8 @@ fn conifers_keep_above_the_ground() {
         }
     }
     assert_eq!(
-        checked, 17,
-        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir and western larch"
+        checked, 19,
+        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock, subalpine fir, western larch, Pacific silver fir and common juniper"
     );
 }
 
@@ -826,8 +826,8 @@ fn needled_species_grow_solid_shoots() {
         }
     }
     assert_eq!(
-        checked, 14,
-        "the needled conifers (whitebark pine, mountain hemlock, subalpine fir and western larch among them), the bald cypress and the juniper's juvenile needles"
+        checked, 16,
+        "the needled conifers (whitebark pine, mountain hemlock, subalpine fir, western larch and Pacific silver fir among them), the bald cypress and the junipers' needles (Rocky Mountain juniper's juvenile ones, common juniper's)"
     );
 }
 
@@ -870,7 +870,7 @@ fn builtin_clusters_draw_as_part_meshes() {
         }
     }
     assert_eq!(
-        checked, 171,
+        checked, 197,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -894,6 +894,8 @@ fn builtin_clusters_draw_as_part_meshes() {
          blueblossom, spreading gooseberry and bush penstemon (phase A's first ten), ten of the \
          Rosaceae: the corymbs of rowan, hawthorn, Catalina ironwood, Woods' and dog roses, woodland \
          strawberry and whitebark raspberry, red raspberry's racemes, and the panicles of loquat and meadowsweet, \
+         the fourteen of the Mount Rainier subalpine batch, and the twelve of the Saguaro desert \
+         batch (beargrass's and banana yucca's flowering stalks are drawn whole, and desert globemallow's flowers stand along its stems), \
          and the twelve of the Caryophyllales families: bladder campion's and four o'clock's cymes, \
          pigweed's and jewels of Opar's panicles, thrift's and purslane's heads, sundew's coil, \
          carpetweed's umbels, the racemes of pokeweed, saltcedar and rougeplant, and greasewood's catkins, \

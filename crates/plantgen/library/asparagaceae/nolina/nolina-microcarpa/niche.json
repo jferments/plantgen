@@ -1,0 +1,162 @@
+{
+  "schema": 2,
+  "species": "nolina-microcarpa",
+  "layers": {
+    "shrub": 0.2
+  },
+  "moisture": [
+    0.05,
+    0.15,
+    0.6,
+    0.75
+  ],
+  "heat_load": [
+    0.1,
+    0.3,
+    1.3,
+    1.7
+  ],
+  "elevation_m": [
+    500,
+    700,
+    2000,
+    2300
+  ],
+  "max_slope_deg": 45,
+  "shade_tolerance": 0.35,
+  "coldest_c": [
+    -3,
+    1,
+    11.5,
+    13.5
+  ],
+  "hard_freeze_c": [
+    -24,
+    -18,
+    8,
+    12
+  ],
+  "warmest_c": [
+    19,
+    22,
+    31.5,
+    33.5
+  ],
+  "degree_days_0": [
+    2800,
+    3600,
+    7800,
+    8600
+  ],
+  "degree_days_5": [
+    1500,
+    2200,
+    6000,
+    6800
+  ],
+  "moisture_index": [
+    0.1,
+    0.14,
+    0.6,
+    0.8
+  ],
+  "summer_rain": [
+    0.25,
+    0.35,
+    0.65,
+    0.75
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Large clumps on rocky hillsides of desert grassland, chaparral and oak and pinyon-juniper woodland."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Shallow, rocky soils; FEIS: dry sites about 400 mm of rain a year, falling in winter and summer."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FEIS: most important on moderate to steep north-facing slopes; Kearney and Peebles: usually in exposed situations on mountainsides."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "900 to 1,900 m (Flora of North America); 3,000 to 6,500 feet in Arizona (FEIS; Kearney and Peebles). The bajada lies below its usual range, at its lowest edge."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Steep rocky slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Open ground to the light shade of oaks and junipers."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 1 to 11.5 °C; gone below −3 °C and above 13.5 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −18 °C borne, gone where the year's coldest night falls below about −24 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 22 to 31.5 °C; gone below 19 °C, where summers are too short, and above 33.5 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 3,600 to 7,800 degree-days above 0 °C, none below 2,800."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 2,200 to 6,000 degree-days above 5 °C, none below 1,500."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.14 to 0.6, gone by 0.1 and above 0.8."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Needs the monsoon's summer rain: from about 0.35 of the year's precipitation in summer, gone below 0.25; up to about 0.65, gone by 0.75."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Fire Effects Information System (FEIS), USDA Forest Service",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "Flora of North America (eFloras): habitat, elevation and distribution",
+        "url": "http://www.efloras.org",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m, 32.25 N 111.17 W) from general knowledge of the species and the ranges, habitats and elevations in the sources read for its spec (2026-10-19). Beargrass (sacahuista) grows from central Arizona to western New Mexico and northern Mexico (Flora of North America; FEIS). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records; every full range holds the bajada's climate (coldest month about 11 °C, warmest about 31 °C, about 7,600 degree-days above 0 °C, coldest night about −4 °C, moisture index about 0.15, about half the year's rain in summer)."
+  }
+}

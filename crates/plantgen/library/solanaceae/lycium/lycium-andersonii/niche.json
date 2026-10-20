@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "lycium-andersonii",
+  "layers": {
+    "shrub": 0.3
+  },
+  "moisture": [
+    0,
+    0.1,
+    0.65,
+    0.8
+  ],
+  "heat_load": [
+    0.3,
+    0.6,
+    1.8,
+    2.2
+  ],
+  "elevation_m": [
+    -50,
+    100,
+    1830,
+    2100
+  ],
+  "max_slope_deg": 35,
+  "shade_tolerance": 0.25,
+  "coldest_c": [
+    0,
+    3,
+    20,
+    24
+  ],
+  "hard_freeze_c": [
+    -18,
+    -13,
+    8,
+    12
+  ],
+  "warmest_c": [
+    22,
+    25,
+    36,
+    39
+  ],
+  "degree_days_0": [
+    3500,
+    4500,
+    11000,
+    12500
+  ],
+  "degree_days_5": [
+    2000,
+    3000,
+    9000,
+    10500
+  ],
+  "moisture_index": [
+    0.01,
+    0.03,
+    0.3,
+    0.4
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.8,
+    0.9
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A rounded spiny shrub of washes, flats and slopes, in thickets along washes."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sandy or gravelly washes, flats, mesas and slopes."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Generally about 457 to 1,829 m (FEIS), lower in the Colorado Desert."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Washes, flats and slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Full sun."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 3 to 20 °C; gone below 0 °C and above 24 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −13 °C borne, gone where the year's coldest night falls below about −18 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 25 to 36 °C; gone below 22 °C, where summers are too short, and above 39 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 4,500 to 11,000 degree-days above 0 °C, none below 3,500."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 3,000 to 9,000 degree-days above 5 °C, none below 2,000."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.03, gone by 0.01."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: it grows where winter rain falls alone (the Mojave and the low Colorado Desert) as well as where the July to September monsoon brings summer rain, as on the bajada (about half the year's); up to about 0.8 of the year's precipitation in summer, gone by 0.9."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA Forest Service Fire Effects Information System (FEIS): species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m) from general knowledge of the species, the ranges and elevations in Kearney and Peebles (1942) and, where one exists, the FEIS species review. Anderson's wolfberry grows in southern and eastern Nevada, southeastern California, most of Arizona, Utah on the Colorado Plateau, New Mexico and northwestern Mexico, chiefly in the Mojave and Sonoran deserts (FEIS). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

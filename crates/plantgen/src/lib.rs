@@ -1196,4 +1196,10 @@ pub mod venation;
 /// (herb 20: a nightshade's, from Solanaceae's words), and a prickle look
 /// with prickles between the nodes is drawn in the plant's mesh, not as a
 /// part, so exports keep them (160 is stemless rosettes, #279).
-pub const GENERATOR_REVISION: u32 = 161;
+/// 162: a rosette succulent's flowers are single flowers on its flowering
+/// stalk, not clusters of their own (`inflorescence` from
+/// `inflorescence_length_m`); a lycophyte's program has bud defaults;
+/// grass 9: culms branch where floras say they do (`culm_branching`)
+/// (58 species for the Rainier and Saguaro scenes, #255; 161 is
+/// bark and armature, #280).
+pub const GENERATOR_REVISION: u32 = 162;

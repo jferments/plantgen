@@ -1,0 +1,153 @@
+{
+  "schema": 2,
+  "species": "senecio-triangularis",
+  "layers": {
+    "herb": 0.6
+  },
+  "moisture": [
+    0.5,
+    0.65,
+    1.0,
+    1.0
+  ],
+  "heat_load": [
+    0.2,
+    0.4,
+    1.6,
+    2.0
+  ],
+  "elevation_m": [
+    -50,
+    300,
+    3500,
+    3900
+  ],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.4,
+  "coldest_c": [
+    -30,
+    -20,
+    1,
+    5
+  ],
+  "hard_freeze_c": [
+    -50,
+    -42,
+    -2,
+    3
+  ],
+  "warmest_c": [
+    5,
+    7,
+    19,
+    22
+  ],
+  "degree_days_0": [
+    400,
+    700,
+    3600,
+    4400
+  ],
+  "degree_days_5": [
+    80,
+    200,
+    2000,
+    2700
+  ],
+  "moisture_index": [
+    0.35,
+    0.5,
+    1,
+    1.01
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.6,
+    0.8
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A tall herb of stream banks, seeps and wet meadows, in dense stands."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Wet to moist ground along streams and seeps."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Low in the north to subalpine and alpine."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Stream banks, seeps and moderate slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Sun to part shade."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about −20 to 1 °C; gone below −30 °C and above 5 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −42 °C borne, gone where the year's coldest night falls below about −50 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 7 to 19 °C; gone below 5 °C, where summers are too short, and above 22 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 700 to 3,600 degree-days above 0 °C, none below 400."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 200 to 2,000 degree-days above 5 °C, none below 80."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.5, gone by 0.35."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: summer-dry Cascade summers suit it; up to about 0.6 of the year's precipitation in summer, gone by 0.8."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Mount Rainier subalpine meadow scene (Paradise, about 1,650 m) from general knowledge of the species; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Arrowleaf groundsel grows from Alaska and Yukon to California and New Mexico, along mountain streams and in wet meadows (the PLANTS Database). Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

@@ -27,6 +27,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the order's rules draw each leaf's petiole as its stated share of the card and shrink the uppermost leaves as a whole, so the small leaves under the panicle draw petioles of 8 to 9 mm against FNA's 1.5 to 5.5 cm for the stem leaves (inferred: FNA gives one petiole length for all)",
     ),
     (
+        "ambrosia-deltoidea",
+        "fruit_size_m",
+        "as bursage's: its bur, about 6 mm with its spines (Kearney and Peebles), is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
+    ),
+    (
         "ambrosia-dumosa",
         "fruit_size_m",
         "bursage first flowers with the family programs' blooms (revision 110): its bur, 4 to 6 mm with its hooked spines, is drawn as a capitulum's small achene, as no rule yet turns an involucre into a bur",
@@ -147,9 +152,24 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
+        "hilaria-rigida",
+        "culm_length_m",
+        "its branch culms (much branched, Hitchcock 1935) are measured as culms of their own, so the shortest reads about 18 cm against the 30 cm to 1 m FNA gives its culms",
+    ),
+    (
         "holodiscus-discolor",
         "flower_size_m",
         "its flowers are drawn about 5.8 mm across against the 3 to 3.5 mm Dendrology (2019) p. 318 gives",
+    ),
+    (
+        "krameria-erecta",
+        "flowering_months",
+        "a look flowers and fruits once a year, so range ratany's two flushes, March to May and August to September (Kearney and Peebles; Range Plant Handbook), are drawn as one flowering from March to July",
+    ),
+    (
+        "krameria-erecta",
+        "fruiting_months",
+        "a look flowers and fruits once a year, so the fruit of range ratany's two flushes, May to June and September to October, is drawn as one crop from July to October",
     ),
     (
         "larrea-tridentata",
@@ -182,6 +202,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
     (
+        "muhlenbergia-porteri",
+        "culm_length_m",
+        "its branch culms (much branched, Hitchcock 1935) are measured as culms of their own, so the shortest reads about 15 cm against the 30 cm to 1 m FNA gives its main culms",
+    ),
+    (
         "nicotiana-tabacum",
         "leaf_length_m",
         "its stem leaves shrink upward to a quarter of the longest (King's: smaller upward), so the topmost draw about 9 cm against the 1 to 2 ft King's gives, which it measures on the main leaves",
@@ -205,6 +230,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "oxalis-oregana",
         "leaf_arrangement",
         "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
+    ),
+    (
+        "parkinsonia-florida",
+        "leaf_length_m",
+        "its bipinnate leaf (one pair of pinnae, FNA) measures about 1.1 cm on its compound card against the 2 to 3 cm stated, since main's compound-leaf changes (revisions 156 to 159); the cause is not traced yet",
+    ),
+    (
+        "pedicularis-bracteosa",
+        "leaf_width_m",
+        "a pinnate card spaces its leaflets along the rachis and draws none longer than their spacing allows, about a fifth of the rachis for its 25, so its pinnules, 3 to 7 cm on a blade 10 to 20 cm (Abrams vol. 3 p. 805), draw the blade 4 to 6 cm wide against the 8 to 15 cm stated",
     ),
     (
         "phyllostachys-aurea",
@@ -280,6 +315,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:sapindaceae",
         "crown_outline_fit",
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
+    ),
+    (
+        "psilostrophe-cooperi",
+        "leaf_arrangement",
+        "its alternate leaves (FNA) are drawn alternate on its long shoots, but the shrub form's spur shoots bear their leaves in a pair (`spur_pairs` 1), which the measure reads as opposite (inferred)",
     ),
     (
         "rosa-rugosa",

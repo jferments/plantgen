@@ -1,0 +1,376 @@
+{
+  "schema": 1,
+  "id": "aristida-purpurea",
+  "taxon": {
+    "scientific_name": "Aristida purpurea",
+    "common_name": "purple threeawn",
+    "family": "Poaceae",
+    "genus": "Aristida",
+    "plant_name_id": 395056
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "params": {
+      "tillers": 60,
+      "tiller_rate": 0.45,
+      "tussock_radius": 0.06,
+      "tiller_lean": 15,
+      "leaves": 3,
+      "leaf_spread": 0.3,
+      "leaf_angle": 20,
+      "arch": 10,
+      "pieces": 5,
+      "flowering": 0.5,
+      "culm_radius": 0.0007,
+      "culm_lean": 10,
+      "panicle_nod": 30
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.3,
+      0.2
+    ],
+    "foliage": [
+      0.1,
+      0.14,
+      0.08
+    ],
+    "foliage_shade": [
+      0.03,
+      0.042,
+      0.024
+    ],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "template": "blade",
+          "taper": 1
+        }
+      },
+      "thatch": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        },
+        "colour": [
+          0.38,
+          0.31,
+          0.18
+        ],
+        "shade": [
+          0.1216,
+          0.0992,
+          0.0576
+        ]
+      },
+      "panicle": {
+        "shape": {
+          "template": "spikelet"
+        },
+        "inflorescence": {
+          "branches": 8,
+          "per_node": 1,
+          "size": 0.25,
+          "spread": 20,
+          "taper": 0.2,
+          "peduncle": 0.05,
+          "stalk": [
+            0.1329,
+            0.0732,
+            0.0732
+          ],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 3,
+            "pedicel": 0.1,
+            "peduncle": 0.3,
+            "size": 0.38,
+            "spread": 20
+          }
+        },
+        "colour": [
+          0.305,
+          0.1144,
+          0.1878
+        ],
+        "accent": [
+          0.5,
+          0.4,
+          0.3
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.45,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.5
+    },
+    "culm_length_m": {
+      "min": 0.3,
+      "max": 0.5,
+      "low": 0.15
+    },
+    "rhizome_habit": "none",
+    "clonal": false,
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "inflorescence": "panicle",
+    "inflorescence_posture": "nodding",
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.2
+    },
+    "florets_per_spikelet": 1,
+    "glumes": 2,
+    "spikelet_length_m": 0.01,
+    "lower_glume_length_m": {
+      "min": 0.006,
+      "max": 0.008
+    },
+    "upper_glume_length_m": {
+      "min": 0.012,
+      "max": 0.016
+    },
+    "lemma_length_m": 0.01,
+    "awns": true,
+    "awn_length_m": {
+      "min": 0.03,
+      "max": 0.05,
+      "high": 0.13
+    },
+    "awn_insertion": "apical",
+    "fruit_type": "caryopsis",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the photos (observations 328863686, 328863685, 119740253, 322187012, 328863688, 400045236, 154588978, 44034826): a dense tuft of fine, rolled blades and slender culms with narrow, nodding, purplish tan panicles, each spikelet trailing three long spreading awns. The panicle's colour is set by hand (Hitchcock, Manual of the Grasses of the United States (1935) p. 452: panicle usually purplish; purplish tan in the photos; sRGB 150, 95, 120 by eye), as no colour character applies to a spikelet and flower_colour, which the family's rule reads, is a flower's; its spikelets come from the order's rules. Colours set by eye were written as screen (sRGB) shades; they are read as the linear light a colour field holds, and bark and foliage follow the stated colour traits by rule (2026-10-19)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: perennial, often in large tufts."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: culms 30 to 50 cm tall; FEIS (Howard 1997): a mid-grass with 6- to 12-inch (15-30.5 cm) culms."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: culms 30 to 50 cm tall; FEIS: 15-30.5 cm culms."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Aristida purpurea: a warm-season, native perennial bunchgrass."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Aristida purpurea: a perennial bunchgrass."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS species review, Aristida purpurea: leaves primarily grow in basal tufts, but there are a few culm leaves."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: blades usually involute and less than 10 cm long; 3 cm to 10 cm drawn."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: blades 1 to 1.5 mm wide when unrolled."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: panicle narrow, nodding, rather lax and loose."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: panicle narrow, nodding."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: panicle usually purplish, 10 to 20 cm long."
+    },
+    "traits.florets_per_spikelet": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: one floret to a spikelet, as in every Aristida."
+    },
+    "traits.glumes": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: first glume 6 to 8 mm long, the second about twice as long."
+    },
+    "traits.spikelet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: one floret, its lemma about 1 cm long, so the spikelet about 1 cm from its base to the tip of its floret, awns left out (the glumes, the second 12 to 16 mm, reach past it)."
+    },
+    "traits.lower_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: first glume 6 to 8 mm long."
+    },
+    "traits.upper_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: the second glume about twice as long as the first."
+    },
+    "traits.lemma_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: lemma about 1 cm long."
+    },
+    "traits.awns": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: awns nearly equal, spreading, 3 to 5 cm long."
+    },
+    "traits.awn_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: awns nearly equal, spreading, 3 to 5 cm long; FEIS: 1 to 5 inches (2.5-13 cm) across the species' varieties."
+    },
+    "traits.awn_insertion": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock, Manual of the Grasses of the United States (1935) p. 452, Aristida purpurea: the lemma's body tapering to a scarcely beaked summit, the three awns from it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a grain (caryopsis), as in every grass."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: flowering May to September, with the spring and the monsoon rains."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: grains ripe June to October."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for purple threeawn from its sources and the photos the traits cite; the rest of its growth comes from the library's rules for the form. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.45 m tall at 4 years in the open, within its sources' range, as grown. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added for the Saguaro desert scene (west bajada of Saguaro National Park's Tucson Mountain District, about 750 m), batch s1b (2026-10-19): sizes and forms from FEIS, Kearney and Peebles, Hitchcock and Flora of North America, counts and colours from photos."
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "schema": 2,
+  "species": "condea-emoryi",
+  "layers": {
+    "shrub": 0.3
+  },
+  "moisture": [
+    0.02,
+    0.12,
+    0.7,
+    0.8
+  ],
+  "heat_load": [
+    0.4,
+    0.7,
+    1.8,
+    2.2
+  ],
+  "elevation_m": [
+    -50,
+    0,
+    1500,
+    1700
+  ],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.3,
+  "coldest_c": [
+    4,
+    7,
+    22,
+    25
+  ],
+  "hard_freeze_c": [
+    -11,
+    -7,
+    10,
+    14
+  ],
+  "warmest_c": [
+    25,
+    28,
+    37,
+    40
+  ],
+  "degree_days_0": [
+    4500,
+    5800,
+    12500,
+    13500
+  ],
+  "degree_days_5": [
+    3000,
+    4000,
+    10500,
+    11500
+  ],
+  "moisture_index": [
+    0.01,
+    0.03,
+    0.3,
+    0.4
+  ],
+  "summer_rain": [
+    0,
+    0,
+    0.8,
+    0.9
+  ],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "An upright shrub of rocky slopes, canyons and washes."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Dry rocky slopes and sandy washes."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Warm, sunny slopes; frost-tender."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Up to about 1,520 m (Kearney and Peebles: up to 5,000 feet), mostly much lower."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rocky slopes and canyons."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Full sun."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, coldest-month means from about 7 to 22 °C; gone below 4 °C and above 25 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, lows to about −7 °C borne, gone where the year's coldest night falls below about −11 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its range, warmest-month means from about 28 to 37 °C; gone below 25 °C, where summers are too short, and above 40 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 5,800 to 12,500 degree-days above 0 °C, none below 4,500."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 4,000 to 10,500 degree-days above 5 °C, none below 3,000."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A moisture index from about 0.03, gone by 0.01."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No lower limit: it grows where winter rain falls alone (the Mojave and the low Colorado Desert) as well as where the July to September monsoon brings summer rain, as on the bajada (about half the year's); up to about 0.8 of the year's precipitation in summer, gone by 0.9."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA Forest Service Fire Effects Information System (FEIS): species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "Kearney and Peebles, Flowering Plants and Ferns of Arizona (USDA Miscellaneous Publication 423, 1942)",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored for the Saguaro desert scene (the west bajada of Saguaro National Park's Tucson Mountain District, about 750 m) from general knowledge of the species, the ranges and elevations in Kearney and Peebles (1942) and, where one exists, the FEIS species review. Desert lavender grows in southern Arizona, southeastern California, southern Nevada and northwestern Mexico (Kearney and Peebles 1942; Abrams 1951), in the Sonoran and Colorado deserts. Each climate range brackets the climate of that range, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}
