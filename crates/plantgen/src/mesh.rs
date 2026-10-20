@@ -514,7 +514,8 @@ pub(crate) fn build_shaded(
     apart: bool,
 ) -> (PlantMesh, Vec<f32>) {
     // Pieces of a strap stand on the drawn ends of the pieces before them.
-    let seated = seated(graph, looks);
+    let mut seated = seated(graph, looks);
+    on_bark(&mut seated, graph, looks);
     let (graph, twists) = match &seated {
         Some(seated) => (&seated.graph, &seated.twists[..]),
         None => (graph, &[][..]),
@@ -2052,6 +2053,61 @@ fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<Seated> {
         out.twists = twists;
     }
     out
+}
+
+/// Stands every thorn on its wood's bark. A program places a thorn on its
+/// stem's axis, where the stem was a twig; the stem then thickens round it,
+/// and on an old trunk a spine shorter than the trunk's radius was drawn
+/// inside the wood. Each thorn's foot moves out from the axis, along the
+/// part of its heading across the stem, to the stem's radius there, so an
+/// old areole's spines stand from the bark as on the plant. Bodies are left
+/// as they are: their spines are drawn with them ([`crate::spines`]).
+fn on_bark(out: &mut Option<Seated>, graph: &PlantGraph, looks: &[Look]) {
+    let thorn = |organ: &GraphOrgan| {
+        looks
+            .get(usize::from(organ.organ))
+            .is_some_and(|look| matches!(look.form, blooms::Form::Thorn))
+    };
+    if !graph.organs.iter().any(thorn) {
+        return;
+    }
+    let ends = graph.end_radii();
+    for number in 0..graph.organs.len() {
+        let organ = &graph.organs[number];
+        if !thorn(organ) {
+            continue;
+        }
+        let Some(index) = organ.segment.map(|index| index as usize) else {
+            continue;
+        };
+        let Some(segment) = graph
+            .segments
+            .get(index)
+            .filter(|segment| segment.body == 0)
+        else {
+            continue;
+        };
+        let along = segment.end - segment.start;
+        let length = along.length();
+        if length < 1e-9 {
+            continue;
+        }
+        let along = along * (1.0 / length);
+        let t = ((organ.position - segment.start).dot(along) / length).clamp(0.0, 1.0);
+        let radius = math::lerp(segment.radius, ends[index], t);
+        let off = organ.position - segment.start - along * (t * length);
+        let heading = organ.heading.normalize_or(Vec3::Y);
+        let across = heading - along * heading.dot(along);
+        if across.length() < 1e-6 {
+            continue;
+        }
+        let across = across.normalize_or(Vec3::Y);
+        let lift = radius - off.dot(across);
+        if lift <= 1e-6 {
+            continue;
+        }
+        seat(out, graph).organs[number].position = organ.position + across * lift;
+    }
 }
 
 /// `out`'s graph, made a copy of `graph` the first time a piece of a

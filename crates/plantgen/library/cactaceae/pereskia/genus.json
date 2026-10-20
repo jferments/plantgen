@@ -27,6 +27,10 @@
     "generator.params.thorn_length": {
       "rule": "max(radial_spine_length_m) / 1.2",
       "why": "Floras give the longest spines; the program draws each spine 0.6 to 1.2 times thorn_length."
+    },
+    "appearance.organs.thorn.colour": {
+      "colour": "spine_colour",
+      "why": "A leafy cactus's spines are drawn in the colour its flora gives the spines."
     }
   },
   "evidence": {
