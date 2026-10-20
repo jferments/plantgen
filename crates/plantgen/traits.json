@@ -1014,6 +1014,24 @@
       "when": {"spines": ["areoles"]},
       "why": "a cactus column's outline from its foot up: cylindrical, as wide at its foot as higher up, or club-shaped, narrower at its foot, where it grew while the plant was young, than above"
     },
+    "stem_buried": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["none", "partly", "mostly", "flush"],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "how much of a cactus's stem sits below the soil, its contractile roots drawing it down, as floras word it: none ('not deep-seated in substrate'), partly, mostly ('mostly low and deep-seated in substrate', Flora of North America's Astrophytum), or flush, its top level with the ground ('flat-topped and usually flush with soil surface', its Astrophytum asterias)"
+    },
+    "basal_stems": {
+      "group": "form",
+      "organ": "plant",
+      "type": "count",
+      "range": [1, 500],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "the stems a grown cactus clump stands on, from its base, where its flora counts them ('3-60-branched, ultimately forming somewhat open clumps', Flora of North America's Echinocereus engelmannii; 'simple or with 2-5 branches', its Peniocereus greggii)"
+    },
     "lower_areole_spines": {
       "group": "stem_and_bark",
       "organ": "stem",
@@ -1056,6 +1074,15 @@
       "optional": true,
       "when": {"stem_form": ["flat_joints"]},
       "why": "saw teeth on each margin of a flat joint, the top pair included, as a Christmas cactus's 'sharply serrate' joints; 0 an entire pad"
+    },
+    "areole_position": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "enum",
+      "values": ["faces", "margins"],
+      "optional": true,
+      "when": {"stem_form": ["flat_joints"]},
+      "why": "where a flat joint's areoles sit: over its faces, as a prickly pear's, or only along its margins, as a Christmas cactus's in the notches between its teeth"
     },
     "areole_spacing_m": {
       "group": "stem_and_bark",
@@ -1168,6 +1195,33 @@
       "type": "colour",
       "optional": true,
       "why": "the colour of the wool and bristles in the tubercles' axils, where it differs from the areoles' wool"
+    },
+    "spine_cover": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["not_obscuring", "partly_obscuring", "nearly_obscuring", "obscuring"],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "how much of the stem a cactus's spines hide, in a flora's words: the skin plain between them, partly hidden, 'nearly obscuring stem surfaces', or hidden ('obscuring stems')"
+    },
+    "spine_sheath_colour": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "colour",
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "the colour of a cholla's papery spine sheaths, which is what its spines show where they wear them"
+    },
+    "areole_hair_length_m": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.05],
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "how long the hairs standing in a tuft from each areole are, where the areoles are hairy rather than felted (a peyote's 'hairs in compact erect tufts to 7-10 mm')"
     },
     "spine_sheaths": {
       "group": "stem_and_bark",
@@ -2547,6 +2601,15 @@
       "range": [0.0005, 0.5],
       "optional": true,
       "why": "a tepal from its base to its tip; for a perianth whose outer and inner tepals differ (a lily's 'sepals' and 'petals'), the longer"
+    },
+    "tepal_width_m": {
+      "group": "flowers",
+      "organ": "tepal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.3],
+      "optional": true,
+      "why": "a tepal across at its widest; for a perianth whose outer and inner tepals differ, the inner ones' (a flora's 'inner tepals 37-75 x (8-)14-25 mm' gives 14-25 mm)"
     },
     "stamen_exsertion": {
       "group": "flowers",

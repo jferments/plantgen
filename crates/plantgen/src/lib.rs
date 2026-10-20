@@ -1202,4 +1202,15 @@ pub mod venation;
 /// grass 9: culms branch where floras say they do (`culm_branching`)
 /// (58 species for the Rainier and Saguaro scenes, #255; 161 is
 /// bark and armature, #280).
-pub const GENERATOR_REVISION: u32 = 162;
+/// 163: cacti round 5, from a photo check. A joint that sprouts no
+/// daughters flowers every year (column 7, cactaceae 13: a beavertail
+/// clump flowers again) and a club joint's daughter turns toward upright
+/// (`joint_rise`: chollas no longer coil); a flat joint's areoles may keep
+/// to its margins (`areoles.margins`, from `areole_position`: Christmas
+/// cactus). Spines are drawn broad enough to hide the share of stem a
+/// flora's words give (`spine_cover`); hairy areoles carry erect tufts
+/// (`areole_hairs`: peyote); twisted centrals wander. Barrels widen from youth (`radius_height`), cacti sink as deep
+/// as `stem_buried` says, clumps take `basal_stems` and lean as their
+/// `limb_angle` words, ribs are spaced for the usual count, tepals take
+/// their stated width.
+pub const GENERATOR_REVISION: u32 = 163;

@@ -102,11 +102,6 @@
           "taper": 1,
           "aspect": 0.04
         },
-        "colour": [
-          0.22,
-          0.17,
-          0.14
-        ],
         "form": "thorn"
       }
     }
@@ -164,10 +159,7 @@
       60
     ],
     "inflorescence": "cyme",
-    "units_per_inflorescence": {
-      "min": 10,
-      "max": 50
-    },
+    "units_per_inflorescence": {"min": 10, "max": 50, "typical": 10},
     "inflorescence_length_m": {
       "min": 0.1,
       "max": 0.25
@@ -184,11 +176,7 @@
       "min": 0.015,
       "max": 0.032
     },
-    "flower_colour": [
-      230,
-      105,
-      150
-    ],
+    "flower_colour": [202, 137, 188],
     "filament_colour": [
       200,
       45,
@@ -299,11 +287,7 @@
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Pereskia grandifolia var. grandifolia: Shrubs or trees, erect, 2-10 m. Stems to 20 cm diam., very spiny; areoles to 12 mm diam. on basal portion of stem. Leaves elliptic-oblong, 6-30 × 3-9 cm, 0.5 mm thick. Spines all alike, 1-6 per areole, straight, acicular, 1-6.5 cm. Flowers 10-50 in dense cymose-paniculate aggregations, not fragrant, 1.5-3.2 × 3-7 cm; tepals epigynous; scales and areoles in distal 1/2 of receptacles; lateral pedicels 1-3 cm; terminal flower without pedicel; perianth pink. Fruits reddish green to yellowish green, pyriform or turbinate, often nearly as broad as long, 50-100 × 30-70 mm, often proliferating. Flowering not reported for Florida [year-round]. Pyriform written as obovoid and turbinate as obconic. 'Cymose-paniculate' drawn as a cyme, its flowers in dense branched clusters. The cluster's length is not stated: 10-50 flowers 3-7 cm across 'in dense ... aggregations' fill a rounded cluster about 10-25 cm long, by inference. Tepals epigynous, so the ovary inferior; flowering months left unstated: the flora gives only '[year-round]' where native, and a year-round season draws no gap between flowers and fruit; the colours by hand from 'pink' and 'reddish green to yellowish green'; typical height by hand toward the low end of 2-10 m."
     },
-    "traits.units_per_inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Pereskia grandifolia var. grandifolia: Shrubs or trees, erect, 2-10 m. Stems to 20 cm diam., very spiny; areoles to 12 mm diam. on basal portion of stem. Leaves elliptic-oblong, 6-30 × 3-9 cm, 0.5 mm thick. Spines all alike, 1-6 per areole, straight, acicular, 1-6.5 cm. Flowers 10-50 in dense cymose-paniculate aggregations, not fragrant, 1.5-3.2 × 3-7 cm; tepals epigynous; scales and areoles in distal 1/2 of receptacles; lateral pedicels 1-3 cm; terminal flower without pedicel; perianth pink. Fruits reddish green to yellowish green, pyriform or turbinate, often nearly as broad as long, 50-100 × 30-70 mm, often proliferating. Flowering not reported for Florida [year-round]. Pyriform written as obovoid and turbinate as obconic. 'Cymose-paniculate' drawn as a cyme, its flowers in dense branched clusters. The cluster's length is not stated: 10-50 flowers 3-7 cm across 'in dense ... aggregations' fill a rounded cluster about 10-25 cm long, by inference. Tepals epigynous, so the ovary inferior; flowering months left unstated: the flora gives only '[year-round]' where native, and a year-round season draws no gap between flowers and fruit; the colours by hand from 'pink' and 'reddish green to yellowish green'; typical height by hand toward the low end of 2-10 m."
-    },
+    "traits.units_per_inflorescence": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Pereskia grandifolia var. grandifolia: 'Flowers 10-50 in dense cymose-paniculate aggregations'; Britton and Rose, The Cactaceae vol. 1 (1919), p. 19: 'inflorescence terminal, usually few-flowered'. So a cluster holds 10 to 50 flowers, and the typical one the fewest the flora counts, as Britton and Rose's 'usually few-flowered' has it."},
     "traits.inflorescence_length_m": {
       "evidence": "SourceInferred",
       "source": "fna-online",
@@ -324,11 +308,7 @@
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Pereskia grandifolia var. grandifolia: Shrubs or trees, erect, 2-10 m. Stems to 20 cm diam., very spiny; areoles to 12 mm diam. on basal portion of stem. Leaves elliptic-oblong, 6-30 × 3-9 cm, 0.5 mm thick. Spines all alike, 1-6 per areole, straight, acicular, 1-6.5 cm. Flowers 10-50 in dense cymose-paniculate aggregations, not fragrant, 1.5-3.2 × 3-7 cm; tepals epigynous; scales and areoles in distal 1/2 of receptacles; lateral pedicels 1-3 cm; terminal flower without pedicel; perianth pink. Fruits reddish green to yellowish green, pyriform or turbinate, often nearly as broad as long, 50-100 × 30-70 mm, often proliferating. Flowering not reported for Florida [year-round]. Pyriform written as obovoid and turbinate as obconic. 'Cymose-paniculate' drawn as a cyme, its flowers in dense branched clusters. The cluster's length is not stated: 10-50 flowers 3-7 cm across 'in dense ... aggregations' fill a rounded cluster about 10-25 cm long, by inference. Tepals epigynous, so the ovary inferior; flowering months left unstated: the flora gives only '[year-round]' where native, and a year-round season draws no gap between flowers and fruit; the colours by hand from 'pink' and 'reddish green to yellowish green'; typical height by hand toward the low end of 2-10 m."
     },
-    "traits.flower_colour": {
-      "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Pereskia grandifolia var. grandifolia: Shrubs or trees, erect, 2-10 m. Stems to 20 cm diam., very spiny; areoles to 12 mm diam. on basal portion of stem. Leaves elliptic-oblong, 6-30 × 3-9 cm, 0.5 mm thick. Spines all alike, 1-6 per areole, straight, acicular, 1-6.5 cm. Flowers 10-50 in dense cymose-paniculate aggregations, not fragrant, 1.5-3.2 × 3-7 cm; tepals epigynous; scales and areoles in distal 1/2 of receptacles; lateral pedicels 1-3 cm; terminal flower without pedicel; perianth pink. Fruits reddish green to yellowish green, pyriform or turbinate, often nearly as broad as long, 50-100 × 30-70 mm, often proliferating. Flowering not reported for Florida [year-round]. Pyriform written as obovoid and turbinate as obconic. 'Cymose-paniculate' drawn as a cyme, its flowers in dense branched clusters. The cluster's length is not stated: 10-50 flowers 3-7 cm across 'in dense ... aggregations' fill a rounded cluster about 10-25 cm long, by inference. Tepals epigynous, so the ovary inferior; flowering months left unstated: the flora gives only '[year-round]' where native, and a year-round season draws no gap between flowers and fruit; the colours by hand from 'pink' and 'reddish green to yellowish green'; typical height by hand toward the low end of 2-10 m."
-    },
+    "traits.flower_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Pereskia grandifolia: 'perianth pink'; Britton and Rose, The Cactaceae vol. 1 (1919), p. 19: 'petals rose-colored, sometimes white'. With no shade named it was measured: the median of the pixels inside open flowers of seven iNaturalist photographs (imagekit batch inat-cacti-2026-10-19, photos 0, 1, 3, 4, 6, 9, 10 in key order), the brighter three quarters of each, then the median of the photos: RGB 202, 137, 188, a pale rose-pink. Until 2026-10-19 a deep pink, RGB 230, 105, 150, by hand from 'pink'."},
     "traits.ovary_position": {
       "evidence": "SourceInferred",
       "source": "fna-online",

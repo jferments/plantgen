@@ -11,6 +11,7 @@
     "corolla_shape": "funnelform",
     "flower_zone": "crown",
     "stem_flecks": "numerous",
+    "stem_buried": "mostly",
     "areole_spacing_m": {
       "min": 0.006,
       "max": 0.009
@@ -19,6 +20,7 @@
     "central_spines": 0
   },
   "evidence": {
+    "traits.stem_buried": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum: plants stem succulents, unbranched [to several branched from base], mostly low and deep-seated in substrate [taller in Mexican species]."},
     "traits.stem_form": {
       "evidence": "SourceInferred",
       "source": "fna-online",

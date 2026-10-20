@@ -105,6 +105,21 @@ pub struct BodyLook {
     /// tubercle and the one above it: a mammillaria's.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub axils: Option<Axils>,
+    /// Share of the skin, 0 to 0.95, that a flora says the spines hide
+    /// ('nearly obscuring the stem'): where the spines as their counts,
+    /// lengths and the areoles' spacing draw them hide less, every set
+    /// but the glochids is drawn that much broader, as a sheath, a flat
+    /// spine or a mass of glinting bristles reads ([`Self::drawn`]). 0
+    /// leaves them as they are.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spine_cover: f64,
+    /// Length, metres, of the hairs standing in a compact erect tuft
+    /// from each areole, as a peyote's 'copiously hairy' areoles carry
+    /// them (Flora of North America's Lophophora: 'the hairs in compact
+    /// erect tufts to 7-10 mm'): drawn as one more set of fine, crinkled
+    /// hairs in the felt's colour ([`Self::drawn`]). 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub areole_hairs: f64,
 }
 
 impl Default for BodyLook {
@@ -125,6 +140,8 @@ impl Default for BodyLook {
             cork: None,
             flecks: None,
             axils: None,
+            spine_cover: 0.0,
+            areole_hairs: 0.0,
         }
     }
 }
@@ -227,6 +244,12 @@ pub struct Areoles {
     /// for none; barrel cacti's can exceed 4 cm (Gibson and Nobel 1986,
     /// ch. 5).
     pub apex_wool: f64,
+    /// 1: on a body without ribs, the areoles keep to its two margins,
+    /// `spacing` apart down each from the tip, and none sit on its faces:
+    /// a holiday cactus's in the notches of its toothed joints. 0 spreads
+    /// them over the faces.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub margins: f64,
 }
 
 impl Default for Areoles {
@@ -236,6 +259,7 @@ impl Default for Areoles {
             felt_radius: 0.003,
             felt: [0.55, 0.5, 0.42],
             apex_wool: 0.0,
+            margins: 0.0,
         }
     }
 }
@@ -515,6 +539,49 @@ impl BodyLook {
         }
     }
 
+    /// The look as it is drawn: its spine sets broadened to hide the
+    /// share of the skin [`Self::spine_cover`] states, and its areoles'
+    /// erect tufts of hairs ([`Self::areole_hairs`]) added as a last set,
+    /// after the stated ones, so no stated spine's draws change.
+    #[must_use]
+    pub fn drawn(mut self) -> Self {
+        if self.spine_cover > 0.0 && self.areoles.spacing > 0.0 {
+            let spacing = self.areoles.spacing;
+            let width = self
+                .ribs
+                .as_ref()
+                .map_or(spacing, |ribs| ribs.spacing.max(spacing));
+            let factor = spines::cover_factor(&self, spacing * width, self.spine_cover);
+            for set in &mut self.spines {
+                if set.role != Some(SpineRole::Glochid) {
+                    set.width *= factor;
+                }
+            }
+        }
+        if self.areole_hairs > 0.0 && self.spines.len() < MAX_SPINE_SETS {
+            self.spines.push(SpineSet {
+                role: None,
+                count: [40, 60],
+                angle: 80.0,
+                angle_spread: 10.0,
+                aim: 0.0,
+                arc: 360.0,
+                length: self.areole_hairs,
+                length_spread: 0.3,
+                curve: 0.0,
+                hook: 0.0,
+                twist: 0.0,
+                crinkle: 45.0,
+                distal: 0.0,
+                width: 0.0001,
+                flat: 1.0,
+                colour: self.areoles.felt,
+                tip: None,
+            });
+        }
+        self
+    }
+
     /// Colour at the bottom of a valley.
     #[must_use]
     pub fn valley_colour(&self) -> [f32; 3] {
@@ -565,6 +632,9 @@ impl BodyLook {
         }
         within("areoles felt_radius", areoles.felt_radius, 0.0, 0.05)?;
         within("areoles apex_wool", areoles.apex_wool, 0.0, 0.1)?;
+        within("areoles margins", areoles.margins, 0.0, 1.0)?;
+        within("spine_cover", self.spine_cover, 0.0, 0.95)?;
+        within("areole_hairs", self.areole_hairs, 0.0, 0.05)?;
         colour_ok("areoles felt", areoles.felt)?;
         if self.spines.len() > MAX_SPINE_SETS {
             return Err(format!(
@@ -1948,6 +2018,22 @@ fn spiral_sites(line: &Centreline, flatten: f64, phase: f64, spacing: f64) -> Ve
         .collect()
 }
 
+/// Areoles down a body's two margins (`t` 0 and half a turn, the edges of
+/// a pad), `spacing` apart from the tip, the lowest fifth of the body
+/// bare.
+fn margin_sites(line: &Centreline, spacing: f64) -> Vec<Site> {
+    let mut sites = Vec::new();
+    let mut s = line.length - spacing * 0.5;
+    while s > line.length * 0.2 && sites.len() + 2 <= MAX_AXIS_AREOLES {
+        for t in [0.0, PI] {
+            let ordinal = u32::try_from(sites.len()).unwrap_or(u32::MAX);
+            sites.push(Site { s, t, ordinal });
+        }
+        s -= spacing;
+    }
+    sites
+}
+
 /// Mix `a` toward `b` by `t`.
 fn mix(a: [f32; 3], b: [f32; 3], t: f64) -> [f32; 3] {
     #[allow(clippy::cast_possible_truncation)]
@@ -2343,6 +2429,8 @@ impl Body<'_> {
         let mut sites = if wants_sites {
             if ribs > 0 {
                 rib_sites(line, &surface, spacing, self.axis.id)
+            } else if look.areoles.margins > 0.0 {
+                margin_sites(line, spacing)
             } else {
                 spiral_sites(line, look.flatten, self.phase, spacing)
             }
@@ -3377,6 +3465,19 @@ mod tests {
         let kept = f64::from(u32::try_from(both.len()).unwrap())
             / f64::from(u32::try_from(3 * alone).unwrap());
         assert!(kept > 0.8, "kept {} of {}", both.len(), 3 * alone);
+    }
+
+    #[test]
+    fn margin_areoles_keep_to_the_edges_and_leave_the_foot_bare() {
+        let graph = column(0.2, 0.05, 4);
+        let axis = &axes(&graph)[0];
+        let line = Centreline::new(&graph, axis, &BodyLook::default(), 0.0).unwrap();
+        let sites = margin_sites(&line, 0.02);
+        assert!(!sites.is_empty() && sites.len() % 2 == 0);
+        for site in &sites {
+            assert!(site.t == 0.0 || (site.t - PI).abs() < 1e-12);
+            assert!(site.s > line.length * 0.2 && site.s < line.length);
+        }
     }
 
     #[test]

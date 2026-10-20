@@ -13,13 +13,11 @@
     "params": {
       "vigour_spread": 0.12,
       "lean": 1,
-      "sink": 0.015,
       "seedling": 0.004,
       "height_max": 0.06,
       "height_rate": 0.05,
       "height_shape": 1.5,
       "radius_min": 0.006,
-      "radius_height": 0.03,
       "fill": 0.95,
       "fill_years": 6,
       "wiggle": 0.1,
@@ -148,6 +146,7 @@
       "max": 0.02
     },
     "fruit_width_m": 0.012,
+    "stem_buried": "flush",
     "height_typical_m": {
       "min": 0.06,
       "max": 0.15,
@@ -245,6 +244,7 @@
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Astrophytum: flowers funnelform, 4.5-5.4 × 3.8-5.2 cm; inner tepals yellow, proximally red, 25 × 6-10 mm; stigma lobes 10-12, yellow. Fruits green or pinkish to red, ovoid to spheric, 15-20 × 12 mm. The carpels are as many as the stigma lobes; colours by hand from the words, the red reaching about a third of the tepal."
     },
+    "traits.stem_buried": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Astrophytum asterias: plants flat-topped and usually flush with soil surface, or at most, above-ground portion low, dome-shaped. Until round 5 the stem was sunk by hand only 1.5 cm of its 6, so it stood as a drum; the family's rule now sinks it so only its top and dome show."},
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "fna-online",

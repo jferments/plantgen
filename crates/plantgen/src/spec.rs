@@ -889,7 +889,7 @@ impl Appearance {
     pub fn body_looks<'a>(&self, bodies: impl IntoIterator<Item = &'a str>) -> Vec<BodyLook> {
         bodies
             .into_iter()
-            .map(|name| self.bodies.get(name).cloned().unwrap_or_default())
+            .map(|name| self.bodies.get(name).cloned().unwrap_or_default().drawn())
             .collect()
     }
 

@@ -50,7 +50,7 @@ use crate::blooms::{self, FruitForm, Part};
 use crate::graph::GraphOrgan;
 use crate::leaves::{self, Section, SolidLeaf};
 use crate::looks::{Armed, Fruit, FruitKind, KeptPosture, Skin};
-use crate::math::{self, Vec3, any_perpendicular};
+use crate::math::{self, PI, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
 
@@ -498,6 +498,15 @@ pub(crate) fn skin(
     } = *surface;
     let other = axis.cross(across);
     let golden = math::radians(GOLDEN_DEGREES);
+    // A woolly skin's puffs are each sized for the patch of skin its
+    // site has to itself, so the many tufts of a bud stay tufts rather
+    // than balls the size of the bud: an ellipsoid's skin, about
+    // 2 pi wide (long + wide), shared by its sites.
+    let site_wide = if kind == Skin::Woolly && count > 0 {
+        wide.min(math::sqrt(2.0 * PI * wide * (long + wide) / f64::from(count)) * 0.6)
+    } else {
+        wide
+    };
     for i in 0..count {
         // From near the base (z = -0.75) to below the crown (z = 0.8).
         let z = -0.75 + 1.55 * (f64::from(i) + 0.5) / f64::from(count);
@@ -512,7 +521,7 @@ pub(crate) fn skin(
             axis,
             angle,
             (kind, spines),
-            (long, wide),
+            (long, site_wide),
             colour,
             dress,
             part,
@@ -543,6 +552,12 @@ pub(crate) fn tube_skin(
     }
     let other = axis.cross(across);
     let golden = math::radians(GOLDEN_DEGREES);
+    // As on a pericarpel, a woolly tube's puffs share its skin.
+    let wide = if kind == Skin::Woolly {
+        wide.min(math::sqrt(2.0 * PI * radius(0.5) * length / f64::from(count)) * 0.6)
+    } else {
+        wide
+    };
     for i in 0..count {
         let u = 0.05 + 0.85 * (f64::from(i) + 0.5) / f64::from(count);
         let angle = golden * f64::from(i);

@@ -109,6 +109,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "spine_sheath_colour": [159, 153, 132],
     "fruit_shape": "obconic",
     "fruit_surface": "areolate",
     "tubercle_shape": "broad",
@@ -139,6 +140,7 @@
     "flower_size_m": {"min": 0.024, "max": 0.032}
   },
   "evidence": {
+    "traits.spine_sheath_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Cylindropuntia fulgida: 'Spines 0-12(-18) per areole ... yellowish, sometimes also pale pinkish, aging brown ... sheaths uniformly whitish, yellowish to golden, baggy.' The flora gives no one shade, so it was measured: the median of the non-green pixels inside the spiny joints of four iNaturalist photographs (imagekit batch inat-cacti-2026-10-19, photos 0, 3, 5, 7 in key order; photos with sky behind the joints left out), the brighter three quarters of each, then the median of the photos: RGB 159, 153, 132, a whitish grey-straw."},
     "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: fruit obconical, fleshy, mostly spineless, its tubercles obscure."},
     "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: fruit obconical, fleshy, mostly spineless, the tubercles obscure."},
     "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 209, Cylindropuntia fulgida: tubercles broadly oval."},

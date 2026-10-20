@@ -105,17 +105,21 @@
   "traits": {
     "fruit_shape": "ovoid",
     "lower_areole_spines": "none",
-    "stem_colour": [130, 85, 120],
+    "stem_colour": [120, 108, 115],
     "spine_colour": [150, 80, 50],
     "flower_colour": [225, 190, 45],
     "flower_size_m": 0.065,
     "radial_spines": {"min": 0, "max": 2, "high": 3},
     "radial_spine_length_m": {"min": 0.04, "max": 0.05, "high": 0.1},
-    "fruit_colour_ripe": [160, 65, 110]
+    "fruit_colour_ripe": [160, 65, 110],
+    "flowering_months": [4, 5, 6],
+    "fruiting_months": [7, 8, 9, 10, 11, 12]
   },
   "evidence": {
+    "traits.flowering_months": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Opuntia santa-rita (the name the spec's authors wrote; WCVP v16 sinks it in O. gosseliniana): flowering spring (Apr-early Jun). USA-NPN Nature's Notebook (species 948, observations fetched 2026-10-19, Arizona only, 126 open-flower records from 14 plants at 8 sites, 2016 to 2025) agree: the share of checks finding open flowers is highest in April and May (0.30 each)."},
+    "traits.fruiting_months": {"evidence": "SourceInferred", "source": "usa-npn", "note": "No flora read gives the months. USA-NPN Nature's Notebook for Opuntia santa-rita (species 948, observations fetched 2026-10-19), Arizona only (the Texas records are of planted pads far outside its range): 319 ripe-fruit records from 14 plants at 7 sites, 2017 to 2026; the share of checks finding ripe fruit by month Jan 0.04, Feb 0.05, Mar 0.04, Apr 0.03, May 0.03, Jun 0.06, Jul 0.27, Aug 0.33, Sep 0.41, Oct 0.38, Nov 0.23, Dec 0.18; the months with at least a third of the busiest month's share, July to December. Fewer plants than a phenology work would want."},
     "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: fruit ovoid, spineless, with many glochids."},
-    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: stem segments usually reddish or purplish."},
+    "traits.stem_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: stem segments usually reddish or purplish. With no shade named, it was measured from the purple pads: the median of the pixels inside sunlit pads of seven iNaturalist photographs whose pads are purple (imagekit batch inat-cacti-2026-10-19, photos 2, 3, 4, 6, 9, 10, 11 in key order; photos 1, 5, 7 and 8 show green or pale pads in their growing season), the brighter three quarters of each, then the median of the photos: RGB 120, 108, 115, a dusky violet-grey (the photos ranged from 99, 82, 86 to 185, 123, 141). Until 2026-10-19 a lighter pink-violet, RGB 130, 85, 120, by eye."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: spines rust to yellowish to brownish red; rust here."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: flowers yellow, to 7.5 cm across (typical a little short of it, by hand); fruit ovoid, spineless, its colour and size not given, so they stay set by hand."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 501, Opuntia gosseliniana: flowers yellow, to 7.5 cm across (typical a little short of it, by hand); fruit ovoid, spineless, its colour and size not given, so they stay set by hand."},

@@ -66,9 +66,7 @@
         "spines": [
           {
             "role": "radial",
-            "count": [8, 12],
             "angle": 50,
-            "length": 0.025,
             "width": 0.0008,
             "angle_spread": 25,
             "length_spread": 0.3,
@@ -114,6 +112,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "spine_sheath_colour": [179, 161, 129],
+    "spine_cover": "obscuring",
+    "radial_spine_length_m": {"min": 0.015, "max": 0.028, "low": 0.01},
+    "radial_spines": {"min": 10, "max": 15, "low": 8},
     "fruit_surface": "areolate",
     "tubercle_relief": "prominent",
     "tubercle_shape": "elongate",
@@ -133,6 +135,10 @@
     "fruiting_months": [5, 6, 7]
   },
   "evidence": {
+    "traits.spine_sheath_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "FNA vol. 4: 'sheaths uniformly whitish or pale yellow'; the flora gives no shade, so it was measured: the median of the non-green pixels inside the sunlit spine cover of seven iNaturalist photographs (imagekit batch inat-cacti-2026-10-19, photos 0, 1, 2, 6, 7, 8, 10 in key order), the brighter three quarters of each, then the median of the photos: RGB 179, 161, 129, a pale straw (the photos ranged from 149, 140, 138 to 199, 177, 153)."},
+    "traits.spine_cover": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Cylindropuntia bigelovii var. bigelovii: 'Spines (8-)10-15 per areole, at most areoles, interlaced with spines of adjacent areoles, usually uniformly, diffusely spreading and nearly completely obscuring stem, pale yellow to yellow to tan, aging brown; abaxial spines spreading to deflexed, subterete to flattened, the longest (10-)15-25 mm; adaxial spines erect or spreading, terete, the longest (10-)20-28 mm; sheaths uniformly whitish or pale yellow, not obviously baggy.' A cholla's spines are not told into radials and centrals, so all of them are the radial set."},
+    "traits.radial_spine_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Cylindropuntia bigelovii var. bigelovii: 'Spines (8-)10-15 per areole, at most areoles, interlaced with spines of adjacent areoles, usually uniformly, diffusely spreading and nearly completely obscuring stem, pale yellow to yellow to tan, aging brown; abaxial spines spreading to deflexed, subterete to flattened, the longest (10-)15-25 mm; adaxial spines erect or spreading, terete, the longest (10-)20-28 mm; sheaths uniformly whitish or pale yellow, not obviously baggy.' A cholla's spines are not told into radials and centrals, so all of them are the radial set."},
+    "traits.radial_spines": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Cylindropuntia bigelovii var. bigelovii: 'Spines (8-)10-15 per areole, at most areoles, interlaced with spines of adjacent areoles, usually uniformly, diffusely spreading and nearly completely obscuring stem, pale yellow to yellow to tan, aging brown; abaxial spines spreading to deflexed, subterete to flattened, the longest (10-)15-25 mm; adaxial spines erect or spreading, terete, the longest (10-)20-28 mm; sheaths uniformly whitish or pale yellow, not obviously baggy.' A cholla's spines are not told into radials and centrals, so all of them are the radial set."},
     "traits.fruit_surface": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: fruit leathery-fleshy, spineless, the tubercles fading."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
     "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},

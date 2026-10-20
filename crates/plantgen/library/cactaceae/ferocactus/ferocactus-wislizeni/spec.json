@@ -19,7 +19,6 @@
       "height_rate": 0.02,
       "height_shape": 1.8,
       "radius_min": 0.015,
-      "radius_height": 0.6,
       "fill": 0.95,
       "fill_years": 20,
       "pinch": 0.02,
@@ -36,9 +35,9 @@
     }
   },
   "growth": {
-    "years": 100,
+    "years": 35,
     "step": 1,
-    "keyframes": [10, 30, 60, 100]
+    "keyframes": [5, 12, 25, 35]
   },
   "variants": {
     "environments": ["open"],
@@ -74,7 +73,6 @@
             "role": "radial",
             "angle": 15,
             "width": 0.0003,
-            "colour": [0.7, 0.68, 0.62],
             "angle_spread": 10,
             "length_spread": 0.3
           },
@@ -84,30 +82,22 @@
             "angle": 35,
             "length": 0.08,
             "width": 0.0018,
-            "colour": [0.45, 0.12, 0.06],
             "angle_spread": 10,
             "length_spread": 0.2,
-            "flat": 0.6,
-            "tip": [0.3, 0.25, 0.2]
+            "flat": 0.6
           },
           {
             "role": "main",
             "count": [1, 1],
             "angle": 30,
             "width": 0.0028,
-            "colour": [0.5, 0.13, 0.06],
             "angle_spread": 8,
             "aim": 180,
             "arc": 0,
             "length_spread": 0.15,
-            "flat": 0.35,
-            "tip": [0.25, 0.08, 0.05]
+            "flat": 0.35
           }
-        ],
-        "greying": {
-          "colour": [0.35, 0.33, 0.3],
-          "years": 25
-        }
+        ]
       }
     }
   },
@@ -117,22 +107,12 @@
       "environment": "open",
       "height": 0.45,
       "tolerance": 0.5
-    },
-    {
-      "age": 60,
-      "environment": "open",
-      "height": 0.95,
-      "tolerance": 0.4
-    },
-    {
-      "age": 100,
-      "environment": "open",
-      "height": 1.4,
-      "tolerance": 0.35
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "central_spine_colour": [145, 114, 94],
+    "spine_colour": [235, 232, 225],
     "fruit_shape": "ovoid",
     "tubercle_relief": "barely",
     "flower_colour": [220, 130, 30],
@@ -140,14 +120,14 @@
     "fruit_colour_ripe": [215, 175, 45],
     "fruit_size_m": 0.04,
     "ribs": {"min": 20, "max": 28, "typical": 25},
-    "stem_diameter_max_m": {"min": 0.45, "max": 0.83},
+    "stem_diameter_max_m": {"min": 0.36, "max": 0.65, "low": 0.2, "high": 1.0},
     "areole_spacing_m": {"min": 0.02, "max": 0.03},
     "radial_spines": {"min": 12, "max": 20},
     "radial_spine_length_m": 0.05,
     "central_spines": 4,
     "central_spine_length_m": {"min": 0.08, "max": 0.1},
     "central_spine_form": "hooked",
-    "height_typical_m": {"min": 0.6, "max": 1.6},
+    "height_typical_m": {"min": 0.19, "max": 1.0, "high": 3.0},
     "height_max_m": 3,
     "woodiness": "herbaceous",
     "rosette": "none",
@@ -156,6 +136,8 @@
     "fruit_width_m": {"min": 0.018, "max": 0.04}
   },
   "evidence": {
+    "traits.central_spine_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus wislizeni: 'Spines 16-25(-29) per areole, central spines and larger radial spines dull pink, gray, or tan; smallest spines per areole white, slender, often bristlelike, less than 1 mm diam., strongly contrasting with central spines'; it says nothing of greying. With three colours named for the centrals, the colour was measured: the median of the non-green pixels inside the spine cover of seven iNaturalist photographs (imagekit batch inat-cacti-2026-10-19, photos 1, 2, 5, 6, 9, 10, 11 in key order), the brighter three quarters of each, then the median of the photos: RGB 145, 114, 94, a grey-brown with a pink cast. Until 2026-10-19 the centrals were a bright red by hand, greying over 25 years."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus wislizeni: 'Spines 16-25(-29) per areole, central spines and larger radial spines dull pink, gray, or tan; smallest spines per areole white, slender, often bristlelike, less than 1 mm diam., strongly contrasting with central spines'; it says nothing of greying. The radial set here is the white bristles; their white by hand from the word."},
     "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: fruit ovoid, yellow, to 5 cm long."},
     "generator.params.sun_tilt": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) p. 195: Ferocactus wislizenii stems lean 17 degrees toward the equator at 33 degrees north."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: barely tuberculate, the ribs with at most a swelling under each areole."},
@@ -173,11 +155,7 @@
       "source": "usfs-feis",
       "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): 20 to 28 ribs; Britton and Rose's usual count is 25."
     },
-    "traits.stem_diameter_max_m": {
-      "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): stems 45 to 83 cm across."
-    },
+    "traits.stem_diameter_max_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus wislizeni: stems 19-100(-300) \u00d7 (20-)36-65(-100) cm, so 36 to 65 cm thick, 20 to 100 at the extremes. FEIS's review (Matthews 1994) gives 45 to 83 cm, which stood here until round 5. The stem's widening over 60 cm of height, set by hand until then, now comes from the family's rule on its globose genus."},
     "traits.radial_spines": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -248,7 +226,7 @@
     "growth": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact. Since round 5 (2026-10-19) it ends at the age the plant reaches the middle of the flora's usual height (Flora of North America's 19-100 cm, so about 0.6 m, at 35 years on its height curve), so its oldest keyframe, the one rendered and checked, is a typical plant rather than one of 100 years and 1.5 m."
     },
     "variants": {
       "evidence": "Authored",
@@ -265,7 +243,7 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
+    "traits.height_typical_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Ferocactus wislizeni: stems usually leaning southward in adulthood, depressed-spheric to ovoid-cylindric, 19-100(-300) \u00d7 (20-)36-65(-100) cm; the usual heights 19 to 100 cm, rarely to 3 m. Until round 5 a model estimate of 0.6 to 1.6 m."},
     "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},

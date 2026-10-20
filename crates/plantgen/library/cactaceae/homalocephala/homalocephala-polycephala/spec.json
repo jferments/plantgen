@@ -125,11 +125,6 @@
           }
         ],
         "greying": {
-          "colour": [
-            0.45,
-            0.43,
-            0.41
-          ],
           "years": 15
         }
       }
@@ -145,6 +140,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "spine_cover": "nearly_obscuring",
+    "central_spine_length_m": {"min": 0.06, "max": 0.075},
     "ribs": {
       "min": 11,
       "max": 25
@@ -164,7 +161,7 @@
       "min": 6,
       "max": 14
     },
-    "radial_spine_length_m": 0.05,
+    "radial_spine_length_m": {"min": 0.03, "max": 0.045},
     "central_spines": 4,
     "central_spine_form": {
       "curved": "usually",
@@ -178,11 +175,7 @@
       85,
       70
     ],
-    "spine_colour_aged": [
-      120,
-      115,
-      110
-    ],
+    "spine_colour_aged": [175, 153, 138],
     "areole_wool_colour": [
       235,
       225,
@@ -226,6 +219,8 @@
     ]
   },
   "evidence": {
+    "traits.spine_cover": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Echinocactus polycephalus: 'Spines 10-19 per areole ... flattened to abaxially ridged, annulate-ridged, nearly obscuring stem surfaces'."},
+    "traits.central_spine_length_m": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia's Homalocephala polycephala (read 2026-10-19), from the Jepson Manual's treatment of Echinocactus polycephalus var. polycephalus (the Jepson eFlora itself is blocked from here): four central spines, reddish with a purplish hue, greying with age, the lowest curving down, reaching 6-7.5 cm; 6 to 8 radial spines like the centrals, 3-4.5 cm. The Flora of North America gives the centrals no length and the genus's radials 2-5 cm."},
     "traits.ribs": {
       "evidence": "SourceInferred",
       "source": "fna-online",
@@ -271,11 +266,7 @@
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
     },
-    "traits.spine_colour_aged": {
-      "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
-    },
+    "traits.spine_colour_aged": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "Flora of North America vol. 4: spines 'red to straw colored, aging gray ... canescent with minute, white, unicellular trichomes often obscuring underlying spine color'; var. polycephalus 'spines red to gray, canescent'. The flora names no shade, so the grey was measured: the median of the non-green pixels inside the spine mass of ten iNaturalist photographs (imagekit batch inat-cacti-2026-10-19, photos 0-4, 6-8, 10, 11 in key order), the brighter three quarters of each, then the median of the photos: RGB 175, 153, 138, a pinkish grey (the photos ranged from 148, 113, 101 on red-spined heads to 226, 190, 167 on bleached ones)."},
     "traits.flower_colour": {
       "evidence": "SourceInferred",
       "source": "fna-online",
@@ -311,11 +302,7 @@
       "source": "fna-online",
       "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus polycephalus: plants branched from the base forming compact mounds of 2-50(-130) branches; stems gray-green to yellow-green, spheric to short cylindric, 15-40 × (9-)15-30 cm; ribs 11-25, the crests sharp, with flat sides. Spines 10-19 per areole, straight to curved but not hooked, often twisted, red to straw coloured, aging gray, flattened to abaxially ridged, nearly obscuring the stem, glabrous to canescent; radial spines 6-14 per areole; central spines 4, the abaxial frequently longest, straight to somewhat recurved. Flowers 5.5-5.8 × 4-6 cm; inner tepals bright yellow; stigma lobes bright yellow. Fruits ovoid, hidden by hairs, drying to a tan shell, 15-40 mm. Var. polycephalus: stems gray-green; spines red to gray, canescent; flowering Jul-Aug. Colours by hand from the words; heights from its stems' 15-40 cm."
     },
-    "traits.radial_spine_length_m": {
-      "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), : Echinocactus: stems gray-blue, gray-green, yellow-green or grass green, flat-topped spheric to short cylindric, the apical region appearing copiously woolly; ribs very prominent; spines conspicuously annulate-ridged, rigid; radial spines 5-14 per areole, straight to curved, 2-5 cm; central spines 1-4, straight to curved. Flowers near the stem apex, broadly funnelform to nearly salverform; ovary scaly, spineless, copiously woolly, with white or pale tan hairs from the areoles hiding the ovary and flower tube; stigma lobes 6-14(-17). Fruits many scaled, the axils of the scales copiously woolly (the wool hiding the fruit except in E. texensis), spineless; floral remnant persistent. The species: fruits hidden by hairs, drying to a tan shell. Its radials the genus's longest; the carpels as many as the stigma lobes; colours by hand from the words."
-    },
+    "traits.radial_spine_length_m": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia's Homalocephala polycephala (read 2026-10-19), from the Jepson Manual's treatment of Echinocactus polycephalus var. polycephalus (the Jepson eFlora itself is blocked from here): four central spines, reddish with a purplish hue, greying with age, the lowest curving down, reaching 6-7.5 cm; 6 to 8 radial spines like the centrals, 3-4.5 cm. The Flora of North America gives the centrals no length and the genus's radials 2-5 cm."},
     "traits.areole_wool_colour": {
       "evidence": "SourceInferred",
       "source": "fna-online",

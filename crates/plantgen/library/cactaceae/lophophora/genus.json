@@ -4,6 +4,7 @@
   "name": "Lophophora",
   "parent": "subfamily/cactoideae",
   "traits": {
+    "areole_hair_length_m": {"min": 0.007, "max": 0.01},
     "stem_form": "globose",
     "stem_apex": "depressed",
     "tubercles": true,
@@ -20,6 +21,7 @@
     "central_spines": 0
   },
   "evidence": {
+    "traits.areole_hair_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 4 (read on eFloras 2026-10-19), Lophophora: 'areoles 3-15+ mm apart along the ribs or at the apices of low, humplike tubercles, copiously hairy, the hairs in compact erect tufts to 7-10 mm'. So each areole's tuft of hairs is 7-10 mm long when grown."},
     "traits.stem_form": {
       "evidence": "SourceInferred",
       "source": "fna-online",

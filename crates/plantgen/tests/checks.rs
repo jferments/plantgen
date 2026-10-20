@@ -132,11 +132,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
     ),
     (
-        "ferocactus-acanthodes-subsp-acanthodes",
-        "stem_form",
-        "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
-    ),
-    (
         "frangula-purshiana",
         "inflorescence",
         "Rhamnaceae's flowers are in cymes or panicles (Simpson 2019), but cascara's axillary clusters are drawn as an umbel",
