@@ -1214,7 +1214,8 @@ pub mod venation;
 /// `limb_angle` words, ribs are spaced for the usual count, tepals take
 /// their stated width.
 /// 164: a stand of the same age (`interior`, `edge`) is a stand of the
-/// plant's like, its own crown at each neighbour's place, the stems a
-/// quarter of its height apart (`STAND_SPACING`), not shade of 0.12 a
-/// metre from the ground to its top.
+/// plant's like, its own crown at each neighbour's place, the stems 0.115
+/// of its height apart as in fully stocked Douglas-fir stands
+/// (`STAND_SPACING`, McArdle et al. 1961), not shade of 0.12 a metre from
+/// the ground to its top.
 pub const GENERATOR_REVISION: u32 = 164;

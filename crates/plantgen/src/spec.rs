@@ -385,17 +385,20 @@ pub struct GrowthPlan {
 /// their height (the stand's relative spacing, Hart's index), so the stand
 /// thins as its trees grow. Each neighbour is the plant's own crown
 /// ([`crate::conditions::Layout`]), so the shade over a crown is what crowns
-/// like it cast and lifts as it lifts. A quarter is the model's choice
-/// (tree shape, 2026-10-20), fitted to Douglas-fir: grown in it to 300
-/// years it stands 60 m on a trunk 1.5 m across with a crown from about
-/// 24 m up, where old-growth trees are 150-180 cm across with a crown
-/// starting 20-40 m up on a clear bole (FEIS, Hermann and Lavender 1990,
-/// Franklin et al. 1981); at a fifth the trunk was 1.2 m and at 0.15
-/// 0.9 m. Before it a stand was shade of 0.12 a metre from the ground to
-/// the plant's top, which deepened as the plant grew and left any tree
-/// only its top 8-10 m of foliage: a 55 cm Douglas-fir with its crown
-/// from 51 m up.
-pub const STAND_SPACING: f64 = 0.25;
+/// like it cast and lifts as it lifts. The value is the median of fully
+/// stocked Douglas-fir stands in McArdle et al. (1961, Tables 1 and 2): the
+/// square spacing of their trees per acre over the height of their dominants
+/// is 0.102-0.147 across site indices 80-210 and ages 30-160, median 0.115,
+/// and rises slowly with age. Grown in it, Douglas-fir is 33.5 m and 32.5 cm
+/// across at 60 years where the tables' average tree at that height (site
+/// index 140) is 33.2 m and 28.2 cm; at a quarter, the value fitted to
+/// old-growth trunks before, it was 59 cm. Trees older than the tables, such
+/// as 300-year Douglas-fir 150-180 cm across (FEIS), stand far wider apart
+/// than a fully stocked stand, which this spacing does not model. Before it
+/// a stand was shade of 0.12 a metre from the ground to the plant's top,
+/// which deepened as the plant grew and left any tree only its top 8-10 m of
+/// foliage: a 55 cm Douglas-fir with its crown from 51 m up.
+pub const STAND_SPACING: f64 = 0.115;
 
 /// The synthetic stand a variant grows in.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]

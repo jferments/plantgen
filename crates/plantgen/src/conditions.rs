@@ -1094,8 +1094,8 @@ mod tests {
         // The key is the same on every run and machine: the SHA-256 of
         // {"schema":1,"neighbours":{"version":1,"density":0.0,
         // "relative_height":1.0,"canopy":0.0,"spacing":0.0,"one_sided":false,
-        // "like":0.25,"layout":{"kind":"interior","spacing_m":0.25,
-        // "per_height":0.25}}}.
+        // "like":0.115,"layout":{"kind":"interior","spacing_m":0.25,
+        // "per_height":0.115}}}.
         assert_eq!(
             interior.class().to_string(),
             "c143493ffd03ae6b9d9d98672bdce44776b31d518cd03f324bb2d47252dd633b"
@@ -1342,7 +1342,7 @@ mod tests {
             LayoutKind::Edge
         );
         assert!(Conditions::preset(Environment::Open).layout().is_none());
-        // The nearest neighbours stand a quarter of the plant's height away.
+        // The nearest neighbours stand STAND_SPACING of the plant's height away.
         let nearest = |top_m: f64| {
             let crown = Crown {
                 base_m: 0.3 * top_m,
@@ -1356,8 +1356,8 @@ mod tests {
                 .map(|envelope| envelope.centre_m[0].hypot(envelope.centre_m[1]))
                 .fold(f64::INFINITY, f64::min)
         };
-        assert!((nearest(8.0) - 2.0).abs() < 1e-9);
-        assert!((nearest(40.0) - 10.0).abs() < 1e-9);
+        assert!((nearest(8.0) - 0.92).abs() < 1e-9);
+        assert!((nearest(40.0) - 4.6).abs() < 1e-9);
         // Never nearer than the least spacing.
         assert!((nearest(0.4) - Layout::LEAST_SPACING_M).abs() < 1e-9);
     }
