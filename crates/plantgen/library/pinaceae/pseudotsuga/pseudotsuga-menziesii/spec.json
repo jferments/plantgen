@@ -98,14 +98,14 @@
       "age": 30,
       "environment": "interior",
       "height": 19.5,
-      "dbh": 0.14,
+      "dbh": 0.18,
       "tolerance": 0.35
     },
     {
       "age": 60,
       "environment": "interior",
       "height": 33.2,
-      "dbh": 0.28,
+      "dbh": 0.36,
       "tolerance": 0.35
     }
   ],
@@ -204,7 +204,7 @@
     "allometry": {
       "evidence": "SourceInferred",
       "source": "mcardle-1961",
-      "note": "McArdle et al. (1961), fully stocked stands, site index 140 (site class III): Table 1 gives the dominant and codominant trees 64 ft (19.5 m) at 30 years and 109 ft (33.2 m) at 60; Table 2 gives the average tree 5.5 in (14.0 cm) and 11.1 in (28.2 cm) at breast height. The 20 m, 25 cm and 36 m, 45 cm before were rough sizes from general knowledge."
+      "note": "McArdle et al. (1961), fully stocked stands, site index 140 (site class III): Table 1 gives the dominant and codominant trees 64 ft (19.5 m) at 30 years and 109 ft (33.2 m) at 60; Table 2 gives the average tree of the whole stand 5.5 in (14.0 cm) and 11.1 in (28.2 cm) at breast height. The trees of that height, the dominant and codominant, are the larger ones: they span the upper 55 per cent of a stand's diameter range (p. 63), and in Table 11's stand of site III their quadratic mean diameter is 1.27 times the whole stand's at 40 years and 1.29 at 60, so 18 cm at 30 years and 36 cm at 60. The 20 m, 25 cm and 36 m, 45 cm before were rough sizes from general knowledge."
     },
     "appearance": {
       "evidence": "Authored",

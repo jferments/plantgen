@@ -70,8 +70,8 @@
       "why": "Green wood's stiffness, which holds a limb up against its weight (bend@1)."
     },
     "generator.params.pipe_rings": {
-      "rule": "0.000025",
-      "why": "Trunk wood laid down a year per m² of foliage above, one rate for every conifer, so a trunk answers to its crown's foliage and nothing hand-set: fitted to the average tree of fully stocked Douglas-fir in McArdle et al. (1961), 28.2 cm at 60 years and 42.9 cm at 100 (site index 140), grown in the stand of its like; on seeds 1 and 2 it draws 30-32 and 41-44 cm. Before, each species set its own rate, 1.2e-6 to 3e-5, fitted to rough sizes, and stand-grown trunks stalled."
+      "rule": "0",
+      "why": "No yearly rings on living foliage: a conifer's trunk is the pipe model's, its living foliage's pipes plus the disused pipes of the limbs it has shed (Shinozaki et al. 1964). Measured open-grown Douglas-fir (USDA Urban Tree Database, Longview, WA) are 58 cm through at 30 years and 95 cm at 60; the pipe model alone draws 56 and 93 cm, and every yearly ring rate added on top overgrew them (2.5e-5, fitted to McArdle's stands, drew 137 cm at 60 years; the old per-species 3e-5, 147 cm). The rates each species set by hand, 1.2e-6 to 3e-5, are gone."
     }
   },
   "evidence": {
@@ -92,8 +92,8 @@
     },
     "rules.generator.params.pipe_rings": {
       "evidence": "SourceInferred",
-      "source": "mcardle-1961",
-      "note": "McArdle, Meyer and Bruce (1961), The yield of Douglas fir in the Pacific Northwest, USDA Technical Bulletin 201, Table 2 (average-tree diameter of fully stocked stands): 11.1 in (28.2 cm) at 60 years and 16.9 in (42.9 cm) at 100 on site index 140. The rate is the one that grows the model's Douglas-fir to them in the stand of its like; it is applied to every conifer. The trunks it gives follow the foliage the model's crowns carry as Gholz et al. (1979) foliage-diameter equations have it."
+      "source": "usfs-urban-tree-database-2016",
+      "note": "McPherson, van Doorn and Peper (2016), Urban tree database (USDA Forest Service RDS-2016-0005), Pacific Northwest region (Longview, WA), 39 open-grown Douglas-fir 1 to 76 years old: dbh = -1.19688 + 2.36185 age - 0.01267 age² (adjusted r² 0.985), 58 cm at 30 years and 95 at 60; at 72 to 76 years, 88 to 118 cm. Shinozaki, Yoda, Hozumi and Kira (1964), A quantitative analysis of plant form: the pipe model theory: a stem carries a pipe for every unit of foliage above it, and keeps the disused pipes of branches that have died."
     }
   }
 }

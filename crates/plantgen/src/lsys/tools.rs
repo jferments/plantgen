@@ -2901,6 +2901,8 @@ pub struct Pipes {
     /// Ring area each segment adds per unit of time: `rings` times its leaf
     /// area (Pressler's law).
     pub ring_rate: f64,
+    /// The pipe model's exponent `n`.
+    pub exponent: f64,
 }
 
 /// The pipe model: a segment's radius `r` satisfies
@@ -2914,8 +2916,8 @@ pub struct Pipes {
 /// of area `rings · leaf area above` to every segment (Pressler's law: ring
 /// area is proportional to the foliage above), so stems keep thickening
 /// after their crowns stop growing. A segment's radius is the larger of
-/// the pipe radius and its last radius with this year's ring added, and
-/// never shrinks.
+/// the two, and never shrinks. The growth loop also keeps the pipes of
+/// shed limbs in the stem below them (Shinozaki et al.'s disused pipes).
 ///
 /// # Errors
 ///
@@ -2988,6 +2990,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
             .map(|segment| leaf_area[segment.node as usize])
             .collect(),
         ring_rate: rings,
+        exponent,
     })
 }
 
