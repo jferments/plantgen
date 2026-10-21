@@ -115,7 +115,6 @@
       "age": 30,
       "environment": "interior",
       "height": 8,
-      "dbh": 0.15,
       "tolerance": 0.4
     }
   ],
@@ -184,7 +183,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 8 m tall and 15 cm across at breast height at 30 years in a closed stand. Replace with measured data before calling this species calibrated."
+      "note": "Rough sizes from general knowledge of the species: 8 m tall at 30 years in a closed stand. Replace with measured data before calling this species calibrated. The diameter once given with the height was the same kind of guess and is gone: it asked for about 2 cm of trunk per metre of height in a closed stand, where red alder's normal yield tables (Worthington et al. 1960, Tables 1 and 5) give 0.8 to 1.5, and a guessed girth does not gate the size test."
     },
     "appearance": {
       "evidence": "Authored",
