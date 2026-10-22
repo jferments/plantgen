@@ -31,7 +31,6 @@
       "min_shoot": 0.025,
       "dead_years": 8,
       "pipe_organ": 0.004,
-      "pipe_rings": 3e-06,
       "branch_reach": 1.5,
       "stems": 1,
       "ground_gap": 0.005

@@ -77,9 +77,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the climber program first flowers in its second year (a shoot turns adult once the vine is adult_age old, counted from 0), so Malabar spinach, which flowers in its first, is drawn flowering at 2 years",
     ),
     (
-        "basella-alba",
+        "program:climber",
         "shoot_leaves",
-        "the climber's shoots are drawn with 3 leaves against the 15 to 30 its twining stems bear; the climber program grows few leaves on a shoot (as on pipevine's)",
+        "the climber program grows few leaves on a shoot: Malabar spinach's are drawn with 3 against the 15 to 30 its twining stems bear, and pipevine's with 2 or 3 against 4 to 18",
     ),
     (
         "capsicum-annuum",

@@ -23,8 +23,7 @@
       "spray_droop": 25,
       "pipe_organ": 0.0095,
       "branch_reach": 8.0,
-      "bole": 0.3,
-      "pipe_rings": 3e-05
+      "bole": 0.3
     }
   },
   "growth": {
@@ -98,15 +97,15 @@
     {
       "age": 30,
       "environment": "interior",
-      "height": 20,
-      "dbh": 0.25,
+      "height": 19.5,
+      "dbh": 0.18,
       "tolerance": 0.35
     },
     {
       "age": 60,
       "environment": "interior",
-      "height": 36,
-      "dbh": 0.45,
+      "height": 33.2,
+      "dbh": 0.36,
       "tolerance": 0.35
     }
   ],
@@ -203,9 +202,9 @@
       "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data. Cones (plant forms F3): 5 to 10 cm hang, with three-pointed bracts between the scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage. Needle shading (generator revision 85): `pipe_rings` raised from 9.8e-06 to 3e-05, refitted to the interior dbh references (0.25 m at 30 years, 0.45 m at 60) now that its sprays shade only their true needle area."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Rough heights and diameters for a well-stocked western Washington stand, from general forestry knowledge. Replace with a published yield or site-index table before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "mcardle-1961",
+      "note": "McArdle et al. (1961), fully stocked stands, site index 140 (site class III): Table 1 gives the dominant and codominant trees 64 ft (19.5 m) at 30 years and 109 ft (33.2 m) at 60; Table 2 gives the average tree of the whole stand 5.5 in (14.0 cm) and 11.1 in (28.2 cm) at breast height. The trees of that height, the dominant and codominant, are the larger ones: they span the upper 55 per cent of a stand's diameter range (p. 63), and in Table 11's stand of site III their quadratic mean diameter is 1.27 times the whole stand's at 40 years and 1.29 at 60, so 18 cm at 30 years and 36 cm at 60. The 20 m, 25 cm and 36 m, 45 cm before were rough sizes from general knowledge."
     },
     "appearance": {
       "evidence": "Authored",

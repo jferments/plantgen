@@ -26,7 +26,6 @@
       "spray_length": 1.1,
       "shade_death": 0.25,
       "pipe_organ": 0.009,
-      "pipe_rings": 1e-05,
       "branch_reach": 4,
       "epi_chance": 0
     }

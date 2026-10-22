@@ -23,7 +23,6 @@
       "shade_death": 0.05,
       "shade_years": 4,
       "pipe_organ": 0.004,
-      "pipe_rings": 1.2e-06,
       "branch_reach": 3,
       "bole": 0.05
     }
@@ -110,8 +109,7 @@
       "age": 60,
       "environment": "open",
       "height": 16,
-      "tolerance": 0.35,
-      "dbh": 0.35
+      "tolerance": 0.35
     }
   ],
   "tier": "procedural_proxy",
@@ -315,7 +313,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence medium), as no source read gives it: 16 m tall and 35 cm through at 60 years in open subalpine parkland: FEIS (Cope 1992) gives juvenile growth of 10-40 cm a year and says it \"is more common at higher elevations but grows faster at lower elevations\". Replace with measured data before calling this species calibrated."
+      "note": "A model estimate (confidence medium), as no source read gives it: 16 m tall at 60 years in open subalpine parkland: FEIS (Cope 1992) gives juvenile growth of 10-40 cm a year and says it \"is more common at higher elevations but grows faster at lower elevations\". Replace with measured data before calling this species calibrated. The 35 cm diameter once set beside the height was the same kind of estimate and is gone: a conifer's trunk is now the pipe model's with the disused pipes of its shed limbs (_ranks/subclass/pinidae.json), and a guessed girth does not gate it."
     },
     "appearance": {
       "evidence": "Authored",

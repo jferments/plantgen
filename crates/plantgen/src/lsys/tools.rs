@@ -71,6 +71,16 @@ pub struct Neighbourhood {
     pub spacing: f64,
     /// Neighbours stand only on the −X side (a stand edge).
     pub one_sided: bool,
+    /// A stand of the plant's like: neighbours whose crowns are its own
+    /// stand this many times its height apart, and at least `spacing`
+    /// (`crate::conditions::Layout`). 0: none.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub like: f64,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f64) -> bool {
+    *value == 0.0
 }
 
 impl Neighbourhood {
@@ -80,6 +90,7 @@ impl Neighbourhood {
         canopy: 0.0,
         spacing: 0.0,
         one_sided: false,
+        like: 0.0,
     };
 
     /// Fraction of the sky light arriving along `direction` (a unit vector
@@ -2890,6 +2901,8 @@ pub struct Pipes {
     /// Ring area each segment adds per unit of time: `rings` times its leaf
     /// area (Pressler's law).
     pub ring_rate: f64,
+    /// The pipe model's exponent `n`.
+    pub exponent: f64,
 }
 
 /// The pipe model: a segment's radius `r` satisfies
@@ -2903,7 +2916,8 @@ pub struct Pipes {
 /// of area `rings · leaf area above` to every segment (Pressler's law: ring
 /// area is proportional to the foliage above), so stems keep thickening
 /// after their crowns stop growing. A segment's radius is the larger of
-/// the two, and never shrinks.
+/// the two, and never shrinks. The growth loop also keeps the pipes of
+/// shed limbs in the stem below them (Shinozaki et al.'s disused pipes).
 ///
 /// # Errors
 ///
@@ -2976,6 +2990,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
             .map(|segment| leaf_area[segment.node as usize])
             .collect(),
         ring_rate: rings,
+        exponent,
     })
 }
 
@@ -3671,6 +3686,7 @@ mod tests {
             canopy: 0.0,
             spacing: 4.0,
             one_sided: false,
+            like: 0.0,
         };
         let up = Vec3::Y;
         let top = stand.transmission(Vec3::new(0.0, 20.0, 0.0), 20.0, up);
@@ -3851,6 +3867,7 @@ mod tests {
             canopy: 0.0,
             spacing: 4.0,
             one_sided: true,
+            like: 0.0,
         };
         let region = |settings: &[f64], around: &Neighbourhood| {
             let mut state = ToolState::default();
@@ -3917,6 +3934,7 @@ mod tests {
         crate::conditions::Around {
             neighbourhood: &Neighbourhood::OPEN,
             envelopes: &[],
+            far: None,
             host: None,
             substrate,
             sun: None,

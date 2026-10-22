@@ -25,7 +25,6 @@
       "spray_base": 0.25,
       "spray_length": 1.0,
       "shade_death": 0.15,
-      "pipe_rings": 1.2e-06,
       "branch_reach": 6.0,
       "epi_chance": 0,
       "pipe_exponent": 3,

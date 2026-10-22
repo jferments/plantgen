@@ -421,11 +421,14 @@ impl Litter {
 }
 
 /// Girth bookkeeping across steps: the annual rings laid down on each
-/// segment and the widest radius it has had.
+/// segment, the widest radius it has had, the disused pipes it carries for
+/// branches above it that have died, and each segment's parent segment.
 #[derive(Clone, Default)]
 struct Girth {
     widest: IdMap<f64>,
     ring_area: IdMap<f64>,
+    disused: IdMap<f64>,
+    parent: IdMap<Option<u64>>,
 }
 
 impl Girth {
@@ -439,6 +442,10 @@ impl Girth {
         pipes: Option<&tools::Pipes>,
         dt: f64,
     ) -> (Vec<f64>, Vec<f64>) {
+        let below = match pipes {
+            Some(pipes) => self.disused_below(scene, pipes.exponent),
+            None => Vec::new(),
+        };
         scene
             .segments
             .iter()
@@ -447,7 +454,15 @@ impl Girth {
                 let radius = match pipes {
                     Some(pipes) => {
                         let rings = self.ring_area.entry(segment.id).or_insert(0.0);
-                        let radius = pipes.radii[index].max(math::sqrt(*rings / math::PI));
+                        let pipe = if below[index] > 0.0 {
+                            math::pow(
+                                math::pow(pipes.radii[index], pipes.exponent) + below[index],
+                                1.0 / pipes.exponent,
+                            )
+                        } else {
+                            pipes.radii[index]
+                        };
+                        let radius = pipe.max(math::sqrt(*rings / math::PI));
                         // This step's ring shows from the next step on.
                         *rings += pipes.ring_rate * dt * pipes.leaf_area[index];
                         radius
@@ -460,6 +475,86 @@ impl Girth {
                 (*widest, *widest - was)
             })
             .unzip()
+    }
+
+    /// Each segment's disused pipes (Shinozaki et al. 1964): a limb shed
+    /// from the stem leaves its pipes in the stem below it, so the flow it
+    /// had at its widest (its radius to the pipe exponent) stays in every
+    /// segment between where it stood and the ground. Records the limbs
+    /// gone since the last step, then sums each segment's own and those of
+    /// the segments above it, in the pipe model's units.
+    fn disused_below(&mut self, scene: &Scene, exponent: f64) -> Vec<f64> {
+        let mut at_node: Vec<Option<usize>> = vec![None; scene.nodes.len()];
+        for (index, segment) in scene.segments.iter().enumerate() {
+            at_node[segment.node as usize] = Some(index);
+        }
+        let parent_of = |node: u32| {
+            let mut node = scene.nodes[node as usize].parent;
+            while let Some(current) = node {
+                if let Some(index) = at_node[current as usize] {
+                    return Some(scene.segments[index].id);
+                }
+                node = scene.nodes[current as usize].parent;
+            }
+            None
+        };
+        let order: IdMap<u16> = scene
+            .segments
+            .iter()
+            .map(|segment| (segment.id, segment.order))
+            .collect();
+        let standing: IdMap<Option<u64>> = scene
+            .segments
+            .iter()
+            .map(|segment| (segment.id, parent_of(segment.node)))
+            .collect();
+        // A segment gone whose parent is a standing piece of the stem
+        // (order 0) is the foot of a shed limb; its pipes pass to the stem,
+        // and the rest of the limb was inside them. Twigs that die within
+        // a living crown leave none: the pipe model sizes the crown's own
+        // wood by its living foliage.
+        let gone: Vec<(u64, u64)> = self
+            .parent
+            .iter()
+            .filter(|(id, _)| !standing.contains_key(id))
+            .filter_map(|(&id, &parent)| {
+                parent
+                    .filter(|parent| order.get(parent) == Some(&0))
+                    .map(|parent| (id, parent))
+            })
+            .collect();
+        for (id, parent) in gone {
+            let widest = self.widest.get(&id).copied().unwrap_or(0.0);
+            *self.disused.entry(parent).or_insert(0.0) += math::pow(widest, exponent);
+        }
+        let gone_ids: Vec<u64> = self
+            .parent
+            .keys()
+            .filter(|id| !standing.contains_key(id))
+            .copied()
+            .collect();
+        for id in gone_ids {
+            self.disused.remove(&id);
+        }
+        self.parent = standing;
+        let (offsets, children) = scene.children();
+        let mut flow = vec![0.0; scene.nodes.len()];
+        for segment in &scene.segments {
+            flow[segment.node as usize] = self.disused.get(&segment.id).copied().unwrap_or(0.0);
+        }
+        for index in (0..scene.nodes.len()).rev() {
+            let span = offsets[index] as usize..offsets[index + 1] as usize;
+            let above: f64 = children[span]
+                .iter()
+                .map(|&child| flow[child as usize])
+                .sum();
+            flow[index] += above;
+        }
+        scene
+            .segments
+            .iter()
+            .map(|segment| flow[segment.node as usize])
+            .collect()
     }
 }
 
@@ -642,6 +737,8 @@ pub struct Grower<'a> {
     /// a stand sets ([`Self::set_envelopes`]), or with a layout those and
     /// its own crown at its neighbours' places.
     envelopes: Vec<crate::conditions::Envelope>,
+    /// With a layout, the rest of its stand past the envelopes.
+    far: Option<crate::conditions::FarStand>,
     layout: Option<crate::conditions::Layout>,
     substrate: Option<std::sync::Arc<crate::substrate::SubstrateField>>,
     // What wood rests on: the substrate, or level soil without one.
@@ -701,6 +798,7 @@ impl<'a> Grower<'a> {
             conditions: settings.conditions.clone(),
             neighbourhood: settings.conditions.neighbourhood(),
             envelopes: Vec::new(),
+            far: None,
             layout: None,
             substrate: None,
             ground: std::sync::Arc::new(crate::substrate::SubstrateField::flat()),
@@ -873,7 +971,8 @@ impl<'a> Grower<'a> {
             // Its neighbours' crowns are its own as the last step left it.
             self.envelopes = self.conditions.envelopes().to_vec();
             if let Some(crown) = &self.crown {
-                self.envelopes.extend(layout.envelopes(crown));
+                self.envelopes.extend(layout.envelopes(crown, clock.t));
+                self.far = layout.far(crown, clock.t);
             }
         }
         let mut timer = self.times.is_some().then(Timer::start);
@@ -948,6 +1047,7 @@ impl<'a> Grower<'a> {
         let around = Around {
             neighbourhood: &self.neighbourhood,
             envelopes: &self.envelopes,
+            far: self.far.as_ref(),
             host: settings.host.as_deref(),
             substrate: self.substrate.as_deref(),
             sun: self.sun,

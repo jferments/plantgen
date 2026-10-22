@@ -31,7 +31,6 @@
       "shade_death": 0.15,
       "shade_years": 2,
       "pipe_organ": 0.012,
-      "pipe_rings": 1.6e-05,
       "branch_reach": 4.2,
       "epi_chance": 0
     }

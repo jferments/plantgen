@@ -100,6 +100,8 @@ pub struct Around<'a> {
     pub neighbourhood: &'a Neighbourhood,
     /// Neighbours' crowns, which shade the plant and take their room.
     pub envelopes: &'a [Envelope],
+    /// The rest of a layout's stand, past its envelopes' rings.
+    pub far: Option<&'a FarStand>,
     pub host: Option<&'a Host>,
     pub substrate: Option<&'a SubstrateField>,
     /// The latitude of the sun, degrees, when the sky has one.
@@ -108,14 +110,17 @@ pub struct Around<'a> {
 
 impl Surroundings for Around<'_> {
     fn transmission(&self, point: Vec3, height: f64, direction: Vec3) -> f64 {
+        let far = self
+            .far
+            .map_or(1.0, |far| far.transmission(point, direction));
         self.envelopes.iter().fold(
-            self.neighbourhood.transmission(point, height, direction),
+            self.neighbourhood.transmission(point, height, direction) * far,
             |light, envelope| light * envelope.transmission(point, direction),
         )
     }
 
     fn clear_sky(&self) -> bool {
-        self.neighbourhood.density <= 0.0 && self.envelopes.is_empty()
+        self.neighbourhood.density <= 0.0 && self.envelopes.is_empty() && self.far.is_none()
     }
 
     fn occupied(&self, point: Vec3) -> bool {
@@ -183,6 +188,10 @@ pub struct Neighbours {
     pub spacing: f64,
     /// Neighbours stand only on the −X side.
     pub one_sided: bool,
+    /// A stand of the plant's like whose stems stand this many times its
+    /// height apart, at least `spacing`; 0: none.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub like: f64,
     /// Neighbours' crowns, besides the stand above: each shades the light
     /// that passes through it and takes its room, so no attraction point
     /// of space colonization lies inside it.
@@ -203,8 +212,13 @@ pub struct Neighbours {
 #[serde(deny_unknown_fields)]
 pub struct Layout {
     pub kind: LayoutKind,
-    /// Distance between neighbouring stems, metres.
+    /// Distance between neighbouring stems, metres: the least, when
+    /// `per_height` sets it.
     pub spacing_m: f64,
+    /// Distance between neighbouring stems as a share of the plant's
+    /// height, so the stand thins as it grows; 0: `spacing_m` always.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub per_height: f64,
 }
 
 /// Where a layout's neighbours stand, on a square grid of its spacing.
@@ -225,13 +239,19 @@ impl Layout {
     /// The most rings of neighbours round the plant a layout places.
     pub const RINGS: i32 = 3;
 
-    /// The neighbours' crowns when each is `crown`, the plant's own, as
-    /// envelopes in the plant's frame: every one within
+    /// The least distance between stems a layout takes, metres.
+    pub const LEAST_SPACING_M: f64 = 0.25;
+
+    /// The neighbours' crowns at `age_years` when each is `crown`, the
+    /// plant's own, as envelopes in the plant's frame: every one within
     /// [`Self::RINGS`] rings that can shade the plant or reach its crown
-    /// ([`Crown::reaches`]), in [`sort_envelopes`]' order.
+    /// ([`Crown::reaches`]), in [`sort_envelopes`]' order. A stand spaced
+    /// by height opens with age as old-growth stands do
+    /// ([`crate::spec::stand_spacing`]).
     #[must_use]
-    pub fn envelopes(&self, crown: &Crown) -> Vec<Envelope> {
+    pub fn envelopes(&self, crown: &Crown, age_years: f64) -> Vec<Envelope> {
         let rings = -Self::RINGS..=Self::RINGS;
+        let spacing_m = self.spacing_m(crown, age_years);
         let mut envelopes = Vec::new();
         for east in rings.clone() {
             for north in rings.clone() {
@@ -240,10 +260,7 @@ impl Layout {
                     LayoutKind::Interior => east != 0 || north != 0,
                     LayoutKind::Row => east != 0 && north == 0,
                 };
-                let centre = [
-                    f64::from(east) * self.spacing_m,
-                    f64::from(north) * self.spacing_m,
-                ];
+                let centre = [f64::from(east) * spacing_m, f64::from(north) * spacing_m];
                 if placed && crown.reaches(centre, crown.radius_m) {
                     envelopes.push(crown.envelope(centre));
                 }
@@ -253,8 +270,45 @@ impl Layout {
         envelopes
     }
 
+    /// The rest of the stand when each neighbour is `crown`: past the
+    /// [`Self::RINGS`] rings of envelopes the stand goes on, a layer of
+    /// foliage from its crowns' base to their top with their leaf area
+    /// spread over each stem's ground, so light low in the sky does not
+    /// pass under the nearest crowns. `None` in a row, or where the rings
+    /// already reach as far as a crown shades ([`Crown::reaches`]).
+    #[must_use]
+    pub fn far(&self, crown: &Crown, age_years: f64) -> Option<FarStand> {
+        let spacing_m = self.spacing_m(crown, age_years);
+        let reach_m = (f64::from(Self::RINGS) + 0.5) * spacing_m;
+        let depth = crown.top_m - crown.base_m;
+        (self.kind != LayoutKind::Row
+            && depth > 0.0
+            && crown.reaches([reach_m, 0.0], crown.radius_m))
+        .then(|| FarStand {
+            reach_m,
+            base_m: crown.base_m,
+            top_m: crown.top_m,
+            density: (Crown::EXTINCTION * crown.leaf_area_m2 / (spacing_m * spacing_m * depth))
+                .min(10.0),
+            one_sided: self.kind == LayoutKind::Edge,
+        })
+    }
+
+    /// The distance between stems at `age_years` when each crown is
+    /// `crown`.
+    fn spacing_m(&self, crown: &Crown, age_years: f64) -> f64 {
+        let opening = crate::spec::stand_spacing(age_years) / crate::spec::STAND_SPACING;
+        self.spacing_m.max(self.per_height * opening * crown.top_m)
+    }
+
     fn validate(&self) -> Result<(), String> {
-        within("layout spacing_m", self.spacing_m, 0.25, 100.0)
+        within(
+            "layout spacing_m",
+            self.spacing_m,
+            Self::LEAST_SPACING_M,
+            100.0,
+        )?;
+        within("layout per_height", self.per_height, 0.0, 10.0)
     }
 }
 
@@ -285,6 +339,38 @@ pub struct Envelope {
     pub radius_m: f64,
     /// Shade per metre of this crown, 1/m.
     pub density: f64,
+}
+
+/// The part of a stand of the plant's like beyond its rings of envelopes
+/// ([`Layout::far`]): a level layer of foliage from `base_m` to `top_m`
+/// that begins `reach_m` out from the plant, all round or, at an edge, on
+/// the −X side.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct FarStand {
+    pub reach_m: f64,
+    pub base_m: f64,
+    pub top_m: f64,
+    /// Shade per metre of the layer, 1/m.
+    pub density: f64,
+    pub one_sided: bool,
+}
+
+impl FarStand {
+    /// The fraction of light along `direction` (a unit vector toward the
+    /// sky) that reaches `point` through the layer: the ray's path in it
+    /// once it has gone `reach_m` out, in plan, from the plant's axis.
+    #[must_use]
+    pub fn transmission(&self, point: Vec3, direction: Vec3) -> f64 {
+        let flat = math::sqrt(direction.x * direction.x + direction.z * direction.z);
+        if direction.y <= 1e-9 || flat < 1e-9 || (self.one_sided && direction.x >= 0.0) {
+            return 1.0;
+        }
+        let out = math::sqrt(point.x * point.x + point.z * point.z);
+        let past = (self.reach_m - out).max(0.0) / flat;
+        let low = past.max((self.base_m - point.y) / direction.y);
+        let high = (self.top_m - point.y) / direction.y;
+        math::exp(-self.density * (high - low).max(0.0))
+    }
 }
 
 /// A plant's crown as its neighbours see it: an upright cylinder round its
@@ -453,6 +539,7 @@ impl Neighbours {
             canopy: neighbourhood.canopy,
             spacing: neighbourhood.spacing,
             one_sided: neighbourhood.one_sided,
+            like: neighbourhood.like,
             envelopes: Vec::new(),
             layout: None,
         }
@@ -467,6 +554,7 @@ impl Neighbours {
             canopy: self.canopy,
             spacing: self.spacing,
             one_sided: self.one_sided,
+            like: self.like,
         }
     }
 }
@@ -803,6 +891,18 @@ impl Conditions {
         self.neighbours
             .as_ref()
             .and_then(|neighbours| neighbours.layout)
+            .or_else(|| {
+                let neighbourhood = self.neighbourhood();
+                (neighbourhood.like > 0.0).then(|| Layout {
+                    kind: if neighbourhood.one_sided {
+                        LayoutKind::Edge
+                    } else {
+                        LayoutKind::Interior
+                    },
+                    spacing_m: neighbourhood.spacing.max(Layout::LEAST_SPACING_M),
+                    per_height: neighbourhood.like,
+                })
+            })
     }
 
     /// The document with its preset expanded into `neighbours` and left
@@ -911,6 +1011,7 @@ impl Neighbours {
         )?;
         within("neighbours canopy", self.canopy, 0.0, 150.0)?;
         within("neighbours spacing", self.spacing, 0.0, 100.0)?;
+        within("neighbours like", self.like, 0.0, 10.0)?;
         if let Some(layout) = &self.layout {
             layout.validate()?;
         }
@@ -991,6 +1092,11 @@ fn version(section: &str, found: u32) -> Result<(), String> {
     }
 }
 
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f64) -> bool {
+    *value == 0.0
+}
+
 fn within(what: &str, value: f64, low: f64, high: f64) -> Result<(), String> {
     if (low..=high).contains(&value) {
         Ok(())
@@ -1056,11 +1162,13 @@ mod tests {
             Conditions::from_json(text).unwrap().class()
         );
         // The key is the same on every run and machine: the SHA-256 of
-        // {"schema":1,"neighbours":{"version":1,"density":0.12,
-        // "relative_height":1.0,"canopy":0.0,"spacing":5.0,"one_sided":false}}.
+        // {"schema":1,"neighbours":{"version":1,"density":0.0,
+        // "relative_height":1.0,"canopy":0.0,"spacing":0.0,"one_sided":false,
+        // "like":0.115,"layout":{"kind":"interior","spacing_m":0.25,
+        // "per_height":0.115}}}.
         assert_eq!(
             interior.class().to_string(),
-            "2ffbeb9dd5ed42be0d179e8bb53e76065b7baf7d9404b91c371402947dd706aa"
+            "0a66def241296c41e8a15f1a9356fdb8222a1efbc06cfa7a5c63db339e36adcb"
         );
     }
 
@@ -1194,6 +1302,7 @@ mod tests {
         let around = Around {
             neighbourhood: &Neighbourhood::OPEN,
             envelopes: &crowns,
+            far: None,
             host: None,
             substrate: None,
             sun: None,
@@ -1257,11 +1366,15 @@ mod tests {
             leaf_area_m2: 200.0,
         };
         let placed = |kind, spacing_m| -> Vec<[f64; 2]> {
-            Layout { kind, spacing_m }
-                .envelopes(&crown)
-                .iter()
-                .map(|envelope| envelope.centre_m)
-                .collect()
+            Layout {
+                kind,
+                spacing_m,
+                per_height: 0.0,
+            }
+            .envelopes(&crown, 0.0)
+            .iter()
+            .map(|envelope| envelope.centre_m)
+            .collect()
         };
         // It reaches neighbours whose stems stand within 26 m: at 5 m apart,
         // all three rings.
@@ -1292,6 +1405,65 @@ mod tests {
     }
 
     #[test]
+    fn a_stand_of_the_plants_like_thins_as_it_grows() {
+        let layout = Conditions::preset(Environment::Interior).layout().unwrap();
+        assert_eq!(layout.kind, LayoutKind::Interior);
+        assert_eq!(
+            Conditions::preset(Environment::Edge).layout().unwrap().kind,
+            LayoutKind::Edge
+        );
+        assert!(Conditions::preset(Environment::Open).layout().is_none());
+        // The nearest neighbours stand STAND_SPACING of the plant's height away.
+        let nearest_at = |top_m: f64, age_years: f64| {
+            let crown = Crown {
+                base_m: 0.3 * top_m,
+                top_m,
+                radius_m: 0.15 * top_m,
+                leaf_area_m2: 100.0,
+            };
+            layout
+                .envelopes(&crown, age_years)
+                .iter()
+                .map(|envelope| envelope.centre_m[0].hypot(envelope.centre_m[1]))
+                .fold(f64::INFINITY, f64::min)
+        };
+        let nearest = |top_m: f64| nearest_at(top_m, 60.0);
+        assert!((nearest(8.0) - 0.92).abs() < 1e-9);
+        assert!((nearest(40.0) - 4.6).abs() < 1e-9);
+        // Never nearer than the least spacing.
+        assert!((nearest(0.4) - Layout::LEAST_SPACING_M).abs() < 1e-9);
+        // Past the yield tables' ages it opens as old growth does.
+        assert!((nearest_at(40.0, 160.0) - 4.6).abs() < 1e-9);
+        assert!((nearest_at(40.0, 450.0) - 0.204 * 40.0).abs() < 1e-9);
+        assert!((nearest_at(40.0, 850.0) - 0.204 * 40.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn the_stand_past_its_rings_shades_light_low_in_the_sky() {
+        let crown = Crown {
+            base_m: 20.0,
+            top_m: 40.0,
+            radius_m: 3.0,
+            leaf_area_m2: 150.0,
+        };
+        let layout = Conditions::preset(Environment::Interior).layout().unwrap();
+        let far = layout.far(&crown, 60.0).unwrap();
+        // 4.6 m apart, so the layer starts 3.5 rings out.
+        assert!((far.reach_m - 3.5 * 4.6).abs() < 1e-9);
+        let foot = Vec3::new(0.0, 1.0, 0.0);
+        // Straight up the ray never leaves the rings.
+        assert_eq!(far.transmission(foot, Vec3::new(0.0, 1.0, 0.0)), 1.0);
+        // Low in the sky it crosses the layer and is shaded.
+        let low = Vec3::new(0.894, 0.447, 0.0);
+        assert!(far.transmission(foot, low) < 0.01);
+        // At an edge, light from the open side passes.
+        let edge = Conditions::preset(Environment::Edge).layout().unwrap();
+        let open_side = edge.far(&crown, 60.0).unwrap();
+        assert_eq!(open_side.transmission(foot, low), 1.0);
+        assert!(open_side.transmission(foot, Vec3::new(-0.894, 0.447, 0.0)) < 0.01);
+    }
+
+    #[test]
     fn a_layout_is_read_checked_and_part_of_the_class() {
         let text = |spacing: &str| {
             format!(
@@ -1305,7 +1477,8 @@ mod tests {
             row.layout(),
             Some(Layout {
                 kind: LayoutKind::Row,
-                spacing_m: 6.0
+                spacing_m: 6.0,
+                per_height: 0.0
             })
         );
         assert_eq!(row.resolve().layout(), row.layout());

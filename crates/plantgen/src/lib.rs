@@ -1213,4 +1213,15 @@ pub mod venation;
 /// as `stem_buried` says, clumps take `basal_stems` and lean as their
 /// `limb_angle` words, ribs are spaced for the usual count, tepals take
 /// their stated width.
-pub const GENERATOR_REVISION: u32 = 163;
+/// 164: a stand of the same age (`interior`, `edge`) is a stand of the
+/// plant's like, its own crown at each neighbour's place, the stems 0.115
+/// of its height apart as in fully stocked Douglas-fir stands
+/// (`STAND_SPACING`, McArdle et al. 1961), not shade of 0.12 a metre from
+/// the ground to its top; past 160 years the stand opens to old-growth
+/// Douglas-fir's spacing (`STAND_THINNING`, Franklin et al. 1981); past its
+/// rings of crowns the stand goes on as a layer of foliage (`FarStand`).
+/// A stem keeps the disused pipes of the branches it has shed (Shinozaki
+/// et al. 1964), so a stand tree's trunk keeps thickening as its crown
+/// climbs; conifers lay down no yearly rings on top, so open-grown trunks
+/// are the pipe model's (USDA Urban Tree Database).
+pub const GENERATOR_REVISION: u32 = 164;
