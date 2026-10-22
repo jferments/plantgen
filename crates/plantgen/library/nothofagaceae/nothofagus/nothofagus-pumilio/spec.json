@@ -38,8 +38,7 @@
       "wind": 1.0,
       "wind_bend": 0.12,
       "wind_kill": 0.0,
-      "path_half": 2.82,
-      "pipe_rings": 2e-05
+      "path_half": 2.82
     }
   },
   "growth": {

@@ -2903,6 +2903,10 @@ pub struct Pipes {
     pub ring_rate: f64,
     /// The pipe model's exponent `n`.
     pub exponent: f64,
+    /// Whether every twig that dies leaves its pipes in the wood below it,
+    /// as heartwood (`heartwood` > 0); otherwise only limbs shed from the
+    /// bole do.
+    pub heartwood: bool,
 }
 
 /// The pipe model: a segment's radius `r` satisfies
@@ -2923,7 +2927,7 @@ pub struct Pipes {
 ///
 /// Fails on invalid settings.
 pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, GrowthError> {
-    let [exponent, tip, organ, rings] = values[..] else {
+    let [exponent, tip, organ, rings, heartwood] = values[..] else {
         return Err(invalid("pipe", "wrong number of settings".into()));
     };
     // Written so that NaN settings fail too.
@@ -2991,6 +2995,7 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
             .collect(),
         ring_rate: rings,
         exponent,
+        heartwood: heartwood > 0.0,
     })
 }
 
@@ -3924,7 +3929,7 @@ mod tests {
             "lsystem p 1; module A queries position; tool pipe@1 { exponent = 2, tip = 0.01 };
              axiom F(1) [ F(1) A ] [ F(1) A ] F(1) A;",
         );
-        let pipes = pipe(&setup.scene, &[], &[2.0, 0.01, 0.0, 0.0]).unwrap();
+        let pipes = pipe(&setup.scene, &[], &[2.0, 0.01, 0.0, 0.0, 0.0]).unwrap();
         // Three tips above the base: r = sqrt(3) * 0.01.
         assert!((pipes.radii[0] - 3.0_f64.sqrt() * 0.01).abs() < 1e-12);
         assert!((pipes.radii[1] - 0.01).abs() < 1e-12);

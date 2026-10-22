@@ -12,14 +12,12 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 6,
+      "crown_radius": 10,
       "crown_base": 5,
       "crown_rate": 0.035,
       "space_density": 4,
       "internode": 0.22,
       "max_shoot": 3,
-      "pipe_rings": 4.33e-06,
-      "pipe_organ": 0.0049,
       "pipe_tip": 0.0024,
       "branch_angle": 50,
       "apical_young": 0.65,
@@ -295,7 +293,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific madrone's crown values (an evergreen broadleaf), changed by hand: one trunk, as FNA describes it (single-trunked), upright rather than leaning. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+      "note": "Pacific madrone's crown values (an evergreen broadleaf), changed by hand: one trunk, as FNA describes it (single-trunked), upright rather than leaning. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size. crown_radius 10 since broadleaf revision 28, when a tree's crown_radius became half its crown's width (room_width 0.9): the USDA Urban Tree Database's open-grown southern magnolias 45 to 60 years old (59 trees, eight regions) have crowns 11.8 m across, and it draws 13.3 m at 50 years, within their scatter; at their 11.8 m (crown_radius 8.4) it grew 14 m tall, the database's median, against Silvics' 23 m for trees free of competition."
     },
     "allometry": {
       "evidence": "SourceInferred",

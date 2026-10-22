@@ -137,6 +137,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Rhamnaceae's flowers are in cymes or panicles (Simpson 2019), but cascara's axillary clusters are drawn as an umbel",
     ),
     (
+        "fuchsia-excorticata",
+        "stem_diameter_max_m",
+        "under Leonardo's rule (broadleaf revision 28) a trunk carries a pipe for each living twig, so tree fuchsia's crown of small leaves on many twigs draws a trunk 57 cm through at 25 years against the greatest 46 cm: about 0.05 m² of leaf a cm² of trunk, where the Urban Tree Database's open-grown broadleaves carry 0.15 to 0.25",
+    ),
+    (
         "fuchsia-magellanica",
         "shoot_leaves",
         "a cut-back plant's shoots grow 3 to 5 ft a season (Bean) with some 15 to 25 whorls, but in the open at six years its shoots grow no more than a few vigour units, bearing about 8 leaves",

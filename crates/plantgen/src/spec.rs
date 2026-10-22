@@ -506,6 +506,11 @@ pub struct VariantPlan {
     /// Replacements for the default neighbourhoods.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub neighbourhoods: BTreeMap<Environment, Neighbourhood>,
+    /// The relative spacing of a fully stocked stand of the plant's like
+    /// (`interior` and `edge`), when its own yield tables give one;
+    /// [`STAND_SPACING`] (Douglas-fir's) otherwise.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stand_spacing: Option<f64>,
     /// Growing conditions to build variants in as well, each grown with
     /// every seed and labelled by its preset ([`crate::conditions`]).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -1415,6 +1420,13 @@ impl PlantSpec {
         if self.variants.environments.is_empty() || self.variants.seeds.is_empty() {
             return fail("variants need at least one environment and one seed".into());
         }
+        if self
+            .variants
+            .stand_spacing
+            .is_some_and(|like| !(0.05..=0.5).contains(&like))
+        {
+            return fail("variants.stand_spacing must be 0.05 to 0.5".into());
+        }
         // Each variant is named by its environment and seed, so a
         // conditions document's preset labels its variants and may not be
         // an environment's or another document's.
@@ -1687,6 +1699,21 @@ impl PlantSpec {
         Ok(())
     }
 
+    /// The default neighbourhood of `environment` for this plant: a stand
+    /// of its like is spaced as its own yield tables space it, where it
+    /// gives them ([`VariantPlan::stand_spacing`]).
+    #[must_use]
+    pub fn neighbourhood(&self, environment: Environment) -> Neighbourhood {
+        let neighbourhood = environment.neighbourhood();
+        match self.variants.stand_spacing {
+            Some(like) if neighbourhood.like > 0.0 => Neighbourhood {
+                like,
+                ..neighbourhood
+            },
+            _ => neighbourhood,
+        }
+    }
+
     /// Every variant the plan asks for, environments first.
     #[must_use]
     pub fn variant_list(&self) -> Vec<Variant> {
@@ -1701,7 +1728,7 @@ impl PlantSpec {
                         .neighbourhoods
                         .get(environment)
                         .copied()
-                        .unwrap_or_else(|| environment.neighbourhood()),
+                        .unwrap_or_else(|| self.neighbourhood(*environment)),
                     class: None,
                     substrate: None,
                 });

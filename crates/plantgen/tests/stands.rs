@@ -74,8 +74,8 @@ fn two_trees_grown_together_make_room_for_each_other() {
     let maple = maple();
     let alone = grow(&maple.program, &maple.params, &maple.settings).unwrap();
     let alone = &alone.keyframes[0];
-    // Two maples 5 m apart, east and west.
-    let pair = stand(&maple, &[[0.0, 0.0], [5.0, 0.0]], None);
+    // Two maples 3 m apart, east and west.
+    let pair = stand(&maple, &[[0.0, 0.0], [3.0, 0.0]], None);
     let (west, east) = (&pair[0].keyframes[0], &pair[1].keyframes[0]);
     let centre = organs_centre(alone)[0];
     // Each leans its crown away from the other, as far as the other does

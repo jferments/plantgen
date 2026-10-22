@@ -29,8 +29,6 @@
       "lean": 3,
       "wiggle": 4,
       "pipe_tip": 0.00245,
-      "pipe_organ": 0.0049,
-      "pipe_rings": 8.98e-08,
       "extinction": 0.45,
       "path_half": 12,
       "fork_stems": 1,

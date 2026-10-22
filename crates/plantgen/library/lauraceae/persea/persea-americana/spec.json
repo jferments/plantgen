@@ -18,8 +18,6 @@
       "space_density": 4,
       "internode": 0.22,
       "max_shoot": 3,
-      "pipe_rings": 4.33e-06,
-      "pipe_organ": 0.0049,
       "pipe_tip": 0.0024,
       "branch_angle": 50,
       "apical_young": 0.65,

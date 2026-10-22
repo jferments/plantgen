@@ -272,9 +272,14 @@
 # one of these left at its default, a thorny species grows as before. Its
 # rules go last.
 #
+# Revision 28 (tree girth): the pipe model's exponent (pipe_exponent, 2.3
+# as before) and whether every twig that dies leaves its pipes in the wood
+# below it as heartwood (heartwood, 0 as before) are parameters, so a
+# growth form can take Leonardo's rule and its dead wood by rule.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 27;
+lsystem broadleaf 28;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -324,6 +329,8 @@ param thorn_share = 1;        # share of a thorny shoot's nodes that bear thorns
 param thorn_pair = 1;         # 1: a pair of thorns beside each bud; 0: one, beside the bud where a shoot thorn stands
 param thorn_spread = 0.2;     # thorns run this share shorter or longer than thorn_length
 param thorn_years = 0;        # years a thorn or prickle stays on its stem; 0: for good
+param pipe_exponent = 2.3;    # a parent's radius to this power is its children's summed; Leonardo's rule is 2
+param heartwood = 0;          # 1: every twig that dies leaves its pipes in the wood below it
 param thorn_tips = 0;         # chance a year that a long shoot's tip ends in a thorn, its topmost bud carrying it on
 param wind;                   # strength of a steady wind toward +X; 0 none
 param wind_bend;              # extra downwind bending per unit of wind
@@ -475,7 +482,7 @@ tool bend@1 {
 };
 # Each living bud's twig adds to the pipes below it, a growth unit's
 # nodes sharing one bud's.
-tool pipe@1 { exponent = 2.3, tip = pipe_tip / pow(unit_nodes, 1 / 2.3), organ = pipe_organ, rings = pipe_rings };
+tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip / pow(unit_nodes, 1 / pipe_exponent), organ = pipe_organ, rings = pipe_rings, heartwood = heartwood };
 
 # The stem leans a little in a random direction; each tree forks at its own
 # height. The droop bends each segment, so a growth unit's nodes share it.

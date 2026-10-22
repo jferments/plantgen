@@ -35,8 +35,6 @@
       "fork_angle": 30,
       "droop": 0.01,
       "pipe_tip": 0.003,
-      "pipe_organ": 0.005,
-      "pipe_rings": 1e-05,
       "blooms": 2,
       "adult_age": 6,
       "bloom_size": 0.04,

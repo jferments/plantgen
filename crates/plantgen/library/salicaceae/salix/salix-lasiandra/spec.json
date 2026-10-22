@@ -29,7 +29,6 @@
       "fork_angle": 25,
       "droop": 0.025,
       "extinction": 0.45,
-      "pipe_rings": 1.4e-05,
       "bloom_area": 0.036,
       "path_half": 4.25
     }

@@ -29,8 +29,6 @@
       "lean": 3,
       "wiggle": 4,
       "pipe_tip": 0.00196,
-      "pipe_organ": 0.00392,
-      "pipe_rings": 8.98e-08,
       "extinction": 0.45,
       "path_half": 22,
       "fork_stems": 1,
@@ -302,7 +300,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red alder's crown values (a fast, straight-stemmed deciduous tree), changed by hand: one trunk, as FNA describes it (single-trunked), a wider crown, short-shoot leaves on the angiosperm default 0.26 m card (its blades and long petioles; a smaller card grows more shoots than the string holds), its shoots spaced more closely than alder's (space_density 3.5) so the crown of narrower lobed cards keeps within the module limit, and path_half fitted so it grows to the Silvics height at 40 years. Not fitted to crown measurements. Its pipe_tip and pipe_organ were scaled together by 0.8 (branching form, broadleaf revision 23, 2026-10-19) so its dbh at 40 years stays within the reference's tolerance once dead branches stand and tips are now and then lost."
+      "note": "Red alder's crown values (a fast, straight-stemmed deciduous tree), changed by hand: one trunk, as FNA describes it (single-trunked), a wider crown, short-shoot leaves on the angiosperm default 0.26 m card (its blades and long petioles; a smaller card grows more shoots than the string holds), its shoots spaced more closely than alder's (space_density 3.5) so the crown of narrower lobed cards keeps within the module limit, and path_half fitted so it grows to the Silvics height at 40 years. Not fitted to crown measurements. Its pipe_tip and pipe_organ were scaled together by 0.8 (branching form, broadleaf revision 23, 2026-10-19) so its dbh at 40 years stays within the reference's tolerance once dead branches stand and tips are now and then lost. Since broadleaf revision 28 its pipe_organ and pipe_rings are the broadleaf trees' rules (0, with Leonardo's rule and dead twigs kept as heartwood); this pipe_tip stays."
     },
     "allometry": {
       "evidence": "SourceInferred",

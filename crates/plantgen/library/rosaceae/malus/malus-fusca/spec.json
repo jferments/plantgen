@@ -37,7 +37,6 @@
       "space_reach": 1.6,
       "space_kill": 0.45,
       "extinction": 0.45,
-      "pipe_rings": 1.2e-05,
       "leaf_area": 0.26,
       "bloom_area": 0.567,
       "path_half": 8.0

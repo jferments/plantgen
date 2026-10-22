@@ -18,8 +18,6 @@
       "space_density": 4,
       "internode": 0.22,
       "max_shoot": 3,
-      "pipe_rings": 4.33e-06,
-      "pipe_organ": 0.0042,
       "pipe_tip": 0.00205,
       "branch_angle": 50,
       "apical_young": 0.65,
@@ -218,7 +216,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a broadleaf evergreen with a leaning, crooked trunk, an irregular crown, thick, glossy oval leaves and clusters of small white flowers. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 40 cm at 50 years again."
+      "note": "Hand-set from general knowledge of the species: a broadleaf evergreen with a leaning, crooked trunk, an irregular crown, thick, glossy oval leaves and clusters of small white flowers. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 40 cm at 50 years again. Since broadleaf revision 28 its pipe_organ and pipe_rings are the broadleaf trees' rules (0, with Leonardo's rule and dead twigs kept as heartwood); this pipe_tip stays."
     },
     "allometry": {
       "evidence": "Authored",

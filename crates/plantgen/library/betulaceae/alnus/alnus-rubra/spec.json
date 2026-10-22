@@ -30,8 +30,6 @@
       "lean": 3,
       "wiggle": 4,
       "pipe_tip": 0.00185,
-      "pipe_organ": 0.0037,
-      "pipe_rings": 8.98e-08,
       "extinction": 0.45,
       "blooms": 3,
       "bloom_size": 0.07,
@@ -210,7 +208,7 @@
     "generator.params.pipe_tip": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B): the twig's and the leaf's pipe radii are scaled together so the stem's diameter at breast height matches the oldest reference size; the fuller crowns of broadleaf revision 11 carry more leaf, so the yearly rings (pipe_rings) are fitted near zero and the pipe model sets the diameter."
+      "note": "A choice of the model's (crown form step B): the twig's and the leaf's pipe radii are scaled together so the stem's diameter at breast height matches the oldest reference size; the fuller crowns of broadleaf revision 11 carry more leaf, so the yearly rings (pipe_rings) are fitted near zero and the pipe model sets the diameter. Since broadleaf revision 28 its pipe_organ and pipe_rings are the broadleaf trees' rules (0, with Leonardo's rule and dead twigs kept as heartwood); this pipe_tip stays."
     },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",

@@ -34,8 +34,6 @@
       "fork_angle": 35,
       "droop": 0.015,
       "pipe_tip": 0.003,
-      "pipe_organ": 0.005,
-      "pipe_rings": 1e-05,
       "light_cell": 0.35,
       "thorns": 1,
       "thorn_length": 0.02,

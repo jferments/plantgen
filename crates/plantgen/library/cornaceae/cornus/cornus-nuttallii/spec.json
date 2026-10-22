@@ -18,7 +18,6 @@
       "space_density": 14,
       "internode": 0.18,
       "max_shoot": 3,
-      "pipe_organ": 0.0051,
       "pipe_tip": 0.0025,
       "branch_angle": 50,
       "apical_young": 0.62,
@@ -33,7 +32,6 @@
       "extinction": 0.4,
       "space_reach": 1.8,
       "space_kill": 0.5,
-      "pipe_rings": 4.8e-06,
       "bloom_area": 2.142,
       "path_half": 10.0
     }
@@ -182,7 +180,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small understory tree with a rounded crown, opposite oval leaves with curving veins, and large white flower heads of four to six petal-like bracts. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 20 cm at 40 years again."
+      "note": "Hand-set from general knowledge of the species: a small understory tree with a rounded crown, opposite oval leaves with curving veins, and large white flower heads of four to six petal-like bracts. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 20 cm at 40 years again. Since broadleaf revision 28 its pipe_organ and pipe_rings are the broadleaf trees' rules (0, with Leonardo's rule and dead twigs kept as heartwood); this pipe_tip stays."
     },
     "allometry": {
       "evidence": "Authored",

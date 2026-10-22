@@ -30,7 +30,6 @@
       "fork_angle": 30,
       "droop": 0.025,
       "extinction": 0.45,
-      "pipe_rings": 1.4e-05,
       "path_half": 4.25
     }
   },

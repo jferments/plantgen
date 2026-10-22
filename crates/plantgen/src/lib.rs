@@ -1224,4 +1224,12 @@ pub mod venation;
 /// et al. 1964), so a stand tree's trunk keeps thickening as its crown
 /// climbs; conifers lay down no yearly rings on top, so open-grown trunks
 /// are the pipe model's (USDA Urban Tree Database).
-pub const GENERATOR_REVISION: u32 = 164;
+/// 165: broadleaf trees take Leonardo's rule (pipe exponent 2) and keep
+/// every dead twig's pipes as heartwood (broadleaf 28), with no pipe per
+/// leaf and no yearly ring, so their trunks are their twigs', living and
+/// dead (bigleaf maple at the USDA Urban Tree Database's four ages); their
+/// crowns spread to their stated radius (room_width 0.9, as shrubs'), not
+/// 1.6 times it; their stands are spaced as red alder's yield tables space
+/// them (`variants.stand_spacing` 0.165, Worthington et al. 1960); and a
+/// limb shed from a forked stem below the crown leaves its pipes too.
+pub const GENERATOR_REVISION: u32 = 165;
