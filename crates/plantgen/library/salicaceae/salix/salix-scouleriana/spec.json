@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 3,
       "crown_base": 0.3,
       "crown_rate": 0.07,
       "space_density": 12,
@@ -29,7 +28,6 @@
       "fork_stems": 5,
       "fork_angle": 30,
       "droop": 0.025,
-      "extinction": 0.45,
       "path_half": 4.25
     }
   },
@@ -237,7 +235,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific willow's values, changed by hand for Scouler's willow: a smaller, multistemmed tree-shrub with slender stems from a low fork (FEIS, Anderson 2001: \"may be multistemmed\", \"slender stems and branches\"), and leaves obovate to oblanceolate. path_half fitted so it grows to its reference height. Not fitted to measurements."
+      "note": "Pacific willow's values, changed by hand for Scouler's willow: a smaller, multistemmed tree-shrub with slender stems from a low fork (FEIS, Anderson 2001: \"may be multistemmed\", \"slender stems and branches\"), and leaves obovate to oblanceolate. path_half fitted so it grows to its reference height. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "Authored",

@@ -11,7 +11,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 6,
       "crown_base": 3,
       "crown_rate": 0.045,
       "internode": 0.25,
@@ -33,7 +32,6 @@
       "fork_angle": 40,
       "droop": 0.0,
       "steer_weight": 0.5,
-      "pipe_tip": 0.003,
       "light_cell": 0.4,
       "thorns": 1,
       "thorn_length": 0.05,
@@ -138,7 +136,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tree 4 to 10 m tall of the African savanna and the Arabian and Sinai deserts, whose branches spread from a short trunk into a flat-topped umbrella crown, with paired straight white thorns and short hooked ones, and tiny twice-divided leaves. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a tree 4 to 10 m tall of the African savanna and the Arabian and Sinai deserts, whose branches spread from a short trunk into a flat-topped umbrella crown, with paired straight white thorns and short hooked ones, and tiny twice-divided leaves. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "generator.params.bud_years": {
       "evidence": "SourceInferred",

@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 6,
       "crown_base": 4,
       "crown_rate": 0.04,
       "space_density": 7,
@@ -27,14 +26,12 @@
       "leaf_angle": 50,
       "wiggle": 4,
       "lean": 4,
-      "extinction": 0.45,
       "leaf_area": 0.318,
       "bloom_area": 0.372,
       "blooms": 1,
       "bloom_size": 0.12,
       "bloom_angle": 130,
-      "path_half": 11.5,
-      "pipe_tip": 0.00262
+      "path_half": 11.5
     }
   },
   "growth": {
@@ -117,6 +114,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_area_per_basal_area": 0.276,
+    "crown_spread": 0.63,
     "bark_colour": [76, 71, 61],
     "leaf_habit": "deciduous",
     "leaf_colour_autumn": [235, 205, 60],
@@ -140,6 +139,8 @@
     "fruit_size_m": {"min": 0.025, "max": 0.05}
   },
   "evidence": {
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 28 Oregon ashes: 0.276 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 27 Oregon ashes 25 years or older (Longview, WA): 0.63. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.28, 0.24], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): \"a medium-sized deciduous tree\"."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): the leaves \"turn bright yellow and fall off early in autumn\". Colour ours."},
@@ -167,11 +168,6 @@
       "source": "plantgen-authors",
       "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
     },
-    "generator.params.pipe_tip": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B): the twig's and the leaf's pipe radii are scaled together so the stem's diameter at breast height matches the oldest reference size; the fuller crowns of broadleaf revision 11 carry more leaf, so the yearly rings (pipe_rings) are fitted near zero and the pipe model sets the diameter. Since broadleaf revision 28 its pipe_organ and pipe_rings are the broadleaf trees' rules (0, with Leonardo's rule and dead twigs kept as heartwood); this pipe_tip stays."
-    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
@@ -180,7 +176,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a medium-sized tree with a narrow, rounded crown, opposite branching and pinnately compound leaves of five to seven broad leaflets. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a medium-sized tree with a narrow, rounded crown, opposite branching and pinnately compound leaves of five to seven broad leaflets. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "SourceInferred",

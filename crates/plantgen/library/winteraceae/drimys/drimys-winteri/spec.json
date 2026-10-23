@@ -11,13 +11,11 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 4,
       "crown_base": 5,
       "crown_rate": 0.035,
       "space_density": 4,
       "internode": 0.22,
       "max_shoot": 3,
-      "pipe_tip": 0.0024,
       "branch_angle": 40,
       "apical_young": 0.65,
       "apical": 0.52,
@@ -28,7 +26,6 @@
       "fork_height": 4,
       "fork_stems": 1,
       "fork_angle": 30,
-      "extinction": 0.45,
       "path_half": 14,
       "spur_leaf": 0.195
     }
@@ -232,7 +229,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific madrone's crown values, changed by hand: one straight trunk with ascending branches into a narrow crown. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+      "note": "Pacific madrone's crown values, changed by hand: one straight trunk with ascending branches into a narrow crown. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "Authored",

@@ -13,7 +13,6 @@
   "generator": {
     "params": {
       "crown_height": 8,
-      "crown_radius": 4,
       "crown_base": 1,
       "crown_rate": 0.06,
       "space_density": 12,
@@ -34,7 +33,6 @@
       "fork_stems": 3,
       "fork_angle": 30,
       "droop": 0.01,
-      "pipe_tip": 0.003,
       "blooms": 2,
       "adult_age": 6,
       "bloom_size": 0.04,
@@ -136,7 +134,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical and subtropical coasts, 5 to 10 m tall, with dark, scaly bark and narrow leaves grey-felted beneath, whose shallow roots send up hundreds of pencil-like breathing roots through the mud round it. Each bloom card stands for one of its cymes, 2 cm to 6 cm long as the species states, now that Acanthaceae's flowers are mostly in cymes (bloom_size 0.04, was 0.015, a single flower's size). Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical and subtropical coasts, 5 to 10 m tall, with dark, scaly bark and narrow leaves grey-felted beneath, whose shallow roots send up hundreds of pencil-like breathing roots through the mud round it. Each bloom card stands for one of its cymes, 2 cm to 6 cm long as the species states, now that Acanthaceae's flowers are mostly in cymes (bloom_size 0.04, was 0.015, a single flower's size). Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "Authored",

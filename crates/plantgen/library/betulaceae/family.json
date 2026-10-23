@@ -4,6 +4,8 @@
   "name": "Betulaceae",
   "parent": "order/fagales",
   "traits": {
+    "crown_spread": 0.59,
+    "leaf_area_per_basal_area": 0.311,
     "inflorescence": {
       "catkin": "usually"
     },
@@ -69,6 +71,8 @@
     }
   },
   "evidence": {
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 48 birches 25 years or older (Betula pendula and B. nigra), the family's only trees in it: 0.59. Median crown width over height of its trees 25 years or older, measured open-grown street and park trees."},
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 74 birches (Betula pendula and B. nigra), the family's only trees in it: 0.311 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "fna-online",

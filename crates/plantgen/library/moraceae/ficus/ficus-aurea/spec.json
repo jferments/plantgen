@@ -13,7 +13,6 @@
   "generator": {
     "params": {
       "bloom_area": 0.459,
-      "crown_radius": 8,
       "crown_base": 2.5,
       "crown_rate": 0.05,
       "space_density": 6,
@@ -32,7 +31,6 @@
       "fork_stems": 4,
       "fork_angle": 40,
       "droop": 0.01,
-      "pipe_tip": 0.004,
       "path_half": 8.87
     }
   },
@@ -131,7 +129,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an evergreen fig of southern Florida, 10 to 20 m tall, that often starts as a seedling high in another tree and sends roots down round it; its broad crown drops aerial roots that thicken into pillars where they reach the ground, over a buttressed base and long surface roots; leathery, glossy oval leaves. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: an evergreen fig of southern Florida, 10 to 20 m tall, that often starts as a seedling high in another tree and sends roots down round it; its broad crown drops aerial roots that thicken into pillars where they reach the ground, over a buttressed base and long surface roots; leathery, glossy oval leaves. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "Authored",

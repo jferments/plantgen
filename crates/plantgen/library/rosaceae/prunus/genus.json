@@ -3,6 +3,8 @@
   "rank": "genus",
   "name": "Prunus",
   "traits": {
+    "leaf_area_per_basal_area": 0.106,
+    "crown_spread": 1.01,
     "short_shoots": true,
     "wood_density_basic_kg_m3": 600,
     "ovary_position": "superior",
@@ -60,6 +62,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 294 cherries and plums: 0.106 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 180 cherries and plums 25 years or older: 1.01. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "appearance.bark_look.thickness": {"evidence": "SourceInferred", "source": "ffe-fvs-guide", "note": "The genus's bark thickness as its reference species', prunus-emarginata (plantgen-claude project-files/bark/records/prunus-emarginata.json): text: about 1/4 in (Sargent) as the cap; FOFEM 0.062 doubted"},
     "appearance.bark_look.stages.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's twig stage as its reference species, prunus-emarginata, shows it (plantgen-claude project-files/bark/records/prunus-emarginata.json): stage: text: 'bright red, conspicuously marked by large pale lenticels in their second season' (Sargent)"},
     "appearance.bark_look.stages.trunk": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's trunk stage as its reference species, prunus-emarginata, shows it (plantgen-claude project-files/bark/records/prunus-emarginata.json): stage: text: 'smooth dark brown surface marked by horizontal light gray interrupted bands and by rows of oblong orange-colored lenticels' (Sargent); 'break and curl cross-wise' (VT, search excerpt). Bands drawn as mottle until a banding layer exists"},

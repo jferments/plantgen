@@ -11,13 +11,11 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 3,
       "crown_base": 0.8,
       "crown_rate": 0.035,
       "space_density": 8,
       "internode": 0.15,
       "max_shoot": 3,
-      "pipe_tip": 0.0024,
       "branch_angle": 35,
       "apical_young": 0.65,
       "apical": 0.52,
@@ -28,7 +26,6 @@
       "fork_height": 0.3,
       "fork_stems": 4,
       "fork_angle": 20,
-      "extinction": 0.45,
       "path_half": 6,
       "spur_leaf": 0.131
     }
@@ -253,7 +250,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific madrone's crown values, changed by hand for a shrub-like small tree: several stems from near the ground, steep branches into a dense, narrow crown (Flora of China: evergreen shrub-like or small trees). Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+      "note": "Pacific madrone's crown values, changed by hand for a shrub-like small tree: several stems from near the ground, steep branches into a dense, narrow crown (Flora of China: evergreen shrub-like or small trees). Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "Authored",

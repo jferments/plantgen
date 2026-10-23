@@ -12,13 +12,11 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 7,
       "crown_base": 5,
       "crown_rate": 0.035,
       "space_density": 3,
       "internode": 0.22,
       "max_shoot": 3,
-      "pipe_tip": 0.0024,
       "branch_angle": 50,
       "apical_young": 0.65,
       "apical": 0.52,
@@ -29,7 +27,6 @@
       "fork_height": 1.5,
       "fork_stems": 3,
       "fork_angle": 30,
-      "extinction": 0.45,
       "path_half": 12,
       "spur_leaf": 0.1
     }
@@ -253,7 +250,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific madrone's crown values, changed by hand: several stems from a low fork into a broad, much-branched crown (FEIS: highly branched), path_half fitted so it reaches its height. Its spur leaf card is set by hand at 0.10 m, about the rule's 1.5 times FNA's mean blade, so its leaves keep within FNA's 3-10 cm, and its shoots are spaced more closely than madrone's (space_density 3) so the crown of small leaves keeps within the module limit. Not fitted to measurements."
+      "note": "Pacific madrone's crown values, changed by hand: several stems from a low fork into a broad, much-branched crown (FEIS: highly branched), path_half fitted so it reaches its height. Its spur leaf card is set by hand at 0.10 m, about the rule's 1.5 times FNA's mean blade, so its leaves keep within FNA's 3-10 cm, and its shoots are spaced more closely than madrone's (space_density 3) so the crown of small leaves keeps within the module limit. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "Authored",

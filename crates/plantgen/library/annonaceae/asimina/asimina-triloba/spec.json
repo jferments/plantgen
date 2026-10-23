@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 2.5,
       "crown_base": 1.5,
       "crown_rate": 0.045,
       "space_density": 6,
@@ -28,8 +27,6 @@
       "droop": 0.02,
       "lean": 3,
       "wiggle": 4,
-      "pipe_tip": 0.00245,
-      "extinction": 0.45,
       "path_half": 6,
       "fork_stems": 1,
       "bloom_size": 0.03
@@ -269,7 +266,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red alder's crown values, changed by hand for a small understory tree: one slender trunk (FEIS: usually single), spreading-ascending branches (FNA), a narrower crown and shorter shoots, flowers drawn 3 cm across (FNA: 2-4 cm), path_half fitted so it reaches its height. Not fitted to measurements. Short-shoot leaves take the decurrent-tree rule's size (0.88 of leaf_size): the hand-set card of 0.337 m, from when leaf_size was 1.5 times the flora's blade, drew every leaf 33 cm long and its petiole 1 cm, past FNA's 15-30 cm and 5-10 mm."
+      "note": "Red alder's crown values, changed by hand for a small understory tree: one slender trunk (FEIS: usually single), spreading-ascending branches (FNA), a narrower crown and shorter shoots, flowers drawn 3 cm across (FNA: 2-4 cm), path_half fitted so it reaches its height. Not fitted to measurements. Short-shoot leaves take the decurrent-tree rule's size (0.88 of leaf_size): the hand-set card of 0.337 m, from when leaf_size was 1.5 times the flora's blade, drew every leaf 33 cm long and its petiole 1 cm, past FNA's 15-30 cm and 5-10 mm. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "Authored",

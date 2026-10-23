@@ -12,7 +12,6 @@
   "generator": {
     "params": {
       "crown_height": 34,
-      "crown_radius": 7,
       "crown_base": 8,
       "crown_rate": 0.045,
       "space_density": 8,
@@ -28,8 +27,6 @@
       "droop": 0.01,
       "lean": 2,
       "wiggle": 4,
-      "pipe_tip": 0.00232,
-      "extinction": 0.45,
       "bloom_area": 0.05,
       "path_half": 17.7
     }
@@ -84,15 +81,24 @@
   },
   "allometry": [
     {
+      "age": 25,
+      "environment": "open",
+      "height": 19.5,
+      "dbh": 0.388,
+      "tolerance": 0.4
+    },
+    {
       "age": 40,
       "environment": "open",
-      "height": 30,
-      "dbh": 0.55,
-      "tolerance": 0.35
+      "height": 29.5,
+      "dbh": 0.687,
+      "tolerance": 0.4
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_area_per_basal_area": 0.204,
+    "crown_spread": 0.41,
     "bark_colour": [84, 82, 74],
     "leaf_length_m": {"min": 0.076, "max": 0.102},
     "leaf_width_m": {"min": 0.051, "max": 0.064},
@@ -100,6 +106,8 @@
     "shade_tolerance": "intolerant"
   },
   "evidence": {
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 21 black cottonwoods (Populus balsamifera subsp. trichocarpa): 0.204 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 28 black cottonwoods (Populus balsamifera subsp. trichocarpa) 25 years or older (Longview, WA): 0.41. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.33, 0.32, 0.29], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"slender branchlets ... marked by many orange-colored lenticels ... reddish brown during their first year, gradually becoming dark gray\". Colour chosen by eye for reddish brown."},
     "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"Leaves broad-ovate ... 3'-4' long, 2'-2½' wide; petioles slender ... 1½'-2' in length\"."},
@@ -112,20 +120,15 @@
       "source": "plantgen-authors",
       "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
     },
-    "generator.params.pipe_tip": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B): the twig's and the leaf's pipe radii are scaled together so the stem's diameter at breast height matches the oldest reference size; the fuller crowns of broadleaf revision 11 carry more leaf, so the yearly rings (pipe_rings) are fitted near zero and the pipe model sets the diameter. Since broadleaf revision 28 its pipe_organ and pipe_rings are the broadleaf trees' rules (0, with Leonardo's rule and dead twigs kept as heartwood); this pipe_tip stays."
-    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: the tallest broadleaf tree of the region, with a straight stem, an open crown of upswept branches and alternate, broadly heart-shaped leaves on long stalks. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: the tallest broadleaf tree of the region, with a straight stem, an open crown of upswept branches and alternate, broadly heart-shaped leaves on long stalks. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 30 m tall and 55 cm across at breast height at 40 years in the open. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "USDA Forest Service Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005, public domain): its fitted age-to-dbh and dbh-to-height equations for black cottonwood (Populus balsamifera subsp. trichocarpa) in the Pacific Northwest region (Longview, WA; 36 open-grown park and street trees aged 1-204.5 years), evaluated: 19.5 m and 39 cm at 25 years; 29.5 m and 69 cm at 40 years. Was 30 m and 55 cm at 40 years, from general knowledge."
     },
     "appearance": {
       "evidence": "Authored",
