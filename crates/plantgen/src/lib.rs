@@ -1224,12 +1224,19 @@ pub mod venation;
 /// et al. 1964), so a stand tree's trunk keeps thickening as its crown
 /// climbs; conifers lay down no yearly rings on top, so open-grown trunks
 /// are the pipe model's (USDA Urban Tree Database).
-/// 165: broadleaf trees take Leonardo's rule (pipe exponent 2) and keep
-/// every dead twig's pipes as heartwood (broadleaf 28), with no pipe per
-/// leaf and no yearly ring, so their trunks are their twigs', living and
-/// dead (bigleaf maple at the USDA Urban Tree Database's four ages); their
-/// crowns spread to their stated radius (room_width 0.9, as shrubs'), not
-/// 1.6 times it; their stands are spaced as red alder's yield tables space
-/// them (`variants.stand_spacing` 0.165, Worthington et al. 1960); and a
-/// limb shed from a forked stem below the crown leaves its pipes too.
+/// 165: broadleaf trees are sized from measured open-grown trees (USDA
+/// Urban Tree Database): they take Leonardo's rule (pipe exponent 2,
+/// broadleaf 28) with a pipe per leaf at their lineage's leaf area per
+/// basal area (`leaf_area_per_basal_area`, else the database's 0.167 m²
+/// a cm²) and no yearly ring; their crowns spread to their lineage's
+/// measured width over height (`crown_spread`, else 0.87) in place of
+/// hand-set radii; their leaves need 0.15 of open light to live and
+/// their light dims at broadleaf forests' extinction (0.59); dormant
+/// buds sprout where light returns, so full crowns keep renewing; their
+/// reference sizes are the database's growth curves for the species or
+/// its nearest relative. Their stands are spaced as red alder's yield
+/// tables space them (`variants.stand_spacing` 0.165, Worthington et al.
+/// 1960), and a limb shed from a forked stem below the crown leaves its
+/// pipes too. Hand-picked bark colours are stated in sRGB, and a twig's
+/// leaves are drawn spread along a shoot (`spray`), above the ground.
 pub const GENERATOR_REVISION: u32 = 165;

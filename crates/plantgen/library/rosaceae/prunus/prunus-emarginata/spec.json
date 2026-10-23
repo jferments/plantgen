@@ -127,8 +127,8 @@
     {
       "age": 30,
       "environment": "open",
-      "height": 12,
-      "dbh": 0.22,
+      "height": 10.0,
+      "dbh": 0.48,
       "tolerance": 0.4
     }
   ],
@@ -176,9 +176,9 @@
       "note": "Hand-set from general knowledge of the species: a slender tree with a narrow crown, alternate oblong, finely toothed leaves and small clusters of white flowers. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 12 m tall and 22 cm across at breast height at 30 years in the open. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "The USDA Urban Tree Database's open-grown cherries in the Pacific Northwest region (McPherson, van Doorn and Peper 2016, RDS-2016-0005; Longview), since it has no bitter cherries: 39 cherry plums and Japanese flowering cherries 25 to 35 years old, median 10.0 m tall and 48 cm through, read as 30 years. Was 12 m and 22 cm at 30 years, from general knowledge."
     },
     "appearance": {
       "evidence": "Authored",

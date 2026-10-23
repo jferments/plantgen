@@ -31,7 +31,7 @@
       "blooms": 1,
       "bloom_size": 0.12,
       "bloom_angle": 130,
-      "path_half": 11.5
+      "path_half": 22
     }
   },
   "growth": {
@@ -114,6 +114,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intermediate",
+    "self_pruning": true,
     "leaf_area_per_basal_area": 0.276,
     "crown_spread": 0.63,
     "bark_colour": [76, 71, 61],
@@ -139,6 +141,8 @@
     "fruit_size_m": {"min": 0.025, "max": 0.05}
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Fraxinus latifolia, Reaction to Competition (p. 341): 'The species is classed as intermediate in tolerance of shade'."},
+    "traits.self_pruning": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Fraxinus latifolia, Reaction to Competition (p. 341): 'Individuals self-prune quickly with side shade, and forest-grown trees have long, clean trunks'."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 28 Oregon ashes: 0.276 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 27 Oregon ashes 25 years or older (Longview, WA): 0.63. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.28, 0.24], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
@@ -166,7 +170,7 @@
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region. Refitted 2026-10-23 (11.5 to 22) when the reference became the Urban Tree Database's open-grown Oregon ashes, 23 m at 50 years."
     },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",

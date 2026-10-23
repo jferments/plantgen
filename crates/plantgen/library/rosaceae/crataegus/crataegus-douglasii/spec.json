@@ -159,7 +159,7 @@
     {
       "age": 25,
       "environment": "open",
-      "height": 4,
+      "height": 2.5,
       "tolerance": 0.4
     }
   ],
@@ -284,9 +284,9 @@
       "note": "Pacific crabapple's values, changed by hand for black hawthorn: a smaller, many-stemmed shrubby tree with stems clustered from the base (FEIS, Habeck 1991), straight thorns, and flat-topped clusters of white flowers ripening to black fruit. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "4 m at 25 years in the open, the top of FEIS's 1-4 m (Habeck 1991). Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "2.5 m at 25 years in the open, the middle of FEIS's 1 to 4 m for a grown black hawthorn (Habeck 1991), the height its crown is given from the same range; no measured size at an age is known. Was 4 m, the top of that range."
     },
     "appearance": {
       "evidence": "Authored",

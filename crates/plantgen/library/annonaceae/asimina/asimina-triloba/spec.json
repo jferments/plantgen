@@ -73,7 +73,7 @@
     {
       "age": 25,
       "environment": "open",
-      "height": 7,
+      "height": 9.0,
       "tolerance": 0.4
     }
   ],
@@ -269,9 +269,9 @@
       "note": "Red alder's crown values, changed by hand for a small understory tree: one slender trunk (FEIS: usually single), spreading-ascending branches (FNA), a narrower crown and shorter shoots, flowers drawn 3 cm across (FNA: 2-4 cm), path_half fitted so it reaches its height. Not fitted to measurements. Short-shoot leaves take the decurrent-tree rule's size (0.88 of leaf_size): the hand-set card of 0.337 m, from when leaf_size was 1.5 times the flora's blade, drew every leaf 33 cm long and its petiole 1 cm, past FNA's 15-30 cm and 5-10 mm. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "7 m at 25 years in the open, within FEIS's 6-12 m. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "9 m at 25 years in the open, the middle of FEIS's 6 to 12 m for a grown pawpaw; no measured size at an age is known. Was 7 m, within that range."
     },
     "appearance": {
       "evidence": "Authored",
