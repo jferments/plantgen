@@ -1,23 +1,37 @@
 //! Solid low-poly plants for weak GPUs (plant quality tiers, Project
-//! After's plan of 2026-10-23): every organ drawn as a few opaque coloured
-//! triangles in the shape of its card's outline, no texture and no alpha
-//! test, within a triangle budget spent in the order that keeps a species
-//! recognisable.
+//! After's plan of 2026-10-23): a plant as its own skeleton and the
+//! masses its organs make on it, opaque and untextured, within a triangle
+//! budget, every part attached to the wood that bears it.
 //!
-//! A tier spends its budget on the plant's outline first, its wood at a
-//! coarse level, then on its signature organs (flowers, heads, fruit,
-//! clusters and spikes), and what is left on its foliage. Organs come from
-//! the finest level whose cards fit the budget after keeping at least
-//! [`SolidTier::floor`] of them; the share kept is drawn evenly over the
-//! plant by a hash of each card's place, and each kept organ grows by the
-//! square root of one over the share, so the plant keeps its cover
-//! (stochastic pruning, as levels 2 and 3 do in a renderer).
+//! Low-poly games draw a tree as a trunk and a few branches with a mass
+//! of leaves wrapped round each branch's end, and a herb or a grass as
+//! its stems with the leaves, blades and flowers they bear. This module
+//! draws a grown plant the same way, from the plant itself:
 //!
-//! Each organ is a polygon traced round its card's template: the widest
-//! covered span at a few stations along the card, its first and last
-//! covered points as base and tip, bent as its card bends. A foxglove's
-//! broad toothed leaf and a fireweed's narrow willow leaf stay broad and
-//! narrow with six triangles each, and a grass blade keeps its arch.
+//! 1. A tree starts as one mass, the convex hull of its organs wrapped
+//!    round the points where it stands. A herb, a grass, a fern or a
+//!    cactus starts with nothing but its flower clusters, and draws its
+//!    stems one at a time, the largest first: fewer stems, never stems
+//!    merged into a lump.
+//! 2. The largest part is split along the plant's own branching while
+//!    the budget allows: a mass of sibling branches into two masses of
+//!    half of them each; a branch into its tube, a part for its own
+//!    branches and one for the organs it bears itself. Those organs are a
+//!    few of the real leaves at their real size, evenly along the stem
+//!    (more as the budget allows, narrow blades widened for the ones left
+//!    out), or a mass split in halves along it.
+//! 3. Every part touches what bears it: a mass wraps the points where its
+//!    branches leave the drawn wood, a tube starts on its parent's drawn
+//!    path, a leaf sits on its drawn stem, and flowers and fruit hang
+//!    from the mass they belong to. Every shape is drawn from real
+//!    organs.
+//!
+//! Some organs keep a shape of their own. A fern's frond (organs spread
+//! flat to either side of a stalk) is one strip along its own arch, as
+//! wide as its pinnae reach. A spike, raceme or fruit is a spindle in its
+//! own colour; an airy grass panicle stays a spray of thin spokes. Fleshy
+//! bodies are tubes of their own cross-section and swell, a pad flat,
+//! with a dome at the tip.
 
 use crate::body::BodyLook;
 use crate::graph::PlantGraph;
@@ -28,47 +42,28 @@ use crate::rng::{mix64, unit};
 use crate::spec::Appearance;
 use crate::templates::Templates;
 
-/// One solid tier: how its wood is built, how much it may draw, and how
-/// finely it traces each organ.
+/// One solid tier: how much it may draw and how finely.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct SolidTier {
     pub name: &'static str,
-    /// The wood's level, for a 15 m plant ([`LodSpec::for_height`]).
-    pub wood: LodSpec,
     /// Triangles a plant at most [`SMALL_M`] tall may draw, and one at
     /// least [`LARGE_M`]; between, in proportion to its height.
     pub small: usize,
     pub large: usize,
-    /// The most of the budget a plant's wood takes (not a cactus's bodies),
-    /// its axes kept from the most visible on.
-    pub wood_share: f64,
-    /// The most rings an axis keeps, and how far (a share of the plant's
-    /// height) its tube may stray from its path where it drops one.
+    /// The most points a drawn axis keeps, and how far (a share of the
+    /// plant's height) its tube may stray from its path where it drops one.
     pub rings: usize,
     pub straying: f64,
-    /// Stations along a signature organ's outline, and along a leaf's:
-    /// 1 draws a diamond (2 triangles), 2 a hexagon (4), 3 an octagon (6).
-    pub signature_stations: usize,
-    pub foliage_stations: usize,
-    /// The most of the organs' budget signature organs take while the
-    /// plant has foliage; foliage takes the rest, and either takes what
-    /// the other leaves.
-    pub signature_share: f64,
-    /// The least share of a level's leaves a plant keeps before it takes
-    /// the next coarser level's.
-    pub floor: f64,
-    /// The most a kept organ grows to stand for those dropped: more keeps
-    /// the plant's cover, less keeps its leaves' size.
-    pub most_growth: f64,
+    /// Sides round a woody tube, and round a fleshy body.
+    pub sides: u32,
+    pub body_sides: u32,
+    /// Directions a mass is wrapped along ([`DIRECTIONS`]): a hull of at
+    /// most twice as many points.
+    pub directions: usize,
+    /// Stations along an organ's outline drawn alone: 1 draws a diamond
+    /// (2 triangles), 2 a hexagon (4), 3 an octagon (6).
+    pub stations: usize,
 }
-
-/// The most of a fleshy plant's budget its bodies and wood take: they
-/// are its outline.
-const BODY_SHARE: f64 = 0.7;
-
-/// How much larger a share of its organs a coarser level must keep to be
-/// taken when no level keeps a tier's floor.
-const COARSER_GAIN: f64 = 2.5;
 
 /// Plants this tall or lower take a tier's `small` budget.
 pub const SMALL_M: f64 = 2.0;
@@ -79,48 +74,28 @@ pub const LARGE_M: f64 = 15.0;
 /// hundred triangles a herb, 1,500 a tree.
 pub const LOW: SolidTier = SolidTier {
     name: "low",
-    wood: LodSpec {
-        min_radius: 0.02,
-        ring_edge: 0.4,
-        min_sides: 3,
-        max_sides: 4,
-        bend: 20.0,
-        cluster: 0.0,
-    },
     small: 400,
     large: 1500,
-    wood_share: 0.3,
-    rings: 5,
-    straying: 0.02,
-    signature_stations: 3,
-    foliage_stations: 2,
-    signature_share: 0.4,
-    floor: 0.15,
-    most_growth: 1.6,
+    rings: 6,
+    straying: 0.01,
+    sides: 3,
+    body_sides: 6,
+    directions: 3,
+    stations: 2,
 };
 
-/// The weakest machines: an essence of the plant, 30 to 120 triangles a
-/// herb and 300 a tree.
+/// The weakest machines: an essence of the plant, 120 triangles a herb
+/// and 300 a tree.
 pub const MINIMAL: SolidTier = SolidTier {
     name: "minimal",
-    wood: LodSpec {
-        min_radius: 0.06,
-        ring_edge: 1.0,
-        min_sides: 3,
-        max_sides: 3,
-        bend: 35.0,
-        cluster: 0.0,
-    },
     small: 120,
     large: 300,
-    wood_share: 0.4,
     rings: 3,
-    straying: 0.05,
-    signature_stations: 1,
-    foliage_stations: 1,
-    signature_share: 0.4,
-    floor: 0.1,
-    most_growth: 2.2,
+    straying: 0.03,
+    sides: 3,
+    body_sides: 4,
+    directions: 3,
+    stations: 1,
 };
 
 pub const TIERS: [SolidTier; 2] = [LOW, MINIMAL];
@@ -139,68 +114,55 @@ impl SolidTier {
             (self.small as f64 + (self.large as f64 - self.small as f64) * t).round() as usize;
         budget
     }
-
-    /// The most points along a chain of cards drawn as one ribbon.
-    #[must_use]
-    pub fn ribbon_points(&self, signature: bool) -> usize {
-        2 + if signature {
-            self.signature_stations
-        } else {
-            self.foliage_stations
-        }
-    }
-
-    /// Triangles one organ of `cards` cards takes: a polygon round one
-    /// card, or a ribbon along a chain, narrowing to a point.
-    #[must_use]
-    pub fn chain_triangles(&self, cards: usize, signature: bool) -> usize {
-        if cards <= 1 {
-            self.organ_triangles(signature)
-        } else {
-            2 * (cards + 1).min(self.ribbon_points(signature)) - 3
-        }
-    }
-
-    /// Triangles one organ's polygon takes.
-    #[must_use]
-    pub fn organ_triangles(&self, signature: bool) -> usize {
-        2 * if signature {
-            self.signature_stations
-        } else {
-            self.foliage_stations
-        }
-    }
 }
 
 /// What a solid build drew.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct SolidStats {
     pub budget: usize,
-    /// One side's triangles: wood, and the organs' polygons (a renderer
-    /// draws them two-sided; [`SolidPlant::two_sided`] doubles them).
+    /// Triangles of the tubes, of the closed masses, and of the flat
+    /// pieces (single organs and flat masses, drawn two-sided).
     pub wood_triangles: usize,
+    pub mass_triangles: usize,
     pub organ_triangles: usize,
-    /// The level whose cards the organs came from.
-    pub level: usize,
-    /// Signature organs and foliage: kept of each.
-    pub signature: (usize, usize),
-    pub foliage: (usize, usize),
+    /// Axes drawn of the plant's axes; masses; organs drawn alone, of all.
+    pub axes: (usize, usize),
+    pub masses: usize,
+    pub singles: (usize, usize),
 }
 
 impl SolidStats {
     #[must_use]
     pub fn triangles(&self) -> usize {
-        self.wood_triangles + self.organ_triangles
+        self.wood_triangles + self.mass_triangles + self.organ_triangles
     }
+}
+
+/// One piece of a solid plant and where it is attached.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct Piece {
+    /// The points it hangs from: on a drawn path, or where a stem stands.
+    pub attach: Vec<Vec3>,
+    /// Its vertices.
+    pub points: Vec<Vec3>,
+    /// A single organ (attached at its base), not a mass.
+    pub single: bool,
 }
 
 /// A plant at a solid tier.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct SolidPlant {
+    /// Tubes and closed masses, their faces outward.
     pub wood: Mesh,
-    /// One-sided organ polygons, their fronts facing as their cards did.
+    /// Flat pieces facing one way, drawn two-sided.
     pub organs: Mesh,
     pub stats: SolidStats,
+    /// Every mass and single organ, with where it hangs from.
+    pub pieces: Vec<Piece>,
+    /// The drawn axes' paths (place and radius), each starting on its
+    /// parent's; and where the plant's stems stand.
+    pub paths: Vec<Vec<(Vec3, f64)>>,
+    pub grounds: Vec<Vec3>,
 }
 
 impl SolidPlant {
@@ -235,9 +197,58 @@ pub fn signature(look: &Look) -> bool {
         )
 }
 
+/// Directions a mass is wrapped along: the three axes, the four
+/// diagonals of a cube, then the six diagonals of its faces.
+const DIRECTIONS: [[f64; 3]; 13] = [
+    [1.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0],
+    [0.0, 0.0, 1.0],
+    [1.0, 1.0, 1.0],
+    [1.0, 1.0, -1.0],
+    [1.0, -1.0, 1.0],
+    [-1.0, 1.0, 1.0],
+    [1.0, 1.0, 0.0],
+    [1.0, -1.0, 0.0],
+    [1.0, 0.0, 1.0],
+    [1.0, 0.0, -1.0],
+    [0.0, 1.0, 1.0],
+    [0.0, 1.0, -1.0],
+];
+
+/// A mass thinner than this share of its length is drawn flat, both
+/// faces: a fern's frond, a pad, a fan of blades in one plane.
+const FLAT: f64 = 0.06;
+
+/// Bodies narrower than this share of the plant's height are drawn with
+/// the wood's sides.
+const SLIM: f64 = 0.02;
+
+/// Organs no thicker across their axis than this share of their spread
+/// are drawn as a strip along it ([`Solid::blade`]).
+const BLADE_THIN: f64 = 0.35;
+/// ... and only when there are at least this many, each shorter than
+/// this share of the stalk.
+const BLADE_MANY: usize = 6;
+const BLADE_SMALL: f64 = 0.3;
+
+/// Flowers and fruit spread over more than this share of a woody part
+/// are left to its leaves' mass: hung on its side they would float.
+const SCATTERED: f64 = 0.6;
+
+/// Leaves at least this share of their part's size on average are drawn
+/// as themselves ([`Kind::Bin`]), at first this many.
+const LEAFY: f64 = 0.1;
+/// Sampled blades widen at most this much: more, and a culm's leaves
+/// would be boards.
+const WIDEST_BLADE: f64 = 1.5;
+const SAMPLE: usize = 3;
+
+/// The most splits a build tries.
+const MOST_SPLITS: usize = 20_000;
+
 /// Build `graph` at `tier`. `levels` are the package's four mesh levels
 /// for a 15 m plant (a quality profile's `lods`); the organs come from
-/// the finest of them that fits.
+/// the second, every organ a card of its own.
 #[must_use]
 #[allow(clippy::too_many_arguments)]
 pub fn build(
@@ -251,26 +262,8 @@ pub fn build(
 ) -> SolidPlant {
     let height = graph.height;
     let budget = tier.budget(height);
-    // A plant with fleshy bodies (a cactus) keeps the coarse level's
-    // bodies, which are its outline; any other draws its axes as thin
-    // three-sided tubes, the most visible first, within its share.
-    let fleshy = graph.segments.iter().any(|segment| segment.body != 0);
-    let room = (budget as f64 * if fleshy { BODY_SHARE } else { tier.wood_share }) as usize;
-    let mut wood = Mesh::default();
-    if fleshy {
-        let mut drawn = PlantMesh::default();
-        crate::body::build_within(graph, bodies, looks.len(), room, &mut drawn);
-        append(&mut wood, &drawn.wood, false);
-    }
-    let woody = axes(
-        graph,
-        appearance,
-        tier,
-        room.saturating_sub(wood.triangle_count()),
-    );
-    append(&mut wood, &woody, false);
     // Organs drawn solid near (an agave's thick leaves, a lily's petals,
-    // lace) drawn as their cards: their templates still describe them.
+    // lace) taken as their cards: their templates still describe them.
     let carded: Vec<Look> = looks
         .iter()
         .cloned()
@@ -283,248 +276,74 @@ pub fn build(
             look
         })
         .collect();
-    let left = budget.saturating_sub(wood.triangle_count());
-    let is_signature = |card: &Card| looks.get(usize::from(card.template)).is_some_and(signature);
-    // Every coarse level's organs, each split into signature organs and
-    // foliage. An organ is a chain of cards: a grass blade is drawn in
-    // pieces, which are pruned and drawn together.
-    let built: Vec<(usize, Vec<Vec<Card>>, Vec<Vec<Card>>)> = levels
-        .iter()
-        .enumerate()
-        .skip(1)
-        .map(|(level, lod)| {
-            let plant = mesh::build(
-                graph,
-                &carded,
-                bodies,
-                appearance,
-                &lod.for_height(height),
-                level,
-            );
-            let (signatures, foliage): (Vec<Card>, Vec<Card>) =
-                plant.cards.into_iter().partition(|card| is_signature(card));
-            (level, chains(signatures), chains(foliage))
-        })
-        .collect();
-    let has_foliage = built.iter().any(|(_, _, foliage)| !foliage.is_empty());
-    let has_signature = built
-        .iter()
-        .any(|(_, signatures, _)| !signatures.is_empty());
-    // The organs' budget split between them: signature organs at most
-    // their share while the plant has leaves.
-    let room_s = if !has_foliage {
-        left
-    } else if has_signature {
-        (left as f64 * tier.signature_share) as usize
-    } else {
-        0
-    };
-    let cost = |chain: &[Card], signature: bool| tier.chain_triangles(chain.len(), signature);
-    // How many of `organs` fit `room`, kept in their hash order.
-    let fitting = |organs: &[Vec<Card>], room: usize, signature: bool| {
-        let mut used = 0;
-        let mut kept = 0;
-        for chain in organs {
-            used += cost(chain, signature);
-            if used > room {
-                break;
-            }
-            kept += 1;
-        }
-        kept
-    };
-    // Each class from the finest level that keeps at least the floor of
-    // it within its room (the coarsest when none does): a fireweed's
-    // leaves one by one, and its racemes as the spikes their clusters
-    // draw.
-    let pick = |room: usize, signature: bool| {
-        let share = |organs: &[Vec<Card>]| {
-            if organs.is_empty() {
-                1.0
-            } else {
-                fitting(organs, room, signature) as f64 / organs.len() as f64
-            }
-        };
-        let of = |entry: &(usize, Vec<Vec<Card>>, Vec<Vec<Card>>)| {
-            if signature {
-                share(&entry.1)
-            } else {
-                share(&entry.2)
-            }
-        };
-        // When none keeps its floor, the finest unless a coarser one
-        // keeps a far larger share: merged leaves are larger than leaves,
-        // and only worth it when they are far fewer.
-        let mut best = 0;
-        for (at, entry) in built.iter().enumerate() {
-            if of(entry) >= tier.floor {
-                return at;
-            }
-            if of(entry) >= of(&built[best]) * COARSER_GAIN {
-                best = at;
-            }
-        }
-        best
-    };
-    let at_s = pick(room_s, true);
-    let signatures: &[Vec<Card>] = built.get(at_s).map_or(&[], |entry| &entry.1);
-    let keep_signature = fitting(signatures, room_s, true);
-    let used_s: usize = signatures
-        .iter()
-        .take(keep_signature)
-        .map(|c| cost(c, true))
-        .sum();
-    let room_f = left.saturating_sub(used_s);
-    let at_f = pick(room_f, false);
-    let foliage: &[Vec<Card>] = built.get(at_f).map_or(&[], |entry| &entry.2);
-    let keep_foliage = fitting(foliage, room_f, false);
-    let used_f: usize = foliage
-        .iter()
-        .take(keep_foliage)
-        .map(|c| cost(c, false))
-        .sum();
-    // Signature organs take what foliage leaves.
-    let keep_signature = fitting(signatures, left.saturating_sub(used_f), true);
-    let level = built.get(at_f.max(at_s)).map_or(0, |entry| entry.0);
-    let (signature_count, foliage_count) = (signatures.len(), foliage.len());
-    let signature_outlines = Outlines::new(templates, tier.signature_stations);
-    let foliage_outlines = Outlines::new(templates, tier.foliage_stations);
-    let mut organs = Mesh::default();
-    // Leaves too many to keep their floor one by one: those crowded on
-    // one axis (a fern's pinnae, a shoot's needles) drawn as the frond or
-    // spray they make, the rest one by one with what is left.
-    let mut keep_foliage = keep_foliage;
-    let mut foliage_chains: Vec<Vec<Card>> = foliage.to_vec();
-    let mut combed = 0;
-    let mut clumped = 0;
-    let mut room_c = room_f;
-    // Only a herb's: a shrub's or a tree's leafy shoots read as the
-    // clumps of its crown below.
-    if !foliage.is_empty() && height <= SMALL_M {
-        let cards: Vec<Card> = foliage.iter().flatten().copied().collect();
-        let (combs, rest) = combs(
-            graph,
-            &cards,
-            &foliage_outlines,
-            tier.ribbon_points(false) + 1,
-        );
-        if !combs.is_empty() {
-            let mut used = 0;
-            for comb in &combs {
-                if used + comb.triangles() > room_f {
-                    continue;
-                }
-                used += comb.triangles();
-                comb.draw(&mut organs);
-                combed += comb.organs;
-            }
-            foliage_chains = chains(rest);
-            keep_foliage = fitting(&foliage_chains, room_f.saturating_sub(used), false);
-            room_c = room_f.saturating_sub(used);
-        }
-    }
-    // Leaves still far too many to keep one by one, as a tree's crown's:
-    // merged by place into the clumps they make, each drawn as one of
-    // them grown to their cover.
-    let singles = foliage_chains
-        .iter()
-        .filter(|chain| chain.len() == 1)
-        .count();
-    if !foliage_chains.is_empty()
-        && (keep_foliage as f64) < tier.floor * foliage_chains.len() as f64
-        && singles * 10 >= foliage_chains.len() * 9
-    {
-        let cards: Vec<Card> = foliage_chains.iter().flatten().copied().collect();
-        let merged = clumps(&cards, room_c / tier.organ_triangles(false).max(1));
-        clumped = cards.len().min(foliage_count);
-        foliage_chains = merged.into_iter().map(|card| vec![card]).collect();
-        keep_foliage = foliage_chains.len();
-    }
-    let foliage: &[Vec<Card>] = &foliage_chains;
-    for (chains, keep, outlines, signature) in [
-        (signatures, keep_signature, &signature_outlines, true),
-        (foliage, keep_foliage, &foliage_outlines, false),
-    ] {
-        if keep == 0 || chains.is_empty() {
-            continue;
-        }
-        let share = keep as f64 / chains.len() as f64;
-        for chain in chains.iter().take(keep) {
-            if chain.len() == 1 {
-                outlines.polygon(&chain[0], share, tier.most_growth, &mut organs);
-            } else {
-                outlines.ribbon(chain, share, tier.ribbon_points(signature), &mut organs);
-            }
-        }
-    }
-    let stats = SolidStats {
-        budget,
-        wood_triangles: wood.triangle_count(),
-        organ_triangles: organs.triangle_count(),
-        level,
-        signature: (keep_signature, signature_count),
-        foliage: (
-            if clumped > 0 { clumped } else { keep_foliage } + combed,
-            foliage_count,
-        ),
-    };
-    SolidPlant {
-        wood,
-        organs,
-        stats,
-    }
-}
-
-/// The plant's axes as three-sided tubes within `budget` triangles: each
-/// axis (a stem or a branch and its continuations) as a path through at
-/// most [`SolidTier::rings`] of its points, those that keep it within
-/// [`SolidTier::straying`] of the plant's height of its path, taken from
-/// the most visible (longest and thickest) on while they fit.
-fn axes(graph: &PlantGraph, appearance: &Appearance, tier: &SolidTier, budget: usize) -> Mesh {
-    let mut paths: Vec<(f64, Vec<(Vec3, f64)>, u16, f64)> = axis_paths(graph)
+    let plant = mesh::build(
+        graph,
+        &carded,
+        bodies,
+        appearance,
+        &levels[1].for_height(height),
+        1,
+    );
+    let outlines = Outlines::new(templates, tier.stations);
+    let skeleton = Skeleton::new(graph);
+    // Spine cards (templates past the looks') are left to the bodies'
+    // colour.
+    let cards: Vec<Card> = plant
+        .cards
         .into_iter()
-        .map(|axis| {
-            let length: f64 = axis
-                .points
-                .windows(2)
-                .map(|w| (w[1].0 - w[0].0).length())
-                .sum();
-            let mean = axis.points.iter().map(|p| p.1).sum::<f64>() / axis.points.len() as f64;
-            (length * mean, axis.points, axis.order, axis.born)
-        })
+        .filter(|card| usize::from(card.template) < looks.len())
         .collect();
-    paths.sort_by(|a, b| b.0.total_cmp(&a.0));
-    let tolerance = graph.height * tier.straying;
-    let colour = [
-        appearance.bark[0],
-        appearance.bark[1],
-        appearance.bark[2],
-        1.0,
-    ];
-    let mut out = Mesh::default();
-    for (_, points, order, born) in paths {
-        let kept = simplify(&points, tolerance, tier.rings.max(2));
-        let cost = (kept.len() - 1) * 6;
-        if out.triangle_count() + cost > budget {
-            continue;
-        }
-        tube(&kept, colour, order.min(2) as u8, born, &mut out);
-    }
-    out
+    let items = items(&skeleton, graph, chains(cards), looks, &outlines);
+    let mut solid = Solid {
+        skeleton: &skeleton,
+        items: &items,
+        outlines: &outlines,
+        bodies,
+        tier,
+        bark: [
+            appearance.bark[0],
+            appearance.bark[1],
+            appearance.bark[2],
+            1.0,
+        ],
+        directions: DIRECTIONS
+            .iter()
+            .take(tier.directions.clamp(3, DIRECTIONS.len()))
+            .map(|d| Vec3::new(d[0], d[1], d[2]).normalize_or(Vec3::Y))
+            .collect(),
+        drawn: vec![None; skeleton.axes.len()],
+        own: {
+            let mut own = vec![Vec::new(); skeleton.axes.len()];
+            for (i, item) in items.iter().enumerate() {
+                own[item.axis].push(i);
+            }
+            own
+        },
+        tolerance: height * tier.straying,
+        height,
+        // A cactus is drawn stem by stem at any height: its joints
+        // wrapped together would be a boulder.
+        herb: height <= SMALL_M || skeleton.axes.iter().any(|axis| axis.body != 0),
+    };
+    solid.refine(budget)
 }
 
-/// One axis of a plant: a stem or a branch and its continuations.
+/// One axis of a plant: a stem, a branch or a fleshy body and their
+/// continuations.
 struct Axis {
     /// Its segments, base first.
     segments: Vec<usize>,
     /// Its path: the first segment's start, then each segment's end, with
     /// the radius there.
     points: Vec<(Vec3, f64)>,
-    order: u16,
     born: f64,
+    /// Its fleshy body type, 0 for wood, and the left vector its first
+    /// segment's cross-section is set by.
+    body: u8,
+    left: Vec3,
 }
 
-/// The plant's axes that stand at its age, other than fleshy bodies.
+/// The plant's axes that stand at its age.
 fn axis_paths(graph: &PlantGraph) -> Vec<Axis> {
     let segments = &graph.segments;
     let alive = |index: usize| segments[index].shed.is_none_or(|shed| shed > graph.age);
@@ -538,7 +357,7 @@ fn axis_paths(graph: &PlantGraph) -> Vec<Axis> {
     let mut axes = Vec::new();
     for (first, segment) in segments.iter().enumerate() {
         let starts = segment.parent.is_none() || segment.lateral;
-        if !starts || !alive(first) || segment.body != 0 {
+        if !starts || !alive(first) {
             continue;
         }
         let mut points = vec![(segment.start, segment.radius)];
@@ -547,7 +366,14 @@ fn axis_paths(graph: &PlantGraph) -> Vec<Axis> {
         while let Some(index) = at.filter(|&index| alive(index)) {
             let end = &segments[index];
             let radius = next[index].map_or(end.radius * 0.5, |n| segments[n].radius);
-            points.push((end.end, radius));
+            points.push((
+                end.end,
+                if segment.body != 0 {
+                    end.radius
+                } else {
+                    radius
+                },
+            ));
             members.push(index);
             at = next[index];
             if members.len() > segments.len() {
@@ -557,223 +383,1554 @@ fn axis_paths(graph: &PlantGraph) -> Vec<Axis> {
         axes.push(Axis {
             segments: members,
             points,
-            order: segment.order,
             born: segment.born,
+            body: segment.body,
+            left: segment.left,
         });
     }
     axes
 }
 
-/// Organs on one axis drawn as one ribbon along it: its leaves or pinnae
-/// as the frond or leafy shoot they make.
-struct Comb {
-    /// The axis's path where the organs stand, at most a few points, each
-    /// with the half-width the organs reach to either side of it there.
-    points: Vec<(Vec3, f64)>,
-    /// The side the organs reach toward, across the axis.
-    side: Vec3,
-    colour: [f32; 4],
-    born: f64,
-    organs: usize,
+/// The plant's axes and how they branch.
+struct Skeleton {
+    axes: Vec<Axis>,
+    children: Vec<Vec<usize>>,
+    roots: Vec<usize>,
+    /// Each segment's axis and its place along it.
+    place: Vec<Option<(usize, usize)>>,
 }
 
-/// At least this many organs on one axis make a comb, if none reaches
-/// further from it than this share of its length.
-const COMB_ORGANS: usize = 10;
-const COMB_REACH: f64 = 0.12;
+impl Skeleton {
+    fn new(graph: &PlantGraph) -> Self {
+        let axes = axis_paths(graph);
+        let mut place = vec![None; graph.segments.len()];
+        for (a, axis) in axes.iter().enumerate() {
+            for (k, &segment) in axis.segments.iter().enumerate() {
+                place[segment] = Some((a, k));
+            }
+        }
+        let mut children = vec![Vec::new(); axes.len()];
+        let mut roots = Vec::new();
+        for (a, axis) in axes.iter().enumerate() {
+            let parent = axis
+                .segments
+                .first()
+                .and_then(|&first| graph.segments[first].parent)
+                .and_then(|parent| place[parent as usize]);
+            match parent {
+                Some((p, _)) if p != a => children[p].push(a),
+                _ => roots.push(a),
+            }
+        }
+        Self {
+            axes,
+            children,
+            roots,
+            place,
+        }
+    }
 
-/// The combs of `cards` with at least [`COMB_ORGANS`] on one axis of
-/// `graph`, at most `most` points each, most organs first; and the cards
-/// on no comb.
-fn combs(
+    /// Every axis of the subtrees of `axes`.
+    fn subtree(&self, axes: &[usize]) -> Vec<usize> {
+        let mut out = Vec::new();
+        let mut stack: Vec<usize> = axes.to_vec();
+        while let Some(a) = stack.pop() {
+            out.push(a);
+            stack.extend_from_slice(&self.children[a]);
+        }
+        out
+    }
+}
+
+/// One organ: a card, or a blade's pieces, and the axis that bears it.
+struct Item {
+    cards: Vec<Card>,
+    /// Its axis and its place along it.
+    axis: usize,
+    k: usize,
+    signature: bool,
+    /// An airy organ (a grass's panicle, a spray of florets): drawn as
+    /// spokes, never wrapped solid.
+    airy: bool,
+    /// A grass's or sedge's blade: itself, never part of a strip.
+    grassy: bool,
+    /// Its outline's points: base, tip, and the ends of its widest span.
+    points: Vec<Vec3>,
+    colour: [f64; 3],
+    area: f64,
+    /// Its length, its cards' end to end.
+    length: f64,
+    born: f64,
+}
+
+/// The organs of `chains` and the axes that bear them. A card whose
+/// segment no standing axis holds is borne by the nearest that does,
+/// from its segment's ancestors, or by place.
+fn items(
+    skeleton: &Skeleton,
     graph: &PlantGraph,
-    cards: &[Card],
+    chains: Vec<Vec<Card>>,
+    looks: &[Look],
     outlines: &Outlines,
-    most: usize,
-) -> (Vec<Comb>, Vec<Card>) {
-    let axes = axis_paths(graph);
-    // Each segment's axis and place along it.
-    let mut on = vec![None; graph.segments.len()];
-    for (a, axis) in axes.iter().enumerate() {
-        for (k, &segment) in axis.segments.iter().enumerate() {
-            on[segment] = Some((a, k));
-        }
-    }
-    let mut by_axis: std::collections::BTreeMap<usize, Vec<(usize, &Card)>> =
-        std::collections::BTreeMap::new();
-    let mut rest = Vec::new();
-    for card in cards {
-        match on.get(card.segment as usize).copied().flatten() {
-            Some((a, k)) => by_axis.entry(a).or_default().push((k, card)),
-            None => rest.push(*card),
-        }
-    }
+) -> Vec<Item> {
     let v = |x: [f32; 3]| Vec3::new(f64::from(x[0]), f64::from(x[1]), f64::from(x[2]));
     let mut out = Vec::new();
-    for (a, members) in by_axis {
-        if members.len() < COMB_ORGANS {
-            rest.extend(members.iter().map(|(_, card)| **card));
+    for cards in chains {
+        let Some(first) = cards.first().copied() else {
             continue;
-        }
-        let axis = &axes[a];
-        let (low, high) = members
-            .iter()
-            .fold((usize::MAX, 0), |(l, h), (k, _)| (l.min(*k), h.max(*k)));
-        // The axis from the first organ's segment to past the last's.
-        let path: Vec<Vec3> = axis.points[low..=(high + 1).min(axis.points.len() - 1)]
-            .iter()
-            .map(|p| p.0)
-            .collect();
-        let tangent = (*path.last().unwrap_or(&Vec3::ZERO) - path[0]).normalize_or(Vec3::Y);
-        // Where each organ reaches across the axis: its tip's offset from
-        // the axis, off the tangent.
-        let reach = |card: &Card, k: usize| {
-            let tip = card
-                .bend
-                .point(
-                    v(card.base),
-                    v(card.heading),
-                    v(card.left),
-                    f64::from(card.width) * 0.5,
-                    f64::from(card.length),
-                    0.0,
-                    1.0,
-                )
-                .0;
-            let from = axis.points[k].0;
-            let offset = tip - from;
-            offset - tangent * offset.dot(tangent)
         };
-        let reference = reach(members[0].1, members[0].0);
-        let mut side = Vec3::ZERO;
-        for (k, card) in &members {
-            let r = reach(card, *k);
-            side += if r.dot(reference) >= 0.0 { r } else { -r };
+        let mut place = None;
+        let mut segment = (first.segment != mesh::NO_SEGMENT).then_some(first.segment as usize);
+        while let Some(index) = segment.filter(|&index| index < graph.segments.len()) {
+            if let Some(found) = skeleton.place[index] {
+                place = Some(found);
+                break;
+            }
+            segment = graph.segments[index].parent.map(|parent| parent as usize);
         }
-        let side = side.normalize_or_else(|| crate::math::any_perpendicular(tangent));
-        // Only organs short beside their axis make a comb: a fern's
-        // pinnae, not a fireweed's leaves or a grass's blades.
-        let length: f64 = path.windows(2).map(|w| (w[1] - w[0]).length()).sum();
-        let widest = members
-            .iter()
-            .map(|(k, card)| reach(card, *k).length())
-            .fold(0.0, f64::max);
-        if widest > COMB_REACH * length {
-            rest.extend(members.iter().map(|(_, card)| **card));
-            continue;
-        }
-        // The half-width at each kept point: the furthest the organs whose
-        // segments lie nearest it reach along the side.
-        let kept = simplify(
-            &path.iter().map(|&p| (p, 0.0)).collect::<Vec<_>>(),
-            0.0,
-            most.max(3),
-        );
-        let place_of = |k: usize| axis.points[k].0;
-        let mut points = Vec::new();
-        for (i, &(p, _)) in kept.iter().enumerate() {
-            let mut half: f64 = 0.0;
-            for (k, card) in &members {
-                let nearest = kept
-                    .iter()
-                    .enumerate()
-                    .min_by(|x, y| {
-                        (x.1.0 - place_of(*k))
-                            .length()
-                            .total_cmp(&(y.1.0 - place_of(*k)).length())
-                    })
-                    .map_or(0, |(j, _)| j);
-                if nearest == i {
-                    half = half.max(reach(card, *k).dot(side).abs());
+        if place.is_none() {
+            // The nearest point of any axis.
+            let base = v(first.base);
+            let mut best = (f64::INFINITY, None);
+            for (a, axis) in skeleton.axes.iter().enumerate() {
+                for (k, point) in axis.points.iter().enumerate() {
+                    let d = (point.0 - base).length();
+                    if d < best.0 {
+                        best = (d, Some((a, k.saturating_sub(1))));
+                    }
                 }
             }
-            points.push((p, half));
+            place = best.1;
         }
-        // The tip narrows to a point; empty points between take their
-        // neighbours' width.
-        if let Some(last) = points.last_mut() {
-            last.1 = 0.0;
-        }
-        for i in 1..points.len().saturating_sub(1) {
-            if points[i].1 == 0.0 {
-                points[i].1 = 0.5 * (points[i - 1].1 + points[i + 1].1);
-            }
-        }
-        let mut colour = [0.0_f64; 3];
-        for (_, card) in &members {
-            let tint = outlines
-                .shapes
-                .get(usize::from(card.template))
-                .and_then(Option::as_ref)
-                .map_or([1.0; 3], |o| o.tint);
-            for c in 0..3 {
-                colour[c] += f64::from(card.color[c]) * tint[c];
-            }
-        }
-        let n = members.len() as f64;
-        out.push(Comb {
-            points,
-            side,
-            colour: [
-                (colour[0] / n) as f32,
-                (colour[1] / n) as f32,
-                (colour[2] / n) as f32,
-                1.0,
-            ],
-            born: members
+        let Some((axis, k)) = place else {
+            continue;
+        };
+        let mut points = Vec::new();
+        let mut colour = [0.0; 3];
+        let mut area = 0.0;
+        let mut airy = false;
+        let signature = looks
+            .get(usize::from(first.template))
+            .is_some_and(signature);
+        for card in &cards {
+            let Some(Some(outline)) = outlines.shapes.get(usize::from(card.template)) else {
+                continue;
+            };
+            let (base, heading, left) = (v(card.base), v(card.heading), v(card.left));
+            airy |= outline.solidity < AIRY;
+            // A flower's or fruit's mass is its whole outline: a raceme's
+            // flowers fill it.
+            let solidity = if signature {
+                1.0
+            } else {
+                outline.solidity.clamp(MIN_SOLIDITY, 1.0)
+            };
+            let half = f64::from(card.width) * 0.5 * solidity;
+            let at = |x: f64, y: f64| {
+                card.bend
+                    .point(base, heading, left, half, f64::from(card.length), x, y)
+                    .0
+            };
+            let (v_top, l_top, r_top) = outline
+                .spans
                 .iter()
-                .map(|(_, c)| f64::from(c.born))
+                .copied()
+                .max_by(|a, b| (a.2 - a.1).total_cmp(&(b.2 - b.1)))
+                .unwrap_or((0.5, -1.0, 1.0));
+            points.push(at(outline.base.0, outline.base.1));
+            points.push(at(outline.tip.0, outline.tip.1));
+            points.push(at(l_top, v_top));
+            points.push(at(r_top, v_top));
+            let a =
+                f64::from(card.length) * f64::from(card.width) * outline.widest * outline.solidity;
+            for c in 0..3 {
+                colour[c] += f64::from(card.color[c]) * outline.tint[c] * a;
+            }
+            area += a;
+        }
+        if points.is_empty() {
+            continue;
+        }
+        let total = area.max(1.0e-12);
+        out.push(Item {
+            axis,
+            k,
+            signature,
+            airy,
+            grassy: looks
+                .get(usize::from(first.template))
+                .is_some_and(|look| matches!(look.shape, Shape::Blade(_))),
+            points,
+            colour: colour.map(|c| c / total),
+            area,
+            length: cards.iter().map(|card| f64::from(card.length)).sum(),
+            born: cards
+                .iter()
+                .map(|card| f64::from(card.born))
                 .fold(f64::INFINITY, f64::min),
-            organs: members.len(),
+            cards,
         });
     }
-    out.sort_by(|a, b| b.organs.cmp(&a.organs));
-    (out, rest)
+    out
 }
 
-impl Comb {
+/// A part of the plant still to draw.
+#[derive(Debug, Clone)]
+enum Kind {
+    /// Sibling axes not drawn, each hanging from its point. On a woody
+    /// plant, the masses their organs make. On a herb, largest first,
+    /// none of them yet but the first so many that show well as a mass
+    /// ([`Solid::preview`]): a fern's flat fronds, a raceme; a low-poly
+    /// herb has fewer stems, not stems merged into a lump.
+    Bundle(Vec<usize>, Vec<Vec3>, Option<usize>),
+    /// Organs one drawn axis bears itself, as masses hanging from where
+    /// they stand on its drawn path; or, leaves large beside the part
+    /// ([`LEAFY`]), this many of them in their own outlines, evenly over
+    /// it, and its flowers as a mass.
+    Bin(usize, Vec<usize>, usize),
+    /// One organ in its own outline.
+    Single(usize),
+}
+
+/// A part drawn: its meshes, where they hang, and how large it shows.
+struct Group {
+    kind: Kind,
+    wood: Mesh,
+    organs: Mesh,
+    pieces: Vec<Piece>,
+    extent: f64,
+    /// Its split, once made: `None` inside for a part that cannot split.
+    split: Option<Option<Split>>,
+    /// Drawn as one strip along its stalk ([`Solid::blade`]): a frond.
+    strip: bool,
+}
+
+/// A part's split: the tube of an axis it draws, and the parts taking its
+/// place.
+struct Split {
+    tube: Option<(usize, Mesh)>,
+    parts: Vec<Group>,
+}
+
+impl Split {
     fn triangles(&self) -> usize {
-        2 * self.points.len().saturating_sub(1) - 1
+        self.tube
+            .as_ref()
+            .map_or(0, |(_, mesh)| mesh.triangle_count())
+            + self.parts.iter().map(Group::triangles).sum::<usize>()
+    }
+}
+
+impl Group {
+    fn triangles(&self) -> usize {
+        self.wood.triangle_count() + self.organs.triangle_count()
     }
 
-    fn draw(&self, out: &mut Mesh) {
-        let base = u32::try_from(out.positions.len()).unwrap_or(0);
-        let n = self.points.len();
-        for (k, &(at, half)) in self.points.iter().enumerate() {
-            let along = if k + 1 < n {
-                self.points[k + 1].0 - at
-            } else {
-                at - self.points[k - 1].0
+    fn add(&mut self, drawn: Drawn) {
+        append(&mut self.wood, &drawn.wood, false);
+        append(&mut self.organs, &drawn.organs, false);
+        self.pieces.push(drawn.piece);
+    }
+
+    fn take(&mut self, other: Group) {
+        append(&mut self.wood, &other.wood, false);
+        append(&mut self.organs, &other.organs, false);
+        self.pieces.extend(other.pieces);
+    }
+}
+
+/// One hull drawn.
+struct Drawn {
+    wood: Mesh,
+    organs: Mesh,
+    piece: Piece,
+}
+
+/// A build under way.
+struct Solid<'a> {
+    skeleton: &'a Skeleton,
+    items: &'a [Item],
+    outlines: &'a Outlines,
+    bodies: &'a [BodyLook],
+    tier: &'a SolidTier,
+    bark: [f32; 4],
+    directions: Vec<Vec3>,
+    /// Each drawn axis's path.
+    drawn: Vec<Option<Vec<(Vec3, f64)>>>,
+    /// The organs each axis bears itself.
+    own: Vec<Vec<usize>>,
+    tolerance: f64,
+    /// A herb, whose stems are drawn one by one ([`Kind::Bundle`]).
+    herb: bool,
+    height: f64,
+}
+
+impl Solid<'_> {
+    /// Split the largest part whose split fits while any does.
+    fn refine(&mut self, budget: usize) -> SolidPlant {
+        let roots = self.skeleton.roots.clone();
+        let grounds: Vec<Vec3> = roots
+            .iter()
+            .map(|&a| self.skeleton.axes[a].points[0].0)
+            .collect();
+        let first = self.bundle(roots, grounds.clone());
+        let mut groups: Vec<Group> = first.into_iter().map(|kind| self.group(kind)).collect();
+        let mut tubes: Vec<(usize, Mesh)> = Vec::new();
+        let mut total: usize = groups.iter().map(Group::triangles).sum();
+        for _ in 0..MOST_SPLITS {
+            for at in 0..groups.len() {
+                if groups[at].split.is_none() {
+                    let kind = groups[at].kind.clone();
+                    groups[at].split = Some(self.split(&kind));
+                }
+            }
+            let best = groups
+                .iter()
+                .enumerate()
+                .filter(|(_, group)| {
+                    matches!(&group.split, Some(Some(split)) if total + split.triangles() <= budget + group.triangles())
+                })
+                .max_by(|a, b| a.1.extent.total_cmp(&b.1.extent))
+                .map(|(at, _)| at);
+            let Some(at) = best else {
+                break;
             };
-            let normal = along.cross(self.side).normalize_or(Vec3::Y);
-            for sign in [-1.0, 1.0] {
+            let group = groups.swap_remove(at);
+            let now = group.triangles();
+            let Some(Some(split)) = group.split else {
+                continue;
+            };
+            total = total + split.triangles() - now;
+            tubes.extend(split.tube);
+            groups.extend(split.parts);
+        }
+        let mut plant = SolidPlant {
+            grounds,
+            ..SolidPlant::default()
+        };
+        for (axis, tube) in &tubes {
+            append(&mut plant.wood, tube, false);
+            if let Some(path) = &self.drawn[*axis] {
+                plant.paths.push(path.clone());
+            }
+        }
+        plant.stats.wood_triangles = plant.wood.triangle_count();
+        let mut singles = 0;
+        for group in groups {
+            for piece in &group.pieces {
+                if piece.single {
+                    singles += 1;
+                } else {
+                    plant.stats.masses += 1;
+                }
+            }
+            plant.stats.mass_triangles += group.wood.triangle_count();
+            append(&mut plant.wood, &group.wood, false);
+            append(&mut plant.organs, &group.organs, false);
+            plant.pieces.extend(group.pieces);
+        }
+        plant.stats.organ_triangles = plant.organs.triangle_count();
+        plant.stats.budget = budget;
+        plant.stats.axes = (tubes.len(), self.skeleton.axes.len());
+        plant.stats.singles = (singles, self.items.len());
+        plant
+    }
+
+    /// A part's split, or `None` for one that cannot split.
+    fn split(&mut self, kind: &Kind) -> Option<Split> {
+        match kind {
+            Kind::Single(_) => None,
+            Kind::Bin(axis, members, sample) => {
+                if self.leafy(members) {
+                    let (flowers, leaves): (Vec<usize>, Vec<usize>) = members
+                        .iter()
+                        .copied()
+                        .partition(|&i| self.items[i].signature);
+                    if *sample < leaves.len() {
+                        let more = (sample + sample.div_ceil(4)).max(SAMPLE);
+                        return Some(Split {
+                            tube: None,
+                            parts: vec![self.group(Kind::Bin(*axis, members.clone(), more))],
+                        });
+                    }
+                    // Every leaf drawn: they stay, and the flowers split.
+                    if flowers.len() < 2 {
+                        return None;
+                    }
+                    let mut parts: Vec<Group> = leaves
+                        .iter()
+                        .map(|&i| self.group(Kind::Single(i)))
+                        .collect();
+                    parts.push(self.group(Kind::Bin(*axis, flowers, 0)));
+                    return Some(Split { tube: None, parts });
+                }
+                if members.len() <= 2 {
+                    return Some(Split {
+                        tube: None,
+                        parts: members
+                            .iter()
+                            .map(|&i| self.group(Kind::Single(i)))
+                            .collect(),
+                    });
+                }
+                // Halves along the long axis of where the organs stand: a
+                // stem's leaves below and above, a tuft's to either side.
+                let sorted = self.along(members);
+                let (low, high) = sorted.split_at(sorted.len() / 2);
+                Some(Split {
+                    tube: None,
+                    parts: vec![
+                        self.group(Kind::Bin(*axis, low.to_vec(), SAMPLE)),
+                        self.group(Kind::Bin(*axis, high.to_vec(), SAMPLE)),
+                    ],
+                })
+            }
+            Kind::Bundle(axes, attach, Some(shown)) => {
+                // A herb: the next stem shown as its mass if it shows well
+                // so, else the first drawn whole.
+                if *shown < axes.len() && self.preview(axes[*shown], attach[*shown]).is_some() {
+                    return Some(Split {
+                        tube: None,
+                        parts: vec![self.group(Kind::Bundle(
+                            axes.clone(),
+                            attach.clone(),
+                            Some(shown + 1),
+                        ))],
+                    });
+                }
+                // A stem shown flat (a fern's frond) stays so: its
+                // rachis and pinnae would cost many times its one plane.
+                let j = (0..axes.len()).find(|&j| {
+                    j >= *shown
+                        || self
+                            .preview(axes[j], attach[j])
+                            .is_none_or(|part| !part.strip)
+                })?;
+                let mut split = self.open(axes[j], attach[j]);
+                if axes.len() > 1 {
+                    let mut rest = axes.clone();
+                    let mut points = attach.clone();
+                    rest.remove(j);
+                    points.remove(j);
+                    let shown = if j < *shown { shown - 1 } else { *shown };
+                    split
+                        .parts
+                        .push(self.group(Kind::Bundle(rest, points, Some(shown))));
+                }
+                Some(split)
+            }
+            Kind::Bundle(axes, attach, None) => {
+                if axes.len() == 1 {
+                    return Some(self.open(axes[0], attach[0]));
+                }
+                // Halves by where their wood stands, across the widest
+                // spread of their middles.
+                let middles: Vec<Vec3> = axes.iter().map(|&a| self.middle(a)).collect();
+                let along = principal_axes(&middles)[0];
+                let mut order: Vec<usize> = (0..axes.len()).collect();
+                order.sort_by(|&i, &j| middles[i].dot(along).total_cmp(&middles[j].dot(along)));
+                let half = order.len() / 2;
+                let pick = |part: &[usize]| {
+                    Kind::Bundle(
+                        part.iter().map(|&i| axes[i]).collect(),
+                        part.iter().map(|&i| attach[i]).collect(),
+                        None,
+                    )
+                };
+                Some(Split {
+                    tube: None,
+                    parts: vec![
+                        self.group(pick(&order[..half])),
+                        self.group(pick(&order[half..])),
+                    ],
+                })
+            }
+        }
+    }
+
+    /// Axis `a` drawn from `start`: its tube, a part for its branches and
+    /// one for the organs it bears itself.
+    fn open(&mut self, a: usize, start: Vec3) -> Split {
+        let axis = &self.skeleton.axes[a];
+        let mut path = simplify(&axis.points, self.tolerance, self.tier.rings.max(2));
+        if let Some(first) = path.first_mut() {
+            first.0 = start;
+        }
+        let mut tube = Mesh::default();
+        self.tube(axis, &path, &mut tube);
+        self.drawn[a] = Some(path.clone());
+        let mut parts = Vec::new();
+        let children: Vec<usize> = self.skeleton.children[a].clone();
+        if !children.is_empty() {
+            let points: Vec<Vec3> = children
+                .iter()
+                .map(|&c| nearest_on(&path, self.skeleton.axes[c].points[0].0))
+                .collect();
+            for bundle in self.bundle(children, points) {
+                parts.push(self.group(bundle));
+            }
+        }
+        let own = self.own[a].clone();
+        if !own.is_empty() {
+            parts.push(self.group(Kind::Bin(a, own, SAMPLE)));
+        }
+        Split {
+            tube: Some((a, tube)),
+            parts,
+        }
+    }
+
+    /// Sibling axes as parts: a woody plant's as masses; a herb's one by
+    /// one, the largest first, but those bearing only flowers (a raceme,
+    /// a head, a spike's flowers each on its stalk) as masses from the
+    /// start.
+    fn bundle(&self, axes: Vec<usize>, attach: Vec<Vec3>) -> Vec<Kind> {
+        if !self.herb {
+            return vec![Kind::Bundle(axes, attach, None)];
+        }
+        let flowery = |a: usize| {
+            let subtree = self.skeleton.subtree(&[a]);
+            let mut any = false;
+            for &b in &subtree {
+                // A cactus's stem bears only flowers and spines, but is
+                // the plant's body.
+                if self.skeleton.axes[b].body != 0 {
+                    return false;
+                }
+                for &i in &self.own[b] {
+                    if !self.items[i].signature {
+                        return false;
+                    }
+                    any = true;
+                }
+            }
+            any
+        };
+        let mut order: Vec<(bool, f64, usize)> = axes
+            .iter()
+            .enumerate()
+            .map(|(i, &a)| (flowery(a), self.reach(a), i))
+            .collect();
+        order.sort_by(|x, y| y.0.cmp(&x.0).then(y.1.total_cmp(&x.1)));
+        let flowery = order.iter().take_while(|x| x.0).count();
+        let pick = |part: &[(bool, f64, usize)]| -> (Vec<usize>, Vec<Vec3>) {
+            (
+                part.iter().map(|&(_, _, i)| axes[i]).collect(),
+                part.iter().map(|&(_, _, i)| attach[i]).collect(),
+            )
+        };
+        let mut kinds = Vec::new();
+        if flowery > 0 {
+            let (axes, attach) = pick(&order[..flowery]);
+            kinds.push(Kind::Bundle(axes, attach, None));
+        }
+        if flowery < order.len() {
+            let (axes, attach) = pick(&order[flowery..]);
+            kinds.push(Kind::Bundle(axes, attach, Some(0)));
+        }
+        kinds
+    }
+
+    /// The size of `axis`'s subtree: the box round its wood and organs.
+    fn reach(&self, axis: usize) -> f64 {
+        let subtree = self.skeleton.subtree(&[axis]);
+        let mut points: Vec<Vec3> = Vec::new();
+        for &a in &subtree {
+            points.extend(self.skeleton.axes[a].points.iter().map(|p| p.0));
+            for &i in &self.own[a] {
+                points.extend_from_slice(&self.items[i].points);
+            }
+        }
+        extent(&points)
+    }
+
+    /// A herb's stem shown as the mass it makes, if that shows it well: a
+    /// stem bearing only flowers (a raceme, a head), or one drawn as a
+    /// strip (a fern's frond).
+    fn preview(&self, axis: usize, attach: Vec3) -> Option<Group> {
+        let group = self.group(Kind::Bundle(vec![axis], vec![attach], None));
+        let subtree = self.skeleton.subtree(&[axis]);
+        let flowery = subtree.iter().all(|&a| {
+            self.skeleton.axes[a].body == 0 && self.own[a].iter().all(|&i| self.items[i].signature)
+        });
+        (group.triangles() > 0 && (flowery || group.strip)).then_some(group)
+    }
+
+    /// Whether `members`' leaves are large beside the part they make, so
+    /// a few of them drawn as they are show it better than a mass.
+    fn leafy(&self, members: &[usize]) -> bool {
+        let leaves: Vec<usize> = members
+            .iter()
+            .copied()
+            .filter(|&i| !self.items[i].signature)
+            .collect();
+        if leaves.is_empty() {
+            return false;
+        }
+        let points: Vec<Vec3> = leaves
+            .iter()
+            .flat_map(|&i| self.items[i].points.iter().copied())
+            .collect();
+        let mean = leaves.iter().map(|&i| self.items[i].length).sum::<f64>() / leaves.len() as f64;
+        mean >= LEAFY * extent(&points)
+    }
+
+    /// `members` in order along the long axis of where they stand.
+    fn along(&self, members: &[usize]) -> Vec<usize> {
+        let middle = |i: usize| {
+            let points = &self.items[i].points;
+            points.iter().fold(Vec3::ZERO, |a, &b| a + b) / points.len() as f64
+        };
+        let middles: Vec<Vec3> = members.iter().map(|&i| middle(i)).collect();
+        let along = principal_axes(&middles)[0];
+        let mut order: Vec<usize> = members.to_vec();
+        order.sort_by(|&a, &b| middle(a).dot(along).total_cmp(&middle(b).dot(along)));
+        order
+    }
+
+    /// The middle of the wood of `axis`'s subtree.
+    fn middle(&self, axis: usize) -> Vec3 {
+        let subtree = self.skeleton.subtree(&[axis]);
+        let mut sum = Vec3::ZERO;
+        let mut count = 0.0;
+        for &a in &subtree {
+            for point in &self.skeleton.axes[a].points {
+                sum += point.0;
+                count += 1.0;
+            }
+        }
+        sum / f64::max(count, 1.0)
+    }
+
+    /// Draw a part.
+    fn group(&self, kind: Kind) -> Group {
+        let mut group = Group {
+            kind: kind.clone(),
+            wood: Mesh::default(),
+            organs: Mesh::default(),
+            pieces: Vec::new(),
+            extent: 0.0,
+            split: None,
+            strip: false,
+        };
+        match &kind {
+            Kind::Single(i) if self.items[*i].signature && !self.items[*i].airy => {
+                if let Some(mut drawn) = self.mass(&[*i], &[self.items[*i].points[0]]) {
+                    drawn.piece.single = true;
+                    group.add(drawn);
+                }
+            }
+            Kind::Single(i) => self.leaf(*i, 1.0, &mut group),
+            Kind::Bin(axis, members, sample) => {
+                let path = self.drawn[*axis].clone().unwrap_or_default();
+                // Each class hangs from the stretch of the path its organs
+                // stand along.
+                let attach_of = |class: &[usize]| -> Vec<Vec3> {
+                    let points = &self.skeleton.axes[*axis].points;
+                    let first = class.iter().map(|&i| self.items[i].k).min().unwrap_or(0);
+                    let last = class.iter().map(|&i| self.items[i].k).max().unwrap_or(0);
+                    vec![
+                        nearest_on(&path, points[first.min(points.len() - 1)].0),
+                        nearest_on(&path, points[(last + 1).min(points.len() - 1)].0),
+                    ]
+                };
+                let (flowers, leaves): (Vec<usize>, Vec<usize>) = members
+                    .iter()
+                    .copied()
+                    .partition(|&i| self.items[i].signature);
+                if self.leafy(members) {
+                    // A few of its leaves, evenly along it, as they are.
+                    let leaves = self.along(&leaves);
+                    let take = (*sample).clamp(1, leaves.len());
+                    // Narrow ones (blades) widen for those left out,
+                    // from where they stand, so a tuft stays a tuft.
+                    let share = (take as f64 / leaves.len() as f64)
+                        .sqrt()
+                        .max(1.0 / WIDEST_BLADE);
+                    for j in 0..take {
+                        let i = leaves[(j * leaves.len() + leaves.len() / 2) / take];
+                        self.leaf(i, share, &mut group);
+                    }
+                } else if let Some(drawn) = self.mass(&leaves, &attach_of(&leaves)) {
+                    group.add(drawn);
+                }
+                if let Some(drawn) = self.mass(&flowers, &attach_of(&flowers)) {
+                    group.add(drawn);
+                }
+            }
+            Kind::Bundle(axes, attach, Some(shown)) => {
+                for (&a, &p) in axes.iter().zip(attach).take(*shown) {
+                    if let Some(part) = self.preview(a, p) {
+                        group.take(part);
+                    }
+                }
+                // Stems not drawn stand for less the more of their
+                // siblings are, as sampled leaves do.
+                let sibling = axes.first().map_or(0, |&a| a);
+                let parent = self
+                    .skeleton
+                    .children
+                    .iter()
+                    .position(|c| c.contains(&sibling));
+                let siblings = parent.map_or(&self.skeleton.roots, |p| &self.skeleton.children[p]);
+                let drawn = siblings
+                    .iter()
+                    .filter(|&&a| self.drawn[a].is_some())
+                    .count();
+                group.extent = axes.first().map_or(0.0, |&a| self.reach(a)) * SAMPLE as f64
+                    / (SAMPLE + drawn) as f64;
+                return group;
+            }
+            Kind::Bundle(axes, attach, None) => {
+                let subtree = self.skeleton.subtree(axes);
+                let members: Vec<usize> = subtree
+                    .iter()
+                    .flat_map(|&a| self.own[a].iter().copied())
+                    .collect();
+                let (flowers, leaves): (Vec<usize>, Vec<usize>) = members
+                    .iter()
+                    .copied()
+                    .partition(|&i| self.items[i].signature);
+                let wood = self.wood_points(&subtree);
+                // Fleshy bodies are the plant's outline, in their colour,
+                // and organs hang from them; else leaves make the mass and
+                // flowers and fruit hang from it; bare wood is a mass in
+                // bark.
+                let fleshy = subtree
+                    .iter()
+                    .map(|&a| self.skeleton.axes[a].body)
+                    .find(|&b| b != 0);
+                let (base, hanging): (Option<Drawn>, Vec<&Vec<usize>>) = if let Some(body) = fleshy
+                {
+                    let mut points = wood.clone();
+                    points.extend_from_slice(attach);
+                    (
+                        self.hull(&points, attach, self.body_colour(body), 0.0),
+                        vec![&leaves, &flowers],
+                    )
+                } else if members.is_empty() {
+                    // Bare wood waits to be drawn as its branches: a
+                    // bark-coloured lump inside a crown reads as nothing.
+                    group.extent = extent(&wood);
+                    return group;
+                } else if leaves.is_empty() {
+                    (self.mass(&flowers, attach), Vec::new())
+                } else {
+                    // Only many small organs make a strip (a frond's
+                    // pinnae); a culm's few long blades are themselves.
+                    let mean = leaves.iter().map(|&i| self.items[i].length).sum::<f64>()
+                        / leaves.len() as f64;
+                    let stalk: f64 = self.skeleton.axes[axes[0]]
+                        .points
+                        .windows(2)
+                        .map(|pair| (pair[1].0 - pair[0].0).length())
+                        .sum();
+                    let blade = (axes.len() == 1
+                        && leaves.iter().filter(|&&i| self.items[i].grassy).count() * 2
+                            < leaves.len()
+                        && leaves.len() >= BLADE_MANY
+                        && mean < BLADE_SMALL * stalk)
+                        .then(|| {
+                            let mut path = simplify(
+                                &self.skeleton.axes[axes[0]].points,
+                                self.tolerance,
+                                self.tier.rings.max(2),
+                            );
+                            path[0].0 = attach[0];
+                            let points: Vec<Vec3> = leaves
+                                .iter()
+                                .flat_map(|&i| self.items[i].points.iter().copied())
+                                .collect();
+                            self.blade(
+                                &path,
+                                &points,
+                                attach,
+                                self.colour_of(&leaves),
+                                self.born_of(&leaves),
+                            )
+                        })
+                        .flatten();
+                    group.strip = blade.is_some();
+                    (blade.or_else(|| self.mass(&leaves, attach)), vec![&flowers])
+                };
+                let Some(base) = base else {
+                    return group;
+                };
+                let anchors = base.piece.points.clone();
+                let whole = extent(&base.piece.points);
+                group.add(base);
+                for class in hanging {
+                    if class.is_empty() {
+                        continue;
+                    }
+                    let points: Vec<Vec3> = class
+                        .iter()
+                        .flat_map(|&i| self.items[i].points.iter().copied())
+                        .collect();
+                    // Flowers or fruit strewn through a crown (a maple's
+                    // samaras) wait for a finer split; a spike or a head
+                    // shows.
+                    if fleshy.is_none() && extent(&points) > SCATTERED * whole {
+                        continue;
+                    }
+                    let centre =
+                        points.iter().fold(Vec3::ZERO, |a, &b| a + b) / points.len() as f64;
+                    let touch = anchors
+                        .iter()
+                        .copied()
+                        .min_by(|a, b| (*a - centre).length().total_cmp(&(*b - centre).length()))
+                        .unwrap_or(attach[0]);
+                    if let Some(drawn) = self.mass(class, &[touch]) {
+                        group.add(drawn);
+                    }
+                }
+            }
+        }
+        let all: Vec<Vec3> = group
+            .pieces
+            .iter()
+            .flat_map(|piece| piece.points.iter().copied())
+            .collect();
+        group.extent = extent(&all);
+        // Sampled leaves stand for the rest by how far apart they are.
+        if let Kind::Bin(_, members, sample) = &kind {
+            if self.leafy(members) {
+                group.extent *= SAMPLE as f64 / (*sample).max(1) as f64;
+            }
+        }
+        group
+    }
+
+    /// Organ `i` in its own outline, a narrow one widened for `share`
+    /// of its kind drawn.
+    fn leaf(&self, i: usize, share: f64, group: &mut Group) {
+        let item = &self.items[i];
+        let mut organs = Mesh::default();
+        if item.cards.len() == 1 {
+            self.outlines
+                .polygon(&item.cards[0], share, 1.0, &mut organs);
+        } else {
+            self.outlines
+                .ribbon(&item.cards, share, self.tier.stations + 2, &mut organs);
+        }
+        // Set on the stem as drawn: the drawn path strays a little from
+        // the real one, and the organ moves with it.
+        let base = item.points[0];
+        let shift = self.drawn[item.axis]
+            .as_ref()
+            .map_or(Vec3::ZERO, |path| nearest_on(path, base) - base);
+        #[allow(clippy::cast_possible_truncation)]
+        for p in &mut organs.positions {
+            *p = [
+                p[0] + shift.x as f32,
+                p[1] + shift.y as f32,
+                p[2] + shift.z as f32,
+            ];
+        }
+        group.pieces.push(Piece {
+            attach: vec![base + shift],
+            points: organs.positions.iter().map(|p| v32(*p)).collect(),
+            single: true,
+        });
+        append(&mut group.organs, &organs, false);
+    }
+
+    /// Organs spread flat to either side of `path` (a fern's pinnae on
+    /// its rachis, a cedar's spray) as one strip along it, as wide each
+    /// side at each point as they reach there and turned the way they
+    /// spread: the frond's own outline and arch. `None` when they stand
+    /// round it rather than flat.
+    fn blade(
+        &self,
+        path: &[(Vec3, f64)],
+        points: &[Vec3],
+        attach: &[Vec3],
+        colour: [f32; 4],
+        born: f64,
+    ) -> Option<Drawn> {
+        let n = path.len();
+        if n < 2 || points.len() < 3 {
+            return None;
+        }
+        // Each point's station (the nearer end of its nearest stretch)
+        // and its offset from the path, across it.
+        let mut at: Vec<Vec<Vec3>> = vec![Vec::new(); n];
+        for &p in points {
+            let mut best = (f64::INFINITY, 0, Vec3::ZERO);
+            for k in 0..n - 1 {
+                let (a, b) = (path[k].0, path[k + 1].0);
+                let ab = b - a;
+                let t = if ab.dot(ab) > 0.0 {
+                    ((p - a).dot(ab) / ab.dot(ab)).clamp(0.0, 1.0)
+                } else {
+                    0.0
+                };
+                let q = a + ab * t;
+                let d = (q - p).length();
+                if d < best.0 {
+                    let tangent = ab.normalize_or(Vec3::Y);
+                    let offset = p - q;
+                    best = (
+                        d,
+                        if t < 0.5 { k } else { k + 1 },
+                        offset - tangent * offset.dot(tangent),
+                    );
+                }
+            }
+            at[best.1].push(best.2);
+        }
+        let all: Vec<Vec3> = at.iter().flatten().copied().collect();
+        // Offsets lie across the path: the third axis is along it.
+        let [wide, thin, _] = principal_axes(&all);
+        let reach = |d: Vec3, set: &[Vec3]| set.iter().map(|o| o.dot(d).abs()).fold(0.0, f64::max);
+        // A strip runs along a stalk longer than its organs reach across
+        // it (a frond, a spray), not round a rosette's point.
+        let length: f64 = path
+            .windows(2)
+            .map(|pair| (pair[1].0 - pair[0].0).length())
+            .sum();
+        if reach(thin, &all) > BLADE_THIN * reach(wide, &all) || length < reach(wide, &all) {
+            return None;
+        }
+        let mut side = wide;
+        let mut ring_left = Vec::with_capacity(n);
+        let mut ring_right = Vec::with_capacity(n);
+        for k in 0..n {
+            let tangent =
+                (path[(k + 1).min(n - 1)].0 - path[k.saturating_sub(1)].0).normalize_or(Vec3::Y);
+            if at[k].len() >= 3 {
+                let local = principal_axes(&at[k])[0];
+                side = if local.dot(side) < 0.0 { -local } else { local };
+            }
+            side = (side - tangent * side.dot(tangent))
+                .normalize_or_else(|| crate::math::any_perpendicular(tangent));
+            let (mut left, mut right) = (0.0_f64, 0.0_f64);
+            for o in &at[k] {
+                let d = o.dot(side);
+                if d > 0.0 {
+                    right = right.max(d)
+                } else {
+                    left = left.max(-d)
+                }
+            }
+            ring_left.push(path[k].0 - side * left);
+            ring_right.push(path[k].0 + side * right);
+        }
+        let mut organs = Mesh::default();
+        let vertex = |position: Vec3, normal: Vec3| Vertex {
+            position,
+            normal,
+            uv: [0.0, 0.0],
+            color: colour,
+            born,
+            shed: None,
+            level: 3,
+            segment: mesh::NO_SEGMENT,
+        };
+        for k in 0..n - 1 {
+            for [a, b, c] in [
+                [ring_left[k], ring_right[k], ring_right[k + 1]],
+                [ring_left[k], ring_right[k + 1], ring_left[k + 1]],
+            ] {
+                let cross = (b - a).cross(c - a);
+                if cross.length() < 1.0e-9 {
+                    continue;
+                }
+                let normal = cross.normalize_or(Vec3::Y);
+                let first = organs.push(vertex(a, normal));
+                organs.push(vertex(b, normal));
+                organs.push(vertex(c, normal));
+                organs
+                    .indices
+                    .extend_from_slice(&[first, first + 1, first + 2]);
+            }
+        }
+        if organs.triangle_count() == 0 {
+            return None;
+        }
+        let drawn = organs.positions.iter().map(|p| v32(*p)).collect();
+        Some(Drawn {
+            wood: Mesh::default(),
+            organs,
+            piece: Piece {
+                attach: attach.to_vec(),
+                points: drawn,
+                single: false,
+            },
+        })
+    }
+
+    /// Points round the wood of `axes`: each path point and four points
+    /// a radius out across it, a body's flattened as its cross-section.
+    fn wood_points(&self, axes: &[usize]) -> Vec<Vec3> {
+        let mut wood = Vec::new();
+        for &a in axes {
+            let axis = &self.skeleton.axes[a];
+            let flatten = self.flatten(axis);
+            for (k, &(place, radius)) in axis.points.iter().enumerate() {
+                let next = axis
+                    .points
+                    .get(k + 1)
+                    .map_or(place - axis.points[k.saturating_sub(1)].0, |n| n.0 - place);
+                let tangent = next.normalize_or(Vec3::Y);
+                let side = (axis.left - tangent * axis.left.dot(tangent))
+                    .normalize_or_else(|| crate::math::any_perpendicular(tangent));
+                let other = tangent.cross(side);
+                for (s, o) in [(1.0, 0.0), (-1.0, 0.0), (0.0, 1.0), (0.0, -1.0)] {
+                    wood.push(place + side * (radius * s) + other * (radius * flatten * o));
+                }
+            }
+        }
+        wood
+    }
+
+    /// The points a mass wraps for organ `i`: its outline's, and a
+    /// flower or fruit's widest span turned a quarter about its length
+    /// too, so a raceme or a spike is a spindle, not a sliver edge on.
+    fn points_of(&self, i: usize) -> Vec<Vec3> {
+        let item = &self.items[i];
+        let mut points = item.points.clone();
+        if item.signature {
+            for card in item.points.chunks_exact(4) {
+                let length = (card[1] - card[0]).normalize_or(Vec3::Y);
+                let middle = (card[2] + card[3]) * 0.5;
+                let turned = length.cross((card[3] - card[2]) * 0.5);
+                points.push(middle + turned);
+                points.push(middle - turned);
+            }
+        }
+        points
+    }
+
+    /// The mass of organs `class`, wrapping `attach`.
+    fn mass(&self, class: &[usize], attach: &[Vec3]) -> Option<Drawn> {
+        if class.is_empty() {
+            return None;
+        }
+        if class
+            .iter()
+            .all(|&i| self.items[i].airy && self.items[i].signature)
+        {
+            // Airy organs stay their spokes: wrapped they would be solid
+            // rock where the plant has a haze.
+            let mut organs = Mesh::default();
+            for &i in class {
+                for card in &self.items[i].cards {
+                    self.outlines.polygon(card, 1.0, 1.0, &mut organs);
+                }
+            }
+            let points = organs.positions.iter().map(|p| v32(*p)).collect();
+            return (organs.triangle_count() > 0).then(|| Drawn {
+                wood: Mesh::default(),
+                organs,
+                piece: Piece {
+                    // Each spray hangs from its own foot on the stem.
+                    attach: class.iter().map(|&i| self.items[i].points[0]).collect(),
+                    points,
+                    single: false,
+                },
+            });
+        }
+        let mut points: Vec<Vec3> = class.iter().flat_map(|&i| self.points_of(i)).collect();
+        points.extend_from_slice(attach);
+        self.hull(&points, attach, self.colour_of(class), self.born_of(class))
+    }
+
+    /// The tier's directions in the frame of `points`' principal axes, so
+    /// a mass follows its own length, width and thickness: a stem's leaves
+    /// a spindle, a frond a flat diamond.
+    fn directions_of(&self, points: &[Vec3]) -> Vec<Vec3> {
+        let axes = principal_axes(points);
+        self.directions
+            .iter()
+            .map(|d| (axes[0] * d.x + axes[1] * d.y + axes[2] * d.z).normalize_or(Vec3::Y))
+            .collect()
+    }
+
+    fn colour_of(&self, class: &[usize]) -> [f32; 4] {
+        let mut colour = [0.0; 3];
+        let mut total = 0.0;
+        for &i in class {
+            let item = &self.items[i];
+            for c in 0..3 {
+                colour[c] += item.colour[c] * item.area;
+            }
+            total += item.area;
+        }
+        let total = f64::max(total, 1.0e-12);
+        #[allow(clippy::cast_possible_truncation)]
+        let colour = [
+            (colour[0] / total) as f32,
+            (colour[1] / total) as f32,
+            (colour[2] / total) as f32,
+            1.0,
+        ];
+        colour
+    }
+
+    fn born_of(&self, class: &[usize]) -> f64 {
+        let born = class
+            .iter()
+            .map(|&i| self.items[i].born)
+            .fold(f64::INFINITY, f64::min);
+        if born.is_finite() { born } else { 0.0 }
+    }
+
+    /// How much thinner than wide a body's cross-section is: 1 round.
+    fn flatten(&self, axis: &Axis) -> f64 {
+        if axis.body == 0 {
+            1.0
+        } else {
+            self.bodies
+                .get(usize::from(axis.body - 1))
+                .map_or(1.0, |look| look.flatten.clamp(0.05, 1.0))
+        }
+    }
+
+    fn body_colour(&self, body: u8) -> [f32; 4] {
+        self.bodies
+            .get(usize::from(body.saturating_sub(1)))
+            .map_or(self.bark, |look| {
+                let (tint, cover) = look.tint();
+                let mix = |a: f32, b: f32| a + (b - a) * cover as f32;
+                [
+                    mix(look.colour[0], tint[0]),
+                    mix(look.colour[1], tint[1]),
+                    mix(look.colour[2], tint[2]),
+                    1.0,
+                ]
+            })
+    }
+
+    /// The convex hull of `points` along the tier's directions (and
+    /// `attach`, always on it or inside), flat-shaded: closed, or a flat
+    /// polygon drawn two-sided when thin; `None` for a degenerate one.
+    fn hull(&self, points: &[Vec3], attach: &[Vec3], colour: [f32; 4], born: f64) -> Option<Drawn> {
+        let mut candidates: Vec<Vec3> = attach.to_vec();
+        for d in &self.directions_of(points) {
+            let most = points
+                .iter()
+                .copied()
+                .max_by(|a, b| a.dot(*d).total_cmp(&b.dot(*d)));
+            let least = points
+                .iter()
+                .copied()
+                .min_by(|a, b| a.dot(*d).total_cmp(&b.dot(*d)));
+            candidates.extend(most);
+            candidates.extend(least);
+        }
+        let size = extent(&candidates).max(1.0e-6);
+        let mut unique: Vec<Vec3> = Vec::new();
+        for p in candidates {
+            if unique.iter().all(|q| (*q - p).length() > size * 1.0e-3) {
+                unique.push(p);
+            }
+        }
+        let vertex = |position: Vec3, normal: Vec3| Vertex {
+            position,
+            normal,
+            uv: [0.0, 0.0],
+            color: colour,
+            born,
+            shed: None,
+            level: 3,
+            segment: mesh::NO_SEGMENT,
+        };
+        let (mut wood, mut organs) = (Mesh::default(), Mesh::default());
+        match hull3(&unique, size) {
+            Hull::Solid(faces) => {
+                for [a, b, c] in faces {
+                    let (pa, pb, pc) = (unique[a], unique[b], unique[c]);
+                    let cross = (pb - pa).cross(pc - pa);
+                    let normal = cross.normalize_or(Vec3::Y);
+                    let first = wood.push(vertex(pa, normal));
+                    wood.push(vertex(pb, normal));
+                    wood.push(vertex(pc, normal));
+                    wood.indices
+                        .extend_from_slice(&[first, first + 1, first + 2]);
+                }
+            }
+            Hull::Flat(ring, normal) => {
+                let first = u32::try_from(organs.positions.len()).unwrap_or(0);
+                for &p in &ring {
+                    organs.push(vertex(unique[p], normal));
+                }
+                for k in 1..ring.len().saturating_sub(1) {
+                    let k = u32::try_from(k).unwrap_or(0);
+                    organs
+                        .indices
+                        .extend_from_slice(&[first, first + k, first + k + 1]);
+                }
+            }
+            Hull::None => return None,
+        }
+        let mut drawn: Vec<Vec3> = wood.positions.iter().map(|p| v32(*p)).collect();
+        drawn.extend(organs.positions.iter().map(|p| v32(*p)));
+        Some(Drawn {
+            wood,
+            organs,
+            piece: Piece {
+                attach: attach.to_vec(),
+                points: drawn,
+                single: false,
+            },
+        })
+    }
+
+    /// `axis` drawn along `path` as a tube of the tier's sides, or a body
+    /// of its own cross-section and a rounded tip.
+    fn tube(&self, axis: &Axis, path: &[(Vec3, f64)], out: &mut Mesh) {
+        if path.len() < 2 {
+            return;
+        }
+        // A body slim beside the plant (a cholla's joint) takes the
+        // wood's sides: its many joints show the plant better than a few
+        // round ones.
+        let widest = path.iter().map(|p| p.1).fold(0.0, f64::max);
+        let (sides, colour, flatten) = if axis.body == 0 {
+            (self.tier.sides, self.bark, 1.0)
+        } else if widest < SLIM * self.height {
+            (
+                self.tier.sides,
+                self.body_colour(axis.body),
+                self.flatten(axis),
+            )
+        } else {
+            (
+                self.tier.body_sides,
+                self.body_colour(axis.body),
+                self.flatten(axis),
+            )
+        };
+        // A body's dome lies within its length: the last ring stands
+        // where the dome begins and the apex at the very tip.
+        let mut path = path.to_vec();
+        let mut apex_at = None;
+        if axis.body != 0 && path.len() >= 2 {
+            let n = path.len();
+            let (end, radius) = path[n - 1];
+            let before = path[n - 2].0;
+            let dome = self
+                .bodies
+                .get(usize::from(axis.body - 1))
+                .map_or(1.0, |look| look.dome.clamp(0.1, 2.0));
+            let back = (radius * dome).min((end - before).length() * 0.5);
+            path[n - 1].0 = end - (end - before).normalize_or(Vec3::Y) * back;
+            apex_at = Some(end);
+        }
+        let path = &path[..];
+        let first = u32::try_from(out.positions.len()).unwrap_or(0);
+        let level = 0;
+        let mut side = axis.left;
+        let mut tangent = Vec3::Y;
+        for (k, &(place, radius)) in path.iter().enumerate() {
+            let before = if k > 0 {
+                place - path[k - 1].0
+            } else {
+                Vec3::ZERO
+            };
+            let after = if k + 1 < path.len() {
+                path[k + 1].0 - place
+            } else {
+                Vec3::ZERO
+            };
+            tangent = (before.normalize_or(Vec3::ZERO) + after.normalize_or(Vec3::ZERO))
+                .normalize_or(Vec3::Y);
+            side = (side - tangent * side.dot(tangent))
+                .normalize_or_else(|| crate::math::any_perpendicular(tangent));
+            let other = tangent.cross(side);
+            // Out far enough that a triangle's mean width is the stem's.
+            let reach = if sides == 3 {
+                radius * std::f64::consts::PI / (3.0 * (std::f64::consts::PI / 3.0).sin())
+            } else {
+                radius
+            };
+            for s in 0..sides {
+                let angle = std::f64::consts::TAU * f64::from(s) / f64::from(sides);
+                let out_dir = side * angle.cos() + other * (angle.sin() * flatten);
                 out.push(Vertex {
-                    position: at + self.side * (half * sign),
-                    normal,
+                    position: place + out_dir * reach,
+                    normal: (side * angle.cos() + other * angle.sin()).normalize_or(Vec3::Y),
                     uv: [0.0, 0.0],
-                    color: self.colour,
-                    born: self.born,
+                    color: colour,
+                    born: axis.born,
                     shed: None,
-                    level: 3,
+                    level,
                     segment: mesh::NO_SEGMENT,
                 });
             }
         }
-        let n = u32::try_from(n).unwrap_or(0);
-        for k in 0..n.saturating_sub(1) {
-            let (a, b, c, d) = (
-                base + 2 * k,
-                base + 2 * k + 1,
-                base + 2 * k + 2,
-                base + 2 * k + 3,
-            );
-            if k + 2 == n {
-                out.indices.extend_from_slice(&[a, b, c]);
-            } else {
+        let rings = u32::try_from(path.len()).unwrap_or(0);
+        for ring in 0..rings - 1 {
+            for s in 0..sides {
+                let a = first + ring * sides + s;
+                let b = first + ring * sides + (s + 1) % sides;
+                let (c, d) = (a + sides, b + sides);
                 out.indices.extend_from_slice(&[a, b, d, a, d, c]);
             }
         }
+        if axis.body != 0 {
+            // A rounded tip: a point half a radius past the last ring.
+            let (end, radius) = path[path.len() - 1];
+            let apex = out.push(Vertex {
+                position: apex_at.unwrap_or(end + tangent * (radius * 0.5)),
+                normal: tangent,
+                uv: [0.0, 0.0],
+                color: colour,
+                born: axis.born,
+                shed: None,
+                level,
+                segment: mesh::NO_SEGMENT,
+            });
+            let last = first + (rings - 1) * sides;
+            for s in 0..sides {
+                out.indices
+                    .extend_from_slice(&[last + s, last + (s + 1) % sides, apex]);
+            }
+        }
     }
+}
+
+fn v32(p: [f32; 3]) -> Vec3 {
+    Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]))
+}
+
+/// The principal axes of `points`, longest first (Jacobi's rotations of
+/// their covariance); the world's axes for fewer than three.
+fn principal_axes(points: &[Vec3]) -> [Vec3; 3] {
+    if points.len() < 3 {
+        return [Vec3::X, Vec3::Y, Vec3::Z];
+    }
+    let n = points.len() as f64;
+    let mean = points.iter().fold(Vec3::ZERO, |a, &b| a + b) / n;
+    let mut m = [[0.0_f64; 3]; 3];
+    for p in points {
+        let d = [p.x - mean.x, p.y - mean.y, p.z - mean.z];
+        for i in 0..3 {
+            for j in 0..3 {
+                m[i][j] += d[i] * d[j] / n;
+            }
+        }
+    }
+    let mut v = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
+    for _ in 0..24 {
+        for (p, q) in [(0, 1), (0, 2), (1, 2)] {
+            if m[p][q].abs() < 1.0e-18 {
+                continue;
+            }
+            let theta = (m[q][q] - m[p][p]) / (2.0 * m[p][q]);
+            let t = theta.signum() / (theta.abs() + (theta * theta + 1.0).sqrt());
+            let t = if theta == 0.0 { 1.0 } else { t };
+            let c = 1.0 / (t * t + 1.0).sqrt();
+            let s = t * c;
+            for k in 0..3 {
+                let (mkp, mkq) = (m[k][p], m[k][q]);
+                m[k][p] = c * mkp - s * mkq;
+                m[k][q] = s * mkp + c * mkq;
+            }
+            for k in 0..3 {
+                let (mpk, mqk) = (m[p][k], m[q][k]);
+                m[p][k] = c * mpk - s * mqk;
+                m[q][k] = s * mpk + c * mqk;
+            }
+            for row in &mut v {
+                let (vp, vq) = (row[p], row[q]);
+                row[p] = c * vp - s * vq;
+                row[q] = s * vp + c * vq;
+            }
+        }
+    }
+    let mut order = [0, 1, 2];
+    order.sort_by(|&a, &b| m[b][b].total_cmp(&m[a][a]));
+    let column = |k: usize| Vec3::new(v[0][k], v[1][k], v[2][k]).normalize_or(Vec3::Y);
+    let first = column(order[0]);
+    let second = column(order[1]);
+    let third = first.cross(second).normalize_or_else(|| column(order[2]));
+    [first, second, third]
+}
+
+/// The diagonal of the box round `points`.
+fn extent(points: &[Vec3]) -> f64 {
+    if points.is_empty() {
+        return 0.0;
+    }
+    let (low, high) = points
+        .iter()
+        .fold((points[0], points[0]), |(l, h), &p| (l.min(p), h.max(p)));
+    (high - low).length()
+}
+
+/// The point of `path` nearest `p`; `p` itself for no path.
+fn nearest_on(path: &[(Vec3, f64)], p: Vec3) -> Vec3 {
+    let mut best = (f64::INFINITY, p);
+    if path.len() == 1 {
+        return path[0].0;
+    }
+    for pair in path.windows(2) {
+        let (a, b) = (pair[0].0, pair[1].0);
+        let ab = b - a;
+        let t = if ab.dot(ab) > 0.0 {
+            ((p - a).dot(ab) / ab.dot(ab)).clamp(0.0, 1.0)
+        } else {
+            0.0
+        };
+        let q = a + ab * t;
+        let d = (q - p).length();
+        if d < best.0 {
+            best = (d, q);
+        }
+    }
+    best.1
+}
+
+/// A convex hull: its faces outward, or a flat polygon's ring and the
+/// way it faces.
+enum Hull {
+    Solid(Vec<[usize; 3]>),
+    Flat(Vec<usize>, Vec3),
+    None,
+}
+
+/// The convex hull of a few points (incremental, Clarkson and Shor's
+/// order of insertion aside), flat when thinner than [`FLAT`] of `size`.
+fn hull3(points: &[Vec3], size: f64) -> Hull {
+    let n = points.len();
+    if n < 3 {
+        return Hull::None;
+    }
+    // The farthest pair, the farthest from their line, and from their plane.
+    let mut pair = (0, 1, 0.0);
+    for i in 0..n {
+        for j in i + 1..n {
+            let d = (points[i] - points[j]).length();
+            if d > pair.2 {
+                pair = (i, j, d);
+            }
+        }
+    }
+    let (i0, i1) = (pair.0, pair.1);
+    let line = (points[i1] - points[i0]).normalize_or(Vec3::Y);
+    let off_line = |p: Vec3| {
+        let o = p - points[i0];
+        (o - line * o.dot(line)).length()
+    };
+    let i2 = (0..n)
+        .max_by(|&a, &b| off_line(points[a]).total_cmp(&off_line(points[b])))
+        .unwrap_or(0);
+    let normal = (points[i1] - points[i0])
+        .cross(points[i2] - points[i0])
+        .normalize_or(Vec3::ZERO);
+    if normal == Vec3::ZERO || off_line(points[i2]) < size * 1.0e-4 {
+        return Hull::None;
+    }
+    let off_plane = |p: Vec3| (p - points[i0]).dot(normal);
+    let i3 = (0..n)
+        .max_by(|&a, &b| {
+            off_plane(points[a])
+                .abs()
+                .total_cmp(&off_plane(points[b]).abs())
+        })
+        .unwrap_or(0);
+    if off_plane(points[i3]).abs() < FLAT * pair.2 {
+        // Flat: the 2D hull in the plane (Andrew's monotone chain).
+        let u = line;
+        let w = normal.cross(u);
+        let mut order: Vec<usize> = (0..n).collect();
+        let at = |i: usize| {
+            (
+                (points[i] - points[i0]).dot(u),
+                (points[i] - points[i0]).dot(w),
+            )
+        };
+        order.sort_by(|&a, &b| {
+            at(a)
+                .0
+                .total_cmp(&at(b).0)
+                .then(at(a).1.total_cmp(&at(b).1))
+        });
+        let cross = |o: usize, a: usize, b: usize| {
+            let (o, a, b) = (at(o), at(a), at(b));
+            (a.0 - o.0) * (b.1 - o.1) - (a.1 - o.1) * (b.0 - o.0)
+        };
+        let mut ring: Vec<usize> = Vec::new();
+        for pass in 0..2 {
+            let start = ring.len();
+            let sequence: Vec<usize> = if pass == 0 {
+                order.clone()
+            } else {
+                order.iter().rev().copied().collect()
+            };
+            for &p in &sequence {
+                while ring.len() >= start + 2
+                    && cross(ring[ring.len() - 2], ring[ring.len() - 1], p) <= 0.0
+                {
+                    ring.pop();
+                }
+                ring.push(p);
+            }
+            ring.pop();
+        }
+        if ring.len() < 3 {
+            return Hull::None;
+        }
+        return Hull::Flat(ring, normal);
+    }
+    let eps = size * 1.0e-7;
+    let centre = (points[i0] + points[i1] + points[i2] + points[i3]) / 4.0;
+    let orient = |f: [usize; 3]| -> [usize; 3] {
+        let (a, b, c) = (points[f[0]], points[f[1]], points[f[2]]);
+        if (b - a).cross(c - a).dot(centre - a) > 0.0 {
+            [f[0], f[2], f[1]]
+        } else {
+            f
+        }
+    };
+    let mut faces: Vec<[usize; 3]> = vec![
+        orient([i0, i1, i2]),
+        orient([i0, i1, i3]),
+        orient([i1, i2, i3]),
+        orient([i0, i2, i3]),
+    ];
+    for p in 0..n {
+        if [i0, i1, i2, i3].contains(&p) {
+            continue;
+        }
+        let visible: Vec<bool> = faces
+            .iter()
+            .map(|f| {
+                let (a, b, c) = (points[f[0]], points[f[1]], points[f[2]]);
+                let normal = (b - a).cross(c - a).normalize_or(Vec3::ZERO);
+                normal.dot(points[p] - a) > eps
+            })
+            .collect();
+        if !visible.iter().any(|&v| v) {
+            continue;
+        }
+        let mut edges: Vec<(usize, usize)> = Vec::new();
+        for (f, face) in faces.iter().enumerate() {
+            if visible[f] {
+                for e in [(face[0], face[1]), (face[1], face[2]), (face[2], face[0])] {
+                    edges.push(e);
+                }
+            }
+        }
+        let horizon: Vec<(usize, usize)> = edges
+            .iter()
+            .copied()
+            .filter(|&(a, b)| !edges.contains(&(b, a)))
+            .collect();
+        let mut kept: Vec<[usize; 3]> = faces
+            .iter()
+            .zip(&visible)
+            .filter(|(_, v)| !**v)
+            .map(|(f, _)| *f)
+            .collect();
+        for (a, b) in horizon {
+            kept.push([a, b, p]);
+        }
+        faces = kept;
+    }
+    Hull::Solid(faces)
 }
 
 /// At most `most` of `points`, the ends and those that stray furthest
@@ -786,10 +1943,16 @@ fn simplify(points: &[(Vec3, f64)], tolerance: f64, most: usize) -> Vec<(Vec3, f
         let mut worst = (tolerance, None);
         for pair in kept.windows(2) {
             let (a, b) = (points[pair[0]].0, points[pair[1]].0);
+            let (ra, rb) = (points[pair[0]].1, points[pair[1]].1);
+            let span = (b - a).length().max(1.0e-12);
             let along = (b - a).normalize_or(Vec3::Y);
             for index in pair[0] + 1..pair[1] {
                 let offset = points[index].0 - a;
-                let off = (offset - along * offset.dot(along)).length();
+                // Off the line, or off the radius it would give there: a
+                // pad's swell is its shape.
+                let t = (offset.dot(along) / span).clamp(0.0, 1.0);
+                let swell = (points[index].1 - (ra + (rb - ra) * t)).abs();
+                let off = (offset - along * offset.dot(along)).length().max(swell);
                 if off > worst.0 {
                     worst = (off, Some(index));
                 }
@@ -800,57 +1963,6 @@ fn simplify(points: &[(Vec3, f64)], tolerance: f64, most: usize) -> Vec<(Vec3, f
         kept.sort_unstable();
     }
     kept.into_iter().map(|index| points[index]).collect()
-}
-
-/// A three-sided tube along `points` (place and radius), its rings turned
-/// by parallel transport.
-fn tube(points: &[(Vec3, f64)], colour: [f32; 4], level: u8, born: f64, out: &mut Mesh) {
-    const SIDES: u32 = 3;
-    let first = u32::try_from(out.positions.len()).unwrap_or(0);
-    let mut normal = None;
-    for (k, &(place, radius)) in points.iter().enumerate() {
-        let before = if k > 0 {
-            place - points[k - 1].0
-        } else {
-            Vec3::ZERO
-        };
-        let after = if k + 1 < points.len() {
-            points[k + 1].0 - place
-        } else {
-            Vec3::ZERO
-        };
-        let tangent = (before.normalize_or(Vec3::ZERO) + after.normalize_or(Vec3::ZERO))
-            .normalize_or(Vec3::Y);
-        let n: Vec3 = normal.unwrap_or_else(|| crate::math::any_perpendicular(tangent));
-        let n = (n - tangent * n.dot(tangent))
-            .normalize_or_else(|| crate::math::any_perpendicular(tangent));
-        normal = Some(n);
-        let b = tangent.cross(n);
-        // Out far enough that the triangle's mean width is the stem's.
-        let reach = radius * std::f64::consts::PI / (3.0 * (std::f64::consts::PI / 3.0).sin());
-        for side in 0..SIDES {
-            let angle = std::f64::consts::TAU * f64::from(side) / f64::from(SIDES);
-            let out_dir = n * angle.cos() + b * angle.sin();
-            out.push(Vertex {
-                position: place + out_dir * reach,
-                normal: out_dir,
-                uv: [0.0, 0.0],
-                color: colour,
-                born,
-                shed: None,
-                level,
-                segment: mesh::NO_SEGMENT,
-            });
-        }
-    }
-    for ring in 0..u32::try_from(points.len().saturating_sub(1)).unwrap_or(0) {
-        for side in 0..SIDES {
-            let a = first + ring * SIDES + side;
-            let b = first + ring * SIDES + (side + 1) % SIDES;
-            let (c, d) = (a + SIDES, b + SIDES);
-            out.indices.extend_from_slice(&[a, b, d, a, d, c]);
-        }
-    }
 }
 
 /// `cards` as organs, in an order hashed from their places: a card alone,
@@ -871,6 +1983,7 @@ fn chains(cards: Vec<Card>) -> Vec<Vec<Card>> {
             )
             .0
     };
+    let v3 = |x: [f32; 3]| Vec3::new(f64::from(x[0]), f64::from(x[1]), f64::from(x[2]));
     let place = |card: &Card| {
         Vec3::new(
             f64::from(card.base[0]),
@@ -878,38 +1991,71 @@ fn chains(cards: Vec<Card>) -> Vec<Vec<Card>> {
             f64::from(card.base[2]),
         )
     };
-    let mut groups: std::collections::BTreeMap<(u32, u8), Vec<usize>> =
-        std::collections::BTreeMap::new();
+    // Grouped by segment only: a blade's tip is a template of its own.
+    let mut groups: std::collections::BTreeMap<u32, Vec<usize>> = std::collections::BTreeMap::new();
     let mut out: Vec<Vec<Card>> = Vec::new();
     for (index, card) in cards.iter().enumerate() {
         if card.segment == mesh::NO_SEGMENT {
             out.push(vec![*card]);
         } else {
-            groups
-                .entry((card.segment, card.template))
-                .or_default()
-                .push(index);
+            groups.entry(card.segment).or_default().push(index);
         }
     }
     for members in groups.values() {
         // Each card's follower: the one whose base is nearest its tip,
-        // within a fifth of its length.
+        // within a fifth of its length, the closest pairs joined first so
+        // no piece of a blade is left starting a chain of its own.
         let mut follower = vec![None; members.len()];
         let mut followed = vec![false; members.len()];
+        let mut pairs = Vec::new();
+        // Bases by cell, a cell as wide as the farthest reach.
+        let cell = members
+            .iter()
+            .map(|&a| f64::from(cards[a].length) * 0.2)
+            .fold(1.0e-6, f64::max);
+        let key = |p: Vec3| {
+            (
+                (p.x / cell).floor() as i64,
+                (p.y / cell).floor() as i64,
+                (p.z / cell).floor() as i64,
+            )
+        };
+        let mut cells: std::collections::HashMap<(i64, i64, i64), Vec<usize>> =
+            std::collections::HashMap::new();
+        for (j, &b) in members.iter().enumerate() {
+            cells.entry(key(place(&cards[b]))).or_default().push(j);
+        }
         for (i, &a) in members.iter().enumerate() {
             let end = tip(&cards[a]);
             let reach = f64::from(cards[a].length) * 0.2;
-            let mut best = (reach, None);
-            for (j, &b) in members.iter().enumerate() {
-                if i == j || followed[j] {
-                    continue;
-                }
-                let gap = (place(&cards[b]) - end).length();
-                if gap < best.0 {
-                    best = (gap, Some(j));
+            let (x, y, z) = key(end);
+            for dx in -1..=1 {
+                for dy in -1..=1 {
+                    for dz in -1..=1 {
+                        for &j in cells
+                            .get(&(x + dx, y + dy, z + dz))
+                            .map_or(&[][..], Vec::as_slice)
+                        {
+                            let next = &cards[members[j]];
+                            let gap = (place(next) - end).length();
+                            // A blade goes on the way it was heading and
+                            // no wider: not into a neighbour's base.
+                            let ahead = v3(next.heading).dot(v3(cards[a].heading));
+                            if i != j
+                                && gap < reach
+                                && ahead > 0.7
+                                && next.width <= cards[a].width * 1.2
+                            {
+                                pairs.push((gap, i, j));
+                            }
+                        }
+                    }
                 }
             }
-            if let Some(j) = best.1 {
+        }
+        pairs.sort_by(|x, y| x.0.total_cmp(&y.0));
+        for (_, i, j) in pairs {
+            if follower[i].is_none() && !followed[j] {
                 follower[i] = Some(j);
                 followed[j] = true;
             }
@@ -936,107 +2082,6 @@ fn chains(cards: Vec<Card>) -> Vec<Vec<Card>> {
         .collect();
     keyed.sort_by(|a, b| a.0.total_cmp(&b.0));
     keyed.into_iter().map(|(_, chain)| chain).collect()
-}
-
-/// Of the cover a clump's leaves give, the share its one card covers:
-/// leaves in a clump overlap. And the most it grows each way.
-const CLUMP_FILL: f64 = 0.5;
-const CLUMP_GROWTH: f64 = 4.0;
-/// Radians a clump's tip turns from straight up at most.
-const CLUMP_TURN: f64 = 0.7;
-
-/// `cards` merged by place into at most `count` clumps, in an order
-/// hashed from their places: each the largest of its cards, centred on
-/// theirs, heading as they head on the whole, grown to cover
-/// [`CLUMP_FILL`] of their area.
-fn clumps(cards: &[Card], count: usize) -> Vec<Card> {
-    if cards.is_empty() || count == 0 {
-        return Vec::new();
-    }
-    let v = |x: [f32; 3]| Vec3::new(f64::from(x[0]), f64::from(x[1]), f64::from(x[2]));
-    let f = |x: Vec3| [x.x as f32, x.y as f32, x.z as f32];
-    let middle = |card: &Card| v(card.base) + v(card.heading) * (f64::from(card.length) * 0.5);
-    let area = |card: &Card| f64::from(card.length) * f64::from(card.width);
-    let (low, high) = cards.iter().fold(
-        (
-            Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
-            Vec3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
-        ),
-        |(l, h), card| {
-            let m = middle(card);
-            (l.min(m), h.max(m))
-        },
-    );
-    let axis = cards.iter().map(middle).fold(Vec3::ZERO, |a, b| a + b) / cards.len() as f64;
-    let extent = (high - low).max(Vec3::new(1.0e-3, 1.0e-3, 1.0e-3));
-    let mut cell = crate::math::pow(extent.x * extent.y * extent.z / count as f64, 1.0 / 3.0);
-    let mut groups: std::collections::BTreeMap<(i64, i64, i64), Vec<usize>> =
-        std::collections::BTreeMap::new();
-    for _ in 0..40 {
-        groups.clear();
-        for (index, card) in cards.iter().enumerate() {
-            let at = (middle(card) - low) / cell;
-            groups
-                .entry((at.x as i64, at.y as i64, at.z as i64))
-                .or_default()
-                .push(index);
-        }
-        if groups.len() <= count {
-            break;
-        }
-        cell *= 1.15;
-    }
-    let mut out: Vec<Card> = groups
-        .values()
-        .map(|members| {
-            let largest = members
-                .iter()
-                .copied()
-                .max_by(|&a, &b| area(&cards[a]).total_cmp(&area(&cards[b])))
-                .unwrap_or(members[0]);
-            let mut card = cards[largest];
-            let n = members.len() as f64;
-            let centre = members
-                .iter()
-                .map(|&i| middle(&cards[i]))
-                .fold(Vec3::ZERO, |a, b| a + b)
-                / n;
-            // Facing out of the crown and a little up, as a crown's leaf
-            // masses show from any side, its tip up but turned by up to
-            // [`CLUMP_TURN`] either way.
-            let outward = Vec3::new(centre.x - axis.x, 0.0, centre.z - axis.z);
-            let outward = (outward.normalize_or(Vec3::ZERO) + Vec3::Y * 0.5).normalize_or(Vec3::Y);
-            let up = (Vec3::Y - outward * outward.dot(Vec3::Y))
-                .normalize_or_else(|| crate::math::any_perpendicular(outward));
-            let across = outward.cross(up);
-            let turn = (hash(&card) * 2.0 - 1.0) * CLUMP_TURN;
-            let heading = up * turn.cos() + across * turn.sin();
-            let left = outward.cross(heading);
-            let cover: f64 = members.iter().map(|&i| area(&cards[i])).sum();
-            let grow = (cover * CLUMP_FILL / area(&card).max(1.0e-9))
-                .sqrt()
-                .clamp(1.0, CLUMP_GROWTH);
-            card.length = (f64::from(card.length) * grow) as f32;
-            card.width = (f64::from(card.width) * grow) as f32;
-            card.heading = f(heading);
-            card.left = f(left);
-            card.base = f(centre - heading * (f64::from(card.length) * 0.5));
-            let mut colour = [0.0_f64; 3];
-            for &i in members {
-                for c in 0..3 {
-                    colour[c] += f64::from(cards[i].color[c]) / n;
-                }
-            }
-            card.color = [colour[0] as f32, colour[1] as f32, colour[2] as f32];
-            card.born = members
-                .iter()
-                .map(|&i| cards[i].born)
-                .fold(f32::INFINITY, f32::min);
-            card
-        })
-        .collect();
-    out.sort_by(|a, b| hash(a).total_cmp(&hash(b)));
-    out
 }
 
 /// A number from 0 to 1 drawn from a card's place.
@@ -1406,6 +2451,7 @@ fn append(to: &mut Mesh, from: &Mesh, back: bool) {
     to.births.extend_from_slice(&from.births);
     to.sheds.extend_from_slice(&from.sheds);
     to.levels.extend_from_slice(&from.levels);
+    to.segments.extend_from_slice(&from.segments);
     for triangle in from.indices.chunks_exact(3) {
         let [a, b, c] = [
             triangle[0] + offset,

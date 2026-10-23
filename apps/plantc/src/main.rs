@@ -2818,18 +2818,19 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             );
             let stats = &solid.stats;
             rows.push(format!(
-                "{{\"species\":\"{}\",\"tier\":\"{}\",\"budget\":{},\"triangles\":{},\"wood\":{},\"organs\":{},\"level\":{},\"signature\":[{},{}],\"foliage\":[{},{}]}}",
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"budget\":{},\"triangles\":{},\"wood\":{},\"masses\":[{},{}],\"flat\":{},\"axes\":[{},{}],\"singles\":[{},{}]}}",
                 spec.id,
                 tier.name,
                 stats.budget,
                 stats.triangles(),
                 stats.wood_triangles,
+                stats.masses,
+                stats.mass_triangles,
                 stats.organ_triangles,
-                stats.level,
-                stats.signature.0,
-                stats.signature.1,
-                stats.foliage.0,
-                stats.foliage.1
+                stats.axes.0,
+                stats.axes.1,
+                stats.singles.0,
+                stats.singles.1
             ));
             images.push(preview::render(
                 &solid.two_sided(),
