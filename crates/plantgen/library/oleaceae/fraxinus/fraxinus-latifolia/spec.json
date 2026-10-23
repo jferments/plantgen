@@ -12,7 +12,7 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 6,
+      "crown_radius": 8.8,
       "crown_base": 4,
       "crown_rate": 0.04,
       "space_density": 7,
@@ -111,8 +111,8 @@
     {
       "age": 50,
       "environment": "open",
-      "height": 18,
-      "dbh": 0.4,
+      "height": 23,
+      "dbh": 0.65,
       "tolerance": 0.4
     }
   ],
@@ -179,12 +179,12 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a medium-sized tree with a narrow, rounded crown, opposite branching and pinnately compound leaves of five to seven broad leaflets. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a medium-sized tree with a narrow, rounded crown, opposite branching and pinnately compound leaves of five to seven broad leaflets. Not fitted to measurements. crown_radius 8.8 since broadleaf revision 28, when a tree's crown_radius became half its crown's width (room_width 0.9): the USDA Urban Tree Database's Oregon ashes 45 to 70 years old (Longview, WA, 8 trees) have crowns 14.2 m across, and it draws 13.6 m at 50 years (9.5 m at 6)."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 18 m tall and 40 cm across at breast height at 50 years in the open. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "The USDA Urban Tree Database's open-grown Oregon ashes (Longview, WA): 11 trees 43 to 53 years old, median 23 m tall and 65 cm through, read as 50 years. Was 18 m and 40 cm at 50 years, from general knowledge (broadleaf revision 28)."
     },
     "appearance": {
       "evidence": "Authored",

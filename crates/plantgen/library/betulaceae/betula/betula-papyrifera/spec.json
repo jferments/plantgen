@@ -12,7 +12,7 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 4.5,
+      "crown_radius": 7.1,
       "crown_base": 4,
       "crown_rate": 0.05,
       "space_density": 12,
@@ -129,10 +129,10 @@
   },
   "allometry": [
     {
-      "age": 40,
+      "age": 38,
       "environment": "open",
-      "height": 16,
-      "dbh": 0.25,
+      "height": 18.8,
+      "dbh": 0.5,
       "tolerance": 0.35
     }
   ],
@@ -219,12 +219,12 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow, open crown, alternate oval, toothed leaves and hanging catkins. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 25 cm at 40 years again."
+      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow, open crown, alternate oval, toothed leaves and hanging catkins. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 25 cm at 40 years again. crown_radius 7.1 since broadleaf revision 28, when a tree's crown_radius became half its crown's width (room_width 0.9): the USDA Urban Tree Database's open-grown birches 35 to 60 years old (Longview, WA, European white and river birches, 10 trees; it has no paper birches) have crowns 11.2 m across, and it draws 11.1 m at 40 years (7.9 m at 4.5)."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 16 m tall and 25 cm across at breast height at 40 years in the open. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "The USDA Urban Tree Database's open-grown birches, as for its leaf area per crown area, since it has no paper birches: Longview, WA, European white and river birches 35 to 60 years old, 10 trees, median 38 years, 18.8 m tall and 50 cm through. Was 16 m and 25 cm at 40 years, from general knowledge (broadleaf revision 28)."
     },
     "appearance": {
       "evidence": "Authored",
