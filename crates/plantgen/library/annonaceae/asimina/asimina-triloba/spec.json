@@ -53,11 +53,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.4,
-      0.37,
-      0.33
-    ],
     "foliage": [
       0.1,
       0.2,
@@ -87,6 +82,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [102, 94, 84],
     "limb_angle": "spreading",
     "twig_colour": [130, 95, 75],
     "leaf_colour_autumn": [200, 160, 60],
@@ -151,6 +147,7 @@
     "fruitlets": "berries"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.4, 0.37, 0.33], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 354): 'small spreading branches'."},
     "traits.twig_colour": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Asimina triloba (read 2026-10-19): branchlets \"Light brown, tinged with red, marked by shallow grooves\". The colour is our reading of the words; iNaturalist photos read grey-brown, Lab L about 45 (imagekit pawpaw trial, 2026-10-18), where the bark's colour drew the twigs silver-grey (L about 82)."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Asimina triloba (read 2026-10-18): \"In autumn, the leaves are a rusty yellow\". Colour ours."},

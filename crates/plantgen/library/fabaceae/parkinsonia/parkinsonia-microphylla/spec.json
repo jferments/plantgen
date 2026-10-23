@@ -57,7 +57,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.48, 0.56, 0.3],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.05,
@@ -101,6 +100,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [122, 143, 76],
     "wood_density_basic_kg_m3": 620,
     "leaf_division": "compound",
     "division_pattern": "pinnate",
@@ -128,6 +128,7 @@
     "inflorescence_length_m": {"min": 0.02, "max": 0.04}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.48, 0.56, 0.3], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Parkinsonia microphylla (gwddagg_v2.2_species.csv, read): specific gravity 0.62 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.62, branches 0.59. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

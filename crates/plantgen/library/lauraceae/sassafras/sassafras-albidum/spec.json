@@ -53,11 +53,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.38,
-      0.3,
-      0.24
-    ],
     "foliage": [
       0.1,
       0.2,
@@ -93,6 +88,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [97, 76, 61],
     "crown_form": "flat_topped",
     "limb_course": "tortuous",
     "limb_angle": "horizontal",
@@ -157,6 +153,7 @@
     "fruits_per_inflorescence": {"min": 1, "max": 4}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.3, 0.24], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 363): 'short stout more or less contorted branches spreading almost at right angles and forming a narrow usually flat-topped head'."},
     "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 363): 'short stout more or less contorted branches spreading almost at right angles'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 363): 'short stout more or less contorted branches spreading almost at right angles and forming a narrow usually flat-topped head'."},

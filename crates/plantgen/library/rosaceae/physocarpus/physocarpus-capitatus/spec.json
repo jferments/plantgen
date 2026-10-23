@@ -60,7 +60,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.42, 0.28, 0.18],
     "bark_pattern": {
       "kind": "peeling",
       "scale": 0.015,
@@ -143,6 +142,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [107, 71, 46],
     "height_max_m": {
       "min": 1,
       "max": 5
@@ -159,6 +159,7 @@
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.42, 0.28, 0.18], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "gbif-inaturalist",

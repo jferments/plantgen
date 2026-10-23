@@ -42,7 +42,6 @@
     "seeds": [1, 2]
   },
   "appearance": {
-    "bark": [0.6, 0.58, 0.3],
     "foliage": [0.25, 0.42, 0.12],
     "foliage_shade": [0.0875, 0.147, 0.042],
     "variation": 0.15,
@@ -85,6 +84,7 @@
   ],
   "tier": "procedural_proxy",
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.6, 0.58, 0.3], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "generator.params.flower_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `flower` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
     "generator.params": {
       "evidence": "Authored",
@@ -189,6 +189,7 @@
     "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
   },
   "traits": {
+    "bark_colour": [153, 148, 76],
     "culm_length_m": {"min": 3, "max": 5, "high": 8},
     "stem_diameter_max_m": 0.03,
     "rhizome_habit": "long_creeping",

@@ -60,11 +60,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.38,
-      0.35,
-      0.31
-    ],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.04,
@@ -174,6 +169,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [97, 89, 79],
     "leader": "lost",
     "limb_angle": "spreading",
     "height_max_m": {
@@ -212,6 +208,7 @@
     "inflorescence_length_m": {"min": 0.05, "max": 0.1}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.35, 0.31], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 237): open-grown, 'stout branches ... spreading horizontally and forming a broad dense symmetrical round-topped crown' (the leader lost is inferred from the broad round crown)."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 237): 'stout branches ascending in the forest and forming a narrow spire-like head, or in open positions spreading horizontally and forming a broad dense symmetrical round-topped crown'."},
     "taxon": {

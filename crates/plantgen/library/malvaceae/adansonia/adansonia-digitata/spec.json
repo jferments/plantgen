@@ -53,7 +53,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.55, 0.5, 0.45],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.15,
@@ -98,6 +97,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [140, 128, 115],
     "leaf_out_months": [12],
     "leaf_fall_months": [3, 4],
     "crown_form": "spreading",
@@ -112,6 +112,7 @@
     "fruit_size_m": {"min": 0.15, "max": 0.25}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.55, 0.5, 0.45], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_out_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-10-18): \"All baobabs are deciduous, losing their leaves in the dry season, and remaining leafless for about eight months of the year.\" Its leaves come with the southern African summer rains; December is ours."},
     "traits.leaf_fall_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-10-18): leafless \"for about eight months of the year\" in the dry season: shed in March and April, ours, so it stands in leaf about four months."},
     "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The trunk stands bare to the fork about 8 m up (crown_base 8, was 7; crown_height 13, was 12), where five or so thick limbs spread at a wide angle (fork_stems 5, fork_angle 50, were 4 and 40), in iNaturalist photographs (observations 18299511, 185799293). Shorter shoots and sparser attraction points (internode 0.35, space_density 1.5, were 0.45 and 4) keep a crown of few thick limbs."},

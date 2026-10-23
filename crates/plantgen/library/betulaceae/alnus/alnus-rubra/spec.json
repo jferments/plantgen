@@ -61,7 +61,6 @@
         }
       }
     },
-    "bark": [0.38, 0.37, 0.33],
     "twig": [0.22,  0.06,  0.03],
     "bark_pattern": {
       "kind": "smooth",
@@ -142,6 +141,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [97, 94, 84],
     "branch_posture": "drooping",
     "leaf_colour_autumn": [95, 90, 45],
     "shade_tolerance": "intolerant",
@@ -171,6 +171,7 @@
     "leaf_apex": {"acute": "usually", "obtuse": "often"}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.37, 0.33], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 223): 'slender somewhat pendulous branches forming a narrow pyramidal head'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Alnus rubra (read 2026-10-18): \"Rather than turning yellow in autumn, its leaves darken in colour and wither before they are shed\". Colour ours: a darkened olive."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Alnus rubra: \"slender branchlets marked by minute scattered pale lenticels, light green and coated at first with hoary tomentum ..., becoming during the first winter bright red and lustrous and ultimately ashy gray\". Colour chosen by eye for the red of twigs past their first summer, which carry most of a crown's twig wood."},

@@ -44,7 +44,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.33, 0.32, 0.29],
     "twig": [0.25, 0.09, 0.04],
     "bark_pattern": {
       "kind": "furrowed",
@@ -94,12 +93,14 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [84, 82, 74],
     "leaf_length_m": {"min": 0.076, "max": 0.102},
     "leaf_width_m": {"min": 0.051, "max": 0.064},
     "petiole_length_m": {"min": 0.038, "max": 0.051},
     "shade_tolerance": "intolerant"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.33, 0.32, 0.29], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"slender branchlets ... marked by many orange-colored lenticels ... reddish brown during their first year, gradually becoming dark gray\". Colour chosen by eye for reddish brown."},
     "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"Leaves broad-ovate ... 3'-4' long, 2'-2½' wide; petioles slender ... 1½'-2' in length\"."},
     "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"Leaves broad-ovate ... 3'-4' long, 2'-2½' wide; petioles slender ... 1½'-2' in length\"."},

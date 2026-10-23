@@ -46,7 +46,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.55, 0.53, 0.48],
     "twig": [0.5, 0.24, 0.07],
     "bark_pattern": {
       "kind": "smooth",
@@ -99,6 +98,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [140, 135, 122],
     "height_max_m": {
       "min": 15.24,
       "max": 18.288
@@ -113,6 +113,7 @@
     "leaf_apex": {"obtuse": "usually", "acuminate": "often"}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.55, 0.53, 0.48], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Ficus aurea, p. 334: \"terete pithy light orange-colored branchlets marked by pale lenticels\". Colour chosen by eye for light orange."},
     "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Ficus aurea, p. 334: \"Leaves oblong ... 2'-5' long, 1½'-3' wide, thick and coriaceous ... petioles stout, slightly grooved, ½'-1' in length\"."},
     "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},

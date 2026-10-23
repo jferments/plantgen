@@ -74,7 +74,6 @@
         }
       }
     },
-    "bark": [0.62, 0.62, 0.55],
     "twig": [0.26,  0.06,  0.026],
     "bark_pattern": {
       "kind": "smooth",
@@ -112,6 +111,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [158, 158, 140],
     "limb_course": "tortuous",
     "branch_posture": "drooping",
     "leaf_colour_autumn": [235, 185, 40],
@@ -142,6 +142,7 @@
     "leaf_apex": {"acuminate": "usually", "acute": "often"}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.62, 0.62, 0.55], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 121): 'slender remote and often contorted branches somewhat pendulous toward the ends'."},
     "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 121): 'slender remote and often contorted branches somewhat pendulous toward the ends'."},
     "appearance.bark_look.stages.white": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "stage: text: 'greenish or yellowish white to gray and smooth' (FNA); 'roughened by horizontal bands of circular wart-like excrescences' (Sargent); white powder (summary of Rabinowitz & Tripp 2015). Branch-scar eyes come from the mesh, not the tile; until_diameter_m: inferred (photo)"},

@@ -53,11 +53,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.42,
-      0.4,
-      0.36
-    ],
     "foliage": [
       0.12,
       0.22,
@@ -94,6 +89,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [107, 102, 92],
     "leaf_colour_autumn": [240, 205, 50],
     "height_max_m": {
       "min": 30.5,
@@ -166,6 +162,7 @@
     "fruitlets": "samaras"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.42, 0.4, 0.36], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Liriodendron tulipifera (read 2026-10-18): \"In autumn they turn a clear, bright yellow\". Colour ours."},
     "taxon": {
       "evidence": "Authored",

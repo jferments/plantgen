@@ -61,7 +61,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.3, 0.2, 0.12],
     "foliage": [0.035, 0.1, 0.03],
     "foliage_shade": [0.01, 0.03, 0.01],
     "variation": 0.2,
@@ -118,6 +117,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [76, 51, 31],
     "height_max_m": {
       "min": 0.5,
       "max": 2
@@ -136,6 +136,7 @@
     "leaf_apex": "acute"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.2, 0.12], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "gbif-inaturalist",

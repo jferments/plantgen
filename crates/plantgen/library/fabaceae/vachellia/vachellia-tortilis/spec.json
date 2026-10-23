@@ -55,7 +55,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.3, 0.25, 0.22],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.025,

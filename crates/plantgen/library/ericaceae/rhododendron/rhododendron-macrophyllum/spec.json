@@ -67,11 +67,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.36,
-      0.26,
-      0.2
-    ],
     "foliage": [
       0.06,
       0.15,
@@ -147,6 +142,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [92, 66, 51],
     "height_max_m": {
       "min": 1,
       "max": 5,
@@ -201,6 +197,7 @@
     "leaf_apex": {"acute": "usually", "obtuse": "often", "acuminate": "sometimes"}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.36, 0.26, 0.2], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

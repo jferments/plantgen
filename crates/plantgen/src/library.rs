@@ -2508,6 +2508,47 @@ mod tests {
         assert_eq!(species("acer-unknown"), None);
     }
 
+    #[test]
+    fn hand_set_bark_is_stated_in_srgb() {
+        // A bark colour picked by eye is a screen colour, stated as the
+        // trait bark_colour (sRGB), which the rule at the vascular plants
+        // turns into linear light. Set straight into appearance.bark,
+        // which is linear, a mid-grey bark (sRGB about 0.4) drew pale grey
+        // to white beside photographs (2026-10-23). A tree or shrub whose
+        // own spec sets appearance.bark brighter than linear 0.25 must say
+        // in its note that the value is linear light.
+        fn specs(dir: &std::path::Path, out: &mut Vec<PathBuf>) {
+            for item in fs::read_dir(dir).unwrap() {
+                let path = item.unwrap().path();
+                if path.is_dir() {
+                    specs(&path, out);
+                } else if path.file_name().is_some_and(|name| name == "spec.json") {
+                    out.push(path);
+                }
+            }
+        }
+        let mut files = Vec::new();
+        specs(&std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("library"), &mut files);
+        let mut pale = Vec::new();
+        for file in files {
+            let spec: serde_json::Value =
+                serde_json::from_str(&fs::read_to_string(&file).unwrap()).unwrap();
+            let woody = matches!(
+                spec["growth_form"].as_str(),
+                Some("decurrent_tree" | "excurrent_tree" | "scale_leaved_tree" | "shrub")
+            );
+            let Some(bark) = spec["appearance"]["bark"].as_array() else {
+                continue;
+            };
+            let brightest = bark.iter().filter_map(serde_json::Value::as_f64).fold(0.0, f64::max);
+            let note = spec["evidence"]["appearance"].to_string().to_lowercase();
+            if woody && brightest >= 0.25 && !note.contains("linear") {
+                pale.push(spec["id"].as_str().unwrap_or_default().to_owned());
+            }
+        }
+        assert!(pale.is_empty(), "bark set as linear light without saying so: {pale:?}");
+    }
+
     /// A folder of its own under the system's temporary folder, removed
     /// when dropped.
     struct Folder(PathBuf);

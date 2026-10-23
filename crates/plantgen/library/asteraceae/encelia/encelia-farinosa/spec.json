@@ -61,7 +61,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.55, 0.52, 0.45],
     "foliage": [0.62, 0.66, 0.58],
     "foliage_shade": [0.217, 0.231, 0.203],
     "variation": 0.15,
@@ -100,6 +99,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [140, 133, 115],
     "height_max_m": {
       "min": 1,
       "max": 1.6
@@ -138,6 +138,7 @@
     "leaf_apex": {"obtuse": "usually", "acute": "often"}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.55, 0.52, 0.45], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",

@@ -51,7 +51,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.35, 0.3, 0.27],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.025,
@@ -106,6 +105,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [89, 76, 69],
     "leaf_habit": "deciduous",
     "leaf_colour_autumn": [210, 120, 50],
     "leaf_out_months": [10, 11],
@@ -126,6 +126,7 @@
     "fruiting_months": [1, 2, 3]
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.35, 0.3, 0.27], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Nothofagus pumilio (read 2026-10-18): \"a deciduous tree or shrub\", native from 35 to 56 degrees South."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Nothofagus pumilio (read 2026-10-18): the leaves \"turn to yellow and reddish tones in autumn\". Colour ours."},
     "traits.leaf_out_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Nothofagus pumilio (read 2026-10-18): a deciduous tree of the southern Andes, so it leafs out in the southern spring; October and November, with its flowers (flowering_months 10 to 12), are ours."},

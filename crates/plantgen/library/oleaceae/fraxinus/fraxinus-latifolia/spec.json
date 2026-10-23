@@ -47,7 +47,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.3, 0.28, 0.24],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.03,
@@ -118,6 +117,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [76, 71, 61],
     "leaf_habit": "deciduous",
     "leaf_colour_autumn": [235, 205, 60],
     "leaf_fall_months": [10],
@@ -140,6 +140,7 @@
     "fruit_size_m": {"min": 0.025, "max": 0.05}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.28, 0.24], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): \"a medium-sized deciduous tree\"."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): the leaves \"turn bright yellow and fall off early in autumn\". Colour ours."},
     "traits.leaf_fall_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Fraxinus latifolia (read 2026-10-18): the leaves \"fall off early in autumn\": October, ahead of the October to November most broadleaves are given. Month ours."},

@@ -56,7 +56,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.25, 0.2, 0.12],
     "foliage": [0.03, 0.09, 0.03],
     "foliage_shade": [0.01, 0.03, 0.01],
     "variation": 0.2,
@@ -99,6 +98,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [64, 51, 31],
     "height_typical_m": {
       "min": 0.2,
       "max": 0.6
@@ -114,6 +114,7 @@
     "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.25, 0.2, 0.12], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (plantc atlas, 2026-10-17), so it shades with what it shows: Berberidaceae's spiny margin now cuts its leaflets' teeth, where before it drew the generic simple card (0.235)."},
     "generator.params.bud_area": {
       "evidence": "Authored",

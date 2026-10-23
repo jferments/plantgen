@@ -60,7 +60,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.45, 0.43, 0.4],
     "bark_pattern": {
       "kind": "fibrous",
       "scale": 0.02,
@@ -109,6 +108,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [115, 110, 102],
     "leader": "lost",
     "limb_angle": "erect",
     "height_max_m": {
@@ -140,6 +140,7 @@
     "flower_symmetry": "zygomorphic"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.45, 0.43, 0.4], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 627): 'usually divided 4°—6° above the ground into a number of stout upright branches'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 627): 'usually divided 4°—6° above the ground into a number of stout upright branches'."},
     "traits.height_max_m": {

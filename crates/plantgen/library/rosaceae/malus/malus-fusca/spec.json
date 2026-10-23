@@ -52,7 +52,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.3, 0.25, 0.2],
     "bark_pattern": {
       "kind": "scaly",
       "scale": 0.025,
@@ -133,6 +132,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [76, 64, 51],
     "height_max_m": {
       "min": 3.05,
       "max": 9.14
@@ -151,6 +151,7 @@
     "fruit_size_m": {"min": 0.01, "max": 0.02}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.25, 0.2], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
