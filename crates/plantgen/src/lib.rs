@@ -56,6 +56,7 @@ pub mod leaves;
 pub mod library;
 pub mod litter;
 pub mod looks;
+pub mod lowpoly;
 pub mod lsys;
 pub mod margins;
 pub mod math;

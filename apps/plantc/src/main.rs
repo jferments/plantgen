@@ -119,6 +119,7 @@ fn run() -> Result<(), Failure> {
         "stand" => stand_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
+        "tiers" => tiers_command(&args),
         "parts" => parts_command(&args),
         "organs" => organs_command(&args),
         "year" => year_command(&args),
@@ -221,6 +222,11 @@ Usage:
       and north: the stand is a tile that wraps at its edges) and
       conditions (a place every plant grows in). Seeds default to each
       spec's first.
+  plantc tiers <species>... --out FOLDER [--seed N] [--size PIXELS] [--age YEARS]
+      Render each species at its oldest age (or --age) from the side at
+      full detail (level 0 cards) and at the solid low-poly tiers, low and
+      minimal (`plantgen::lowpoly`), one PNG a species in FOLDER, and
+      print each tier's triangles and the organs it kept as JSON lines.
   plantc sheet <species|spec.json> --out FILE.png [--seed N] [--size PIXELS]
       Render every keyframe age (columns) in every environment (rows).
   plantc parts <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -2743,6 +2749,103 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
             .map(|environment| environment.name())
             .collect::<Vec<_>>()
     );
+    Ok(())
+}
+
+#[allow(clippy::too_many_lines)]
+fn tiers_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &["seed", "size", "out", "quality", "program", "day", "age"],
+    )?;
+    let program = options.program()?;
+    let out = options.flags.get("out").ok_or("missing `--out FOLDER`")?;
+    fs::create_dir_all(out).map_err(|error| format!("cannot make {out}: {error}"))?;
+    let size: usize = options.number("size")?.unwrap_or(360);
+    let day = options.day()?;
+    let quality = options.quality()?;
+    if options.positional.is_empty() {
+        return Err("name at least one species".into());
+    }
+    for name in &options.positional {
+        let spec = load_spec(name)?;
+        let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+        let age = match options.number::<f64>("age")? {
+            Some(age) => age,
+            None => spec.growth.keyframes.iter().copied().fold(0.0, f64::max),
+        };
+        let environment = spec.variants.environments[0];
+        let growth = grow_variant(&spec, program.as_deref(), environment, seed, vec![age], age)?;
+        let (looks, sizes) = looks_of(&spec, &growth, day);
+        let bodies = bodies_of(&spec, &growth);
+        let templates = templates_of(&spec, &looks, &bodies, &growth);
+        let graph = &*drawn(&growth.keyframes[0], &sizes, &looks);
+        let mut full = mesh::build(
+            graph,
+            &looks,
+            &bodies,
+            &spec.appearance,
+            &quality.lods[0].for_height(graph.height),
+            0,
+        );
+        full.vary_by_plant(&looks, seed);
+        let preview_options = PreviewOptions {
+            width: size,
+            height: size * 3 / 2,
+            view: View::Side,
+            supersample: 2,
+            figure: false,
+            frame_height: Some(graph.height * 1.05),
+            focus: None,
+        };
+        let mut images = vec![preview::render(&full, &templates, &preview_options)];
+        let mut rows = vec![format!(
+            "{{\"species\":\"{}\",\"tier\":\"full\",\"height_m\":{:.2},\"triangles\":{}}}",
+            spec.id,
+            graph.height,
+            full.triangle_count()
+        )];
+        for tier in &plantgen::lowpoly::TIERS {
+            let solid = plantgen::lowpoly::build(
+                graph,
+                &looks,
+                &bodies,
+                &spec.appearance,
+                &templates,
+                &quality.lods,
+                tier,
+            );
+            let stats = &solid.stats;
+            rows.push(format!(
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"budget\":{},\"triangles\":{},\"wood\":{},\"organs\":{},\"level\":{},\"signature\":[{},{}],\"foliage\":[{},{}]}}",
+                spec.id,
+                tier.name,
+                stats.budget,
+                stats.triangles(),
+                stats.wood_triangles,
+                stats.organ_triangles,
+                stats.level,
+                stats.signature.0,
+                stats.signature.1,
+                stats.foliage.0,
+                stats.foliage.1
+            ));
+            images.push(preview::render(
+                &solid.two_sided(),
+                &templates,
+                &preview_options,
+            ));
+        }
+        let (width, height, pixels) = preview::contact_sheet(&images, images.len(), 8);
+        let png = raster::encode_png(width, height, &pixels)
+            .map_err(|error| format!("cannot encode PNG: {error}"))?;
+        let file = Path::new(out).join(format!("{}.png", spec.id));
+        fs::write(&file, png)
+            .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+        for row in rows {
+            out!("{row}");
+        }
+    }
     Ok(())
 }
 
