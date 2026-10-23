@@ -335,6 +335,7 @@ mod tests {
             accent: [0.3, 0.2, 0.1],
             face_up: 0.0,
             spray: 0.0,
+            face_out: 0.0,
             solid: None,
             forms: crate::looks::Forms::default(),
             inflorescence: None,

@@ -79,6 +79,12 @@ pub struct OrganLook {
     /// it holds rather than bunched at one point, as games draw crowns.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub spray: f64,
+    /// How far a card that lies along its organ turns its upper face out
+    /// from the middle of its plant's crown, from 0 (as placed) to 1
+    /// (square to the crown's surface there): a crown's leaves held toward
+    /// the open sky around it, so the crown reads as one leafy surface.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub face_out: f64,
     /// Degrees a card that lies along its organ turns about its own
     /// length before it turns to the sky, from -180 to 180: 90 sets a
     /// sword leaf's blade edgewise to the stem, its faces in the plane of
@@ -4590,6 +4596,8 @@ pub struct Look {
     pub face_up: f64,
     /// How far from its node its card is drawn ([`OrganLook::spray`]).
     pub spray: f64,
+    /// How far its card turns out from its crown ([`OrganLook::face_out`]).
+    pub face_out: f64,
     /// Degrees its card turns about its own length ([`OrganLook::roll`]).
     pub roll: f64,
     /// Where its petiole meets its blade, for a leaf.
@@ -4807,6 +4815,7 @@ pub fn resolve<'a>(
                     sori: look.sori,
                     face_up: look.face_up,
                     spray: look.spray,
+                    face_out: look.face_out,
                     roll: look.roll,
                     insertion: look.insertion,
                     solid: look.solid.clone(),
@@ -4849,6 +4858,7 @@ pub fn resolve<'a>(
                 accent: foliage,
                 face_up: 0.0,
                 spray: 0.0,
+                face_out: 0.0,
                 roll: 0.0,
                 insertion: Insertion::Marginal,
                 solid: None,
@@ -5231,6 +5241,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         accent: stage.accent.unwrap_or(colour),
         face_up: look.face_up,
         spray: 0.0,
+        face_out: 0.0,
         roll: 0.0,
         // A stage's look is a flower or a fruit, on no petiole.
         insertion: Insertion::Marginal,
@@ -5559,6 +5570,7 @@ impl OrganLook {
         }
         within("roll", self.roll, -180.0, 180.0)?;
         within("spray", self.spray, 0.0, 4.0)?;
+        within("face_out", self.face_out, 0.0, 1.0)?;
         within("face_up", self.face_up, 0.0, 1.0)
     }
 }
@@ -5767,6 +5779,7 @@ mod tests {
                 accent: None,
                 face_up: 0.0,
                 spray: 0.0,
+                face_out: 0.0,
                 solid: None,
                 bend: None,
                 form: None,
@@ -6028,6 +6041,7 @@ mod tests {
                 accent: Some([0.9, 0.7, 0.1]),
                 face_up: 0.0,
                 spray: 0.0,
+                face_out: 0.0,
                 solid: None,
                 bend: None,
                 form: None,
@@ -6071,6 +6085,7 @@ mod tests {
                     accent,
                     face_up: 0.0,
                     spray: 0.0,
+                    face_out: 0.0,
                     solid: None,
                     bend: None,
                     form: None,
@@ -6172,6 +6187,7 @@ mod tests {
             accent: None,
             face_up: 0.0,
             spray: 0.0,
+            face_out: 0.0,
             solid: None,
             bend: None,
             form: None,
@@ -6245,6 +6261,7 @@ mod tests {
             accent: Some([0.45, 0.5, 0.15]),
             face_up: 0.0,
             spray: 0.0,
+            face_out: 0.0,
             solid: None,
             bend: None,
             form: None,
@@ -6343,6 +6360,7 @@ mod tests {
                 accent: Some([0.9, 0.7, 0.1]),
                 face_up: 0.0,
                 spray: 0.0,
+                face_out: 0.0,
                 solid: None,
                 bend: None,
                 form: None,
@@ -6467,6 +6485,7 @@ mod tests {
             accent: Some([0.45, 0.5, 0.15]),
             face_up: 0.0,
             spray: 0.0,
+            face_out: 0.0,
             solid: None,
             bend: None,
             form: None,
