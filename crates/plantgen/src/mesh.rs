@@ -1798,15 +1798,24 @@ fn sprayed(organ: &GraphOrgan, look: &Look) -> Option<Sprayed> {
     };
     let out = Vec3::new(organ.position.x, 0.0, organ.position.z).normalize_or(Vec3::ZERO);
     let shoot = (direction(node) + (out + Vec3::Y) * SHOOT_LEAN).normalize_or(Vec3::Y);
-    let reach = look.spray * organ.size;
+    // A shoot reaching down stops at the ground, and a petiole that
+    // would reach below it turns up.
+    let mut reach = look.spray * organ.size;
+    if shoot.y < 0.0 {
+        reach = reach.min(organ.position.y.max(0.0) / -shoot.y);
+    }
     let along = organ.position + shoot * (reach * unit(mix64(organ.id ^ 0x1656_67b1_9e37_79f9)));
     let aside = direction(organ.id);
-    let aside = (aside - shoot * aside.dot(shoot)).normalize_or(any_perpendicular(shoot));
+    let mut aside = (aside - shoot * aside.dot(shoot)).normalize_or(any_perpendicular(shoot));
+    let petiole = SPRAY_PETIOLE * organ.size;
+    if along.y + aside.y * petiole < 0.0 {
+        aside.y = -aside.y;
+    }
     Some(Sprayed {
         node,
         tip: organ.position + shoot * reach,
         along,
-        base: along + aside * (SPRAY_PETIOLE * organ.size),
+        base: along + aside * petiole,
     })
 }
 
