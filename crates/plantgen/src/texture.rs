@@ -632,6 +632,7 @@ pub fn organ_templates(shapes: &[Shape]) -> Templates {
             shade: [1.0; 3],
             accent: [1.0; 3],
             face_up: 0.0,
+            spray: 0.0,
             solid: None,
             // Litter lies flat: its pieces are drawn into the ground's
             // textures, never as bent cards.

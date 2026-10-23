@@ -4610,6 +4610,7 @@ mod tests {
                     shade: None,
                     accent: Some([0.8, 0.7, 0.1]),
                     face_up: 0.0,
+                    spray: 0.0,
                     solid: None,
                     bend: None,
                     form: None,
