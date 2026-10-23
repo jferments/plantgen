@@ -12,7 +12,7 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 8.8,
+      "crown_radius": 6,
       "crown_base": 4,
       "crown_rate": 0.04,
       "space_density": 7,
@@ -180,7 +180,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a medium-sized tree with a narrow, rounded crown, opposite branching and pinnately compound leaves of five to seven broad leaflets. Not fitted to measurements. crown_radius 8.8 since broadleaf revision 28, when a tree's crown_radius became half its crown's width (room_width 0.9): the USDA Urban Tree Database's Oregon ashes 45 to 70 years old (Longview, WA, 8 trees) have crowns 14.2 m across, and it draws 13.6 m at 50 years (9.5 m at 6)."
+      "note": "Hand-set from general knowledge of the species: a medium-sized tree with a narrow, rounded crown, opposite branching and pinnately compound leaves of five to seven broad leaflets. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "SourceInferred",

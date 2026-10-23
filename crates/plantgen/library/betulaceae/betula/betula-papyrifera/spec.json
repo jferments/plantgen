@@ -12,7 +12,7 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 7.1,
+      "crown_radius": 4.5,
       "crown_base": 4,
       "crown_rate": 0.05,
       "space_density": 12,
@@ -220,7 +220,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow, open crown, alternate oval, toothed leaves and hanging catkins. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 25 cm at 40 years again. crown_radius 7.1 since broadleaf revision 28, when a tree's crown_radius became half its crown's width (room_width 0.9): the USDA Urban Tree Database's open-grown birches 35 to 60 years old (Longview, WA, European white and river birches, 10 trees; it has no paper birches) have crowns 11.2 m across, and it draws 11.1 m at 40 years (7.9 m at 4.5)."
+      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow, open crown, alternate oval, toothed leaves and hanging catkins. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 25 cm at 40 years again."
     },
     "allometry": {
       "evidence": "SourceInferred",

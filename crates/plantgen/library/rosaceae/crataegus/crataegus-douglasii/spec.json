@@ -12,7 +12,7 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 4.4,
+      "crown_radius": 2.5,
       "crown_base": 0.3,
       "crown_rate": 0.06,
       "space_density": 18,
@@ -283,7 +283,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific crabapple's values, changed by hand for black hawthorn: a smaller, many-stemmed shrubby tree with stems clustered from the base (FEIS, Habeck 1991), straight thorns, and flat-topped clusters of white flowers ripening to black fruit. Not fitted to measurements. crown_radius 4.4 since broadleaf revision 28, when a tree's crown_radius became half its crown's width (room_width 0.9 against the form's 1.6): it keeps the crown it drew, about 4.8 m across at 25 years, as no flora gives black hawthorn's width."
+      "note": "Pacific crabapple's values, changed by hand for black hawthorn: a smaller, many-stemmed shrubby tree with stems clustered from the base (FEIS, Habeck 1991), straight thorns, and flat-topped clusters of white flowers ripening to black fruit. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

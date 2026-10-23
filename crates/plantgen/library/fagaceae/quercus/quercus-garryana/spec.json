@@ -12,7 +12,7 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 13,
+      "crown_radius": 9,
       "crown_base": 4,
       "crown_rate": 0.025,
       "space_density": 4,
@@ -218,7 +218,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 50 cm at 80 years again. Since broadleaf revision 28 its pipe_organ and pipe_rings are the broadleaf trees' rules (0, with Leonardo's rule and dead twigs kept as heartwood); this pipe_tip stays. crown_radius 13 since broadleaf revision 28, when a tree's crown_radius became half its crown's width (room_width 0.9): its crown is the Urban Tree Database's white oaks', as its leaf area per crown area is (Sacramento's valley oaks, Quercus lobata: 16.1 m across at 60 to 100 years, 14 trees, and 21.5 m past 100), about 18.5 m across at 80 years. At 9 it held 6.6 m² of leaf per m² of crown, past the database's 1.9 to 5.3."
+      "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 50 cm at 80 years again. Since broadleaf revision 28 its pipe_organ and pipe_rings are the broadleaf trees' rules (0, with Leonardo's rule and dead twigs kept as heartwood); this pipe_tip stays."
     },
     "allometry": {
       "evidence": "SourceInferred",

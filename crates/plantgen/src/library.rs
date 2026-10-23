@@ -2528,7 +2528,10 @@ mod tests {
             }
         }
         let mut files = Vec::new();
-        specs(&std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("library"), &mut files);
+        specs(
+            &std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("library"),
+            &mut files,
+        );
         let mut pale = Vec::new();
         for file in files {
             let spec: serde_json::Value =
@@ -2540,13 +2543,19 @@ mod tests {
             let Some(bark) = spec["appearance"]["bark"].as_array() else {
                 continue;
             };
-            let brightest = bark.iter().filter_map(serde_json::Value::as_f64).fold(0.0, f64::max);
+            let brightest = bark
+                .iter()
+                .filter_map(serde_json::Value::as_f64)
+                .fold(0.0, f64::max);
             let note = spec["evidence"]["appearance"].to_string().to_lowercase();
             if woody && brightest >= 0.25 && !note.contains("linear") {
                 pale.push(spec["id"].as_str().unwrap_or_default().to_owned());
             }
         }
-        assert!(pale.is_empty(), "bark set as linear light without saying so: {pale:?}");
+        assert!(
+            pale.is_empty(),
+            "bark set as linear light without saying so: {pale:?}"
+        );
     }
 
     /// A folder of its own under the system's temporary folder, removed
