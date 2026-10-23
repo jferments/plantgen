@@ -115,6 +115,12 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   instancing and meshopt extensions, and `--triangles` or `--max-mib`
   redraws the levels with as much detail as a triangle or size budget
   allows.
+- **Solid low-poly tiers.** For integrated GPUs and handhelds, a plant
+  as an opaque, untextured solid of 120 to 1,500 triangles that still
+  reads as its species: its flowers, spikes and fruit first, then its
+  leaves in their own outline and arrangement (a grass's blades, a fern's
+  fronds, a tree's leaf clumps, a cactus's pads). `plantc tiers SPECIES`
+  draws them beside the full plant.
 - **Ground.** Tiling textures of what plants lay on the ground: needles,
   leaves, thatch, twigs, mosses and grasses, and each canopy species' own
   litter.

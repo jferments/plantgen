@@ -2175,6 +2175,184 @@ pub fn build_between(
     }
 }
 
+/// The fewest vertices round a ring, and rings over a dome, of a body
+/// drawn within a few hundred triangles ([`build_within`]).
+const SOLID_SIDES: u32 = 4;
+const SOLID_CAP_RINGS: u32 = 1;
+/// The longest step between rings of such a body, in mean radii.
+const SOLID_RING_STEP: f64 = 8.0;
+
+/// Draw the bodies of `graph` as smooth solids, spines only tinting them,
+/// within about `triangles` for their skins: the coarsest level's
+/// detail, its rings farther apart and fewer round, and its domes fewer,
+/// until they fit or can lose no more (a solid low-poly plant,
+/// [`crate::lowpoly`]).
+pub fn build_within(
+    graph: &PlantGraph,
+    looks: &[BodyLook],
+    first_template: usize,
+    triangles: usize,
+    out: &mut PlantMesh,
+) {
+    if looks.is_empty() || !graph.segments.iter().any(|segment| segment.body > 0) {
+        return;
+    }
+    let mut detail = DETAIL[DETAIL.len() - 1];
+    let axes = axes(graph);
+    let lines: Vec<Option<(&BodyLook, f64, Centreline)>> = axes
+        .iter()
+        .map(|axis| {
+            let look = looks.get(axis.body)?;
+            let phase = unit(mix64(axis.id ^ 0xB0D7)) * 2.0 * PI;
+            Centreline::new(graph, axis, look, phase).map(|line| (look, phase, line))
+        })
+        .collect();
+    let hulls: Vec<Option<Hull>> = lines
+        .iter()
+        .map(|line| {
+            line.as_ref()
+                .map(|(look, _, line)| Hull::new(line, look.flatten))
+        })
+        .collect();
+    let (axes, lines, hulls) = (&axes, &lines, &hulls);
+    let bodies = |detail: Detail| {
+        axes.iter()
+            .zip(lines)
+            .enumerate()
+            .filter_map(move |(index, (axis, line))| {
+                let (look, phase, line) = line.as_ref()?;
+                Some(Body {
+                    graph,
+                    axis,
+                    index,
+                    look,
+                    line,
+                    detail,
+                    phase: *phase,
+                    hulls,
+                    first_template,
+                })
+            })
+    };
+    for _ in 0..16 {
+        let skin: usize = bodies(detail).map(|body| body.triangles()).sum();
+        if skin <= triangles {
+            break;
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let over = skin as f64 / triangles.max(1) as f64;
+        if detail.cap_rings > SOLID_CAP_RINGS {
+            detail.cap_rings -= 1;
+        } else if detail.smooth_sides > SOLID_SIDES || detail.max_sides > SOLID_SIDES {
+            detail.smooth_sides = SOLID_SIDES;
+            detail.max_sides = SOLID_SIDES;
+        } else if detail.ring_step < SOLID_RING_STEP {
+            // Longer steps still find a cholla's joints and an arm's bend:
+            // rings are sought a quarter step apart.
+            detail.ring_step = (detail.ring_step * over.max(1.25)).min(SOLID_RING_STEP);
+            detail.max_turn = (detail.max_turn * over.max(1.25)).min(60.0);
+            detail.max_change = (detail.max_change * over.max(1.25)).min(0.6);
+        } else if detail.max_sides > 3 {
+            detail.smooth_sides = 3;
+            detail.max_sides = 3;
+        } else {
+            break;
+        }
+    }
+    // Still over: a flat body (a prickly pear's pad) as a flat hexagon
+    // seen from both faces, and the bodies kept oldest first, so none
+    // stands on one left out, while they fit.
+    let mut kept: Vec<(f64, Body<'_>)> = bodies(detail)
+        .map(|body| {
+            (
+                body.line
+                    .stations
+                    .first()
+                    .map_or(0.0, |station| station.born),
+                body,
+            )
+        })
+        .collect();
+    kept.sort_by(|a, b| a.0.total_cmp(&b.0));
+    let cost = |body: &Body<'_>| {
+        if body.look.flatten < PAD_FLATTEN {
+            PAD_TRIANGLES
+        } else {
+            body.triangles()
+        }
+    };
+    let mut used = 0;
+    for (index, (_, body)) in kept.iter().enumerate() {
+        let cost = cost(body);
+        if index > 0 && used + cost > triangles {
+            continue;
+        }
+        used += cost;
+        if body.look.flatten < PAD_FLATTEN {
+            body.draw_pad(out);
+        } else {
+            body.draw(out, 0);
+        }
+    }
+}
+
+/// A body flatter than this is drawn as a flat pad within a budget
+/// ([`build_within`]), of this many triangles.
+const PAD_FLATTEN: f64 = 0.5;
+const PAD_TRIANGLES: usize = 8;
+
+impl Body<'_> {
+    /// The body as a flat hexagon across its width, wound both ways: its
+    /// foot, two pairs of points at its sides and its tip, coloured as its
+    /// skin under its spines' tint.
+    fn draw_pad(&self, out: &mut PlantMesh) {
+        let (look, line) = (self.look, self.line);
+        let (tint, cover) = look.tint();
+        let colour = mix(look.colour, tint, cover);
+        let middle = line.at(line.length * 0.5);
+        let normal = middle.tangent.cross(middle.across).normalize_or(Vec3::Y);
+        let mut ring = vec![line.at(0.0).point];
+        let sides = [0.3, 0.7].map(|share| line.at(line.length * share));
+        ring.extend(
+            sides
+                .iter()
+                .map(|station| station.point + station.across * station.radius),
+        );
+        ring.push(line.at(line.length).point);
+        ring.extend(
+            sides
+                .iter()
+                .rev()
+                .map(|station| station.point - station.across * station.radius),
+        );
+        let wood = &mut out.wood;
+        for face in [normal, -normal] {
+            let first = u32::try_from(wood.positions.len()).unwrap_or(u32::MAX);
+            for &position in &ring {
+                wood.push(Vertex {
+                    position: position + face * 1.0e-4,
+                    normal: face,
+                    uv: [0.0, 0.0],
+                    color: [colour[0], colour[1], colour[2], 1.0],
+                    born: middle.born,
+                    shed: middle.shed,
+                    level: 0,
+                    segment: crate::mesh::NO_SEGMENT,
+                });
+            }
+            for k in 1..5 {
+                let (a, b) = if face.dot(normal) > 0.0 {
+                    (k, k + 1)
+                } else {
+                    (k + 1, k)
+                };
+                wood.indices
+                    .extend_from_slice(&[first, first + a, first + b]);
+            }
+        }
+    }
+}
+
 /// The ribs round `axis` of `look` whose widest radius is `widest`: as
 /// many as fit at the ribs' spacing, within their count (0 without ribs),
 /// and their twist, radians per metre.
