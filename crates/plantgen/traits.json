@@ -382,6 +382,14 @@
       "optional": true,
       "why": "how high a woody plant's single young stem grows before it first divides into its main stems, where floras give it (an angel's trumpet's first main fork at 80-150 cm)"
     },
+    "trunk_fork_stems": {
+      "group": "form",
+      "organ": "stem",
+      "type": "count",
+      "range": [2, 12],
+      "optional": true,
+      "why": "how many main stems or scaffold limbs a tree's trunk divides into where it first forks, as floras or photographs of open-grown trees show it (an open-grown Oregon white oak's short trunk into two or three very large limbs)"
+    },
     "flowers_above_fork": {
       "group": "form",
       "organ": "plant",

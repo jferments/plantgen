@@ -170,6 +170,11 @@
       "else": {"rule": "trunk_fork_height_m"},
       "why": "A single-stemmed woody plant stands on one trunk that never divides into equal stems; one whose flora says how high its young stem first divides forks there into its main stems."
     },
+    "generator.params.fork_stems": {
+      "needs": ["trunk_fork_stems"],
+      "rule": "trunk_fork_stems",
+      "why": "Where its flora or photographs say how many main stems a tree's trunk divides into, it divides into that many, each carrying its share of the crown, where the form's default divides it into three."
+    },
     "generator.params.fork_clear": {
       "needs": ["trunk_fork_height_m"],
       "rule": "1",
