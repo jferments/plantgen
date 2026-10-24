@@ -103,9 +103,9 @@
     },
     "generator.params.crown_widest": {
       "map": {
-        "crown_form": {"rounded": 0.5, "spreading": 0.6, "umbrella": 0.8, "vase": 0.75}
+        "crown_form": {"rounded": 0.5, "spreading": 0.6, "umbrella": 0.8, "vase": 0.75, "conical": 0.17}
       },
-      "why": "A dome is widest at its middle, a spreading crown a little above it, a vase and an umbrella near the top."
+      "why": "A dome is widest at its middle, a spreading crown a little above it, a vase and an umbrella near the top, and a cone in its bottom third, as the Urban Tree Database classes a paraboloid crown (McPherson et al. 2016, GTR-253, crown shape 3: widest in the bottom third; 0.17, that third's middle)."
     },
     "generator.params.crown_fullness": {
       "map": {
@@ -115,9 +115,9 @@
     },
     "generator.params.room_height": {
       "map": {
-        "crown_form": {"umbrella": 1}
+        "crown_form": {"umbrella": 1, "conical": 1}
       },
-      "why": "An umbrella stops at its flat top: its free space reaches no higher than the crown."
+      "why": "An umbrella stops at its flat top, and a cone at its leader's tip: its free space reaches no higher than the crown, so a cone's widest part stands low where its own height puts it, not part way up a region taller than the tree."
     },
     "generator.params.terminal_bloom": {
       "map": {
@@ -247,7 +247,7 @@
     "rules.generator.params.crown_widest": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A choice of the model's (broadleaf revision 16): where each crown form's region is widest, by eye from photographs of open-grown trees."
+      "note": "A choice of the model's (broadleaf revision 16): where each crown form's region is widest, by eye from photographs of open-grown trees; conical (2026-10-24) from the Urban Tree Database's paraboloid crown class (McPherson, van Doorn and Peper 2016, PSW-GTR-253, crown shape 3, widest in the bottom third), at that third's middle."
     },
     "rules.generator.params.crown_fullness": {
       "evidence": "Authored",
@@ -257,7 +257,7 @@
     "rules.generator.params.room_height": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A choice of the model's (broadleaf revision 16): an umbrella's free space stops at its crown's height, so nothing grows above the flat top."
+      "note": "A choice of the model's (broadleaf revision 16): an umbrella's free space stops at its crown's height, so nothing grows above the flat top; a cone's too (2026-10-24), so southern magnolia's widest part stands near the ground as in its photographs, not at its top."
     },
     "rules.generator.params.terminal_bloom": {
       "evidence": "Authored",
