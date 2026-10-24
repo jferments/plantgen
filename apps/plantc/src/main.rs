@@ -193,7 +193,7 @@ Usage:
       neighbours' crowns as envelopes; each keyframe then says how much
       of it stands in the place's solids and crowns.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
-                [--age N] [--view side|three-quarter|oblique|top|under]
+                [--age N] [--view side|eye|three-quarter|oblique|top|under]
                 [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
                 [--focus X,Y,Z [--span METRES]] [--parts on]
@@ -208,7 +208,8 @@ Usage:
       prickles and bark), F of the
       way up the plant's (0 lowest, 1 highest),
       SPAN 0.05 unless given; --view under looks up at it from below, at
-      the lower faces of its leaves. --parts on (level 0)
+      the lower faces of its leaves; --view eye looks from a standing
+      person's eye height (1.6 m), as photos of trees are taken. --parts on (level 0)
       draws every flower, fruit, cone and needle shoot as its part mesh,
       as WorldLab does near the camera; with --focus, only those within
       four spans (at least 1 m) of the focus, the rest as cards. --conditions grows it in a place
@@ -246,7 +247,7 @@ Usage:
       the organ alone and solid (LOD0) as it is that day, at one scale
       per row; each day's stage printed.
   plantc lineup <species|spec.json>... --out FILE.png [--age N] [--seeds N]
-                [--view side|three-quarter|oblique|top|under] [--size PIXELS]
+                [--view side|eye|three-quarter|oblique|top|under] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
   plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]
