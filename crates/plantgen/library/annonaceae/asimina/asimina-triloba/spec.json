@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 1.5,
       "crown_rate": 0.045,
       "space_density": 6,
       "internode": 0.2,
@@ -28,7 +27,6 @@
       "lean": 3,
       "wiggle": 4,
       "path_half": 6,
-      "fork_stems": 1,
       "bloom_size": 0.03
     }
   },
@@ -79,6 +77,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "persistent",
     "bark_colour": [102, 94, 84],
     "limb_angle": "spreading",
     "twig_colour": [130, 95, 75],
@@ -144,6 +143,7 @@
     "fruitlets": "berries"
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 354): 'a shrub or low tree ... with a straight trunk ... small spreading branches'."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.4, 0.37, 0.33], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 354): 'small spreading branches'."},
     "traits.twig_colour": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Asimina triloba (read 2026-10-19): branchlets \"Light brown, tinged with red, marked by shallow grooves\". The colour is our reading of the words; iNaturalist photos read grey-brown, Lab L about 45 (imagekit pawpaw trial, 2026-10-18), where the bark's colour drew the twigs silver-grey (L about 82)."},
@@ -266,7 +266,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red alder's crown values, changed by hand for a small understory tree: one slender trunk (FEIS: usually single), spreading-ascending branches (FNA), a narrower crown and shorter shoots, flowers drawn 3 cm across (FNA: 2-4 cm), path_half fitted so it reaches its height. Not fitted to measurements. Short-shoot leaves take the decurrent-tree rule's size (0.88 of leaf_size): the hand-set card of 0.337 m, from when leaf_size was 1.5 times the flora's blade, drew every leaf 33 cm long and its petiole 1 cm, past FNA's 15-30 cm and 5-10 mm. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Red alder's crown values, changed by hand for a small understory tree: one slender trunk (FEIS: usually single), spreading-ascending branches (FNA), a narrower crown and shorter shoots, flowers drawn 3 cm across (FNA: 2-4 cm), path_half fitted so it reaches its height. Not fitted to measurements. Short-shoot leaves take the decurrent-tree rule's size (0.88 of leaf_size): the hand-set card of 0.337 m, from when leaf_size was 1.5 times the flora's blade, drew every leaf 33 cm long and its petiole 1 cm, past FNA's 15-30 cm and 5-10 mm. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "SourceInferred",

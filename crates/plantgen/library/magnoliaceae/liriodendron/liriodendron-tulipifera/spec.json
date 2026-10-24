@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 6,
       "crown_rate": 0.045,
       "space_density": 3.5,
       "internode": 0.3,
@@ -28,7 +27,6 @@
       "lean": 3,
       "wiggle": 4,
       "path_half": 13,
-      "fork_stems": 1,
       "spur_leaf": 0.26
     }
   },
@@ -86,8 +84,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "persistent",
     "leaf_area_per_basal_area": 0.201,
     "crown_spread": 0.61,
+    "crown_base_share": 0.18,
     "bark_colour": [107, 102, 92],
     "leaf_colour_autumn": [240, 205, 50],
     "height_max_m": {
@@ -161,8 +161,10 @@
     "fruitlets": "samaras"
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 352): 'a straight trunk ... destitute of branches for 80\u00b0-100\u00b0 from the ground, short, comparatively small branches forming a narrow pyramidal, or in old age a broader spreading head'."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 103 tulip trees: 0.201 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 78 tulip trees 25 years or older: 0.61. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
+    "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 78 tulip trees 25 years or older: 0.18 (quartiles 0.13 and 0.38). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.42, 0.4, 0.36], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Liriodendron tulipifera (read 2026-10-18): \"In autumn they turn a clear, bright yellow\". Colour ours."},
     "taxon": {
@@ -298,7 +300,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red alder's crown values (a fast, straight-stemmed deciduous tree), changed by hand: one trunk, as FNA describes it (single-trunked), a wider crown, short-shoot leaves on the angiosperm default 0.26 m card (its blades and long petioles; a smaller card grows more shoots than the string holds), its shoots spaced more closely than alder's (space_density 3.5) so the crown of narrower lobed cards keeps within the module limit, and path_half fitted so it grows to the height at 40 years of its reference (refitted 2026-10-24, 22 to 13, when the reference became the Urban Tree Database's open-grown tulip trees, 23 m at 40 years). Not fitted to crown measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Red alder's crown values (a fast, straight-stemmed deciduous tree), changed by hand: one trunk, as FNA describes it (single-trunked), a wider crown, short-shoot leaves on the angiosperm default 0.26 m card (its blades and long petioles; a smaller card grows more shoots than the string holds), its shoots spaced more closely than alder's (space_density 3.5) so the crown of narrower lobed cards keeps within the module limit, and path_half fitted so it grows to the height at 40 years of its reference (refitted 2026-10-24, 22 to 13, when the reference became the Urban Tree Database's open-grown tulip trees, 23 m at 40 years). Not fitted to crown measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "SourceInferred",

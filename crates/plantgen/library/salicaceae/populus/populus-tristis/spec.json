@@ -12,8 +12,7 @@
   "generator": {
     "params": {
       "crown_height": 34,
-      "crown_base": 8,
-      "crown_rate": 0.045,
+      "crown_rate": 0.03,
       "space_density": 8,
       "internode": 0.35,
       "max_shoot": 4,
@@ -99,6 +98,7 @@
   "traits": {
     "leaf_area_per_basal_area": 0.204,
     "crown_spread": 0.41,
+    "crown_base_share": 0.09,
     "bark_colour": [84, 82, 74],
     "leaf_length_m": {"min": 0.076, "max": 0.102},
     "leaf_width_m": {"min": 0.051, "max": 0.064},
@@ -108,6 +108,7 @@
   "evidence": {
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 21 black cottonwoods (Populus balsamifera subsp. trichocarpa): 0.204 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 28 black cottonwoods (Populus balsamifera subsp. trichocarpa) 25 years or older (Longview, WA): 0.41. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
+    "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 28 black cottonwoods (Populus balsamifera subsp. trichocarpa) 25 years or older (Longview, WA): 0.09 (quartiles 0.08 and 0.12). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.33, 0.32, 0.29], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"slender branchlets ... marked by many orange-colored lenticels ... reddish brown during their first year, gradually becoming dark gray\". Colour chosen by eye for reddish brown."},
     "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-18), as Populus trichocarpa, p. 126: \"Leaves broad-ovate ... 3'-4' long, 2'-2½' wide; petioles slender ... 1½'-2' in length\"."},
@@ -123,7 +124,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: the tallest broadleaf tree of the region, with a straight stem, an open crown of upswept branches and alternate, broadly heart-shaped leaves on long stalks. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: the tallest broadleaf tree of the region, with a straight stem, an open crown of upswept branches and alternate, broadly heart-shaped leaves on long stalks. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values. crown_rate 0.03 (was 0.045) since 2026-10-24, fitted so its trunk keeps to the Urban Tree Database's at 25 and 40 years (+24% and 0%) once its crown starts at the database's share of its height."
     },
     "allometry": {
       "evidence": "SourceInferred",

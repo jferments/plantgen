@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 2,
       "crown_rate": 0.05,
       "space_density": 14,
       "internode": 0.18,
@@ -178,7 +177,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small understory tree with a rounded crown, opposite oval leaves with curving veins, and large white flower heads of four to six petal-like bracts. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: a small understory tree with a rounded crown, opposite oval leaves with curving veins, and large white flower heads of four to six petal-like bracts. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

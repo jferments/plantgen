@@ -13,7 +13,6 @@
   "generator": {
     "params": {
       "crown_height": 7,
-      "crown_base": 0.5,
       "crown_rate": 0.04,
       "internode": 0.18,
       "max_shoot": 3,
@@ -30,9 +29,6 @@
       "leaf_years": 2,
       "lean": 12,
       "wiggle": 12,
-      "fork_height": 0.5,
-      "fork_stems": 3,
-      "fork_angle": 35,
       "droop": 0.01,
       "light_cell": 0.4,
       "thorns": 1,
@@ -106,6 +102,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "trunk_fork_height_m": 1.5,
     "bark_colour": [115, 110, 102],
     "leader": "lost",
     "limb_angle": "erect",
@@ -138,6 +135,7 @@
     "flower_symmetry": "zygomorphic"
   },
   "evidence": {
+    "traits.trunk_fork_height_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 627): 'usually divided 4\u00b0-6\u00b0 above the ground into a number of stout upright branches' (1.2-1.8 m)."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.45, 0.43, 0.4], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 627): 'usually divided 4°—6° above the ground into a number of stout upright branches'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 627): 'usually divided 4°—6° above the ground into a number of stout upright branches'."},
@@ -156,7 +154,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slow evergreen tree 5 to 10 m tall with a broad crown, smooth grey bark that shreds with age, short paired thorns, grey-green pinnate leaves and lavender pea flowers in late spring. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: a slow evergreen tree 5 to 10 m tall with a broad crown, smooth grey bark that shreds with age, short paired thorns, grey-green pinnate leaves and lavender pea flowers in late spring. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "generator.params.bud_years": {
       "evidence": "Authored",

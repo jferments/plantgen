@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 5,
       "crown_rate": 0.035,
       "space_density": 4,
       "internode": 0.22,
@@ -24,9 +23,6 @@
       "leaf_angle": 50,
       "lean": 6,
       "wiggle": 8,
-      "fork_height": 4,
-      "fork_stems": 1,
-      "fork_angle": 30,
       "path_half": 14.4,
       "spur_leaf": 0.247
     }
@@ -79,8 +75,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "persistent",
     "leaf_area_per_basal_area": 0.131,
     "crown_spread": 0.86,
+    "crown_base_share": 0.22,
     "bark_colour": [102, 97, 87],
     "limb_angle": "spreading",
     "height_max_m": {
@@ -171,8 +169,10 @@
     "fruit_seed_thread_m": 0.004
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 345): 'a tree, of pyramidal habit ... with a tall straight trunk'."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 236 southern magnolias: 0.131 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 210 southern magnolias 25 years or older (six cities): 0.86. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
+    "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 210 southern magnolias 25 years or older (six cities): 0.22 (quartiles 0.17 and 0.31). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.4, 0.38, 0.34], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 345): 'rather small spreading branches'."},
     "taxon": {
@@ -298,7 +298,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific madrone's crown values (an evergreen broadleaf), changed by hand: one trunk, as FNA describes it (single-trunked), upright rather than leaning. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Pacific madrone's crown values (an evergreen broadleaf), changed by hand: one trunk, as FNA describes it (single-trunked), upright rather than leaning. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "SourceInferred",

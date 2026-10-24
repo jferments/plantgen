@@ -477,6 +477,15 @@
       "optional": true,
       "why": "a grown, open-grown tree's crown width over its height"
     },
+    "crown_base_share": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0, 0.9],
+      "optional": true,
+      "why": "how far up a grown, open-grown tree's height its crown begins: the height of the lowest live limb's foliage over the tree's height"
+    },
     "leaf_area_per_basal_area": {
       "group": "form",
       "organ": "plant",

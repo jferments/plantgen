@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 4,
       "crown_rate": 0.05,
       "space_density": 12,
       "internode": 0.28,
@@ -134,6 +133,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_clump": "few",
     "bark_colour": [178, 173, 158],
     "branch_posture": "pendulous",
     "limb_angle": "spreading",
@@ -167,6 +167,7 @@
     "leaf_apex": {"acute": "usually", "acuminate": "often"}
   },
   "evidence": {
+    "traits.stem_clump": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo tally (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/TALLY.md): two or more stems from at or near the ground (multiple) in 7 of 8 photo votes, kept 1."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.7, 0.68, 0.62], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, pp. 212-213): 'a narrow open head of short pendulous branches'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 205): 'short slender branches more or less erect and forming on young trees a narrow symmetrical pyramidal head, becoming horizontal and often pendulous on older trees'."},
@@ -212,7 +213,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow, open crown, alternate oval, toothed leaves and hanging catkins. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow, open crown, alternate oval, toothed leaves and hanging catkins. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "SourceInferred",

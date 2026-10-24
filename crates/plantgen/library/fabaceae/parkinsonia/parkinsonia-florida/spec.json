@@ -11,12 +11,8 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 0.5,
       "branch_angle": 45,
       "lean": 10,
-      "fork_height": 0.4,
-      "fork_stems": 4,
-      "fork_angle": 35,
       "thorns": 1,
       "thorn_length": 0.01,
       "thorn_angle": 50,
@@ -107,8 +103,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
     "leaf_area_per_basal_area": 0.214,
     "crown_spread": 1.13,
+    "crown_base_share": 0.32,
     "height_typical_m": {
       "min": 4,
       "max": 6
@@ -198,8 +196,10 @@
     ]
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, pp. 613-614, as Cercidium Torreyanum): 'a straight trunk ... separating several feet from the ground into a number of upright branches forming a narrow head'."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 14 blue palo verdes: 0.214 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 16 blue palo verdes 15 years or older (8 of 25 or older): 1.13. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
+    "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 16 blue palo verdes 15 years or older (8 of 25 or older): 0.32 (quartiles 0.25 and 0.36). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -423,7 +423,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Set by hand for blue palo verde from its sources and the photos the traits cite, on the template of foothill palo verde (parkinsonia-microphylla); the rest of its growth comes from the library's rules for the form. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Set by hand for blue palo verde from its sources and the photos the traits cite, on the template of foothill palo verde (parkinsonia-microphylla); the rest of its growth comes from the library's rules for the form. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

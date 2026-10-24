@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 2.5,
       "crown_rate": 0.025,
       "space_density": 8,
       "internode": 0.2,
@@ -26,9 +25,6 @@
       "leaf_angle": 55,
       "lean": 6,
       "wiggle": 6,
-      "fork_height": 4,
-      "fork_stems": 2,
-      "fork_angle": 35,
       "droop": 0.02,
       "blooms": 1,
       "bloom_size": 0.042,
@@ -283,7 +279,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Oregon white oak's values, changed by hand for tanoak: ascending branches and a straighter, less forked bole (FEIS, Fryer 2008: \"Tanoak boles are generally long and straight\", \"Branches are ascending\"), a broad, rounded open-grown crown a little narrower than the oak's, and smaller leaves. path_half fitted so the tree grows to its reference height. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Oregon white oak's values, changed by hand for tanoak: ascending branches and a straighter, less forked bole (FEIS, Fryer 2008: \"Tanoak boles are generally long and straight\", \"Branches are ascending\"), a broad, rounded open-grown crown a little narrower than the oak's, and smaller leaves. path_half fitted so the tree grows to its reference height. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "SourceInferred",

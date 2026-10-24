@@ -13,7 +13,6 @@
   "generator": {
     "params": {
       "crown_height": 8,
-      "crown_base": 1,
       "crown_rate": 0.06,
       "space_density": 12,
       "internode": 0.2,
@@ -29,9 +28,6 @@
       "leaf_years": 2,
       "lean": 6,
       "wiggle": 10,
-      "fork_height": 1.0,
-      "fork_stems": 3,
-      "fork_angle": 30,
       "droop": 0.01,
       "blooms": 2,
       "adult_age": 6,
@@ -108,6 +104,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
     "bark_colour": [64, 56, 51],
     "wood_density_basic_kg_m3": 700,
     "height_typical_m": {"min": 3, "max": 12},
@@ -124,6 +121,7 @@
     "leaf_apex": "acute"
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, pp. 866-867, as A. nitida): 'a short trunk ... spreading branches forming a broad round-topped head'."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.25, 0.22, 0.2], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Avicennia germinans (gwddagg_v2.2_species.csv, read): specific gravity 0.7 (wsg_est, the database's hierarchical-model species mean, from 33 records in 9 sources); trunks 0.68, branches 0.66. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
@@ -134,7 +132,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical and subtropical coasts, 5 to 10 m tall, with dark, scaly bark and narrow leaves grey-felted beneath, whose shallow roots send up hundreds of pencil-like breathing roots through the mud round it. Each bloom card stands for one of its cymes, 2 cm to 6 cm long as the species states, now that Acanthaceae's flowers are mostly in cymes (bloom_size 0.04, was 0.015, a single flower's size). Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical and subtropical coasts, 5 to 10 m tall, with dark, scaly bark and narrow leaves grey-felted beneath, whose shallow roots send up hundreds of pencil-like breathing roots through the mud round it. Each bloom card stands for one of its cymes, 2 cm to 6 cm long as the species states, now that Acanthaceae's flowers are mostly in cymes (bloom_size 0.04, was 0.015, a single flower's size). Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

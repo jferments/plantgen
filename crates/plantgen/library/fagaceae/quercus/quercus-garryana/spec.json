@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 4,
       "crown_rate": 0.025,
       "space_density": 4,
       "internode": 0.2,
@@ -26,9 +25,6 @@
       "leaf_angle": 55,
       "lean": 6,
       "wiggle": 9,
-      "fork_height": 5,
-      "fork_stems": 3,
-      "fork_angle": 35,
       "droop": 0.02,
       "bloom_area": 0.72,
       "blooms": 1,
@@ -139,6 +135,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "trunk_fork_height_m": 5,
     "bark_colour": [84, 82, 76],
     "leader": "lost",
     "limb_angle": "ascending",
@@ -170,6 +167,7 @@
     "leaf_apex": "rounded"
   },
   "evidence": {
+    "traits.trunk_fork_height_m": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The stem forks into its big limbs about 5 m up, read by eye against the trunk in iNaturalist photographs of open-grown trees (observations 28744863, 83148498)."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.33, 0.32, 0.3], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 1 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/): a few tortuous scaffold limbs (2) in the photos where renders draw about 6 straight ones; Sargent (p. 296): 'stout ascending or spreading branches forming a broad compact head'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 296): 'stout ascending or spreading branches forming a broad compact head'."},
@@ -178,7 +176,6 @@
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"Its fall color is unspectacular, with many trees turning plain brown\". Colour ours."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Quercus Garryana: \"stout branchlets coated at first with thick pale rufous pubescence, pubescent or tomentose and light or dark orange color during their first winter, becoming glabrous and rather bright reddish brown in their second year and ultimately gray\". Colour chosen by eye between the pubescent orange and the reddish brown."},
     "generator.params.spur_pairs": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "An oak's leaves crowd at its twig tips, where the internodes are short (University of Washington botany notes), and a short growth unit bears about 5 to 8 leaves (Hallé, Oldeman and Tomlinson 1978, the general figure for preformed short shoots); three pairs is six. With single leaves at their flora length (woody forms, 2026-10-17), two pairs left the open-grown crown at 2.0 m² of leaf per m² of crown, the bottom of the Urban Tree Database's valley oaks, where Karlik and McKay (2002) measured 4.4 under a blue oak's crown."},
-    "generator.params.crown_base": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The crown starts about 4 m up and the stem forks into its big limbs about 5 m up (fork_height), read by eye against the trunk in iNaturalist photographs of open-grown trees (observations 28744863, 83148498)."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Open-grown trees in iNaturalist research-grade photographs (observations 28744863, 28832264, 83148498) spread wider than tall on a few big limbs that rise from a short trunk and arch outward."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
@@ -215,7 +212,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "SourceInferred",

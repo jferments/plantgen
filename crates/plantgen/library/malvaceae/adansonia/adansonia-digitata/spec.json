@@ -12,7 +12,6 @@
   "generator": {
     "params": {
       "crown_height": 13,
-      "crown_base": 8,
       "crown_rate": 0.025,
       "space_density": 1.5,
       "internode": 0.35,
@@ -27,9 +26,6 @@
       "leaf_angle": 55,
       "lean": 3,
       "wiggle": 8,
-      "fork_height": 8,
-      "fork_stems": 5,
-      "fork_angle": 50,
       "droop": 0.0,
       "pipe_tip": 0.008,
       "pipe_organ": 0.012,
@@ -96,6 +92,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
     "bark_colour": [140, 128, 115],
     "leaf_out_months": [12],
     "leaf_fall_months": [3, 4],
@@ -111,6 +108,7 @@
     "fruit_size_m": {"min": 0.15, "max": 0.25}
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs (observations 18299511, 185799293, 37979372, 142536045): a few thick limbs spread from the top of the swollen trunk."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.55, 0.5, 0.45], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_out_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-10-18): \"All baobabs are deciduous, losing their leaves in the dry season, and remaining leafless for about eight months of the year.\" Its leaves come with the southern African summer rains; December is ours."},
     "traits.leaf_fall_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Adansonia digitata (read 2026-10-18): leafless \"for about eight months of the year\" in the dry season: shed in March and April, ours, so it stands in leaf about four months."},
@@ -126,7 +124,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a massive tree of the African savanna, 10 to 20 m tall, with a swollen, smooth grey bottle-shaped trunk storing water, a few thick, crooked branches high up and digitate leaves of five to seven leaflets, dropped in the dry season. Not fitted to measurements. space_kill 0.6 (was 1.0) since the growth-form language (revision 145): at 1.0 a young tree crowded its own buds to death in some seeds (seed 1 at 6 to 8 years, then 5.9 m at 100 years against 15 m); at 0.6 seeds 1 to 9 reach 12.4 to 15.5 m. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: a massive tree of the African savanna, 10 to 20 m tall, with a swollen, smooth grey bottle-shaped trunk storing water, a few thick, crooked branches high up and digitate leaves of five to seven leaflets, dropped in the dry season. Not fitted to measurements. space_kill 0.6 (was 1.0) since the growth-form language (revision 145): at 1.0 a young tree crowded its own buds to death in some seeds (seed 1 at 6 to 8 years, then 5.9 m at 100 years against 15 m); at 0.6 seeds 1 to 9 reach 12.4 to 15.5 m. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

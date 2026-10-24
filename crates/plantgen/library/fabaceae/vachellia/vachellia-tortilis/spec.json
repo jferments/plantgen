@@ -11,7 +11,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 3,
       "crown_rate": 0.045,
       "internode": 0.25,
       "max_shoot": 3,
@@ -27,9 +26,6 @@
       "leaf_angle": 60,
       "lean": 8,
       "wiggle": 8,
-      "fork_height": 2.5,
-      "fork_stems": 3,
-      "fork_angle": 40,
       "droop": 0.0,
       "steer_weight": 0.5,
       "light_cell": 0.4,
@@ -98,6 +94,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "lost",
     "crown_form": "umbrella",
     "wood_density_basic_kg_m3": 780,
     "leaf_division": "compound",
@@ -125,6 +122,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs of grown trees (observations 287136128, 135888680, 35563571, 342732647): a short trunk divides low into limbs that spread into a wide, flat-topped crown."},
     "generator.params.crown_height": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (woody forms, broadleaf revision 16): the crown's region reaches 13 m, not the species' 21 m maximum, so its umbrella levels out at about 7 m, the height of the grown open trees in iNaturalist photographs (observations 287136128, 135888680). The trunk divides about 2.5 m up (fork_height) under a crown from 3 m (crown_base), and short shoots need 0.3 of the open sky's light (spur_light), so the crown's underside thins as in the photographs."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs of grown trees (observations 287136128, 135888680, 35563571, 342732647): a short trunk divides low into limbs that spread into a wide, flat-topped crown."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Vachellia tortilis (gwddagg_v2.2_species.csv, read): specific gravity 0.78 (wsg_est, the database's hierarchical-model species mean, from 3 records in 3 sources); trunks 0.78, branches 0.69. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -136,7 +134,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tree 4 to 10 m tall of the African savanna and the Arabian and Sinai deserts, whose branches spread from a short trunk into a flat-topped umbrella crown, with paired straight white thorns and short hooked ones, and tiny twice-divided leaves. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: a tree 4 to 10 m tall of the African savanna and the Arabian and Sinai deserts, whose branches spread from a short trunk into a flat-topped umbrella crown, with paired straight white thorns and short hooked ones, and tiny twice-divided leaves. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "generator.params.bud_years": {
       "evidence": "SourceInferred",

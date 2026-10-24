@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_base": 1,
       "crown_rate": 0.05,
       "internode": 0.2,
       "max_shoot": 3,
@@ -28,9 +27,6 @@
       "leaf_angle": 55,
       "lean": 15,
       "wiggle": 12,
-      "fork_height": 0.8,
-      "fork_stems": 3,
-      "fork_angle": 35,
       "droop": 0.015,
       "light_cell": 0.35,
       "thorns": 1,
@@ -167,7 +163,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a spreading tree 6 to 9 m tall, often several-trunked and leaning, with dark, shaggy, furrowed bark, paired thorns, twice-divided leaves of many small velvety leaflets and yellow catkin spikes in spring; this proxy dies at 100 years and stands as a snag, losing its dead branches one by one. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: a spreading tree 6 to 9 m tall, often several-trunked and leaning, with dark, shaggy, furrowed bark, paired thorns, twice-divided leaves of many small velvety leaflets and yellow catkin spikes in spring; this proxy dies at 100 years and stands as a snag, losing its dead branches one by one. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "generator.params.bud_years": {
       "evidence": "SourceInferred",

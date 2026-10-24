@@ -12,7 +12,6 @@
   "generator": {
     "params": {
       "crown_height": 10,
-      "crown_base": 1,
       "crown_rate": 0.05,
       "space_density": 12,
       "internode": 0.28,
@@ -138,7 +137,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a deciduous southern beech of the Patagonian Andes, a tall forest tree where sheltered but, at the tree line and on the windward plains, a low, leaning tree flagged by the westerlies, its crown streaming downwind; small crinkled leaves turning red in autumn. Grown here in a steady wind. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Hand-set from general knowledge of the species: a deciduous southern beech of the Patagonian Andes, a tall forest tree where sheltered but, at the tree line and on the windward plains, a low, leaning tree flagged by the westerlies, its crown streaming downwind; small crinkled leaves turning red in autumn. Grown here in a steady wind. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",
