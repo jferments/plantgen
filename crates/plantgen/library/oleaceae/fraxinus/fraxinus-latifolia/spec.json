@@ -113,6 +113,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_see_through": 0.06,
     "shade_tolerance": "intermediate",
     "self_pruning": true,
     "leaf_area_per_basal_area": 0.276,
@@ -141,6 +142,7 @@
     "fruit_size_m": {"min": 0.025, "max": 0.05}
   },
   "evidence": {
+    "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/CROWNS.md): median sky inside the crown outline of 2 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.06."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Fraxinus latifolia, Reaction to Competition (p. 341): 'The species is classed as intermediate in tolerance of shade'."},
     "traits.self_pruning": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Fraxinus latifolia, Reaction to Competition (p. 341): 'Individuals self-prune quickly with side shade, and forest-grown trees have long, clean trunks'."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 28 Oregon ashes: 0.276 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},

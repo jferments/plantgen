@@ -2627,7 +2627,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     )
     .map_err(|error| format!("cannot encode PNG: {error}"))?;
     fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
-    out!("{}", describe(graph, &growth.organ_types));
+    out!("{}", describe(&growth.keyframes[0], &growth.organ_types));
     out!(
         "wrote {out}: LOD{level}, {} triangles ({} wood, {} cards){}",
         plant.triangle_count(),
@@ -2695,12 +2695,12 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
             .iter()
             .map(|graph| graph.height)
             .fold(0.0, f64::max);
-        for graph in &growth.keyframes {
-            let graph = &*drawn(graph, &sizes, &looks);
+        for grown in &growth.keyframes {
+            let graph = &*drawn(grown, &sizes, &looks);
             out!(
                 "  {:<10} {}",
                 environment.name(),
-                describe(graph, &growth.organ_types)
+                describe(grown, &growth.organ_types)
             );
             let mut plant = mesh::build(
                 graph,

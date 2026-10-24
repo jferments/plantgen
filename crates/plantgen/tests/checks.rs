@@ -17,6 +17,11 @@ use plantgen::spec::PlantSpec;
 /// too, so the list only shrinks.
 const KNOWN: &[(&str, &str, &str)] = &[
     (
+        "acer-macrophyllum",
+        "crown_see_through",
+        "its photographs show about 2% sky; drawn four times over (form::MOST_DRAWN), its crown still shows about 8% from the side, where long limbs run bare between its leafy shoots (architecture, not leaf area: the grown leaf area matches the Urban Tree Database)",
+    ),
+    (
         "achlys-triphylla",
         "leaf_arrangement",
         "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
@@ -62,6 +67,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the broadleaf program spaces a crown's twigs by the cube root of its short shoots' leaf card, so a bush of 2.5 to 5 cm leaves shows half its outline as sky, where iNaturalist photographs show a dense bush leafy to its core",
     ),
     (
+        "asimina-triloba",
+        "crown_see_through",
+        "its photographs show no sky through its crown; drawn four times over (form::MOST_DRAWN) it still shows about 13% between its shoots",
+    ),
+    (
         "azorella-compacta",
         "height_typical_m",
         "it is grown 200 years, to a dome 0.6 m tall, but Reiche's mounds 1.5 m tall and more, and the ministry's 1 m, are of cushions centuries older (inferred: no source dates them)",
@@ -75,6 +85,21 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "basella-alba",
         "juvenile_period_years",
         "the climber program first flowers in its second year (a shoot turns adult once the vine is adult_age old, counted from 0), so Malabar spinach, which flowers in its first, is drawn flowering at 2 years",
+    ),
+    (
+        "cornus-nuttallii",
+        "crown_see_through",
+        "its photographs show no sky through its crown; drawn four times over (form::MOST_DRAWN) it still shows about 9% between its shoots",
+    ),
+    (
+        "fraxinus-latifolia",
+        "crown_see_through",
+        "its photographs show about 6% sky; drawn four times over (form::MOST_DRAWN) its crown still shows about 13% from the side, between limbs that run bare to their leafy tips",
+    ),
+    (
+        "populus-tremuloides",
+        "crown_see_through",
+        "its photographs show about 5% sky; drawn four times over (form::MOST_DRAWN) its crown still shows about 9% between its shoots",
     ),
     (
         "program:climber",
@@ -322,6 +347,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
+        "prunus-emarginata",
+        "crown_see_through",
+        "its photographs show about 3% sky; drawn four times over (form::MOST_DRAWN) its crown still shows about 20%, between the few long shoots of a single stem where its photographs show a clump of stems",
+    ),
+    (
         "psilostrophe-cooperi",
         "leaf_arrangement",
         "its alternate leaves (FNA) are drawn alternate on its long shoots, but the shrub form's spur shoots bear their leaves in a pair (`spur_pairs` 1), which the measure reads as opposite (inferred)",
@@ -375,6 +405,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
+    ),
+    (
+        "umbellularia-californica",
+        "crown_see_through",
+        "its photographs show about 2% sky; drawn four times over (form::MOST_DRAWN) its crown still shows about 12% between its shoots",
     ),
     (
         "vachellia-tortilis",

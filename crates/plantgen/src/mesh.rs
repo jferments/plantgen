@@ -4250,6 +4250,7 @@ mod tests {
             accent: None,
             face_up,
             spray: 0.0,
+            fill: None,
             face_out: 0.0,
             solid: None,
             bend: None,
@@ -4271,6 +4272,7 @@ mod tests {
             "leaf".into(),
             OrganLook {
                 spray: 2.0,
+                fill: None,
                 ..look(Shape::default_for(OrganKind::Leaf), 0.0)
             },
         );
@@ -4418,6 +4420,7 @@ mod tests {
             .iter()
             .map(|look| Look {
                 spray: 0.0,
+                fill: None,
                 ..look.clone()
             })
             .collect()

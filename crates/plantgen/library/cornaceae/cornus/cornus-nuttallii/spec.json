@@ -108,6 +108,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_see_through": 0.0,
     "bark_colour": [71, 61, 51],
     "petal_apex": "obtuse",
     "limb_angle": "spreading",
@@ -139,6 +140,7 @@
     "leaf_apex": "acuminate"
   },
   "evidence": {
+    "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/CROWNS.md): median sky inside the crown outline of 4 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.00."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.28, 0.24, 0.2], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.petal_apex": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Of the showy bracts, which the flower card draws as its petals: broad and rounded, often with a small point at the tip, in iNaturalist photographs (Imagekit count trial, 2026-10-19, 91 heads); drawn acute (point 0.6) they read as square-ish. The flower card's point is set to the petal_apex rule's obtuse value (0.25) by hand, as the rule reaches only looks drawn with flower cards, not a seasonal flower look."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 787): 'small spreading branches forming an oblong conic or ultimately round-topped head'."},

@@ -290,7 +290,10 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     }
     meshes.extend(items);
     let camera = match (options.view, options.focus) {
-        (View::Side | View::Eye | View::ThreeQuarter | View::Oblique | View::Under, Some((target, span))) => {
+        (
+            View::Side | View::Eye | View::ThreeQuarter | View::Oblique | View::Under,
+            Some((target, span)),
+        ) => {
             let direction = match options.view {
                 View::Side | View::Eye => Vec3::new(0.0, 0.04, 1.0),
                 View::Under => Vec3::new(0.0, -0.36, 1.0),

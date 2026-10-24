@@ -332,6 +332,7 @@ mod tests {
                 accent: None,
                 face_up: 0.0,
                 spray: 0.0,
+                fill: None,
                 face_out: 0.0,
                 solid: None,
                 bend: None,

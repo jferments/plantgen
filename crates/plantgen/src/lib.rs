@@ -1239,5 +1239,12 @@ pub mod venation;
 /// 1960), and a limb shed from a forked stem below the crown leaves its
 /// pipes too. Hand-picked bark colours are stated in sRGB, and a twig's
 /// leaves are drawn spread along a shoot (`spray`), above the ground,
-/// where the coarse levels trace them too.
+/// where the coarse levels trace them too. A broadleaf crown begins at
+/// its lineage's measured share of the height (`crown_base_share`, else
+/// the database's 0.229), its stem divides only where its flora or
+/// photographs say its leader is lost (at `trunk_fork_height_m`, else
+/// its crown base) or that it stands on several stems (at 1 m), and its
+/// leaves are drawn up to four times over, never grown, until it shows
+/// about as much sky as its photographs (`crown_see_through`, else
+/// 0.05; `fill`).
 pub const GENERATOR_REVISION: u32 = 165;

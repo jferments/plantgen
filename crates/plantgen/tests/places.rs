@@ -88,12 +88,15 @@ fn a_crown_makes_room_for_a_wall_and_shies_from_a_neighbour() {
     );
 
     // A neighbour's crown to the east shades it and takes its room: its
-    // leaves stand farther west, and fewer of them in the neighbour.
+    // leaves stand farther west, and fewer of them in the neighbour. A
+    // bigleaf maple stands on several stems divided at 1 m (`stem_clump`),
+    // which stay where they part, so its leaves move about 0.15 m at 15
+    // years where a single stem's moved 0.3 m and more.
     let shaded = maple(NEIGHBOUR, 0.0, 15.0, vec![15.0]);
     let shaded = &shaded.keyframes[0];
     let (west, centre) = (organs_centre(shaded).x, organs_centre(open).x);
     assert!(
-        west < centre - 0.3,
+        west < centre - 0.1,
         "leaves' centre {west:.2} m, open {centre:.2} m"
     );
     let (inside, open_inside) = (

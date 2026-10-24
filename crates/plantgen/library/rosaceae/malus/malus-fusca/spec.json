@@ -33,7 +33,7 @@
       "space_kill": 0.45,
       "leaf_area": 0.26,
       "bloom_area": 0.567,
-      "path_half": 8.0
+      "path_half": 7.5
     }
   },
   "growth": {
@@ -165,7 +165,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, thicket-forming tree with crooked branches, alternate toothed leaves and clusters of white to pink flowers. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
+      "note": "Hand-set from general knowledge of the species: a small, thicket-forming tree with crooked branches, alternate toothed leaves and clusters of white to pink flowers. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values. path_half 7.5 (was 8.0) since 2026-10-24, so that on one stem, its fork no longer hand-set, its tallest plants keep under its flora's 9.14 m."
     },
     "allometry": {
       "evidence": "Authored",

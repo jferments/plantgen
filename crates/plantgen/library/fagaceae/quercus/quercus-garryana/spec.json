@@ -135,6 +135,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_see_through": 0.12,
     "trunk_fork_height_m": 5,
     "bark_colour": [84, 82, 76],
     "leader": "lost",
@@ -167,6 +168,7 @@
     "leaf_apex": "rounded"
   },
   "evidence": {
+    "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/CROWNS.md): median sky inside the crown outline of 2 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.12."},
     "traits.trunk_fork_height_m": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The stem forks into its big limbs about 5 m up, read by eye against the trunk in iNaturalist photographs of open-grown trees (observations 28744863, 83148498)."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.33, 0.32, 0.3], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 1 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/): a few tortuous scaffold limbs (2) in the photos where renders draw about 6 straight ones; Sargent (p. 296): 'stout ascending or spreading branches forming a broad compact head'."},

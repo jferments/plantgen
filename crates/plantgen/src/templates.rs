@@ -4611,6 +4611,7 @@ mod tests {
                     accent: Some([0.8, 0.7, 0.1]),
                     face_up: 0.0,
                     spray: 0.0,
+                    fill: None,
                     face_out: 0.0,
                     solid: None,
                     bend: None,

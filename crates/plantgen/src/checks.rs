@@ -776,12 +776,19 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
     // The plant.
     tally.add("height_typical_m", 0, 0, graph.height);
     tally.add("height_max_m", 0, 0, graph.height);
+    let (looks, _) =
+        crate::drawing::looks_of(grown.spec, grown.growth, crate::package::DEFAULT_DAY);
     if let Some(form) = crate::form::measure(graph, &grown.growth.organ_types) {
         tally.add("crown_width_max_m", 0, 0, 2.0 * form.crown_radius);
         if let Some(fit) = form.outline_fit {
             tally.add("crown_outline_fit", 0, 0, fit);
         }
-        if let Some(through) = form.see_through {
+        // A crown whose leaves are drawn again to its photographs'
+        // see-through (`crate::form::filled`) shows the sky it is drawn
+        // with.
+        let drawn = crate::form::filled(graph, &looks)
+            .and_then(|filled| crate::form::drawn_see_through(&filled, &looks));
+        if let Some(through) = drawn.or(form.see_through) {
             tally.add("crown_see_through", 0, 0, through);
         }
     }
@@ -790,8 +797,6 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
     }
     culms(grown, &mut tally);
     bodies(grown, &mut tally);
-    let (looks, _) =
-        crate::drawing::looks_of(grown.spec, grown.growth, crate::package::DEFAULT_DAY);
     arrangement(grown, &looks, &mut tally);
     let seasons: Vec<Option<&Season>> = grown
         .growth
