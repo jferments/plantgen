@@ -272,9 +272,16 @@
 # one of these left at its default, a thorny species grows as before. Its
 # rules go last.
 #
+# Revision 28 (tree girth): the pipe model's exponent (pipe_exponent, 2.3
+# as before) and whether every twig that dies leaves its pipes in the wood
+# below it as heartwood (heartwood, 0 as before) are parameters, so a
+# growth form can take Leonardo's rule and its dead wood by rule. A flat
+# shoot (plagio) takes its branch posture's droop and give and its limb's
+# yearly turn, as other branches do.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 27;
+lsystem broadleaf 28;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -324,6 +331,8 @@ param thorn_share = 1;        # share of a thorny shoot's nodes that bear thorns
 param thorn_pair = 1;         # 1: a pair of thorns beside each bud; 0: one, beside the bud where a shoot thorn stands
 param thorn_spread = 0.2;     # thorns run this share shorter or longer than thorn_length
 param thorn_years = 0;        # years a thorn or prickle stays on its stem; 0: for good
+param pipe_exponent = 2.3;    # a parent's radius to this power is its children's summed; Leonardo's rule is 2
+param heartwood = 0;          # 1: every twig that dies leaves its pipes in the wood below it
 param thorn_tips = 0;         # chance a year that a long shoot's tip ends in a thorn, its topmost bud carrying it on
 param wind;                   # strength of a steady wind toward +X; 0 none
 param wind_bend;              # extra downwind bending per unit of wind
@@ -435,6 +444,7 @@ module Ab(s, p);                          # a shoot's tip at the end of its year
 module Ct(o);                             # a limb's yearly turn (limb_turn)
 module Cb(o);                             # a branch's held angle and droop
 module Cat(o);                            # a shoot of order o takes its axis category's held angle and droop
+module Cp(o);                             # a flat shoot of order o holds plagio_set with its branch posture's droop
 module Af(k);                             # k 1: the second of two lateral buds that carry a dead tip on, a fork; 0: none
 module Rs(m);                             # m stems still to send up this year
 module Sb;                                # a stem's foot: with stem_life, the stem dies at that age
@@ -475,7 +485,7 @@ tool bend@1 {
 };
 # Each living bud's twig adds to the pipes below it, a growth unit's
 # nodes sharing one bud's.
-tool pipe@1 { exponent = 2.3, tip = pipe_tip / pow(unit_nodes, 1 / 2.3), organ = pipe_organ, rings = pipe_rings };
+tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip / pow(unit_nodes, 1 / pipe_exponent), organ = pipe_organ, rings = pipe_rings, heartwood = heartwood };
 
 # The stem leans a little in a random direction; each tree forks at its own
 # height. The droop bends each segment, so a growth unit's nodes share it.
@@ -546,8 +556,7 @@ rule A(split) : flat_top > 0 && split <= 0 && py > flat_top * crown_height * (1 
 # ends its year in Ab, which decides (the last rules). These make no draws
 # of their own, so every draw keeps its site.
 rule A(split) : plagio > 0 && limb > 0 && order >= 2 && vigour >= 1 && space > 0 ->
-    incline(plagio_set, incline_rate)
-    steer(sx, sy, sz, steer_weight)
+    steer(sx, sy, sz, steer_weight) Ct(order) Cp(order)
     Mp(min(floor(vigour), max_shoot) * unit_nodes,
        min(floor(vigour), max_shoot) * unit_nodes,
        internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) Ab(split, 1);
@@ -942,6 +951,16 @@ decompose Cb(o) : o >= 2 && (branch_set >= 0 || branch_droop >= 0 || branch_hold
     incline(branch_set >= 0 ? branch_set : set_point, branch_hold >= 0 ? branch_hold : incline_rate)
     T(wind, -1, 0, ((branch_droop >= 0 ? branch_droop : droop) + wind_bend * wind) / unit_nodes);
 decompose Cb(o) -> ;
+
+# Revision 28. A flat shoot (plagio) holds plagio_set, and gives to its
+# weight and droops as its branch posture says, as any other branch does
+# (Cb): red alder's "slender somewhat pendulous branches" (Sargent) hang
+# their sprays at the ends instead of holding every one level. A limb's
+# yearly turn (Ct) takes it too.
+decompose Cp(o) : branch_droop >= 0 || branch_hold >= 0 ->
+    incline(plagio_set, branch_hold >= 0 ? branch_hold : incline_rate)
+    T(wind, -1, 0, ((branch_droop >= 0 ? branch_droop : droop) + wind_bend * wind) / unit_nodes);
+decompose Cp(o) -> incline(plagio_set, incline_rate);
 
 # A tortuous limb (limb_turn) turns its own way each year: every year's
 # shoot on a limb or branch starts off turned by a chance angle, which its

@@ -122,7 +122,7 @@ fn an_interior_layout_grows_the_middle_plant_of_a_tile() {
 fn an_edge_layout_leans_the_crown_away_from_its_neighbours() {
     let maple = maple();
     let alone = grow(&maple.program, &maple.params, &maple.settings).unwrap();
-    let edge = in_layout(&maple, LayoutKind::Edge, 5.0);
+    let edge = in_layout(&maple, LayoutKind::Edge, 3.0);
     let (alone, edge) = (&alone.keyframes[0], &edge.keyframes[0]);
     // Neighbours stand west (−X): the crown leans east.
     let lean = organs_centre(edge)[0] - organs_centre(alone)[0];
@@ -134,7 +134,7 @@ fn an_edge_layout_leans_the_crown_away_from_its_neighbours() {
 fn a_row_layout_narrows_the_crown_across_the_row() {
     let maple = maple();
     let alone = grow(&maple.program, &maple.params, &maple.settings).unwrap();
-    let row = in_layout(&maple, LayoutKind::Row, 5.0);
+    let row = in_layout(&maple, LayoutKind::Row, 3.0);
     let (alone, row) = (
         organs_spread(&alone.keyframes[0]),
         organs_spread(&row.keyframes[0]),

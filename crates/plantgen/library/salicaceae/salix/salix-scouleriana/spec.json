@@ -12,8 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 3,
-      "crown_base": 0.3,
       "crown_rate": 0.07,
       "space_density": 12,
       "internode": 0.2,
@@ -25,12 +23,7 @@
       "leaf_angle": 45,
       "lean": 10,
       "wiggle": 7,
-      "fork_height": 0.3,
-      "fork_stems": 5,
-      "fork_angle": 30,
       "droop": 0.025,
-      "extinction": 0.45,
-      "pipe_rings": 1.4e-05,
       "path_half": 4.25
     }
   },
@@ -114,6 +107,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_see_through": 0.11,
+    "leader": "lost",
     "branch_posture": "pendulous",
     "height_max_m": {
       "min": 2,
@@ -153,6 +148,8 @@
     "leaf_apex": {"acuminate": "usually", "obtuse": "often", "rounded": "sometimes"}
   },
   "evidence": {
+    "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/CROWNS.md): median sky inside the crown outline of 2 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.11."},
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 161): 'a short trunk ... slender pendulous branches forming a rather compact round-topped shapely head'."},
     "traits.branch_posture": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 161): 'slender pendulous branches forming a rather compact round-topped shapely head'."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Salix Scouleriana: \"stout branchlets marked by scattered yellow lenticels, coated when they first appear with pale early deciduous pubescence, becoming bright yellow or dark orange color, and in their second year dark red-brown\". Colour chosen by eye between dark orange and red-brown."},
     "taxon": {
@@ -238,7 +235,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific willow's values, changed by hand for Scouler's willow: a smaller, multistemmed tree-shrub with slender stems from a low fork (FEIS, Anderson 2001: \"may be multistemmed\", \"slender stems and branches\"), and leaves obovate to oblanceolate. path_half fitted so it grows to its reference height. Not fitted to measurements."
+      "note": "Pacific willow's values, changed by hand for Scouler's willow: a smaller, multistemmed tree-shrub with slender stems from a low fork (FEIS, Anderson 2001: \"may be multistemmed\", \"slender stems and branches\"), and leaves obovate to oblanceolate. path_half fitted so it grows to its reference height. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

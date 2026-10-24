@@ -2,7 +2,7 @@
   "schema": 1,
   "rank": "genus",
   "name": "Quercus",
-  "traits": {"terminal_bud": true, "wood_modulus_green_mpa": {"min": 6100, "max": 12300, "typical": 9300}, "wood_rupture_green_mpa": {"min": 48, "max": 82, "typical": 57}, "wood_moisture_green_share": {"min": 0.64, "max": 0.83, "typical": 0.77}, "flowering_position": "lateral", "epicormic": true, "self_pruning": true},
+  "traits": {"leaf_area_per_basal_area": 0.177, "crown_spread": 0.92, "crown_base_share": 0.2, "terminal_bud": true, "wood_modulus_green_mpa": {"min": 6100, "max": 12300, "typical": 9300}, "wood_rupture_green_mpa": {"min": 48, "max": 82, "typical": 57}, "wood_moisture_green_share": {"min": 0.64, "max": 0.83, "typical": 0.77}, "flowering_position": "lateral", "epicormic": true, "self_pruning": true},
   "appearance": {
     "bark_look": {
       "thickness": {
@@ -41,6 +41,9 @@
     }
   },
   "evidence": {
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 953 oaks: 0.177 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 677 oaks 25 years or older (13 species): 0.92. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
+    "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 677 oaks 25 years or older (13 species): 0.20 (quartiles 0.15 and 0.26). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "appearance.bark_look.thickness": {"evidence": "SourceInferred", "source": "ffe-fvs-guide", "note": "The genus's bark thickness as its reference species', quercus-garryana (plantgen-claude project-files/bark/records/quercus-garryana.json): text: FOFEM 0.029"},
     "appearance.bark_look.stages.young": {"evidence": "Authored", "source": "plantgen-authors", "note": "The genus's young stage as its reference species, quercus-garryana, shows it (plantgen-claude project-files/bark/records/quercus-garryana.json): stage: inferred (photo): young trunks of the tree form not described"},
     "appearance.bark_look.stages.mature": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "The genus's mature stage as its reference species, quercus-garryana, shows it (plantgen-claude project-files/bark/records/quercus-garryana.json): fissures: text: 'wide ridges and shallow, narrow furrows' (Sudworth); scales: text: 'scaly' (FNA, FEIS); size inferred"},

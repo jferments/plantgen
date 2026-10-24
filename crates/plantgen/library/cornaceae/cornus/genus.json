@@ -2,9 +2,12 @@
   "schema": 1,
   "rank": "genus",
   "name": "Cornus",
-  "traits": {"flowering_position": "terminal"},
+  "traits": {"leaf_area_per_basal_area": 0.034, "crown_spread": 1.08, "crown_base_share": 0.32, "flowering_position": "terminal"},
   "generator": {"params": {"blooms": 1, "bloom_years": 1}},
   "evidence": {
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 31 flowering dogwoods: 0.034 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 16 flowering dogwoods 25 years or older: 1.08. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
+    "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 16 flowering dogwoods 25 years or older: 0.32 (quartiles 0.23 and 0.41). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "generator.params.bloom_years": {"evidence": "SourceInferred", "source": "bonner-karrfalt-2008", "note": "The Woody Plant Seed Manual's Cornus chapter: the flowers are borne in terminal clusters, at the ends of the twigs, so only a twig's newest short shoots flower. Every short shoot flowering all its life packed a Pacific dogwood's shoots with overlapping heads along their length; flowering only in its first year leaves separate heads near the shoot tips, as photographs show (Imagekit count trial, 2026-10-19)."},
     "generator.params.blooms": {"evidence": "SourceInferred", "source": "bonner-karrfalt-2008", "note": "The Woody Plant Seed Manual's Cornus chapter: the flowers are borne in terminal clusters (a head inside showy bracts in the flowering and Pacific dogwoods, a flat-topped cyme in red-osier), one to a flowering shoot, so a short shoot bears one bloom. Two to a shoot packed a Pacific dogwood's every shoot with overlapping heads where photos show separate heads at the shoot tips (Imagekit count trial, 2026-10-19)."},
     "traits.flowering_position": {

@@ -53,7 +53,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.45, 0.3, 0.22],
     "bark_pattern": {
       "kind": "fibrous",
       "scale": 0.03,
@@ -126,6 +125,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [115, 76, 56],
     "height_max_m": {
       "min": 43,
       "max": 46
@@ -148,6 +148,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.45, 0.3, 0.22], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "silvics-1990-conifers",

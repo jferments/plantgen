@@ -12,8 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 4.5,
-      "crown_base": 3,
       "crown_rate": 0.045,
       "space_density": 5,
       "internode": 0.25,
@@ -28,12 +26,7 @@
       "droop": 0.02,
       "lean": 3,
       "wiggle": 4,
-      "pipe_tip": 0.00245,
-      "pipe_organ": 0.0049,
-      "pipe_rings": 8.98e-08,
-      "extinction": 0.45,
       "path_half": 12,
-      "fork_stems": 1,
       "spur_leaf": 0.195
     }
   },
@@ -55,11 +48,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.38,
-      0.3,
-      0.24
-    ],
     "foliage": [
       0.1,
       0.2,
@@ -95,6 +83,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [97, 76, 61],
     "crown_form": "flat_topped",
     "limb_course": "tortuous",
     "limb_angle": "horizontal",
@@ -159,6 +148,7 @@
     "fruits_per_inflorescence": {"min": 1, "max": 4}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.3, 0.24], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 363): 'short stout more or less contorted branches spreading almost at right angles and forming a narrow usually flat-topped head'."},
     "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 363): 'short stout more or less contorted branches spreading almost at right angles'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 363): 'short stout more or less contorted branches spreading almost at right angles and forming a narrow usually flat-topped head'."},
@@ -281,7 +271,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red alder's crown values, changed by hand: one trunk with short, stout limbs held out wide (FEIS: a flattened, oblong crown), path_half fitted so it reaches its height. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+      "note": "Red alder's crown values, changed by hand: one trunk with short, stout limbs held out wide (FEIS: a flattened, oblong crown), path_half fitted so it reaches its height. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

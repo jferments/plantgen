@@ -48,9 +48,11 @@
 # crown as wide for its height (crown_radius / crown_height) falls short
 # under their shade; in the open it is as before.
 #
+# Revision 9 (tree girth): its pipes keep broadleaf's heartwood setting.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 8 extends broadleaf;
+lsystem sapindaceae 9 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -100,7 +102,7 @@ param leaf_mass = 0.1;      # kg per m² of leaf
 param bend_set = 0.1;       # share of each year's sag the wood keeps
 param stem_bend = 0;        # share of its sag the stem and a fork's stems take: reaction wood holds them up
 param straighten = 0.3;     # share of its kept bend the wood straightens each year
-tool pipe@1 { exponent = pipe_exponent };
+tool pipe@1 { exponent = pipe_exponent, heartwood = heartwood };
 
 # The crown's height may approach its envelope at its own rate: a maple
 # gains most of its height while young and keeps widening long after

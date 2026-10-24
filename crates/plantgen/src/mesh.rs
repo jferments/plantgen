@@ -513,6 +513,10 @@ pub(crate) fn build_shaded(
     sticks: Option<usize>,
     apart: bool,
 ) -> (PlantMesh, Vec<f32>) {
+    // Leaves that face out from their crown turn before anything is
+    // drawn on them.
+    let faced = faced_out(graph, looks);
+    let graph = faced.as_ref().unwrap_or(graph);
     // Pieces of a strap stand on the drawn ends of the pieces before them.
     let seated = seated(graph, looks);
     let (graph, twists) = match &seated {
@@ -558,7 +562,11 @@ pub(crate) fn build_shaded(
     blooms::build_stepped(graph, looks, &blooms, &colour, &mut mesh.wood);
     if level <= 1 {
         let stem_hairs = appearance.stem_hairs.as_ref().filter(|hairs| hairs.drawn());
-        petioles(graph, looks, stem_hairs, &mut mesh);
+        let twig = appearance
+            .young_wood
+            .or(appearance.twig)
+            .unwrap_or(appearance.bark);
+        petioles(graph, looks, stem_hairs, twig, &mut mesh);
         if let Some(hairs) = stem_hairs {
             stem_tubes(graph, appearance, lod, hairs, &mut mesh.hair_tubes);
         }
@@ -1702,12 +1710,70 @@ fn face_up(heading: Vec3, left: Vec3, amount: f64) -> (Vec3, Vec3) {
     if amount <= 0.0 {
         return (heading, left);
     }
+    face_toward(heading, left, Vec3::Y, amount)
+}
+
+/// `graph` with the organs whose looks face out ([`Look::face_out`])
+/// turned so each one's upper face looks out from the middle of the
+/// crown they fill, or `None` when no look faces out. The crown is the box
+/// those organs fill, taken as an ellipsoid: its surface's normal at an
+/// organ is where the open sky around the plant is, so a leaf on top lies
+/// level and one on the flank stands up facing out. Each card turns about
+/// its own base, so it stays where its program bore it.
+fn faced_out(graph: &PlantGraph, looks: &[Look]) -> Option<PlantGraph> {
+    let amount = |organ: &GraphOrgan| {
+        looks
+            .get(usize::from(organ.organ))
+            .map_or(0.0, |look| look.face_out)
+    };
+    let mut turning = graph.organs.iter().filter(|organ| amount(organ) > 0.0);
+    let first = turning.next()?.position;
+    let (low, high) = turning.fold((first, first), |(low, high), organ| {
+        (low.min(organ.position), high.max(organ.position))
+    });
+    let centre = (low + high) * 0.5;
+    let half = (high - low) * 0.5;
+    // A crown a few leaves across still has a middle to face out from.
+    let squared = |half: f64| half.max(0.1) * half.max(0.1);
+    let mut graph = graph.clone();
+    for organ in &mut graph.organs {
+        let amount = amount(organ);
+        if amount <= 0.0 {
+            continue;
+        }
+        // Below the crown's middle a leaf faces out sideways, not down:
+        // the sky it sees is beside the crown.
+        let from = organ.position - centre;
+        let out = Vec3::new(
+            from.x / squared(half.x),
+            (from.y / squared(half.y)).max(0.0),
+            from.z / squared(half.z),
+        )
+        .normalize_or(Vec3::Y);
+        (organ.heading, organ.left) = face_toward(organ.heading, organ.left, out, amount);
+    }
+    Some(graph)
+}
+
+/// `heading` and `left` turned `amount` of the way (0 to 1) so the card's
+/// upper face, the side its normal points to when that is up, faces
+/// `target`.
+fn face_toward(heading: Vec3, left: Vec3, target: Vec3, amount: f64) -> (Vec3, Vec3) {
     let normal = heading.cross(left);
-    let target = if normal.y < 0.0 { -Vec3::Y } else { Vec3::Y };
+    let target = if normal.y < 0.0 { -target } else { target };
     let axis = normal.cross(target);
     let sin = axis.length();
     if sin < 1e-9 {
-        return (heading, left);
+        // Facing it already, or square away from it: then it turns over
+        // about its own length.
+        return if normal.dot(target) > 0.0 {
+            (heading, left)
+        } else {
+            (
+                heading,
+                left.rotate_about(heading, std::f64::consts::PI * amount.min(1.0)),
+            )
+        };
     }
     let angle = math::atan2(sin, normal.dot(target)) * amount.min(1.0);
     let axis = axis * (1.0 / sin);
@@ -1747,7 +1813,8 @@ pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) 
         Mount::Along => {
             let left = rolled(organ.heading, organ.left, look.roll);
             let (heading, left) = face_up(organ.heading, left, look.face_up);
-            (organ.position, heading, left, organ.size)
+            let base = sprayed(organ, look).map_or(organ.position, |sprayed| sprayed.base);
+            (base, heading, left, organ.size)
         }
         // Centred on the organ, its face toward the organ's heading: the
         // card's heading is the turtle's up and its left the turtle's right,
@@ -1764,6 +1831,73 @@ pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) 
         }
     }
 }
+
+/// Where an organ's card is drawn from, away from its node
+/// ([`Look::spray`]): a point on a shoot that every organ at the node
+/// shares, reaching up and out from the stem in a direction the node's
+/// place picks at random, as far along it as the organ's id picks, up to
+/// `spray` cards' lengths; and the card's base, a petiole's reach to one
+/// side of that point. A twig's leaves, borne together at its tip, are
+/// drawn spread along a shoot as a year's growth spreads them. `None`
+/// for an organ drawn at its node or on a petiole of its own.
+fn sprayed(organ: &GraphOrgan, look: &Look) -> Option<Sprayed> {
+    if look.spray <= 0.0 || look.stalk().is_some() || look.inflorescence.is_some() {
+        return None;
+    }
+    // The node: its place to a millimetre.
+    #[allow(clippy::cast_possible_truncation)]
+    let node = [organ.position.x, organ.position.y, organ.position.z]
+        .iter()
+        .fold(0x2545_f491_4f6c_dd1d_u64, |hash, axis| {
+            mix64(hash ^ ((axis * 1000.0).round() as i64).cast_unsigned())
+        });
+    // A uniform direction from two draws.
+    let direction = |hash: u64| {
+        let z = 2.0 * unit(mix64(hash ^ 0x9e37_79b9_7f4a_7c15)) - 1.0;
+        let turn = std::f64::consts::TAU * unit(mix64(hash ^ 0xc2b2_ae3d_27d4_eb4f));
+        let ring = (1.0 - z * z).max(0.0).sqrt();
+        Vec3::new(ring * turn.cos(), z, ring * turn.sin())
+    };
+    let out = Vec3::new(organ.position.x, 0.0, organ.position.z).normalize_or(Vec3::ZERO);
+    let shoot = (direction(node) + (out + Vec3::Y) * SHOOT_LEAN).normalize_or(Vec3::Y);
+    // A shoot reaching down stops at the ground, and a petiole that
+    // would reach below it turns up.
+    let mut reach = look.spray * organ.size;
+    if shoot.y < 0.0 {
+        reach = reach.min(organ.position.y.max(0.0) / -shoot.y);
+    }
+    let along = organ.position + shoot * (reach * unit(mix64(organ.id ^ 0x1656_67b1_9e37_79f9)));
+    let aside = direction(organ.id);
+    let mut aside = (aside - shoot * aside.dot(shoot)).normalize_or(any_perpendicular(shoot));
+    let petiole = SPRAY_PETIOLE * organ.size;
+    if along.y + aside.y * petiole < 0.0 {
+        aside.y = -aside.y;
+    }
+    Some(Sprayed {
+        node,
+        tip: organ.position + shoot * reach,
+        along,
+        base: along + aside * petiole,
+    })
+}
+
+/// A sprayed organ's place ([`sprayed`]): its node's hash, the tip of the
+/// shoot the node's organs share, the point on it the organ hangs from,
+/// and its card's base.
+struct Sprayed {
+    node: u64,
+    tip: Vec3,
+    along: Vec3,
+    base: Vec3,
+}
+
+/// How far a sprayed shoot leans up and away from the stem: the length
+/// of each of the two steps added to its random direction.
+const SHOOT_LEAN: f64 = 0.5;
+
+/// How far to the side of its shoot a sprayed leaf's base sits, in
+/// lengths of the leaf.
+const SPRAY_PETIOLE: f64 = 0.5;
 
 /// Where the card of a leaf drawn on a petiole of its own goes
 /// ([`crate::looks::Insertion`]), `share` as long as its organ (a sun,
@@ -1792,19 +1926,51 @@ fn on_stalk(
 /// accent colour its card painted the petiole in, a hundredth as thick as
 /// it is long and at least half a millimetre, cast toward the plant's
 /// stem `hairs` where it states them, which the stalk bears as a
-/// [`crate::hairs::Tube`].
+/// [`crate::hairs::Tube`]. A sprayed leaf ([`Look::spray`]) gets its shoot
+/// and petiole instead, in the `twig` colour.
 pub(crate) fn petioles(
     graph: &PlantGraph,
     looks: &[Look],
     hairs: Option<&crate::looks::Hairs>,
+    twig: [f32; 3],
     plant: &mut PlantMesh,
 ) {
     let mesh = &mut plant.wood;
+    let mut shoots = std::collections::BTreeSet::new();
     for organ in &graph.organs {
         let Some(look) = looks.get(usize::from(organ.organ)) else {
             continue;
         };
         let Some(stalk) = look.stalk() else {
+            if let Some(sprayed) = sprayed(organ, look) {
+                // A sprayed leaf's petiole, and its node's shoot once, as
+                // young wood.
+                let colour = crate::hairs::cast_wood(twig, 1.0, hairs);
+                let first = mesh.positions.len();
+                let shoot = shoots
+                    .insert(sprayed.node)
+                    .then_some((organ.position, sprayed.tip));
+                for (from, to) in shoot.into_iter().chain([(sprayed.along, sprayed.base)]) {
+                    let reach = to - from;
+                    let length = reach.length();
+                    if length > 0.0 {
+                        crate::fruit::stalk_between(
+                            from,
+                            reach * (1.0 / length),
+                            length,
+                            (0.005 * length).max(0.0005),
+                            colour,
+                            crate::blooms::Part {
+                                born: organ.born,
+                                shed: organ.shed,
+                                coarse: crate::clusters::FLAT,
+                            },
+                            mesh,
+                        );
+                    }
+                }
+                mesh.bear(first, organ.segment.unwrap_or(GROUNDED));
+            }
             continue;
         };
         let length = stalk.petiole * organ.size;
@@ -2092,6 +2258,8 @@ fn seat<'a>(out: &'a mut Option<Seated>, graph: &PlantGraph) -> &'a mut PlantGra
 #[must_use]
 #[allow(clippy::too_many_lines)]
 pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(usize, f64)> {
+    let faced = faced_out(graph, looks);
+    let graph = faced.as_ref().unwrap_or(graph);
     let seated = seated(graph, looks);
     let drawn = seated.as_ref().map_or(graph, |seated| &seated.graph);
     // The drawn end of each card that reaches along its organ, by where
@@ -2134,7 +2302,8 @@ pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(
             (number, tip),
         );
     }
-    // Each organ's foot, and how far it is from the wood that bears it.
+    // Each organ's foot, and how far it is from the wood that bears it:
+    // a sprayed card's is its node, where its shoot starts.
     let feet: Vec<Vec3> = drawn
         .organs
         .iter()
@@ -2142,7 +2311,8 @@ pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(
             Some(look)
                 if look.inflorescence.is_none()
                     && look.stalk().is_none()
-                    && look.mount() == Mount::Along =>
+                    && look.mount() == Mount::Along
+                    && look.spray <= 0.0 =>
             {
                 place(shown, look).0
             }
@@ -2229,12 +2399,15 @@ pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(
 }
 
 /// `organ`'s card as the coarse levels trace it: its foot, heading, left
-/// and length. A cluster's is where [`place`] puts it; every other is
-/// traced from its organ's position, at its organ's size.
+/// and length. A cluster's is where [`place`] puts it, and so is a sprayed
+/// leaf's, out along its shoot as level 0 draws it; every other is traced
+/// from its organ's position, at its organ's size.
 fn traced(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) {
     let (base, heading, left, length) = place(organ, look);
     if look.inflorescence.is_some() || look.stalk().is_some() {
         (base, heading, left, length)
+    } else if look.mount() == Mount::Along {
+        (base, heading, left, organ.size)
     } else {
         (organ.position, heading, left, organ.size)
     }
@@ -4076,6 +4249,9 @@ mod tests {
             shade: None,
             accent: None,
             face_up,
+            spray: 0.0,
+            fill: None,
+            face_out: 0.0,
             solid: None,
             bend: None,
             form: None,
@@ -4084,6 +4260,170 @@ mod tests {
             families: None,
             inflorescence: None,
         }
+    }
+
+    /// A sprayed node's leaves are drawn apart along one shoot, each on
+    /// its petiole, within the shoot's reach and a petiole's of the node;
+    /// the shoot is drawn once, and the leaves count as seated.
+    #[test]
+    fn sprayed_leaves_spread_along_one_shoot() {
+        let mut appearance = appearance();
+        appearance.organs.insert(
+            "leaf".into(),
+            OrganLook {
+                spray: 2.0,
+                fill: None,
+                ..look(Shape::default_for(OrganKind::Leaf), 0.0)
+            },
+        );
+        let looks = appearance.looks([("leaf", OrganKind::Leaf)]);
+        let organs: Vec<GraphOrgan> = (0..8_u32)
+            .map(|k| {
+                let turn = f64::from(k) * 0.785;
+                GraphOrgan {
+                    id: u64::from(k) + 1,
+                    ..organ(
+                        Vec3::new(turn.cos(), 0.6, turn.sin()),
+                        Vec3::new(-turn.sin(), 0.0, turn.cos()),
+                    )
+                }
+            })
+            .collect();
+        let node = organs[0].position;
+        let graph = PlantGraph {
+            age: 1.0,
+            height: 1.0,
+            segments: Vec::new(),
+            organs,
+            structures: Vec::new(),
+        };
+        let mesh = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0));
+        let bases: Vec<Vec3> = mesh.cards.iter().map(|card| vector(card.base)).collect();
+        assert_eq!(bases.len(), 8);
+        for base in &bases {
+            let away = (*base - node).length();
+            assert!(
+                away > 1e-3 && away <= (2.0 + SPRAY_PETIOLE) * 0.2 + 1e-6,
+                "{away}"
+            );
+        }
+        let apart = bases
+            .iter()
+            .flat_map(|a| bases.iter().map(move |b| (*a - *b).length()))
+            .fold(0.0, f64::max);
+        assert!(apart > 0.1, "{apart}");
+        // One shoot and eight petioles, three sides and two ends each.
+        assert_eq!(mesh.wood.positions.len(), 9 * 6);
+        assert!(loose_organs(&graph, &looks, 1e-5).is_empty());
+        // Unsprayed, the leaves stand on their node with no stalks.
+        let plain = build_plain(
+            &graph,
+            &appearance_without_spray(&looks),
+            &appearance,
+            &lod(0.0, 0.0, 0.0),
+        );
+        assert!(
+            plain
+                .cards
+                .iter()
+                .all(|card| (vector(card.base) - node).length() < 1e-6)
+        );
+        assert!(plain.wood.positions.is_empty());
+    }
+
+    /// Leaves that face out turn their upper faces out from the middle of
+    /// the crown they fill: level on top, standing on the flanks, each
+    /// about its own base.
+    #[test]
+    fn leaves_face_out_from_their_crown() {
+        let mut appearance = appearance();
+        appearance.organs.insert(
+            "leaf".into(),
+            OrganLook {
+                face_out: 1.0,
+                ..look(Shape::default_for(OrganKind::Leaf), 0.0)
+            },
+        );
+        let looks = appearance.looks([("leaf", OrganKind::Leaf)]);
+        // Level leaves, upper face up, on the crown's two flanks, its top
+        // and its foot; the one at its foot stays level.
+        let at = [
+            Vec3::new(2.0, 3.0, 0.0),
+            Vec3::new(-2.0, 3.0, 0.0),
+            Vec3::new(0.0, 5.0, 0.0),
+            Vec3::new(0.0, 1.0, 0.0),
+        ];
+        let organs = (1..)
+            .zip(at)
+            .map(|(id, position)| GraphOrgan {
+                id,
+                position,
+                ..organ(Vec3::X, Vec3::Z * -1.0)
+            })
+            .collect();
+        let graph = PlantGraph {
+            age: 1.0,
+            height: 5.0,
+            segments: Vec::new(),
+            organs,
+            structures: Vec::new(),
+        };
+        let upper = |organ: &GraphOrgan| organ.heading.cross(organ.left);
+        assert!(graph.organs.iter().all(|organ| upper(organ).y > 0.999));
+        let faced = faced_out(&graph, &looks).unwrap();
+        let facing: Vec<Vec3> = faced.organs.iter().map(upper).collect();
+        assert!(facing[0].x > 0.999, "{:?}", facing[0]);
+        assert!(facing[1].x < -0.999, "{:?}", facing[1]);
+        assert!(facing[2].y > 0.999, "{:?}", facing[2]);
+        assert!(facing[3].y > 0.999, "{:?}", facing[3]);
+        for (before, after) in graph.organs.iter().zip(&faced.organs) {
+            assert_eq!(before.position, after.position);
+        }
+        // A vertical leaf facing in turns over about its length.
+        let inward = GraphOrgan {
+            id: 9,
+            position: Vec3::new(2.0, 3.0, 0.0),
+            ..organ(Vec3::Y, Vec3::Z * -1.0)
+        };
+        assert!(upper(&inward).x < -0.999);
+        let mut turned = graph.clone();
+        turned.organs.push(inward);
+        let over = upper(&faced_out(&turned, &looks).unwrap().organs[4]);
+        assert!(over.x > 0.999, "{over:?}");
+        // Half way, a flank leaf stands at 45 degrees.
+        let half: Vec<Look> = looks
+            .iter()
+            .map(|look| Look {
+                face_out: 0.5,
+                ..look.clone()
+            })
+            .collect();
+        let tilted = upper(&faced_out(&graph, &half).unwrap().organs[0]);
+        assert!(
+            (tilted.x - tilted.y).abs() < 1e-9 && tilted.x > 0.7,
+            "{tilted:?}"
+        );
+        // No look faces out: nothing turns.
+        assert!(faced_out(&graph, &appearance_without_spray(&looks)).is_some());
+        let level: Vec<Look> = looks
+            .iter()
+            .map(|look| Look {
+                face_out: 0.0,
+                ..look.clone()
+            })
+            .collect();
+        assert!(faced_out(&graph, &level).is_none());
+    }
+
+    fn appearance_without_spray(looks: &[Look]) -> Vec<Look> {
+        looks
+            .iter()
+            .map(|look| Look {
+                spray: 0.0,
+                fill: None,
+                ..look.clone()
+            })
+            .collect()
     }
 
     fn vector(v: [f32; 3]) -> Vec3 {

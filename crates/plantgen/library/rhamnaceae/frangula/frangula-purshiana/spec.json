@@ -11,14 +11,10 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 3.5,
-      "crown_base": 1.5,
       "crown_rate": 0.06,
       "space_density": 20,
       "internode": 0.18,
       "max_shoot": 3,
-      "pipe_organ": 0.0053,
-      "pipe_tip": 0.0027,
       "bud_break": 1.3,
       "branch_angle": 45,
       "apical_young": 0.65,
@@ -28,13 +24,9 @@
       "leaf_angle": 50,
       "lean": 6,
       "wiggle": 6,
-      "fork_height": 1.2,
-      "fork_stems": 2,
       "shade_death": 0.04,
-      "extinction": 0.45,
       "space_reach": 1.6,
       "space_kill": 0.45,
-      "pipe_rings": 5.3e-06,
       "bloom_area": 0.765,
       "blooms": 1,
       "bloom_size": 0.03,
@@ -52,7 +44,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.38, 0.36, 0.32],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.05,
@@ -120,6 +111,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_see_through": 0.11,
+    "trunk_fork_height_m": 3.8,
+    "bark_colour": [97, 92, 82],
     "leader": "lost",
     "limb_angle": "ascending",
     "leaf_colour_autumn": [215, 185, 60],
@@ -146,6 +140,9 @@
     "leaf_apex": {"obtuse": "usually", "truncate": "sometimes"}
   },
   "evidence": {
+    "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/CROWNS.md): median sky inside the crown outline of 4 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.11."},
+    "traits.trunk_fork_height_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 725): 'a slender trunk ... separating 10\u00b0-15\u00b0 from the ground into numerous stout upright or sometimes nearly horizontal branches' (3.0-4.6 m)."},
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.36, 0.32], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 725): 'a slender trunk ... separating 10°—15° from the ground into numerous stout upright or sometimes nearly horizontal branches'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 725): 'numerous stout upright or sometimes nearly horizontal branches'."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Frangula purshiana (read 2026-10-18): \"The leaves turn yellow in autumn\". Colour ours."},
@@ -178,7 +175,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small understory tree, often with two or three stems, and alternate, oval leaves with deep, parallel veins. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 15 cm at 30 years again."
+      "note": "Hand-set from general knowledge of the species: a small understory tree, often with two or three stems, and alternate, oval leaves with deep, parallel veins. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

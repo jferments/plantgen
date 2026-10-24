@@ -12,15 +12,10 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 7,
-      "crown_base": 5,
       "crown_rate": 0.035,
       "space_density": 4,
       "internode": 0.22,
       "max_shoot": 3,
-      "pipe_rings": 4.33e-06,
-      "pipe_organ": 0.0042,
-      "pipe_tip": 0.00205,
       "branch_angle": 50,
       "apical_young": 0.65,
       "apical": 0.52,
@@ -29,13 +24,9 @@
       "leaf_angle": 50,
       "lean": 20,
       "wiggle": 12,
-      "fork_height": 4,
-      "fork_stems": 3,
-      "fork_angle": 30,
       "blooms": 2,
       "bloom_size": 0.11,
       "bloom_angle": 140,
-      "extinction": 0.45,
       "bloom_area": 0.382,
       "path_half": 14.4,
       "bole_clear": 1
@@ -64,7 +55,6 @@
         }
       }
     },
-    "bark": [0.42, 0.13, 0.06],
     "twig": [0.4,  0.1,  0.03],
     "bark_pattern": {
       "kind": "peeling",
@@ -136,15 +126,24 @@
   },
   "allometry": [
     {
+      "age": 30,
+      "environment": "open",
+      "height": 13.1,
+      "dbh": 0.507,
+      "tolerance": 0.4
+    },
+    {
       "age": 50,
       "environment": "open",
-      "height": 16,
-      "dbh": 0.4,
+      "height": 18.2,
+      "dbh": 0.801,
       "tolerance": 0.4
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_see_through": 0.11,
+    "bark_colour": [107, 33, 15],
     "leader": "lost",
     "limb_course": "tortuous",
     "limb_angle": "ascending",
@@ -177,6 +176,8 @@
     "leaf_apex": {"rounded": "usually", "acute": "often", "cuspidate": "rarely"}
   },
   "evidence": {
+    "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/CROWNS.md): median sky inside the crown outline of 11 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.11."},
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.42, 0.13, 0.06], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 2 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/): leader lost in 13 of 25 photo votes, kept in 6 of 7 render votes."},
     "traits.limb_course": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 2 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/TALLY.md): limb course wavy in 25 of 28 votes and limb habit tortuous in 9 of 23; Sargent (p. 799) does not describe their course."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 799): 'stout upright or spreading branches forming a narrow oblong or broad round-topped head'."},
@@ -218,12 +219,12 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a broadleaf evergreen with a leaning, crooked trunk, an irregular crown, thick, glossy oval leaves and clusters of small white flowers. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 40 cm at 50 years again."
+      "note": "Hand-set from general knowledge of the species: a broadleaf evergreen with a leaning, crooked trunk, an irregular crown, thick, glossy oval leaves and clusters of small white flowers. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 16 m tall and 40 cm across at breast height at 50 years in the open. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "USDA Forest Service Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005, public domain): its fitted age-to-dbh and dbh-to-height equations for coast live oak (Quercus agrifolia) in the Sacramento Valley region (Sacramento, CA; 60 open-grown park and street trees aged 2.4-134.5 years), since it has no madrones nor any tree of their family: the evergreen broadleaf tree that shares the madrone's California woodlands, from the city whose valley oaks stand for Oregon white oak, evaluated: 13.1 m and 51 cm at 30 years; 18.2 m and 80 cm at 50 years. Was 16 m and 40 cm at 50 years, from general knowledge."
     },
     "appearance": {
       "evidence": "Authored",

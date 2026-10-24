@@ -14,6 +14,10 @@ use crate::templates::Templates;
 pub enum View {
     /// Level with the plant, from the south.
     Side,
+    /// From the south at a person's eye height ([`EYE_HEIGHT`]), looking
+    /// at the plant's middle, as photographs of trees are taken: a tree's
+    /// crown stands against the sky, not the ground.
+    Eye,
     /// From the south-east, a little above.
     ThreeQuarter,
     /// From the south-east, looking 45 degrees down.
@@ -32,6 +36,7 @@ impl View {
     pub fn from_name(name: &str) -> Option<Self> {
         Some(match name {
             "side" => Self::Side,
+            "eye" => Self::Eye,
             "three-quarter" => Self::ThreeQuarter,
             "oblique" => Self::Oblique,
             "top" => Self::Top,
@@ -87,6 +92,10 @@ const ROD_LIGHT: [f32; 3] = [0.7, 0.7, 0.66];
 /// Plants framed lower than this, in metres, get the striped rod instead
 /// of the figure: the figure would dwarf them.
 pub const SMALL_PLANT: f64 = 1.5;
+
+/// The height, in metres, of the eye [`View::Eye`] looks from: a standing
+/// person's, where photographs of trees are taken from.
+pub const EYE_HEIGHT: f64 = 1.6;
 
 fn push_quad(mesh: &mut Mesh, corners: [Vec3; 4], normal: Vec3, color: [f32; 3]) {
     let base = u32::try_from(mesh.positions.len()).unwrap_or(0);
@@ -281,9 +290,12 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     }
     meshes.extend(items);
     let camera = match (options.view, options.focus) {
-        (View::Side | View::ThreeQuarter | View::Oblique | View::Under, Some((target, span))) => {
+        (
+            View::Side | View::Eye | View::ThreeQuarter | View::Oblique | View::Under,
+            Some((target, span)),
+        ) => {
             let direction = match options.view {
-                View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Side | View::Eye => Vec3::new(0.0, 0.04, 1.0),
                 View::Under => Vec3::new(0.0, -0.36, 1.0),
                 View::Oblique => Vec3::new(0.7, 0.99, 0.7),
                 _ => Vec3::new(0.7, 0.3, 0.7),
@@ -301,17 +313,22 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
                 projection: Projection::Perspective { fov_y },
             }
         }
-        (View::Side | View::ThreeQuarter | View::Oblique | View::Under, None) => {
+        (View::Side | View::Eye | View::ThreeQuarter | View::Oblique | View::Under, None) => {
             let target = Vec3::new(center_x, height * 0.5, 0.0);
             let direction = match options.view {
-                View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Side | View::Eye => Vec3::new(0.0, 0.04, 1.0),
                 View::Under => Vec3::new(0.0, -0.1, 1.0),
                 View::Oblique => Vec3::new(0.7, 0.99, 0.7),
                 _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
+            let eye = if options.view == View::Eye {
+                Vec3::new(center_x, EYE_HEIGHT, distance)
+            } else {
+                above_ground(target + direction * distance)
+            };
             Camera {
-                eye: above_ground(target + direction * distance),
+                eye,
                 target,
                 up: Vec3::Y,
                 projection: Projection::Perspective { fov_y: fov },

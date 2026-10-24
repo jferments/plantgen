@@ -12,8 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 4,
-      "crown_base": 1.5,
       "crown_rate": 0.06,
       "space_density": 12,
       "internode": 0.2,
@@ -29,13 +27,7 @@
       "leaf_years": 2,
       "lean": 6,
       "wiggle": 10,
-      "fork_height": 1.5,
-      "fork_stems": 3,
-      "fork_angle": 30,
       "droop": 0.01,
-      "pipe_tip": 0.003,
-      "pipe_organ": 0.005,
-      "pipe_rings": 1e-05,
       "blooms": 1,
       "adult_age": 6,
       "bloom_size": 0.03,
@@ -53,7 +45,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.38, 0.3, 0.24],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.05,
@@ -108,6 +99,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [97, 76, 61],
     "height_max_m": {
       "min": 4.572,
       "max": 24.384
@@ -132,6 +124,7 @@
     "leaf_apex": {"acute": "usually", "obtuse": "often", "mucronate": "sometimes"}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.3, 0.24], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",
@@ -146,7 +139,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical coasts, 5 to 10 m tall, standing on a tangle of arching prop roots that leave the trunk and lower branches and reach down into the mud; glossy, leathery, opposite leaves and small pale yellow flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical coasts, 5 to 10 m tall, standing on a tangle of arching prop roots that leave the trunk and lower branches and reach down into the mud; glossy, leathery, opposite leaves and small pale yellow flowers. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

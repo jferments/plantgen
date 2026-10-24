@@ -59,7 +59,6 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.35, 0.22, 0.15],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.03,
@@ -126,6 +125,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [89, 56, 38],
     "leaf_length_m": {
       "min": 0.0381,
       "max": 0.0635
@@ -147,6 +147,7 @@
     "leaf_apex": {"acute": "usually", "obtuse": "often"}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.35, 0.22, 0.15], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

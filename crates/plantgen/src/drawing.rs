@@ -44,7 +44,7 @@ pub fn neighbourhood(spec: &PlantSpec, environment: Environment) -> Neighbourhoo
         .into_iter()
         .find(|variant| variant.environment == environment)
         .map_or_else(
-            || environment.neighbourhood(),
+            || spec.neighbourhood(environment),
             |variant| variant.neighbourhood,
         )
 }

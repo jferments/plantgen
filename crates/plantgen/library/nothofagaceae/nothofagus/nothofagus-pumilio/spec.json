@@ -12,8 +12,6 @@
   "generator": {
     "params": {
       "crown_height": 10,
-      "crown_radius": 4.5,
-      "crown_base": 1,
       "crown_rate": 0.05,
       "space_density": 12,
       "internode": 0.28,
@@ -28,7 +26,6 @@
       "wiggle": 5,
       "lean": 0,
       "droop": 0.025,
-      "extinction": 0.45,
       "blooms": 0,
       "adult_age": 10,
       "bloom_size": 0.05,
@@ -38,8 +35,7 @@
       "wind": 1.0,
       "wind_bend": 0.12,
       "wind_kill": 0.0,
-      "path_half": 2.82,
-      "pipe_rings": 2e-05
+      "path_half": 2.82
     }
   },
   "growth": {
@@ -52,7 +48,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.35, 0.3, 0.27],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.025,
@@ -107,6 +102,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [89, 76, 69],
     "leaf_habit": "deciduous",
     "leaf_colour_autumn": [210, 120, 50],
     "leaf_out_months": [10, 11],
@@ -127,6 +123,7 @@
     "fruiting_months": [1, 2, 3]
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.35, 0.3, 0.27], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Nothofagus pumilio (read 2026-10-18): \"a deciduous tree or shrub\", native from 35 to 56 degrees South."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Nothofagus pumilio (read 2026-10-18): the leaves \"turn to yellow and reddish tones in autumn\". Colour ours."},
     "traits.leaf_out_months": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Nothofagus pumilio (read 2026-10-18): a deciduous tree of the southern Andes, so it leafs out in the southern spring; October and November, with its flowers (flowering_months 10 to 12), are ours."},
@@ -140,7 +137,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a deciduous southern beech of the Patagonian Andes, a tall forest tree where sheltered but, at the tree line and on the windward plains, a low, leaning tree flagged by the westerlies, its crown streaming downwind; small crinkled leaves turning red in autumn. Grown here in a steady wind. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a deciduous southern beech of the Patagonian Andes, a tall forest tree where sheltered but, at the tree line and on the windward plains, a low, leaning tree flagged by the westerlies, its crown streaming downwind; small crinkled leaves turning red in autumn. Grown here in a steady wind. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

@@ -12,15 +12,10 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 6,
-      "crown_base": 5,
       "crown_rate": 0.035,
       "space_density": 4,
       "internode": 0.22,
       "max_shoot": 3,
-      "pipe_rings": 4.33e-06,
-      "pipe_organ": 0.0049,
-      "pipe_tip": 0.0024,
       "branch_angle": 50,
       "apical_young": 0.65,
       "apical": 0.52,
@@ -28,10 +23,6 @@
       "leaf_angle": 50,
       "lean": 6,
       "wiggle": 8,
-      "fork_height": 4,
-      "fork_stems": 1,
-      "fork_angle": 30,
-      "extinction": 0.45,
       "path_half": 14.4,
       "spur_leaf": 0.247
     }
@@ -54,11 +45,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.4,
-      0.38,
-      0.34
-    ],
     "foliage": [
       0.05,
       0.13,
@@ -73,15 +59,27 @@
   },
   "allometry": [
     {
+      "age": 20,
+      "environment": "open",
+      "height": 9.2,
+      "dbh": 0.269,
+      "tolerance": 0.4
+    },
+    {
       "age": 50,
       "environment": "open",
-      "height": 23,
-      "dbh": 0.38,
+      "height": 14.2,
+      "dbh": 0.635,
       "tolerance": 0.4
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "persistent",
+    "leaf_area_per_basal_area": 0.131,
+    "crown_spread": 0.86,
+    "crown_base_share": 0.22,
+    "bark_colour": [102, 97, 87],
     "limb_angle": "spreading",
     "height_max_m": {
       "min": 18,
@@ -171,6 +169,11 @@
     "fruit_seed_thread_m": 0.004
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 345): 'a tree, of pyramidal habit ... with a tall straight trunk'."},
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 236 southern magnolias: 0.131 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 210 southern magnolias 25 years or older (six cities): 0.86. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
+    "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 210 southern magnolias 25 years or older (six cities): 0.22 (quartiles 0.17 and 0.31). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.4, 0.38, 0.34], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 345): 'rather small spreading branches'."},
     "taxon": {
       "evidence": "Authored",
@@ -295,12 +298,12 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific madrone's crown values (an evergreen broadleaf), changed by hand: one trunk, as FNA describes it (single-trunked), upright rather than leaning. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+      "note": "Pacific madrone's crown values (an evergreen broadleaf), changed by hand: one trunk, as FNA describes it (single-trunked), upright rather than leaning. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "SourceInferred",
-      "source": "silvics-1990-hardwoods",
-      "note": "Silvics of North America vol. 2 (1990), Magnolia grandiflora (Outcalt), Growth and Yield p. 446: trees free of competition grow about 0.46 m in height and 0.76 cm in diameter a year to age 50, so about 23 m and 38 cm at 50 years."
+      "source": "usfs-urban-tree-database-2016",
+      "note": "USDA Forest Service Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005, public domain): its fitted age-to-dbh and dbh-to-height equations for southern magnolia in the Coastal Plain region (Charleston, SC; 40 open-grown park and street trees aged 2.5-92.7 years, within its native range), evaluated: 9.2 m and 27 cm at 20 years; 14.2 m and 64 cm at 50 years. Was Silvics of North America vol. 2 (1990), p. 446: trees free of competition grow about 0.46 m in height and 0.76 cm in diameter a year to age 50 (23 m and 38 cm), a rate, not a measured tree."
     },
     "appearance": {
       "evidence": "Authored",

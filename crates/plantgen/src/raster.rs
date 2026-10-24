@@ -49,13 +49,19 @@ pub struct Lighting {
 }
 
 impl Lighting {
-    /// Mid-morning sun from the south-east, for previews.
+    /// Mid-morning sun from the south-east under a clear sky, for
+    /// previews. The sky gives a level surface 0.165 of its light, as a
+    /// clear sky does (Erbs, Klein and Duffie 1982, Solar Energy 28: 293-302,
+    /// eq. 1: the diffuse share of global irradiance at a clearness index
+    /// above 0.8); at a third of it, as before, crowns' shaded sides and
+    /// insides read nearly as bright as their sunlit faces, where photos
+    /// show them dark.
     #[must_use]
     pub fn daylight() -> Self {
         Self {
             sun: Vec3::new(0.55, 0.7, 0.45).normalize_or(Vec3::Y),
             sun_color: [1.0, 0.95, 0.85],
-            sky: [0.32, 0.38, 0.48],
+            sky: [0.111, 0.132, 0.167],
             ground: [0.16, 0.15, 0.12],
         }
     }

@@ -285,6 +285,29 @@ impl PlantGraph {
                 .fold(0.0, f64::max)
         }
     }
+
+    /// The crown's mean diameter as a tree's is measured on the ground:
+    /// the mean of its organs' spans along two square horizontal axes, as
+    /// the USDA Urban Tree Database averages two dripline diameters. A
+    /// leaning or lopsided crown spans less than twice its widest reach
+    /// from the stem ([`Self::crown_radius`]). Zero without organs.
+    #[must_use]
+    pub fn crown_diameter(&self) -> f64 {
+        if self.organs.is_empty() {
+            return 0.0;
+        }
+        let span = |axis: fn(Vec3) -> f64| {
+            let (low, high) = self.organs.iter().fold(
+                (f64::INFINITY, f64::NEG_INFINITY),
+                |(low, high), organ| {
+                    let value = axis(organ.position);
+                    (low.min(value), high.max(value))
+                },
+            );
+            high - low
+        };
+        f64::midpoint(span(|point| point.x), span(|point| point.z))
+    }
 }
 
 #[cfg(test)]
@@ -302,6 +325,7 @@ mod tests {
         };
         assert_eq!(graph.leaf_area(&[]).to_bits(), 0.0_f64.to_bits());
         assert_eq!(graph.crown_radius().to_bits(), 0.0_f64.to_bits());
+        assert_eq!(graph.crown_diameter().to_bits(), 0.0_f64.to_bits());
         assert_eq!(graph.crown_base(), None);
         assert_eq!(graph.organ_light(), None);
         assert_eq!(graph.diameter_at_breast_height(), None);

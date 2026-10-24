@@ -80,7 +80,6 @@
         }
       }
     },
-    "bark": [0.38, 0.2, 0.1],
     "bark_pattern": {
       "kind": "plated",
       "scale": 0.12,
@@ -126,6 +125,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [97, 51, 26],
     "height_max_m": {
       "min": 27.4,
       "max": 39.6
@@ -154,6 +154,7 @@
     "leaf_margin": "serrate"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.2, 0.1], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "appearance.bark_look.stages.blackjack": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "until_diameter_m: text: 'Younger trees, up to 2 feet in diameter ... blackish, narrowly furrowed' (Sudworth); fissures.width_share: word: 'narrowly furrowed'; fissures.spacing_m: inferred (photo)"},
     "appearance.bark_look.stages.plates.fissures.floor_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "text: 'black crevices' (Wikipedia)"},
     "appearance.bark_look.stages.plates.colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'yellow to orange-red', 'russet-red' (Wikipedia, Sudworth); sRGB by eye"},

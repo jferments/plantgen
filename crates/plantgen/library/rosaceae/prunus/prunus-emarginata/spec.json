@@ -13,8 +13,6 @@
   "generator": {
     "params": {
       "crown_height": 12,
-      "crown_radius": 3.5,
-      "crown_base": 3,
       "crown_rate": 0.06,
       "space_density": 14,
       "internode": 0.25,
@@ -32,15 +30,11 @@
       "adult_age": 5,
       "bloom_size": 0.045,
       "bloom_angle": 90,
-      "extinction": 0.45,
       "space_reach": 2.0,
       "space_kill": 0.6,
-      "pipe_rings": 2.2e-09,
       "leaf_area": 0.248,
       "bloom_area": 0.479,
-      "path_half": 6.67,
-      "pipe_tip": 0.00238,
-      "pipe_organ": 0.00476
+      "path_half": 6.67
     }
   },
   "growth": {
@@ -63,7 +57,6 @@
         }
       }
     },
-    "bark": [0.33, 0.15, 0.1],
     "bark_pattern": {
       "kind": "smooth",
       "scale": 0.05,
@@ -133,13 +126,15 @@
     {
       "age": 30,
       "environment": "open",
-      "height": 12,
-      "dbh": 0.22,
+      "height": 10.0,
+      "dbh": 0.48,
       "tolerance": 0.4
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_see_through": 0.03,
+    "bark_colour": [84, 38, 26],
     "limb_angle": "ascending",
     "shade_tolerance": "intolerant",
     "wood_density_basic_kg_m3": 490,
@@ -156,6 +151,8 @@
     "fruit_size_m": {"min": 0.008, "max": 0.012}
   },
   "evidence": {
+    "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/CROWNS.md): median sky inside the crown outline of 4 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.03."},
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.33, 0.15, 0.1], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 572): 'slender rather upright branches forming a symmetric oblong head'."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's bitter cherry review (Prunus emarginata, read 2026-10-16): \"a generally shade intolerant species of sparse woods\"."},
     "traits.flowering_months": {
@@ -174,20 +171,15 @@
       "source": "plantgen-authors",
       "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
     },
-    "generator.params.pipe_tip": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B): the twig's and the leaf's pipe radii are scaled together so the stem's diameter at breast height matches the oldest reference size; the fuller crowns of broadleaf revision 11 carry more leaf, so the yearly rings (pipe_rings) are fitted near zero and the pipe model sets the diameter."
-    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow crown, alternate oblong, finely toothed leaves and small clusters of white flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow crown, alternate oblong, finely toothed leaves and small clusters of white flowers. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Rough sizes from general knowledge of the species: 12 m tall and 22 cm across at breast height at 30 years in the open. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "The USDA Urban Tree Database's open-grown cherries in the Pacific Northwest region (McPherson, van Doorn and Peper 2016, RDS-2016-0005; Longview), since it has no bitter cherries: 39 cherry plums and Japanese flowering cherries 25 to 35 years old, median 10.0 m tall and 48 cm through, read as 30 years. Was 12 m and 22 cm at 30 years, from general knowledge."
     },
     "appearance": {
       "evidence": "Authored",

@@ -12,8 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 2.5,
-      "crown_base": 0.3,
       "crown_rate": 0.06,
       "space_density": 18,
       "internode": 0.12,
@@ -25,17 +23,12 @@
       "leaf_angle": 55,
       "lean": 8,
       "wiggle": 9,
-      "fork_height": 0.3,
-      "fork_stems": 5,
-      "fork_angle": 30,
       "blooms": 3,
       "adult_age": 5,
       "bloom_size": 0.045,
       "bloom_angle": 90,
       "space_reach": 1.6,
       "space_kill": 0.45,
-      "extinction": 0.45,
-      "pipe_rings": 1.2e-05,
       "path_half": 8.0,
       "thorn_angle": 50
     }
@@ -59,11 +52,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.3,
-      0.27,
-      0.24
-    ],
     "bark_pattern": {
       "kind": "scaly",
       "scale": 0.025,
@@ -167,12 +155,13 @@
     {
       "age": 25,
       "environment": "open",
-      "height": 4,
+      "height": 2.5,
       "tolerance": 0.4
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [76, 69, 61],
     "limb_angle": "ascending",
     "height_max_m": {
       "min": 1,
@@ -203,6 +192,7 @@
     "inflorescence_length_m": {"min": 0.03, "max": 0.07}
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.27, 0.24], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 546): 'stout branches spreading and ascending and forming a compact round-topped head'."},
     "taxon": {
       "evidence": "Authored",
@@ -287,12 +277,12 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific crabapple's values, changed by hand for black hawthorn: a smaller, many-stemmed shrubby tree with stems clustered from the base (FEIS, Habeck 1991), straight thorns, and flat-topped clusters of white flowers ripening to black fruit. Not fitted to measurements."
+      "note": "Pacific crabapple's values, changed by hand for black hawthorn: a smaller, many-stemmed shrubby tree with stems clustered from the base (FEIS, Habeck 1991), straight thorns, and flat-topped clusters of white flowers ripening to black fruit. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "4 m at 25 years in the open, the top of FEIS's 1-4 m (Habeck 1991). Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "2.5 m at 25 years in the open, the middle of FEIS's 1 to 4 m for a grown black hawthorn (Habeck 1991), the height its crown is given from the same range; no measured size at an age is known. Was 4 m, the top of that range."
     },
     "appearance": {
       "evidence": "Authored",

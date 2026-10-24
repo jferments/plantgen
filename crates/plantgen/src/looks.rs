@@ -73,6 +73,28 @@ pub struct OrganLook {
     /// trees.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub face_up: f64,
+    /// How far from its node a card that lies along its organ is drawn,
+    /// in lengths of the card, each leaf on a thin stalk back to the node:
+    /// 0 draws it at the node. A twig's leaves spread through the space
+    /// it holds rather than bunched at one point, as games draw crowns.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub spray: f64,
+    /// The share of the grown crown's side outline the sky shows through
+    /// in photographs (`crown_see_through`), for a leaf drawn spread along
+    /// a shoot ([`OrganLook::spray`]). A crown drawn with the leaves it
+    /// grew shows more sky than its photographs, so each such leaf is
+    /// drawn again, on a shoot of its own from near its node, until the
+    /// drawn crown's side view shows that little ([`crate::form::filled`]).
+    /// Growth, light and leaf area stay the grown plant's. None draws each
+    /// leaf once.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fill: Option<f64>,
+    /// How far a card that lies along its organ turns its upper face out
+    /// from the middle of its plant's crown, from 0 (as placed) to 1
+    /// (square to the crown's surface there): a crown's leaves held toward
+    /// the open sky around it, so the crown reads as one leafy surface.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub face_out: f64,
     /// Degrees a card that lies along its organ turns about its own
     /// length before it turns to the sky, from -180 to 180: 90 sets a
     /// sword leaf's blade edgewise to the stem, its faces in the plane of
@@ -4582,6 +4604,12 @@ pub struct Look {
     /// Its sori ([`OrganLook::sori`]), if it bears any.
     pub sori: Option<Sori>,
     pub face_up: f64,
+    /// How far from its node its card is drawn ([`OrganLook::spray`]).
+    pub spray: f64,
+    /// The see-through its drawn crown is filled to ([`OrganLook::fill`]).
+    pub fill: Option<f64>,
+    /// How far its card turns out from its crown ([`OrganLook::face_out`]).
+    pub face_out: f64,
     /// Degrees its card turns about its own length ([`OrganLook::roll`]).
     pub roll: f64,
     /// Where its petiole meets its blade, for a leaf.
@@ -4798,6 +4826,9 @@ pub fn resolve<'a>(
                     variegation: look.variegation,
                     sori: look.sori,
                     face_up: look.face_up,
+                    spray: look.spray,
+                    fill: look.fill,
+                    face_out: look.face_out,
                     roll: look.roll,
                     insertion: look.insertion,
                     solid: look.solid.clone(),
@@ -4839,6 +4870,9 @@ pub fn resolve<'a>(
                 shade: foliage_shade,
                 accent: foliage,
                 face_up: 0.0,
+                spray: 0.0,
+                fill: None,
+                face_out: 0.0,
                 roll: 0.0,
                 insertion: Insertion::Marginal,
                 solid: None,
@@ -4950,10 +4984,23 @@ pub fn resolve_on<'a>(
 
 /// `graph` as drawn with each organ type's `sizes` from [`resolve_on`]
 /// and its `looks`' sizes by variety ([`Look::size_of`]): organs gone that
-/// day left out, the others at their stage's size; `None` when every size
-/// is 1, so the graph is drawn as it is.
+/// day left out, the others at their stage's size, and leaves that fill
+/// their crown to its photographs' see-through drawn again
+/// ([`OrganLook::fill`], [`crate::form::filled`]); `None` when every size
+/// is 1 and nothing fills, so the graph is drawn as it is.
 #[must_use]
 pub fn staged(
+    graph: &crate::graph::PlantGraph,
+    sizes: &[f64],
+    looks: &[Look],
+) -> Option<crate::graph::PlantGraph> {
+    let sized = sized(graph, sizes, looks);
+    crate::form::filled(sized.as_ref().unwrap_or(graph), looks).or(sized)
+}
+
+/// [`staged`]'s sizes: `graph` with each organ at its stage's size, those
+/// gone left out; `None` when every size is 1.
+fn sized(
     graph: &crate::graph::PlantGraph,
     sizes: &[f64],
     looks: &[Look],
@@ -5220,6 +5267,9 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         shade: [colour[0] * 0.35, colour[1] * 0.42, colour[2] * 0.55],
         accent: stage.accent.unwrap_or(colour),
         face_up: look.face_up,
+        spray: 0.0,
+        fill: None,
+        face_out: 0.0,
         roll: 0.0,
         // A stage's look is a flower or a fruit, on no petiole.
         insertion: Insertion::Marginal,
@@ -5547,6 +5597,11 @@ impl OrganLook {
             }
         }
         within("roll", self.roll, -180.0, 180.0)?;
+        within("spray", self.spray, 0.0, 4.0)?;
+        if let Some(fill) = self.fill {
+            within("fill", fill, 0.0, 1.0)?;
+        }
+        within("face_out", self.face_out, 0.0, 1.0)?;
         within("face_up", self.face_up, 0.0, 1.0)
     }
 }
@@ -5754,6 +5809,9 @@ mod tests {
                 shade: None,
                 accent: None,
                 face_up: 0.0,
+                spray: 0.0,
+                fill: None,
+                face_out: 0.0,
                 solid: None,
                 bend: None,
                 form: None,
@@ -6014,6 +6072,9 @@ mod tests {
                 shade: None,
                 accent: Some([0.9, 0.7, 0.1]),
                 face_up: 0.0,
+                spray: 0.0,
+                fill: None,
+                face_out: 0.0,
                 solid: None,
                 bend: None,
                 form: None,
@@ -6056,6 +6117,9 @@ mod tests {
                     shade: None,
                     accent,
                     face_up: 0.0,
+                    spray: 0.0,
+                    fill: None,
+                    face_out: 0.0,
                     solid: None,
                     bend: None,
                     form: None,
@@ -6156,6 +6220,9 @@ mod tests {
             shade: None,
             accent: None,
             face_up: 0.0,
+            spray: 0.0,
+            fill: None,
+            face_out: 0.0,
             solid: None,
             bend: None,
             form: None,
@@ -6228,6 +6295,9 @@ mod tests {
             shade: None,
             accent: Some([0.45, 0.5, 0.15]),
             face_up: 0.0,
+            spray: 0.0,
+            fill: None,
+            face_out: 0.0,
             solid: None,
             bend: None,
             form: None,
@@ -6325,6 +6395,9 @@ mod tests {
                 shade: None,
                 accent: Some([0.9, 0.7, 0.1]),
                 face_up: 0.0,
+                spray: 0.0,
+                fill: None,
+                face_out: 0.0,
                 solid: None,
                 bend: None,
                 form: None,
@@ -6448,6 +6521,9 @@ mod tests {
             shade: None,
             accent: Some([0.45, 0.5, 0.15]),
             face_up: 0.0,
+            spray: 0.0,
+            fill: None,
+            face_out: 0.0,
             solid: None,
             bend: None,
             form: None,

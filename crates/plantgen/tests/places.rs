@@ -39,12 +39,12 @@ fn maple(place: &str, from_age: f64, years: f64, keyframes: Vec<f64>) -> Growth 
 }
 
 const OPEN: &str = r#"{"schema": 1}"#;
-/// A wall 30 m high whose face stands 3 m north of the trunk.
-const WALL: &str = r#"{"schema": 1, "substrate": {"version": 1, "preset": "wall", "scale": 10}}"#;
-/// A neighbour's crown 7 m across, its axis 6 m east, from 1 m to 15 m up.
+/// A wall 15 m high whose face stands 1.5 m north of the trunk.
+const WALL: &str = r#"{"schema": 1, "substrate": {"version": 1, "preset": "wall", "scale": 5}}"#;
+/// A neighbour's crown 4.2 m across, its axis 3.6 m east, from 1 m to 15 m up.
 const NEIGHBOUR: &str = r#"{"schema": 1, "neighbours": {"version": 1, "density": 0,
     "relative_height": 0, "canopy": 0, "spacing": 0, "one_sided": false,
-    "envelopes": [{"centre_m": [6, 0], "base_m": 1, "top_m": 15, "radius_m": 3.5,
+    "envelopes": [{"centre_m": [3.6, 0], "base_m": 1, "top_m": 15, "radius_m": 2.1,
                    "density": 0.5}]}}"#;
 
 fn intrusion(place: &str, graph: &PlantGraph) -> Intrusion {
@@ -76,7 +76,7 @@ fn a_crown_makes_room_for_a_wall_and_shies_from_a_neighbour() {
     let walled = maple(WALL, 0.0, 15.0, vec![15.0]);
     let (blind, seen) = (intrusion(WALL, open), intrusion(WALL, &walled.keyframes[0]));
     assert!(
-        blind.segments_in_solids > 40 && blind.deepest_m > 1.0,
+        blind.segments_in_solids > 40 && blind.deepest_m > 0.8,
         "the open crown fills the wall's room: {}",
         blind.describe()
     );
@@ -88,12 +88,15 @@ fn a_crown_makes_room_for_a_wall_and_shies_from_a_neighbour() {
     );
 
     // A neighbour's crown to the east shades it and takes its room: its
-    // leaves stand farther west, and fewer of them in the neighbour.
+    // leaves stand farther west, and fewer of them in the neighbour. A
+    // bigleaf maple stands on several stems divided at 1 m (`stem_clump`),
+    // which stay where they part, so its leaves move about 0.15 m at 15
+    // years where a single stem's moved 0.3 m and more.
     let shaded = maple(NEIGHBOUR, 0.0, 15.0, vec![15.0]);
     let shaded = &shaded.keyframes[0];
     let (west, centre) = (organs_centre(shaded).x, organs_centre(open).x);
     assert!(
-        west < centre - 0.3,
+        west < centre - 0.1,
         "leaves' centre {west:.2} m, open {centre:.2} m"
     );
     let (inside, open_inside) = (

@@ -468,6 +468,33 @@
       "range": [0.001, 200],
       "why": "the widest a crown or clump grows"
     },
+    "crown_spread": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0.1, 4],
+      "optional": true,
+      "why": "a grown, open-grown tree's crown width over its height"
+    },
+    "crown_base_share": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0, 0.9],
+      "optional": true,
+      "why": "how far up a grown, open-grown tree's height its crown begins: the height of the lowest live limb's foliage over the tree's height"
+    },
+    "leaf_area_per_basal_area": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "m2/cm2",
+      "range": [0.005, 2],
+      "optional": true,
+      "why": "a grown, open-grown tree's leaf area for each square centimetre of its trunk's area at breast height, the ratio the pipe model holds fixed"
+    },
     "crown_outline_fit": {
       "group": "form",
       "organ": "plant",

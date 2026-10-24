@@ -444,6 +444,18 @@ fn side_views(graph: &PlantGraph, types: &[OrganType]) -> Option<(f64, f64)> {
             })
         })
         .collect();
+    side_of(graph, &leaves)
+}
+
+/// [`side_views`] of `graph`'s wood and `leaves`, each its card's middle,
+/// area and normal.
+#[allow(
+    clippy::cast_possible_truncation,
+    clippy::cast_sign_loss,
+    clippy::cast_precision_loss
+)]
+fn side_of(graph: &PlantGraph, leaves: &[(math::Vec3, f64, math::Vec3)]) -> Option<(f64, f64)> {
+    let alive = |shed: Option<f64>| shed.is_none_or(|age| age > graph.age);
     if leaves.len() < SIDE_LEAVES {
         return None;
     }
@@ -470,7 +482,7 @@ fn side_views(graph: &PlantGraph, types: &[OrganType]) -> Option<(f64, f64)> {
         let height = ((top + margin - foot) / cell).ceil() as usize + 1;
         let to_grid = |at: math::Vec3| ((across(at) - left) / cell, (top + margin - at.y) / cell);
         let mut leafy = Mask::new(width, height);
-        for (at, area, normal) in &leaves {
+        for (at, area, normal) in leaves {
             if at.y < foot {
                 continue;
             }
@@ -746,6 +758,157 @@ fn hull_area(rows: &[Option<(usize, usize)>]) -> f64 {
         twice += p.0 * q.1 - q.0 * p.1;
     }
     twice.abs() / 2.0
+}
+
+/// The most times a leaf is drawn to fill its crown ([`filled`]).
+pub const MOST_DRAWN: f64 = 4.0;
+
+/// The least sky a crown is filled to ([`filled`]): a crown its
+/// photographs show no sky through is filled to this.
+pub const LEAST_SKY: f64 = 0.01;
+
+/// The share of `graph`'s crown outline seen from the side that the sky
+/// shows through, with its leaves drawn spread along their shoots
+/// ([`crate::looks::OrganLook::spray`]) where they are drawn
+/// (`crate::mesh::place`), at the area their cards draw; `None` with
+/// fewer than [`SIDE_LEAVES`] of them.
+#[must_use]
+pub fn drawn_see_through(graph: &PlantGraph, looks: &[crate::looks::Look]) -> Option<f64> {
+    side_of(graph, &drawn_cards(graph, looks, &card_areas(looks))).map(|(_, through)| through)
+}
+
+/// The leaf area a card one metre long draws with each look that spreads
+/// its leaves along a shoot; `None` for the others.
+fn card_areas(looks: &[crate::looks::Look]) -> Vec<Option<f64>> {
+    looks
+        .iter()
+        .map(|look| {
+            (look.spray > 0.0).then(|| {
+                let templates = crate::templates::Templates::for_looks(std::slice::from_ref(look));
+                templates
+                    .templates
+                    .first()
+                    .map_or(0.0, |template| crate::templates::drawn_area(look, template))
+            })
+        })
+        .collect()
+}
+
+/// Each living leaf drawn spread along a shoot, its card as drawn: its
+/// middle, its area and its normal.
+fn drawn_cards(
+    graph: &PlantGraph,
+    looks: &[crate::looks::Look],
+    areas: &[Option<f64>],
+) -> Vec<(math::Vec3, f64, math::Vec3)> {
+    let alive = |shed: Option<f64>| shed.is_none_or(|age| age > graph.age);
+    graph
+        .organs
+        .iter()
+        .filter(|organ| alive(organ.shed) && organ.size > 0.0)
+        .filter_map(|organ| {
+            let index = usize::from(organ.organ);
+            let area = (*areas.get(index)?)?;
+            let (base, heading, left, length) = crate::mesh::place(organ, looks.get(index)?);
+            Some((
+                base + heading * (0.5 * length),
+                area * length * length,
+                heading.cross(left).normalize_or(math::Vec3::Y),
+            ))
+        })
+        .collect()
+}
+
+/// `graph` with each leaf whose look fills its crown
+/// ([`crate::looks::OrganLook::fill`]) drawn again, on shoots of their
+/// own from its node, until the crown seen from the side shows about as
+/// little sky as its photographs; `None` where no look fills or the crown
+/// already shows no more. Drawn `n` times over, leaves strewn through a
+/// crown leave about `sky^n` of it open, so `n` starts there and is
+/// corrected twice by the drawn crown's own sky, up to [`MOST_DRAWN`].
+/// Each copy keeps its leaf's segment, birth, shedding and light, so it
+/// grows, falls and shades as its leaf, and the grown plant's leaf area,
+/// light and size are not changed.
+#[must_use]
+#[allow(
+    clippy::cast_possible_truncation,
+    clippy::cast_sign_loss,
+    clippy::cast_precision_loss
+)]
+pub fn filled(graph: &PlantGraph, looks: &[crate::looks::Look]) -> Option<PlantGraph> {
+    let fill = |organ: &crate::graph::GraphOrgan| {
+        looks
+            .get(usize::from(organ.organ))
+            .filter(|look| look.spray > 0.0)
+            .and_then(|look| look.fill)
+    };
+    let goal = graph.organs.iter().find_map(fill)?.max(LEAST_SKY);
+    let areas = card_areas(looks);
+    let grown = drawn_cards(graph, looks, &areas);
+    let (_, mut sky) = side_of(graph, &grown)?;
+    let mut times: f64 = 1.0;
+    let mut copies: Vec<(usize, crate::graph::GraphOrgan)> = Vec::new();
+    for _ in 0..3 {
+        if sky <= goal || sky >= 1.0 || times >= MOST_DRAWN {
+            break;
+        }
+        times = (times * math::ln(goal) / math::ln(sky)).clamp(1.0, MOST_DRAWN);
+        copies = graph
+            .organs
+            .iter()
+            .enumerate()
+            .filter(|(_, organ)| fill(organ).is_some())
+            .flat_map(|(index, organ)| {
+                let extra = times - 1.0;
+                let more = usize::from(
+                    crate::rng::unit(crate::rng::mix64(organ.id ^ 0x6669_6c6c)) < extra.fract(),
+                );
+                (0..extra.floor() as usize + more).map(move |copy| (index, copy_of(organ, copy)))
+            })
+            .collect();
+        let again = PlantGraph {
+            organs: copies.iter().map(|(_, organ)| organ.clone()).collect(),
+            ..graph.clone()
+        };
+        let mut cards = grown.clone();
+        cards.extend(drawn_cards(&again, looks, &areas));
+        sky = side_of(graph, &cards)?.1;
+    }
+    if copies.is_empty() {
+        return None;
+    }
+    let mut organs = Vec::with_capacity(graph.organs.len() + copies.len());
+    let mut copies = copies.into_iter().peekable();
+    for (index, organ) in graph.organs.iter().enumerate() {
+        organs.push(organ.clone());
+        while let Some((_, copy)) = copies.next_if(|(of, _)| *of == index) {
+            organs.push(copy);
+        }
+    }
+    Some(PlantGraph {
+        organs,
+        ..graph.clone()
+    })
+}
+
+/// Copy `copy` of a leaf drawn to fill its crown ([`filled`]): an id of
+/// its own and a point a millimetre on from its node, so it is spread
+/// along a shoot of its own (`crate::mesh::place`), turned about the
+/// vertical at random. Copies on their node's own shoot overlap it and
+/// leave more sky (magnolia at 50 years from eye height: 14% against
+/// 10%) for 8% fewer triangles.
+#[allow(clippy::cast_precision_loss)]
+fn copy_of(organ: &crate::graph::GraphOrgan, copy: usize) -> crate::graph::GraphOrgan {
+    let id = crate::rng::hash_words(&[organ.id, copy as u64 + 1, 0x6669_6c6c]);
+    let turn = std::f64::consts::TAU * crate::rng::unit(id);
+    let along = organ.heading.normalize_or(math::Vec3::Y);
+    crate::graph::GraphOrgan {
+        id,
+        position: organ.position + along * (0.001 * (copy as f64 + 1.0)),
+        heading: organ.heading.rotate_about(math::Vec3::Y, turn),
+        left: organ.left.rotate_about(math::Vec3::Y, turn),
+        ..organ.clone()
+    }
 }
 
 /// The [`OUTLINE_SHARE`] quantile of `values` (sorted in place), or `None`

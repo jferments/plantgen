@@ -12,15 +12,10 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 5.5,
-      "crown_base": 1.5,
       "crown_rate": 0.035,
       "space_density": 4,
       "internode": 0.22,
       "max_shoot": 3,
-      "pipe_rings": 4.33e-06,
-      "pipe_organ": 0.0049,
-      "pipe_tip": 0.0024,
       "branch_angle": 50,
       "apical_young": 0.65,
       "apical": 0.52,
@@ -28,10 +23,6 @@
       "leaf_angle": 50,
       "lean": 6,
       "wiggle": 8,
-      "fork_height": 1.5,
-      "fork_stems": 3,
-      "fork_angle": 30,
-      "extinction": 0.45,
       "path_half": 10,
       "bloom_size": 0.11,
       "spur_leaf": 0.21
@@ -55,11 +46,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.38,
-      0.38,
-      0.32
-    ],
     "foliage": [
       0.06,
       0.15,
@@ -97,6 +83,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [97, 97, 82],
     "height_max_m": {
       "min": 10,
       "max": 20
@@ -153,6 +140,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.38, 0.38, 0.32], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -266,7 +254,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Pacific madrone's crown values, changed by hand: a short trunk forking low into a broad, dense crown, its panicles drawn 11 cm long (Flora of China: 8-14 cm), path_half fitted so it reaches its height. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+      "note": "Pacific madrone's crown values, changed by hand: a short trunk forking low into a broad, dense crown, its panicles drawn 11 cm long (Flora of China: 8-14 cm), path_half fitted so it reaches its height. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

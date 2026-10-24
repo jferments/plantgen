@@ -12,8 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 4.5,
-      "crown_base": 1,
       "crown_rate": 0.05,
       "internode": 0.2,
       "max_shoot": 3,
@@ -29,13 +27,7 @@
       "leaf_angle": 55,
       "lean": 15,
       "wiggle": 12,
-      "fork_height": 0.8,
-      "fork_stems": 3,
-      "fork_angle": 35,
       "droop": 0.015,
-      "pipe_tip": 0.003,
-      "pipe_organ": 0.005,
-      "pipe_rings": 1e-05,
       "light_cell": 0.35,
       "thorns": 1,
       "thorn_length": 0.02,
@@ -63,7 +55,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "bark": [0.3, 0.24, 0.2],
     "bark_pattern": {
       "kind": "fibrous",
       "scale": 0.025,
@@ -124,6 +115,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "bark_colour": [76, 61, 51],
     "leader": "lost",
     "limb_course": "tortuous",
     "wood_density_basic_kg_m3": 700,
@@ -154,6 +146,7 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.3, 0.24, 0.2], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, pp. 600-601, P. juliflora): 'divided a short distance above the ground into many irregularly arranged crooked branches forming a loose straggling head'."},
     "traits.limb_course": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 602): 'heavy irregularly arranged usually crooked branches'."},
     "generator.params.bud_break": {
@@ -170,7 +163,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a spreading tree 6 to 9 m tall, often several-trunked and leaning, with dark, shaggy, furrowed bark, paired thorns, twice-divided leaves of many small velvety leaflets and yellow catkin spikes in spring; this proxy dies at 100 years and stands as a snag, losing its dead branches one by one. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a spreading tree 6 to 9 m tall, often several-trunked and leaning, with dark, shaggy, furrowed bark, paired thorns, twice-divided leaves of many small velvety leaflets and yellow catkin spikes in spring; this proxy dies at 100 years and stands as a snag, losing its dead branches one by one. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "generator.params.bud_years": {
       "evidence": "SourceInferred",

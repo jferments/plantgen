@@ -12,14 +12,10 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_radius": 5,
-      "crown_base": 2.5,
       "crown_rate": 0.025,
       "space_density": 8,
       "internode": 0.2,
       "max_shoot": 3,
-      "pipe_organ": 0.0048,
-      "pipe_tip": 0.0024,
       "bud_break": 1.4,
       "branch_angle": 70,
       "apical_young": 0.7,
@@ -29,12 +25,7 @@
       "leaf_angle": 55,
       "lean": 6,
       "wiggle": 5,
-      "fork_height": 6,
-      "fork_stems": 1,
-      "fork_angle": 35,
       "droop": 0.02,
-      "extinction": 0.4,
-      "pipe_rings": 3.47e-06,
       "blooms": 1,
       "bloom_size": 0.03,
       "bloom_angle": 60,
@@ -62,11 +53,6 @@
     ]
   },
   "appearance": {
-    "bark": [
-      0.35,
-      0.3,
-      0.26
-    ],
     "bark_pattern": {
       "kind": "furrowed",
       "scale": 0.035,
@@ -170,15 +156,24 @@
   },
   "allometry": [
     {
+      "age": 50,
+      "environment": "open",
+      "height": 18.2,
+      "dbh": 0.801,
+      "tolerance": 0.4
+    },
+    {
       "age": 80,
       "environment": "open",
-      "height": 18,
-      "dbh": 0.45,
+      "height": 20.6,
+      "dbh": 0.982,
       "tolerance": 0.4
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leader": "persistent",
+    "bark_colour": [89, 76, 66],
     "limb_angle": "spreading",
     "height_max_m": {
       "min": 5,
@@ -214,6 +209,8 @@
     "leaf_apex": {"acute": "usually", "acuminate": "often"}
   },
   "evidence": {
+    "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 235, as Castanopsis chrysophylla): 'a massive trunk ... frequently free of branches for 50\u00b0, stout spreading branches forming a broad compact round-topped or conic head'."},
+    "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.35, 0.3, 0.26], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 235): 'stout spreading branches forming a broad compact round-topped or conic head'."},
     "taxon": {
       "evidence": "Authored",
@@ -288,12 +285,12 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Oregon white oak's values, changed by hand for golden chinquapin: a straight trunk with a cone-shaped crown of stout branches at right angles to the bole (FEIS, Meyer 2012), so a stronger leader, wide branch angles and no fork. path_half fitted so the tree grows to its reference height. Not fitted to measurements."
+      "note": "Oregon white oak's values, changed by hand for golden chinquapin: a straight trunk with a cone-shaped crown of stout branches at right angles to the bole (FEIS, Meyer 2012), so a stronger leader, wide branch angles and no fork. path_half fitted so the tree grows to its reference height. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "18 m tall and 45 cm across at breast height at 80 years in the open, within FEIS's 5-30 m and its trunks up to 1.5 m (Meyer 2012); open-grown trees taper more and spread wider than the stand averages FEIS gives. Replace with measured data before calling this species calibrated."
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "USDA Forest Service Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005, public domain): its fitted age-to-dbh and dbh-to-height equations for coast live oak (Quercus agrifolia) in the Sacramento Valley region (Sacramento, CA; 60 open-grown park and street trees aged 2.4-134.5 years), since it has no chinquapins: the database's evergreen tree of the chinquapin's family in California, from the city whose valley oaks stand for Oregon white oak, evaluated: 18.2 m and 80 cm at 50 years; 20.6 m and 98 cm at 80 years. Was 18 m and 45 cm at 80 years, rough sizes within FEIS's ranges (Meyer 2012)."
     },
     "appearance": {
       "evidence": "Authored",

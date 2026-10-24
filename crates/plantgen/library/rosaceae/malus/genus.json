@@ -3,6 +3,9 @@
   "rank": "genus",
   "name": "Malus",
   "traits": {
+    "leaf_area_per_basal_area": 0.092,
+    "crown_spread": 1.07,
+    "crown_base_share": 0.29,
     "short_shoots": true,
     "wood_density_basic_kg_m3": 650,
     "ovary_position": "inferior",
@@ -10,6 +13,9 @@
     "carpels": {"min": 2, "max": 5}
   },
   "evidence": {
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 134 crabapples: 0.092 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 83 crabapples 25 years or older: 1.07. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
+    "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 83 crabapples 25 years or older: 0.29 (quartiles 0.20 and 0.36). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: rosaceous fruit trees such as Pyrus have a well-developed short-shoot system; Malus, a rosaceous fruit tree, bears its leaves and flowers on spurs."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Malus (gwddagg_v2.2_genus.csv, read): specific gravity 0.65 (wsg_est, the hierarchical-model genus mean, from 34 records in 12 sources); trunks 0.65, branches 0.63. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
     "traits": {

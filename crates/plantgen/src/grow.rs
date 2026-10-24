@@ -440,10 +440,11 @@ impl Girth {
         &mut self,
         scene: &Scene,
         pipes: Option<&tools::Pipes>,
+        crown_base: f64,
         dt: f64,
     ) -> (Vec<f64>, Vec<f64>) {
         let below = match pipes {
-            Some(pipes) => self.disused_below(scene, pipes.exponent),
+            Some(pipes) => self.disused_below(scene, pipes, crown_base),
             None => Vec::new(),
         };
         scene
@@ -483,7 +484,8 @@ impl Girth {
     /// segment between where it stood and the ground. Records the limbs
     /// gone since the last step, then sums each segment's own and those of
     /// the segments above it, in the pipe model's units.
-    fn disused_below(&mut self, scene: &Scene, exponent: f64) -> Vec<f64> {
+    fn disused_below(&mut self, scene: &Scene, pipes: &tools::Pipes, crown_base: f64) -> Vec<f64> {
+        let exponent = pipes.exponent;
         let mut at_node: Vec<Option<usize>> = vec![None; scene.nodes.len()];
         for (index, segment) in scene.segments.iter().enumerate() {
             at_node[segment.node as usize] = Some(index);
@@ -498,28 +500,36 @@ impl Girth {
             }
             None
         };
-        let order: IdMap<u16> = scene
+        // Where a segment stands: on the stem (order 0), or as clear wood
+        // below the crown's base, as a forked tree's stems are.
+        let bole: IdMap<bool> = scene
             .segments
             .iter()
-            .map(|segment| (segment.id, segment.order))
+            .map(|segment| {
+                let clear = segment.start.y.max(segment.end.y) < crown_base;
+                (segment.id, segment.order == 0 || clear)
+            })
             .collect();
         let standing: IdMap<Option<u64>> = scene
             .segments
             .iter()
             .map(|segment| (segment.id, parent_of(segment.node)))
             .collect();
-        // A segment gone whose parent is a standing piece of the stem
-        // (order 0) is the foot of a shed limb; its pipes pass to the stem,
-        // and the rest of the limb was inside them. Twigs that die within
-        // a living crown leave none: the pipe model sizes the crown's own
-        // wood by its living foliage.
+        // A segment gone whose parent is a standing piece of the bole (the
+        // stem, or a stem it forks into, below the crown's base) is the foot
+        // of a shed limb; its pipes pass to the bole, and the rest of the
+        // limb was inside them. With the pipe tool's `heartwood`, every
+        // twig that dies leaves its pipes in the wood it grew from, as a
+        // tree's heartwood keeps the sapwood it was; without it, twigs that
+        // die within a living crown leave none, and the crown's own wood is
+        // its living foliage's.
         let gone: Vec<(u64, u64)> = self
             .parent
             .iter()
             .filter(|(id, _)| !standing.contains_key(id))
             .filter_map(|(&id, &parent)| {
                 parent
-                    .filter(|parent| order.get(parent) == Some(&0))
+                    .filter(|parent| pipes.heartwood || bole.get(parent) == Some(&true))
                     .map(|parent| (id, parent))
             })
             .collect();
@@ -999,7 +1009,17 @@ impl<'a> Grower<'a> {
             Some(values) => Some(tools::pipe(&scene, &self.organ_area, &values)?),
             None => None,
         };
-        let (radii, grown) = self.girth.radii(&scene, pipes.as_ref(), settings.dt);
+        let crown_base = {
+            let area = &self.organ_area;
+            Crown::of(scene.organs.iter().map(|organ| {
+                let leaf = area[usize::from(organ.symbol)] * organ.size * organ.size;
+                (organ.position, leaf)
+            }))
+            .map_or(0.0, |crown| crown.base_m)
+        };
+        let (radii, grown) = self
+            .girth
+            .radii(&scene, pipes.as_ref(), crown_base, settings.dt);
         if let Some(values) = step_settings(program, ToolKind::Bend, params, clock, &mut self.stack)
         {
             tools::bend(
