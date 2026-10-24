@@ -2399,12 +2399,15 @@ pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(
 }
 
 /// `organ`'s card as the coarse levels trace it: its foot, heading, left
-/// and length. A cluster's is where [`place`] puts it; every other is
-/// traced from its organ's position, at its organ's size.
+/// and length. A cluster's is where [`place`] puts it, and so is a sprayed
+/// leaf's, out along its shoot as level 0 draws it; every other is traced
+/// from its organ's position, at its organ's size.
 fn traced(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) {
     let (base, heading, left, length) = place(organ, look);
     if look.inflorescence.is_some() || look.stalk().is_some() {
         (base, heading, left, length)
+    } else if look.mount() == Mount::Along {
+        (base, heading, left, organ.size)
     } else {
         (organ.position, heading, left, organ.size)
     }

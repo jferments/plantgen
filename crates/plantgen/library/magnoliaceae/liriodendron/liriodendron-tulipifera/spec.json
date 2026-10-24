@@ -27,7 +27,7 @@
       "droop": 0.02,
       "lean": 3,
       "wiggle": 4,
-      "path_half": 22,
+      "path_half": 13,
       "fork_stems": 1,
       "spur_leaf": 0.26
     }
@@ -298,7 +298,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red alder's crown values (a fast, straight-stemmed deciduous tree), changed by hand: one trunk, as FNA describes it (single-trunked), a wider crown, short-shoot leaves on the angiosperm default 0.26 m card (its blades and long petioles; a smaller card grows more shoots than the string holds), its shoots spaced more closely than alder's (space_density 3.5) so the crown of narrower lobed cards keeps within the module limit, and path_half fitted so it grows to the Silvics height at 40 years. Not fitted to crown measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
+      "note": "Red alder's crown values (a fast, straight-stemmed deciduous tree), changed by hand: one trunk, as FNA describes it (single-trunked), a wider crown, short-shoot leaves on the angiosperm default 0.26 m card (its blades and long petioles; a smaller card grows more shoots than the string holds), its shoots spaced more closely than alder's (space_density 3.5) so the crown of narrower lobed cards keeps within the module limit, and path_half fitted so it grows to the height at 40 years of its reference (refitted 2026-10-24, 22 to 13, when the reference became the Urban Tree Database's open-grown tulip trees, 23 m at 40 years). Not fitted to crown measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius."
     },
     "allometry": {
       "evidence": "SourceInferred",

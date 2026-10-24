@@ -1230,7 +1230,7 @@ pub mod venation;
 /// basal area (`leaf_area_per_basal_area`, else the database's 0.167 m²
 /// a cm²) and no yearly ring; their crowns spread to their lineage's
 /// measured width over height (`crown_spread`, else 0.87) in place of
-/// hand-set radii; their leaves need 0.15 of open light to live and
+/// hand-set radii; their leaves need 0.12 of open light to live and
 /// their light dims at broadleaf forests' extinction (0.59); dormant
 /// buds sprout where light returns, so full crowns keep renewing; their
 /// reference sizes are the database's growth curves for the species or
@@ -1238,5 +1238,6 @@ pub mod venation;
 /// tables space them (`variants.stand_spacing` 0.165, Worthington et al.
 /// 1960), and a limb shed from a forked stem below the crown leaves its
 /// pipes too. Hand-picked bark colours are stated in sRGB, and a twig's
-/// leaves are drawn spread along a shoot (`spray`), above the ground.
+/// leaves are drawn spread along a shoot (`spray`), above the ground,
+/// where the coarse levels trace them too.
 pub const GENERATOR_REVISION: u32 = 165;

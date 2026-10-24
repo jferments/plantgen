@@ -31,7 +31,7 @@
       "blooms": 1,
       "bloom_size": 0.12,
       "bloom_angle": 130,
-      "path_half": 22
+      "path_half": 16
     }
   },
   "growth": {
@@ -170,7 +170,7 @@
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region. Refitted 2026-10-23 (11.5 to 22) when the reference became the Urban Tree Database's open-grown Oregon ashes, 23 m at 50 years."
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region. Refitted 2026-10-23 (11.5 to 16) when the reference became the Urban Tree Database's open-grown Oregon ashes, 23 m at 50 years, kept short enough that no grown plant passes Abrams's greatest height of 25 m."
     },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",

@@ -3,11 +3,15 @@
   "rank": "genus",
   "name": "Parkinsonia",
   "traits": {
+    "leaf_area_per_basal_area": 0.188,
+    "crown_spread": 1.21,
     "wood_density_basic_kg_m3": 600,
     "flower_symmetry": "zygomorphic",
     "zygomorphy": "other"
   },
   "evidence": {
+    "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 35 palo verdes (Parkinsonia aculeata and P. florida): 0.188 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 18 palo verdes 25 years or older (Parkinsonia aculeata and P. florida): 1.21. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.wood_density_basic_kg_m3": {
       "evidence": "SourceInferred",
       "source": "gwdd-v2",

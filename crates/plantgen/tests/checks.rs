@@ -217,6 +217,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves shrink upward to a quarter of the longest, so the topmost draw about 4 cm wide against the 6 to 8 in King's gives the main leaves",
     ),
     (
+        "nothofagus-pumilio",
+        "height_typical_m",
+        "it is grown as a wind-pruned treeline lenga, fitted to authored rough heights (5 m at 20 years, 8 m at 60) no source gives, so since the broadleaf crowns' measured rules (revision 165) its median grows about 6.8 m against the 10 to 25 m stated for lenga's forest trees (inferred: a model estimate); measured lenga heights should replace both",
+    ),
+    (
         "nymphaea-odorata",
         "shoot_leaves",
         "its rhizome is not drawn and each pad's petiole is, as a stem of its own, so each reads as a shoot of one leaf against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",

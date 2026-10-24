@@ -1128,7 +1128,8 @@ fn the_juvenile_period_sets_adult_age() {
 /// USDA Urban Tree Database's open-grown trees of their species, or of
 /// their genus where it has none (`usfs-urban-tree-database-2016`, leaf
 /// area over the area of the mean crown diameter, between its 10th and
-/// 90th percentiles at the age), and an old oak's inner leaves grow in
+/// 90th percentiles at the age; the grown crown measured the same way,
+/// `crown_diameter`), and an old oak's inner leaves grow in
 /// shade (crown calibration): short shoots live while they have light.
 #[test]
 fn open_crowns_hold_the_leaf_area_of_open_grown_trees() {
@@ -1154,7 +1155,7 @@ fn open_crowns_hold_the_leaf_area_of_open_grown_trees() {
             .unwrap();
         let growth = grow_variant(&spec, &variant, age, vec![age]);
         let graph = &growth.keyframes[0];
-        let radius = graph.crown_radius();
+        let radius = 0.5 * graph.crown_diameter();
         let index = graph.leaf_area(&growth.organ_types) / (std::f64::consts::PI * radius * radius);
         assert!(
             (low..=high).contains(&index),
