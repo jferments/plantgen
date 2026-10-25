@@ -115,6 +115,7 @@
   "traits": {
     "crown_see_through": 0.06,
     "shade_tolerance": "intermediate",
+    "leader": "lost",
     "self_pruning": true,
     "leaf_area_per_basal_area": 0.276,
     "crown_spread": 0.63,
@@ -125,7 +126,8 @@
     "leaf_fall_months": [10],
     "height_max_m": {
       "min": 10,
-      "max": 25
+      "max": 25,
+      "typical": 21
     },
     "wood_density_basic_kg_m3": 530,
     "wood_modulus_green_mpa": 7800,
@@ -144,6 +146,7 @@
   "evidence": {
     "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2-2026-10-19/CROWNS.md): median sky inside the crown outline of 2 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.06."},
     "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Fraxinus latifolia, Reaction to Competition (p. 341): 'The species is classed as intermediate in tolerance of shade'."},
+    "traits.leader": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Fraxinus latifolia (Owston), Introduction: 'Open-grown trees on moist sites have short trunks and wide, round-topped crowns with large limbs', where forest-grown trees have long, clean trunks: an open-grown trunk divides low into its large limbs."},
     "traits.self_pruning": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Fraxinus latifolia, Reaction to Competition (p. 341): 'Individuals self-prune quickly with side shade, and forest-grown trees have long, clean trunks'."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 28 Oregon ashes: 0.276 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 27 Oregon ashes 25 years or older (Longview, WA): 0.63. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
@@ -165,7 +168,7 @@
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951), as Fraxinus latifolia: grows 10 m to 25 m tall."
+      "note": "Abrams vol. 3 (1951), as Fraxinus latifolia: grows 10 m to 25 m tall. The typical value is the middle of the height Silvics of North America vol. 2 (1990, Owston), Growth and Yield, says it attains after 60 to 100 years of moderately rapid growth: 18 to 24 m (60 to 80 ft)."
     },
     "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Ash, Oregon, green: modulus of elasticity 7,800 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.5)."},
     "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Ash, Oregon, green: modulus of rupture 52,000 kPa (clear wood in static bending)."},

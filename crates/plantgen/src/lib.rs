@@ -1256,4 +1256,10 @@ pub mod venation;
 /// scaffold limb builds a sub-crown of its own (`crown_units`, sequential
 /// reiteration, Barthélémy and Caraglio 2007; broadleaf 29, sapindaceae
 /// 10), so bigleaf maple and oak are lumpy domes, not smooth eggs.
-pub const GENERATOR_REVISION: u32 = 166;
+/// 167: paper birch and Oregon ash from photos. Birch loses its hand-set
+/// `path_half`, a fit to a size the Urban Tree Database since replaced,
+/// so it grows to the database's height with a narrow head (Sargent's
+/// "narrow open head"), and `Betula` states `crown_see_through` 0.3 from
+/// six photographs. Oregon ash takes Silvics' typical height (21 m) and
+/// its lost leader: open-grown, a short trunk divides into large limbs.
+pub const GENERATOR_REVISION: u32 = 167;
