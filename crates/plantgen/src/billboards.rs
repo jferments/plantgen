@@ -1338,6 +1338,21 @@ pub fn build(
             .collect::<Vec<Option<usize>>>()
     };
     let headed = heads.iter().flatten().copied().max().map_or(0, |h| h + 1);
+    // Heads of flowers seen face on (a capitulum, a single flower, an
+    // umbel or a corymb) look unlike from above and from the side.
+    let faced: Vec<bool> = (0..headed)
+        .map(|h| {
+            organ_cards.iter().zip(&heads).any(|(card, head)| {
+                *head == Some(h)
+                    && looks.get(usize::from(card.template)).is_some_and(|look| {
+                        matches!(
+                            look.shape,
+                            Shape::Umbel(_) | Shape::Head(_) | Shape::Flower(_)
+                        )
+                    })
+            })
+        })
+        .collect();
     let rest: Vec<usize> = (0..elements.len())
         .filter(|&i| heads.get(i).copied().flatten().is_none())
         .collect();
@@ -1486,16 +1501,8 @@ pub fn build(
         flat: bool,
         turn: Turn,
         extent: [f64; 3],
-    }
-    /// What a plane's picture is baked from: its cards, the cards as they
-    /// grew, not turned to face the card, where the picture's normals and
-    /// its parts' places are read from (clumps only, and only when `lit`),
-    /// and its wood. Drawn again for each use and dropped: a tree's are
-    /// gigabytes.
-    struct Drawn {
-        cards: Mesh,
-        lit: Option<Mesh>,
-        wood: Mesh,
+        /// Baked from [`head_ways`] and drawn as an impostor.
+        views: bool,
     }
     // Where the plant stands: a card leaning out from its parts would
     // show the ones behind it below there, under the ground.
@@ -1586,10 +1593,14 @@ pub fn build(
         let extent = spread.map(|v| (v / weight.max(1e-12)).sqrt());
         // A head (a raceme, a spike, a panicle) is much alike round its
         // axis, and turns to the eye about its own middle on the stem,
-        // so it stays on its ribbon from every side. A flat-topped one
-        // (a yarrow's corymb, an umbel) is a sheet, and lies as it grows.
-        let sheet = extent[2] < SHEET * extent[0].min(extent[1]);
-        let turn = if g < headed && !sheet {
+        // so it stays on its ribbon from every side. One seen face on (a
+        // yarrow's corymb, an umbel, a daisy) looks unlike from above and
+        // from the side, a disc of flowers over a cone of rays or a cup
+        // of bracts: lying flat it would be a line from the side, and
+        // turned it would show the disc. It is drawn as a small impostor
+        // ([`HEAD_AROUND`]).
+        let views = g < headed && faced[g];
+        let turn = if g < headed && !views {
             Turn::Facing
         } else {
             turn
@@ -1605,6 +1616,7 @@ pub fn build(
             group: g,
             flat,
             turn,
+            views,
         });
     }
 
@@ -1621,7 +1633,7 @@ pub fn build(
     // so a culm or a blade stays a line in the picture instead of
     // breaking into dots.
     let mut texel = 1.0 / density;
-    let draw = |plane: &Plane, texel: f64, lit: bool| -> Drawn {
+    let draw = |plane: &Plane, texel: f64, lit: bool| -> Baked {
         let g = plane.group;
         // In a crown's mass, as with its twigs, thin flowers and fruit
         // (catkins, cones) keep their own width: a texel wide they would
@@ -1772,7 +1784,7 @@ pub fn build(
                 first + 2,
             ]);
         }
-        Drawn { cards, lit, wood }
+        Baked { cards, lit, wood }
     };
     // Twice, the second time at the density of the bounds the first
     // drew: leaves widened to a texel, and the thin wood left out, change
@@ -1818,13 +1830,14 @@ pub fn build(
         let total: usize = planes
             .iter()
             .map(|p| {
-                let (tw, th) = tile(
-                    p.high.0 - p.low.0,
-                    p.high.1 - p.low.1,
-                    tile_density,
-                    tier.most_texels,
-                );
-                tw * th
+                let (w, h) = (p.high.0 - p.low.0, p.high.1 - p.low.1);
+                if p.views {
+                    let (side, _) = tile(w.max(h), w.max(h), tile_density, tier.most_texels);
+                    side * side * head_ways().len()
+                } else {
+                    let (tw, th) = tile(w, h, tile_density, tier.most_texels);
+                    tw * th
+                }
             })
             .sum();
         if total <= budget {
@@ -1848,11 +1861,43 @@ pub fn build(
             texel * MIN_TEXELS,
         );
     }
+    // Heads seen face on are baked from the full model, where an umbel or
+    // a corymb is drawn flower by flower on its rays: the coarser level
+    // draws it as one flat card, a line from the side.
+    let fine = planes.iter().any(|p| p.views).then(|| {
+        let fine = mesh::build(
+            graph,
+            looks,
+            bodies,
+            appearance,
+            &LodSpec {
+                min_radius: 0.0,
+                ..levels[0].for_height(height)
+            },
+            0,
+        );
+        let cards = fine.card_mesh();
+        (fine.wood, cards)
+    });
     let mut covered_area = 0.0;
     let mut card_area = 0.0;
     for plane in &planes {
         let drawn = draw(plane, texel, true);
         let (w, h) = (plane.high.0 - plane.low.0, plane.high.1 - plane.low.1);
+        if plane.views {
+            let (side, _) = tile(w.max(h), w.max(h), tile_density, tier.most_texels);
+            let mid = plane.centre
+                + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
+                + plane.up * ((plane.low.1 + plane.high.1) * 0.5);
+            let drawn = match &fine {
+                Some((wood, cards)) => near_head(&drawn, mid, wood, cards),
+                None => drawn,
+            };
+            let (covered, area) = add_views(&mut out, &drawn, mid, side, templates, &sky);
+            covered_area += covered;
+            card_area += area;
+            continue;
+        }
         let (tw, th) = tile(w, h, tile_density, tier.most_texels);
         // The picture's frame: the group's extent, grown to the texels'
         // aspect.
@@ -1928,7 +1973,15 @@ pub fn build(
         picture.pivot = pivot.to_f32();
         out.pictures.push(picture);
     }
-    out.stats.cards = out.pictures.len();
+    out.stats.cards = out
+        .pictures
+        .iter()
+        .enumerate()
+        .filter(|(i, p)| match p.turn {
+            Turn::Views { first, .. } => first == *i,
+            _ => true,
+        })
+        .count();
     // A ribbon's quads are written with both windings; a renderer draws
     // them once, two-sided.
     out.stats.wood_triangles = out.wood.triangle_count() - ribbons.len() * (RIBBON_POINTS - 1) * 2;
@@ -2428,20 +2481,7 @@ pub fn impostor(
         }
         strips
     };
-    let mut ways = Vec::new();
-    for elevation in [0.0_f64, 45.0] {
-        for k in 0..tier.around {
-            #[allow(clippy::cast_precision_loss)]
-            let azimuth = core::f64::consts::TAU * k as f64 / tier.around as f64;
-            let (e, a) = (crate::math::radians(elevation), azimuth);
-            ways.push(Vec3::new(
-                crate::math::cos(e) * crate::math::sin(a),
-                crate::math::sin(e),
-                crate::math::cos(e) * crate::math::cos(a),
-            ));
-        }
-    }
-    ways.push(Vec3::Y);
+    let ways = ways_round(tier.around);
     let count = ways.len();
     let mut out = CardPlant::default();
     for way in ways {
@@ -2519,6 +2559,186 @@ pub fn impostor(
         out.stats.coverage = covered / out.stats.texels.max(1) as f64;
     }
     out
+}
+
+/// What a plane's picture is baked from: its cards, the cards as they
+/// grew, not turned to face the card, where the picture's normals and its
+/// parts' places are read from (clumps only, and only when `lit`), and its
+/// wood. Drawn again for each use and dropped: a tree's are gigabytes.
+struct Baked {
+    cards: Mesh,
+    lit: Option<Mesh>,
+    wood: Mesh,
+}
+
+/// Pictures round a flat-topped head at each height of eye, level and
+/// from 45 degrees above; one more from straight above. A head is much
+/// alike round its axis, so a few do.
+pub const HEAD_AROUND: usize = 4;
+
+/// The ways a flat-topped head is baked from ([`HEAD_AROUND`]).
+fn head_ways() -> Vec<Vec3> {
+    ways_round(HEAD_AROUND)
+}
+
+/// `around` ways round the plant level, as many from 45 degrees above,
+/// and one from straight above: the ways an impostor is baked from.
+fn ways_round(around: usize) -> Vec<Vec3> {
+    let mut ways = Vec::new();
+    for elevation in [0.0_f64, 45.0] {
+        for k in 0..around {
+            #[allow(clippy::cast_precision_loss)]
+            let azimuth = core::f64::consts::TAU * k as f64 / around as f64;
+            let (e, a) = (crate::math::radians(elevation), azimuth);
+            ways.push(Vec3::new(
+                crate::math::cos(e) * crate::math::sin(a),
+                crate::math::sin(e),
+                crate::math::cos(e) * crate::math::cos(a),
+            ));
+        }
+    }
+    ways.push(Vec3::Y);
+    ways
+}
+
+/// How far round a head's coarse card its full model is taken, in the
+/// card's own reach from its middle: an umbel's or a corymb's rays reach
+/// down below its flowers about as far as they spread across.
+const HEAD_REACH: f64 = 2.0;
+
+/// The triangles of the full model (`wood`, `cards`) within
+/// [`HEAD_REACH`] of a head's coarse card (`coarse`) round `mid`.
+fn near_head(coarse: &Baked, mid: Vec3, wood: &Mesh, cards: &Mesh) -> Baked {
+    let reach = coarse
+        .cards
+        .positions
+        .iter()
+        .map(|p| (v3(*p) - mid).length())
+        .fold(0.0, f64::max)
+        * HEAD_REACH;
+    let take = |from: &Mesh| {
+        let mut to = Mesh::default();
+        for t in 0..from.triangle_count() {
+            let centre = (0..3).fold(Vec3::ZERO, |sum, k| {
+                sum + v3(from.positions[from.indices[t * 3 + k] as usize])
+            }) * (1.0 / 3.0);
+            if (centre - mid).length() <= reach {
+                copy_triangle(&mut to, from, t);
+            }
+        }
+        to
+    };
+    Baked {
+        cards: take(cards),
+        lit: None,
+        wood: take(wood),
+    }
+}
+
+/// Bake `drawn` round `mid` from each of [`head_ways`], `side` texels a
+/// side, and add it to `out` as one card showing the nearest: a small
+/// impostor. The covered and the card's area, square metres.
+fn add_views(
+    out: &mut CardPlant,
+    drawn: &Baked,
+    mid: Vec3,
+    side: usize,
+    templates: &Templates,
+    sky: &Sky,
+) -> (f64, f64) {
+    let radius = drawn
+        .cards
+        .positions
+        .iter()
+        .chain(&drawn.wood.positions)
+        .map(|p| (v3(*p) - mid).length())
+        .fold(1e-3, f64::max);
+    let ways = head_ways();
+    let first = out.pictures.len();
+    let mut union: Option<Texture> = None;
+    let mut covered = 0.0;
+    #[allow(clippy::cast_precision_loss)]
+    let texel = radius * 2.0 / side as f64;
+    for &way in &ways {
+        let up = (Vec3::Y - way * Vec3::Y.dot(way)).normalize_or_else(|| Vec3::Z);
+        let mut picture = bake(
+            &Shot {
+                cards: &drawn.cards,
+                lit: drawn.lit.as_ref(),
+                wood: &drawn.wood,
+                strips: None,
+                mid,
+                right: up.cross(way),
+                up,
+                normal: way,
+                size: (radius * 2.0, radius * 2.0),
+                texels: (side, side),
+            },
+            templates,
+            sky,
+        );
+        keep_coverage(&mut picture);
+        fill_empty(&mut picture);
+        picture.turn = Turn::Views {
+            first,
+            count: ways.len(),
+        };
+        picture.pivot = mid.to_f32();
+        #[allow(clippy::cast_possible_truncation)]
+        {
+            picture.extent = [radius as f32; 3];
+        }
+        match &mut union {
+            Some(union) => {
+                for (to, from) in union.color.iter_mut().zip(&picture.color) {
+                    to[3] = to[3].max(from[3]);
+                }
+            }
+            None => union = Some(picture.clone()),
+        }
+        #[allow(clippy::cast_precision_loss)]
+        {
+            covered += picture.color.iter().filter(|c| c[3] >= 0.5).count() as f64 * texel * texel;
+        }
+        out.stats.texels += side * side;
+        out.pictures.push(picture);
+    }
+    let Some(outline) = union.as_ref().and_then(outline) else {
+        out.pictures.truncate(first);
+        return (0.0, 0.0);
+    };
+    // Baked facing the first way; it turns as it is drawn.
+    let way = ways[0];
+    let up = (Vec3::Y - way * Vec3::Y.dot(way)).normalize_or_else(|| Vec3::Z);
+    let right = up.cross(way);
+    #[allow(clippy::cast_precision_loss)]
+    let index_alpha = first as f32;
+    let start = u32::try_from(out.cards.positions.len()).unwrap_or(u32::MAX);
+    for &(u, v) in &outline {
+        #[allow(clippy::cast_possible_truncation)]
+        out.cards.push(Vertex {
+            position: mid + right * ((u - 0.5) * radius * 2.0) + up * ((v - 0.5) * radius * 2.0),
+            normal: way,
+            uv: [u as f32, v as f32],
+            color: [1.0, 1.0, 1.0, index_alpha],
+            born: 0.0,
+            shed: None,
+            level: 3,
+            segment: mesh::NO_SEGMENT,
+        });
+    }
+    let n = u32::try_from(outline.len()).unwrap_or(0);
+    for i in 1..n.saturating_sub(1) {
+        out.cards
+            .indices
+            .extend_from_slice(&[start, start + i, start + i + 1]);
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let views = ways.len() as f64;
+    (
+        covered / views,
+        polygon_area(&outline) * radius * radius * 4.0,
+    )
 }
 
 /// What a picture is baked of, and the frame it is seen in.

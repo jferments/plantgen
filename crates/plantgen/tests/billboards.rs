@@ -3,7 +3,8 @@
 //! in it, the cards stay inside the full plant's reach, a build gives
 //! the same bytes twice, the pictures pack into one atlas, the far
 //! impostor is one card with a picture from every way, a cholla's thin
-//! joints are baked, and an agave's long leaves are drawn whole.
+//! joints are baked, an agave's long leaves are drawn whole, and a
+//! yarrow's corymbs are small impostors baked from its full model.
 //! `cargo test --release -p plantgen --test billboards`.
 
 use plantgen::billboards::{self, CORNERS, CardPlant, FAR, TIERS};
@@ -14,6 +15,7 @@ use plantgen::looks::Look;
 use plantgen::lsys::Limits;
 use plantgen::package::DEFAULT_DAY;
 use plantgen::quality::STANDARD;
+use plantgen::raster::Turn;
 use plantgen::spec::PlantSpec;
 use plantgen::templates::Templates;
 
@@ -250,5 +252,41 @@ fn an_agaves_long_leaves_are_drawn_whole() {
             tier.name,
             plant.stats.card_triangles
         );
+    }
+}
+
+#[test]
+fn a_yarrows_corymbs_are_seen_from_every_way() {
+    let (height, _, plants) = carded("achillea-millefolium");
+    let low = &plants[0];
+    let views = billboards::HEAD_AROUND * 2 + 1;
+    let heads: Vec<usize> = low
+        .pictures
+        .iter()
+        .enumerate()
+        .filter_map(|(i, p)| match p.turn {
+            Turn::Views { first, count } if first == i => {
+                assert_eq!(count, views);
+                Some(i)
+            }
+            _ => None,
+        })
+        .collect();
+    assert!(!heads.is_empty(), "no head drawn from every way");
+    assert!(low.stats.cards <= TIERS[0].cards(height));
+    assert_eq!(
+        low.pictures.len(),
+        low.stats.cards + heads.len() * (views - 1),
+        "one card for a head's views"
+    );
+    // Seen level, its flowers stand on rays: the lower half of the
+    // picture is not empty, as a flat card's would be.
+    for &first in &heads {
+        let level = &low.pictures[first];
+        let lower = level.color[..level.width * (level.height / 2)]
+            .iter()
+            .filter(|c| c[3] >= 0.5)
+            .count();
+        assert!(lower > 0, "head {first}: nothing below its flowers");
     }
 }
