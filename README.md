@@ -115,6 +115,12 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   instancing and meshopt extensions, and `--triangles` or `--max-mib`
   redraws the levels with as much detail as a triangle or size budget
   allows.
+- **Baked-card tiers.** For integrated GPUs and handhelds, a plant
+  drawn the way game foliage is, from its own full model: its leaves,
+  fronds and heads grouped by place and facing and baked into pictures on
+  12 to 128 cards (about 70 to 800 triangles for most plants), its trunk
+  and flowering stems kept as tubes and ribbons, and a one-card impostor
+  for far off. `plantc tiers SPECIES` draws them beside the full plant.
 - **Ground.** Tiling textures of what plants lay on the ground: needles,
   leaves, thatch, twigs, mosses and grasses, and each canopy species' own
   litter.
