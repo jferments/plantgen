@@ -81,7 +81,9 @@ pub struct CardTier {
     /// and one at least [`LARGE_M`].
     pub small: usize,
     pub large: usize,
-    /// Texels of all of a plant's pictures together, small and large.
+    /// Texels of a plant's pictures as seen from one height of eye,
+    /// small and large: a card turned to the eye holds one picture for
+    /// each of [`HEIGHTS`].
     pub small_texels: usize,
     pub large_texels: usize,
     /// The most texels along a card's longer side.
@@ -146,7 +148,7 @@ impl CardTier {
         Self::scaled(height, self.small, self.large)
     }
 
-    /// Texels its pictures may hold.
+    /// Texels its pictures seen from one height of eye may hold.
     #[must_use]
     pub fn texels(&self, height: f64) -> usize {
         Self::scaled(height, self.small_texels, self.large_texels)
@@ -168,6 +170,28 @@ const LEAF_AXIS_REACH: f64 = 10.0;
 
 /// The most a clump's card leans from upright, degrees.
 pub const MOST_LEAN: f64 = 45.0;
+
+/// The heights of eye, degrees above level, a card turned to the eye is
+/// baked from ([`Turn::Heights`]), as an impostor is from level, from 45
+/// degrees above and from above ([`ImpostorTier`]). A crown's card baked
+/// from the side alone showed it from the side from every height: from
+/// 45 degrees down a big sagebrush's low cards were 37 per cent darker
+/// than the full plant, whose lit tops show from above.
+pub const HEIGHTS: [f64; 3] = [0.0, 45.0, 90.0];
+
+/// The ways a card turned to the eye is baked from ([`HEIGHTS`]), out
+/// along its level normal `level` and up, each with the up of its frame:
+/// the world's up laid on it, and from above the way back in, so the card's
+/// right stays level and the same in every one.
+fn height_ways(level: Vec3) -> [(Vec3, Vec3); 3] {
+    let right = Vec3::Y.cross(level);
+    HEIGHTS.map(|degrees| {
+        let e = crate::math::radians(degrees);
+        let way =
+            (level * crate::math::cos(e) + Vec3::Y * crate::math::sin(e)).normalize_or(Vec3::Y);
+        (way, way.cross(right))
+    })
+}
 
 /// A solid leaf at least this share of the plant's height long (an
 /// agave's, an aloe's) is drawn whole rather than baked: a rosette's few
@@ -210,7 +234,12 @@ pub struct CardStats {
     pub card_triangles: usize,
     /// Solid leaves drawn whole ([`WHOLE_LEAF`]).
     pub leaf_triangles: usize,
+    /// Texels of all its pictures.
     pub texels: usize,
+    /// Texels of its pictures seen from any one height of eye: those
+    /// of every card but a turned one's ([`HEIGHTS`]), of which one
+    /// picture is seen at a time.
+    pub seen_texels: usize,
     /// The share of the cards' area their pictures cover.
     pub coverage: f64,
 }
@@ -1587,6 +1616,7 @@ pub fn build(
     }
 
     // Planes.
+    #[derive(Clone, Copy)]
     struct Plane {
         centre: Vec3,
         normal: Vec3,
@@ -1600,6 +1630,10 @@ pub fn build(
         extent: [f64; 3],
         /// Baked from [`head_ways`] and drawn as an impostor.
         views: bool,
+        /// Turned to the eye: baked from [`height_ways`] out along
+        /// `level`, how far its parts spread along each one's right, up
+        /// and way.
+        heights: Option<(Vec3, [[f64; 3]; 3])>,
     }
     // Where the plant stands: a card leaning out from its parts would
     // show the ones behind it below there, under the ground.
@@ -1702,6 +1736,27 @@ pub fn build(
         } else {
             turn
         };
+        // A card turned to the eye shows its parts as seen from the
+        // height nearest the eye's ([`HEIGHTS`]); its right is level.
+        let heights = (turn == Turn::Facing).then(|| {
+            let level = right.cross(Vec3::Y).normalize_or(Vec3::Z);
+            let ways = height_ways(level);
+            let mut spread = [[0.0; 3]; 3];
+            let mut weight = 0.0;
+            for e in &members {
+                for p in [e.centre - e.half, e.centre, e.centre + e.half] {
+                    let d = p - centre;
+                    for ((way, up), sums) in ways.iter().zip(&mut spread) {
+                        for (sum, axis) in sums.iter_mut().zip([right, *up, *way]) {
+                            *sum += e.area * d.dot(axis) * d.dot(axis);
+                        }
+                    }
+                    weight += e.area;
+                }
+            }
+            let weight = weight.max(1e-12);
+            (level, spread.map(|sums| sums.map(|v| (v / weight).sqrt())))
+        });
         planes.push(Plane {
             centre,
             normal,
@@ -1714,6 +1769,7 @@ pub fn build(
             flat,
             turn,
             views,
+            heights,
         });
     }
 
@@ -1908,13 +1964,24 @@ pub fn build(
             } else {
                 &drawn.wood.positions[..]
             };
+            // A turned card's frame holds its parts from every height, the
+            // same about its middle in each, so one outline serves all.
+            let ups: Vec<Vec3> = match plane.heights {
+                Some((level, _)) => height_ways(level).iter().map(|w| w.1).collect(),
+                None => vec![plane.up],
+            };
             for p in drawn.cards.positions.iter().chain(reach) {
                 let d = v3(*p) - plane.centre;
-                let (x, y) = (d.dot(plane.right), d.dot(plane.up));
-                low = (low.0.min(x), low.1.min(y));
-                high = (high.0.max(x), high.1.max(y));
+                let x = d.dot(plane.right);
+                for up in &ups {
+                    let y = d.dot(*up);
+                    low = (low.0.min(x), low.1.min(y));
+                    high = (high.0.max(x), high.1.max(y));
+                }
             }
-            low.1 = lowest(plane.centre, plane.up, low.1).min(high.1);
+            if plane.heights.is_none() {
+                low.1 = lowest(plane.centre, plane.up, low.1).min(high.1);
+            }
             plane.low = low;
             plane.high = high;
         }
@@ -1980,6 +2047,7 @@ pub fn build(
     let mut card_area = 0.0;
     for plane in &planes {
         let drawn = draw(plane, texel, true);
+        let drawn_texel = texel;
         let (w, h) = (plane.high.0 - plane.low.0, plane.high.1 - plane.low.1);
         if plane.views {
             let (side, _) = tile(w.max(h), w.max(h), tile_density, tier.most_texels);
@@ -2002,6 +2070,40 @@ pub fn build(
         let texel = (w / (tw - 2).max(1) as f64).max(h / (th - 2).max(1) as f64);
         #[allow(clippy::cast_precision_loss)]
         let (fw, fh) = (texel * tw as f64, texel * th as f64);
+        if let Some((level, extents)) = plane.heights {
+            // Each drawn for its own way: its leaves turned toward face on
+            // and its thin stems laid across as seen from there.
+            drop(drawn);
+            let drawn = height_ways(level).map(|(way, _)| {
+                draw(
+                    &Plane {
+                        normal: way,
+                        ..*plane
+                    },
+                    drawn_texel,
+                    true,
+                )
+            });
+            let (covered, area) = add_heights(
+                &mut out,
+                &drawn,
+                &Frame {
+                    centre: plane.centre,
+                    level,
+                    right: plane.right,
+                    low: plane.low,
+                    high: plane.high,
+                    size: (fw, fh),
+                    texels: (tw, th),
+                },
+                extents,
+                templates,
+                &sky,
+            );
+            covered_area += covered;
+            card_area += area;
+            continue;
+        }
         let mid = plane.centre
             + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
             + plane.up * ((plane.low.1 + plane.high.1) * 0.5);
@@ -2062,6 +2164,7 @@ pub fn build(
         let covered = picture.color.iter().filter(|c| c[3] >= 0.5).count() as f64 * texel * texel;
         covered_area += covered;
         out.stats.texels += tw * th;
+        out.stats.seen_texels += tw * th;
         // A card turns about the middle of its parts: a skirt about its
         // trunk, whatever its outline's shape.
         picture.pivot = plane.centre.to_f32();
@@ -2072,7 +2175,7 @@ pub fn build(
         .iter()
         .enumerate()
         .filter(|(i, p)| match p.turn {
-            Turn::Views { first, .. } => first == *i,
+            Turn::Views { first, .. } | Turn::Heights { first, .. } => first == *i,
             _ => true,
         })
         .count();
@@ -2606,6 +2709,7 @@ pub fn impostor(
             picture.extent = [radius as f32; 3];
         }
         out.stats.texels += tier.texels * tier.texels;
+        out.stats.seen_texels += tier.texels * tier.texels;
         out.pictures.push(picture);
     }
     // One card, baked facing the first way, round what every picture
@@ -2795,6 +2899,7 @@ fn add_views(
             covered += picture.color.iter().filter(|c| c[3] >= 0.5).count() as f64 * texel * texel;
         }
         out.stats.texels += side * side;
+        out.stats.seen_texels += side * side;
         out.pictures.push(picture);
     }
     let Some(outline) = union.as_ref().and_then(outline) else {
@@ -2833,6 +2938,128 @@ fn add_views(
         covered / views,
         polygon_area(&outline) * radius * radius * 4.0,
     )
+}
+
+/// Where a turned card's pictures lie ([`add_heights`]): about `centre`,
+/// from `low` to `high` along `right` and each height's up, `size`
+/// metres and `texels` across and up with their margin.
+struct Frame {
+    centre: Vec3,
+    level: Vec3,
+    right: Vec3,
+    low: (f64, f64),
+    high: (f64, f64),
+    size: (f64, f64),
+    texels: (usize, usize),
+}
+
+/// Bake `drawn`, one for each of [`height_ways`], in `frame` and add it to
+/// `out` as one card turned to the eye that shows the picture from the
+/// nearest height. `extents`: how far its parts spread along each
+/// picture's right, up and way. The covered and the card's area, square
+/// metres.
+fn add_heights(
+    out: &mut CardPlant,
+    drawn: &[Baked; 3],
+    frame: &Frame,
+    extents: [[f64; 3]; 3],
+    templates: &Templates,
+    sky: &Sky,
+) -> (f64, f64) {
+    let (fw, fh) = frame.size;
+    let (tw, th) = frame.texels;
+    let (x, y) = (
+        (frame.low.0 + frame.high.0) * 0.5,
+        (frame.low.1 + frame.high.1) * 0.5,
+    );
+    #[allow(clippy::cast_precision_loss)]
+    let texel = fw / tw as f64;
+    let first = out.pictures.len();
+    let mut union: Option<Texture> = None;
+    let mut covered = 0.0;
+    let ways = height_ways(frame.level);
+    for (((way, up), extent), drawn) in ways.iter().zip(extents).zip(drawn) {
+        let mut picture = bake(
+            &Shot {
+                cards: &drawn.cards,
+                lit: drawn.lit.as_ref(),
+                wood: &drawn.wood,
+                strips: None,
+                mid: frame.centre + frame.right * x + *up * y,
+                right: frame.right,
+                up: *up,
+                normal: *way,
+                size: frame.size,
+                texels: frame.texels,
+            },
+            templates,
+            sky,
+        );
+        keep_coverage(&mut picture);
+        fill_empty(&mut picture);
+        picture.turn = Turn::Heights {
+            first,
+            count: ways.len(),
+        };
+        // It turns about the middle of its parts: a skirt about its
+        // trunk, whatever its outline's shape.
+        picture.pivot = frame.centre.to_f32();
+        #[allow(clippy::cast_possible_truncation)]
+        {
+            picture.extent = extent.map(|v| v as f32);
+        }
+        match &mut union {
+            Some(union) => {
+                for (to, from) in union.color.iter_mut().zip(&picture.color) {
+                    to[3] = to[3].max(from[3]);
+                }
+            }
+            None => union = Some(picture.clone()),
+        }
+        #[allow(clippy::cast_precision_loss)]
+        {
+            covered += picture.color.iter().filter(|c| c[3] >= 0.5).count() as f64 * texel * texel;
+        }
+        out.stats.texels += tw * th;
+        out.pictures.push(picture);
+    }
+    out.stats.seen_texels += tw * th;
+    let Some(outline) = union.as_ref().and_then(outline) else {
+        out.pictures.truncate(first);
+        out.stats.texels -= tw * th * ways.len();
+        out.stats.seen_texels -= tw * th;
+        return (0.0, 0.0);
+    };
+    // Laid facing out level, the first way; it turns as it is drawn, and
+    // each picture's texels lie at the same place along its own right
+    // and up from the middle.
+    #[allow(clippy::cast_precision_loss)]
+    let index_alpha = first as f32;
+    let start = u32::try_from(out.cards.positions.len()).unwrap_or(u32::MAX);
+    for &(u, v) in &outline {
+        #[allow(clippy::cast_possible_truncation)]
+        out.cards.push(Vertex {
+            position: frame.centre
+                + frame.right * (x + (u - 0.5) * fw)
+                + Vec3::Y * (y + (v - 0.5) * fh),
+            normal: frame.level,
+            uv: [u as f32, v as f32],
+            color: [1.0, 1.0, 1.0, index_alpha],
+            born: 0.0,
+            shed: None,
+            level: 3,
+            segment: mesh::NO_SEGMENT,
+        });
+    }
+    let n = u32::try_from(outline.len()).unwrap_or(0);
+    for i in 1..n.saturating_sub(1) {
+        out.cards
+            .indices
+            .extend_from_slice(&[start, start + i, start + i + 1]);
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let heights = ways.len() as f64;
+    (covered / heights, polygon_area(&outline) * fw * fh)
 }
 
 /// What a picture is baked of, and the frame it is seen in.

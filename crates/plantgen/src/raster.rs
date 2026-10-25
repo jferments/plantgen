@@ -133,7 +133,8 @@ pub struct Texture {
     /// right, up and normal as baked: turned, it is as wide as that seen
     /// from the eye.
     pub extent: [f32; 3],
-    /// The way toward the eye it was baked from, for [`Turn::Views`].
+    /// The way toward the eye it was baked from, for [`Turn::Views`]
+    /// and [`Turn::Heights`].
     pub seen_from: [f32; 3],
 }
 
@@ -149,6 +150,13 @@ pub enum Turn {
     /// on, the one baked from nearest the eye ([`Texture::seen_from`]):
     /// an impostor.
     Views { first: usize, count: usize },
+    /// It faces the eye and shows, of the `count` pictures from `first`
+    /// on, the one baked from the height nearest the eye's: a crown's
+    /// card, alike from every side but not from above. Each picture's
+    /// right is the card's own, level; its up is the world's up laid on
+    /// it, but for one baked from straight above, which keeps its frame
+    /// on the ground, up the way back in along the card's level normal.
+    Heights { first: usize, count: usize },
 }
 
 /// The first four real spherical harmonics at the unit vector `d`, in
@@ -997,6 +1005,10 @@ fn draw(
     VIEW_CORNERS.set(views);
 }
 
+/// A picture baked from nearer straight up than this cosine lies on the
+/// ground ([`Turn::Heights`]).
+const STRAIGHT_UP: f64 = 0.999;
+
 /// `mesh`'s baked cards turned to `camera` as their pictures say
 /// ([`Texture::turn`]); `None` when none turns.
 fn turn_cards(mesh: &Mesh, templates: &Templates, camera: &Camera, forward: Vec3) -> Option<Mesh> {
@@ -1031,9 +1043,31 @@ fn turn_cards(mesh: &Mesh, templates: &Templates, camera: &Camera, forward: Vec3
             (up.cross(normal), up)
         };
         let (right, up) = frame(normal, Vec3::Z);
+        // The up, way and spread of the picture shown, when it is not
+        // the card's own.
+        let mut shown: Option<(Vec3, Vec3, Vec3)> = None;
         let facing = match texture.turn {
             Turn::Fixed => continue,
             Turn::Facing => toward,
+            Turn::Heights { first, count } => {
+                let elevation = |d: Vec3| math::asin(d.normalize_or(Vec3::Z).y.clamp(-1.0, 1.0));
+                let eye = elevation(toward);
+                let nearest = (first..first + count)
+                    .filter_map(|v| templates.baked.get(v).map(|t| (v, t)))
+                    .min_by(|a, b| {
+                        let off = |t: &Texture| (elevation(vec3(t.seen_from)) - eye).abs();
+                        off(a.1).total_cmp(&off(b.1))
+                    });
+                if let Some((v, t)) = nearest {
+                    #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
+                    {
+                        turned.colors[i][3] = v as f32;
+                    }
+                    let way = vec3(t.seen_from).normalize_or(normal);
+                    shown = Some((way.cross(right), way, vec3(t.extent)));
+                }
+                toward
+            }
             Turn::Views { first, count } => {
                 let nearest = (first..first + count)
                     .filter_map(|v| templates.baked.get(v).map(|t| (v, t)))
@@ -1050,12 +1084,20 @@ fn turn_cards(mesh: &Mesh, templates: &Templates, camera: &Camera, forward: Vec3
                 toward
             }
         };
-        let (right_now, up_now) = frame(facing, up);
+        let (right_now, up_now) = match shown {
+            // Seen from above, a picture baked from above lies on the
+            // ground as it was baked, and turns as the eye goes round.
+            Some((up_then, way, _)) if way.y > STRAIGHT_UP => {
+                let up_now = (up_then - facing * up_then.dot(facing)).normalize_or(up_then);
+                (up_now.cross(facing), up_now)
+            }
+            _ => frame(facing, up),
+        };
         // A clump spreads less through its depth than across: turned to
         // an eye beside it, its card narrows to what the eye would see.
-        let extent = vec3(texture.extent);
+        let (up_then, normal_then, extent) = shown.unwrap_or((up, normal, vec3(texture.extent)));
         let across = |axis: Vec3| {
-            let (a, b, c) = (axis.dot(right), axis.dot(up), axis.dot(normal));
+            let (a, b, c) = (axis.dot(right), axis.dot(up_then), axis.dot(normal_then));
             (a * a * extent.x * extent.x
                 + b * b * extent.y * extent.y
                 + c * c * extent.z * extent.z)

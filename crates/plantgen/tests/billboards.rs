@@ -7,7 +7,7 @@
 //! yarrow's corymbs are small impostors baked from its full model.
 //! `cargo test --release -p plantgen --test billboards`.
 
-use plantgen::billboards::{self, CORNERS, CardPlant, FAR, TIERS};
+use plantgen::billboards::{self, CORNERS, CardPlant, FAR, HEIGHTS, TIERS};
 use plantgen::body::BodyLook;
 use plantgen::graph::PlantGraph;
 use plantgen::grow::{GrowthSettings, grow};
@@ -116,8 +116,16 @@ fn tiers_keep_their_budgets() {
                 tier.name,
                 stats.wood_triangles
             );
+            // From any one height of eye; a turned card holds a picture
+            // for each of three.
             assert!(
-                stats.texels <= tier.texels(height),
+                stats.seen_texels <= tier.texels(height),
+                "{id} {}: {} texels seen",
+                tier.name,
+                stats.seen_texels
+            );
+            assert!(
+                stats.texels <= tier.texels(height) * HEIGHTS.len(),
                 "{id} {}: {} texels",
                 tier.name,
                 stats.texels
@@ -288,5 +296,41 @@ fn a_yarrows_corymbs_are_seen_from_every_way() {
             .filter(|c| c[3] >= 0.5)
             .count();
         assert!(lower > 0, "head {first}: nothing below its flowers");
+    }
+}
+
+#[test]
+fn a_sagebrushs_crown_cards_are_baked_from_each_height() {
+    let (_, _, plants) = carded("artemisia-tridentata");
+    for (tier, plant) in TIERS.iter().zip(&plants) {
+        let mut turned = 0;
+        for (i, p) in plant.pictures.iter().enumerate() {
+            let Turn::Heights { first, count } = p.turn else {
+                continue;
+            };
+            assert_eq!(count, HEIGHTS.len());
+            if first != i {
+                continue;
+            }
+            turned += 1;
+            // Level, from 45 degrees above and from above, each the same
+            // size about the same middle, so one outline serves all.
+            let rises: Vec<f32> = (first..first + count)
+                .map(|v| plant.pictures[v].seen_from[1])
+                .collect();
+            assert!(rises[0].abs() < 1e-3, "{}: {rises:?}", tier.name);
+            assert!(
+                (rises[1] - 0.5_f32.sqrt()).abs() < 1e-3,
+                "{}: {rises:?}",
+                tier.name
+            );
+            assert!(rises[2] > 0.999, "{}: {rises:?}", tier.name);
+            for v in first..first + count {
+                let q = &plant.pictures[v];
+                assert_eq!((q.width, q.height), (p.width, p.height));
+                assert_eq!(q.pivot, p.pivot);
+            }
+        }
+        assert!(turned > 0, "{}: no crown card turns", tier.name);
     }
 }
