@@ -1017,10 +1017,12 @@ pub fn build(
             | GrowthForm::ScaleLeavedTree
             | GrowthForm::Shrub
     );
-    // A broadleaf crown is a heap of leafy masses, round from every side;
-    // a conifer's foliage reaches out along its tiers of branches, whose
-    // reach a card turned to the eye would lose.
-    let turning = matches!(form, GrowthForm::DecurrentTree | GrowthForm::Shrub);
+    // A crown is a heap of leafy masses, round from every side. A
+    // conifer's too: its cards facing out along its tiers were seen edge
+    // on from the side, and a Douglas fir's and a redcedar's card tiers
+    // hid a quarter less of the sky than the full tree (`plantc tiers`
+    // cover); turned to the eye, about as much.
+    let turning = crowned;
     // A climber's thin stems lie under its leaves on its host: drawn a
     // texel wide they would cover them, and ivy's cards came out brown.
     let climbing = form == GrowthForm::Vine;
