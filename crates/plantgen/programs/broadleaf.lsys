@@ -279,9 +279,20 @@
 # shoot (plagio) takes its branch posture's droop and give and its limb's
 # yearly turn, as other branches do.
 #
+# Revision 29 (sub-crowns): where the trunk divides into scaffold limbs
+# (crown_units of them above 1, below a fork), each fills a crown of its
+# own (sequential reiteration, Barthélémy and Caraglio 2007): the free
+# space (space@4) is that many copies of the region, each shrunk about its
+# widest point to an equal share of its area and moved out round the
+# stem until it meets the region's edge; below the copies' feet the
+# region is whole, as a young tree's is before its trunk divides. The
+# crown is as wide as before, but a cluster of domes whose tops stand side
+# by side below the region's top, not one smooth dome. With crown_units 0, as every lineage gives it,
+# a plant grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 28;
+lsystem broadleaf 29;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -390,6 +401,7 @@ param tip_bloom = 0;          # 1: a shoot tip with no free space left ends each
 param tip_angle = 15;         # angle of a shoot tip's bloom to its shoot
 param crown_widest = 0.5;     # share of the region's depth at which it is widest
 param crown_fullness = 2;     # the region's profile: 2 an ellipse, more toward a flat-ended cylinder
+param crown_units = 0;        # sub-crowns, one per scaffold limb of a fork (revision 29); 0 or 1: one region
 param bloom_stalk = 0;        # a solitary bloom's own stalk, metres; 0 for none
 # Leafy flowering shoots (revision 22).
 param bloom_pairs = 0;        # leaf pairs a shoot unfolds below its blooms in a year it flowers; 0: spur_pairs
@@ -467,7 +479,8 @@ tool space@4 {
     influence = space_reach,
     kill = space_kill,
     angle = 80,
-    renew = space_renew
+    renew = space_renew,
+    units = fork_height > 0 ? crown_units : 0
 };
 tool vigour@1 {
     lambda = apical + (apical_young - apical) * max(0, 1 - t / apical_years)

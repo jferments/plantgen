@@ -342,11 +342,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a rosette's crown adds its year's leaves where they stand (29 to 38 on common sotol's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
-        "program:sapindaceae",
-        "crown_outline_fit",
-        "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
-    ),
-    (
         "prunus-emarginata",
         "crown_see_through",
         "its photographs show about 3% sky; drawn four times over (form::MOST_DRAWN) its crown still shows about 20%, between the few long shoots of a single stem where its photographs show a clump of stems",
