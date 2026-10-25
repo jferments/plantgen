@@ -50,9 +50,12 @@
 #
 # Revision 9 (tree girth): its pipes keep broadleaf's heartwood setting.
 #
+# Revision 10 (sub-crowns): a maple's region is broadleaf 29's sub-crowns
+# where its trunk divides into scaffold limbs (crown_units).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 9 extends broadleaf;
+lsystem sapindaceae 10 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -130,7 +133,8 @@ tool space@4 {
     lobe_depth = crown_lobe_depth,
     bumps = crown_bumps,
     bump_size = crown_bump_size,
-    angle = perception
+    angle = perception,
+    units = fork_height > 0 ? crown_units : 0
 };
 
 # Broadleaf's tips abort where they have no free space (apex_death), a

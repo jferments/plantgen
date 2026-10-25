@@ -23,7 +23,6 @@
       "leaf_angle": 50,
       "lean": 6,
       "wiggle": 8,
-      "path_half": 14.4,
       "spur_leaf": 0.247
     }
   },
@@ -81,6 +80,8 @@
     "crown_base_share": 0.22,
     "bark_colour": [102, 97, 87],
     "limb_angle": "spreading",
+    "crown_form": "conical",
+    "shade_tolerance": "tolerant",
     "height_max_m": {
       "min": 18,
       "max": 27,
@@ -175,6 +176,8 @@
     "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 210 southern magnolias 25 years or older (six cities): 0.22 (quartiles 0.17 and 0.31). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.4, 0.38, 0.34], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 345): 'rather small spreading branches'."},
+    "traits.crown_form": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 345): 'a tree, of pyramidal habit'; open-grown trees on iNaturalist (batch inat-2026-10-23) stand as a dense cone widest near the ground."},
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Magnolia grandiflora (Outcalt), Reaction to Competition: 'Overall, southern magnolia is tolerant of shade'; under Vegetative Reproduction its saplings' lower limbs often lie on the forest floor and root there."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

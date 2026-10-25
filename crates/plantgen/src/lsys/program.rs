@@ -385,7 +385,8 @@ pub const TOOLS: [ToolSpec; 12] = [
     // Crown form, item 1: the region grown as a front from the lineage's
     // tropisms under the plant's sky, or `space@2`'s outline (`widest`
     // above 0) narrowed where that front falls short among neighbours
-    // (`super::front`, `super::tools`).
+    // (`super::front`, `super::tools`). With `units` above 1, the crown is
+    // that many sub-crowns, one for each scaffold limb.
     ToolSpec {
         kind: ToolKind::Space,
         name: "space",
@@ -409,6 +410,7 @@ pub const TOOLS: [ToolSpec; 12] = [
             ("lobe_depth", 0.0),
             ("bumps", 0.0),
             ("bump_size", 3.0),
+            ("units", 0.0),
         ],
     },
     // With `saturation` (crown form B), a tip's light gathers as a leaf's

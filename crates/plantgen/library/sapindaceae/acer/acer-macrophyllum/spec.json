@@ -177,6 +177,7 @@
   "traits": {
     "crown_see_through": 0.02,
     "stem_clump": "few",
+    "leader": "lost",
     "leaf_area_per_basal_area": 0.191,
     "crown_spread": 0.67,
     "crown_base_share": 0.15,
@@ -205,6 +206,7 @@
   "evidence": {
     "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo measures (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/CROWNS.md): median sky inside the crown outline of 5 side-view photographs of leafy open-grown trees, plantc measure-mask: 0.02."},
     "traits.stem_clump": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms photo tally (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/TALLY.md): two or more stems from at or near the ground (multiple) in 6 of 8 photo votes, lost 1, kept 1."},
+    "traits.leader": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990), Acer macrophyllum (Minore and Zasada), Introduction: its leaves are 'borne on rounded crowns supported by short, branching boles if open-grown', where trees in dense stands are clear for half to two-thirds of their height: an open-grown trunk divides low into its limbs, as its open-grown photos show (plantgen-claude project-files/tree-shape/gallery-2026-10-24, photos 58 and 113)."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 27 bigleaf maples: 0.191 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 30 bigleaf maples 25 years or older (Longview, WA): 0.67 (quartiles 0.55 and 0.79). Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 30 bigleaf maples 25 years or older (Longview, WA): 0.15 (quartiles 0.13 and 0.19). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
