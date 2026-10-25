@@ -2757,10 +2757,38 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
 fn tiers_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
-        &["seed", "size", "out", "quality", "program", "day", "age"],
+        &[
+            "seed", "size", "out", "quality", "program", "day", "age", "view", "focus", "columns",
+        ],
     )?;
     let program = options.program()?;
     let out = options.flags.get("out").ok_or("missing `--out FOLDER`")?;
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::Side,
+    };
+    // `--columns full,low,cards`: which columns to draw (all by default).
+    let columns: Vec<String> = options.flags.get("columns").map_or_else(
+        || vec!["full".into(), "low".into(), "cards".into()],
+        |text| text.split(',').map(|c| c.trim().to_owned()).collect(),
+    );
+    let wants = |name: &str| columns.iter().any(|c| c == name);
+    // `--focus F,S`: a close-up of the point a share F up the plant, S of
+    // its height across.
+    let focus_share: Option<(f64, f64)> = match options.flags.get("focus") {
+        Some(text) => {
+            let parts: Vec<f64> = text
+                .split(',')
+                .map(|part| part.trim().parse::<f64>())
+                .collect::<Result<_, _>>()
+                .map_err(|_| format!("`--focus` expects F,S, found `{text}`"))?;
+            let [f, s] = parts[..] else {
+                return Err(format!("`--focus` expects F,S, found `{text}`").into());
+            };
+            Some((f, s))
+        }
+        None => None,
+    };
     fs::create_dir_all(out).map_err(|error| format!("cannot make {out}: {error}"))?;
     let size: usize = options.number("size")?.unwrap_or(360);
     let day = options.day()?;
@@ -2786,27 +2814,31 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             &looks,
             &bodies,
             &spec.appearance,
-            &quality.lods[0].for_height(graph.height),
-            0,
+            &quality.lods[if wants("full") { 0 } else { 3 }].for_height(graph.height),
+            if wants("full") { 0 } else { 3 },
         );
         full.vary_by_plant(&looks, seed);
         let preview_options = PreviewOptions {
             width: size,
             height: size * 3 / 2,
-            view: View::Side,
+            view,
             supersample: 2,
             figure: false,
             frame_height: Some(graph.height * 1.05),
-            focus: None,
+            focus: focus_share
+                .map(|(f, s)| (Vec3::new(0.0, graph.height * f, 0.0), graph.height * s)),
         };
-        let mut images = vec![preview::render(&full, &templates, &preview_options)];
+        let mut images = Vec::new();
+        if wants("full") {
+            images.push(preview::render(&full, &templates, &preview_options));
+        }
         let mut rows = vec![format!(
             "{{\"species\":\"{}\",\"tier\":\"full\",\"height_m\":{:.2},\"triangles\":{}}}",
             spec.id,
             graph.height,
             full.triangle_count()
         )];
-        for tier in &plantgen::lowpoly::TIERS {
+        for tier in plantgen::lowpoly::TIERS.iter().filter(|_| wants("low")) {
             let solid = plantgen::lowpoly::build(
                 graph,
                 &looks,
@@ -2832,9 +2864,49 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 stats.singles.0,
                 stats.singles.1
             ));
-            images.push(preview::render(
-                &solid.two_sided(),
+            if tier.name == "low" {
+                images.push(preview::render(
+                    &solid.two_sided(),
+                    &templates,
+                    &preview_options,
+                ));
+            }
+        }
+        for tier in plantgen::billboards::TIERS
+            .iter()
+            .filter(|_| wants("cards"))
+        {
+            let carded = plantgen::billboards::build(
+                graph,
+                &looks,
+                &bodies,
+                &spec.appearance,
                 &templates,
+                &quality.lods,
+                tier,
+            );
+            let stats = &carded.stats;
+            rows.push(format!(
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"wood\":{},\"cards\":{},\"card_triangles\":{},\"texels\":{},\"coverage\":{:.3}}}",
+                spec.id,
+                tier.name,
+                stats.triangles(),
+                stats.wood_triangles,
+                stats.cards,
+                stats.card_triangles,
+                stats.texels,
+                stats.coverage
+            ));
+            let mut baked = templates.clone();
+            baked.baked = carded.pictures.clone();
+            let plant = mesh::PlantMesh {
+                wood: carded.wood.clone(),
+                ..mesh::PlantMesh::default()
+            };
+            images.push(preview::render_with(
+                &plant,
+                &[(&carded.cards, raster::Material::Baked)],
+                &baked,
                 &preview_options,
             ));
         }

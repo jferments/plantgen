@@ -227,6 +227,18 @@ fn scale(height: f64, x: f64) -> (Mesh, f64, f64) {
 #[must_use]
 #[allow(clippy::too_many_lines)]
 pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions) -> Image {
+    render_with(plant, &[], templates, options)
+}
+
+/// [`render`], with more meshes drawn as part of the plant (a tier's
+/// baked cards, `crate::billboards`).
+#[must_use]
+pub fn render_with(
+    plant: &PlantMesh,
+    extra: &[(&Mesh, Material)],
+    templates: &Templates,
+    options: &PreviewOptions,
+) -> Image {
     let solid = !plant.tufts.is_empty() && !templates.bodies.is_empty();
     let cards = if solid {
         let first = templates.first_spine_template();
@@ -251,11 +263,12 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
         Mesh::default()
     };
     let wood = templates.bark.map_or(Material::Opaque, Material::Bark);
-    let items = [
+    let mut items = vec![
         (&plant.wood, wood),
         (&cards, Material::Card),
         (&spines, Material::Opaque),
     ];
+    items.extend_from_slice(extra);
     let (low, high) = raster::bounds(&items).unwrap_or((Vec3::ZERO, Vec3::new(1.0, 1.0, 1.0)));
     let reach = low
         .x
@@ -288,7 +301,7 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     if options.figure && options.focus.is_none() {
         meshes.push((&figure_mesh, Material::Opaque));
     }
-    meshes.extend(items);
+    meshes.extend(items.iter().copied());
     let camera = match (options.view, options.focus) {
         (
             View::Side | View::Eye | View::ThreeQuarter | View::Oblique | View::Under,

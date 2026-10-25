@@ -103,6 +103,62 @@ pub enum Material {
     /// sharp glint where the sun is, and the sun's light gathered on the
     /// far side. Casts no shadow.
     Drop,
+    /// A baked card (`crate::billboards`): two-sided, cut out, coloured
+    /// and lit by the [`Texture`] of [`Templates::baked`] whose index is in
+    /// the vertex alpha, its normals mirrored through the card seen from
+    /// behind.
+    Baked,
+}
+
+/// A baked picture of part of a plant: linear colour with coverage in
+/// alpha, and world-space normals, `width × height` texels from the
+/// bottom-left, row by row.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Texture {
+    pub width: usize,
+    pub height: usize,
+    pub color: Vec<[f32; 4]>,
+    pub normal: Vec<[f32; 3]>,
+}
+
+impl Texture {
+    /// Colour, coverage and normal at `(u, v)` in `[0, 1]²`, read between
+    /// the four nearest texels; nothing outside.
+    #[must_use]
+    pub fn sample(&self, u: f64, v: f64) -> ([f64; 4], Vec3) {
+        if !(0.0..=1.0).contains(&u) || !(0.0..=1.0).contains(&v) || self.width == 0 {
+            return ([0.0; 4], Vec3::Y);
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let (x, y) = (u * self.width as f64 - 0.5, v * self.height as f64 - 0.5);
+        let (x0, y0) = (math::floor_index(x), math::floor_index(y));
+        #[allow(clippy::cast_precision_loss)]
+        let (fx, fy) = (x - x0 as f64, y - y0 as f64);
+        let mut color = [0.0; 4];
+        let mut normal = Vec3::ZERO;
+        for (dx, dy, w) in [
+            (0, 0, (1.0 - fx) * (1.0 - fy)),
+            (1, 0, fx * (1.0 - fy)),
+            (0, 1, (1.0 - fx) * fy),
+            (1, 1, fx * fy),
+        ] {
+            #[allow(
+                clippy::cast_possible_wrap,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            let (tx, ty) = (
+                (x0 + dx).clamp(0, self.width as i64 - 1) as usize,
+                (y0 + dy).clamp(0, self.height as i64 - 1) as usize,
+            );
+            let at = ty * self.width + tx;
+            for (sum, value) in color.iter_mut().zip(self.color[at]) {
+                *sum += w * f64::from(value);
+            }
+            normal = normal + vec3(self.normal[at]) * w;
+        }
+        (color, normal)
+    }
 }
 
 impl Material {
@@ -606,6 +662,29 @@ impl Surface<'_> {
             albedo = self.templates.paint(template, albedo, texel, face);
             hair = Some((template, face.lower));
         }
+        let mut baked_normal = None;
+        if self.material == Material::Baked {
+            let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
+            let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let index = mesh.colors[corners[0]][3].max(0.0).round() as usize;
+            let Some(texture) = self.templates.baked.get(index) else {
+                return;
+            };
+            let (texel, drawn) = texture.sample(u, v);
+            if texel[3] < 0.5 {
+                return;
+            }
+            albedo = [texel[0], texel[1], texel[2]];
+            // Seen from behind, the picture's normals mirror through the
+            // card.
+            let drawn = drawn.normalize_or(normal);
+            baked_normal = Some(if normal.dot(view) >= 0.0 {
+                drawn
+            } else {
+                drawn - normal * (2.0 * drawn.dot(normal))
+            });
+        }
         target.depth[at] = depth;
         let Some(lighting) = self.lighting else {
             return;
@@ -668,11 +747,14 @@ impl Surface<'_> {
         if self.material == Material::Card && normal.dot(view) < 0.0 {
             normal = -normal;
         }
+        if let Some(drawn) = baked_normal {
+            normal = drawn;
+        }
         let lit = self
             .shadow
             .map_or(1.0, |map| map.visibility(world, normal, lighting.sun));
         let direct = normal.dot(lighting.sun).max(0.0) * lit;
-        let through = if self.material == Material::Card {
+        let through = if matches!(self.material, Material::Card | Material::Baked) {
             (-normal.dot(lighting.sun)).max(0.0) * lit * 0.35
         } else {
             0.0
