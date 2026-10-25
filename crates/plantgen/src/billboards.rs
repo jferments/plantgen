@@ -2031,7 +2031,9 @@ fn ribbon_axes(graph: &PlantGraph, looks: &[Look], keep: f64, budget: usize) -> 
     let mut signature = vec![false; n];
     for organ in &graph.organs {
         if let Some(s) = organ.segment
-            && looks.get(usize::from(organ.organ)).is_some_and(self::signature)
+            && looks
+                .get(usize::from(organ.organ))
+                .is_some_and(self::signature)
         {
             // Its own segment and those it hangs from within a short
             // reach: a flower on a pedicel or a raceme's side branch is
