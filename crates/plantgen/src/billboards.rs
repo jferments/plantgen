@@ -166,9 +166,6 @@ pub const FACING: f64 = 0.7;
 /// segments where it drops rings).
 const LEAF_AXIS_REACH: f64 = 10.0;
 
-/// The most [`keep_coverage`] scales a picture's coverage.
-const MOST_COVERAGE_SCALE: f64 = 2.0;
-
 /// The most a clump's card leans from upright, degrees.
 pub const MOST_LEAN: f64 = 45.0;
 
@@ -1948,48 +1945,77 @@ pub fn build(
     out
 }
 
-/// Scale a picture's coverage so that as many texels pass the alpha test
-/// (coverage at least one half) as its parts cover on average (Castaño
-/// 2010, "Computing alpha mipmaps"; the same as alpha-to-coverage-preserving
-/// mipmaps in games). A blade or a stalk thinner than a texel, whose
-/// texels are each only partly covered, would otherwise fail the test and
-/// break into dots.
+/// Keep a picture's coverage where it is, through the alpha test
+/// (coverage at least one half). A leaf lobe, a bristle or a moss thread
+/// thinner than a texel covers each of its texels only in part, and would
+/// fail the test and vanish; a stalk a texel wide would break into dots.
 ///
-/// The scale is held to [`MOST_COVERAGE_SCALE`]: a cloud of spikelets or
-/// stamens, each a fraction of a texel, would otherwise fill in solid.
+/// The texels below the cut and not touching one above it are dithered
+/// by error diffusion (Floyd and Steinberg 1976, serpentine): each turns
+/// fully on once the coverage it and its neighbours have carried reaches
+/// one half, and passes what it kept or overshot on. Each patch of thin
+/// parts then keeps as many texels as its parts cover, drawn where they
+/// cover most: lace stays lace and a cloud of spikelets stays a cloud,
+/// where one scale for the whole picture (Castaño 2010, "Computing alpha
+/// mipmaps") either drops the faint parts or fills the dense ones in.
+/// Edges of parts the texels resolve are left alone, so outlines stay
+/// smooth. Only texels a part covers turn on: an empty texel has no
+/// colour, and only carries coverage across a gap.
 fn keep_coverage(picture: &mut Texture) {
-    let n = picture.color.len();
-    if n == 0 {
-        return;
-    }
-    let mean: f64 = picture.color.iter().map(|c| f64::from(c[3])).sum::<f64>();
-    #[allow(clippy::cast_precision_loss)]
-    let goal = mean / n as f64;
-    let passing = |scale: f64| {
-        #[allow(clippy::cast_precision_loss)]
-        let count = picture
-            .color
-            .iter()
-            .filter(|c| f64::from(c[3]) * scale >= 0.5)
-            .count() as f64;
-        count / n as f64
+    let (w, h) = (picture.width, picture.height);
+    let cut = 0.5_f32;
+    let on: Vec<bool> = picture.color.iter().map(|c| c[3] >= cut).collect();
+    let touches = |x: usize, y: usize| {
+        (x > 0 && on[y * w + x - 1])
+            || (x + 1 < w && on[y * w + x + 1])
+            || (y > 0 && on[(y - 1) * w + x])
+            || (y + 1 < h && on[(y + 1) * w + x])
     };
-    let (mut low, mut high) = (1.0_f64, MOST_COVERAGE_SCALE);
-    if passing(low) >= goal {
-        return;
-    }
-    for _ in 0..24 {
-        let mid = f64::midpoint(low, high);
-        if passing(mid) < goal {
-            low = mid;
-        } else {
-            high = mid;
+    let free: Vec<bool> = (0..w * h)
+        .map(|i| !on[i] && !touches(i % w, i / w))
+        .collect();
+    let mut carried = vec![0.0_f32; w * h];
+    for y in 0..h {
+        let back = y % 2 == 1;
+        for k in 0..w {
+            let x = if back { w - 1 - k } else { k };
+            let at = y * w + x;
+            if !free[at] {
+                continue;
+            }
+            let alpha = picture.color[at][3];
+            let value = alpha + carried[at];
+            let left = if value >= cut && alpha > 0.0 {
+                picture.color[at][3] = 1.0;
+                value - 1.0
+            } else {
+                value
+            };
+            // Ahead in this row 7/16, and below: behind 3/16, under 5/16,
+            // ahead 1/16; shared among those still free.
+            #[allow(clippy::cast_possible_wrap)]
+            let (xi, step) = (x as i64, if back { -1 } else { 1 });
+            let mut to = [(0usize, 0.0_f32); 4];
+            let mut count = 0;
+            let mut weight = 0.0;
+            for (dx, dy, share) in [(step, 0, 7.0), (-step, 1, 3.0), (0, 1, 5.0), (step, 1, 1.0)] {
+                let (nx, ny) = (xi + dx, y + dy);
+                #[allow(clippy::cast_possible_wrap)]
+                if nx < 0 || nx >= w as i64 || ny >= h {
+                    continue;
+                }
+                #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
+                let n = ny * w + nx as usize;
+                if free[n] {
+                    to[count] = (n, share);
+                    count += 1;
+                    weight += share;
+                }
+            }
+            for &(n, share) in &to[..count] {
+                carried[n] += left * share / weight;
+            }
         }
-    }
-    #[allow(clippy::cast_possible_truncation)]
-    let scale = high as f32;
-    for c in &mut picture.color {
-        c[3] = (c[3] * scale).min(1.0);
     }
 }
 
@@ -2863,6 +2889,66 @@ mod tests {
         let (axis, least) = smallest_axis(m);
         assert!(axis.dot(n).abs() > 0.999, "{axis:?}");
         assert!((least - 0.04).abs() < 1e-9, "{least}");
+    }
+
+    fn picture(width: usize, height: usize, alpha: impl Fn(usize, usize) -> f32) -> Texture {
+        Texture {
+            width,
+            height,
+            color: (0..width * height)
+                .map(|i| [0.2, 0.5, 0.1, alpha(i % width, i / width)])
+                .collect(),
+            normal: vec![[0.0, 0.0, 1.0]; width * height],
+            sun: Vec::new(),
+            turn: Turn::Fixed,
+            pivot: [0.0; 3],
+            extent: [0.0; 3],
+            seen_from: [0.0; 3],
+        }
+    }
+
+    fn passing(picture: &Texture) -> usize {
+        picture.color.iter().filter(|c| c[3] >= 0.5).count()
+    }
+
+    #[test]
+    fn keeps_faint_parts_as_their_share_of_texels() {
+        // A patch of lace a fifth covered keeps a fifth of its texels, in
+        // every quarter of it, and none outside it.
+        let (w, h) = (64, 64);
+        let mut lace = picture(w, h, |x, y| {
+            if (16..48).contains(&x) && (16..48).contains(&y) {
+                0.2
+            } else {
+                0.0
+            }
+        });
+        keep_coverage(&mut lace);
+        let kept = passing(&lace) as f64;
+        assert!((kept / (32.0 * 32.0) - 0.2).abs() < 0.02, "{kept}");
+        for (x0, y0) in [(16, 16), (32, 16), (16, 32), (32, 32)] {
+            let quarter = (y0..y0 + 16)
+                .flat_map(|y| (x0..x0 + 16).map(move |x| (x, y)))
+                .filter(|&(x, y)| lace.color[y * w + x][3] >= 0.5)
+                .count();
+            assert!((30..=72).contains(&quarter), "{x0},{y0}: {quarter}");
+        }
+        for y in 0..h {
+            for x in 0..w {
+                if !((16..48).contains(&x) && (16..48).contains(&y)) {
+                    assert!(lace.color[y * w + x][3] < 0.5, "{x},{y}");
+                }
+            }
+        }
+        // A leaf the texels resolve keeps its outline.
+        let leaf = picture(w, h, |x, _| match x {
+            0..20 => 1.0,
+            20 => 0.3,
+            _ => 0.0,
+        });
+        let mut kept = leaf.clone();
+        keep_coverage(&mut kept);
+        assert_eq!(kept, leaf);
     }
 }
 
