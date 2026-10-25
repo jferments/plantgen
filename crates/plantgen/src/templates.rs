@@ -354,6 +354,10 @@ pub struct Templates {
     /// The plant's bark pattern, which previews and impostors draw on its
     /// wood (`crate::bark`); `None` for plain bark.
     pub bark: Option<crate::bark::BarkParams>,
+    /// Baked textures that [`crate::raster::Material::Baked`] cards are
+    /// drawn from (`crate::billboards`), by the index in their vertices'
+    /// alpha; empty for a plant drawn from its organs.
+    pub baked: Vec<crate::raster::Texture>,
 }
 
 /// No templates: for scenes without organ cards. Cards that name a
@@ -365,6 +369,7 @@ impl Default for Templates {
             templates: Vec::new(),
             bodies: Vec::new(),
             bark: None,
+            baked: Vec::new(),
         }
     }
 }
@@ -522,6 +527,7 @@ impl Templates {
             templates,
             bodies: Vec::new(),
             bark: None,
+            baked: Vec::new(),
         }
     }
 

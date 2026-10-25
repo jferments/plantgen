@@ -103,6 +103,147 @@ pub enum Material {
     /// sharp glint where the sun is, and the sun's light gathered on the
     /// far side. Casts no shadow.
     Drop,
+    /// A baked card (`crate::billboards`): two-sided, cut out, coloured
+    /// and lit by the [`Texture`] of [`Templates::baked`] whose index is in
+    /// the vertex alpha, its normals mirrored through the card seen from
+    /// behind.
+    Baked,
+}
+
+/// A baked picture of part of a plant: linear colour with coverage in
+/// alpha, and world-space normals, `width × height` texels from the
+/// bottom-left, row by row.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Texture {
+    pub width: usize,
+    pub height: usize,
+    pub color: Vec<[f32; 4]>,
+    pub normal: Vec<[f32; 3]>,
+    /// How much of the sun reaches each texel through the whole plant, by
+    /// direction: the four first spherical-harmonic coefficients (bands 0
+    /// and 1, in the order 1, y, z, x) of its visibility, so it shades as
+    /// it did in the plant under any sun ([`Self::sunlit`]). Empty: the
+    /// shadow map shades it.
+    pub sun: Vec<[f32; 4]>,
+    /// How the card it is drawn on turns to the eye.
+    pub turn: Turn,
+    /// The point that card turns about.
+    pub pivot: [f32; 3],
+    /// How far, root mean square, what the card shows spreads along its
+    /// right, up and normal as baked: turned, it is as wide as that seen
+    /// from the eye.
+    pub extent: [f32; 3],
+    /// The way toward the eye it was baked from, for [`Turn::Views`].
+    pub seen_from: [f32; 3],
+}
+
+/// How a baked card turns to face the eye, as a vertex shader turns it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum Turn {
+    /// It stays where it was baked.
+    #[default]
+    Fixed,
+    /// It faces the eye, as `SpeedTree`'s leaf cards do.
+    Facing,
+    /// It faces the eye and shows, of the `count` pictures from `first`
+    /// on, the one baked from nearest the eye ([`Texture::seen_from`]):
+    /// an impostor.
+    Views { first: usize, count: usize },
+}
+
+/// The first four real spherical harmonics at the unit vector `d`, in
+/// the order of [`Texture::sun`].
+#[must_use]
+pub fn harmonics(d: Vec3) -> [f64; 4] {
+    // 1 / (2 sqrt(pi)) and sqrt(3) / (2 sqrt(pi)).
+    let (y0, y1) = (0.282_094_791_773_878_1, 0.488_602_511_902_919_9);
+    [y0, y1 * d.y, y1 * d.z, y1 * d.x]
+}
+
+impl Texture {
+    /// How much of a sun along `toward` reaches the leaf at `(u, v)`, 0 to
+    /// 1, or `None` when [`Self::sun`] is empty or no leaf is near.
+    #[must_use]
+    pub fn sunlit(&self, u: f64, v: f64, toward: Vec3) -> Option<f64> {
+        if self.sun.is_empty() || self.width == 0 {
+            return None;
+        }
+        // Between the four nearest texels, as the colour is read, but only
+        // from those a leaf covers: an empty texel holds no sun.
+        #[allow(clippy::cast_precision_loss)]
+        let (x, y) = (
+            u.clamp(0.0, 1.0) * self.width as f64 - 0.5,
+            v.clamp(0.0, 1.0) * self.height as f64 - 0.5,
+        );
+        let (x0, y0) = (math::floor_index(x), math::floor_index(y));
+        #[allow(clippy::cast_precision_loss)]
+        let (fx, fy) = (x - x0 as f64, y - y0 as f64);
+        let h = harmonics(toward);
+        let (mut sum, mut weight) = (0.0, 0.0);
+        for (dx, dy, w) in [
+            (0, 0, (1.0 - fx) * (1.0 - fy)),
+            (1, 0, fx * (1.0 - fy)),
+            (0, 1, (1.0 - fx) * fy),
+            (1, 1, fx * fy),
+        ] {
+            #[allow(
+                clippy::cast_possible_wrap,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            let (tx, ty) = (
+                (x0 + dx).clamp(0, self.width as i64 - 1) as usize,
+                (y0 + dy).clamp(0, self.height as i64 - 1) as usize,
+            );
+            let at = ty * self.width + tx;
+            let w = w * f64::from(self.color[at][3]);
+            if w <= 0.0 {
+                continue;
+            }
+            let c = self.sun[at];
+            sum += w * (0..4).map(|i| f64::from(c[i]) * h[i]).sum::<f64>();
+            weight += w;
+        }
+        (weight > 0.0).then(|| (sum / weight).clamp(0.0, 1.0))
+    }
+
+    /// Colour, coverage and normal at `(u, v)` in `[0, 1]²`, read between
+    /// the four nearest texels; nothing outside.
+    #[must_use]
+    pub fn sample(&self, u: f64, v: f64) -> ([f64; 4], Vec3) {
+        if !(0.0..=1.0).contains(&u) || !(0.0..=1.0).contains(&v) || self.width == 0 {
+            return ([0.0; 4], Vec3::Y);
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let (x, y) = (u * self.width as f64 - 0.5, v * self.height as f64 - 0.5);
+        let (x0, y0) = (math::floor_index(x), math::floor_index(y));
+        #[allow(clippy::cast_precision_loss)]
+        let (fx, fy) = (x - x0 as f64, y - y0 as f64);
+        let mut color = [0.0; 4];
+        let mut normal = Vec3::ZERO;
+        for (dx, dy, w) in [
+            (0, 0, (1.0 - fx) * (1.0 - fy)),
+            (1, 0, fx * (1.0 - fy)),
+            (0, 1, (1.0 - fx) * fy),
+            (1, 1, fx * fy),
+        ] {
+            #[allow(
+                clippy::cast_possible_wrap,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            let (tx, ty) = (
+                (x0 + dx).clamp(0, self.width as i64 - 1) as usize,
+                (y0 + dy).clamp(0, self.height as i64 - 1) as usize,
+            );
+            let at = ty * self.width + tx;
+            for (sum, value) in color.iter_mut().zip(self.color[at]) {
+                *sum += w * f64::from(value);
+            }
+            normal = normal + vec3(self.normal[at]) * w;
+        }
+        (color, normal)
+    }
 }
 
 impl Material {
@@ -139,6 +280,10 @@ pub struct Image {
     pub color: Vec<[f32; 4]>,
     pub normal: Vec<[f32; 3]>,
     pub depth: Vec<f32>,
+    /// Pixels' worth of leaf and baked cards drawn, hidden or cut out or
+    /// not: what a GPU shades for them, to set against the pixels they
+    /// cover (overdraw).
+    pub card_fragments: f64,
 }
 
 struct Target {
@@ -147,14 +292,56 @@ struct Target {
     color: Vec<[f32; 4]>,
     normal: Vec<[f32; 3]>,
     depth: Vec<f64>,
+    card_fragments: usize,
 }
 
-struct ShadowMap {
+/// What `meshes` hide from a light far off along a direction: their
+/// depth seen from it.
+pub struct ShadowMap {
     camera: Camera,
     basis: (Vec3, Vec3, Vec3),
     viewport: Viewport,
     size: usize,
     depth: Vec<f64>,
+}
+
+impl ShadowMap {
+    /// The map of `meshes` from `toward` (a unit vector toward the light)
+    /// over `bounds`, `size` texels square.
+    #[must_use]
+    pub fn new(
+        meshes: &[(&Mesh, Material)],
+        templates: &Templates,
+        toward: Vec3,
+        (low, high): (Vec3, Vec3),
+        size: usize,
+    ) -> Self {
+        let center = (low + high) * 0.5;
+        let radius = ((high - low).length() * 0.5).max(0.1);
+        let camera = Camera {
+            eye: center + toward * (radius * 3.0),
+            target: center,
+            up: any_perpendicular(toward),
+            projection: Projection::Orthographic {
+                half_height: radius,
+            },
+        };
+        let size = size.max(1);
+        let mut target = Target::new(size, size);
+        for (mesh, material) in meshes {
+            if *material == Material::Drop {
+                continue;
+            }
+            draw(&mut target, mesh, *material, &camera, None, templates, None);
+        }
+        Self {
+            basis: camera.basis(),
+            viewport: Viewport::new(&camera, size, size),
+            camera,
+            size,
+            depth: target.depth,
+        }
+    }
 }
 
 /// Axis-aligned bounds of every vertex.
@@ -184,32 +371,14 @@ pub fn render(
         options
             .shadow_bounds
             .or_else(|| bounds(meshes))
-            .map(|(low, high)| {
-                let center = (low + high) * 0.5;
-                let radius = ((high - low).length() * 0.5).max(0.1);
-                let camera = Camera {
-                    eye: center + lighting.sun * (radius * 3.0),
-                    target: center,
-                    up: any_perpendicular(lighting.sun),
-                    projection: Projection::Orthographic {
-                        half_height: radius,
-                    },
-                };
-                let size = options.shadow_texels.max(1);
-                let mut target = Target::new(size, size);
-                for (mesh, material) in meshes {
-                    if *material == Material::Drop {
-                        continue;
-                    }
-                    draw(&mut target, mesh, *material, &camera, None, templates, None);
-                }
-                ShadowMap {
-                    basis: camera.basis(),
-                    viewport: Viewport::new(&camera, size, size),
-                    camera,
-                    size,
-                    depth: target.depth,
-                }
+            .map(|bounds| {
+                ShadowMap::new(
+                    meshes,
+                    templates,
+                    lighting.sun,
+                    bounds,
+                    options.shadow_texels,
+                )
             })
     } else {
         None
@@ -237,6 +406,7 @@ impl Target {
             color: vec![[0.0; 4]; width * height],
             normal: vec![[0.0; 3]; width * height],
             depth: vec![f64::INFINITY; width * height],
+            card_fragments: 0,
         }
     }
 
@@ -249,6 +419,8 @@ impl Target {
             color: vec![[0.0; 4]; width * height],
             normal: vec![[0.0; 3]; width * height],
             depth: vec![f32::INFINITY; width * height],
+            #[allow(clippy::cast_precision_loss)]
+            card_fragments: self.card_fragments as f64 / (scale * scale) as f64,
         };
         #[allow(clippy::cast_precision_loss)]
         let samples = (scale * scale) as f32;
@@ -606,6 +778,33 @@ impl Surface<'_> {
             albedo = self.templates.paint(template, albedo, texel, face);
             hair = Some((template, face.lower));
         }
+        let mut baked_normal = None;
+        let mut baked_sun = None;
+        if self.material == Material::Baked {
+            let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
+            let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let index = mesh.colors[corners[0]][3].max(0.0).round() as usize;
+            let Some(texture) = self.templates.baked.get(index) else {
+                return;
+            };
+            let (texel, drawn) = texture.sample(u, v);
+            if texel[3] < 0.5 {
+                return;
+            }
+            albedo = [texel[0], texel[1], texel[2]];
+            if let Some(lighting) = self.lighting {
+                baked_sun = texture.sunlit(u, v, lighting.sun);
+            }
+            // Seen from behind, the picture's normals mirror through the
+            // card.
+            let drawn = drawn.normalize_or(normal);
+            baked_normal = Some(if normal.dot(view) >= 0.0 {
+                drawn
+            } else {
+                drawn - normal * (2.0 * drawn.dot(normal))
+            });
+        }
         target.depth[at] = depth;
         let Some(lighting) = self.lighting else {
             return;
@@ -668,11 +867,17 @@ impl Surface<'_> {
         if self.material == Material::Card && normal.dot(view) < 0.0 {
             normal = -normal;
         }
-        let lit = self
-            .shadow
-            .map_or(1.0, |map| map.visibility(world, normal, lighting.sun));
+        if let Some(drawn) = baked_normal {
+            normal = drawn;
+        }
+        // A baked card's own plant shades it as baked; the shadow map
+        // holds only that plant's cards, a thin shell of what was there.
+        let lit = baked_sun.unwrap_or_else(|| {
+            self.shadow
+                .map_or(1.0, |map| map.visibility(world, normal, lighting.sun))
+        });
         let direct = normal.dot(lighting.sun).max(0.0) * lit;
-        let through = if self.material == Material::Card {
+        let through = if matches!(self.material, Material::Card | Material::Baked) {
             (-normal.dot(lighting.sun)).max(0.0) * lit * 0.35
         } else {
             0.0
@@ -719,6 +924,12 @@ fn draw(
     shadow: Option<&ShadowMap>,
 ) {
     let basis = camera.basis();
+    let turned = if material == Material::Baked {
+        turn_cards(mesh, templates, camera, basis.2)
+    } else {
+        None
+    };
+    let mesh = turned.as_ref().unwrap_or(mesh);
     let viewport = Viewport::new(camera, target.width, target.height);
     let surface = Surface {
         mesh,
@@ -768,7 +979,9 @@ fn draw(
                 weights,
             }
         });
+        let card = matches!(material, Material::Card | Material::Baked);
         let mut visit = |at: usize, weights: [f64; 3], depth: f64| {
+            target.card_fragments += usize::from(card);
             surface.fragment(target, at, corners, weights, depth);
         };
         for fan in 1..count.saturating_sub(1) {
@@ -784,6 +997,87 @@ fn draw(
     VIEW_CORNERS.set(views);
 }
 
+/// `mesh`'s baked cards turned to `camera` as their pictures say
+/// ([`Texture::turn`]); `None` when none turns.
+fn turn_cards(mesh: &Mesh, templates: &Templates, camera: &Camera, forward: Vec3) -> Option<Mesh> {
+    let picture = |i: usize| {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let index = mesh.colors[i][3].max(0.0).round() as usize;
+        templates.baked.get(index)
+    };
+    if !(0..mesh.positions.len()).any(|i| picture(i).is_some_and(|t| t.turn != Turn::Fixed)) {
+        return None;
+    }
+    let perspective = matches!(camera.projection, Projection::Perspective { .. });
+    let mut turned = mesh.clone();
+    for i in 0..mesh.positions.len() {
+        let Some(texture) = picture(i) else {
+            continue;
+        };
+        let pivot = vec3(texture.pivot);
+        let toward = if perspective {
+            (camera.eye - pivot).normalize_or(-forward)
+        } else {
+            -forward
+        };
+        // The card's own frame, as it was baked: up is the world's up laid
+        // on it, where it can be.
+        let normal = vec3(mesh.normals[i]).normalize_or(Vec3::Z);
+        let frame = |normal: Vec3, fallback: Vec3| {
+            let up = (Vec3::Y - normal * Vec3::Y.dot(normal)).normalize_or_else(|| {
+                (fallback - normal * fallback.dot(normal))
+                    .normalize_or_else(|| any_perpendicular(normal))
+            });
+            (up.cross(normal), up)
+        };
+        let (right, up) = frame(normal, Vec3::Z);
+        let facing = match texture.turn {
+            Turn::Fixed => continue,
+            Turn::Facing => toward,
+            Turn::Views { first, count } => {
+                let nearest = (first..first + count)
+                    .filter_map(|v| templates.baked.get(v).map(|t| (v, t)))
+                    .max_by(|a, b| {
+                        let along = |t: &Texture| vec3(t.seen_from).dot(toward);
+                        along(a.1).total_cmp(&along(b.1))
+                    });
+                if let Some((v, _)) = nearest {
+                    #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
+                    {
+                        turned.colors[i][3] = v as f32;
+                    }
+                }
+                toward
+            }
+        };
+        let (right_now, up_now) = frame(facing, up);
+        // A clump spreads less through its depth than across: turned to
+        // an eye beside it, its card narrows to what the eye would see.
+        let extent = vec3(texture.extent);
+        let across = |axis: Vec3| {
+            let (a, b, c) = (axis.dot(right), axis.dot(up), axis.dot(normal));
+            (a * a * extent.x * extent.x
+                + b * b * extent.y * extent.y
+                + c * c * extent.z * extent.z)
+                .sqrt()
+        };
+        let scale = |now: Vec3, then: f64| {
+            if then > 1e-9 {
+                (across(now) / then).min(1.0)
+            } else {
+                1.0
+            }
+        };
+        let offset = vec3(mesh.positions[i]) - pivot;
+        let p = pivot
+            + right_now * (offset.dot(right) * scale(right_now, extent.x))
+            + up_now * (offset.dot(up) * scale(up_now, extent.y));
+        turned.positions[i] = p.to_f32();
+        turned.normals[i] = facing.to_f32();
+    }
+    Some(turned)
+}
+
 thread_local! {
     /// [`draw`]'s mesh corners in view space, kept on each thread between
     /// calls: an impostor draws its plant from 64 directions, and a fresh
@@ -794,7 +1088,10 @@ thread_local! {
 
 impl ShadowMap {
     /// 1 where the sun reaches `world`, 0 in shadow.
-    fn visibility(&self, world: Vec3, normal: Vec3, sun: Vec3) -> f64 {
+    /// 1 where `world`, on a surface facing `normal`, sees the light
+    /// along `sun`, 0 where something in the map is in the way.
+    #[must_use]
+    pub fn visibility(&self, world: Vec3, normal: Vec3, sun: Vec3) -> f64 {
         let view = to_view(&self.camera, self.basis, world);
         let (x, y) = self.viewport.screen(view);
         // Also rejects NaN.
@@ -913,6 +1210,61 @@ mod tests {
             target: Vec3::ZERO,
             up: Vec3::new(0.0, 0.0, -1.0),
             projection: Projection::Orthographic { half_height: 2.0 },
+        }
+    }
+
+    /// A unit square card standing upright at the origin, facing +z,
+    /// picture 0, and that picture as `turn` with `extent`.
+    fn standing_card(turn: Turn, extent: [f32; 3]) -> (Mesh, Templates) {
+        let mut mesh = Mesh::default();
+        for (x, y) in [(-0.5, -0.5), (0.5, -0.5), (0.5, 0.5), (-0.5, 0.5)] {
+            mesh.push(Vertex {
+                color: [1.0, 1.0, 1.0, 0.0],
+                ..Vertex::plain(Vec3::new(x, y, 0.0), Vec3::Z, [1.0; 3])
+            });
+        }
+        mesh.indices = vec![0, 1, 2, 0, 2, 3];
+        let templates = Templates {
+            baked: vec![Texture {
+                width: 1,
+                height: 1,
+                color: vec![[1.0; 4]],
+                normal: vec![[0.0, 0.0, 1.0]],
+                sun: Vec::new(),
+                turn,
+                pivot: [0.0; 3],
+                extent,
+                seen_from: [0.0, 0.0, 1.0],
+            }],
+            ..Templates::default()
+        };
+        (mesh, templates)
+    }
+
+    #[test]
+    fn a_facing_card_turns_to_the_eye_and_narrows_to_its_depth() {
+        let side = Camera {
+            eye: Vec3::new(5.0, 0.0, 0.0),
+            target: Vec3::ZERO,
+            up: Vec3::Y,
+            projection: Projection::Orthographic { half_height: 1.0 },
+        };
+        let (mesh, templates) = standing_card(Turn::Fixed, [0.3; 3]);
+        assert!(turn_cards(&mesh, &templates, &side, side.basis().2).is_none());
+        // As deep as it is broad: seen from the side it is as wide.
+        let (mesh, templates) = standing_card(Turn::Facing, [0.3; 3]);
+        let turned = turn_cards(&mesh, &templates, &side, side.basis().2).expect("it turns");
+        for (p, n) in turned.positions.iter().zip(&turned.normals) {
+            assert!((n[0] - 1.0).abs() < 1e-6, "faces the eye: {n:?}");
+            assert!(p[0].abs() < 1e-6, "lies across the view: {p:?}");
+            assert!((p[2].abs() - 0.5).abs() < 1e-6, "keeps its width: {p:?}");
+        }
+        // A third as deep as it is broad: a third as wide from the side.
+        let (mesh, templates) = standing_card(Turn::Facing, [0.3, 0.3, 0.1]);
+        let turned = turn_cards(&mesh, &templates, &side, side.basis().2).expect("it turns");
+        for p in &turned.positions {
+            assert!((p[2].abs() - 0.5 / 3.0).abs() < 1e-6, "narrows: {p:?}");
+            assert!((p[1].abs() - 0.5).abs() < 1e-6, "keeps its height: {p:?}");
         }
     }
 
