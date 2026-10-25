@@ -479,6 +479,17 @@ fn fit_plane(
     // leaning at most [`MOST_LEAN`] from upright, since plants are
     // seen from the side and from above at an angle more than from
     // straight above.
+    // A clump that wraps round an upright axis (a palm's or a Joshua
+    // tree's skirt of dead leaves, a ring of foliage round a bare middle)
+    // looks alike from every side, as a crown mass does, and any one
+    // plane through it is a band slanting across the trunk: its card
+    // stands upright and turns to the eye.
+    if wraps(members, centre) {
+        // Baked from outside the plant, where its light comes from.
+        let out = centre - foliage_centre;
+        let level = Vec3::new(out.x, 0.0, out.z).normalize_or_else(|| any_perpendicular(Vec3::Y));
+        return (centre, level, false, Turn::Facing);
+    }
     let planar_area: f64 = members.iter().filter(|e| e.planar).map(|e| e.area).sum();
     let flat = planar_area * 2.0 >= total;
     let start = members
@@ -554,6 +565,90 @@ fn fit_plane(
         }
     };
     (centre, normal, flat, turn)
+}
+
+/// Within this share of their mean distance from a clump's upright axis
+/// at most [`WRAP_INNER`] of its leaves lie, round it no gap is wider than
+/// [`WRAP_GAP`] degrees, they reach at least [`WRAP_TALL`] times that
+/// distance up it, and they hang, their tips below their bases by a
+/// cosine of at least [`WRAP_HANG`] on average: it is a skirt of
+/// hanging leaves round a stem ([`wraps`]), not a tussock's, a shoot's or
+/// a crown's fan.
+const WRAP_HOLLOW: f64 = 0.4;
+
+/// See [`WRAP_HOLLOW`].
+const WRAP_TALL: f64 = 2.0;
+
+/// See [`WRAP_HOLLOW`].
+const WRAP_HANG: f64 = 0.5;
+
+/// See [`WRAP_HOLLOW`].
+const WRAP_INNER: f64 = 0.15;
+
+/// See [`WRAP_HOLLOW`].
+const WRAP_GAP: f64 = 90.0;
+
+/// Whether a clump's leaves ring the upright line through `centre`,
+/// leaving its middle bare: a skirt round a trunk, not a heap.
+fn wraps(members: &[&Element], centre: Vec3) -> bool {
+    let leaves: Vec<(f64, f64, f64)> = members
+        .iter()
+        .filter(|e| !e.wood)
+        .map(|e| {
+            let d = e.centre - centre;
+            (d.x.hypot(d.z), crate::math::atan2(d.z, d.x), e.area)
+        })
+        .collect();
+    let total: f64 = leaves.iter().map(|l| l.2).sum();
+    if leaves.len() < 8 || total <= 0.0 {
+        return false;
+    }
+    let mean = leaves.iter().map(|l| l.0 * l.2).sum::<f64>() / total;
+    if mean <= 1e-6 {
+        return false;
+    }
+    // Tall for its width, its leaves hanging down it.
+    let (low, high) = members
+        .iter()
+        .filter(|e| !e.wood)
+        .fold((f64::INFINITY, f64::NEG_INFINITY), |(lo, hi), e| {
+            (lo.min(e.centre.y), hi.max(e.centre.y))
+        });
+    if high - low < WRAP_TALL * mean {
+        return false;
+    }
+    // A leaf's half runs from its base to its tip.
+    let hanging = -members
+        .iter()
+        .filter(|e| !e.wood)
+        .map(|e| e.half.normalize_or(Vec3::ZERO).y * e.area)
+        .sum::<f64>()
+        / total;
+    if hanging < WRAP_HANG {
+        return false;
+    }
+    let inner: f64 = leaves
+        .iter()
+        .filter(|l| l.0 < WRAP_HOLLOW * mean)
+        .map(|l| l.2)
+        .sum();
+    if inner > WRAP_INNER * total {
+        return false;
+    }
+    let mut angles: Vec<f64> = leaves
+        .iter()
+        .filter(|l| l.0 >= WRAP_HOLLOW * mean)
+        .map(|l| l.1)
+        .collect();
+    angles.sort_by(f64::total_cmp);
+    let (Some(&first), Some(&last)) = (angles.first(), angles.last()) else {
+        return false;
+    };
+    let widest = angles
+        .windows(2)
+        .map(|w| w[1] - w[0])
+        .fold(first + core::f64::consts::TAU - last, f64::max);
+    widest < crate::math::radians(WRAP_GAP)
 }
 
 /// The unit axis along which a symmetric 3×3 matrix is least, and that
@@ -1965,12 +2060,9 @@ pub fn build(
         let covered = picture.color.iter().filter(|c| c[3] >= 0.5).count() as f64 * texel * texel;
         covered_area += covered;
         out.stats.texels += tw * th;
-        #[allow(clippy::cast_precision_loss)]
-        let pivot = outline
-            .iter()
-            .fold(Vec3::ZERO, |sum, &corner| sum + corner_world(corner))
-            * (1.0 / outline.len().max(1) as f64);
-        picture.pivot = pivot.to_f32();
+        // A card turns about the middle of its parts: a skirt about its
+        // trunk, whatever its outline's shape.
+        picture.pivot = plane.centre.to_f32();
         out.pictures.push(picture);
     }
     out.stats.cards = out
@@ -3021,12 +3113,15 @@ pub struct Drawn {
     pub tone: [f64; 2],
     /// Card pixels drawn for each pixel the plant covers.
     pub overdraw: [f64; 2],
+    /// The area the plant covers, square metres: how much of the sky
+    /// shows through it.
+    pub cover: [f64; 2],
 }
 
 /// How bright `items` draw under [`Lighting::daylight`] with shadows, with
-/// no ground, and how much their cards overdraw, from the side and from
-/// 45 degrees above, orthographic, `size` pixels square. A tier should
-/// keep the full plant's tone; this measures it.
+/// no ground, how much their cards overdraw and how much they cover, from
+/// the side and from 45 degrees above, orthographic, `size` pixels square.
+/// A tier should keep the full plant's tone and cover; this measures them.
 #[must_use]
 pub fn tone(items: &[(&Mesh, Material)], templates: &Templates, size: usize) -> Drawn {
     let Some((low, high)) = raster::bounds(items) else {
@@ -3075,15 +3170,22 @@ pub fn tone(items: &[(&Mesh, Material)], templates: &Templates, size: usize) -> 
                         count + 1.0,
                     )
                 });
+        #[allow(clippy::cast_precision_loss)]
+        let pixel = radius * 2.0 / size as f64;
         if count > 0.0 {
-            (sum / count, image.card_fragments / count)
+            (
+                sum / count,
+                image.card_fragments / count,
+                count * pixel * pixel,
+            )
         } else {
-            (0.0, 0.0)
+            (0.0, 0.0, 0.0)
         }
     });
     Drawn {
         tone: views.map(|v| v.0),
         overdraw: views.map(|v| v.1),
+        cover: views.map(|v| v.2),
     }
 }
 
@@ -3109,6 +3211,53 @@ mod tests {
         let (axis, least) = smallest_axis(m);
         assert!(axis.dot(n).abs() > 0.999, "{axis:?}");
         assert!((least - 0.04).abs() < 1e-9, "{least}");
+    }
+
+    #[test]
+    fn a_skirt_wraps_its_stem_and_a_tussock_does_not() {
+        let leaf = |angle: f64, y: f64, out: f64, down: bool| {
+            let (sin, cos) = (crate::math::sin(angle), crate::math::cos(angle));
+            let radial = Vec3::new(cos, 0.0, sin);
+            let half = if down {
+                Vec3::new(0.0, -0.3, 0.0)
+            } else {
+                (radial * out + Vec3::Y) * 0.3
+            };
+            Element {
+                centre: radial * (0.5 + out * y) + Vec3::Y * y,
+                facing: radial,
+                wood: false,
+                planar: false,
+                area: 0.1,
+                half,
+            }
+        };
+        let around = |down: bool, out: f64| -> Vec<Element> {
+            (0..48)
+                .map(|i| {
+                    #[allow(clippy::cast_precision_loss)]
+                    let angle = core::f64::consts::TAU * (i % 12) as f64 / 12.0;
+                    #[allow(clippy::cast_precision_loss)]
+                    let y = (i / 12) as f64 * 0.8;
+                    leaf(angle, y, out, down)
+                })
+                .collect()
+        };
+        let centre = |e: &[Element]| {
+            e.iter().fold(Vec3::ZERO, |sum, e| sum + e.centre) * (1.0 / e.len() as f64)
+        };
+        // Dead leaves hanging round a trunk half a metre out.
+        let skirt = around(true, 0.0);
+        let members: Vec<&Element> = skirt.iter().collect();
+        assert!(wraps(&members, centre(&skirt)));
+        // Blades rising and spreading from a tussock's foot.
+        let tussock = around(false, 1.0);
+        let members: Vec<&Element> = tussock.iter().collect();
+        assert!(!wraps(&members, centre(&tussock)));
+        // Half a skirt, round one side.
+        let half: Vec<Element> = skirt.iter().filter(|e| e.centre.x > 0.0).copied().collect();
+        let members: Vec<&Element> = half.iter().collect();
+        assert!(!wraps(&members, centre(&half)));
     }
 
     fn picture(width: usize, height: usize, alpha: impl Fn(usize, usize) -> f32) -> Texture {

@@ -230,7 +230,8 @@ Usage:
       full detail (level 0 cards), at the baked-card tiers and as a far
       impostor (`plantgen::billboards`), one PNG a species in FOLDER (with
       --views, one in a folder per view), and print each tier's
-      triangles, tone and overdraw as JSON lines.
+      triangles, tone, overdraw and cover (m², side and 45° down) as JSON
+      lines.
   plantc sheet <species|spec.json> --out FILE.png [--seed N] [--size PIXELS]
       Render every keyframe age (columns) in every environment (rows).
   plantc parts <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -2865,14 +2866,16 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             TONE_PIXELS,
         );
         let mut rows = vec![format!(
-            "{{\"species\":\"{}\",\"tier\":\"full\",\"height_m\":{:.2},\"triangles\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}]}}",
+            "{{\"species\":\"{}\",\"tier\":\"full\",\"height_m\":{:.2},\"triangles\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.3},{:.3}]}}",
             spec.id,
             graph.height,
             full.triangle_count(),
             full_tone.tone[0],
             full_tone.tone[1],
             full_tone.overdraw[0],
-            full_tone.overdraw[1]
+            full_tone.overdraw[1],
+            full_tone.cover[0],
+            full_tone.cover[1]
         )];
         // A tree drawn in full is gigabytes; the tiers build their own.
         drop(full_cards);
@@ -2904,7 +2907,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 TONE_PIXELS,
             );
             rows.push(format!(
-                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"wood\":{},\"cards\":{},\"card_triangles\":{},\"texels\":{},\"coverage\":{:.3},\"atlas\":[{},{}],\"atlas_fill\":{:.3},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}]}}",
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"wood\":{},\"cards\":{},\"card_triangles\":{},\"texels\":{},\"coverage\":{:.3},\"atlas\":[{},{}],\"atlas_fill\":{:.3},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.3},{:.3}]}}",
                 spec.id,
                 tier.name,
                 stats.triangles(),
@@ -2919,7 +2922,9 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 tone.tone[0],
                 tone.tone[1],
                 tone.overdraw[0],
-                tone.overdraw[1]
+                tone.overdraw[1],
+                tone.cover[0],
+                tone.cover[1]
             ));
             let plant = mesh::PlantMesh {
                 wood: carded.wood.clone(),
@@ -2954,7 +2959,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 TONE_PIXELS,
             );
             rows.push(format!(
-                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"pictures\":{},\"texels\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}]}}",
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"pictures\":{},\"texels\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.3},{:.3}]}}",
                 spec.id,
                 far.name,
                 carded.stats.card_triangles,
@@ -2963,7 +2968,9 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 tone.tone[0],
                 tone.tone[1],
                 tone.overdraw[0],
-                tone.overdraw[1]
+                tone.overdraw[1],
+                tone.cover[0],
+                tone.cover[1]
             ));
             for (k, (_, options)) in shots.iter().enumerate() {
                 images[k].push(preview::render_with(
