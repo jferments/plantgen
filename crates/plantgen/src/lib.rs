@@ -1248,4 +1248,13 @@ pub mod venation;
 /// leaves are drawn up to four times over, never grown, until it shows
 /// about as much sky as its photographs (`crown_see_through`, else
 /// 0.05; `fill`).
-pub const GENERATOR_REVISION: u32 = 165;
+/// 166: tree shape, from a photo check. A conical crown's free space is
+/// widest in its bottom third (Urban Tree Database crown class 3) and a
+/// shade-tolerant decurrent tree's reaches the ground, so southern
+/// magnolia is a cone leafy to the ground; a trunk divides into as many
+/// stems as `trunk_fork_stems` says, and Oregon white oak's limbs are
+/// crooked and spreading (Silvics); where the leader is lost each
+/// scaffold limb builds a sub-crown of its own (`crown_units`, sequential
+/// reiteration, Barthélémy and Caraglio 2007; broadleaf 29, sapindaceae
+/// 10), so bigleaf maple and oak are lumpy domes, not smooth eggs.
+pub const GENERATOR_REVISION: u32 = 166;

@@ -1611,6 +1611,7 @@ const SALT_POINT: u64 = 0x7370_6163;
 const SALT_LOBES: u64 = 0x6c6f_6265;
 const SALT_SETTINGS: u64 = 0x7365_7474;
 const SALT_BUMPS: u64 = 0x6275_6d70;
+const SALT_UNITS: u64 = 0x756e_6974;
 
 /// The outline of a `space@2` or `space@4` envelope and whether its
 /// points renew.
@@ -1628,6 +1629,46 @@ struct Outline {
     bumps: f64,
     bump_size: f64,
     seed: u64,
+    /// `space@4`'s sub-crowns, where the crown is several.
+    units: Option<Units>,
+}
+
+/// A crown made of sub-crowns (sequential reiteration, Barthélémy and
+/// Caraglio 2007): where a tree's stem divides into scaffold limbs, each
+/// builds a crown of its own, so the whole is a cluster of domes, not one
+/// smooth one. Each unit is the whole outline shrunk about its widest
+/// point on the stem to an equal share of its area (`scale`, one over √n
+/// of its size) and moved out at its own azimuth until it meets the
+/// outline's edge at its widest: the units together are as wide as the
+/// crown, and their tops stand side by side below its top. Below the
+/// units' feet the region is whole, as a young tree's crown is before its
+/// trunk divides and an old one's lowest limbs are below the fork.
+struct Units {
+    /// Each unit's azimuth as its cosine and sine.
+    ways: Vec<(f64, f64)>,
+    /// The height the outline is widest at, metres.
+    centre: f64,
+    /// The height of the units' feet, metres.
+    floor: f64,
+    /// How far each unit's centre stands from the stem, metres.
+    offset: f64,
+    scale: f64,
+}
+
+impl Units {
+    /// Whether `point` lies inside a unit, with `inside(p)` the whole
+    /// outline's test of a point.
+    fn admit(&self, point: Vec3, inside: &dyn Fn(Vec3) -> bool) -> bool {
+        if point.y <= self.floor {
+            return inside(point);
+        }
+        self.ways.iter().any(|&(cos, sin)| {
+            let x = (point.x - self.offset * cos) / self.scale;
+            let z = (point.z - self.offset * sin) / self.scale;
+            let y = self.centre + (point.y - self.centre) / self.scale;
+            inside(Vec3::new(x, y, z))
+        })
+    }
 }
 
 impl Outline {
@@ -1815,6 +1856,7 @@ fn fronted_settings(
         lobe_depth,
         bumps,
         bump_size,
+        units,
     ] = values
     else {
         return Err(invalid("space", "wrong number of settings".into()));
@@ -1875,6 +1917,13 @@ fn fronted_settings(
         bumps,
         bump_size,
         seed,
+        units: crown_units(
+            units,
+            base,
+            base + if shaped { widest } else { 0.5 } * depth,
+            extent,
+            seed,
+        ),
     });
     Ok((
         vec![
@@ -1883,6 +1932,35 @@ fn fronted_settings(
         ],
         outline,
     ))
+}
+
+/// `space@4`'s sub-crowns: `count` of them (none below two) in a crown
+/// from `base` metres up, widest `centre` metres up and `radius` metres
+/// there, round the stem at even azimuths turned by the plant's own draw.
+fn crown_units(count: f64, base: f64, centre: f64, radius: f64, seed: u64) -> Option<Units> {
+    // A count is a small whole number.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let count = count.round().clamp(0.0, 12.0) as usize;
+    if count < 2 {
+        return None;
+    }
+    let turn = std::f64::consts::TAU * unit(hash_words(&[seed, SALT_UNITS]));
+    #[allow(clippy::cast_precision_loss)]
+    let ways = (0..count)
+        .map(|k| {
+            let azimuth = turn + std::f64::consts::TAU * k as f64 / count as f64;
+            (math::cos(azimuth), math::sin(azimuth))
+        })
+        .collect();
+    #[allow(clippy::cast_precision_loss)]
+    let scale = 1.0 / math::sqrt(count as f64);
+    Some(Units {
+        ways,
+        centre,
+        floor: centre - scale * (centre - base),
+        offset: (1.0 - scale) * radius,
+        scale,
+    })
 }
 
 /// The front a plant grows its `space@4` region from, for a crown `height`
@@ -2061,6 +2139,7 @@ fn colonize(
                 bumps,
                 bump_size,
                 seed,
+                units: None,
             })
         }
         _ => return Err(invalid("space", "wrong number of settings".into())),
@@ -2087,7 +2166,12 @@ fn colonize(
             (high / spacing).floor() as i64,
         )
     };
-    let (x0, x1) = range(-radius, radius);
+    // Sub-crowns lean out from the stem: the box reaches as far as theirs.
+    let reach_out = outline
+        .as_ref()
+        .and_then(|outline| outline.units.as_ref())
+        .map_or(radius, |units| units.offset + units.scale * radius);
+    let (x0, x1) = range(-reach_out, reach_out);
     let (y0, y1) = range(base, height);
     let span = |(a, b): (i64, i64)| u128::try_from(b - a + 1).unwrap_or(0);
     if span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > limits.max_points as u128 {
@@ -2192,7 +2276,15 @@ fn colonize(
             if heights.1 < 0.0 || heights.0 > 1.0 {
                 (-1.0, -1.0)
             } else {
-                outline.bounds(shape, radius, heights.0.max(0.0), heights.1.min(1.0))
+                match &outline.units {
+                    // Sub-crowns: every point short of the farthest is
+                    // tested against each.
+                    Some(units) => (
+                        0.0,
+                        units.offset + units.scale * outline.bounds(shape, radius, 0.0, 1.0).1,
+                    ),
+                    None => outline.bounds(shape, radius, heights.0.max(0.0), heights.1.min(1.0)),
+                }
             }
         });
         for z in x0..=x1 {
@@ -2254,7 +2346,23 @@ fn colonize(
                         if radial > most * billows {
                             continue;
                         }
-                        if radial > least * billows
+                        if let Some(units) = &outline.units {
+                            let inside = |p: Vec3| {
+                                let relative = (p.y - base) / (height - base);
+                                (0.0..=1.0).contains(&relative)
+                                    && math::sqrt(p.x * p.x + p.z * p.z)
+                                        <= outline.radius(
+                                            shape,
+                                            radius,
+                                            relative,
+                                            math::atan2(p.z, p.x),
+                                            cell.noise,
+                                        )
+                            };
+                            if !units.admit(point, &inside) {
+                                continue;
+                            }
+                        } else if radial > least * billows
                             && radial
                                 > outline.radius(shape, radius, relative, cell.theta, cell.noise)
                         {
@@ -3861,10 +3969,10 @@ mod tests {
     fn space_4_narrows_a_crown_among_neighbours_and_toward_their_side() {
         // base, height, radius, spread, density, influence, kill, angle,
         // renew, ratio, gravitropism, phototropism, widest, fullness,
-        // lobes, lobe_depth, bumps, bump_size.
+        // lobes, lobe_depth, bumps, bump_size, units.
         let shaped = [
             2.0, 12.0, 4.0, 1.0, 20.0, 1.5, 0.4, 80.0, 1.0, 0.4, 0.0, 0.3, 0.5, 2.0, 0.0, 0.0, 0.0,
-            3.0,
+            3.0, 0.0,
         ];
         let edge = Neighbourhood {
             density: 0.3,
@@ -3899,6 +4007,49 @@ mod tests {
         let mut state = ToolState::default();
         let (values, _) = fronted_settings(&grown, &mut state, 5, &Neighbourhood::OPEN).unwrap();
         assert!((values[3] - 0.4 * 10.0).abs() < 1e-9, "{}", values[3]);
+    }
+
+    #[test]
+    fn space_4_sub_crowns_keep_the_width_and_part_at_the_top() {
+        // As above, in the open: a crown 2 to 12 m up, 4 m wide at 7 m.
+        let settings = |units: f64| {
+            [
+                2.0, 12.0, 4.0, 1.0, 20.0, 1.5, 0.4, 80.0, 1.0, 0.4, 0.0, 0.3, 0.5, 2.0, 0.0, 0.0,
+                0.0, 3.0, units,
+            ]
+        };
+        let outline = |units: f64| {
+            let mut state = ToolState::default();
+            fronted_settings(&settings(units), &mut state, 5, &Neighbourhood::OPEN)
+                .unwrap()
+                .1
+                .unwrap()
+        };
+        assert!(outline(0.0).units.is_none());
+        assert!(outline(1.0).units.is_none());
+        let crown = outline(2.0);
+        let units = crown.units.as_ref().unwrap();
+        // Two halves of the area: each 1/√2 the size, its centre out
+        // where it meets the crown's edge at its widest.
+        assert!((units.scale - std::f64::consts::FRAC_1_SQRT_2).abs() < 1e-12);
+        assert!((units.offset + units.scale * 4.0 - 4.0).abs() < 1e-12);
+        let inside = |p: Vec3| {
+            let h = (p.y - 2.0) / 10.0;
+            (0.0..=1.0).contains(&h)
+                && math::sqrt(p.x * p.x + p.z * p.z)
+                    <= crown.radius(1.0, 4.0, h, math::atan2(p.z, p.x), 0.0)
+        };
+        // The edge at the widest still reaches the crown's radius toward
+        // each unit, and nothing lies past it.
+        let (cos, sin) = units.ways[0];
+        let edge = |r: f64| Vec3::new(r * cos, 7.0, r * sin);
+        assert!(units.admit(edge(3.99), &inside));
+        assert!(!units.admit(edge(4.01), &inside));
+        // On the stem the units stop below the crown's top: the tops part.
+        let top = 7.0 + units.scale * 5.0;
+        assert!(units.admit(Vec3::new(0.0, top - 0.6, 0.0), &inside));
+        assert!(!units.admit(Vec3::new(0.0, top + 0.1, 0.0), &inside));
+        assert!(inside(Vec3::new(0.0, top + 0.1, 0.0)));
     }
 
     #[test]
