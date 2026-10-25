@@ -224,10 +224,13 @@ Usage:
       conditions (a place every plant grows in). Seeds default to each
       spec's first.
   plantc tiers <species>... --out FOLDER [--seed N] [--size PIXELS] [--age YEARS]
+               [--columns full,cards,far] [--view VIEW] [--focus F,S]
+               [--views side,oblique,close]
       Render each species at its oldest age (or --age) from the side at
-      full detail (level 0 cards) and at the solid low-poly tiers, low and
-      minimal (`plantgen::lowpoly`), one PNG a species in FOLDER, and
-      print each tier's triangles and the organs it kept as JSON lines.
+      full detail (level 0 cards), at the baked-card tiers and as a far
+      impostor (`plantgen::billboards`), one PNG a species in FOLDER (with
+      --views, one in a folder per view), and print each tier's
+      triangles, tone and overdraw as JSON lines.
   plantc sheet <species|spec.json> --out FILE.png [--seed N] [--size PIXELS]
       Render every keyframe age (columns) in every environment (rows).
   plantc parts <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -2754,11 +2757,15 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
 }
 
 #[allow(clippy::too_many_lines)]
+/// Pixels across the renders that measure a tier's tone.
+const TONE_PIXELS: usize = 160;
+
 fn tiers_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
             "seed", "size", "out", "quality", "program", "day", "age", "view", "focus", "columns",
+            "views",
         ],
     )?;
     let program = options.program()?;
@@ -2767,9 +2774,9 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
         Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
         None => View::Side,
     };
-    // `--columns full,low,cards`: which columns to draw (all by default).
+    // `--columns full,cards,far`: which columns to draw (all by default).
     let columns: Vec<String> = options.flags.get("columns").map_or_else(
-        || vec!["full".into(), "low".into(), "cards".into()],
+        || vec!["full".into(), "cards".into(), "far".into()],
         |text| text.split(',').map(|c| c.trim().to_owned()).collect(),
     );
     let wants = |name: &str| columns.iter().any(|c| c == name);
@@ -2818,60 +2825,58 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             if wants("full") { 0 } else { 3 },
         );
         full.vary_by_plant(&looks, seed);
-        let preview_options = PreviewOptions {
+        let shot = |view: View, focus: Option<(f64, f64)>| PreviewOptions {
             width: size,
             height: size * 3 / 2,
             view,
             supersample: 2,
             figure: false,
             frame_height: Some(graph.height * 1.05),
-            focus: focus_share
-                .map(|(f, s)| (Vec3::new(0.0, graph.height * f, 0.0), graph.height * s)),
+            focus: focus.map(|(f, s)| (Vec3::new(0.0, graph.height * f, 0.0), graph.height * s)),
         };
-        let mut images = Vec::new();
+        // `--views side,oblique,close`: one picture each, in a folder of
+        // its name (close is three-quarter, focused 0.7 up and 0.45
+        // across); otherwise the one `--view`.
+        let shots: Vec<(Option<&str>, PreviewOptions)> = match options.flags.get("views") {
+            Some(names) => names
+                .split(',')
+                .map(|name| match name.trim() {
+                    "side" => Ok((Some("side"), shot(View::Side, None))),
+                    "oblique" => Ok((Some("oblique"), shot(View::Oblique, None))),
+                    "close" => Ok((Some("close"), shot(View::ThreeQuarter, Some((0.7, 0.45))))),
+                    other => Err(format!("unknown view `{other}`")),
+                })
+                .collect::<Result<_, _>>()?,
+            None => vec![(None, shot(view, focus_share))],
+        };
+        let mut images: Vec<Vec<raster::Image>> = vec![Vec::new(); shots.len()];
         if wants("full") {
-            images.push(preview::render(&full, &templates, &preview_options));
-        }
-        let mut rows = vec![format!(
-            "{{\"species\":\"{}\",\"tier\":\"full\",\"height_m\":{:.2},\"triangles\":{}}}",
-            spec.id,
-            graph.height,
-            full.triangle_count()
-        )];
-        for tier in plantgen::lowpoly::TIERS.iter().filter(|_| wants("low")) {
-            let solid = plantgen::lowpoly::build(
-                graph,
-                &looks,
-                &bodies,
-                &spec.appearance,
-                &templates,
-                &quality.lods,
-                tier,
-            );
-            let stats = &solid.stats;
-            rows.push(format!(
-                "{{\"species\":\"{}\",\"tier\":\"{}\",\"budget\":{},\"triangles\":{},\"wood\":{},\"masses\":[{},{}],\"flat\":{},\"axes\":[{},{}],\"singles\":[{},{}]}}",
-                spec.id,
-                tier.name,
-                stats.budget,
-                stats.triangles(),
-                stats.wood_triangles,
-                stats.masses,
-                stats.mass_triangles,
-                stats.organ_triangles,
-                stats.axes.0,
-                stats.axes.1,
-                stats.singles.0,
-                stats.singles.1
-            ));
-            if tier.name == "low" {
-                images.push(preview::render(
-                    &solid.two_sided(),
-                    &templates,
-                    &preview_options,
-                ));
+            for (k, (_, options)) in shots.iter().enumerate() {
+                images[k].push(preview::render(&full, &templates, options));
             }
         }
+        let bark = templates
+            .bark
+            .map_or(raster::Material::Opaque, raster::Material::Bark);
+        let full_cards = full.card_mesh();
+        let full_tone = plantgen::billboards::tone(
+            &[(&full.wood, bark), (&full_cards, raster::Material::Card)],
+            &templates,
+            TONE_PIXELS,
+        );
+        let mut rows = vec![format!(
+            "{{\"species\":\"{}\",\"tier\":\"full\",\"height_m\":{:.2},\"triangles\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}]}}",
+            spec.id,
+            graph.height,
+            full.triangle_count(),
+            full_tone.tone[0],
+            full_tone.tone[1],
+            full_tone.overdraw[0],
+            full_tone.overdraw[1]
+        )];
+        // A tree drawn in full is gigabytes; the tiers build their own.
+        drop(full_cards);
+        drop(full);
         for tier in plantgen::billboards::TIERS
             .iter()
             .filter(|_| wants("cards"))
@@ -2881,13 +2886,25 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 &looks,
                 &bodies,
                 &spec.appearance,
+                spec.growth_form,
                 &templates,
                 &quality.lods,
                 tier,
             );
             let stats = &carded.stats;
+            let atlas = carded.atlas();
+            let mut baked = templates.clone();
+            baked.baked.clone_from(&carded.pictures);
+            let tone = plantgen::billboards::tone(
+                &[
+                    (&carded.wood, bark),
+                    (&carded.cards, raster::Material::Baked),
+                ],
+                &baked,
+                TONE_PIXELS,
+            );
             rows.push(format!(
-                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"wood\":{},\"cards\":{},\"card_triangles\":{},\"texels\":{},\"coverage\":{:.3}}}",
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"wood\":{},\"cards\":{},\"card_triangles\":{},\"texels\":{},\"coverage\":{:.3},\"atlas\":[{},{}],\"atlas_fill\":{:.3},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}]}}",
                 spec.id,
                 tier.name,
                 stats.triangles(),
@@ -2895,27 +2912,80 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 stats.cards,
                 stats.card_triangles,
                 stats.texels,
-                stats.coverage
+                stats.coverage,
+                atlas.width,
+                atlas.height,
+                atlas.fill(&carded.pictures),
+                tone.tone[0],
+                tone.tone[1],
+                tone.overdraw[0],
+                tone.overdraw[1]
             ));
-            let mut baked = templates.clone();
-            baked.baked = carded.pictures.clone();
             let plant = mesh::PlantMesh {
                 wood: carded.wood.clone(),
                 ..mesh::PlantMesh::default()
             };
-            images.push(preview::render_with(
-                &plant,
+            for (k, (_, options)) in shots.iter().enumerate() {
+                images[k].push(preview::render_with(
+                    &plant,
+                    &[(&carded.cards, raster::Material::Baked)],
+                    &baked,
+                    options,
+                ));
+            }
+        }
+        if wants("far") {
+            let far = plantgen::billboards::FAR;
+            let carded = plantgen::billboards::impostor(
+                graph,
+                &looks,
+                &bodies,
+                &spec.appearance,
+                spec.growth_form,
+                &templates,
+                &quality.lods,
+                &far,
+            );
+            let mut baked = templates.clone();
+            baked.baked.clone_from(&carded.pictures);
+            let tone = plantgen::billboards::tone(
                 &[(&carded.cards, raster::Material::Baked)],
                 &baked,
-                &preview_options,
+                TONE_PIXELS,
+            );
+            rows.push(format!(
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"pictures\":{},\"texels\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}]}}",
+                spec.id,
+                far.name,
+                carded.stats.card_triangles,
+                carded.pictures.len(),
+                carded.stats.texels,
+                tone.tone[0],
+                tone.tone[1],
+                tone.overdraw[0],
+                tone.overdraw[1]
             ));
+            for (k, (_, options)) in shots.iter().enumerate() {
+                images[k].push(preview::render_with(
+                    &mesh::PlantMesh::default(),
+                    &[(&carded.cards, raster::Material::Baked)],
+                    &baked,
+                    options,
+                ));
+            }
         }
-        let (width, height, pixels) = preview::contact_sheet(&images, images.len(), 8);
-        let png = raster::encode_png(width, height, &pixels)
-            .map_err(|error| format!("cannot encode PNG: {error}"))?;
-        let file = Path::new(out).join(format!("{}.png", spec.id));
-        fs::write(&file, png)
-            .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+        for ((folder, _), images) in shots.iter().zip(&images) {
+            let (width, height, pixels) = preview::contact_sheet(images, images.len(), 8);
+            let png = raster::encode_png(width, height, &pixels)
+                .map_err(|error| format!("cannot encode PNG: {error}"))?;
+            let folder =
+                folder.map_or_else(|| Path::new(out).to_path_buf(), |f| Path::new(out).join(f));
+            fs::create_dir_all(&folder)
+                .map_err(|error| format!("cannot make {}: {error}", folder.display()))?;
+            let file = folder.join(format!("{}.png", spec.id));
+            fs::write(&file, png)
+                .map_err(|error| format!("cannot write {}: {error}", file.display()))?;
+        }
         for row in rows {
             out!("{row}");
         }
