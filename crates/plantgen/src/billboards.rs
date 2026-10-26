@@ -3289,6 +3289,20 @@ fn add_heights(
     (covered / heights, polygon_area(&outline) * fw * fh)
 }
 
+/// Samples along each side of a picture's texel when its colour and
+/// coverage are drawn ([`bake`]). At 3 (Jay, 2026-10-26, from 4) each
+/// texel's coverage is read in ninths, not sixteenths, before
+/// [`keep_coverage`] diffuses it; the cards' outlines and cover barely
+/// moved, and the colour pass takes about half the time.
+const COLOUR_SUPERSAMPLE: usize = 3;
+
+/// Samples along each side of a texel when the leaves are drawn as they
+/// grew, for the normals and places the sun is read at ([`bake`]). At 2
+/// (Jay, 2026-10-26, from 4), with 16 suns and 3 colour samples, a tree's
+/// cards took 40% less time and came out up to 7% darker, nearly all of
+/// it from this pass.
+const LIT_SUPERSAMPLE: usize = 2;
+
 /// What a picture is baked of, and the frame it is seen in.
 struct Shot<'a> {
     /// Drawn for the colour.
@@ -3350,7 +3364,11 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
             &RenderOptions {
                 width: tw,
                 height: th,
-                supersample: 4,
+                supersample: if normals_only {
+                    LIT_SUPERSAMPLE
+                } else {
+                    COLOUR_SUPERSAMPLE
+                },
                 shadows: false,
                 shadow_bounds: None,
                 shadow_texels: 1,
@@ -3784,8 +3802,15 @@ mod tests {
 }
 
 /// Directions the sun is shadowed from when each texel's
-/// [`Texture::sun`] is baked, spread evenly over the sphere.
-const SUN_DIRECTIONS: usize = 32;
+/// [`Texture::sun`] is baked, spread evenly over the sphere on a golden
+/// spiral: a spherical Fibonacci set, which integrates light over the
+/// sphere with less error for its count than other point sets (Marques et
+/// al. 2013, "Spherical Fibonacci point sets for illumination integrals",
+/// Computer Graphics Forum 32(8)). Only the visibility's four first-order
+/// harmonics are kept. Halved from 32 (Jay, 2026-10-26), the cards' tone
+/// moved at most 1.9% (yarrow, sagebrush, Oregon white oak, Douglas fir
+/// at 60 years) and their sun maps took half the time.
+const SUN_DIRECTIONS: usize = 16;
 
 /// Texels along each side of those shadow maps.
 const SUN_TEXELS: usize = 1024;
