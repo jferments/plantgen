@@ -3873,6 +3873,15 @@
       "type": "bool",
       "why": "whether it grows long shoots and short ones (spurs)"
     },
+    "short_shoot_years": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "number",
+      "unit": "years",
+      "range": [1, 100],
+      "optional": true,
+      "why": "how many years a short shoot (spur) goes on leafing before it dies, where a study of its shoots' ages measures it"
+    },
     "bud_position": {
       "group": "architecture",
       "organ": "stem",
