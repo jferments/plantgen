@@ -1126,7 +1126,7 @@ const STRAIGHT_UP: f64 = 0.999;
 /// `mesh`'s baked cards, each vertex's picture in its colour's alpha
 /// ([`Material::Baked`]), turned to `camera` as their pictures say
 /// ([`Texture::turn`]), each vertex's alpha then the picture it shows:
-/// how PlantGen's renders draw them, and what an engine's vertex shader
+/// how this crate's renders draw them, and what an engine's vertex shader
 /// must do (`shaders/turn_cards.wgsl`, [`crate::billboards::TURN_CARDS_WGSL`]).
 #[must_use]
 pub fn turned(mesh: &Mesh, templates: &Templates, camera: &Camera) -> Mesh {

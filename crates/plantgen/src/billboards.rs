@@ -305,8 +305,8 @@ impl CardPlant {
     pub fn texel(&self) -> f64 {
         let mesh = &self.cards;
         let (mut weighted, mut total) = (0.0, 0.0);
-        for t in mesh.indices.chunks_exact(3) {
-            let [a, b, c] = [t[0], t[1], t[2]].map(|i| i as usize);
+        for t in mesh.indices.as_chunks::<3>().0 {
+            let [a, b, c] = t.map(|i| i as usize);
             let p = |i: usize| v3(mesh.positions[i]);
             let area = (p(b) - p(a)).cross(p(c) - p(a)).length() * 0.5;
             let uv = |i: usize| (f64::from(mesh.uvs[i][0]), f64::from(mesh.uvs[i][1]));
@@ -1749,39 +1749,40 @@ pub fn build_from(
     // Each triangle's thin segment is found on its own, on idle cores:
     // whether it is bark, and its segment and how far off it lies.
     let triangles = source.wood.triangle_count();
-    let lease = cores::Lease::take(if triangles > 1 << 16 {
-        cores::per_task()
-    } else {
-        1
-    });
-    let found = cores::map(
-        (0..triangles).step_by(RUN).collect(),
-        lease.threads(),
-        &|from: usize| {
-            (from..(from + RUN).min(triangles))
-                .map(|t| {
-                    let corners = [0, 1, 2].map(|k| source.wood.indices[t * 3 + k] as usize);
-                    let centre = corners
-                        .iter()
-                        .fold(Vec3::ZERO, |sum, &i| sum + v3(source.wood.positions[i]))
-                        * (1.0 / 3.0);
-                    let barked = corners
-                        .iter()
-                        .any(|&i| bark_radius(&source.wood, i).is_some());
-                    let radius = corners
-                        .iter()
-                        .filter_map(|&i| bark_radius(&source.wood, i))
-                        .fold(0.0, f64::max);
-                    if barked && radius >= keep {
-                        return (barked, None);
-                    }
-                    (barked, thin.nearest(centre, &graph.segments))
-                })
-                .collect::<Vec<_>>()
-        },
-    )
-    .concat();
-    drop(lease);
+    let found = {
+        let lent = cores::Lease::take(if triangles > 1 << 16 {
+            cores::per_task()
+        } else {
+            1
+        });
+        cores::map(
+            (0..triangles).step_by(RUN).collect(),
+            lent.threads(),
+            &|from: usize| {
+                (from..(from + RUN).min(triangles))
+                    .map(|t| {
+                        let corners = [0, 1, 2].map(|k| source.wood.indices[t * 3 + k] as usize);
+                        let centre = corners
+                            .iter()
+                            .fold(Vec3::ZERO, |sum, &i| sum + v3(source.wood.positions[i]))
+                            * (1.0 / 3.0);
+                        let barked = corners
+                            .iter()
+                            .any(|&i| bark_radius(&source.wood, i).is_some());
+                        let radius = corners
+                            .iter()
+                            .filter_map(|&i| bark_radius(&source.wood, i))
+                            .fold(0.0, f64::max);
+                        if barked && radius >= keep {
+                            return (barked, None);
+                        }
+                        (barked, thin.nearest(centre, &graph.segments))
+                    })
+                    .collect::<Vec<_>>()
+            },
+        )
+        .concat()
+    };
     for (t, (barked, nearest)) in found.into_iter().enumerate() {
         let corners = [0, 1, 2].map(|k| source.wood.indices[t * 3 + k] as usize);
         let Some((segment, d)) = nearest else {

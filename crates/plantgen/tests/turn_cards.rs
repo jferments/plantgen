@@ -1,7 +1,7 @@
 //! The vectors an engine checks its card-turning vertex shader against
 //! (`shaders/turn_cards.wgsl`): cards of every kind of turn, seen from
 //! level, from 45 degrees, from straight above and close up, turned as
-//! `raster::turned` turns them in PlantGen's renders.
+//! `raster::turned` turns them in this crate's renders.
 //!
 //! When the turning changes, `PLANTGEN_WRITE_VECTORS=1 cargo test --test
 //! turn_cards` writes the file again.
@@ -156,9 +156,9 @@ fn vectors() -> String {
             Turn::Views { first, count } => (2, first, count),
             Turn::Heights { first, count } => (3, first, count),
         };
-        let _ = write!(
+        let _ = writeln!(
             out,
-            "    {{\"pivot\": {}, \"kind\": {kind}, \"extent\": {}, \"first\": {first}, \"seen_from\": {}, \"count\": {count}}}{}\n",
+            "    {{\"pivot\": {}, \"kind\": {kind}, \"extent\": {}, \"first\": {first}, \"seen_from\": {}, \"count\": {count}}}{}",
             numbers(&p.pivot),
             numbers(&p.extent),
             numbers(&p.seen_from),
@@ -167,9 +167,9 @@ fn vectors() -> String {
     }
     out.push_str("  ],\n  \"vertices\": [\n");
     for i in 0..mesh.positions.len() {
-        let _ = write!(
+        let _ = writeln!(
             out,
-            "    {{\"position\": {}, \"normal\": {}, \"picture\": {}}}{}\n",
+            "    {{\"position\": {}, \"normal\": {}, \"picture\": {}}}{}",
             numbers(&mesh.positions[i]),
             numbers(&mesh.normals[i]),
             mesh.colors[i][3],
@@ -186,16 +186,16 @@ fn vectors() -> String {
         let forward = (camera.target - camera.eye).normalize_or(-Vec3::Z);
         let perspective = matches!(camera.projection, Projection::Perspective { .. });
         let turned = raster::turned(&mesh, &templates, camera);
-        let _ = write!(
+        let _ = writeln!(
             out,
-            "    {{\"name\": \"{name}\", \"eye\": {}, \"forward\": {}, \"perspective\": {perspective}, \"turned\": [\n",
+            "    {{\"name\": \"{name}\", \"eye\": {}, \"forward\": {}, \"perspective\": {perspective}, \"turned\": [",
             numbers(&camera.eye.to_f32()),
             numbers(&forward.to_f32()),
         );
         for i in 0..turned.positions.len() {
-            let _ = write!(
+            let _ = writeln!(
                 out,
-                "      {{\"position\": {}, \"normal\": {}, \"picture\": {}}}{}\n",
+                "      {{\"position\": {}, \"normal\": {}, \"picture\": {}}}{}",
                 numbers(&turned.positions[i]),
                 numbers(&turned.normals[i]),
                 turned.colors[i][3],
@@ -206,9 +206,9 @@ fn vectors() -> String {
                 }
             );
         }
-        let _ = write!(
+        let _ = writeln!(
             out,
-            "    ]}}{}\n",
+            "    ]}}{}",
             if k + 1 < cameras.len() { "," } else { "" }
         );
     }

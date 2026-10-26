@@ -1712,6 +1712,12 @@ type Baked = Vec<((usize, usize), Result<BakedKeyframe, PackageError>)>;
 /// Their baked-card tiers, likewise.
 type Carded = Vec<((usize, usize), Result<Vec<BakedTier>, PackageError>)>;
 
+/// Each baked keyframe, with its variant's and keyframe's index.
+type KeyframesOf = Vec<((usize, usize), BakedKeyframe)>;
+
+/// Each keyframe's tiers, by its variant's and keyframe's index.
+type TiersOf = BTreeMap<(usize, usize), Vec<BakedTier>>;
+
 /// A variant's name in progress lines and errors.
 fn label(variant: &Variant) -> String {
     format!("{} seed {}", variant.environment.name(), variant.seed)
@@ -1858,10 +1864,7 @@ fn assemble(
     variants: &[Variant],
     grown: &[Growth],
     organ_types: Vec<OrganType>,
-    (baked, mut carded): (
-        Vec<((usize, usize), BakedKeyframe)>,
-        BTreeMap<(usize, usize), Vec<BakedTier>>,
-    ),
+    (baked, mut carded): (KeyframesOf, TiersOf),
     validation: Vec<ValidationRecord>,
 ) -> Result<Package, PackageError> {
     let spec = &inputs.spec;
@@ -3513,6 +3516,7 @@ mod tests {
     /// they were baked: the same cards and wood, the same turns, and
     /// pictures that draw it as they did, to their layers' 8 bits.
     #[test]
+    #[allow(clippy::too_many_lines)]
     fn a_card_packages_tiers_draw_as_they_were_baked() {
         let library = Library::builtin();
         let mut spec = library
