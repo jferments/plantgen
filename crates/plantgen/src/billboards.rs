@@ -3332,12 +3332,17 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         },
     };
     let wood_material = templates.bark.map_or(Material::Opaque, Material::Bark);
-    let render = |cards: &Mesh| {
+    let render = |cards: &Mesh, normals_only: bool| {
         let mut items = vec![(cards, Material::Card), (shot.wood, wood_material)];
         if let Some(strips) = shot.strips {
             items.push((strips, wood_material));
         }
-        raster::render(
+        let render = if normals_only {
+            raster::render_normals
+        } else {
+            raster::render
+        };
+        render(
             &items,
             &camera,
             &Lighting::flat(),
@@ -3352,8 +3357,9 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
             },
         )
     };
-    let image = render(shot.cards);
-    let grown = shot.lit.map(render);
+    let image = render(shot.cards, false);
+    // Only its normals and depth are read.
+    let grown = shot.lit.map(|lit| render(lit, true));
     // Rows from the bottom, so v grows upward like the frame's up.
     let mut picture = Texture {
         width: tw,
