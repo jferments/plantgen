@@ -57,6 +57,31 @@ pub const THREAD: f64 = 10.0;
 /// length (fennel's threads "slightly curved").
 const THREAD_BOW: f64 = 0.12;
 
+/// How many pieces [`diamond`] reads a blade's width at.
+const DIAMOND_SAMPLES: u32 = 32;
+
+/// A blade pointed at both ends (`half(t)` its half-width at `t` of its
+/// length), drawn in one quad, as a lozenge from its foot to its tip:
+/// where along it the lozenge is widest (where the blade is), and its
+/// half-width there, twice the blade's mean so that the lozenge keeps
+/// the blade's area. Drawn foot to tip with its two ends' widths, a
+/// pointed leaflet would have none: a yarrow's leaves on the second
+/// level of detail were their rachises, and lost most of their cover.
+/// `None` for a blade wide at either end, which that quad draws.
+fn diamond(half: &dyn Fn(f64) -> f64) -> Option<(f64, f64)> {
+    let (mut sum, mut widest, mut most) = (0.0, 0.5, 0.0);
+    for k in 0..DIAMOND_SAMPLES {
+        let t = (f64::from(k) + 0.5) / f64::from(DIAMOND_SAMPLES);
+        let w = half(t);
+        sum += w;
+        if w > most {
+            (widest, most) = (t, w);
+        }
+    }
+    let mean = sum / f64::from(DIAMOND_SAMPLES);
+    (half(0.0).max(half(1.0)) < mean).then_some((widest, 2.0 * mean))
+}
+
 /// Whether `c`'s last divisions are threads: as long, for their width,
 /// as [`THREAD`] says.
 #[must_use]
@@ -450,15 +475,25 @@ impl<'a> Lace<'a> {
             &[-1.0, 1.0]
         };
         let n = self.stations;
+        let diamond = (n == 1 && !self.midrib).then(|| diamond(half)).flatten();
         for (upper, colour) in [(true, colour), (false, self.underside)] {
             let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
             let mut points = Vec::with_capacity((n + 1) * columns.len());
-            for i in 0..=n {
-                #[allow(clippy::cast_precision_loss)]
-                let t = i as f64 / n as f64;
-                let w = half(t);
-                for &x in columns {
-                    points.push(self.world(from + along * t + side * (x * w)));
+            if let Some((widest, w)) = diamond {
+                // Foot, the two sides where it is widest, tip: the one
+                // quad drawn as a lozenge.
+                let at = from + along * widest;
+                for p in [from, at + side * w, at - side * w, to] {
+                    points.push(self.world(p));
+                }
+            } else {
+                for i in 0..=n {
+                    #[allow(clippy::cast_precision_loss)]
+                    let t = i as f64 / n as f64;
+                    let w = half(t);
+                    for &x in columns {
+                        points.push(self.world(from + along * t + side * (x * w)));
+                    }
                 }
             }
             // The face's normal, from the world points.
@@ -591,6 +626,22 @@ mod tests {
         let mut mesh = Mesh::default();
         lace.draw(&divided::layout(c), &mut mesh);
         mesh
+    }
+
+    #[test]
+    fn a_pointed_leaflet_in_one_quad_keeps_its_area() {
+        let half = |t: f64| 0.5 * crate::templates::outline_profile(None, t, 0.35, 0.5, 0.6);
+        let samples = 1000;
+        let area = (0..samples)
+            .map(|k| 2.0 * half((f64::from(k) + 0.5) / f64::from(samples)))
+            .sum::<f64>()
+            / f64::from(samples);
+        let (widest, width) = diamond(&half).expect("pointed at both ends");
+        assert!((widest - 0.35).abs() < 0.05, "{widest}");
+        // A lozenge as long as the blade and `width` wide each side.
+        assert!((width - area).abs() < 0.01 * area, "{width} {area}");
+        // A blade wide at its foot keeps its quad.
+        assert!(diamond(&|t: f64| 0.3 - 0.2 * t).is_none());
     }
 
     #[test]

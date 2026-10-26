@@ -2955,15 +2955,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
         }
         if let Some(source) = source.as_ref().filter(|_| wants("far")) {
             let far = plantgen::billboards::FAR;
-            let carded = plantgen::billboards::impostor_from(
-                source,
-                graph,
-                &looks,
-                &spec.appearance,
-                spec.growth_form,
-                &templates,
-                &far,
-            );
+            let carded = plantgen::billboards::impostor_from(source, &templates, &far);
             let mut baked = templates.clone();
             baked.baked.clone_from(&carded.pictures);
             let tone = plantgen::billboards::tone(

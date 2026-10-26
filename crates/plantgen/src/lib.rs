@@ -1273,4 +1273,15 @@ pub mod venation;
 /// turns to the eye; and a texel's sunlight is its samples' on average,
 /// its normal's spread kept (Toksvig 2005), so big crowns' cards and far
 /// impostors no longer draw up to 70 per cent lighter than the tree.
-pub const GENERATOR_REVISION: u32 = 169;
+/// 170: thin parts keep their cover. A lacy leaf's pointed leaflets on its
+/// second level of detail are lozenges as wide as keeps their area, not
+/// lines (`lace::diamond`); the card tiers' pictures draw every leaf and
+/// stem as it is, never widened to a texel, and dither until they pass
+/// as much as their parts cover under a filtered alpha test
+/// (`billboards::keep_coverage`); and a clump of leaves held every way
+/// round turns to the eye wherever that draws its cover closer than a
+/// fixed card, its four pictures paid from the plant's own texels
+/// (only a crown's keep theirs as sharp as one), so no plant's atlas
+/// grows. Spanish moss's cards no longer hide four times the sky the moss
+/// does, nor a fescue's impostor twice.
+pub const GENERATOR_REVISION: u32 = 170;
