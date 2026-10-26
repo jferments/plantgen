@@ -38,6 +38,10 @@
 //! | `part-steps` | the part meshes' coarser steps, `APSTEPS2` (below) |
 //! | `mechanics` | one keyframe's bones and branches, JSON, in motion packages only ([`crate::motion`]) |
 //! | `binding` | one level of detail's vertices and cards on those bones, `APBIND1`, in motion packages only ([`crate::motion`]) |
+//! | `card-mesh` | one baked-card tier's cards, `APCARDS1` (below), in card packages only ([`Inputs::with_cards`]) |
+//! | `card-albedo` | PNG, a tier's pictures packed side by side: sRGB colour, coverage in alpha |
+//! | `card-normal` | PNG, the same pictures' world normal · 0.5 + 0.5, alpha 255 |
+//! | `card-sun` | PNG, the same pictures' sun through the whole plant (below) |
 //!
 //! Binary objects are little-endian with 32-bit floats. A graph is a
 //! 24-byte header (magic, age, height, segment count, organ count), then
@@ -132,6 +136,33 @@
 //! (`crate::parts::step_cover`): most steps keep both within a tenth, a
 //! grass panicle's thinned and outlined steps do not, so a renderer that
 //! wants parts faithful from every side stops before them.
+//!
+//! A card package ([`Inputs::with_cards`]) also holds each keyframe's
+//! baked-card tiers ([`crate::billboards`]), for the weakest GPUs: its
+//! trunk and thick limbs as coarse tubes (with ribbons for thin flowering
+//! stems and long solid leaves drawn whole), a `mesh` without cards drawn
+//! as a level's wood is, and everything finer as a few dozen cards whose
+//! pictures are baked from the full plant; or the plant as one card. The
+//! cards are a `card-mesh`, each vertex with its picture:
+//!
+//! ```text
+//! APCARDS1, u32 vertex count V, u32 index count I, positions f32×3V,
+//!           normals f32×3V, uvs f32×2V, pictures u32×V, indices u32×I
+//! ```
+//!
+//! A vertex's uv is within its picture, from its bottom-left. The tier's
+//! pictures share one atlas ([`TierRecord::atlas`]): picture `p` with
+//! bottom-left texel `place` and `size` texels shows uv `(u, v)` at atlas
+//! texel `place + (u, v) · size`, counted from the atlas's bottom-left;
+//! the PNGs' first row is the atlas's top. A card whose picture turns
+//! ([`TurnRecord`]) faces the eye in the vertex shader about the picture's
+//! `pivot`, and may show another of its pictures, as `raster::turn_cards`
+//! turns it. `card-sun` holds, per texel, how much of a sun along the unit
+//! vector `d` reaches that leaf through the whole plant:
+//! `clamp(R + 3 · ((G, B, A) − 0.5) · d, 0, 1)` (the first spherical
+//! harmonics of [`crate::raster::Texture::sun`]); empty texels take their
+//! covered neighbours' colour, normal and sun, so filtering never blends
+//! in black.
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -184,6 +215,10 @@ pub const GRAPH_MAGIC_ADULT: [u8; 8] = *b"APGRAPH3";
 const NO_ADULTNESS: u8 = 255;
 pub const MESH_MAGIC: [u8; 8] = *b"APMESH1\0";
 pub const PARTS_MAGIC: [u8; 8] = *b"APPARTS2";
+/// The magic of a baked-card tier's cards (see the module).
+pub const CARD_MESH_MAGIC: [u8; 8] = *b"APCARDS1";
+/// Bytes of one vertex of a `card-mesh`.
+const CARD_VERTEX_BYTES: usize = 36;
 
 /// Magic of the part meshes' coarser steps (see the module).
 pub const PART_STEPS_MAGIC: [u8; 8] = *b"APSTEPS2";
@@ -482,6 +517,106 @@ pub struct ImpostorRecord {
     pub lod: usize,
 }
 
+/// One of a keyframe's baked-card tiers ([`crate::billboards`]), in a
+/// card package.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct TierRecord {
+    /// `low-cards`, `minimal-cards` or `far-impostor`.
+    pub name: String,
+    /// Its tubes, ribbons and whole leaves: a `mesh` without cards; absent
+    /// for an impostor.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub wood: Option<String>,
+    /// Its cards: a `card-mesh`.
+    pub cards: String,
+    pub atlas: CardAtlasRecord,
+    pub pictures: Vec<PictureRecord>,
+    pub cost: TierCost,
+}
+
+/// A tier's pictures, packed into one texture of each layer.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CardAtlasRecord {
+    pub albedo: String,
+    pub normal: String,
+    pub sun: String,
+    pub width: usize,
+    pub height: usize,
+}
+
+/// One of a tier's pictures ([`crate::raster::Texture`]).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PictureRecord {
+    /// Its bottom-left texel in the atlas, from the atlas's bottom-left.
+    pub place: [usize; 2],
+    /// Texels across and up.
+    pub size: [usize; 2],
+    pub turn: TurnRecord,
+    /// The point its card turns about, metres in the plant's frame.
+    pub pivot: [f64; 3],
+    /// How far what it shows spreads, root mean square, along its card's
+    /// right, up and normal as baked: turned, the card is as wide as that
+    /// seen from the eye.
+    pub extent: [f64; 3],
+    /// The way toward the eye it was baked from.
+    pub seen_from: [f64; 3],
+}
+
+/// How a picture's card turns to the eye ([`crate::raster::Turn`]).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "lowercase")]
+pub enum TurnRecord {
+    /// It stays as baked.
+    Fixed,
+    /// It faces the eye.
+    Facing,
+    /// It faces the eye and shows, of the `count` pictures from `first`,
+    /// the one baked from nearest the eye's way.
+    Views { first: usize, count: usize },
+    /// It faces the eye and shows, of the `count` pictures from `first`,
+    /// the one baked from nearest the eye's height.
+    Heights { first: usize, count: usize },
+}
+
+impl From<raster::Turn> for TurnRecord {
+    fn from(turn: raster::Turn) -> Self {
+        match turn {
+            raster::Turn::Fixed => Self::Fixed,
+            raster::Turn::Facing => Self::Facing,
+            raster::Turn::Views { first, count } => Self::Views { first, count },
+            raster::Turn::Heights { first, count } => Self::Heights { first, count },
+        }
+    }
+}
+
+impl From<TurnRecord> for raster::Turn {
+    fn from(turn: TurnRecord) -> Self {
+        match turn {
+            TurnRecord::Fixed => Self::Fixed,
+            TurnRecord::Facing => Self::Facing,
+            TurnRecord::Views { first, count } => Self::Views { first, count },
+            TurnRecord::Heights { first, count } => Self::Heights { first, count },
+        }
+    }
+}
+
+/// What a tier costs to draw ([`crate::billboards::CardStats`]).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct TierCost {
+    /// Cards, a card that shows one of several pictures counted once.
+    pub cards: usize,
+    pub wood_triangles: usize,
+    pub card_triangles: usize,
+    /// Solid leaves drawn whole, in the wood.
+    pub leaf_triangles: usize,
+    /// Texels of all its pictures, and of those seen from any one height
+    /// of eye.
+    pub texels: usize,
+    pub seen_texels: usize,
+    /// The share of the cards' area their pictures cover.
+    pub coverage: f64,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct KeyframeRecord {
     pub age: f64,
@@ -492,6 +627,9 @@ pub struct KeyframeRecord {
     /// Its bones and branches, in a motion package (`crate::motion`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub mechanics: Option<String>,
+    /// Its baked-card tiers, in a card package, nearest first.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub tiers: Vec<TierRecord>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -674,6 +812,9 @@ pub struct Inputs {
     /// Motion objects to build beside the meshes (`crate::motion`); none
     /// for a static package.
     pub motion: Option<crate::motion::Motion>,
+    /// Whether each keyframe also has its baked-card tiers
+    /// ([`Self::with_cards`]).
+    pub cards: bool,
 }
 
 impl Inputs {
@@ -840,6 +981,7 @@ impl Inputs {
             part_steps,
             part_types,
             motion: None,
+            cards: false,
         })
     }
 
@@ -860,6 +1002,27 @@ impl Inputs {
         }
         self.key = hex(&hasher.finalize());
         self.motion = Some(motion);
+        self
+    }
+
+    /// The same inputs with each keyframe's baked-card tiers built beside
+    /// its levels ([`TierRecord`]): the key gains them, so a package
+    /// without them keeps its key. They cost more to build than the rest
+    /// of a tree's package together.
+    #[must_use]
+    pub fn with_cards(mut self) -> Self {
+        if self.cards {
+            return self;
+        }
+        let mut hasher = Sha256::new();
+        for (label, bytes) in [("without", self.key.as_bytes()), ("cards", &[1][..])] {
+            hasher.update(label.as_bytes());
+            hasher.update([0]);
+            hasher.update((bytes.len() as u64).to_le_bytes());
+            hasher.update(bytes);
+        }
+        self.key = hex(&hasher.finalize());
+        self.cards = true;
         self
     }
 
@@ -930,6 +1093,7 @@ impl Store {
         graph: &PlantGraph,
         organ_types: &[OrganType],
         baked: BakedKeyframe,
+        tiers: Vec<BakedTier>,
     ) -> KeyframeRecord {
         let (mechanics, mut bindings) = match baked.motion {
             Some((record, bindings)) => (Some(self.add("mechanics", record)), bindings),
@@ -961,6 +1125,23 @@ impl Store {
                 lod: IMPOSTOR_LOD,
             },
             mechanics,
+            tiers: tiers
+                .into_iter()
+                .map(|tier| TierRecord {
+                    name: tier.name.to_string(),
+                    wood: tier.wood.map(|bytes| self.add("mesh", bytes)),
+                    cards: self.add("card-mesh", tier.cards),
+                    atlas: CardAtlasRecord {
+                        albedo: self.add("card-albedo", tier.albedo),
+                        normal: self.add("card-normal", tier.normal),
+                        sun: self.add("card-sun", tier.sun),
+                        width: tier.width,
+                        height: tier.height,
+                    },
+                    pictures: tier.pictures,
+                    cost: tier.cost,
+                })
+                .collect(),
         }
     }
 
@@ -988,6 +1169,8 @@ impl Store {
 enum Task {
     Grow(usize),
     Bake(usize, usize),
+    /// A keyframe's baked-card tiers, in a card package.
+    Cards(usize, usize),
 }
 
 /// Threads a build uses: every core the process may use.
@@ -1131,6 +1314,88 @@ pub fn keyframe_meshes(graph: &PlantGraph, inputs: &Inputs, seed: u64) -> Vec<Pl
     level_meshes(graph, inputs, seed, false)
         .into_iter()
         .map(|(mesh, _)| mesh)
+        .collect()
+}
+
+/// One baked-card tier, before it enters the store.
+struct BakedTier {
+    name: &'static str,
+    wood: Option<Vec<u8>>,
+    cards: Vec<u8>,
+    albedo: Vec<u8>,
+    normal: Vec<u8>,
+    sun: Vec<u8>,
+    width: usize,
+    height: usize,
+    pictures: Vec<PictureRecord>,
+    cost: TierCost,
+}
+
+/// Keyframe `graph`'s baked-card tiers, nearest first, drawn as it is on
+/// the inputs' day.
+fn tier_plants(
+    graph: &PlantGraph,
+    inputs: &Inputs,
+) -> Vec<(&'static str, crate::billboards::CardPlant)> {
+    let staged = crate::looks::staged(graph, &inputs.sizes, &inputs.looks);
+    let drawn = staged.as_ref().unwrap_or(graph);
+    crate::billboards::tiers(
+        drawn,
+        &inputs.looks,
+        &inputs.bodies,
+        &inputs.spec.appearance,
+        inputs.spec.growth_form,
+        &inputs.templates,
+        &inputs.quality.lods,
+    )
+}
+
+/// Keyframe `graph`'s baked-card tiers ([`tier_plants`]) as objects.
+fn bake_tiers(graph: &PlantGraph, inputs: &Inputs) -> Result<Vec<BakedTier>, PackageError> {
+    tier_plants(graph, inputs)
+        .into_iter()
+        .map(|(name, plant)| {
+            let atlas = plant.atlas();
+            let [albedo, normal, sun] = card_atlas(&plant, &atlas);
+            let stats = &plant.stats;
+            Ok(BakedTier {
+                name,
+                wood: (plant.wood.triangle_count() > 0).then(|| {
+                    encode_mesh(&PlantMesh {
+                        wood: plant.wood.clone(),
+                        ..PlantMesh::default()
+                    })
+                }),
+                cards: encode_card_mesh(&plant.cards),
+                albedo: png(atlas.width, atlas.height, &albedo)?,
+                normal: png(atlas.width, atlas.height, &normal)?,
+                sun: png(atlas.width, atlas.height, &sun)?,
+                width: atlas.width,
+                height: atlas.height,
+                pictures: plant
+                    .pictures
+                    .iter()
+                    .zip(&atlas.places)
+                    .map(|(picture, &(x, y))| PictureRecord {
+                        place: [x, y],
+                        size: [picture.width, picture.height],
+                        turn: picture.turn.into(),
+                        pivot: picture.pivot.map(f64::from),
+                        extent: picture.extent.map(f64::from),
+                        seen_from: picture.seen_from.map(f64::from),
+                    })
+                    .collect(),
+                cost: TierCost {
+                    cards: stats.cards,
+                    wood_triangles: stats.wood_triangles,
+                    card_triangles: stats.card_triangles,
+                    leaf_triangles: stats.leaf_triangles,
+                    texels: stats.texels,
+                    seen_texels: stats.seen_texels,
+                    coverage: stats.coverage,
+                },
+            })
+        })
         .collect()
 }
 
@@ -1319,6 +1584,7 @@ pub fn build(
         say: &say,
         grown: variants.iter().map(|_| OnceLock::new()).collect(),
         baked: Mutex::new(Vec::new()),
+        carded: Mutex::new(Vec::new()),
     };
     cores::tasks(
         (0..variants.len()).map(Task::Grow).collect(),
@@ -1330,7 +1596,12 @@ pub fn build(
             }
         },
     );
-    let Work { grown, baked, .. } = work;
+    let Work {
+        grown,
+        baked,
+        carded,
+        ..
+    } = work;
     let grown = grown
         .into_iter()
         .enumerate()
@@ -1382,13 +1653,19 @@ pub fn build(
         .into_iter()
         .map(|(job, result)| result.map(|baked| (job, baked)))
         .collect::<Result<Vec<_>, _>>()?;
+    let carded = carded
+        .into_inner()
+        .unwrap_or_else(PoisonError::into_inner)
+        .into_iter()
+        .map(|(job, result)| result.map(|tiers| (job, tiers)))
+        .collect::<Result<BTreeMap<_, _>, _>>()?;
     assemble(
         inputs,
         &program,
         &variants,
         &grown,
         organ_types,
-        baked,
+        (baked, carded),
         validation,
     )
 }
@@ -1413,6 +1690,9 @@ fn organ_types(program: &Program, appearance: &Appearance, grown: &[Growth]) -> 
 /// Baked keyframes by variant and keyframe index, as they finish.
 type Baked = Vec<((usize, usize), Result<BakedKeyframe, PackageError>)>;
 
+/// Their baked-card tiers, likewise.
+type Carded = Vec<((usize, usize), Result<Vec<BakedTier>, PackageError>)>;
+
 /// A variant's name in progress lines and errors.
 fn label(variant: &Variant) -> String {
     format!("{} seed {}", variant.environment.name(), variant.seed)
@@ -1429,6 +1709,7 @@ struct Work<'a> {
     say: &'a (dyn Fn(&str) + Sync),
     grown: Vec<OnceLock<Result<Growth, PackageError>>>,
     baked: Mutex<Baked>,
+    carded: Mutex<Carded>,
 }
 
 impl Work<'_> {
@@ -1436,6 +1717,7 @@ impl Work<'_> {
         match task {
             Task::Grow(index) => self.grow(index),
             Task::Bake(variant, keyframe) => self.bake(variant, keyframe),
+            Task::Cards(variant, keyframe) => self.card(variant, keyframe),
         }
     }
 
@@ -1466,9 +1748,14 @@ impl Work<'_> {
                     growth.stats.peak_organs,
                     started.elapsed().as_secs_f64()
                 ));
-                bake_jobs(growth, self.ages, spec.growth.step)
-                    .into_iter()
-                    .map(|keyframe| Task::Bake(index, keyframe))
+                let jobs = bake_jobs(growth, self.ages, spec.growth.step);
+                // The tiers first: a tree's take longest.
+                let cards = jobs
+                    .iter()
+                    .filter(|_| self.inputs.cards)
+                    .map(|&keyframe| Task::Cards(index, keyframe));
+                cards
+                    .chain(jobs.iter().map(|&keyframe| Task::Bake(index, keyframe)))
                     .collect()
             }
             Err(_) => Vec::new(),
@@ -1507,6 +1794,39 @@ impl Work<'_> {
             .push(((variant, keyframe), result));
         Vec::new()
     }
+
+    /// Bake keyframe `keyframe` of variant `variant`'s card tiers.
+    fn card(&self, variant: usize, keyframe: usize) -> Vec<Task> {
+        let Some(Ok(growth)) = self.grown[variant].get() else {
+            return Vec::new();
+        };
+        let graph = &growth.keyframes[keyframe];
+        let started = Instant::now();
+        let result = bake_tiers(graph, self.inputs);
+        if let Ok(tiers) = &result {
+            let costs: Vec<String> = tiers
+                .iter()
+                .map(|tier| {
+                    format!(
+                        "{} {} cards {} texels",
+                        tier.name, tier.cost.cards, tier.cost.seen_texels
+                    )
+                })
+                .collect();
+            (self.say)(&format!(
+                "carded {} at {} years: {} ({:.1} s)",
+                label(&self.variants[variant]),
+                graph.age,
+                costs.join(", "),
+                started.elapsed().as_secs_f64()
+            ));
+        }
+        self.carded
+            .lock()
+            .unwrap_or_else(PoisonError::into_inner)
+            .push(((variant, keyframe), result));
+        Vec::new()
+    }
 }
 
 /// The package from its grown variants and baked keyframes, each keyframe
@@ -1519,7 +1839,10 @@ fn assemble(
     variants: &[Variant],
     grown: &[Growth],
     organ_types: Vec<OrganType>,
-    baked: Vec<((usize, usize), BakedKeyframe)>,
+    (baked, mut carded): (
+        Vec<((usize, usize), BakedKeyframe)>,
+        BTreeMap<(usize, usize), Vec<BakedTier>>,
+    ),
     validation: Vec<ValidationRecord>,
 ) -> Result<Package, PackageError> {
     let spec = &inputs.spec;
@@ -1587,7 +1910,13 @@ fn assemble(
         .collect();
     for ((variant, keyframe), baked) in baked {
         let growth = &grown[variant];
-        let record = store.keyframe(&growth.keyframes[keyframe], &growth.organ_types, baked);
+        let tiers = carded.remove(&(variant, keyframe)).unwrap_or_default();
+        let record = store.keyframe(
+            &growth.keyframes[keyframe],
+            &growth.organ_types,
+            baked,
+            tiers,
+        );
         records[variant].keyframes.push(record);
     }
 
@@ -1785,6 +2114,13 @@ pub fn verify(package: &Path) -> Result<Manifest, PackageError> {
     Ok(manifest)
 }
 
+/// Millions of `count`.
+fn millions(count: usize) -> f64 {
+    #[allow(clippy::cast_precision_loss)]
+    let millions = count as f64 / 1e6;
+    millions
+}
+
 fn megabytes(bytes: u64) -> f64 {
     #[allow(clippy::cast_precision_loss)]
     let bytes = bytes as f64;
@@ -1864,6 +2200,23 @@ pub fn summary(manifest: &Manifest) -> String {
                 size_text(size.leaf_area),
                 triangles.join(" / ")
             );
+            if !keyframe.tiers.is_empty() {
+                let tiers: Vec<String> = keyframe
+                    .tiers
+                    .iter()
+                    .map(|tier| {
+                        let cost = &tier.cost;
+                        format!(
+                            "{} {} cards {} triangles {:.2} M texels",
+                            tier.name,
+                            cost.cards,
+                            cost.wood_triangles + cost.card_triangles + cost.leaf_triangles,
+                            millions(cost.seen_texels)
+                        )
+                    })
+                    .collect();
+                let _ = writeln!(text, "      cards: {}", tiers.join(", "));
+            }
         }
     }
     if let Some(parts) = &manifest.parts {
@@ -2857,11 +3210,394 @@ fn decode_sites(input: &mut Reader<'_>, cards: usize) -> Result<Vec<u32>, Packag
     Ok(sites)
 }
 
+/// A tier's cards as a `card-mesh` object (see the module).
+#[must_use]
+pub fn encode_card_mesh(cards: &Mesh) -> Vec<u8> {
+    let vertices = cards.vertex_count();
+    let mut out = Writer(Vec::with_capacity(
+        16 + vertices * CARD_VERTEX_BYTES + cards.indices.len() * 4,
+    ));
+    out.bytes(&CARD_MESH_MAGIC);
+    out.count(vertices);
+    out.count(cards.indices.len());
+    out.f32s(cards.positions.as_flattened());
+    out.f32s(cards.normals.as_flattened());
+    out.f32s(cards.uvs.as_flattened());
+    for colour in &cards.colors {
+        // The picture's index is a whole number held in alpha.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        out.u32(colour[3].max(0.0).round() as u32);
+    }
+    for &index in &cards.indices {
+        out.u32(index);
+    }
+    out.0
+}
+
+/// A `card-mesh` object's cards, each vertex's picture in its colour's
+/// alpha as [`crate::billboards::CardPlant::cards`] holds it.
+///
+/// # Errors
+///
+/// When the bytes are not a whole `APCARDS1` mesh.
+pub fn decode_card_mesh(bytes: &[u8]) -> Result<Mesh, PackageError> {
+    let mut input = Reader {
+        bytes,
+        at: 0,
+        what: "card mesh",
+    };
+    if input.array::<8>()? != CARD_MESH_MAGIC {
+        return Err(format_error("not an APCARDS1 card mesh"));
+    }
+    let vertices = input.u32()? as usize;
+    let indices = input.u32()? as usize;
+    if !indices.is_multiple_of(3) {
+        return Err(format_error(
+            "a card mesh's index count is not a multiple of 3",
+        ));
+    }
+    input.check_room(
+        vertices
+            .saturating_mul(CARD_VERTEX_BYTES)
+            .saturating_add(indices.saturating_mul(4)),
+    )?;
+    let positions = triples(&input.f32s(vertices * 3)?);
+    let normals = triples(&input.f32s(vertices * 3)?);
+    let uvs = input.f32s(vertices * 2)?.as_chunks::<2>().0.to_vec();
+    let mut colors = Vec::with_capacity(vertices);
+    for _ in 0..vertices {
+        #[allow(clippy::cast_precision_loss)]
+        colors.push([1.0, 1.0, 1.0, input.u32()? as f32]);
+    }
+    let mut mesh = Mesh {
+        positions,
+        normals,
+        uvs,
+        colors,
+        births: vec![0.0; vertices],
+        sheds: vec![f32::INFINITY; vertices],
+        levels: vec![3; vertices],
+        indices: Vec::with_capacity(indices),
+        segments: Vec::new(),
+    };
+    for _ in 0..indices {
+        let index = input.u32()?;
+        if index as usize >= vertices {
+            return Err(format_error(
+                "a card mesh index points past the last vertex",
+            ));
+        }
+        mesh.indices.push(index);
+    }
+    input.finish()?;
+    Ok(mesh)
+}
+
+/// A tier's pictures packed by `atlas` as the `card-albedo`, `card-normal`
+/// and `card-sun` layers, RGBA8 rows from the top (see the module).
+fn card_atlas(
+    plant: &crate::billboards::CardPlant,
+    atlas: &crate::billboards::Atlas,
+) -> [Vec<u8>; 3] {
+    let (width, height) = (atlas.width, atlas.height);
+    let mut layers = [
+        vec![0_u8; width * height * 4],
+        vec![0_u8; width * height * 4],
+        vec![0_u8; width * height * 4],
+    ];
+    let (y0, y1) = (raster::harmonics(Vec3::Y)[0], raster::harmonics(Vec3::Y)[1]);
+    for (picture, &(px, py)) in plant.pictures.iter().zip(&atlas.places) {
+        let sun = filled_sun(picture);
+        for y in 0..picture.height {
+            for x in 0..picture.width {
+                let from = y * picture.width + x;
+                let at = ((height - 1 - (py + y)) * width + px + x) * 4;
+                let colour = picture.color[from];
+                for c in 0..3 {
+                    layers[0][at + c] = crate::texture::linear_to_srgb(f64::from(colour[c]));
+                    layers[1][at + c] =
+                        crate::texture::to_byte(f64::from(picture.normal[from][c]) * 0.5 + 0.5);
+                }
+                layers[0][at + 3] = crate::texture::to_byte(f64::from(colour[3]));
+                layers[1][at + 3] = 255;
+                // Mean visibility, then the band-1 slope along x, y and z
+                // ([`raster::harmonics`]: 1, y, z, x).
+                let c = sun[from].map(f64::from);
+                layers[2][at] = crate::texture::to_byte(c[0] * y0);
+                for (k, band) in [3, 1, 2].into_iter().enumerate() {
+                    layers[2][at + 1 + k] = crate::texture::to_byte(c[band] * y1 / 3.0 + 0.5);
+                }
+            }
+        }
+    }
+    layers
+}
+
+/// A picture's sun, empty texels taking their covered neighbours' as they
+/// take their colour, a few texels out.
+fn filled_sun(picture: &raster::Texture) -> Vec<[f32; 4]> {
+    let (w, h) = (picture.width, picture.height);
+    let mut sun = picture.sun.clone();
+    sun.resize(w * h, [0.0; 4]);
+    let mut known: Vec<bool> = picture.color.iter().map(|c| c[3] > 0.0).collect();
+    for _ in 0..4 {
+        let (before, was) = (sun.clone(), known.clone());
+        for y in 0..h {
+            for x in 0..w {
+                let at = y * w + x;
+                if was[at] {
+                    continue;
+                }
+                let mut sum = [0.0_f32; 4];
+                let mut count = 0.0_f32;
+                for (nx, ny) in [
+                    (x.wrapping_sub(1), y),
+                    (x + 1, y),
+                    (x, y.wrapping_sub(1)),
+                    (x, y + 1),
+                ] {
+                    if nx >= w || ny >= h || !was[ny * w + nx] {
+                        continue;
+                    }
+                    for (total, value) in sum.iter_mut().zip(before[ny * w + nx]) {
+                        *total += value;
+                    }
+                    count += 1.0;
+                }
+                if count > 0.0 {
+                    sun[at] = sum.map(|v| v / count);
+                    known[at] = true;
+                }
+            }
+        }
+    }
+    sun
+}
+
+/// A tier's pictures as the package holds them, from its three atlas PNGs:
+/// what a renderer reads, to the 8 bits of each layer.
+///
+/// # Errors
+///
+/// When a layer is not a PNG of the atlas's size.
+pub fn decode_card_pictures(
+    tier: &TierRecord,
+    albedo: &[u8],
+    normal: &[u8],
+    sun: &[u8],
+) -> Result<Vec<raster::Texture>, PackageError> {
+    let (width, height) = (tier.atlas.width, tier.atlas.height);
+    let layers = [albedo, normal, sun].map(|bytes| {
+        read_png(bytes).and_then(|(w, h, pixels)| {
+            if (w, h) == (width, height) {
+                Ok(pixels)
+            } else {
+                Err(format_error("a card atlas layer is not the atlas's size"))
+            }
+        })
+    });
+    let [albedo, normal, sun] = layers;
+    let (albedo, normal, sun) = (albedo?, normal?, sun?);
+    let (y0, y1) = (raster::harmonics(Vec3::Y)[0], raster::harmonics(Vec3::Y)[1]);
+    tier.pictures
+        .iter()
+        .map(|record| {
+            let ([px, py], [w, h]) = (record.place, record.size);
+            if px + w > width || py + h > height {
+                return Err(format_error("a card picture lies outside its atlas"));
+            }
+            let byte = |layer: &[u8], x: usize, y: usize, c: usize| {
+                f64::from(layer[((height - 1 - (py + y)) * width + px + x) * 4 + c]) / 255.0
+            };
+            let mut picture = raster::Texture {
+                width: w,
+                height: h,
+                color: Vec::with_capacity(w * h),
+                normal: Vec::with_capacity(w * h),
+                sun: Vec::with_capacity(w * h),
+                turn: record.turn.into(),
+                #[allow(clippy::cast_possible_truncation)]
+                pivot: record.pivot.map(|v| v as f32),
+                #[allow(clippy::cast_possible_truncation)]
+                extent: record.extent.map(|v| v as f32),
+                #[allow(clippy::cast_possible_truncation)]
+                seen_from: record.seen_from.map(|v| v as f32),
+            };
+            for y in 0..h {
+                for x in 0..w {
+                    #[allow(clippy::cast_possible_truncation)]
+                    {
+                        let at = ((height - 1 - (py + y)) * width + px + x) * 4;
+                        let srgb = |c: usize| crate::texture::srgb_to_linear(albedo[at + c]) as f32;
+                        picture.color.push([
+                            srgb(0),
+                            srgb(1),
+                            srgb(2),
+                            byte(&albedo, x, y, 3) as f32,
+                        ]);
+                        picture
+                            .normal
+                            .push([0, 1, 2].map(|c| (byte(&normal, x, y, c) * 2.0 - 1.0) as f32));
+                        let slope = |c: usize| (byte(&sun, x, y, c) - 0.5) * 3.0 / y1;
+                        picture.sun.push([
+                            (byte(&sun, x, y, 0) / y0) as f32,
+                            slope(2) as f32,
+                            slope(3) as f32,
+                            slope(1) as f32,
+                        ]);
+                    }
+                }
+            }
+            Ok(picture)
+        })
+        .collect()
+}
+
+/// A PNG's size and its pixels as RGBA8, rows from the top.
+fn read_png(bytes: &[u8]) -> Result<(usize, usize, Vec<u8>), PackageError> {
+    let mut decoder = png::Decoder::new(std::io::Cursor::new(bytes));
+    decoder.set_transformations(png::Transformations::normalize_to_color8());
+    let mut reader = decoder
+        .read_info()
+        .map_err(|error| format_error(format!("cannot read PNG: {error}")))?;
+    let size = reader
+        .output_buffer_size()
+        .ok_or_else(|| format_error("a PNG is too large to read"))?;
+    let mut buffer = vec![0; size];
+    let info = reader
+        .next_frame(&mut buffer)
+        .map_err(|error| format_error(format!("cannot read PNG: {error}")))?;
+    let (width, height) = (info.width as usize, info.height as usize);
+    if info.color_type != png::ColorType::Rgba {
+        return Err(format_error("a card atlas layer is not RGBA"));
+    }
+    let mut pixels = Vec::with_capacity(width * height * 4);
+    for row in 0..height {
+        pixels.extend_from_slice(&buffer[row * info.line_size..][..width * 4]);
+    }
+    Ok((width, height, pixels))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::drawing::{Request, draw};
     use crate::library::Library;
+
+    /// A young sagebrush's tiers, as a card package holds them and as
+    /// they were baked: the same cards and wood, the same turns, and
+    /// pictures that draw it as they did, to their layers' 8 bits.
+    #[test]
+    fn a_card_packages_tiers_draw_as_they_were_baked() {
+        let library = Library::builtin();
+        let mut spec = library
+            .spec("artemisia-tridentata")
+            .expect("in the library");
+        spec.growth.years = 12.0;
+        spec.growth.keyframes = vec![12.0];
+        spec.variants.environments.truncate(1);
+        spec.variants.seeds.truncate(1);
+        spec.allometry.clear();
+        let quality = crate::quality::DRAFT;
+        let inputs = Inputs::new(&spec, &quality).expect("inputs").with_cards();
+        assert_ne!(
+            inputs.key,
+            Inputs::new(&spec, &quality).expect("inputs").key
+        );
+        let package = build(&inputs, 2, &mut |_| {}).expect("builds");
+        let keyframe = &package.manifest.variants[0].keyframes[0];
+        let names: Vec<&str> = keyframe.tiers.iter().map(|t| t.name.as_str()).collect();
+        assert_eq!(names, ["low-cards", "minimal-cards", "far-impostor"]);
+
+        let (program, params) = inputs
+            .spec
+            .program_from(&inputs.program_source)
+            .expect("program");
+        let variant = &inputs.spec.variant_list()[0];
+        let growth =
+            grow_variant(&inputs.spec, &program, &params, None, variant, &[12.0]).expect("grows");
+        let plants = tier_plants(&growth.keyframes[0], &inputs);
+        let object = |sha: &str| &package.objects[sha];
+        let bark = inputs
+            .templates
+            .bark
+            .map_or(raster::Material::Opaque, raster::Material::Bark);
+        let mut turned = 0;
+        for (record, (name, plant)) in keyframe.tiers.iter().zip(&plants) {
+            assert_eq!(record.name, *name);
+            assert_eq!(record.cost.cards, plant.stats.cards);
+            assert_eq!(record.cost.seen_texels, plant.stats.seen_texels);
+            let cards = decode_card_mesh(object(&record.cards)).expect("card mesh");
+            assert_eq!(cards.positions, plant.cards.positions, "{name}");
+            assert_eq!(cards.normals, plant.cards.normals, "{name}");
+            assert_eq!(cards.uvs, plant.cards.uvs, "{name}");
+            assert_eq!(cards.indices, plant.cards.indices, "{name}");
+            let pictures: Vec<f32> = plant.cards.colors.iter().map(|c| c[3]).collect();
+            assert_eq!(
+                cards.colors.iter().map(|c| c[3]).collect::<Vec<_>>(),
+                pictures
+            );
+            let wood = match &record.wood {
+                Some(sha) => decode_mesh(object(sha)).expect("wood").wood,
+                None => Mesh::default(),
+            };
+            assert_eq!(wood.positions, plant.wood.positions, "{name}");
+            assert_eq!(wood.indices, plant.wood.indices, "{name}");
+            let decoded = decode_card_pictures(
+                record,
+                object(&record.atlas.albedo),
+                object(&record.atlas.normal),
+                object(&record.atlas.sun),
+            )
+            .expect("pictures");
+            assert_eq!(decoded.len(), plant.pictures.len());
+            for (back, baked) in decoded.iter().zip(&plant.pictures) {
+                assert_eq!((back.width, back.height), (baked.width, baked.height));
+                assert_eq!(back.turn, baked.turn);
+                // The manifest writes its numbers to 15 digits.
+                for (a, b) in [
+                    (back.pivot, baked.pivot),
+                    (back.extent, baked.extent),
+                    (back.seen_from, baked.seen_from),
+                ] {
+                    assert!((0..3).all(|k| (a[k] - b[k]).abs() <= 1e-6), "{a:?} {b:?}");
+                }
+                turned += usize::from(matches!(back.turn, raster::Turn::Heights { .. }));
+            }
+            let drawn = |pictures: &[raster::Texture]| {
+                let mut templates = inputs.templates.clone();
+                templates.baked = pictures.to_vec();
+                crate::billboards::tone(
+                    &[(&plant.wood, bark), (&plant.cards, raster::Material::Baked)],
+                    &templates,
+                    96,
+                )
+            };
+            let (before, after) = (drawn(&plant.pictures), drawn(&decoded));
+            for k in 0..2 {
+                assert!(
+                    (after.tone[k] - before.tone[k]).abs() < 0.01,
+                    "{name}: tone {:?} as baked, {:?} from the package",
+                    before.tone,
+                    after.tone
+                );
+                assert!(
+                    (after.cover[k] - before.cover[k]).abs() < 0.005,
+                    "{name}: cover {:?} as baked, {:?} from the package",
+                    before.cover,
+                    after.cover
+                );
+            }
+        }
+        assert!(turned > 0, "no crown card turns");
+
+        // A damaged card mesh is refused.
+        let bytes = object(&keyframe.tiers[0].cards);
+        assert!(decode_card_mesh(&bytes[..bytes.len() - 1]).is_err());
+        let mut wrong = bytes.clone();
+        wrong[0] = b'X';
+        assert!(decode_card_mesh(&wrong).is_err());
+    }
 
     #[test]
     fn a_mesh_size_is_its_encoding_length() {

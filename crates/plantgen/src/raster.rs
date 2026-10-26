@@ -1009,6 +1009,16 @@ fn draw(
 /// ground ([`Turn::Heights`]).
 const STRAIGHT_UP: f64 = 0.999;
 
+/// `mesh`'s baked cards, each vertex's picture in its colour's alpha
+/// ([`Material::Baked`]), turned to `camera` as their pictures say
+/// ([`Texture::turn`]), each vertex's alpha then the picture it shows:
+/// how PlantGen's renders draw them, and what an engine's vertex shader
+/// must do (`shaders/turn_cards.wgsl`, [`crate::billboards::TURN_CARDS_WGSL`]).
+#[must_use]
+pub fn turned(mesh: &Mesh, templates: &Templates, camera: &Camera) -> Mesh {
+    turn_cards(mesh, templates, camera, camera.basis().2).unwrap_or_else(|| mesh.clone())
+}
+
 /// `mesh`'s baked cards turned to `camera` as their pictures say
 /// ([`Texture::turn`]); `None` when none turns.
 fn turn_cards(mesh: &Mesh, templates: &Templates, camera: &Camera, forward: Vec3) -> Option<Mesh> {

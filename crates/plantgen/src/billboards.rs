@@ -51,6 +51,11 @@ use crate::raster::{self, Camera, Lighting, Material, Projection, RenderOptions,
 use crate::spec::{Appearance, GrowthForm};
 use crate::templates::Templates;
 
+/// How a baked card turns to the eye, in WGSL for an engine's vertex
+/// shader: the reference for [`raster::turned`], with vectors from it in
+/// `shaders/turn_cards.json`.
+pub const TURN_CARDS_WGSL: &str = include_str!("../shaders/turn_cards.wgsl");
+
 /// Plants this tall or lower take a tier's `small` budget.
 pub const SMALL_M: f64 = 2.0;
 /// Plants this tall or taller take its `large` budget.
@@ -1062,6 +1067,35 @@ impl Source {
         let sky = Sky::new(&mesh.wood, &mesh.card_mesh(), templates);
         Self { mesh, sky }
     }
+}
+
+/// Every tier of `graph` from one [`Source`], by name: [`TIERS`]' cards,
+/// then the [`FAR`] impostor.
+#[must_use]
+pub fn tiers(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    form: GrowthForm,
+    templates: &Templates,
+    levels: &[LodSpec; 4],
+) -> Vec<(&'static str, CardPlant)> {
+    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    let mut out: Vec<(&'static str, CardPlant)> = TIERS
+        .iter()
+        .map(|tier| {
+            let plant = build_from(
+                &from, graph, looks, bodies, appearance, form, templates, levels, tier,
+            );
+            (tier.name, plant)
+        })
+        .collect();
+    out.push((
+        FAR.name,
+        impostor_from(&from, graph, looks, appearance, form, templates, &FAR),
+    ));
+    out
 }
 
 /// Build `graph` at `tier`. `levels` are the package's four mesh levels

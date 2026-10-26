@@ -337,12 +337,14 @@ Usage:
       colour, normal, occlusion-roughness-metallic and height maps, and a
       sheet with each stage's tile lit and a trunk wearing it.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
-               [--threads N] [--profile static|motion]
+               [--threads N] [--profile static|motion] [--cards yes|no]
       Build a .afterplant package in DIR (default `plants`) and print its
       key. A package that is already built is not built again. With
       --profile motion it also holds each keyframe's bones and branches
       and each level's binding to them (plant motion S2), under a key of
-      its own; the static package is unchanged.
+      its own; the static package is unchanged. With --cards yes it also
+      holds each keyframe's baked-card tiers (low and minimal cards, the
+      far impostor; see `plantc tiers`), under a key of its own.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -3771,7 +3773,9 @@ fn templates_of(
 fn build_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
-        &["out", "quality", "threads", "program", "day", "profile"],
+        &[
+            "out", "quality", "threads", "program", "day", "profile", "cards",
+        ],
     )?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
@@ -3796,6 +3800,11 @@ fn build_package(spec: &PlantSpec, options: &Options, out: &Path) -> Result<Path
     }
     .map_err(|error| error.to_string())?;
     let inputs = profiled(spec, inputs, options)?;
+    let inputs = match options.flags.get("cards").map(String::as_str) {
+        None | Some("no") => inputs,
+        Some("yes") => inputs.with_cards(),
+        Some(other) => return Err(format!("--cards is yes or no, not `{other}`").into()),
+    };
     if let Some(path) = package::existing(out, &spec.id, &inputs.key) {
         out!(
             "{} is already built:\n  key {}\n  {}",
