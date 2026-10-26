@@ -182,20 +182,26 @@ pub const MOST_LEAN: f64 = 45.0;
 /// degrees above and from above ([`ImpostorTier`]). A crown's card baked
 /// from the side alone showed it from the side from every height: from
 /// 45 degrees down a big sagebrush's low cards were 37 per cent darker
-/// than the full plant, whose lit tops show from above.
-pub const HEIGHTS: [f64; 3] = [0.0, 45.0, 90.0];
+/// than the full plant, whose lit tops show from above. Past 90 the way
+/// goes on over the top: 135 is 45 degrees above level from behind, the
+/// side the eye sees a clump on the far side of a crown from. Baked from
+/// in front alone, a Douglas-fir's far clumps showed their sprays edge on
+/// from 45 degrees, thin streaks where the full tree shows their tops.
+pub const HEIGHTS: [f64; 4] = [0.0, 45.0, 90.0, 135.0];
 
 /// The ways a card turned to the eye is baked from ([`HEIGHTS`]), out
-/// along its level normal `level` and up, each with the up of its frame:
-/// the world's up laid on it, and from above the way back in, so the card's
-/// right stays level and the same in every one.
-fn height_ways(level: Vec3) -> [(Vec3, Vec3); 3] {
+/// along its level normal `level` and up, each with the up and right of
+/// its frame: the world's up laid on it, and from above the way back in,
+/// so the right stays level, the card's own in front and from above and
+/// reversed from behind.
+fn height_ways(level: Vec3) -> [(Vec3, Vec3, Vec3); 4] {
     let right = Vec3::Y.cross(level);
     HEIGHTS.map(|degrees| {
         let e = crate::math::radians(degrees);
         let way =
             (level * crate::math::cos(e) + Vec3::Y * crate::math::sin(e)).normalize_or(Vec3::Y);
-        (way, way.cross(right))
+        let right = if degrees > 90.0 { -right } else { right };
+        (way, way.cross(right), right)
     })
 }
 
@@ -634,27 +640,30 @@ fn fit_plane(
             ];
             n.x * mn[0] + n.y * mn[1] + n.z * mn[2]
         };
-        if least <= across(outward) * SHEET * SHEET {
+        // A piece of a broadleaf crown, leaves many times smaller than
+        // itself, is a mass that looks alike from every side, and a card
+        // facing out is edge on wherever the clump is on the plant's
+        // outline: it turns to the eye, as leaf cards do ("leaves that
+        // always billboard (face) the camera", SpeedTree Modeler
+        // glossary). Leaves on herbs' shoots and in tufts keep their
+        // card, since their shapes and the way they face show.
+        let leaves: Vec<&&Element> = members.iter().filter(|e| !e.wood).collect();
+        let leaf_area: f64 = leaves.iter().map(|e| e.area).sum();
+        let leaf_length = leaves
+            .iter()
+            .map(|e| e.half.length() * 2.0 * e.area)
+            .sum::<f64>()
+            / leaf_area.max(1e-12);
+        let mass = turning && span.length() >= MASS * leaf_length;
+        if mass {
+            turn = Turn::Facing;
+        }
+        // So does a crown's spray spread in a sheet, its card baked
+        // from four heights of eye ([`HEIGHTS`]): an oak's level spray
+        // on a card of its own lay flat, a streak seen from the side.
+        if least <= across(outward) * SHEET * SHEET && !mass {
             thinnest
         } else {
-            // A piece of a broadleaf crown, leaves many times
-            // smaller than itself, is a mass that looks alike from every
-            // side, and a card facing out is edge on wherever the clump
-            // is on the plant's outline: it turns to the eye, as leaf
-            // cards do ("leaves that always billboard (face) the
-            // camera", SpeedTree Modeler glossary). Leaves on herbs'
-            // shoots and in tufts keep their card, since their shapes
-            // and the way they face show.
-            let leaves: Vec<&&Element> = members.iter().filter(|e| !e.wood).collect();
-            let leaf_area: f64 = leaves.iter().map(|e| e.area).sum();
-            let leaf_length = leaves
-                .iter()
-                .map(|e| e.half.length() * 2.0 * e.area)
-                .sum::<f64>()
-                / leaf_area.max(1e-12);
-            if turning && span.length() >= MASS * leaf_length {
-                turn = Turn::Facing;
-            }
             outward
         }
     };
@@ -1837,7 +1846,7 @@ pub fn build_from(
         /// Turned to the eye: baked from [`height_ways`] out along
         /// `level`, how far its parts spread along each one's right, up
         /// and way.
-        heights: Option<(Vec3, [[f64; 3]; 3])>,
+        heights: Option<(Vec3, [[f64; 3]; 4])>,
     }
     // Where the plant stands: a card leaning out from its parts would
     // show the ones behind it below there, under the ground.
@@ -1945,13 +1954,13 @@ pub fn build_from(
         let heights = (turn == Turn::Facing).then(|| {
             let level = right.cross(Vec3::Y).normalize_or(Vec3::Z);
             let ways = height_ways(level);
-            let mut spread = [[0.0; 3]; 3];
+            let mut spread = [[0.0; 3]; 4];
             let mut weight = 0.0;
             for e in &members {
                 for p in [e.centre - e.half, e.centre, e.centre + e.half] {
                     let d = p - centre;
-                    for ((way, up), sums) in ways.iter().zip(&mut spread) {
-                        for (sum, axis) in sums.iter_mut().zip([right, *up, *way]) {
+                    for ((way, up, right), sums) in ways.iter().zip(&mut spread) {
+                        for (sum, axis) in sums.iter_mut().zip([*right, *up, *way]) {
                             *sum += e.area * d.dot(axis) * d.dot(axis);
                         }
                     }
@@ -2185,6 +2194,11 @@ pub fn build_from(
             }
             if plane.heights.is_none() {
                 low.1 = lowest(plane.centre, plane.up, low.1).min(high.1);
+            } else {
+                // Even about its middle across, as seen from behind its
+                // right is reversed.
+                let m = high.0.max(-low.0);
+                (low.0, high.0) = (-m, m);
             }
             plane.low = low;
             plane.high = high;
@@ -2278,7 +2292,7 @@ pub fn build_from(
             // and its thin stems laid across as seen from there. Their
             // light, from the leaves as they grow, is the same for all.
             let mut first = true;
-            let drawn = height_ways(level).map(|(way, _)| {
+            let drawn = height_ways(level).map(|(way, _, _)| {
                 draw(
                     &Plane {
                         normal: way,
@@ -3186,9 +3200,9 @@ struct Frame {
 /// metres.
 fn add_heights(
     out: &mut CardPlant,
-    drawn: &[Baked; 3],
+    drawn: &[Baked; 4],
     frame: &Frame,
-    extents: [[f64; 3]; 3],
+    extents: [[f64; 3]; 4],
     templates: &Templates,
     sky: &Sky,
 ) -> (f64, f64) {
@@ -3204,9 +3218,9 @@ fn add_heights(
     let mut union: Option<Texture> = None;
     let mut covered = 0.0;
     let ways = height_ways(frame.level);
-    // Only the first holds the light ([`build`]); it serves all three.
+    // Only the first holds the light ([`build`]); it serves all.
     let lit = drawn[0].lit.as_ref();
-    for (((way, up), extent), drawn) in ways.iter().zip(extents).zip(drawn) {
+    for (((way, up, right), extent), drawn) in ways.iter().zip(extents).zip(drawn) {
         let mut picture = bake(
             &Shot {
                 cards: &drawn.cards,
@@ -3214,7 +3228,7 @@ fn add_heights(
                 wood: &drawn.wood,
                 strips: None,
                 mid: frame.centre + frame.right * x + *up * y,
-                right: frame.right,
+                right: *right,
                 up: *up,
                 normal: *way,
                 size: frame.size,
@@ -3347,7 +3361,7 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         },
     };
     let wood_material = templates.bark.map_or(Material::Opaque, Material::Bark);
-    let render = |cards: &Mesh, normals_only: bool| {
+    let render = |cards: &Mesh, scale: usize, normals_only: bool| {
         let mut items = vec![(cards, Material::Card), (shot.wood, wood_material)];
         if let Some(strips) = shot.strips {
             items.push((strips, wood_material));
@@ -3357,28 +3371,31 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         } else {
             raster::render
         };
+        // Normals and depth are wanted a sample at a time, not averaged.
+        let (width, height, supersample) = if normals_only {
+            (tw * scale, th * scale, 1)
+        } else {
+            (tw, th, scale)
+        };
         render(
             &items,
             &camera,
             &Lighting::flat(),
             templates,
             &RenderOptions {
-                width: tw,
-                height: th,
-                supersample: if normals_only {
-                    LIT_SUPERSAMPLE
-                } else {
-                    COLOUR_SUPERSAMPLE
-                },
+                width,
+                height,
+                supersample,
                 shadows: false,
                 shadow_bounds: None,
                 shadow_texels: 1,
             },
         )
     };
-    let image = render(shot.cards, false);
-    // Only its normals and depth are read.
-    let grown = shot.lit.map(|lit| render(lit, true));
+    let image = render(shot.cards, COLOUR_SUPERSAMPLE, false);
+    // The leaves as they grow, unturned, LIT_SUPERSAMPLE samples along
+    // each side of a texel: only their normals and depth are read.
+    let samples = render(shot.lit.unwrap_or(shot.cards), LIT_SUPERSAMPLE, true);
     // Rows from the bottom, so v grows upward like the frame's up.
     let mut picture = Texture {
         width: tw,
@@ -3391,43 +3408,59 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         extent: [0.0; 3],
         seen_from: shot.normal.to_f32(),
     };
-    for y in 0..th {
-        for x in 0..tw {
-            let from = (th - 1 - y) * tw + x;
-            picture.color[y * tw + x] = image.color[from];
-            picture.normal[y * tw + x] = match &grown {
-                Some(grown) if grown.depth[from].is_finite() => grown.normal[from],
-                _ => image.normal[from],
-            };
-        }
-    }
+    let per = LIT_SUPERSAMPLE;
+    // The point `distance` from the eye seen at `(u, v)` on the frame.
+    let at_depth = |u: f64, v: f64, distance: f32| {
+        // A texel only partly covered may have no depth: it lies on the
+        // frame.
+        let distance = Some(f64::from(distance))
+            .filter(|d| d.is_finite())
+            .unwrap_or(depth + 1.0);
+        shot.mid
+            + shot.right * ((u - 0.5) * fw)
+            + shot.up * ((v - 0.5) * fh)
+            + shot.normal * (depth + 1.0 - distance)
+    };
     // How much sun reaches each texel through the whole plant, from
     // every side: on its card a leaf no longer lies in the crown's
     // shade, and a shell of cards casts too thin a shadow on itself.
+    // It is its samples' ([`Sky::fitted`]).
+    let mut seen = Vec::with_capacity(per * per);
     for y in 0..th {
         for x in 0..tw {
             let at = y * tw + x;
+            let from = (th - 1 - y) * tw + x;
+            picture.color[at] = image.color[from];
+            picture.normal[at] = image.normal[from];
             if picture.color[at][3] <= 0.0 {
                 continue;
             }
-            let from = (th - 1 - y) * tw + x;
-            let distance = match &grown {
-                Some(grown) if grown.depth[from].is_finite() => grown.depth[from],
-                _ => image.depth[from],
-            };
-            // A texel only partly covered may have no depth: it lies on
-            // the frame.
-            let distance = Some(f64::from(distance))
-                .filter(|d| d.is_finite())
-                .unwrap_or(depth + 1.0);
-            #[allow(clippy::cast_precision_loss)]
-            let (u, v) = ((x as f64 + 0.5) / tw as f64, (y as f64 + 0.5) / th as f64);
-            let p = shot.mid
-                + shot.right * ((u - 0.5) * fw)
-                + shot.up * ((v - 0.5) * fh)
-                + shot.normal * (depth + 1.0 - distance);
-            let n = v3(picture.normal[at]).normalize_or(shot.normal);
-            picture.sun[at] = sky.visibility(p, n);
+            seen.clear();
+            for row in (th - 1 - y) * per..(th - y) * per {
+                for column in x * per..(x + 1) * per {
+                    let k = row * tw * per + column;
+                    if samples.depth[k].is_finite() {
+                        #[allow(clippy::cast_precision_loss)]
+                        let (u, v) = (
+                            (column as f64 + 0.5) / (tw * per) as f64,
+                            1.0 - (row as f64 + 0.5) / (th * per) as f64,
+                        );
+                        seen.push((
+                            at_depth(u, v, samples.depth[k]),
+                            v3(samples.normal[k]).normalize_or(shot.normal),
+                        ));
+                    }
+                }
+            }
+            if let Some((sun, normal)) = sky.fitted(&seen) {
+                picture.sun[at] = sun;
+                picture.normal[at] = normal.to_f32();
+            } else {
+                #[allow(clippy::cast_precision_loss)]
+                let (u, v) = ((x as f64 + 0.5) / tw as f64, (y as f64 + 0.5) / th as f64);
+                let normal = v3(picture.normal[at]).normalize_or(shot.normal);
+                picture.sun[at] = sky.visibility(at_depth(u, v, image.depth[from]), normal);
+            }
         }
     }
     picture
@@ -3847,27 +3880,92 @@ impl Sky {
         Self { maps }
     }
 
-    /// The four spherical-harmonic coefficients of the sun's visibility at
-    /// `p` on a surface facing `normal` (projected from the maps, each
-    /// direction an equal share of the sphere).
-    fn visibility(&self, p: Vec3, normal: Vec3) -> [f32; 4] {
+    /// Whether the sun along each of the maps' directions reaches `p`, on
+    /// a surface facing `normal`: 1 or 0, in the maps' order.
+    fn seen(&self, p: Vec3, normal: Vec3) -> impl Iterator<Item = (Vec3, f64)> + '_ {
+        // Seen from either face: a leaf is lit through from behind.
+        self.maps
+            .iter()
+            .map(move |(d, map)| (*d, map.visibility(p, normal, *d)))
+    }
+
+    /// The four spherical-harmonic coefficients of `seen`, one value for
+    /// each map's direction, each an equal share of the sphere.
+    fn project(&self, seen: impl Iterator<Item = (Vec3, f64)>) -> [f64; 4] {
         if self.maps.is_empty() {
             // Seen from everywhere: 1 in every direction.
-            #[allow(clippy::cast_possible_truncation)]
-            return [(1.0 / raster::harmonics(Vec3::Y)[0]) as f32, 0.0, 0.0, 0.0];
+            return [1.0 / raster::harmonics(Vec3::Y)[0], 0.0, 0.0, 0.0];
         }
         let mut c = [0.0; 4];
-        for (d, map) in &self.maps {
-            // Seen from either face: a leaf is lit through from behind.
-            let seen = map.visibility(p, normal, *d);
-            let h = raster::harmonics(*d);
+        for (d, seen) in seen {
+            let h = raster::harmonics(d);
             for i in 0..4 {
                 c[i] += seen * h[i];
             }
         }
         #[allow(clippy::cast_precision_loss)]
         let share = 4.0 * core::f64::consts::PI / self.maps.len() as f64;
+        c.map(|v| v * share)
+    }
+
+    /// The sun of a texel whose samples are `seen`, each a point and its
+    /// normal, and the normal it is shaded by, their mean; `None` without
+    /// samples. It is their visibility on average, scaled so that the
+    /// light the texel takes from the suns above the horizon, shaded as a
+    /// renderer shades it ([`raster::Texture::sunlit`]), is theirs on
+    /// average. Shaded by one normal, their mean made full length, leaves
+    /// facing every way took the sun as if all faced it: a conifer's
+    /// cards drew a quarter lighter than the tree, its far impostor half
+    /// again, and the nearest sample's sun lit the texel as the outermost
+    /// leaf.
+    fn fitted(&self, seen: &[(Vec3, Vec3)]) -> Option<([f32; 4], Vec3)> {
+        if seen.is_empty() {
+            return None;
+        }
+        let mut mean = [0.0; SUN_DIRECTIONS];
+        let mut light = 0.0;
+        let mut normal = Vec3::ZERO;
+        for &(p, n) in seen {
+            for (sum, (d, seen)) in mean.iter_mut().zip(self.seen(p, n)) {
+                *sum += seen;
+                if d.y > 0.0 {
+                    light += raster::card_light(n, d) * seen;
+                }
+            }
+            normal += n;
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let count = seen.len() as f64;
+        let normal = normal.normalize_or(seen[0].1);
+        let c = self.project(
+            self.maps
+                .iter()
+                .zip(mean)
+                .map(|((d, _), m)| (*d, m / count)),
+        );
+        let shaded: f64 = self
+            .maps
+            .iter()
+            .filter(|(d, _)| d.y > 0.0)
+            .map(|(d, _)| {
+                let h = raster::harmonics(*d);
+                let sun = (0..4).map(|i| c[i] * h[i]).sum::<f64>().clamp(0.0, 1.0);
+                raster::card_light(normal, *d) * sun
+            })
+            .sum();
+        let scale = if shaded > 1e-9 {
+            light / count / shaded
+        } else {
+            1.0
+        };
         #[allow(clippy::cast_possible_truncation)]
-        c.map(|v| (v * share) as f32)
+        Some((c.map(|v| (v * scale) as f32), normal))
+    }
+
+    /// The four spherical-harmonic coefficients of the sun's visibility at
+    /// `p` on a surface facing `normal`.
+    fn visibility(&self, p: Vec3, normal: Vec3) -> [f32; 4] {
+        #[allow(clippy::cast_possible_truncation)]
+        self.project(self.seen(p, normal)).map(|v| v as f32)
     }
 }
