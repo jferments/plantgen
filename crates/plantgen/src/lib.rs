@@ -1263,4 +1263,7 @@ pub mod venation;
 /// "narrow open head"), and `Betula` states `crown_see_through` 0.3 from
 /// six photographs. Oregon ash takes Silvics' typical height (21 m) and
 /// its lost leader: open-grown, a short trunk divides into large limbs.
-pub const GENERATOR_REVISION: u32 = 167;
+/// 168: birch short shoots go on leafing for 20 years (`short_shoot_years`,
+/// Ishihara 2013's Betula axis data), not the library's 10, so a birch
+/// crown is leafy down its sides instead of a cap over a bare broom.
+pub const GENERATOR_REVISION: u32 = 168;
