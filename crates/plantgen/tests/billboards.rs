@@ -153,7 +153,7 @@ fn cards_stay_within_the_plant() {
     for id in SPECIES {
         let (height, reach, plants) = carded(id);
         for (tier, plant) in TIERS.iter().zip(&plants) {
-            for p in &plant.cards.positions {
+            for (p, c) in plant.cards.positions.iter().zip(&plant.cards.colors) {
                 let (x, y, z) = (f64::from(p[0]), f64::from(p[1]), f64::from(p[2]));
                 // A card's outline may grow past its leaves by a little
                 // where its corners are cut ([`CORNERS`]).
@@ -163,8 +163,19 @@ fn cards_stay_within_the_plant() {
                     tier.name,
                     x.hypot(z)
                 );
+                // A card turned to the eye's height holds its parts as
+                // seen from every height, from above too: as it stands
+                // before it turns, a low clump's may reach below the
+                // ground, where its pictures from the side are empty.
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let picture = &plant.pictures[c[3] as usize];
+                let low = if matches!(picture.turn, Turn::Heights { .. }) {
+                    -height * 0.25
+                } else {
+                    -height * 0.1
+                };
                 assert!(
-                    (-height * 0.1..=height * 1.25).contains(&y),
+                    (low..=height * 1.25).contains(&y),
                     "{id} {}: a card corner at {y:.3} m, the plant is {height:.3} m",
                     tier.name
                 );
@@ -281,9 +292,16 @@ fn a_yarrows_corymbs_are_seen_from_every_way() {
         .collect();
     assert!(!heads.is_empty(), "no head drawn from every way");
     assert!(low.stats.cards <= TIERS[0].cards(height));
+    // A clump turned to the eye ([`HEIGHTS`]) has a picture from each.
+    let turned = low
+        .pictures
+        .iter()
+        .enumerate()
+        .filter(|(i, p)| matches!(p.turn, Turn::Heights { first, .. } if first == *i))
+        .count();
     assert_eq!(
         low.pictures.len(),
-        low.stats.cards + heads.len() * (views - 1),
+        low.stats.cards + heads.len() * (views - 1) + turned * (HEIGHTS.len() - 1),
         "one card for a head's views"
     );
     // Seen level, its flowers stand on rays: the lower half of the
