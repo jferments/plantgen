@@ -469,7 +469,25 @@ pub fn build_capped(
     sticks: Option<usize>,
 ) -> PlantMesh {
     let (mesh, _) = build_shaded(
-        graph, looks, bodies, appearance, lod, level, 0.0, parts, sticks, false,
+        graph, looks, bodies, appearance, lod, level, 0.0, parts, sticks, false, true,
+    );
+    mesh
+}
+
+/// [`build`] without its organ cards: the wood alone, as the baked-card
+/// tiers take their tubes from it (`crate::billboards`), at a fraction of
+/// the cost for a level that merges its organs (`cluster_cards`).
+#[must_use]
+pub(crate) fn build_wood(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    lod: &LodSpec,
+    level: usize,
+) -> PlantMesh {
+    let (mesh, _) = build_shaded(
+        graph, looks, bodies, appearance, lod, level, 0.0, None, None, false, false,
     );
     mesh
 }
@@ -495,14 +513,15 @@ pub fn build_unshaded(
     sticks: Option<usize>,
 ) -> (PlantMesh, Vec<f32>) {
     build_shaded(
-        graph, looks, bodies, appearance, lod, level, 0.0, parts, sticks, true,
+        graph, looks, bodies, appearance, lod, level, 0.0, parts, sticks, true, true,
     )
 }
 
 /// [`build_capped`], with the bark's shade in its colour, or kept `apart`
 /// with one shade per wood vertex (see [`build_unshaded`]); empty unless
 /// apart. Fleshy bodies are drawn `along` of the way to the next level's
-/// detail (`crate::body::build_between`).
+/// detail (`crate::body::build_between`). Without `organs` it draws no
+/// organ cards.
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn build_shaded(
     graph: &PlantGraph,
@@ -515,6 +534,7 @@ pub(crate) fn build_shaded(
     parts: Option<&[bool]>,
     sticks: Option<usize>,
     apart: bool,
+    organs: bool,
 ) -> (PlantMesh, Vec<f32>) {
     // Leaves that face out from their crown turn before anything is
     // drawn on them.
@@ -574,7 +594,9 @@ pub(crate) fn build_shaded(
             stem_tubes(graph, appearance, lod, hairs, &mut mesh.hair_tubes);
         }
     }
-    mesh.cards = cards(graph, looks, &solid, twists, appearance.variation, lod);
+    if organs {
+        mesh.cards = cards(graph, looks, &solid, twists, appearance.variation, lod);
+    }
     // Bent cards first, so a renderer draws them as one range.
     let (mut bent, flat): (Vec<Card>, Vec<Card>) =
         mesh.cards.drain(..).partition(|card| !card.bend.is_flat());

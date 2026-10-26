@@ -1186,7 +1186,7 @@ pub fn build_from(
     // texel wide they would cover them, and ivy's cards came out brown.
     let climbing = form == GrowthForm::Vine;
     let coarse_at = |keep: f64| {
-        mesh::build(
+        mesh::build_wood(
             graph,
             looks,
             bodies,

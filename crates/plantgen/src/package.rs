@@ -1490,6 +1490,7 @@ pub(crate) fn level_mesh(
             Some(&inputs.part_types),
             sticks,
             unshaded,
+            true,
         )
     };
     let mut level_mesh = build(None);
