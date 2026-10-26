@@ -1266,4 +1266,11 @@ pub mod venation;
 /// 168: birch short shoots go on leafing for 20 years (`short_shoot_years`,
 /// Ishihara 2013's Betula axis data), not the library's 10, so a birch
 /// crown is leafy down its sides instead of a cap over a bare broom.
-pub const GENERATOR_REVISION: u32 = 168;
+/// 169: card tiers. A crown's card is also baked from 45 degrees above
+/// behind (`billboards::HEIGHTS`), so the far side of a crown shows its
+/// clumps' tops from above, and a turning shader picks, of two pictures
+/// as near the eye's height, the one on its side; a crown's level spray
+/// turns to the eye; and a texel's sunlight is its samples' on average,
+/// its normal's spread kept (Toksvig 2005), so big crowns' cards and far
+/// impostors no longer draw up to 70 per cent lighter than the tree.
+pub const GENERATOR_REVISION: u32 = 169;

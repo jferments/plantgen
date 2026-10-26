@@ -997,7 +997,7 @@ impl Surface<'_> {
         });
         let direct = normal.dot(lighting.sun).max(0.0) * lit;
         let through = if matches!(self.material, Material::Card | Material::Baked) {
-            (-normal.dot(lighting.sun)).max(0.0) * lit * 0.35
+            (-normal.dot(lighting.sun)).max(0.0) * lit * THROUGH
         } else {
             0.0
         };
@@ -1119,6 +1119,19 @@ fn draw(
     VIEW_CORNERS.set(views);
 }
 
+/// The share of the sun a leaf or baked card lets through to its shaded
+/// face.
+pub const THROUGH: f64 = 0.35;
+
+/// How much of a sun along `sun` a baked card's texel facing `normal`
+/// takes, wholly seen: on its face, or let through from behind
+/// ([`THROUGH`]).
+#[must_use]
+pub fn card_light(normal: Vec3, sun: Vec3) -> f64 {
+    let along = normal.dot(sun);
+    along.max(0.0) + (-along).max(0.0) * THROUGH
+}
+
 /// A picture baked from nearer straight up than this cosine lies on the
 /// ground ([`Turn::Heights`]).
 const STRAIGHT_UP: f64 = 0.999;
@@ -1186,11 +1199,19 @@ fn turn_cards(mesh: &Mesh, templates: &Templates, camera: &Camera, forward: Vec3
                 };
                 // The nearest height; of two as near, in front and behind,
                 // the one on the eye's side, the first of equals.
-                let least = pictures().map(|(_, t)| off(t)).fold(f64::INFINITY, f64::min);
+                let least = pictures()
+                    .map(|(_, t)| off(t))
+                    .fold(f64::INFINITY, f64::min);
                 let along = |t: &Texture| vec3(t.seen_from).dot(toward);
                 let nearest = pictures()
                     .filter(|(_, t)| off(t) <= least + HEIGHT_TIE)
-                    .reduce(|best, next| if along(next.1) > along(best.1) { next } else { best });
+                    .reduce(|best, next| {
+                        if along(next.1) > along(best.1) {
+                            next
+                        } else {
+                            best
+                        }
+                    });
                 if let Some((v, t)) = nearest {
                     #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
                     {

@@ -3408,7 +3408,7 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         extent: [0.0; 3],
         seen_from: shot.normal.to_f32(),
     };
-    let s = LIT_SUPERSAMPLE;
+    let per = LIT_SUPERSAMPLE;
     // The point `distance` from the eye seen at `(u, v)` on the frame.
     let at_depth = |u: f64, v: f64, distance: f32| {
         // A texel only partly covered may have no depth: it lies on the
@@ -3424,12 +3424,8 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
     // How much sun reaches each texel through the whole plant, from
     // every side: on its card a leaf no longer lies in the crown's
     // shade, and a shell of cards casts too thin a shadow on itself.
-    // It is its samples' on average, each seen where it lies, and their
-    // normals' mean keeps its length, shorter the more ways they face:
-    // the nearest sample's sun and the mean made full length, as if all
-    // faced one way, made a conifer's cards a quarter lighter than the
-    // tree and its far impostor half again (Toksvig 2005, "Mipmapping
-    // normal maps", J. Graphics Tools 10(3)).
+    // It is its samples' ([`Sky::fitted`]).
+    let mut seen = Vec::with_capacity(per * per);
     for y in 0..th {
         for x in 0..tw {
             let at = y * tw + x;
@@ -3439,42 +3435,32 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
             if picture.color[at][3] <= 0.0 {
                 continue;
             }
-            let mut normal = Vec3::ZERO;
-            let mut sun = [0.0_f32; 4];
-            let mut covered = 0_u32;
-            for sy in 0..s {
-                for sx in 0..s {
-                    let (row, column) = ((th - 1 - y) * s + sy, x * s + sx);
-                    let k = row * tw * s + column;
-                    if !samples.depth[k].is_finite() {
-                        continue;
+            seen.clear();
+            for row in (th - 1 - y) * per..(th - y) * per {
+                for column in x * per..(x + 1) * per {
+                    let k = row * tw * per + column;
+                    if samples.depth[k].is_finite() {
+                        #[allow(clippy::cast_precision_loss)]
+                        let (u, v) = (
+                            (column as f64 + 0.5) / (tw * per) as f64,
+                            1.0 - (row as f64 + 0.5) / (th * per) as f64,
+                        );
+                        seen.push((
+                            at_depth(u, v, samples.depth[k]),
+                            v3(samples.normal[k]).normalize_or(shot.normal),
+                        ));
                     }
-                    #[allow(clippy::cast_precision_loss)]
-                    let (u, v) = (
-                        (column as f64 + 0.5) / (tw * s) as f64,
-                        1.0 - (row as f64 + 0.5) / (th * s) as f64,
-                    );
-                    let n = v3(samples.normal[k]).normalize_or(shot.normal);
-                    let seen = sky.visibility(at_depth(u, v, samples.depth[k]), n);
-                    for (sum, c) in sun.iter_mut().zip(seen) {
-                        *sum += c;
-                    }
-                    normal += n;
-                    covered += 1;
                 }
             }
-            if covered == 0 {
+            if let Some((sun, normal)) = sky.fitted(&seen) {
+                picture.sun[at] = sun;
+                picture.normal[at] = normal.to_f32();
+            } else {
                 #[allow(clippy::cast_precision_loss)]
                 let (u, v) = ((x as f64 + 0.5) / tw as f64, (y as f64 + 0.5) / th as f64);
-                let n = v3(picture.normal[at]).normalize_or(shot.normal);
-                picture.sun[at] = sky.visibility(at_depth(u, v, image.depth[from]), n);
-                continue;
+                let normal = v3(picture.normal[at]).normalize_or(shot.normal);
+                picture.sun[at] = sky.visibility(at_depth(u, v, image.depth[from]), normal);
             }
-            let length = normal.length();
-            picture.normal[at] = normal.normalize_or(shot.normal).to_f32();
-            #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
-            let share = (length / f64::from(covered)).min(1.0) as f32 / covered as f32;
-            picture.sun[at] = sun.map(|c| c * share);
         }
     }
     picture
@@ -3894,27 +3880,92 @@ impl Sky {
         Self { maps }
     }
 
-    /// The four spherical-harmonic coefficients of the sun's visibility at
-    /// `p` on a surface facing `normal` (projected from the maps, each
-    /// direction an equal share of the sphere).
-    fn visibility(&self, p: Vec3, normal: Vec3) -> [f32; 4] {
+    /// Whether the sun along each of the maps' directions reaches `p`, on
+    /// a surface facing `normal`: 1 or 0, in the maps' order.
+    fn seen(&self, p: Vec3, normal: Vec3) -> impl Iterator<Item = (Vec3, f64)> + '_ {
+        // Seen from either face: a leaf is lit through from behind.
+        self.maps
+            .iter()
+            .map(move |(d, map)| (*d, map.visibility(p, normal, *d)))
+    }
+
+    /// The four spherical-harmonic coefficients of `seen`, one value for
+    /// each map's direction, each an equal share of the sphere.
+    fn project(&self, seen: impl Iterator<Item = (Vec3, f64)>) -> [f64; 4] {
         if self.maps.is_empty() {
             // Seen from everywhere: 1 in every direction.
-            #[allow(clippy::cast_possible_truncation)]
-            return [(1.0 / raster::harmonics(Vec3::Y)[0]) as f32, 0.0, 0.0, 0.0];
+            return [1.0 / raster::harmonics(Vec3::Y)[0], 0.0, 0.0, 0.0];
         }
         let mut c = [0.0; 4];
-        for (d, map) in &self.maps {
-            // Seen from either face: a leaf is lit through from behind.
-            let seen = map.visibility(p, normal, *d);
-            let h = raster::harmonics(*d);
+        for (d, seen) in seen {
+            let h = raster::harmonics(d);
             for i in 0..4 {
                 c[i] += seen * h[i];
             }
         }
         #[allow(clippy::cast_precision_loss)]
         let share = 4.0 * core::f64::consts::PI / self.maps.len() as f64;
+        c.map(|v| v * share)
+    }
+
+    /// The sun of a texel whose samples are `seen`, each a point and its
+    /// normal, and the normal it is shaded by, their mean; `None` without
+    /// samples. It is their visibility on average, scaled so that the
+    /// light the texel takes from the suns above the horizon, shaded as a
+    /// renderer shades it ([`raster::Texture::sunlit`]), is theirs on
+    /// average. Shaded by one normal, their mean made full length, leaves
+    /// facing every way took the sun as if all faced it: a conifer's
+    /// cards drew a quarter lighter than the tree, its far impostor half
+    /// again, and the nearest sample's sun lit the texel as the outermost
+    /// leaf.
+    fn fitted(&self, seen: &[(Vec3, Vec3)]) -> Option<([f32; 4], Vec3)> {
+        if seen.is_empty() {
+            return None;
+        }
+        let mut mean = [0.0; SUN_DIRECTIONS];
+        let mut light = 0.0;
+        let mut normal = Vec3::ZERO;
+        for &(p, n) in seen {
+            for (sum, (d, seen)) in mean.iter_mut().zip(self.seen(p, n)) {
+                *sum += seen;
+                if d.y > 0.0 {
+                    light += raster::card_light(n, d) * seen;
+                }
+            }
+            normal += n;
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let count = seen.len() as f64;
+        let normal = normal.normalize_or(seen[0].1);
+        let c = self.project(
+            self.maps
+                .iter()
+                .zip(mean)
+                .map(|((d, _), m)| (*d, m / count)),
+        );
+        let shaded: f64 = self
+            .maps
+            .iter()
+            .filter(|(d, _)| d.y > 0.0)
+            .map(|(d, _)| {
+                let h = raster::harmonics(*d);
+                let sun = (0..4).map(|i| c[i] * h[i]).sum::<f64>().clamp(0.0, 1.0);
+                raster::card_light(normal, *d) * sun
+            })
+            .sum();
+        let scale = if shaded > 1e-9 {
+            light / count / shaded
+        } else {
+            1.0
+        };
         #[allow(clippy::cast_possible_truncation)]
-        c.map(|v| (v * share) as f32)
+        Some((c.map(|v| (v * scale) as f32), normal))
+    }
+
+    /// The four spherical-harmonic coefficients of the sun's visibility at
+    /// `p` on a surface facing `normal`.
+    fn visibility(&self, p: Vec3, normal: Vec3) -> [f32; 4] {
+        #[allow(clippy::cast_possible_truncation)]
+        self.project(self.seen(p, normal)).map(|v| v as f32)
     }
 }
