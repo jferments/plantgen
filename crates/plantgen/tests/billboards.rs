@@ -214,7 +214,6 @@ fn the_far_impostor_is_one_card_seen_from_every_way() {
             looks,
             bodies,
             &spec.appearance,
-            spec.growth_form,
             templates,
             &STANDARD.lods,
             &FAR,

@@ -646,7 +646,8 @@ fn fit_plane(
         // outline: it turns to the eye, as leaf cards do ("leaves that
         // always billboard (face) the camera", SpeedTree Modeler
         // glossary). Leaves on herbs' shoots and in tufts keep their
-        // card, since their shapes and the way they face show.
+        // card, since their shapes and the way they face show, unless
+        // turned they draw their cover closer ([`turned_covers_closer`]).
         let leaves: Vec<&&Element> = members.iter().filter(|e| !e.wood).collect();
         let leaf_area: f64 = leaves.iter().map(|e| e.area).sum();
         let leaf_length = leaves
@@ -667,7 +668,69 @@ fn fit_plane(
             outward
         }
     };
+    // Any clump turns to the eye where that draws its cover closer to
+    // its parts' than a fixed card does: a herb's leaves held every way
+    // round a stem drawn on a fixed card hide a third less of the sky
+    // from the side than the plant, as the card goes edge on.
+    if !flat
+        && turn == Turn::Fixed
+        && normal.y.abs() < LEVEL
+        && turned_covers_closer(members, normal)
+    {
+        turn = Turn::Facing;
+    }
     (centre, normal, flat, turn)
+}
+
+/// The elevations, in degrees, a clump's cover is compared from
+/// ([`turned_covers_closer`]): from the side and from 45° above, as the
+/// plants are seen and as [`HEIGHTS`] bakes them.
+const COVER_ELEVATIONS: [f64; 2] = [0.0, 45.0];
+
+/// How many ways round a clump its cover is compared from.
+const COVER_AZIMUTHS: u32 = 8;
+
+/// Whether a card baked facing `normal` and turned to the eye draws
+/// about as much of `members` as they cover, from round the clump at
+/// [`COVER_ELEVATIONS`], more closely than the same card held fixed.
+/// Each part covers its area times how squarely it faces the eye (a
+/// stem, times how square to it the eye looks). A fixed card shows the
+/// parts as seen along `normal`, foreshortened as the eye moves round;
+/// a turned one shows them as seen from the eye's height at the card's
+/// own bearing ([`height_ways`]), whatever the eye's bearing. The first
+/// is right for a sheet of parts, the second for a clump that looks
+/// alike from every side.
+fn turned_covers_closer(members: &[&Element], normal: Vec3) -> bool {
+    let cover = |v: Vec3| -> f64 {
+        members
+            .iter()
+            .map(|e| {
+                let c = e.facing.dot(v).abs();
+                e.area
+                    * if e.wood {
+                        (1.0 - c * c).max(0.0).sqrt()
+                    } else {
+                        c
+                    }
+            })
+            .sum()
+    };
+    let level = Vec3::new(normal.x, 0.0, normal.z).normalize_or(Vec3::X);
+    let baked = cover(normal);
+    let (mut fixed, mut turned) = (0.0, 0.0);
+    for elevation in COVER_ELEVATIONS {
+        let e = crate::math::radians(elevation);
+        let (cos, sin) = (crate::math::cos(e), crate::math::sin(e));
+        let seen = cover((level * cos + Vec3::Y * sin).normalize_or(Vec3::Y));
+        for k in 0..COVER_AZIMUTHS {
+            let a = std::f64::consts::TAU * f64::from(k) / f64::from(COVER_AZIMUTHS);
+            let v = Vec3::new(crate::math::cos(a) * cos, sin, crate::math::sin(a) * cos);
+            let truth = cover(v);
+            fixed += (baked * normal.dot(v).abs() - truth).abs();
+            turned += (seen - truth).abs();
+        }
+    }
+    turned < fixed
 }
 
 /// Within this share of their mean distance from a clump's upright axis
@@ -1200,10 +1263,7 @@ pub fn tiers(
             (tier.name, plant)
         })
         .collect();
-    out.push((
-        FAR.name,
-        impostor_from(&from, graph, looks, appearance, form, templates, &FAR),
-    ));
+    out.push((FAR.name, impostor_from(&from, templates, &FAR)));
     out
 }
 
@@ -1256,9 +1316,6 @@ pub fn build_from(
     // hid a quarter less of the sky than the full tree (`plantc tiers`
     // cover); turned to the eye, about as much.
     let turning = crowned;
-    // A climber's thin stems lie under its leaves on its host: drawn a
-    // texel wide they would cover them, and ivy's cards came out brown.
-    let climbing = form == GrowthForm::Vine;
     let coarse_at = |keep: f64| {
         mesh::build_wood(
             graph,
@@ -1986,224 +2043,71 @@ pub fn build_from(
         });
     }
 
+    // Each part as it is, however much thinner than a texel: the picture
+    // keeps its coverage ([`keep_coverage`]). Widened to a texel and
+    // turned face on, a moss's scales hid five times the sky the moss
+    // does, and a tussock's minimal cards a third more than it; so did
+    // thin stems drawn as strips a texel wide.
+    let draw = |g: usize| -> Baked {
+        let cards = PlantMesh {
+            cards: group_cards[g].clone(),
+            ..PlantMesh::default()
+        }
+        .card_mesh();
+        let mut wood = Mesh::default();
+        for &(t, _, _) in &group_triangles[g] {
+            copy_triangle(&mut wood, &source.wood, t);
+        }
+        for &t in &group_solids[g] {
+            copy_triangle(&mut wood, &source.wood, t);
+        }
+        Baked { cards, wood }
+    };
+    // Each card's bounds are those of what it draws.
+    for plane in &mut planes {
+        let crown = crowned && !plane.flat && plane.group >= headed;
+        let drawn = draw(plane.group);
+        let mut low = (f64::INFINITY, f64::INFINITY);
+        let mut high = (f64::NEG_INFINITY, f64::NEG_INFINITY);
+        let reach = if crown && !drawn.cards.indices.is_empty() {
+            &[][..]
+        } else {
+            &drawn.wood.positions[..]
+        };
+        // A turned card's frame holds its parts from every height, the
+        // same about its middle in each, so one outline serves all.
+        let ups: Vec<Vec3> = match plane.heights {
+            Some((level, _)) => height_ways(level).iter().map(|w| w.1).collect(),
+            None => vec![plane.up],
+        };
+        for p in drawn.cards.positions.iter().chain(reach) {
+            let d = v3(*p) - plane.centre;
+            let x = d.dot(plane.right);
+            for up in &ups {
+                let y = d.dot(*up);
+                low = (low.0.min(x), low.1.min(y));
+                high = (high.0.max(x), high.1.max(y));
+            }
+        }
+        if plane.heights.is_none() {
+            low.1 = lowest(plane.centre, plane.up, low.1).min(high.1);
+        } else {
+            // Even about its middle across, as seen from behind its
+            // right is reversed.
+            let m = high.0.max(-low.0);
+            (low.0, high.0) = (-m, m);
+        }
+        plane.low = low;
+        plane.high = high;
+    }
     // Texels per metre, the same on every card.
     let area: f64 = planes
         .iter()
         .map(|p| ((p.high.0 - p.low.0) * (p.high.1 - p.low.1)).max(1e-8))
         .sum();
     #[allow(clippy::cast_precision_loss)]
-    let mut density = (tier.texels(height) as f64 / area).sqrt();
-
-    // Nothing thinner than a texel: narrower blades are widened to one,
-    // and thinner stems drawn as strips a texel wide in their own colour,
-    // so a culm or a blade stays a line in the picture instead of
-    // breaking into dots.
-    let mut texel = 1.0 / density;
-    let draw = |plane: &Plane, texel: f64, lit: bool| -> Baked {
-        let g = plane.group;
-        // In a crown's mass, as with its twigs, thin flowers and fruit
-        // (catkins, cones) keep their own width: a texel wide they would
-        // stand out round its edge. Its leaves and needles are what it is
-        // made of, and stay at least a texel wide.
-        let crown = crowned && !plane.flat && g >= headed;
-        let wide = |card: &Card| {
-            let mut card = *card;
-            #[allow(clippy::cast_possible_truncation)]
-            let least = (texel * MIN_TEXELS) as f32;
-            let flower = looks.get(usize::from(card.template)).is_some_and(signature);
-            if !(crown && flower) {
-                card.width = card.width.max(least);
-            }
-            card
-        };
-        let widened: Vec<Card> = group_cards[g]
-            .iter()
-            .map(|card| {
-                let mut card = wide(card);
-                if !plane.flat {
-                    // A clump's picture shows each leaf at least
-                    // [`FACE_ON_TEXELS`] wide, turned toward face on as
-                    // little as that takes, as crown cards are painted: a
-                    // leaf seen edge on from the card would be thinner
-                    // than a texel and the clump would read as bare
-                    // stripes, while a broad leaf turned all the way
-                    // would show wider than it is from most sides. Its
-                    // place and size stay. It only turns about its own
-                    // midrib, so its tip stays where it grows.
-                    let heading = v3(card.heading).normalize_or(Vec3::Y);
-                    let toward = (plane.normal - heading * plane.normal.dot(heading))
-                        .normalize_or_else(|| any_perpendicular(heading));
-                    let aside = heading.cross(toward);
-                    let now = heading.cross(v3(card.left)).normalize_or(toward);
-                    let width = f64::from(card.width).max(1e-9);
-                    let least = (texel * FACE_ON_TEXELS / width).min(1.0);
-                    let cos = now.dot(toward).abs();
-                    if cos < least {
-                        let sin = (1.0 - least * least).max(0.0).sqrt();
-                        let side = if now.dot(aside) < 0.0 { -1.0 } else { 1.0 };
-                        let normal = toward * least + aside * (sin * side);
-                        // heading × left is the leaf's normal.
-                        card.left = normal.cross(heading).normalize_or(v3(card.left)).to_f32();
-                    }
-                }
-                card
-            })
-            .collect();
-        let cards = PlantMesh {
-            cards: widened,
-            ..PlantMesh::default()
-        }
-        .card_mesh();
-        let lit = (lit && !plane.flat).then(|| {
-            // But each leaf keeps its own normal in the picture, so it
-            // takes the light as it would in the crown: turned face on,
-            // a clump's leaves would all face the sun together and the
-            // sunny side of a crown would draw as bright flat plates.
-            PlantMesh {
-                cards: group_cards[g].iter().map(wide).collect(),
-                ..PlantMesh::default()
-            }
-            .card_mesh()
-        });
-        let mut wood = Mesh::default();
-        let mut strips = Vec::new();
-        for &(t, segment, barked) in &group_triangles[g] {
-            if !barked || graph.segments[segment].radius * 2.0 >= texel * MIN_TEXELS {
-                copy_triangle(&mut wood, &source.wood, t);
-            }
-        }
-        for &t in &group_solids[g] {
-            copy_triangle(&mut wood, &source.wood, t);
-        }
-        // Every thin segment of the group thinner than a texel is a strip:
-        // a tube's triangles span many segments, so not every segment has
-        // its own.
-        for (s, segment) in graph.segments.iter().enumerate() {
-            let e = wood_element[s];
-            // In a crown's mass the twigs lie among the leaves: drawn a
-            // texel wide they would stand out round its edge, so they
-            // keep their own width and only those as wide as a texel
-            // show.
-            if e != usize::MAX
-                && group[e] == g
-                && !crown
-                && !climbing
-                && segment.radius * 2.0 < texel * MIN_TEXELS
-            {
-                strips.push(s);
-            }
-        }
-        for segment in strips {
-            let s = &graph.segments[segment];
-            // Its own colour, or the nearest coloured one it grows from.
-            let mut from = segment;
-            let mut steps = 0;
-            while segment_colour[from].1 == 0.0 && steps < 256 {
-                match graph.segments[from].parent {
-                    Some(parent) => from = parent as usize,
-                    None => break,
-                }
-                steps += 1;
-            }
-            let (sum, count) = segment_colour[from];
-            let colour = if count > 0.0 {
-                sum.map(|c| c / count)
-            } else {
-                [
-                    f64::from(appearance.bark[0]),
-                    f64::from(appearance.bark[1]),
-                    f64::from(appearance.bark[2]),
-                ]
-            };
-            let along = s.end - s.start;
-            let side = along
-                .cross(plane.normal)
-                .normalize_or_else(|| any_perpendicular(along))
-                * (texel * MIN_TEXELS * 0.5);
-            let first = u32::try_from(wood.positions.len()).unwrap_or(u32::MAX);
-            for corner in [s.start - side, s.start + side, s.end + side, s.end - side] {
-                #[allow(clippy::cast_possible_truncation)]
-                wood.push(Vertex {
-                    position: corner,
-                    normal: plane.normal,
-                    uv: [0.0, 0.0],
-                    color: [colour[0] as f32, colour[1] as f32, colour[2] as f32, 1.0],
-                    born: s.born,
-                    shed: s.shed,
-                    level: 1,
-                    segment: mesh::NO_SEGMENT,
-                });
-            }
-            // Both windings: the strip shows from either side.
-            wood.indices.extend_from_slice(&[
-                first,
-                first + 1,
-                first + 2,
-                first,
-                first + 2,
-                first + 3,
-                first,
-                first + 2,
-                first + 1,
-                first,
-                first + 3,
-                first + 2,
-            ]);
-        }
-        Baked { cards, lit, wood }
-    };
-    // Twice, the second time at the density of the bounds the first
-    // drew: leaves widened to a texel, and the thin wood left out, change
-    // them.
-    for pass in 0..2 {
-        if pass == 1 {
-            let area: f64 = planes
-                .iter()
-                .map(|p| ((p.high.0 - p.low.0) * (p.high.1 - p.low.1)).max(1e-8))
-                .sum();
-            #[allow(clippy::cast_precision_loss)]
-            {
-                density = (tier.texels(height) as f64 / area).sqrt();
-            }
-            texel = 1.0 / density;
-        }
-        for plane in &mut planes {
-            let crown = crowned && !plane.flat && plane.group >= headed;
-            let drawn = draw(plane, texel, false);
-            let mut low = (f64::INFINITY, f64::INFINITY);
-            let mut high = (f64::NEG_INFINITY, f64::NEG_INFINITY);
-            let reach = if crown && !drawn.cards.indices.is_empty() {
-                &[][..]
-            } else {
-                &drawn.wood.positions[..]
-            };
-            // A turned card's frame holds its parts from every height, the
-            // same about its middle in each, so one outline serves all.
-            let ups: Vec<Vec3> = match plane.heights {
-                Some((level, _)) => height_ways(level).iter().map(|w| w.1).collect(),
-                None => vec![plane.up],
-            };
-            for p in drawn.cards.positions.iter().chain(reach) {
-                let d = v3(*p) - plane.centre;
-                let x = d.dot(plane.right);
-                for up in &ups {
-                    let y = d.dot(*up);
-                    low = (low.0.min(x), low.1.min(y));
-                    high = (high.0.max(x), high.1.max(y));
-                }
-            }
-            if plane.heights.is_none() {
-                low.1 = lowest(plane.centre, plane.up, low.1).min(high.1);
-            } else {
-                // Even about its middle across, as seen from behind its
-                // right is reversed.
-                let m = high.0.max(-low.0);
-                (low.0, high.0) = (-m, m);
-            }
-            plane.low = low;
-            plane.high = high;
-        }
-    }
+    let density = (tier.texels(height) as f64 / area).sqrt();
+    let texel = 1.0 / density;
 
     // The pictures' margins and rounding are paid from the same budget.
     let budget = tier.texels(height);
@@ -2265,10 +2169,9 @@ pub fn build_from(
     // they are joined in order: the same pictures however many bake them.
     let bake_plane = |plane: &Plane| -> (CardPlant, f64, f64) {
         let mut out = CardPlant::default();
-        let drawn_texel = texel;
         let (w, h) = (plane.high.0 - plane.low.0, plane.high.1 - plane.low.1);
         if plane.views {
-            let drawn = draw(plane, texel, true);
+            let drawn = draw(plane.group);
             let (side, _) = tile(w.max(h), w.max(h), tile_density, tier.most_texels);
             let mid = plane.centre
                 + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
@@ -2288,20 +2191,7 @@ pub fn build_from(
         #[allow(clippy::cast_precision_loss)]
         let (fw, fh) = (texel * tw as f64, texel * th as f64);
         if let Some((level, extents)) = plane.heights {
-            // Each drawn for its own way: its leaves turned toward face on
-            // and its thin stems laid across as seen from there. Their
-            // light, from the leaves as they grow, is the same for all.
-            let mut first = true;
-            let drawn = height_ways(level).map(|(way, _, _)| {
-                draw(
-                    &Plane {
-                        normal: way,
-                        ..*plane
-                    },
-                    drawn_texel,
-                    std::mem::take(&mut first),
-                )
-            });
+            let drawn = draw(plane.group);
             let (covered, area) = add_heights(
                 &mut out,
                 &drawn,
@@ -2320,16 +2210,14 @@ pub fn build_from(
             );
             return (out, covered, area);
         }
-        let drawn = draw(plane, drawn_texel, true);
+        let drawn = draw(plane.group);
         let mid = plane.centre
             + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
             + plane.up * ((plane.low.1 + plane.high.1) * 0.5);
         let mut picture = bake(
             &Shot {
                 cards: &drawn.cards,
-                lit: drawn.lit.as_ref(),
                 wood: &drawn.wood,
-                strips: None,
                 mid,
                 right: plane.right,
                 up: plane.up,
@@ -2437,7 +2325,123 @@ pub fn build_from(
 /// Edges of parts the texels resolve are left alone, so outlines stay
 /// smooth. Only texels a part covers turn on: an empty texel has no
 /// colour, and only carries coverage across a gap.
+///
+/// A renderer reads coverage between texels before the test, and a
+/// texel turned on alone then passes only about 0.6 of itself: a moss's
+/// pictures, all scattered texels, hid two fifths less sky than the moss.
+/// So the thin parts' coverage is scaled, a few rounds, until the picture
+/// passes as much as its parts cover ([`drawn_coverage`]).
 fn keep_coverage(picture: &mut Texture) {
+    let alpha: Vec<f32> = picture.color.iter().map(|c| c[3]).collect();
+    let target: f64 = alpha.iter().map(|&a| f64::from(a)).sum();
+    if target <= 0.0 {
+        return;
+    }
+    let mut scale = 1.0_f32;
+    for _ in 0..COVERAGE_ROUNDS {
+        for (texel, &a) in picture.color.iter_mut().zip(&alpha) {
+            texel[3] = a;
+        }
+        dither(picture, scale);
+        let drawn = drawn_coverage(picture);
+        if drawn <= 0.0 || (drawn - target).abs() <= target * COVERAGE_CLOSE {
+            break;
+        }
+        #[allow(clippy::cast_possible_truncation)]
+        let next = (f64::from(scale) * target / drawn) as f32;
+        scale = next.clamp(1.0 / MOST_COVERAGE_SCALE, MOST_COVERAGE_SCALE);
+    }
+}
+
+/// Rounds [`keep_coverage`] takes at most to bring a picture's drawn cover
+/// to its parts'.
+const COVERAGE_ROUNDS: usize = 4;
+
+/// ... stopping once within this share of it.
+const COVERAGE_CLOSE: f64 = 0.02;
+
+/// ... and scaling its thin parts' coverage at most this many times
+/// either way.
+const MOST_COVERAGE_SCALE: f32 = 3.0;
+
+/// Samples along each side of a quarter texel [`drawn_coverage`] reads
+/// where the test passes only part of it.
+const DRAWN_SAMPLES: usize = 8;
+
+/// How many texels' worth of `picture` an alpha test at one half passes,
+/// its coverage read between the four nearest texels as a renderer
+/// filters a magnified texture (as [`Texture::sample`] does). A texel
+/// turned on alone passes only about 0.6 of itself so: the rest of its
+/// square reads below one half. Each quarter of a texel lies between
+/// the same four texel centres; it passes whole where all four pass,
+/// not at all where none does, and is sampled otherwise.
+fn drawn_coverage(picture: &Texture) -> f64 {
+    let (w, h) = (picture.width, picture.height);
+    let alpha = |x: i64, y: i64| {
+        #[allow(
+            clippy::cast_possible_wrap,
+            clippy::cast_sign_loss,
+            clippy::cast_possible_truncation
+        )]
+        let (x, y) = (
+            x.clamp(0, w as i64 - 1) as usize,
+            y.clamp(0, h as i64 - 1) as usize,
+        );
+        picture.color[y * w + x][3]
+    };
+    let n = DRAWN_SAMPLES;
+    #[allow(clippy::cast_precision_loss)]
+    let step = 0.5 / n as f32;
+    let mut passed = 0.0_f64;
+    for y in 0..h {
+        for x in 0..w {
+            #[allow(clippy::cast_possible_wrap)]
+            let (xi, yi) = (x as i64, y as i64);
+            for (qx, qy) in [(0, 0), (1, 0), (0, 1), (1, 1)] {
+                // The texel centres round this quarter, and where in
+                // the cell between them it starts.
+                let (x0, y0) = (xi + qx - 1, yi + qy - 1);
+                let corners = [
+                    alpha(x0, y0),
+                    alpha(x0 + 1, y0),
+                    alpha(x0, y0 + 1),
+                    alpha(x0 + 1, y0 + 1),
+                ];
+                if corners.iter().all(|&a| a >= 0.5) {
+                    passed += 0.25;
+                    continue;
+                }
+                if corners.iter().all(|&a| a < 0.5) {
+                    continue;
+                }
+                #[allow(clippy::cast_precision_loss)]
+                let (u0, v0) = (0.5 * (1 - qx) as f32, 0.5 * (1 - qy) as f32);
+                let mut inside = 0_usize;
+                for sy in 0..n {
+                    for sx in 0..n {
+                        #[allow(clippy::cast_precision_loss)]
+                        let (tx, ty) =
+                            (u0 + step * (sx as f32 + 0.5), v0 + step * (sy as f32 + 0.5));
+                        let a = corners[0] * (1.0 - tx) * (1.0 - ty)
+                            + corners[1] * tx * (1.0 - ty)
+                            + corners[2] * (1.0 - tx) * ty
+                            + corners[3] * tx * ty;
+                        inside += usize::from(a >= 0.5);
+                    }
+                }
+                #[allow(clippy::cast_precision_loss)]
+                {
+                    passed += 0.25 * inside as f64 / (n * n) as f64;
+                }
+            }
+        }
+    }
+    passed
+}
+
+/// [`keep_coverage`]'s error diffusion, its thin parts' coverage taken
+/// `scale` times.
+fn dither(picture: &mut Texture, scale: f32) {
     let (w, h) = (picture.width, picture.height);
     let cut = 0.5_f32;
     let on: Vec<bool> = picture.color.iter().map(|c| c[3] >= cut).collect();
@@ -2460,7 +2464,7 @@ fn keep_coverage(picture: &mut Texture) {
                 continue;
             }
             let alpha = picture.color[at][3];
-            let value = alpha + carried[at];
+            let value = alpha * scale + carried[at];
             let left = if value >= cut && alpha > 0.0 {
                 picture.color[at][3] = 1.0;
                 value - 1.0
@@ -2760,33 +2764,23 @@ pub const FAR: ImpostorTier = ImpostorTier {
 /// Build `graph` as an impostor ([`ImpostorTier`]), baked from the same
 /// full plant as [`build`]'s cards.
 #[must_use]
-#[allow(clippy::too_many_arguments)]
 pub fn impostor(
     graph: &PlantGraph,
     looks: &[Look],
     bodies: &[BodyLook],
     appearance: &Appearance,
-    form: GrowthForm,
     templates: &Templates,
     levels: &[LodSpec; 4],
     tier: &ImpostorTier,
 ) -> CardPlant {
     let from = Source::new(graph, looks, bodies, appearance, templates, levels);
-    impostor_from(&from, graph, looks, appearance, form, templates, tier)
+    impostor_from(&from, templates, tier)
 }
 
 /// [`impostor`] from `graph`'s [`Source`].
 #[must_use]
 #[allow(clippy::too_many_lines)]
-pub fn impostor_from(
-    from: &Source,
-    graph: &PlantGraph,
-    looks: &[Look],
-    appearance: &Appearance,
-    form: GrowthForm,
-    templates: &Templates,
-    tier: &ImpostorTier,
-) -> CardPlant {
+pub fn impostor_from(from: &Source, templates: &Templates, tier: &ImpostorTier) -> CardPlant {
     let (source, sky) = (&from.mesh, &from.sky);
     let grown = source.card_mesh();
     let items = [(&source.wood, Material::Opaque), (&grown, Material::Card)];
@@ -2800,133 +2794,20 @@ pub fn impostor_from(
         .chain(&source.wood.positions)
         .map(|p| (v3(*p) - centre).length())
         .fold(1e-3, f64::max);
-    // Nothing thinner than a texel, as on the cards ([`build`]), in a
-    // herb, a grass or a fern: leaves are widened to one, and thin stems
-    // (a grass's culms) drawn as strips a texel wide turned to each way,
-    // or the heads would float. A crown, a texel there tens of
-    // centimetres, is drawn as it grows: widened, its twigs would ring it
-    // in a halo and its leaves would fill it in solid.
-    let crowned = matches!(
-        form,
-        GrowthForm::ExcurrentTree
-            | GrowthForm::DecurrentTree
-            | GrowthForm::ScaleLeavedTree
-            | GrowthForm::Shrub
-    );
-    #[allow(clippy::cast_precision_loss)]
-    let texel = radius * 2.0 / tier.texels as f64;
-    // A tree's cards are gigabytes: kept as they grew, not copied.
-    let cards = if crowned {
-        grown
-    } else {
-        drop(grown);
-        PlantMesh {
-            cards: source
-                .cards
-                .iter()
-                .map(|card| {
-                    let mut card = *card;
-                    #[allow(clippy::cast_possible_truncation)]
-                    let least = (texel * MIN_TEXELS) as f32;
-                    card.width = card.width.max(least);
-                    card
-                })
-                .collect(),
-            ..PlantMesh::default()
-        }
-        .card_mesh()
-    };
-    let mut colour = vec![([0.0_f64; 3], 0.0_f64); graph.segments.len()];
-    for (i, c) in source.wood.colors.iter().enumerate() {
-        if let Some(s) = source.wood.segment(i)
-            && let Some((sum, count)) = colour.get_mut(s as usize)
-        {
-            for k in 0..3 {
-                sum[k] += f64::from(c[k]);
-            }
-            *count += 1.0;
-        }
-    }
-    // Only the free-standing stems that hold up flowers or seed heads
-    // ([`ribbon_axes`]): a vine's stems lie under its leaves, and drawn a
-    // texel wide they would cover them.
-    let thin: Vec<(usize, [f32; 3])> = if crowned {
-        Vec::new()
-    } else {
-        ribbon_axes(graph, looks, texel * MIN_TEXELS * 0.5, usize::MAX)
-            .into_iter()
-            .flatten()
-            .filter(|&i| graph.segments[i].end != graph.segments[i].start)
-            .map(|i| {
-                let mut from = i;
-                for _ in 0..256 {
-                    match graph.segments[from].parent {
-                        Some(parent) if colour[from].1 == 0.0 => from = parent as usize,
-                        _ => break,
-                    }
-                }
-                let (sum, count) = colour[from];
-                #[allow(clippy::cast_possible_truncation)]
-                let c = if count > 0.0 {
-                    sum.map(|c| (c / count) as f32)
-                } else {
-                    [appearance.bark[0], appearance.bark[1], appearance.bark[2]]
-                };
-                (i, c)
-            })
-            .collect()
-    };
-    let strips_facing = |way: Vec3| {
-        let mut strips = Mesh::default();
-        for &(i, c) in &thin {
-            let s = &graph.segments[i];
-            let along = s.end - s.start;
-            let side = along
-                .cross(way)
-                .normalize_or_else(|| any_perpendicular(along))
-                * (texel * MIN_TEXELS * 0.5);
-            let first = u32::try_from(strips.positions.len()).unwrap_or(u32::MAX);
-            for corner in [s.start - side, s.start + side, s.end + side, s.end - side] {
-                strips.push(Vertex {
-                    position: corner,
-                    normal: way,
-                    uv: [0.0, 0.0],
-                    color: [c[0], c[1], c[2], 1.0],
-                    born: s.born,
-                    shed: s.shed,
-                    level: 1,
-                    segment: mesh::NO_SEGMENT,
-                });
-            }
-            strips.indices.extend_from_slice(&[
-                first,
-                first + 1,
-                first + 2,
-                first,
-                first + 2,
-                first + 3,
-                first,
-                first + 2,
-                first + 1,
-                first,
-                first + 3,
-                first + 2,
-            ]);
-        }
-        strips
-    };
+    // Every part as it is, as on the cards ([`build`]): its pictures keep
+    // their coverage ([`keep_coverage`]). Leaves widened to a texel and
+    // culms drawn as strips a texel wide made a fescue's impostor hide
+    // nearly twice the sky the fescue does.
+    let cards = grown;
     let ways = ways_round(tier.around);
     let count = ways.len();
     let mut out = CardPlant::default();
     let view = |way: Vec3| -> Texture {
         let up = (Vec3::Y - way * Vec3::Y.dot(way)).normalize_or_else(|| Vec3::Z);
-        let strips = strips_facing(way);
         let mut picture = bake(
             &Shot {
                 cards: &cards,
-                lit: None,
                 wood: &source.wood,
-                strips: Some(&strips),
                 mid: centre,
                 right: up.cross(way),
                 up,
@@ -2999,13 +2880,10 @@ pub fn impostor_from(
     out
 }
 
-/// What a plane's picture is baked from: its cards, the cards as they
-/// grew, not turned to face the card, where the picture's normals and its
-/// parts' places are read from (clumps only, and only when `lit`), and its
-/// wood. Drawn again for each use and dropped: a tree's are gigabytes.
+/// What a plane's picture is baked from: its cards and its wood. Drawn
+/// again for each use and dropped: a tree's are gigabytes.
 struct Baked {
     cards: Mesh,
-    lit: Option<Mesh>,
     wood: Mesh,
 }
 
@@ -3068,7 +2946,6 @@ fn near_head(coarse: &Baked, mid: Vec3, wood: &Mesh, cards: &Mesh) -> Baked {
     };
     Baked {
         cards: take(cards),
-        lit: None,
         wood: take(wood),
     }
 }
@@ -3102,9 +2979,7 @@ fn add_views(
         let mut picture = bake(
             &Shot {
                 cards: &drawn.cards,
-                lit: drawn.lit.as_ref(),
                 wood: &drawn.wood,
-                strips: None,
                 mid,
                 right: up.cross(way),
                 up,
@@ -3200,7 +3075,7 @@ struct Frame {
 /// metres.
 fn add_heights(
     out: &mut CardPlant,
-    drawn: &[Baked; 4],
+    drawn: &Baked,
     frame: &Frame,
     extents: [[f64; 3]; 4],
     templates: &Templates,
@@ -3218,15 +3093,11 @@ fn add_heights(
     let mut union: Option<Texture> = None;
     let mut covered = 0.0;
     let ways = height_ways(frame.level);
-    // Only the first holds the light ([`build`]); it serves all.
-    let lit = drawn[0].lit.as_ref();
-    for (((way, up, right), extent), drawn) in ways.iter().zip(extents).zip(drawn) {
+    for ((way, up, right), extent) in ways.iter().zip(extents) {
         let mut picture = bake(
             &Shot {
                 cards: &drawn.cards,
-                lit,
                 wood: &drawn.wood,
-                strips: None,
                 mid: frame.centre + frame.right * x + *up * y,
                 right: *right,
                 up: *up,
@@ -3311,8 +3182,8 @@ fn add_heights(
 /// moved, and the colour pass takes about half the time.
 const COLOUR_SUPERSAMPLE: usize = 3;
 
-/// Samples along each side of a texel when the leaves are drawn as they
-/// grew, for the normals and places the sun is read at ([`bake`]). At 2
+/// Samples along each side of a texel when the leaves are drawn for the
+/// normals and places the sun is read at ([`bake`]). At 2
 /// (Jay, 2026-10-26, from 4), with 16 suns and 3 colour samples, a tree's
 /// cards took 40% less time and came out up to 7% darker, nearly all of
 /// it from this pass.
@@ -3322,13 +3193,7 @@ const LIT_SUPERSAMPLE: usize = 2;
 struct Shot<'a> {
     /// Drawn for the colour.
     cards: &'a Mesh,
-    /// Drawn for the normals and the places the sun is read at, when
-    /// they differ from `cards` (leaves as they grew, before they were
-    /// turned face on).
-    lit: Option<&'a Mesh>,
     wood: &'a Mesh,
-    /// Strips drawn with the wood, if any.
-    strips: Option<&'a Mesh>,
     /// The middle of the picture, its right and up, and the way it faces.
     mid: Vec3,
     right: Vec3,
@@ -3362,10 +3227,7 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
     };
     let wood_material = templates.bark.map_or(Material::Opaque, Material::Bark);
     let render = |cards: &Mesh, scale: usize, normals_only: bool| {
-        let mut items = vec![(cards, Material::Card), (shot.wood, wood_material)];
-        if let Some(strips) = shot.strips {
-            items.push((strips, wood_material));
-        }
+        let items = [(cards, Material::Card), (shot.wood, wood_material)];
         let render = if normals_only {
             raster::render_normals
         } else {
@@ -3393,9 +3255,9 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         )
     };
     let image = render(shot.cards, COLOUR_SUPERSAMPLE, false);
-    // The leaves as they grow, unturned, LIT_SUPERSAMPLE samples along
-    // each side of a texel: only their normals and depth are read.
-    let samples = render(shot.lit.unwrap_or(shot.cards), LIT_SUPERSAMPLE, true);
+    // LIT_SUPERSAMPLE samples along each side of a texel: only their
+    // normals and depth are read.
+    let samples = render(shot.cards, LIT_SUPERSAMPLE, true);
     // Rows from the bottom, so v grows upward like the frame's up.
     let mut picture = Texture {
         width: tw,
@@ -3623,7 +3485,8 @@ fn outline(picture: &Texture) -> Option<Vec<(f64, f64)>> {
 /// How a plant draws from the side and from 45 degrees above ([`tone`]).
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Drawn {
-    /// The mean luminance of the covered pixels.
+    /// The mean luminance of the covered pixels, each by how much of it
+    /// is covered.
     pub tone: [f64; 2],
     /// Card pixels drawn for each pixel the plant covers.
     pub overdraw: [f64; 2],
@@ -3671,19 +3534,21 @@ pub fn tone(items: &[(&Mesh, Material)], templates: &Templates, size: usize) -> 
                 shadow_texels: raster::SHADOW_TEXELS,
             },
         );
-        let (sum, count) =
-            image
-                .color
-                .iter()
-                .filter(|c| c[3] >= 0.5)
-                .fold((0.0, 0.0), |(sum, count), c| {
-                    (
-                        sum + 0.2126 * f64::from(c[0])
-                            + 0.7152 * f64::from(c[1])
-                            + 0.0722 * f64::from(c[2]),
-                        count + 1.0,
-                    )
-                });
+        // Each pixel counts by the share of its samples the plant
+        // covers: counted whole once half covered, a moss's or a lacy
+        // leaf's threads, thinner than a pixel, hid a fifth as much sky
+        // as their pictures' texels, which gather the same cover into
+        // fewer, fuller pixels.
+        let (sum, count) = image.color.iter().fold((0.0, 0.0), |(sum, count), c| {
+            let share = f64::from(c[3]);
+            (
+                sum + share
+                    * (0.2126 * f64::from(c[0])
+                        + 0.7152 * f64::from(c[1])
+                        + 0.0722 * f64::from(c[2])),
+                count + share,
+            )
+        });
         #[allow(clippy::cast_precision_loss)]
         let pixel = radius * 2.0 / size as f64;
         if count > 0.0 {
@@ -3832,6 +3697,70 @@ mod tests {
         let mut kept = leaf.clone();
         keep_coverage(&mut kept);
         assert_eq!(kept, leaf);
+    }
+
+    #[test]
+    fn a_lone_texel_passes_part_of_itself_and_a_patch_all() {
+        let lone = picture(9, 9, |x, y| if (x, y) == (4, 4) { 1.0 } else { 0.0 });
+        let drawn = drawn_coverage(&lone);
+        assert!((0.5..0.7).contains(&drawn), "{drawn}");
+        let patch = picture(12, 12, |x, y| {
+            if (2..10).contains(&x) && (2..10).contains(&y) {
+                1.0
+            } else {
+                0.0
+            }
+        });
+        assert!((drawn_coverage(&patch) - 64.0).abs() < 1.0);
+    }
+
+    #[test]
+    fn scattered_threads_pass_as_much_as_they_cover() {
+        // A moss's strands: a picture a fiftieth covered, in faint
+        // texels. Dithered to scattered texels, each of which passes 0.6
+        // of itself, it would draw two fifths too little.
+        let (w, h) = (80, 80);
+        let faint = picture(
+            w,
+            h,
+            |x, y| if (x * 7 + y * 3) % 10 == 0 { 0.2 } else { 0.0 },
+        );
+        let target: f64 = faint.color.iter().map(|c| f64::from(c[3])).sum();
+        let mut kept = faint.clone();
+        keep_coverage(&mut kept);
+        let drawn = drawn_coverage(&kept);
+        assert!((drawn / target - 1.0).abs() < 0.05, "{drawn} of {target}");
+    }
+
+    #[test]
+    fn a_clump_alike_every_way_turns_and_a_sheet_does_not() {
+        let part = |facing: Vec3| Element {
+            centre: Vec3::ZERO,
+            facing: facing.normalize_or(Vec3::Z),
+            wood: false,
+            planar: false,
+            area: 0.01,
+            half: Vec3::Y * 0.05,
+        };
+        // Leaves held every way round, as a yarrow's or a fireweed's.
+        let round: Vec<Element> = (0..64)
+            .map(|i| {
+                let (a, b) = (f64::from(i) * 2.399_963, f64::from(i) * 0.7);
+                part(Vec3::new(
+                    crate::math::cos(a),
+                    crate::math::sin(b),
+                    crate::math::sin(a),
+                ))
+            })
+            .collect();
+        let round: Vec<&Element> = round.iter().collect();
+        assert!(turned_covers_closer(&round, Vec3::Z));
+        // A fan of blades in one plane.
+        let sheet: Vec<Element> = (0..64)
+            .map(|i| part(Vec3::new(0.05 * f64::from(i % 3) - 0.05, 0.0, 1.0)))
+            .collect();
+        let sheet: Vec<&Element> = sheet.iter().collect();
+        assert!(!turned_covers_closer(&sheet, Vec3::Z));
     }
 }
 
