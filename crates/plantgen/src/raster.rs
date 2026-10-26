@@ -1123,6 +1123,10 @@ fn draw(
 /// ground ([`Turn::Heights`]).
 const STRAIGHT_UP: f64 = 0.999;
 
+/// Pictures whose heights differ from the eye's by no more than this
+/// apart, radians, are as near ([`Turn::Heights`]).
+const HEIGHT_TIE: f64 = 1e-4;
+
 /// `mesh`'s baked cards, each vertex's picture in its colour's alpha
 /// ([`Material::Baked`]), turned to `camera` as their pictures say
 /// ([`Texture::turn`]), each vertex's alpha then the picture it shows:
@@ -1176,12 +1180,17 @@ fn turn_cards(mesh: &Mesh, templates: &Templates, camera: &Camera, forward: Vec3
             Turn::Heights { first, count } => {
                 let elevation = |d: Vec3| math::asin(d.normalize_or(Vec3::Z).y.clamp(-1.0, 1.0));
                 let eye = elevation(toward);
-                let nearest = (first..first + count)
-                    .filter_map(|v| templates.baked.get(v).map(|t| (v, t)))
-                    .min_by(|a, b| {
-                        let off = |t: &Texture| (elevation(vec3(t.seen_from)) - eye).abs();
-                        off(a.1).total_cmp(&off(b.1))
-                    });
+                let off = |t: &Texture| (elevation(vec3(t.seen_from)) - eye).abs();
+                let pictures = || {
+                    (first..first + count).filter_map(|v| templates.baked.get(v).map(|t| (v, t)))
+                };
+                // The nearest height; of two as near, in front and behind,
+                // the one on the eye's side, the first of equals.
+                let least = pictures().map(|(_, t)| off(t)).fold(f64::INFINITY, f64::min);
+                let along = |t: &Texture| vec3(t.seen_from).dot(toward);
+                let nearest = pictures()
+                    .filter(|(_, t)| off(t) <= least + HEIGHT_TIE)
+                    .reduce(|best, next| if along(next.1) > along(best.1) { next } else { best });
                 if let Some((v, t)) = nearest {
                     #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
                     {

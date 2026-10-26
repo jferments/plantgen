@@ -30,12 +30,13 @@ fn picture(turn: Turn, pivot: [f32; 3], extent: [f32; 3], seen_from: [f32; 3]) -
     }
 }
 
-/// The pictures: one fixed, one facing, three heights (level, 45 degrees,
-/// from above, as `billboards::HEIGHTS` bakes them), four views round.
+/// The pictures: one fixed, one facing, four heights (level, 45 degrees,
+/// from above, 45 degrees from behind, as `billboards::HEIGHTS` bakes
+/// them), four views round.
 fn pictures() -> Vec<Texture> {
     let half = 0.5_f32.sqrt();
-    let heights = Turn::Heights { first: 2, count: 3 };
-    let views = Turn::Views { first: 5, count: 4 };
+    let heights = Turn::Heights { first: 2, count: 4 };
+    let views = Turn::Views { first: 6, count: 4 };
     vec![
         picture(Turn::Fixed, [0.0, 1.0, 0.0], [0.3; 3], [0.0, 0.0, 1.0]),
         picture(
@@ -52,6 +53,12 @@ fn pictures() -> Vec<Texture> {
             [0.0, half, half],
         ),
         picture(heights, [0.0, 2.0, 1.0], [0.4, 0.35, 0.5], [0.0, 1.0, 0.0]),
+        picture(
+            heights,
+            [0.0, 2.0, 1.0],
+            [0.4, 0.4, 0.35],
+            [0.0, half, -half],
+        ),
         picture(views, [0.0, 1.5, -1.0], [0.6; 3], [1.0, 0.0, 0.0]),
         picture(views, [0.0, 1.5, -1.0], [0.6; 3], [0.0, 0.0, 1.0]),
         picture(views, [0.0, 1.5, -1.0], [0.6; 3], [-1.0, 0.0, 0.0]),
@@ -94,7 +101,7 @@ fn cards() -> Mesh {
     // A crown's card, laid facing level as `billboards` lays it.
     card(&mut mesh, Vec3::new(0.0, 2.0, 1.0), x * 0.5, y * 0.6, 2);
     // An impostor's card.
-    card(&mut mesh, Vec3::new(0.0, 1.5, -1.0), x * 0.7, y * 0.7, 5);
+    card(&mut mesh, Vec3::new(0.0, 1.5, -1.0), x * 0.7, y * 0.7, 6);
     mesh
 }
 
@@ -114,6 +121,10 @@ fn cameras() -> Vec<(&'static str, Camera)> {
         (
             "level from +x",
             looking(Vec3::new(10.0, 1.5, 0.0), middle, false),
+        ),
+        (
+            "45 degrees from +z",
+            looking(Vec3::new(0.0, 11.5, 10.0), middle, false),
         ),
         (
             "45 degrees from -z",

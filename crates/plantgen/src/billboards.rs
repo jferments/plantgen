@@ -182,20 +182,26 @@ pub const MOST_LEAN: f64 = 45.0;
 /// degrees above and from above ([`ImpostorTier`]). A crown's card baked
 /// from the side alone showed it from the side from every height: from
 /// 45 degrees down a big sagebrush's low cards were 37 per cent darker
-/// than the full plant, whose lit tops show from above.
-pub const HEIGHTS: [f64; 3] = [0.0, 45.0, 90.0];
+/// than the full plant, whose lit tops show from above. Past 90 the way
+/// goes on over the top: 135 is 45 degrees above level from behind, the
+/// side the eye sees a clump on the far side of a crown from. Baked from
+/// in front alone, a Douglas-fir's far clumps showed their sprays edge on
+/// from 45 degrees, thin streaks where the full tree shows their tops.
+pub const HEIGHTS: [f64; 4] = [0.0, 45.0, 90.0, 135.0];
 
 /// The ways a card turned to the eye is baked from ([`HEIGHTS`]), out
-/// along its level normal `level` and up, each with the up of its frame:
-/// the world's up laid on it, and from above the way back in, so the card's
-/// right stays level and the same in every one.
-fn height_ways(level: Vec3) -> [(Vec3, Vec3); 3] {
+/// along its level normal `level` and up, each with the up and right of
+/// its frame: the world's up laid on it, and from above the way back in,
+/// so the right stays level, the card's own in front and from above and
+/// reversed from behind.
+fn height_ways(level: Vec3) -> [(Vec3, Vec3, Vec3); 4] {
     let right = Vec3::Y.cross(level);
     HEIGHTS.map(|degrees| {
         let e = crate::math::radians(degrees);
         let way =
             (level * crate::math::cos(e) + Vec3::Y * crate::math::sin(e)).normalize_or(Vec3::Y);
-        (way, way.cross(right))
+        let right = if degrees > 90.0 { -right } else { right };
+        (way, way.cross(right), right)
     })
 }
 
@@ -653,7 +659,7 @@ fn fit_plane(
             turn = Turn::Facing;
         }
         // So does a crown's spray spread in a sheet, its card baked
-        // from three heights of eye ([`HEIGHTS`]): an oak's level spray
+        // from four heights of eye ([`HEIGHTS`]): an oak's level spray
         // on a card of its own lay flat, a streak seen from the side.
         if least <= across(outward) * SHEET * SHEET && !mass {
             thinnest
@@ -1840,7 +1846,7 @@ pub fn build_from(
         /// Turned to the eye: baked from [`height_ways`] out along
         /// `level`, how far its parts spread along each one's right, up
         /// and way.
-        heights: Option<(Vec3, [[f64; 3]; 3])>,
+        heights: Option<(Vec3, [[f64; 3]; 4])>,
     }
     // Where the plant stands: a card leaning out from its parts would
     // show the ones behind it below there, under the ground.
@@ -1948,13 +1954,13 @@ pub fn build_from(
         let heights = (turn == Turn::Facing).then(|| {
             let level = right.cross(Vec3::Y).normalize_or(Vec3::Z);
             let ways = height_ways(level);
-            let mut spread = [[0.0; 3]; 3];
+            let mut spread = [[0.0; 3]; 4];
             let mut weight = 0.0;
             for e in &members {
                 for p in [e.centre - e.half, e.centre, e.centre + e.half] {
                     let d = p - centre;
-                    for ((way, up), sums) in ways.iter().zip(&mut spread) {
-                        for (sum, axis) in sums.iter_mut().zip([right, *up, *way]) {
+                    for ((way, up, right), sums) in ways.iter().zip(&mut spread) {
+                        for (sum, axis) in sums.iter_mut().zip([*right, *up, *way]) {
                             *sum += e.area * d.dot(axis) * d.dot(axis);
                         }
                     }
@@ -2188,6 +2194,11 @@ pub fn build_from(
             }
             if plane.heights.is_none() {
                 low.1 = lowest(plane.centre, plane.up, low.1).min(high.1);
+            } else {
+                // Even about its middle across, as seen from behind its
+                // right is reversed.
+                let m = high.0.max(-low.0);
+                (low.0, high.0) = (-m, m);
             }
             plane.low = low;
             plane.high = high;
@@ -2281,7 +2292,7 @@ pub fn build_from(
             // and its thin stems laid across as seen from there. Their
             // light, from the leaves as they grow, is the same for all.
             let mut first = true;
-            let drawn = height_ways(level).map(|(way, _)| {
+            let drawn = height_ways(level).map(|(way, _, _)| {
                 draw(
                     &Plane {
                         normal: way,
@@ -3189,9 +3200,9 @@ struct Frame {
 /// metres.
 fn add_heights(
     out: &mut CardPlant,
-    drawn: &[Baked; 3],
+    drawn: &[Baked; 4],
     frame: &Frame,
-    extents: [[f64; 3]; 3],
+    extents: [[f64; 3]; 4],
     templates: &Templates,
     sky: &Sky,
 ) -> (f64, f64) {
@@ -3207,9 +3218,9 @@ fn add_heights(
     let mut union: Option<Texture> = None;
     let mut covered = 0.0;
     let ways = height_ways(frame.level);
-    // Only the first holds the light ([`build`]); it serves all three.
+    // Only the first holds the light ([`build`]); it serves all.
     let lit = drawn[0].lit.as_ref();
-    for (((way, up), extent), drawn) in ways.iter().zip(extents).zip(drawn) {
+    for (((way, up, right), extent), drawn) in ways.iter().zip(extents).zip(drawn) {
         let mut picture = bake(
             &Shot {
                 cards: &drawn.cards,
@@ -3217,7 +3228,7 @@ fn add_heights(
                 wood: &drawn.wood,
                 strips: None,
                 mid: frame.centre + frame.right * x + *up * y,
-                right: frame.right,
+                right: *right,
                 up: *up,
                 normal: *way,
                 size: frame.size,

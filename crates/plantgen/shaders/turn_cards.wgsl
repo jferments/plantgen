@@ -46,6 +46,10 @@ const CARD_HEIGHTS: u32 = 3u;
 // straight above, and keeps its frame on the ground.
 const CARD_STRAIGHT_UP: f32 = 0.999;
 
+// Pictures whose heights differ from the eye's by no more than this apart,
+// radians, are as near.
+const CARD_HEIGHT_TIE: f32 = 1e-4;
+
 fn card_normalize_or(v: vec3<f32>, fallback: vec3<f32>) -> vec3<f32> {
     let n = length(v);
     if (n > 1e-12) {
@@ -122,13 +126,19 @@ fn turn_card(
     var from_above = false;
     if (own.kind == CARD_HEIGHTS) {
         let eye_height = card_elevation(toward);
-        var best = own.first;
         var off = 1e30;
         for (var v = own.first; v < own.first + own.count; v++) {
-            let o = abs(card_elevation(card_picture(v).seen_from) - eye_height);
-            // The first of equals.
-            if (o < off) {
-                off = o;
+            off = min(off, abs(card_elevation(card_picture(v).seen_from) - eye_height));
+        }
+        // The nearest height; of two as near, in front and behind, the one
+        // on the eye's side, the first of equals.
+        var best = own.first;
+        var along = -1e30;
+        for (var v = own.first; v < own.first + own.count; v++) {
+            let seen = card_picture(v).seen_from;
+            let a = dot(seen, toward);
+            if (abs(card_elevation(seen) - eye_height) <= off + CARD_HEIGHT_TIE && a > along) {
+                along = a;
                 best = v;
             }
         }
