@@ -672,6 +672,49 @@ struct Surface<'a> {
 }
 
 impl Surface<'_> {
+    /// The template and texel a leaf card shows at a pixel of triangle
+    /// `corners` at weights `k`, `depth` from the eye; `None` where its
+    /// outline cuts the pixel away.
+    fn card_texel(
+        &self,
+        corners: [usize; 3],
+        k: [f64; 3],
+        depth: f64,
+    ) -> Option<(usize, crate::templates::Texel)> {
+        let mesh = self.mesh;
+        let mix = |values: [f64; 3]| k[0] * values[0] + k[1] * values[1] + k[2] * values[2];
+        let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
+        let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
+        // The template, and the card's face, are packed in alpha.
+        let (template, _, _) = crate::templates::unpack_face(mesh.colors[corners[0]][3]);
+        #[allow(clippy::cast_possible_truncation)]
+        let (u, v) = (u as f32, v as f32);
+        // Cut where the coverage, read between texels, is below one
+        // half, so the card's edge follows its outline.
+        if self.templates.coverage(template, u, v) < 0.5 {
+            return None;
+        }
+        let texel = self.templates.sample(template, u, v);
+        // Up close the edge's hairs are strands of their own.
+        if texel.fringe
+            && let Some(hairs) = self
+                .templates
+                .templates
+                .get(template)
+                .and_then(|drawn| drawn.hairs.as_ref())
+        {
+            let footprint = if self.perspective {
+                self.pixel * depth
+            } else {
+                self.pixel
+            };
+            if !crate::hairs::fringe_drawn(hairs, footprint) {
+                return None;
+            }
+        }
+        Some((template, texel))
+    }
+
     /// The bark pattern at a pixel of triangle `corners` at weights `k`,
     /// `depth` from the eye, and the triangle's unit directions round and
     /// along its stem; `None` off bark.
@@ -728,6 +771,15 @@ impl Surface<'_> {
         if depth >= target.depth[at] {
             return;
         }
+        // A shadow map keeps only depth: of a leaf card, only whether its
+        // outline cuts the pixel away.
+        if self.lighting.is_none() && self.material != Material::Baked {
+            if self.material == Material::Card && self.card_texel(corners, k, depth).is_none() {
+                return;
+            }
+            target.depth[at] = depth;
+            return;
+        }
         let mesh = self.mesh;
         let mix = |values: [f64; 3]| k[0] * values[0] + k[1] * values[1] + k[2] * values[2];
         let mut albedo =
@@ -752,36 +804,11 @@ impl Surface<'_> {
             -self.forward
         };
         if self.material == Material::Card {
-            let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
-            let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
+            let Some((template, texel)) = self.card_texel(corners, k, depth) else {
+                return;
+            };
             // The template, and the card's face, are packed in alpha.
             let alpha = mesh.colors[corners[0]][3];
-            let (template, _, _) = crate::templates::unpack_face(alpha);
-            #[allow(clippy::cast_possible_truncation)]
-            let (u, v) = (u as f32, v as f32);
-            // Cut where the coverage, read between texels, is below one
-            // half, so the card's edge follows its outline.
-            if self.templates.coverage(template, u, v) < 0.5 {
-                return;
-            }
-            let texel = self.templates.sample(template, u, v);
-            // Up close the edge's hairs are strands of their own.
-            if texel.fringe
-                && let Some(hairs) = self
-                    .templates
-                    .templates
-                    .get(template)
-                    .and_then(|drawn| drawn.hairs.as_ref())
-            {
-                let footprint = if self.perspective {
-                    self.pixel * depth
-                } else {
-                    self.pixel
-                };
-                if !crate::hairs::fringe_drawn(hairs, footprint) {
-                    return;
-                }
-            }
             let face = crate::templates::card_face(alpha, normal.dot(view) >= 0.0);
             albedo = self.templates.paint(template, albedo, texel, face);
             hair = Some((template, face.lower));
