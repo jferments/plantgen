@@ -8,7 +8,8 @@
     "crown_base_share": 0.17,
     "crown_see_through": 0.3,
     "terminal_bud": false,
-    "short_shoots": true
+    "short_shoots": true,
+    "short_shoot_years": 20
   },
   "appearance": {
     "bark_look": {
@@ -103,6 +104,7 @@
     "appearance.bark_look.stages.white": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's white stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): exfoliation: text: 'readily exfoliating in paper-thin sheets' (FNA); 'fine horizontal strips' (Wikipedia); inner 'pale orange color when first exposed' (Sargent); sizes inferred; lenticels: text: 'in maturity dark, much expanded, horizontal' (FNA); 'long narrow ... raised' (Sargent); sizes inferred; until_diameter_m: inferred (photo)"},
     "appearance.bark_look.stages.black base": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "The genus's black base stage as its reference species, betula-papyrifera, shows it (plantgen-claude project-files/bark/records/betula-papyrifera.json): stage: text: 'on old trunks for a few feet above the ground ... dull brown or nearly black, sharply and irregularly furrowed and broken on the surface into thick closely appressed scales' (Sargent)"},
     "traits.terminal_bud": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, analytical key to the genera, pp. xxiii-xxiv): 'Terminal buds wanting; branchlets prolonged by an upper axillary bud' leads, with Carpinus and Ostrya, to Betula (p. 205)."},
-    "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: Acer, Betula, Corylus, Fagus and rosaceous fruit trees such as Pyrus have a well-developed short-shoot system, whose short shoots fill most of the crown and bear most of its leaves (Wilson's red maple)."}
+    "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: Acer, Betula, Corylus, Fagus and rosaceous fruit trees such as Pyrus have a well-developed short-shoot system, whose short shoots fill most of the crown and bear most of its leaves (Wilson's red maple)."},
+    "traits.short_shoot_years": {"evidence": "SourceInferred", "source": "ishihara-2013-betula", "note": "Ages of the 716 living lateral axes on 21 branch systems of eight Betula maximowicziana trees (Ishihara 2013, Dryad data AxisFateData): short-shoot-origin axes still short when sampled (259) were up to 20 years old in the four vigorous trees and 23 in the four slow-growing ones. Their share of the living laterals of the same age was 0.45-0.51 to 10 years, 0.34-0.38 at 11-15 and 0.21-0.38 at 16-20, and fell to 0.03 at 21-30 years in the slow trees, whose branches still bore 71 laterals of other kinds that old. So a birch short shoot that does not turn long goes on leafing for about 20 years."}
   }
 }

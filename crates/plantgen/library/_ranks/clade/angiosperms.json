@@ -25,8 +25,8 @@
       "why": "Where a taxon grows short shoots, they fill most of its crown and bear most of its leaves (Wilson's red maple, Hall\u00e9, Oldeman and Tomlinson 1978, pp. 59-60): every bud of a growth unit that does not grow a long shoot grows a short one, from the nodes behind them, so each year's growth ends in long shoots with tufts of leaves behind, in a shrub as in a tree (decurrent_tree). Until 2026-10-17 a shrub grew only as many short shoots as long ones, which left beaked hazel with a quarter of a tree's leaf area per crown area. Elsewhere a third as many as the long ones, as at the seed plants."
     },
     "generator.params.bud_years": {
-      "map": {"short_shoots": {"true": 10}},
-      "why": "A short shoot lives far longer than its leaves but far less than the wood, perhaps 20 years at most (Hall\u00e9, Oldeman and Tomlinson 1978, p. 60), and many die younger: almond spurs at 5 to 27 percent a year (Lampinen et al. 2011). So leaves crowd the last ten years' wood behind each tip, and older wood is bare."
+      "map": {"short_shoots": {"true": {"rule": "first(short_shoot_years, 10)"}}},
+      "why": "A short shoot lives far longer than its leaves but far less than the wood, perhaps 20 years at most (Hall\u00e9, Oldeman and Tomlinson 1978, p. 60), and many die younger: almond spurs at 5 to 27 percent a year (Lampinen et al. 2011). So leaves crowd the last ten years' wood behind each tip, and older wood is bare; where a study of a taxon's shoots measures how long its short shoots live (short_shoot_years), they live that long."
     },
     "appearance.organs.*.inflorescence.pedicel": {
       "rule": "clamp(pedicel_length_m / (inflorescence_length_m + first(peduncle_length_m, 0)), 0, 1)",
