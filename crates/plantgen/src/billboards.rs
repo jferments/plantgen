@@ -634,27 +634,30 @@ fn fit_plane(
             ];
             n.x * mn[0] + n.y * mn[1] + n.z * mn[2]
         };
-        if least <= across(outward) * SHEET * SHEET {
+        // A piece of a broadleaf crown, leaves many times smaller than
+        // itself, is a mass that looks alike from every side, and a card
+        // facing out is edge on wherever the clump is on the plant's
+        // outline: it turns to the eye, as leaf cards do ("leaves that
+        // always billboard (face) the camera", SpeedTree Modeler
+        // glossary). Leaves on herbs' shoots and in tufts keep their
+        // card, since their shapes and the way they face show.
+        let leaves: Vec<&&Element> = members.iter().filter(|e| !e.wood).collect();
+        let leaf_area: f64 = leaves.iter().map(|e| e.area).sum();
+        let leaf_length = leaves
+            .iter()
+            .map(|e| e.half.length() * 2.0 * e.area)
+            .sum::<f64>()
+            / leaf_area.max(1e-12);
+        let mass = turning && span.length() >= MASS * leaf_length;
+        if mass {
+            turn = Turn::Facing;
+        }
+        // So does a crown's spray spread in a sheet, its card baked
+        // from three heights of eye ([`HEIGHTS`]): an oak's level spray
+        // on a card of its own lay flat, a streak seen from the side.
+        if least <= across(outward) * SHEET * SHEET && !mass {
             thinnest
         } else {
-            // A piece of a broadleaf crown, leaves many times
-            // smaller than itself, is a mass that looks alike from every
-            // side, and a card facing out is edge on wherever the clump
-            // is on the plant's outline: it turns to the eye, as leaf
-            // cards do ("leaves that always billboard (face) the
-            // camera", SpeedTree Modeler glossary). Leaves on herbs'
-            // shoots and in tufts keep their card, since their shapes
-            // and the way they face show.
-            let leaves: Vec<&&Element> = members.iter().filter(|e| !e.wood).collect();
-            let leaf_area: f64 = leaves.iter().map(|e| e.area).sum();
-            let leaf_length = leaves
-                .iter()
-                .map(|e| e.half.length() * 2.0 * e.area)
-                .sum::<f64>()
-                / leaf_area.max(1e-12);
-            if turning && span.length() >= MASS * leaf_length {
-                turn = Turn::Facing;
-            }
             outward
         }
     };
