@@ -242,7 +242,7 @@ type IdMap<V> = HashMap<u64, V, BuildHasherDefault<IdHasher>>;
 /// The hasher of [`IdMap`]: Fx hashing (as in rustc), one rotate, xor and
 /// multiply per word.
 #[derive(Clone, Default)]
-struct IdHasher(u64);
+pub(crate) struct IdHasher(u64);
 
 impl Hasher for IdHasher {
     fn finish(&self) -> u64 {

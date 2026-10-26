@@ -232,8 +232,9 @@ pub const CORNERS: usize = 8;
 /// Rounds of k-means.
 const ROUNDS: usize = 16;
 
-/// Points measured together on one core in [`kmeans`].
-const KMEANS_RUN: usize = 4096;
+/// Points measured together on one core in [`kmeans`], and triangles
+/// matched to their segments together in [`build_from`].
+const RUN: usize = 4096;
 
 /// What a baked-card build drew.
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -451,10 +452,7 @@ fn kmeans(points: &[[f64; 9]], weights: &[f64], k: usize) -> Vec<usize> {
     });
     let threads = lease.threads();
     let runs = |n: usize| -> Vec<std::ops::Range<usize>> {
-        (0..n)
-            .step_by(KMEANS_RUN)
-            .map(|a| a..(a + KMEANS_RUN).min(n))
-            .collect()
+        (0..n).step_by(RUN).map(|a| a..(a + RUN).min(n)).collect()
     };
     let roots: Vec<f64> = weights.iter().map(|w| w.sqrt()).collect();
     let mut centres = vec![points[first]];
@@ -1748,23 +1746,45 @@ pub fn build_from(
     // rachis, is drawn however thin the rachis).
     let mut group_triangles: Vec<Vec<(usize, usize, bool)>> = vec![Vec::new(); groups];
     let mut segment_colour = vec![([0.0_f64; 3], 0.0_f64); graph.segments.len()];
-    for t in 0..source.wood.triangle_count() {
+    // Each triangle's thin segment is found on its own, on idle cores:
+    // whether it is bark, and its segment and how far off it lies.
+    let triangles = source.wood.triangle_count();
+    let lease = cores::Lease::take(if triangles > 1 << 16 {
+        cores::per_task()
+    } else {
+        1
+    });
+    let found = cores::map(
+        (0..triangles).step_by(RUN).collect(),
+        lease.threads(),
+        &|from: usize| {
+            (from..(from + RUN).min(triangles))
+                .map(|t| {
+                    let corners = [0, 1, 2].map(|k| source.wood.indices[t * 3 + k] as usize);
+                    let centre = corners
+                        .iter()
+                        .fold(Vec3::ZERO, |sum, &i| sum + v3(source.wood.positions[i]))
+                        * (1.0 / 3.0);
+                    let barked = corners
+                        .iter()
+                        .any(|&i| bark_radius(&source.wood, i).is_some());
+                    let radius = corners
+                        .iter()
+                        .filter_map(|&i| bark_radius(&source.wood, i))
+                        .fold(0.0, f64::max);
+                    if barked && radius >= keep {
+                        return (barked, None);
+                    }
+                    (barked, thin.nearest(centre, &graph.segments))
+                })
+                .collect::<Vec<_>>()
+        },
+    )
+    .concat();
+    drop(lease);
+    for (t, (barked, nearest)) in found.into_iter().enumerate() {
         let corners = [0, 1, 2].map(|k| source.wood.indices[t * 3 + k] as usize);
-        let centre = corners
-            .iter()
-            .fold(Vec3::ZERO, |sum, &i| sum + v3(source.wood.positions[i]))
-            * (1.0 / 3.0);
-        let barked = corners
-            .iter()
-            .any(|&i| bark_radius(&source.wood, i).is_some());
-        let radius = corners
-            .iter()
-            .filter_map(|&i| bark_radius(&source.wood, i))
-            .fold(0.0, f64::max);
-        if barked && radius >= keep {
-            continue;
-        }
-        let Some((segment, d)) = thin.nearest(centre, &graph.segments) else {
+        let Some((segment, d)) = nearest else {
             continue;
         };
         // A leaf drawn whole along its axis (a yarrow's cut blade) is
@@ -2635,7 +2655,13 @@ fn ribbon(
 /// to (tubes do not record their segments).
 struct SegmentGrid {
     cell: f64,
-    cells: std::collections::HashMap<(i64, i64, i64), Vec<usize>>,
+    // Cells are looked up 27 times for each wood triangle: Fx hashing
+    // ([`crate::grow::IdHasher`]), not `SipHash`.
+    cells: std::collections::HashMap<
+        (i64, i64, i64),
+        Vec<usize>,
+        std::hash::BuildHasherDefault<crate::grow::IdHasher>,
+    >,
 }
 
 impl SegmentGrid {
@@ -2655,7 +2681,7 @@ impl SegmentGrid {
             .fold(1e-3, f64::max);
         let mut grid = Self {
             cell,
-            cells: std::collections::HashMap::new(),
+            cells: std::collections::HashMap::default(),
         };
         for s in thin {
             let key = grid.key((segments[s].start + segments[s].end) * 0.5);
