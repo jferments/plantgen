@@ -290,6 +290,41 @@ impl Atlas {
 }
 
 impl CardPlant {
+    /// How wide one of its pictures' texels is where its card lies, metres,
+    /// averaged over its cards' area: a tier stays as sharp as it was
+    /// baked while a texel covers at most a pixel, as a texture is drawn
+    /// from its finest mipmap level while it is magnified (OpenGL 4.6
+    /// core profile, section 8.14, the level of detail λ ≤ 0). Each
+    /// card counts once, with the picture it was laid down with.
+    #[must_use]
+    pub fn texel(&self) -> f64 {
+        let mesh = &self.cards;
+        let (mut weighted, mut total) = (0.0, 0.0);
+        for t in mesh.indices.chunks_exact(3) {
+            let [a, b, c] = [t[0], t[1], t[2]].map(|i| i as usize);
+            let p = |i: usize| v3(mesh.positions[i]);
+            let area = (p(b) - p(a)).cross(p(c) - p(a)).length() * 0.5;
+            let uv = |i: usize| (f64::from(mesh.uvs[i][0]), f64::from(mesh.uvs[i][1]));
+            let ((u0, v0), (u1, v1), (u2, v2)) = (uv(a), uv(b), uv(c));
+            let uv_area = ((u1 - u0) * (v2 - v0) - (u2 - u0) * (v1 - v0)).abs() * 0.5;
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let Some(picture) = self
+                .pictures
+                .get(mesh.colors[a][3].max(0.0).round() as usize)
+            else {
+                continue;
+            };
+            #[allow(clippy::cast_precision_loss)]
+            let texels = uv_area * (picture.width * picture.height) as f64;
+            if area <= 0.0 || texels <= 0.0 {
+                continue;
+            }
+            weighted += area * (area / texels).sqrt();
+            total += area;
+        }
+        if total > 0.0 { weighted / total } else { 0.0 }
+    }
+
     /// The pictures packed in rows (tallest first) into one texture as
     /// wide as a power of two, the least square one that holds them.
     #[must_use]

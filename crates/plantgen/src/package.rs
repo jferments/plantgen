@@ -502,6 +502,18 @@ impl LodRecord {
     }
 }
 
+impl ImpostorRecord {
+    /// How wide a texel of its views is, metres: each frames the bounding
+    /// sphere's diameter. It stays as sharp as baked up to a screen radius
+    /// of `view_size / 2` pixels (as [`TierCost::texel`]).
+    #[must_use]
+    pub fn texel(&self) -> f64 {
+        #[allow(clippy::cast_precision_loss)]
+        let texel = 2.0 * self.radius / self.view_size.max(1) as f64;
+        texel
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ImpostorRecord {
     pub albedo: String,
@@ -615,6 +627,11 @@ pub struct TierCost {
     pub seen_texels: usize,
     /// The share of the cards' area their pictures cover.
     pub coverage: f64,
+    /// How wide a texel of its pictures is on its cards, metres
+    /// ([`crate::billboards::CardPlant::texel`]): it stays as sharp as
+    /// baked while a texel covers at most a screen pixel, so up to a
+    /// screen radius of [`ImpostorRecord::radius`] / `texel` pixels.
+    pub texel: f64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1393,6 +1410,7 @@ fn bake_tiers(graph: &PlantGraph, inputs: &Inputs) -> Result<Vec<BakedTier>, Pac
                     texels: stats.texels,
                     seen_texels: stats.seen_texels,
                     coverage: stats.coverage,
+                    texel: plant.texel(),
                 },
             })
         })
@@ -2207,15 +2225,21 @@ pub fn summary(manifest: &Manifest) -> String {
                     .map(|tier| {
                         let cost = &tier.cost;
                         format!(
-                            "{} {} cards {} triangles {:.2} M texels",
+                            "{} {} cards {} triangles {:.2} M texels sharp to {:.0} px",
                             tier.name,
                             cost.cards,
                             cost.wood_triangles + cost.card_triangles + cost.leaf_triangles,
-                            millions(cost.seen_texels)
+                            millions(cost.seen_texels),
+                            keyframe.impostor.radius / cost.texel.max(1e-9)
                         )
                     })
                     .collect();
-                let _ = writeln!(text, "      cards: {}", tiers.join(", "));
+                let _ = writeln!(
+                    text,
+                    "      cards: {}; impostor sharp to {:.0} px (screen radius)",
+                    tiers.join(", "),
+                    keyframe.impostor.radius / keyframe.impostor.texel().max(1e-9)
+                );
             }
         }
     }
