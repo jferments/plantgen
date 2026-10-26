@@ -330,9 +330,12 @@ fn bent_card(card: &Card, base: Vec3, heading: Vec3, left: Vec3, out: &mut Mesh)
     let shed = card.shed.is_finite().then_some(f64::from(card.shed));
     let half = f64::from(card.width) * 0.5;
     let length = f64::from(card.length);
+    // Each grid point once: a point is five of the bend's positions.
+    let mut points = [None; crate::bend::GRID_POINTS];
     for k in 0..crate::bend::VERTICES {
         let (x, v) = crate::bend::corner(k);
-        let (position, normal) = card.bend.point(base, heading, left, half, length, x, v);
+        let (position, normal) = *points[crate::bend::grid_point(k)]
+            .get_or_insert_with(|| card.bend.point(base, heading, left, half, length, x, v));
         #[allow(clippy::cast_possible_truncation)]
         let index = out.push(Vertex {
             position,

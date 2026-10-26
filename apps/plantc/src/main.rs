@@ -2880,11 +2880,23 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
         // A tree drawn in full is gigabytes; the tiers build their own.
         drop(full_cards);
         drop(full);
-        for tier in plantgen::billboards::TIERS
+        let source = (wants("cards") || wants("far")).then(|| {
+            plantgen::billboards::Source::new(
+                graph,
+                &looks,
+                &bodies,
+                &spec.appearance,
+                &templates,
+                &quality.lods,
+            )
+        });
+        for (tier, source) in plantgen::billboards::TIERS
             .iter()
             .filter(|_| wants("cards"))
+            .filter_map(|tier| Some((tier, source.as_ref()?)))
         {
-            let carded = plantgen::billboards::build(
+            let carded = plantgen::billboards::build_from(
+                source,
                 graph,
                 &looks,
                 &bodies,
@@ -2939,16 +2951,15 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 ));
             }
         }
-        if wants("far") {
+        if let Some(source) = source.as_ref().filter(|_| wants("far")) {
             let far = plantgen::billboards::FAR;
-            let carded = plantgen::billboards::impostor(
+            let carded = plantgen::billboards::impostor_from(
+                source,
                 graph,
                 &looks,
-                &bodies,
                 &spec.appearance,
                 spec.growth_form,
                 &templates,
-                &quality.lods,
                 &far,
             );
             let mut baked = templates.clone();

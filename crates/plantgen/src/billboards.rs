@@ -1023,12 +1023,73 @@ fn whole_leaves(
     (out, replaced)
 }
 
+/// What every tier of a plant is baked from: the plant at the second of
+/// the package's mesh levels with every organ a card of its own and every
+/// axis however fine, and its shadow from each way the sun can shine
+/// ([`SUN_DIRECTIONS`]). The shadows took a quarter of a tree's bake; made
+/// once, they serve all its tiers.
+pub struct Source {
+    mesh: PlantMesh,
+    sky: Sky,
+}
+
+impl Source {
+    /// `graph`'s source; `levels` are the package's four mesh levels for a
+    /// 15 m plant.
+    #[must_use]
+    pub fn new(
+        graph: &PlantGraph,
+        looks: &[Look],
+        bodies: &[BodyLook],
+        appearance: &Appearance,
+        templates: &Templates,
+        levels: &[LodSpec; 4],
+    ) -> Self {
+        let height = graph.height.max(0.01);
+        // Every axis, however fine (a fern's rachis, a grass's culm): the
+        // pictures are where they still show.
+        let mesh = mesh::build(
+            graph,
+            looks,
+            bodies,
+            appearance,
+            &LodSpec {
+                min_radius: 0.0,
+                ..levels[1].for_height(height)
+            },
+            1,
+        );
+        let sky = Sky::new(&mesh.wood, &mesh.card_mesh(), templates);
+        Self { mesh, sky }
+    }
+}
+
 /// Build `graph` at `tier`. `levels` are the package's four mesh levels
 /// for a 15 m plant; the cards are baked from the second, every organ a
-/// card of its own, and the tubes come from the coarsest.
+/// card of its own ([`Source`]), and the tubes come from the coarsest.
+#[must_use]
+#[allow(clippy::too_many_arguments)]
+pub fn build(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    form: GrowthForm,
+    templates: &Templates,
+    levels: &[LodSpec; 4],
+    tier: &CardTier,
+) -> CardPlant {
+    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    build_from(
+        &from, graph, looks, bodies, appearance, form, templates, levels, tier,
+    )
+}
+
+/// [`build`] from `graph`'s [`Source`].
 #[must_use]
 #[allow(clippy::too_many_lines, clippy::too_many_arguments)]
-pub fn build(
+pub fn build_from(
+    from: &Source,
     graph: &PlantGraph,
     looks: &[Look],
     bodies: &[BodyLook],
@@ -1122,21 +1183,7 @@ pub fn build(
         keep *= 1.5;
         coarse = coarse_at(keep);
     }
-    // Every axis, however fine (a fern's rachis, a grass's culm): the
-    // pictures are where they still show.
-    let source = mesh::build(
-        graph,
-        looks,
-        bodies,
-        appearance,
-        &LodSpec {
-            min_radius: 0.0,
-            ..levels[1].for_height(height)
-        },
-        1,
-    );
-
-    let sky = Sky::new(&source.wood, &source.card_mesh(), templates);
+    let (source, sky) = (&from.mesh, &from.sky);
 
     // Elements: organ cards, then thin wood segments.
     let mut elements = Vec::new();
@@ -2046,10 +2093,10 @@ pub fn build(
     let mut covered_area = 0.0;
     let mut card_area = 0.0;
     for plane in &planes {
-        let drawn = draw(plane, texel, true);
         let drawn_texel = texel;
         let (w, h) = (plane.high.0 - plane.low.0, plane.high.1 - plane.low.1);
         if plane.views {
+            let drawn = draw(plane, texel, true);
             let (side, _) = tile(w.max(h), w.max(h), tile_density, tier.most_texels);
             let mid = plane.centre
                 + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
@@ -2072,8 +2119,9 @@ pub fn build(
         let (fw, fh) = (texel * tw as f64, texel * th as f64);
         if let Some((level, extents)) = plane.heights {
             // Each drawn for its own way: its leaves turned toward face on
-            // and its thin stems laid across as seen from there.
-            drop(drawn);
+            // and its thin stems laid across as seen from there. Their
+            // light, from the leaves as they grow, is the same for all.
+            let mut first = true;
             let drawn = height_ways(level).map(|(way, _)| {
                 draw(
                     &Plane {
@@ -2081,7 +2129,7 @@ pub fn build(
                         ..*plane
                     },
                     drawn_texel,
-                    true,
+                    std::mem::take(&mut first),
                 )
             });
             let (covered, area) = add_heights(
@@ -2104,6 +2152,7 @@ pub fn build(
             card_area += area;
             continue;
         }
+        let drawn = draw(plane, drawn_texel, true);
         let mid = plane.centre
             + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
             + plane.up * ((plane.low.1 + plane.high.1) * 0.5);
@@ -2528,6 +2577,7 @@ pub const FAR: ImpostorTier = ImpostorTier {
 /// Build `graph` as an impostor ([`ImpostorTier`]), baked from the same
 /// full plant as [`build`]'s cards.
 #[must_use]
+#[allow(clippy::too_many_arguments)]
 pub fn impostor(
     graph: &PlantGraph,
     looks: &[Look],
@@ -2538,18 +2588,23 @@ pub fn impostor(
     levels: &[LodSpec; 4],
     tier: &ImpostorTier,
 ) -> CardPlant {
-    let height = graph.height.max(0.01);
-    let source = mesh::build(
-        graph,
-        looks,
-        bodies,
-        appearance,
-        &LodSpec {
-            min_radius: 0.0,
-            ..levels[1].for_height(height)
-        },
-        1,
-    );
+    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    impostor_from(&from, graph, looks, appearance, form, templates, tier)
+}
+
+/// [`impostor`] from `graph`'s [`Source`].
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn impostor_from(
+    from: &Source,
+    graph: &PlantGraph,
+    looks: &[Look],
+    appearance: &Appearance,
+    form: GrowthForm,
+    templates: &Templates,
+    tier: &ImpostorTier,
+) -> CardPlant {
+    let (source, sky) = (&from.mesh, &from.sky);
     let grown = source.card_mesh();
     let items = [(&source.wood, Material::Opaque), (&grown, Material::Card)];
     let Some((low, high)) = raster::bounds(&items) else {
@@ -2577,7 +2632,6 @@ pub fn impostor(
     );
     #[allow(clippy::cast_precision_loss)]
     let texel = radius * 2.0 / tier.texels as f64;
-    let sky = Sky::new(&source.wood, &grown, templates);
     // A tree's cards are gigabytes: kept as they grew, not copied.
     let cards = if crowned {
         grown
@@ -2978,11 +3032,13 @@ fn add_heights(
     let mut union: Option<Texture> = None;
     let mut covered = 0.0;
     let ways = height_ways(frame.level);
+    // Only the first holds the light ([`build`]); it serves all three.
+    let lit = drawn[0].lit.as_ref();
     for (((way, up), extent), drawn) in ways.iter().zip(extents).zip(drawn) {
         let mut picture = bake(
             &Shot {
                 cards: &drawn.cards,
-                lit: drawn.lit.as_ref(),
+                lit,
                 wood: &drawn.wood,
                 strips: None,
                 mid: frame.centre + frame.right * x + *up * y,
