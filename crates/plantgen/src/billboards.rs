@@ -43,6 +43,7 @@
 //! baked they fall apart into scraps seen from above.
 
 use crate::body::BodyLook;
+use crate::cores;
 use crate::graph::PlantGraph;
 use crate::looks::{Look, Shape};
 use crate::math::{Vec3, any_perpendicular};
@@ -784,6 +785,46 @@ fn v3(p: [f32; 3]) -> Vec3 {
 fn bark_radius(mesh: &Mesh, i: usize) -> Option<f64> {
     let a = mesh.colors[i][3];
     (a < 0.0).then(|| f64::from(-a))
+}
+
+/// Add `part`'s cards and pictures to `out`'s, after those it has: its
+/// pictures' indices, and the vertices' in its triangles, shift by as many
+/// as come before.
+fn join_cards(out: &mut CardPlant, part: CardPlant) {
+    let pictures = out.pictures.len();
+    let vertices = u32::try_from(out.cards.positions.len()).unwrap_or(u32::MAX);
+    let cards = part.cards;
+    out.cards.positions.extend(cards.positions);
+    out.cards.normals.extend(cards.normals);
+    out.cards.uvs.extend(cards.uvs);
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    out.cards.colors.extend(
+        cards
+            .colors
+            .into_iter()
+            .map(|[r, g, b, a]| [r, g, b, (a as usize + pictures) as f32]),
+    );
+    out.cards.births.extend(cards.births);
+    out.cards.sheds.extend(cards.sheds);
+    out.cards.levels.extend(cards.levels);
+    debug_assert!(cards.segments.is_empty() && out.cards.segments.is_empty());
+    out.cards
+        .indices
+        .extend(cards.indices.into_iter().map(|i| i + vertices));
+    out.pictures
+        .extend(part.pictures.into_iter().map(|mut picture| {
+            match &mut picture.turn {
+                Turn::Views { first, .. } | Turn::Heights { first, .. } => *first += pictures,
+                _ => {}
+            }
+            picture
+        }));
+    out.stats.texels += part.stats.texels;
+    out.stats.seen_texels += part.stats.seen_texels;
 }
 
 /// Copy triangle `t` of `from` into `to`.
@@ -2159,9 +2200,10 @@ pub fn build_from(
         let cards = fine.card_mesh();
         (fine.wood, cards)
     });
-    let mut covered_area = 0.0;
-    let mut card_area = 0.0;
-    for plane in &planes {
+    // Each card is baked on its own, on as many cores as are idle, and
+    // they are joined in order: the same pictures however many bake them.
+    let bake_plane = |plane: &Plane| -> (CardPlant, f64, f64) {
+        let mut out = CardPlant::default();
         let drawn_texel = texel;
         let (w, h) = (plane.high.0 - plane.low.0, plane.high.1 - plane.low.1);
         if plane.views {
@@ -2175,9 +2217,7 @@ pub fn build_from(
                 None => drawn,
             };
             let (covered, area) = add_views(&mut out, &drawn, mid, side, templates, &sky);
-            covered_area += covered;
-            card_area += area;
-            continue;
+            return (out, covered, area);
         }
         let (tw, th) = tile(w, h, tile_density, tier.most_texels);
         // The picture's frame: the group's extent, grown to the texels'
@@ -2217,9 +2257,7 @@ pub fn build_from(
                 templates,
                 &sky,
             );
-            covered_area += covered;
-            card_area += area;
-            continue;
+            return (out, covered, area);
         }
         let drawn = draw(plane, drawn_texel, true);
         let mid = plane.centre
@@ -2249,7 +2287,7 @@ pub fn build_from(
         keep_coverage(&mut picture);
         fill_empty(&mut picture);
         let Some(outline) = outline(&picture) else {
-            continue;
+            return (out, 0.0, 0.0);
         };
         let index = out.pictures.len();
         #[allow(clippy::cast_precision_loss)]
@@ -2277,16 +2315,25 @@ pub fn build_from(
                 .extend_from_slice(&[first, first + i, first + i + 1]);
         }
         let poly_area = polygon_area(&outline) * fw * fh;
-        card_area += poly_area;
         #[allow(clippy::cast_precision_loss)]
         let covered = picture.color.iter().filter(|c| c[3] >= 0.5).count() as f64 * texel * texel;
-        covered_area += covered;
         out.stats.texels += tw * th;
         out.stats.seen_texels += tw * th;
         // A card turns about the middle of its parts: a skirt about its
         // trunk, whatever its outline's shape.
         picture.pivot = plane.centre.to_f32();
         out.pictures.push(picture);
+        (out, covered, poly_area)
+    };
+    let lease = cores::Lease::take(planes.len().min(cores::per_task()));
+    let baked = cores::map(planes.iter().collect(), lease.threads(), &bake_plane);
+    drop(lease);
+    let mut covered_area = 0.0;
+    let mut card_area = 0.0;
+    for (part, covered, area) in baked {
+        join_cards(&mut out, part);
+        covered_area += covered;
+        card_area += area;
     }
     out.stats.cards = out
         .pictures
@@ -2804,7 +2851,7 @@ pub fn impostor_from(
     let ways = ways_round(tier.around);
     let count = ways.len();
     let mut out = CardPlant::default();
-    for way in ways {
+    let view = |way: Vec3| -> Texture {
         let up = (Vec3::Y - way * Vec3::Y.dot(way)).normalize_or_else(|| Vec3::Z);
         let strips = strips_facing(way);
         let mut picture = bake(
@@ -2831,10 +2878,13 @@ pub fn impostor_from(
         {
             picture.extent = [radius as f32; 3];
         }
-        out.stats.texels += tier.texels * tier.texels;
-        out.stats.seen_texels += tier.texels * tier.texels;
-        out.pictures.push(picture);
-    }
+        picture
+    };
+    let lease = cores::Lease::take(count.min(cores::per_task()));
+    out.pictures = cores::map(ways, lease.threads(), &view);
+    drop(lease);
+    out.stats.texels = count * tier.texels * tier.texels;
+    out.stats.seen_texels = out.stats.texels;
     // One card, baked facing the first way, round what every picture
     // covers; it turns as it is drawn.
     let mut union = out.pictures[0].clone();
@@ -3695,21 +3745,21 @@ impl Sky {
             return Self { maps: Vec::new() };
         };
         let golden = core::f64::consts::PI * (3.0 - 5.0_f64.sqrt());
-        let maps = (0..SUN_DIRECTIONS)
-            .map(|i| {
-                #[allow(clippy::cast_precision_loss)]
-                let z = 1.0 - 2.0 * (i as f64 + 0.5) / SUN_DIRECTIONS as f64;
-                let r = (1.0 - z * z).max(0.0).sqrt();
-                #[allow(clippy::cast_precision_loss)]
-                let phi = i as f64 * golden;
-                // y up: the first direction is straight overhead.
-                let d = Vec3::new(r * crate::math::cos(phi), z, r * crate::math::sin(phi));
-                (
-                    d,
-                    raster::ShadowMap::new(&items, templates, d, bounds, SUN_TEXELS),
-                )
-            })
-            .collect();
+        let sun = |i: usize| {
+            #[allow(clippy::cast_precision_loss)]
+            let z = 1.0 - 2.0 * (i as f64 + 0.5) / SUN_DIRECTIONS as f64;
+            let r = (1.0 - z * z).max(0.0).sqrt();
+            #[allow(clippy::cast_precision_loss)]
+            let phi = i as f64 * golden;
+            // y up: the first direction is straight overhead.
+            let d = Vec3::new(r * crate::math::cos(phi), z, r * crate::math::sin(phi));
+            (
+                d,
+                raster::ShadowMap::new(&items, templates, d, bounds, SUN_TEXELS),
+            )
+        };
+        let lease = cores::Lease::take(SUN_DIRECTIONS.min(cores::per_task()));
+        let maps = cores::map((0..SUN_DIRECTIONS).collect(), lease.threads(), &sun);
         Self { maps }
     }
 
