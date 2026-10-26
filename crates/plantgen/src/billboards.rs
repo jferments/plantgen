@@ -232,6 +232,9 @@ pub const CORNERS: usize = 8;
 /// Rounds of k-means.
 const ROUNDS: usize = 16;
 
+/// Points measured together on one core in [`kmeans`].
+const KMEANS_RUN: usize = 4096;
+
 /// What a baked-card build drew.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct CardStats {
@@ -439,6 +442,21 @@ fn kmeans(points: &[[f64; 9]], weights: &[f64], k: usize) -> Vec<usize> {
     let first = (0..n)
         .max_by(|&a, &b| weights[a].total_cmp(&weights[b]).then(b.cmp(&a)))
         .unwrap_or(0);
+    // Each point's distance to every centre is measured on its own, so
+    // the points are shared out over the idle cores in runs.
+    let lease = cores::Lease::take(if n * k > 1 << 20 {
+        cores::per_task()
+    } else {
+        1
+    });
+    let threads = lease.threads();
+    let runs = |n: usize| -> Vec<std::ops::Range<usize>> {
+        (0..n)
+            .step_by(KMEANS_RUN)
+            .map(|a| a..(a + KMEANS_RUN).min(n))
+            .collect()
+    };
+    let roots: Vec<f64> = weights.iter().map(|w| w.sqrt()).collect();
     let mut centres = vec![points[first]];
     let mut nearest: Vec<f64> = points.iter().map(|p| distance2(p, &centres[0])).collect();
     while centres.len() < k {
@@ -446,8 +464,8 @@ fn kmeans(points: &[[f64; 9]], weights: &[f64], k: usize) -> Vec<usize> {
         // stray hair does not take a card from a frond.
         let next = (0..n)
             .max_by(|&a, &b| {
-                (nearest[a] * weights[a].sqrt())
-                    .total_cmp(&(nearest[b] * weights[b].sqrt()))
+                (nearest[a] * roots[a])
+                    .total_cmp(&(nearest[b] * roots[b]))
                     .then(b.cmp(&a))
             })
             .unwrap_or(0);
@@ -455,27 +473,35 @@ fn kmeans(points: &[[f64; 9]], weights: &[f64], k: usize) -> Vec<usize> {
             break;
         }
         centres.push(points[next]);
-        let c = centres.len() - 1;
-        for (i, p) in points.iter().enumerate() {
-            nearest[i] = nearest[i].min(distance2(p, &centres[c]));
-        }
+        let centre = &centres[centres.len() - 1];
+        let nearer = cores::map(runs(n), threads, &|run: std::ops::Range<usize>| {
+            run.map(|i| nearest[i].min(distance2(&points[i], centre)))
+                .collect::<Vec<f64>>()
+        });
+        nearest = nearer.concat();
     }
     let mut group = vec![0; n];
     for _ in 0..ROUNDS {
-        let mut changed = false;
-        for (i, p) in points.iter().enumerate() {
-            let best = (0..centres.len())
-                .min_by(|&a, &b| {
-                    distance2(p, &centres[a])
-                        .total_cmp(&distance2(p, &centres[b]))
-                        .then(a.cmp(&b))
-                })
-                .unwrap_or(0);
-            if group[i] != best {
-                group[i] = best;
-                changed = true;
-            }
-        }
+        // The nearest centre, the first of equals.
+        let best = cores::map(runs(n), threads, &|run: std::ops::Range<usize>| {
+            run.map(|i| {
+                let p = &points[i];
+                let mut best = 0;
+                let mut off = distance2(p, &centres[0]);
+                for (c, centre) in centres.iter().enumerate().skip(1) {
+                    let d = distance2(p, centre);
+                    if d.total_cmp(&off) == std::cmp::Ordering::Less {
+                        best = c;
+                        off = d;
+                    }
+                }
+                best
+            })
+            .collect::<Vec<usize>>()
+        })
+        .concat();
+        let changed = best != group;
+        group = best;
         let mut sums = vec![([0.0; 9], 0.0); centres.len()];
         for (i, p) in points.iter().enumerate() {
             let (sum, weight) = &mut sums[group[i]];
