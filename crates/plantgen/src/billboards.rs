@@ -3361,7 +3361,7 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         },
     };
     let wood_material = templates.bark.map_or(Material::Opaque, Material::Bark);
-    let render = |cards: &Mesh, normals_only: bool| {
+    let render = |cards: &Mesh, scale: usize, normals_only: bool| {
         let mut items = vec![(cards, Material::Card), (shot.wood, wood_material)];
         if let Some(strips) = shot.strips {
             items.push((strips, wood_material));
@@ -3371,28 +3371,31 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         } else {
             raster::render
         };
+        // Normals and depth are wanted a sample at a time, not averaged.
+        let (width, height, supersample) = if normals_only {
+            (tw * scale, th * scale, 1)
+        } else {
+            (tw, th, scale)
+        };
         render(
             &items,
             &camera,
             &Lighting::flat(),
             templates,
             &RenderOptions {
-                width: tw,
-                height: th,
-                supersample: if normals_only {
-                    LIT_SUPERSAMPLE
-                } else {
-                    COLOUR_SUPERSAMPLE
-                },
+                width,
+                height,
+                supersample,
                 shadows: false,
                 shadow_bounds: None,
                 shadow_texels: 1,
             },
         )
     };
-    let image = render(shot.cards, false);
-    // Only its normals and depth are read.
-    let grown = shot.lit.map(|lit| render(lit, true));
+    let image = render(shot.cards, COLOUR_SUPERSAMPLE, false);
+    // The leaves as they grow, unturned, LIT_SUPERSAMPLE samples along
+    // each side of a texel: only their normals and depth are read.
+    let samples = render(shot.lit.unwrap_or(shot.cards), LIT_SUPERSAMPLE, true);
     // Rows from the bottom, so v grows upward like the frame's up.
     let mut picture = Texture {
         width: tw,
@@ -3405,43 +3408,73 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         extent: [0.0; 3],
         seen_from: shot.normal.to_f32(),
     };
-    for y in 0..th {
-        for x in 0..tw {
-            let from = (th - 1 - y) * tw + x;
-            picture.color[y * tw + x] = image.color[from];
-            picture.normal[y * tw + x] = match &grown {
-                Some(grown) if grown.depth[from].is_finite() => grown.normal[from],
-                _ => image.normal[from],
-            };
-        }
-    }
+    let s = LIT_SUPERSAMPLE;
+    // The point `distance` from the eye seen at `(u, v)` on the frame.
+    let at_depth = |u: f64, v: f64, distance: f32| {
+        // A texel only partly covered may have no depth: it lies on the
+        // frame.
+        let distance = Some(f64::from(distance))
+            .filter(|d| d.is_finite())
+            .unwrap_or(depth + 1.0);
+        shot.mid
+            + shot.right * ((u - 0.5) * fw)
+            + shot.up * ((v - 0.5) * fh)
+            + shot.normal * (depth + 1.0 - distance)
+    };
     // How much sun reaches each texel through the whole plant, from
     // every side: on its card a leaf no longer lies in the crown's
     // shade, and a shell of cards casts too thin a shadow on itself.
+    // It is its samples' on average, each seen where it lies, and their
+    // normals' mean keeps its length, shorter the more ways they face:
+    // the nearest sample's sun and the mean made full length, as if all
+    // faced one way, made a conifer's cards a quarter lighter than the
+    // tree and its far impostor half again (Toksvig 2005, "Mipmapping
+    // normal maps", J. Graphics Tools 10(3)).
     for y in 0..th {
         for x in 0..tw {
             let at = y * tw + x;
+            let from = (th - 1 - y) * tw + x;
+            picture.color[at] = image.color[from];
+            picture.normal[at] = image.normal[from];
             if picture.color[at][3] <= 0.0 {
                 continue;
             }
-            let from = (th - 1 - y) * tw + x;
-            let distance = match &grown {
-                Some(grown) if grown.depth[from].is_finite() => grown.depth[from],
-                _ => image.depth[from],
-            };
-            // A texel only partly covered may have no depth: it lies on
-            // the frame.
-            let distance = Some(f64::from(distance))
-                .filter(|d| d.is_finite())
-                .unwrap_or(depth + 1.0);
-            #[allow(clippy::cast_precision_loss)]
-            let (u, v) = ((x as f64 + 0.5) / tw as f64, (y as f64 + 0.5) / th as f64);
-            let p = shot.mid
-                + shot.right * ((u - 0.5) * fw)
-                + shot.up * ((v - 0.5) * fh)
-                + shot.normal * (depth + 1.0 - distance);
-            let n = v3(picture.normal[at]).normalize_or(shot.normal);
-            picture.sun[at] = sky.visibility(p, n);
+            let mut normal = Vec3::ZERO;
+            let mut sun = [0.0_f32; 4];
+            let mut covered = 0_u32;
+            for sy in 0..s {
+                for sx in 0..s {
+                    let (row, column) = ((th - 1 - y) * s + sy, x * s + sx);
+                    let k = row * tw * s + column;
+                    if !samples.depth[k].is_finite() {
+                        continue;
+                    }
+                    #[allow(clippy::cast_precision_loss)]
+                    let (u, v) = (
+                        (column as f64 + 0.5) / (tw * s) as f64,
+                        1.0 - (row as f64 + 0.5) / (th * s) as f64,
+                    );
+                    let n = v3(samples.normal[k]).normalize_or(shot.normal);
+                    let seen = sky.visibility(at_depth(u, v, samples.depth[k]), n);
+                    for (sum, c) in sun.iter_mut().zip(seen) {
+                        *sum += c;
+                    }
+                    normal += n;
+                    covered += 1;
+                }
+            }
+            if covered == 0 {
+                #[allow(clippy::cast_precision_loss)]
+                let (u, v) = ((x as f64 + 0.5) / tw as f64, (y as f64 + 0.5) / th as f64);
+                let n = v3(picture.normal[at]).normalize_or(shot.normal);
+                picture.sun[at] = sky.visibility(at_depth(u, v, image.depth[from]), n);
+                continue;
+            }
+            let length = normal.length();
+            picture.normal[at] = normal.normalize_or(shot.normal).to_f32();
+            #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
+            let share = (length / f64::from(covered)).min(1.0) as f32 / covered as f32;
+            picture.sun[at] = sun.map(|c| c * share);
         }
     }
     picture
