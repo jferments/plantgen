@@ -1280,6 +1280,8 @@ pub mod venation;
 /// as much as their parts cover under a filtered alpha test
 /// (`billboards::keep_coverage`); and a clump of leaves held every way
 /// round turns to the eye wherever that draws its cover closer than a
-/// fixed card. Spanish moss's cards no longer hide four times the sky
-/// the moss does, nor a fescue's impostor twice.
+/// fixed card, its four pictures paid from the plant's own texels
+/// (only a crown's keep theirs as sharp as one), so no plant's atlas
+/// grows. Spanish moss's cards no longer hide four times the sky the moss
+/// does, nor a fescue's impostor twice.
 pub const GENERATOR_REVISION: u32 = 170;

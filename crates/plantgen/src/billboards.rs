@@ -2110,6 +2110,11 @@ pub fn build_from(
     let texel = 1.0 / density;
 
     // The pictures' margins and rounding are paid from the same budget.
+    // A crown's cards keep each of their four pictures ([`HEIGHTS`]) as
+    // sharp as one, as they were first baked; any other plant's turned
+    // cards pay for all four from its budget, so turning its clumps to
+    // the eye costs no memory. Kept as sharp, a yarrow's, an ivy's and a
+    // saguaro's low-card pictures took three to four times the texels.
     let budget = tier.texels(height);
     let mut tile_density = density;
     for _ in 0..8 {
@@ -2122,7 +2127,12 @@ pub fn build_from(
                     side * side * head_ways().len()
                 } else {
                     let (tw, th) = tile(w, h, tile_density, tier.most_texels);
-                    tw * th
+                    let paid = if p.heights.is_some() && !turning {
+                        HEIGHTS.len()
+                    } else {
+                        1
+                    };
+                    tw * th * paid
                 }
             })
             .sum();
