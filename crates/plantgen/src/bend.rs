@@ -214,6 +214,21 @@ pub fn corner(k: u32) -> (f64, f64) {
     (2.0 * u - 1.0, v)
 }
 
+/// The grid point corner `k` of a bent card stands on, numbered row by
+/// row from 0 to `(ACROSS + 1) * (ALONG + 1) - 1`: neighbouring cells'
+/// corners share one, so a mesh computes each point once.
+#[must_use]
+pub fn grid_point(k: u32) -> usize {
+    let cell = k / 6;
+    let (cu, cv) = ((0x26 >> (k % 6)) & 1, (0x32 >> (k % 6)) & 1);
+    let column = cell % ACROSS + cu;
+    let row = cell / ACROSS + cv;
+    (row * (ACROSS + 1) + column) as usize
+}
+
+/// Grid points of a bent card ([`grid_point`]).
+pub const GRID_POINTS: usize = ((ACROSS + 1) * (ALONG + 1)) as usize;
+
 /// Corner `k` of a quad drawn as two triangles, as the renderer's
 /// `corner`: (0,0) (1,1) (1,0) (0,0) (0,1) (1,1).
 fn quad_corner(k: u32) -> (f64, f64) {
@@ -223,6 +238,16 @@ fn quad_corner(k: u32) -> (f64, f64) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn corners_on_one_grid_point_are_one_point() {
+        let mut seen = [None; GRID_POINTS];
+        for k in 0..VERTICES {
+            let point = corner(k);
+            assert_eq!(*seen[grid_point(k)].get_or_insert(point), point);
+        }
+        assert!(seen.iter().all(Option::is_some));
+    }
 
     #[test]
     fn a_flat_bend_is_the_card() {

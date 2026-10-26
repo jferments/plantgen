@@ -340,7 +340,16 @@ impl ShadowMap {
             if *material == Material::Drop {
                 continue;
             }
-            draw(&mut target, mesh, *material, &camera, None, templates, None);
+            draw(
+                &mut target,
+                mesh,
+                *material,
+                &camera,
+                None,
+                templates,
+                None,
+                false,
+            );
         }
         Self {
             basis: camera.basis(),
@@ -374,6 +383,31 @@ pub fn render(
     templates: &Templates,
     options: &RenderOptions,
 ) -> Image {
+    render_as(meshes, camera, lighting, templates, options, false)
+}
+
+/// [`render`]'s depth and normals alone, as it draws them: the colour is
+/// left black. Leaf cards, bark and opaque parts skip their shading;
+/// other materials are drawn in full.
+#[must_use]
+pub fn render_normals(
+    meshes: &[(&Mesh, Material)],
+    camera: &Camera,
+    lighting: &Lighting,
+    templates: &Templates,
+    options: &RenderOptions,
+) -> Image {
+    render_as(meshes, camera, lighting, templates, options, true)
+}
+
+fn render_as(
+    meshes: &[(&Mesh, Material)],
+    camera: &Camera,
+    lighting: &Lighting,
+    templates: &Templates,
+    options: &RenderOptions,
+    normals_only: bool,
+) -> Image {
     let scale = options.supersample.max(1);
     let shadow = if options.shadows && lighting.sun_color.iter().any(|c| *c > 0.0) {
         options
@@ -401,6 +435,7 @@ pub fn render(
             Some(lighting),
             templates,
             shadow.as_ref(),
+            normals_only,
         );
     }
     target.downsample(scale)
@@ -664,6 +699,8 @@ struct Surface<'a> {
     templates: &'a Templates,
     lighting: Option<&'a Lighting>,
     shadow: Option<&'a ShadowMap>,
+    /// Only depth and normals are wanted ([`render_normals`]).
+    normals_only: bool,
     eye: Vec3,
     forward: Vec3,
     perspective: bool,
@@ -672,6 +709,86 @@ struct Surface<'a> {
 }
 
 impl Surface<'_> {
+    /// [`Self::fragment`]'s depth and normal of a leaf card, bark or an
+    /// opaque part, worked out as it works them out, without its colour.
+    fn normal_only(
+        &self,
+        target: &mut Target,
+        at: usize,
+        corners: [usize; 3],
+        k: [f64; 3],
+        depth: f64,
+    ) {
+        let mesh = self.mesh;
+        let bark = self.bark(corners, k, depth);
+        let normals = corners.map(|i| vec3(mesh.normals[i]));
+        let positions = corners.map(|i| vec3(mesh.positions[i]));
+        let mut normal =
+            (normals[0] * k[0] + normals[1] * k[1] + normals[2] * k[2]).normalize_or(Vec3::Y);
+        let world = positions[0] * k[0] + positions[1] * k[1] + positions[2] * k[2];
+        let view = if self.perspective {
+            (self.eye - world).normalize_or(-self.forward)
+        } else {
+            -self.forward
+        };
+        if self.material == Material::Card && self.card_texel(corners, k, depth).is_none() {
+            return;
+        }
+        target.depth[at] = depth;
+        if let Some((sample, round, along)) = bark {
+            normal =
+                (normal - round * f64::from(sample.slope[0]) - along * f64::from(sample.slope[1]))
+                    .normalize_or(normal);
+        }
+        if self.material == Material::Card && normal.dot(view) < 0.0 {
+            normal = -normal;
+        }
+        target.normal[at] = normal.to_f32();
+    }
+
+    /// The template and texel a leaf card shows at a pixel of triangle
+    /// `corners` at weights `k`, `depth` from the eye; `None` where its
+    /// outline cuts the pixel away.
+    fn card_texel(
+        &self,
+        corners: [usize; 3],
+        k: [f64; 3],
+        depth: f64,
+    ) -> Option<(usize, crate::templates::Texel)> {
+        let mesh = self.mesh;
+        let mix = |values: [f64; 3]| k[0] * values[0] + k[1] * values[1] + k[2] * values[2];
+        let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
+        let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
+        // The template, and the card's face, are packed in alpha.
+        let (template, _, _) = crate::templates::unpack_face(mesh.colors[corners[0]][3]);
+        #[allow(clippy::cast_possible_truncation)]
+        let (u, v) = (u as f32, v as f32);
+        // Cut where the coverage, read between texels, is below one
+        // half, so the card's edge follows its outline.
+        if self.templates.coverage(template, u, v) < 0.5 {
+            return None;
+        }
+        let texel = self.templates.sample(template, u, v);
+        // Up close the edge's hairs are strands of their own.
+        if texel.fringe
+            && let Some(hairs) = self
+                .templates
+                .templates
+                .get(template)
+                .and_then(|drawn| drawn.hairs.as_ref())
+        {
+            let footprint = if self.perspective {
+                self.pixel * depth
+            } else {
+                self.pixel
+            };
+            if !crate::hairs::fringe_drawn(hairs, footprint) {
+                return None;
+            }
+        }
+        Some((template, texel))
+    }
+
     /// The bark pattern at a pixel of triangle `corners` at weights `k`,
     /// `depth` from the eye, and the triangle's unit directions round and
     /// along its stem; `None` off bark.
@@ -728,6 +845,25 @@ impl Surface<'_> {
         if depth >= target.depth[at] {
             return;
         }
+        // A shadow map keeps only depth: of a leaf card, only whether its
+        // outline cuts the pixel away.
+        if self.lighting.is_none() && self.material != Material::Baked {
+            if self.material == Material::Card && self.card_texel(corners, k, depth).is_none() {
+                return;
+            }
+            target.depth[at] = depth;
+            return;
+        }
+        if self.normals_only
+            && self.lighting.is_some()
+            && matches!(
+                self.material,
+                Material::Card | Material::Opaque | Material::Bark(_)
+            )
+        {
+            self.normal_only(target, at, corners, k, depth);
+            return;
+        }
         let mesh = self.mesh;
         let mix = |values: [f64; 3]| k[0] * values[0] + k[1] * values[1] + k[2] * values[2];
         let mut albedo =
@@ -752,36 +888,11 @@ impl Surface<'_> {
             -self.forward
         };
         if self.material == Material::Card {
-            let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
-            let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
+            let Some((template, texel)) = self.card_texel(corners, k, depth) else {
+                return;
+            };
             // The template, and the card's face, are packed in alpha.
             let alpha = mesh.colors[corners[0]][3];
-            let (template, _, _) = crate::templates::unpack_face(alpha);
-            #[allow(clippy::cast_possible_truncation)]
-            let (u, v) = (u as f32, v as f32);
-            // Cut where the coverage, read between texels, is below one
-            // half, so the card's edge follows its outline.
-            if self.templates.coverage(template, u, v) < 0.5 {
-                return;
-            }
-            let texel = self.templates.sample(template, u, v);
-            // Up close the edge's hairs are strands of their own.
-            if texel.fringe
-                && let Some(hairs) = self
-                    .templates
-                    .templates
-                    .get(template)
-                    .and_then(|drawn| drawn.hairs.as_ref())
-            {
-                let footprint = if self.perspective {
-                    self.pixel * depth
-                } else {
-                    self.pixel
-                };
-                if !crate::hairs::fringe_drawn(hairs, footprint) {
-                    return;
-                }
-            }
             let face = crate::templates::card_face(alpha, normal.dot(view) >= 0.0);
             albedo = self.templates.paint(template, albedo, texel, face);
             hair = Some((template, face.lower));
@@ -922,6 +1033,7 @@ impl Surface<'_> {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn draw(
     target: &mut Target,
     mesh: &Mesh,
@@ -930,6 +1042,7 @@ fn draw(
     lighting: Option<&Lighting>,
     templates: &Templates,
     shadow: Option<&ShadowMap>,
+    normals_only: bool,
 ) {
     let basis = camera.basis();
     let turned = if material == Material::Baked {
@@ -945,6 +1058,7 @@ fn draw(
         templates,
         lighting,
         shadow,
+        normals_only,
         eye: camera.eye,
         forward: basis.2,
         perspective: viewport.perspective,
@@ -1008,6 +1122,16 @@ fn draw(
 /// A picture baked from nearer straight up than this cosine lies on the
 /// ground ([`Turn::Heights`]).
 const STRAIGHT_UP: f64 = 0.999;
+
+/// `mesh`'s baked cards, each vertex's picture in its colour's alpha
+/// ([`Material::Baked`]), turned to `camera` as their pictures say
+/// ([`Texture::turn`]), each vertex's alpha then the picture it shows:
+/// how this crate's renders draw them, and what an engine's vertex shader
+/// must do (`shaders/turn_cards.wgsl`, [`crate::billboards::TURN_CARDS_WGSL`]).
+#[must_use]
+pub fn turned(mesh: &Mesh, templates: &Templates, camera: &Camera) -> Mesh {
+    turn_cards(mesh, templates, camera, camera.basis().2).unwrap_or_else(|| mesh.clone())
+}
 
 /// `mesh`'s baked cards turned to `camera` as their pictures say
 /// ([`Texture::turn`]); `None` when none turns.

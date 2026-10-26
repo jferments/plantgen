@@ -43,6 +43,7 @@
 //! baked they fall apart into scraps seen from above.
 
 use crate::body::BodyLook;
+use crate::cores;
 use crate::graph::PlantGraph;
 use crate::looks::{Look, Shape};
 use crate::math::{Vec3, any_perpendicular};
@@ -50,6 +51,11 @@ use crate::mesh::{self, Card, LodSpec, Mesh, PlantMesh, Vertex};
 use crate::raster::{self, Camera, Lighting, Material, Projection, RenderOptions, Texture, Turn};
 use crate::spec::{Appearance, GrowthForm};
 use crate::templates::Templates;
+
+/// How a baked card turns to the eye, in WGSL for an engine's vertex
+/// shader: the reference for [`raster::turned`], with vectors from it in
+/// `shaders/turn_cards.json`.
+pub const TURN_CARDS_WGSL: &str = include_str!("../shaders/turn_cards.wgsl");
 
 /// Plants this tall or lower take a tier's `small` budget.
 pub const SMALL_M: f64 = 2.0;
@@ -226,6 +232,10 @@ pub const CORNERS: usize = 8;
 /// Rounds of k-means.
 const ROUNDS: usize = 16;
 
+/// Points measured together on one core in [`kmeans`], and triangles
+/// matched to their segments together in [`build_from`].
+const RUN: usize = 4096;
+
 /// What a baked-card build drew.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct CardStats {
@@ -285,6 +295,41 @@ impl Atlas {
 }
 
 impl CardPlant {
+    /// How wide one of its pictures' texels is where its card lies, metres,
+    /// averaged over its cards' area: a tier stays as sharp as it was
+    /// baked while a texel covers at most a pixel, as a texture is drawn
+    /// from its finest mipmap level while it is magnified (OpenGL 4.6
+    /// core profile, section 8.14, the level of detail λ ≤ 0). Each
+    /// card counts once, with the picture it was laid down with.
+    #[must_use]
+    pub fn texel(&self) -> f64 {
+        let mesh = &self.cards;
+        let (mut weighted, mut total) = (0.0, 0.0);
+        for t in mesh.indices.as_chunks::<3>().0 {
+            let [a, b, c] = t.map(|i| i as usize);
+            let p = |i: usize| v3(mesh.positions[i]);
+            let area = (p(b) - p(a)).cross(p(c) - p(a)).length() * 0.5;
+            let uv = |i: usize| (f64::from(mesh.uvs[i][0]), f64::from(mesh.uvs[i][1]));
+            let ((u0, v0), (u1, v1), (u2, v2)) = (uv(a), uv(b), uv(c));
+            let uv_area = ((u1 - u0) * (v2 - v0) - (u2 - u0) * (v1 - v0)).abs() * 0.5;
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let Some(picture) = self
+                .pictures
+                .get(mesh.colors[a][3].max(0.0).round() as usize)
+            else {
+                continue;
+            };
+            #[allow(clippy::cast_precision_loss)]
+            let texels = uv_area * (picture.width * picture.height) as f64;
+            if area <= 0.0 || texels <= 0.0 {
+                continue;
+            }
+            weighted += area * (area / texels).sqrt();
+            total += area;
+        }
+        if total > 0.0 { weighted / total } else { 0.0 }
+    }
+
     /// The pictures packed in rows (tallest first) into one texture as
     /// wide as a power of two, the least square one that holds them.
     #[must_use]
@@ -398,6 +443,18 @@ fn kmeans(points: &[[f64; 9]], weights: &[f64], k: usize) -> Vec<usize> {
     let first = (0..n)
         .max_by(|&a, &b| weights[a].total_cmp(&weights[b]).then(b.cmp(&a)))
         .unwrap_or(0);
+    // Each point's distance to every centre is measured on its own, so
+    // the points are shared out over the idle cores in runs.
+    let lease = cores::Lease::take(if n * k > 1 << 20 {
+        cores::per_task()
+    } else {
+        1
+    });
+    let threads = lease.threads();
+    let runs = |n: usize| -> Vec<std::ops::Range<usize>> {
+        (0..n).step_by(RUN).map(|a| a..(a + RUN).min(n)).collect()
+    };
+    let roots: Vec<f64> = weights.iter().map(|w| w.sqrt()).collect();
     let mut centres = vec![points[first]];
     let mut nearest: Vec<f64> = points.iter().map(|p| distance2(p, &centres[0])).collect();
     while centres.len() < k {
@@ -405,8 +462,8 @@ fn kmeans(points: &[[f64; 9]], weights: &[f64], k: usize) -> Vec<usize> {
         // stray hair does not take a card from a frond.
         let next = (0..n)
             .max_by(|&a, &b| {
-                (nearest[a] * weights[a].sqrt())
-                    .total_cmp(&(nearest[b] * weights[b].sqrt()))
+                (nearest[a] * roots[a])
+                    .total_cmp(&(nearest[b] * roots[b]))
                     .then(b.cmp(&a))
             })
             .unwrap_or(0);
@@ -414,27 +471,35 @@ fn kmeans(points: &[[f64; 9]], weights: &[f64], k: usize) -> Vec<usize> {
             break;
         }
         centres.push(points[next]);
-        let c = centres.len() - 1;
-        for (i, p) in points.iter().enumerate() {
-            nearest[i] = nearest[i].min(distance2(p, &centres[c]));
-        }
+        let centre = &centres[centres.len() - 1];
+        let nearer = cores::map(runs(n), threads, &|run: std::ops::Range<usize>| {
+            run.map(|i| nearest[i].min(distance2(&points[i], centre)))
+                .collect::<Vec<f64>>()
+        });
+        nearest = nearer.concat();
     }
     let mut group = vec![0; n];
     for _ in 0..ROUNDS {
-        let mut changed = false;
-        for (i, p) in points.iter().enumerate() {
-            let best = (0..centres.len())
-                .min_by(|&a, &b| {
-                    distance2(p, &centres[a])
-                        .total_cmp(&distance2(p, &centres[b]))
-                        .then(a.cmp(&b))
-                })
-                .unwrap_or(0);
-            if group[i] != best {
-                group[i] = best;
-                changed = true;
-            }
-        }
+        // The nearest centre, the first of equals.
+        let best = cores::map(runs(n), threads, &|run: std::ops::Range<usize>| {
+            run.map(|i| {
+                let p = &points[i];
+                let mut best = 0;
+                let mut off = distance2(p, &centres[0]);
+                for (c, centre) in centres.iter().enumerate().skip(1) {
+                    let d = distance2(p, centre);
+                    if d.total_cmp(&off) == std::cmp::Ordering::Less {
+                        best = c;
+                        off = d;
+                    }
+                }
+                best
+            })
+            .collect::<Vec<usize>>()
+        })
+        .concat();
+        let changed = best != group;
+        group = best;
         let mut sums = vec![([0.0; 9], 0.0); centres.len()];
         for (i, p) in points.iter().enumerate() {
             let (sum, weight) = &mut sums[group[i]];
@@ -746,6 +811,46 @@ fn bark_radius(mesh: &Mesh, i: usize) -> Option<f64> {
     (a < 0.0).then(|| f64::from(-a))
 }
 
+/// Add `part`'s cards and pictures to `out`'s, after those it has: its
+/// pictures' indices, and the vertices' in its triangles, shift by as many
+/// as come before.
+fn join_cards(out: &mut CardPlant, part: CardPlant) {
+    let pictures = out.pictures.len();
+    let vertices = u32::try_from(out.cards.positions.len()).unwrap_or(u32::MAX);
+    let cards = part.cards;
+    out.cards.positions.extend(cards.positions);
+    out.cards.normals.extend(cards.normals);
+    out.cards.uvs.extend(cards.uvs);
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    out.cards.colors.extend(
+        cards
+            .colors
+            .into_iter()
+            .map(|[r, g, b, a]| [r, g, b, (a as usize + pictures) as f32]),
+    );
+    out.cards.births.extend(cards.births);
+    out.cards.sheds.extend(cards.sheds);
+    out.cards.levels.extend(cards.levels);
+    debug_assert!(cards.segments.is_empty() && out.cards.segments.is_empty());
+    out.cards
+        .indices
+        .extend(cards.indices.into_iter().map(|i| i + vertices));
+    out.pictures
+        .extend(part.pictures.into_iter().map(|mut picture| {
+            match &mut picture.turn {
+                Turn::Views { first, .. } | Turn::Heights { first, .. } => *first += pictures,
+                _ => {}
+            }
+            picture
+        }));
+    out.stats.texels += part.stats.texels;
+    out.stats.seen_texels += part.stats.seen_texels;
+}
+
 /// Copy triangle `t` of `from` into `to`.
 fn copy_triangle(to: &mut Mesh, from: &Mesh, t: usize) {
     for k in 0..3 {
@@ -1023,12 +1128,102 @@ fn whole_leaves(
     (out, replaced)
 }
 
+/// What every tier of a plant is baked from: the plant at the second of
+/// the package's mesh levels with every organ a card of its own and every
+/// axis however fine, and its shadow from each way the sun can shine
+/// ([`SUN_DIRECTIONS`]). The shadows took a quarter of a tree's bake; made
+/// once, they serve all its tiers.
+pub struct Source {
+    mesh: PlantMesh,
+    sky: Sky,
+}
+
+impl Source {
+    /// `graph`'s source; `levels` are the package's four mesh levels for a
+    /// 15 m plant.
+    #[must_use]
+    pub fn new(
+        graph: &PlantGraph,
+        looks: &[Look],
+        bodies: &[BodyLook],
+        appearance: &Appearance,
+        templates: &Templates,
+        levels: &[LodSpec; 4],
+    ) -> Self {
+        let height = graph.height.max(0.01);
+        // Every axis, however fine (a fern's rachis, a grass's culm): the
+        // pictures are where they still show.
+        let mesh = mesh::build(
+            graph,
+            looks,
+            bodies,
+            appearance,
+            &LodSpec {
+                min_radius: 0.0,
+                ..levels[1].for_height(height)
+            },
+            1,
+        );
+        let sky = Sky::new(&mesh.wood, &mesh.card_mesh(), templates);
+        Self { mesh, sky }
+    }
+}
+
+/// Every tier of `graph` from one [`Source`], by name: [`TIERS`]' cards,
+/// then the [`FAR`] impostor.
+#[must_use]
+pub fn tiers(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    form: GrowthForm,
+    templates: &Templates,
+    levels: &[LodSpec; 4],
+) -> Vec<(&'static str, CardPlant)> {
+    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    let mut out: Vec<(&'static str, CardPlant)> = TIERS
+        .iter()
+        .map(|tier| {
+            let plant = build_from(
+                &from, graph, looks, bodies, appearance, form, templates, levels, tier,
+            );
+            (tier.name, plant)
+        })
+        .collect();
+    out.push((
+        FAR.name,
+        impostor_from(&from, graph, looks, appearance, form, templates, &FAR),
+    ));
+    out
+}
+
 /// Build `graph` at `tier`. `levels` are the package's four mesh levels
 /// for a 15 m plant; the cards are baked from the second, every organ a
-/// card of its own, and the tubes come from the coarsest.
+/// card of its own ([`Source`]), and the tubes come from the coarsest.
+#[must_use]
+#[allow(clippy::too_many_arguments)]
+pub fn build(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    form: GrowthForm,
+    templates: &Templates,
+    levels: &[LodSpec; 4],
+    tier: &CardTier,
+) -> CardPlant {
+    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    build_from(
+        &from, graph, looks, bodies, appearance, form, templates, levels, tier,
+    )
+}
+
+/// [`build`] from `graph`'s [`Source`].
 #[must_use]
 #[allow(clippy::too_many_lines, clippy::too_many_arguments)]
-pub fn build(
+pub fn build_from(
+    from: &Source,
     graph: &PlantGraph,
     looks: &[Look],
     bodies: &[BodyLook],
@@ -1056,7 +1251,7 @@ pub fn build(
     // texel wide they would cover them, and ivy's cards came out brown.
     let climbing = form == GrowthForm::Vine;
     let coarse_at = |keep: f64| {
-        mesh::build(
+        mesh::build_wood(
             graph,
             looks,
             bodies,
@@ -1122,21 +1317,7 @@ pub fn build(
         keep *= 1.5;
         coarse = coarse_at(keep);
     }
-    // Every axis, however fine (a fern's rachis, a grass's culm): the
-    // pictures are where they still show.
-    let source = mesh::build(
-        graph,
-        looks,
-        bodies,
-        appearance,
-        &LodSpec {
-            min_radius: 0.0,
-            ..levels[1].for_height(height)
-        },
-        1,
-    );
-
-    let sky = Sky::new(&source.wood, &source.card_mesh(), templates);
+    let (source, sky) = (&from.mesh, &from.sky);
 
     // Elements: organ cards, then thin wood segments.
     let mut elements = Vec::new();
@@ -1565,23 +1746,46 @@ pub fn build(
     // rachis, is drawn however thin the rachis).
     let mut group_triangles: Vec<Vec<(usize, usize, bool)>> = vec![Vec::new(); groups];
     let mut segment_colour = vec![([0.0_f64; 3], 0.0_f64); graph.segments.len()];
-    for t in 0..source.wood.triangle_count() {
+    // Each triangle's thin segment is found on its own, on idle cores:
+    // whether it is bark, and its segment and how far off it lies.
+    let triangles = source.wood.triangle_count();
+    let found = {
+        let lent = cores::Lease::take(if triangles > 1 << 16 {
+            cores::per_task()
+        } else {
+            1
+        });
+        cores::map(
+            (0..triangles).step_by(RUN).collect(),
+            lent.threads(),
+            &|from: usize| {
+                (from..(from + RUN).min(triangles))
+                    .map(|t| {
+                        let corners = [0, 1, 2].map(|k| source.wood.indices[t * 3 + k] as usize);
+                        let centre = corners
+                            .iter()
+                            .fold(Vec3::ZERO, |sum, &i| sum + v3(source.wood.positions[i]))
+                            * (1.0 / 3.0);
+                        let barked = corners
+                            .iter()
+                            .any(|&i| bark_radius(&source.wood, i).is_some());
+                        let radius = corners
+                            .iter()
+                            .filter_map(|&i| bark_radius(&source.wood, i))
+                            .fold(0.0, f64::max);
+                        if barked && radius >= keep {
+                            return (barked, None);
+                        }
+                        (barked, thin.nearest(centre, &graph.segments))
+                    })
+                    .collect::<Vec<_>>()
+            },
+        )
+        .concat()
+    };
+    for (t, (barked, nearest)) in found.into_iter().enumerate() {
         let corners = [0, 1, 2].map(|k| source.wood.indices[t * 3 + k] as usize);
-        let centre = corners
-            .iter()
-            .fold(Vec3::ZERO, |sum, &i| sum + v3(source.wood.positions[i]))
-            * (1.0 / 3.0);
-        let barked = corners
-            .iter()
-            .any(|&i| bark_radius(&source.wood, i).is_some());
-        let radius = corners
-            .iter()
-            .filter_map(|&i| bark_radius(&source.wood, i))
-            .fold(0.0, f64::max);
-        if barked && radius >= keep {
-            continue;
-        }
-        let Some((segment, d)) = thin.nearest(centre, &graph.segments) else {
+        let Some((segment, d)) = nearest else {
             continue;
         };
         // A leaf drawn whole along its axis (a yarrow's cut blade) is
@@ -2043,13 +2247,14 @@ pub fn build(
         let cards = fine.card_mesh();
         (fine.wood, cards)
     });
-    let mut covered_area = 0.0;
-    let mut card_area = 0.0;
-    for plane in &planes {
-        let drawn = draw(plane, texel, true);
+    // Each card is baked on its own, on as many cores as are idle, and
+    // they are joined in order: the same pictures however many bake them.
+    let bake_plane = |plane: &Plane| -> (CardPlant, f64, f64) {
+        let mut out = CardPlant::default();
         let drawn_texel = texel;
         let (w, h) = (plane.high.0 - plane.low.0, plane.high.1 - plane.low.1);
         if plane.views {
+            let drawn = draw(plane, texel, true);
             let (side, _) = tile(w.max(h), w.max(h), tile_density, tier.most_texels);
             let mid = plane.centre
                 + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
@@ -2059,9 +2264,7 @@ pub fn build(
                 None => drawn,
             };
             let (covered, area) = add_views(&mut out, &drawn, mid, side, templates, &sky);
-            covered_area += covered;
-            card_area += area;
-            continue;
+            return (out, covered, area);
         }
         let (tw, th) = tile(w, h, tile_density, tier.most_texels);
         // The picture's frame: the group's extent, grown to the texels'
@@ -2072,8 +2275,9 @@ pub fn build(
         let (fw, fh) = (texel * tw as f64, texel * th as f64);
         if let Some((level, extents)) = plane.heights {
             // Each drawn for its own way: its leaves turned toward face on
-            // and its thin stems laid across as seen from there.
-            drop(drawn);
+            // and its thin stems laid across as seen from there. Their
+            // light, from the leaves as they grow, is the same for all.
+            let mut first = true;
             let drawn = height_ways(level).map(|(way, _)| {
                 draw(
                     &Plane {
@@ -2081,7 +2285,7 @@ pub fn build(
                         ..*plane
                     },
                     drawn_texel,
-                    true,
+                    std::mem::take(&mut first),
                 )
             });
             let (covered, area) = add_heights(
@@ -2100,10 +2304,9 @@ pub fn build(
                 templates,
                 &sky,
             );
-            covered_area += covered;
-            card_area += area;
-            continue;
+            return (out, covered, area);
         }
+        let drawn = draw(plane, drawn_texel, true);
         let mid = plane.centre
             + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
             + plane.up * ((plane.low.1 + plane.high.1) * 0.5);
@@ -2131,7 +2334,7 @@ pub fn build(
         keep_coverage(&mut picture);
         fill_empty(&mut picture);
         let Some(outline) = outline(&picture) else {
-            continue;
+            return (out, 0.0, 0.0);
         };
         let index = out.pictures.len();
         #[allow(clippy::cast_precision_loss)]
@@ -2159,16 +2362,25 @@ pub fn build(
                 .extend_from_slice(&[first, first + i, first + i + 1]);
         }
         let poly_area = polygon_area(&outline) * fw * fh;
-        card_area += poly_area;
         #[allow(clippy::cast_precision_loss)]
         let covered = picture.color.iter().filter(|c| c[3] >= 0.5).count() as f64 * texel * texel;
-        covered_area += covered;
         out.stats.texels += tw * th;
         out.stats.seen_texels += tw * th;
         // A card turns about the middle of its parts: a skirt about its
         // trunk, whatever its outline's shape.
         picture.pivot = plane.centre.to_f32();
         out.pictures.push(picture);
+        (out, covered, poly_area)
+    };
+    let lease = cores::Lease::take(planes.len().min(cores::per_task()));
+    let baked = cores::map(planes.iter().collect(), lease.threads(), &bake_plane);
+    drop(lease);
+    let mut covered_area = 0.0;
+    let mut card_area = 0.0;
+    for (part, covered, area) in baked {
+        join_cards(&mut out, part);
+        covered_area += covered;
+        card_area += area;
     }
     out.stats.cards = out
         .pictures
@@ -2444,7 +2656,13 @@ fn ribbon(
 /// to (tubes do not record their segments).
 struct SegmentGrid {
     cell: f64,
-    cells: std::collections::HashMap<(i64, i64, i64), Vec<usize>>,
+    // Cells are looked up 27 times for each wood triangle: Fx hashing
+    // ([`crate::grow::IdHasher`]), not `SipHash`.
+    cells: std::collections::HashMap<
+        (i64, i64, i64),
+        Vec<usize>,
+        std::hash::BuildHasherDefault<crate::grow::IdHasher>,
+    >,
 }
 
 impl SegmentGrid {
@@ -2464,7 +2682,7 @@ impl SegmentGrid {
             .fold(1e-3, f64::max);
         let mut grid = Self {
             cell,
-            cells: std::collections::HashMap::new(),
+            cells: std::collections::HashMap::default(),
         };
         for s in thin {
             let key = grid.key((segments[s].start + segments[s].end) * 0.5);
@@ -2528,6 +2746,7 @@ pub const FAR: ImpostorTier = ImpostorTier {
 /// Build `graph` as an impostor ([`ImpostorTier`]), baked from the same
 /// full plant as [`build`]'s cards.
 #[must_use]
+#[allow(clippy::too_many_arguments)]
 pub fn impostor(
     graph: &PlantGraph,
     looks: &[Look],
@@ -2538,18 +2757,23 @@ pub fn impostor(
     levels: &[LodSpec; 4],
     tier: &ImpostorTier,
 ) -> CardPlant {
-    let height = graph.height.max(0.01);
-    let source = mesh::build(
-        graph,
-        looks,
-        bodies,
-        appearance,
-        &LodSpec {
-            min_radius: 0.0,
-            ..levels[1].for_height(height)
-        },
-        1,
-    );
+    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    impostor_from(&from, graph, looks, appearance, form, templates, tier)
+}
+
+/// [`impostor`] from `graph`'s [`Source`].
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn impostor_from(
+    from: &Source,
+    graph: &PlantGraph,
+    looks: &[Look],
+    appearance: &Appearance,
+    form: GrowthForm,
+    templates: &Templates,
+    tier: &ImpostorTier,
+) -> CardPlant {
+    let (source, sky) = (&from.mesh, &from.sky);
     let grown = source.card_mesh();
     let items = [(&source.wood, Material::Opaque), (&grown, Material::Card)];
     let Some((low, high)) = raster::bounds(&items) else {
@@ -2577,7 +2801,6 @@ pub fn impostor(
     );
     #[allow(clippy::cast_precision_loss)]
     let texel = radius * 2.0 / tier.texels as f64;
-    let sky = Sky::new(&source.wood, &grown, templates);
     // A tree's cards are gigabytes: kept as they grew, not copied.
     let cards = if crowned {
         grown
@@ -2681,7 +2904,7 @@ pub fn impostor(
     let ways = ways_round(tier.around);
     let count = ways.len();
     let mut out = CardPlant::default();
-    for way in ways {
+    let view = |way: Vec3| -> Texture {
         let up = (Vec3::Y - way * Vec3::Y.dot(way)).normalize_or_else(|| Vec3::Z);
         let strips = strips_facing(way);
         let mut picture = bake(
@@ -2708,10 +2931,13 @@ pub fn impostor(
         {
             picture.extent = [radius as f32; 3];
         }
-        out.stats.texels += tier.texels * tier.texels;
-        out.stats.seen_texels += tier.texels * tier.texels;
-        out.pictures.push(picture);
-    }
+        picture
+    };
+    let lease = cores::Lease::take(count.min(cores::per_task()));
+    out.pictures = cores::map(ways, lease.threads(), &view);
+    drop(lease);
+    out.stats.texels = count * tier.texels * tier.texels;
+    out.stats.seen_texels = out.stats.texels;
     // One card, baked facing the first way, round what every picture
     // covers; it turns as it is drawn.
     let mut union = out.pictures[0].clone();
@@ -2978,11 +3204,13 @@ fn add_heights(
     let mut union: Option<Texture> = None;
     let mut covered = 0.0;
     let ways = height_ways(frame.level);
+    // Only the first holds the light ([`build`]); it serves all three.
+    let lit = drawn[0].lit.as_ref();
     for (((way, up), extent), drawn) in ways.iter().zip(extents).zip(drawn) {
         let mut picture = bake(
             &Shot {
                 cards: &drawn.cards,
-                lit: drawn.lit.as_ref(),
+                lit,
                 wood: &drawn.wood,
                 strips: None,
                 mid: frame.centre + frame.right * x + *up * y,
@@ -3062,6 +3290,20 @@ fn add_heights(
     (covered / heights, polygon_area(&outline) * fw * fh)
 }
 
+/// Samples along each side of a picture's texel when its colour and
+/// coverage are drawn ([`bake`]). At 3 (Jay, 2026-10-26, from 4) each
+/// texel's coverage is read in ninths, not sixteenths, before
+/// [`keep_coverage`] diffuses it; the cards' outlines and cover barely
+/// moved, and the colour pass takes about half the time.
+const COLOUR_SUPERSAMPLE: usize = 3;
+
+/// Samples along each side of a texel when the leaves are drawn as they
+/// grew, for the normals and places the sun is read at ([`bake`]). At 2
+/// (Jay, 2026-10-26, from 4), with 16 suns and 3 colour samples, a tree's
+/// cards took 40% less time and came out up to 7% darker, nearly all of
+/// it from this pass.
+const LIT_SUPERSAMPLE: usize = 2;
+
 /// What a picture is baked of, and the frame it is seen in.
 struct Shot<'a> {
     /// Drawn for the colour.
@@ -3105,12 +3347,17 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
         },
     };
     let wood_material = templates.bark.map_or(Material::Opaque, Material::Bark);
-    let render = |cards: &Mesh| {
+    let render = |cards: &Mesh, normals_only: bool| {
         let mut items = vec![(cards, Material::Card), (shot.wood, wood_material)];
         if let Some(strips) = shot.strips {
             items.push((strips, wood_material));
         }
-        raster::render(
+        let render = if normals_only {
+            raster::render_normals
+        } else {
+            raster::render
+        };
+        render(
             &items,
             &camera,
             &Lighting::flat(),
@@ -3118,15 +3365,20 @@ fn bake(shot: &Shot, templates: &Templates, sky: &Sky) -> Texture {
             &RenderOptions {
                 width: tw,
                 height: th,
-                supersample: 4,
+                supersample: if normals_only {
+                    LIT_SUPERSAMPLE
+                } else {
+                    COLOUR_SUPERSAMPLE
+                },
                 shadows: false,
                 shadow_bounds: None,
                 shadow_texels: 1,
             },
         )
     };
-    let image = render(shot.cards);
-    let grown = shot.lit.map(render);
+    let image = render(shot.cards, false);
+    // Only its normals and depth are read.
+    let grown = shot.lit.map(|lit| render(lit, true));
     // Rows from the bottom, so v grows upward like the frame's up.
     let mut picture = Texture {
         width: tw,
@@ -3551,8 +3803,15 @@ mod tests {
 }
 
 /// Directions the sun is shadowed from when each texel's
-/// [`Texture::sun`] is baked, spread evenly over the sphere.
-const SUN_DIRECTIONS: usize = 32;
+/// [`Texture::sun`] is baked, spread evenly over the sphere on a golden
+/// spiral: a spherical Fibonacci set, which integrates light over the
+/// sphere with less error for its count than other point sets (Marques et
+/// al. 2013, "Spherical Fibonacci point sets for illumination integrals",
+/// Computer Graphics Forum 32(8)). Only the visibility's four first-order
+/// harmonics are kept. Halved from 32 (Jay, 2026-10-26), the cards' tone
+/// moved at most 1.9% (yarrow, sagebrush, Oregon white oak, Douglas fir
+/// at 60 years) and their sun maps took half the time.
+const SUN_DIRECTIONS: usize = 16;
 
 /// Texels along each side of those shadow maps.
 const SUN_TEXELS: usize = 1024;
@@ -3570,21 +3829,21 @@ impl Sky {
             return Self { maps: Vec::new() };
         };
         let golden = core::f64::consts::PI * (3.0 - 5.0_f64.sqrt());
-        let maps = (0..SUN_DIRECTIONS)
-            .map(|i| {
-                #[allow(clippy::cast_precision_loss)]
-                let z = 1.0 - 2.0 * (i as f64 + 0.5) / SUN_DIRECTIONS as f64;
-                let r = (1.0 - z * z).max(0.0).sqrt();
-                #[allow(clippy::cast_precision_loss)]
-                let phi = i as f64 * golden;
-                // y up: the first direction is straight overhead.
-                let d = Vec3::new(r * crate::math::cos(phi), z, r * crate::math::sin(phi));
-                (
-                    d,
-                    raster::ShadowMap::new(&items, templates, d, bounds, SUN_TEXELS),
-                )
-            })
-            .collect();
+        let sun = |i: usize| {
+            #[allow(clippy::cast_precision_loss)]
+            let z = 1.0 - 2.0 * (i as f64 + 0.5) / SUN_DIRECTIONS as f64;
+            let r = (1.0 - z * z).max(0.0).sqrt();
+            #[allow(clippy::cast_precision_loss)]
+            let phi = i as f64 * golden;
+            // y up: the first direction is straight overhead.
+            let d = Vec3::new(r * crate::math::cos(phi), z, r * crate::math::sin(phi));
+            (
+                d,
+                raster::ShadowMap::new(&items, templates, d, bounds, SUN_TEXELS),
+            )
+        };
+        let lease = cores::Lease::take(SUN_DIRECTIONS.min(cores::per_task()));
+        let maps = cores::map((0..SUN_DIRECTIONS).collect(), lease.threads(), &sun);
         Self { maps }
     }
 
