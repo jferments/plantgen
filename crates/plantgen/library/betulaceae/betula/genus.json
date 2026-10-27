@@ -5,6 +5,7 @@
   "traits": {
     "leaf_area_per_basal_area": 0.311,
     "crown_spread": 0.59,
+    "height_growth_rate": 0.064,
     "crown_base_share": 0.17,
     "crown_see_through": 0.3,
     "terminal_bud": false,
@@ -95,6 +96,7 @@
   },
   "evidence": {
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 74 birches (Betula pendula and B. nigra): 0.311 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.height_growth_rate": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data, open-grown street and park trees: the median height of its 108 birches of all species (4 age bins, 7 to 38 years) by age bin, fitted (least squares, weighted by trees) as H (1 - exp(-k (age + 3))): k 0.064 a year, H 18.6 m. Bins and fit: plantgen-claude project-files/tree-shape/UTD-SIZES-2026-10-23.md, round5-2026-10-26/tools/utdfit.py (tree shape, 2026-10-27)."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 48 birches 25 years or older (Betula pendula and B. nigra): 0.59. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.crown_see_through": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Sky inside the crown outline of six side views of leafy open-grown birches against clear sky (2026-10-25, plantgen-claude project-files/tree-shape/round3-2026-10-25/BIRCH.md; imagekit run measure-skycolour-birch-2026-10-25): sky by colour, the tree cropped by eye, plantc measure-mask. Betula pendula inat:294973161 0.11, inat:331977194 0.29, inat:394508815 0.41, inat:628368217 0.37, inat:717317748 0.22; B. papyrifera inat:82778231 0.30 (half a crown, mirrored). Median 0.30, the genus's as its pendulous, thin crowns read in Sargent ('narrow open head'). Lower crowns that stood against forest were cut off, which may raise it."},
     "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 48 birches 25 years or older (Betula pendula and B. nigra): 0.17 (quartiles 0.13 and 0.22). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},

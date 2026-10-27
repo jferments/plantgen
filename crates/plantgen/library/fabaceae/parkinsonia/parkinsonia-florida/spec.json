@@ -106,6 +106,7 @@
     "leader": "lost",
     "leaf_area_per_basal_area": 0.214,
     "crown_spread": 1.13,
+    "height_growth_rate": 0.048,
     "crown_base_share": 0.32,
     "height_typical_m": {
       "min": 4,
@@ -198,6 +199,7 @@
   "evidence": {
     "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, pp. 613-614, as Cercidium Torreyanum): 'a straight trunk ... separating several feet from the ground into a number of upright branches forming a narrow head'."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 14 blue palo verdes: 0.214 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.height_growth_rate": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data, open-grown street and park trees: the median height of its 31 blue palo verdes (3 age bins, 9 to 28 years) by age bin, fitted (least squares, weighted by trees) as H (1 - exp(-k (age + 3))): k 0.048 a year, H 12.4 m. Bins and fit: plantgen-claude project-files/tree-shape/UTD-SIZES-2026-10-23.md, round5-2026-10-26/tools/utdfit.py (tree shape, 2026-10-27)."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 16 blue palo verdes 15 years or older (8 of 25 or older): 1.13. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 16 blue palo verdes 15 years or older (8 of 25 or older): 0.32 (quartiles 0.25 and 0.36). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "taxon": {

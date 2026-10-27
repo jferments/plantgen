@@ -1284,4 +1284,9 @@ pub mod venation;
 /// (only a crown's keep theirs as sharp as one), so no plant's atlas
 /// grows. Spanish moss's cards no longer hide four times the sky the moss
 /// does, nor a fescue's impostor twice.
-pub const GENERATOR_REVISION: u32 = 170;
+/// 171: a broadleaf tree's crown grows toward its full size at the rate
+/// its lineage's open-grown trees approach their greatest height in the
+/// USDA Urban Tree Database (`height_growth_rate`, five species and four
+/// genera), not at a rate set by hand: a young southern magnolia no longer
+/// grows half again as wide as the database's magnolias of its age.
+pub const GENERATOR_REVISION: u32 = 171;

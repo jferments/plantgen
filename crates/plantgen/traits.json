@@ -486,6 +486,15 @@
       "optional": true,
       "why": "a grown, open-grown tree's crown width over its height"
     },
+    "height_growth_rate": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "1/year",
+      "range": [0.005, 0.3],
+      "optional": true,
+      "why": "how fast an open-grown tree approaches its greatest height: k in H (1 - exp(-k (age + 3))), fitted to measured heights by age"
+    },
     "crown_base_share": {
       "group": "form",
       "organ": "plant",

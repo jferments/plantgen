@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_rate": 0.06,
       "space_density": 25,
       "internode": 0.3,
       "max_shoot": 4,
