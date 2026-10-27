@@ -1306,4 +1306,14 @@ pub mod venation;
 /// leaves are full size. Its card tiers keep a rosette plant's wood as
 /// tubes: pieces of branch baked onto rosette cards swung off the tree as
 /// the cards turned.
-pub const GENERATOR_REVISION: u32 = 172;
+///
+/// 173: a Joshua tree's leaves and bark as the Forest Service and
+/// photographs show them (`rosette` revision 6). Its dead leaves fold
+/// down along the branches instead of standing out like a brush, and
+/// hang about 25 years, not 40, so old wood shows; its rosettes open
+/// into balls (oldest leaves at 105 degrees, not 60), their leaves
+/// growing from the stem's surface so no bare stem shows among them;
+/// its old trunk wears dark, corky plates about 10 cm long, and its
+/// young branches the grey-tan of their leaf bases; its leaves are olive,
+/// not bluish green.
+pub const GENERATOR_REVISION: u32 = 173;
