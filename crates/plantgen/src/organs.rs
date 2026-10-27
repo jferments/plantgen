@@ -147,12 +147,27 @@ pub fn of_program(program: &Program, appearance: &Appearance) -> Vec<&'static st
 
 /// Whether something termed `term` may be within a structure termed
 /// `structure`: a piece within anything, anything else within an organ it
-/// is part of (`part_of`, followed up to the whole plant).
+/// is part of (`part_of`, followed up to the whole plant) or may stand on
+/// (`also_part_of`, as a spine on a leaf, and what that is part of).
 #[must_use]
 pub fn may_be_within(term: &str, structure: &str) -> bool {
     if term == PIECE {
         return true;
     }
+    let organs = &Vocabulary::builtin().organs;
+    let Some(organ) = organs.get(term) else {
+        return false;
+    };
+    organ
+        .part_of
+        .iter()
+        .chain(&organ.also_part_of)
+        .any(|whole| whole == structure || is_part_of(whole, structure))
+}
+
+/// Whether the vocabulary's organ `term` is part of `structure`, following
+/// `part_of` up to the whole plant.
+fn is_part_of(term: &str, structure: &str) -> bool {
     let organs = &Vocabulary::builtin().organs;
     let mut next = organs.get(term).and_then(|organ| organ.part_of.as_deref());
     // The vocabulary's check rules out a part_of cycle; the bound is for
@@ -718,6 +733,11 @@ mod tests {
         assert!(may_be_within(PIECE, "inflorescence"));
         assert!(!may_be_within("leaflet", "inflorescence"));
         assert!(!may_be_within("leaf", "leaf"));
+        // A spine is a thorn on the stem or a leaf turned spine, as a date
+        // palm's acanthophylls and a fan palm's petiole teeth are.
+        assert!(may_be_within("spine", "leaf"));
+        assert!(may_be_within("spine", "stem"));
+        assert!(!may_be_within("spine", "inflorescence"));
     }
 
     #[test]

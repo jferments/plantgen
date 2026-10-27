@@ -46,6 +46,12 @@ pub struct Organ {
     /// The organ it is part of; `None` for the whole plant only.
     #[serde(default)]
     pub part_of: Option<String>,
+    /// Other organs it may stand on as a part of them, besides `part_of`:
+    /// a spine is made from a shoot, the bark's skin or a leaf, so it may
+    /// be part of a leaf as well as of the stem
+    /// ([`crate::organs::may_be_within`]).
+    #[serde(default)]
+    pub also_part_of: Vec<String>,
     /// One of the vocabulary's `categories`.
     pub category: String,
     /// The kind it is one of, from the vocabulary's `kinds`.
@@ -414,6 +420,18 @@ impl Vocabulary {
                 })?;
                 seen.push(whole);
                 next = found.part_of.as_deref();
+            }
+            for other in &organ.also_part_of {
+                if !self.organs.contains_key(other) {
+                    return Err(format!(
+                        "organ `{name}`: it may be part of `{other}`, which is not an organ"
+                    ));
+                }
+                if other == name || organ.part_of.as_deref() == Some(other) {
+                    return Err(format!(
+                        "organ `{name}`: `{other}` is itself or already what it is part of"
+                    ));
+                }
             }
             if !self.categories.contains_key(&organ.category) {
                 return Err(format!(
@@ -1454,6 +1472,20 @@ mod tests {
             none.clone(),
             none.clone(),
             "organ `stem`: it is part of `trunk`, which is not an organ",
+        );
+        refused(
+            json!({"plant": plant, "stem": stem, "spine": {"part_of": "stem",
+                "also_part_of": ["leaf"], "category": "organ", "why": "a spine"}}),
+            none.clone(),
+            none.clone(),
+            "organ `spine`: it may be part of `leaf`, which is not an organ",
+        );
+        refused(
+            json!({"plant": plant, "stem": stem, "spine": {"part_of": "stem",
+                "also_part_of": ["stem"], "category": "organ", "why": "a spine"}}),
+            none.clone(),
+            none.clone(),
+            "organ `spine`: `stem` is itself or already what it is part of",
         );
         refused(
             json!({"plant": plant, "bark": {"part_of": "plant", "category": "organ",
