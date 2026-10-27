@@ -290,20 +290,9 @@
 # by side below the region's top, not one smooth dome. With crown_units 0, as every lineage gives it,
 # a plant grows as before.
 #
-# Revision 30 (masses and gaps): a crown's free space (space@4) can be a
-# cluster of rounded masses with gaps between them (mass_size: cells that
-# share of the crown's radius, each holding one ball whose radius is
-# mass_share of the cell), so twigs gather into masses with sky between
-# them, as a photographed crown's foliage does, where an evenly filled
-# region grew a smooth egg; within a mass's width of the stem the region stays whole,
-# so a young tree grows as before. And a lateral bud about to grow a long
-# shoot dies instead with the chance bud_loss, as most of a tree's buds
-# never grow (Thomas 2014, pp. 258-259). mass_size 0 and bud_loss 0 grow
-# a plant as before.
-#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 30;
+lsystem broadleaf 29;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -413,9 +402,6 @@ param tip_angle = 15;         # angle of a shoot tip's bloom to its shoot
 param crown_widest = 0.5;     # share of the region's depth at which it is widest
 param crown_fullness = 2;     # the region's profile: 2 an ellipse, more toward a flat-ended cylinder
 param crown_units = 0;        # sub-crowns, one per scaffold limb of a fork (revision 29); 0 or 1: one region
-param mass_size = 0;          # free space as rounded masses in cells this share of the crown's radius; 0: one even region
-param mass_share = 0.5;       # a mass's radius as a share of its cell
-param bud_loss = 0;           # chance a lateral bud about to grow a long shoot dies instead
 param bloom_stalk = 0;        # a solitary bloom's own stalk, metres; 0 for none
 # Leafy flowering shoots (revision 22).
 param bloom_pairs = 0;        # leaf pairs a shoot unfolds below its blooms in a year it flowers; 0: spur_pairs
@@ -494,9 +480,7 @@ tool space@4 {
     kill = space_kill,
     angle = 80,
     renew = space_renew,
-    units = fork_height > 0 ? crown_units : 0,
-    masses = mass_size * room_width * crown_radius,
-    mass_share = mass_share
+    units = fork_height > 0 ? crown_units : 0
 };
 tool vigour@1 {
     lambda = apical + (apical_young - apical) * max(0, 1 - t / apical_years)
@@ -619,12 +603,7 @@ rule A(split) : vigour >= 1 && space > 0 ->
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) A(split);
 
 # A lateral bud breaks into a long shoot when it has the vigour and free
-# space, unless it dies first (bud_loss); otherwise, in enough light, it
-# leafs out as a short shoot. Whether it dies is set by its place, its
-# heading and the year, with no random draw, so every rule's draws keep
-# their sites and species with no bud_loss grow as before.
-rule B : bud_loss > 0 && vigour >= bud_break && space > 0
-         && frac(43758.5453 * sin(12.9898 * px + 78.233 * py + 37.719 * pz + 3.7 * hx + 5.3 * hy + 7.1 * hz + 0.618 * t)) < bud_loss -> ;
+# space; otherwise, in enough light, it leafs out as a short shoot.
 rule B : vigour >= bud_break && space > 0 && (fork_clear <= 0 || py >= 0.7 * fork_height) -> A(0);
 rule B : light >= spur_light && blooms > 0 && t >= adult_age && (bloom_years <= 0 || age < bloom_years) && bloom_stalk <= 0 && (bloom_floor <= 0 || py >= bloom_floor) -> Q(bloom_pairs > 0 ? bloom_pairs : spur_pairs, age * spur_pairs) Bo(blooms) B;
 rule B : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk <= 0 || (bloom_floor > 0 && py < bloom_floor)) -> Q(spur_pairs, age * spur_pairs) B;

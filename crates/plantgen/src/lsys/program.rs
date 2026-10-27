@@ -411,8 +411,6 @@ pub const TOOLS: [ToolSpec; 12] = [
             ("bumps", 0.0),
             ("bump_size", 3.0),
             ("units", 0.0),
-            ("masses", 0.0),
-            ("mass_share", 0.5),
         ],
     },
     // With `saturation` (crown form B), a tip's light gathers as a leaf's

@@ -1284,9 +1284,4 @@ pub mod venation;
 /// (only a crown's keep theirs as sharp as one), so no plant's atlas
 /// grows. Spanish moss's cards no longer hide four times the sky the moss
 /// does, nor a fescue's impostor twice.
-/// 171: a broadleaf tree's free space is a cluster of rounded masses with
-/// gaps between them (`mass_size`, `mass_share`; `space@4` `masses`), and
-/// half of its lateral buds about to grow a long shoot die instead
-/// (`bud_loss`; Thomas 2014, Dmyterko and Bruchwald 2010; broadleaf 30),
-/// so crowns show lumpy outlines and sky between masses, not smooth eggs.
-pub const GENERATOR_REVISION: u32 = 171;
+pub const GENERATOR_REVISION: u32 = 170;
