@@ -5,6 +5,7 @@
   "traits": {
     "leaf_area_per_basal_area": 0.092,
     "crown_spread": 1.07,
+    "height_growth_rate": 0.052,
     "crown_base_share": 0.29,
     "short_shoots": true,
     "wood_density_basic_kg_m3": 650,
@@ -14,6 +15,7 @@
   },
   "evidence": {
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 134 crabapples: 0.092 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.height_growth_rate": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data, open-grown street and park trees: the median height of its 203 apples and crabapples (5 age bins, 10 to 57 years) by age bin, fitted (least squares, weighted by trees) as H (1 - exp(-k (age + 3))): k 0.052 a year, H 9.1 m. Bins and fit: plantgen-claude project-files/tree-shape/UTD-SIZES-2026-10-23.md, round5-2026-10-26/tools/utdfit.py (tree shape, 2026-10-27)."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 83 crabapples 25 years or older: 1.07. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 83 crabapples 25 years or older: 0.29 (quartiles 0.20 and 0.36). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: rosaceous fruit trees such as Pyrus have a well-developed short-shoot system; Malus, a rosaceous fruit tree, bears its leaves and flowers on spurs."},

@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_rate": 0.045,
       "space_density": 3.5,
       "internode": 0.3,
       "max_shoot": 4,
@@ -87,6 +86,7 @@
     "leader": "persistent",
     "leaf_area_per_basal_area": 0.201,
     "crown_spread": 0.61,
+    "height_growth_rate": 0.025,
     "crown_base_share": 0.18,
     "bark_colour": [107, 102, 92],
     "leaf_colour_autumn": [240, 205, 50],
@@ -163,6 +163,7 @@
   "evidence": {
     "traits.leader": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 352): 'a straight trunk ... destitute of branches for 80\u00b0-100\u00b0 from the ground, short, comparatively small branches forming a narrow pyramidal, or in old age a broader spreading head'."},
     "traits.leaf_area_per_basal_area": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 103 tulip trees: 0.201 m² of leaf a cm². Median leaf area over trunk area at breast height of its open-grown street and park trees 20 cm or more through, the trees the broadleaf median (0.167) was taken over."},
+    "traits.height_growth_rate": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data, open-grown street and park trees: the median height of its 123 tulip trees (6 age bins, 8 to 76 years) by age bin, fitted (least squares, weighted by trees) as H (1 - exp(-k (age + 3))): k 0.025 a year, H 26.6 m. Bins and fit: plantgen-claude project-files/tree-shape/UTD-SIZES-2026-10-23.md, round5-2026-10-26/tools/utdfit.py (tree shape, 2026-10-27)."},
     "traits.crown_spread": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 78 tulip trees 25 years or older: 0.61. Median crown width over height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees."},
     "traits.crown_base_share": {"evidence": "SourceInferred", "source": "usfs-urban-tree-database-2016", "note": "USDA Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005), TS3 raw tree data: its 78 tulip trees 25 years or older: 0.18 (quartiles 0.13 and 0.38). Median height of the crown's base over the tree's height of its trees 25 years or older (15 or older where it has fewer than 10 that old), measured open-grown street and park trees, which are often pruned up for clearance."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.42, 0.4, 0.36], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
