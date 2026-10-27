@@ -1639,7 +1639,15 @@ pub fn build_from(
     };
     // Tubes take at most two thirds as many triangles as the cards:
     // thicker wood is kept first, and the rest is baked into the cards.
-    let wood_budget = tier.cards(height) * (CORNERS - 2) * 2 / 3;
+    // A rosette's stem is bare wood that holds its rosettes up at its
+    // tips (a Joshua tree's forking branches): baked onto a rosette's
+    // card, which turns to the eye, a piece of branch swings off the
+    // tree. Its wood is all kept, as tubes of the tier's few sides.
+    let wood_budget = if form == GrowthForm::RosetteSucculent {
+        usize::MAX
+    } else {
+        tier.cards(height) * (CORNERS - 2) * 2 / 3
+    };
     let mut keep = height * tier.keep;
     let mut coarse = coarse_at(keep);
     let mut tube_triangles = 0;

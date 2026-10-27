@@ -25,8 +25,8 @@
       "open_years": 2,
       "angle_spread": 10,
       "internode": 0.0005,
-      "trunk_rate": 0.02,
-      "trunk_radius": 0.09,
+      "trunk_rate": 0.038,
+      "trunk_radius": 0.05,
       "skirt": 1,
       "dead_angle": 150,
       "dead_life": 40,
@@ -48,8 +48,11 @@
       "stalk_life": 2,
       "leaf_area": 0.0175,
       "flower_area": 0.230,
-      "upturn": 0.5,
-      "dead_area": 0.0175
+      "upturn": 0.05,
+      "dead_area": 0.0175,
+      "fork_length": 0.6,
+      "fork_spread": 0.3,
+      "girth_rate": 0.0017
     }
   },
   "growth": {
@@ -216,7 +219,27 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tree 3 to 12 m tall whose trunk and branches carry dense rosettes of stiff, dagger-like, finely toothed leaves 15 to 35 cm long; a branch tip that flowers, or is damaged, stops and two or three branches grow from below it, so old trees branch every 0.6 to 0.9 m of growth (FEIS); dead leaves cling to the branches as a shaggy skirt; flowering is irregular, in good years only. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a tree 3 to 12 m tall whose trunk and branches carry dense rosettes of stiff, dagger-like, finely toothed leaves 15 to 35 cm long; a branch tip that flowers, or is damaged, stops and two or three branches grow from below it, so old trees branch every 0.6 to 0.9 m of growth (FEIS); dead leaves cling to the branches as a shaggy skirt; flowering is irregular, in good years only. Not fitted to measurements. The stem's radius under a rosette (0.05 m, a branch about a quarter as wide as its rosette, which FEIS gives as 0.3 to 0.5 m) and how gently a branch turns back up (upturn 0.05, so that inner branches stand erect and outer ones spread level, as FEIS describes) were set by eye against iNaturalist photographs (imagekit), 2026-10-27; with upturn 0.5 every branch turned upright into a candelabra."
+    },
+    "generator.params.trunk_rate": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS Yucca brevifolia (Gucker 2006, read): unbranched seedlings grew about 7.6 cm a year for their first 10 years and about 3.8 cm a year after; 21-year-old unbranched trees averaged 5.9 cm a year. The rate after the first ten years, most of a tree's life, is taken."
+    },
+    "generator.params.fork_length": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS Yucca brevifolia (read): branches form after the terminal bud dies from flowering or insect damage, and fork at 0.6 to 0.9 m (2 to 3 ft) intervals. A branch may fork once it has grown 0.6 m."
+    },
+    "generator.params.fork_spread": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS Yucca brevifolia (read): branches fork at 0.6 to 0.9 m intervals; 0.3 m between the two ends."
+    },
+    "generator.params.girth_rate": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS Yucca brevifolia (read): trunks are typically 0.3 to 0.9 m in diameter, and trees live about 150 years on average. A stem 0.05 m in radius under its crown that thickens 1.7 mm a year is 0.6 m across, the middle of that range, at 150 years."
     },
     "allometry": {
       "evidence": "Authored",

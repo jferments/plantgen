@@ -1296,4 +1296,14 @@ pub mod venation;
 /// longer hide half as much sky again as the plant. A lone leaf lying
 /// level (a water lily's pad) lies on its card's plane, not on edge: a
 /// water lily's low cards no longer hide a third less sky from 45 degrees.
-pub const GENERATOR_REVISION: u32 = 171;
+/// 172: a Joshua tree branches as the Forest Service describes it
+/// (`rosette` revision 5). Its branches fork again every 0.6 to 0.9 m
+/// they grow, its tip killed by flowering or insects, not only when a
+/// crown flowers, so an old tree carries dozens of rosettes on a spreading
+/// crown rather than two or three on parallel columns; it grows 3.8 cm
+/// a year, not 2; its stem thickens with age, so a 120-year trunk is
+/// about 40 cm across and its branches 10 to 25; and a new branch's
+/// leaves are full size. Its card tiers keep a rosette plant's wood as
+/// tubes: pieces of branch baked onto rosette cards swung off the tree as
+/// the cards turned.
+pub const GENERATOR_REVISION: u32 = 172;
