@@ -337,9 +337,18 @@ impl CardPlant {
     }
 
     /// The pictures packed in rows (tallest first) into one texture as
-    /// wide as a power of two, the least square one that holds them.
+    /// wide as a power of two, the least square one that holds them. A
+    /// plant with no pictures (a bare snag, all wood) gets one empty
+    /// texel, since an image cannot be zero high.
     #[must_use]
     pub fn atlas(&self) -> Atlas {
+        if self.pictures.is_empty() {
+            return Atlas {
+                width: 1,
+                height: 1,
+                places: Vec::new(),
+            };
+        }
         let mut order: Vec<usize> = (0..self.pictures.len()).collect();
         order
             .sort_by_key(|&i| std::cmp::Reverse((self.pictures[i].height, self.pictures[i].width)));
