@@ -1,6 +1,7 @@
-//! A palm's teeth and spines are parts of its frond: the organ check a
+//! A palm's teeth and spines are spines on its frond: the organ check a
 //! package runs (`organs::disagreements`, spec rework M7) passes for every
-//! built-in palm whose fronds bear them. Project After's package gate
+//! built-in palm whose fronds bear them, since the vocabulary's spine may
+//! be part of a leaf as well as of the stem. Project After's package gate
 //! found Washingtonia's and Serenoa's petiole teeth and Phoenix's
 //! acanthophylls refused as spines drawn within a leaf (2026-10-26).
 
@@ -13,7 +14,7 @@ use plantgen::spec::PlantSpec;
 const YEARS: f64 = 12.0;
 
 #[test]
-fn palm_teeth_and_spines_are_pieces_of_their_fronds() {
+fn palm_teeth_and_spines_are_spines_on_their_fronds() {
     let mut failures = Vec::new();
     for id in [
         "washingtonia-filifera",

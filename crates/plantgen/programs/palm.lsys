@@ -495,11 +495,6 @@ module Sk(n);                 # a sucker on its runner, the n-th
 module Sh(z, r);              # a sheath card of the crownshaft, z long, round a core r in radius
 module Sc(z);                 # the crownshaft's core, z long
 
-# A Phoenix frond's spines are its lowest leaflets turned spines
-# (acanthophylls) and a fan palm's teeth stand on its petiole's margins:
-# both are parts of the frond they are drawn within, so pieces of it, as
-# its rays and boot are, not spines of the stem (organs::disagreements
-# refuses a spine within a leaf).
 organ leaflet leaf as leaflet area leaflet_area;
 organ ray leaf as piece area ray_area;
 organ dead leaf as piece area dead_area;
@@ -507,14 +502,14 @@ organ boot leaf as piece area boot_area;
 organ cone cone area cone_area;
 organ sheath leaf as piece area sheath_area;
 organ cataphyll leaf as scale_leaf area cataphyll_area;
-organ spine leaf as piece area spine_area;
+organ spine leaf as spine area spine_area;
 organ sporophyll leaf as megasporophyll area sporophyll_area;
 organ seed fruit as seed area seed_area;
 organ cone_male cone area male_cone_area;
 organ cone_open cone area open_cone_area;
 organ palman leaf as piece area palman_area;
 organ filament leaf as piece area filament_area;
-organ tooth leaf as piece area tooth_area;
+organ tooth leaf as spine area tooth_area;
 organ pinnule leaf as leaflet area pinnule_area;
 
 structure frond leaf;         # one frond: its sheath, petiole, rachis, leaflets, pinnae or rays and palman, then its dead frond and boot
