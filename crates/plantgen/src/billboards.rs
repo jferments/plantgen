@@ -659,10 +659,40 @@ fn fit_plane(
         if mass {
             turn = Turn::Facing;
         }
+        // A clump whose parts lie along a line (a lone leaf, a row of
+        // them) lies in every plane through that line, and which is
+        // thinnest, or whether one faces out, is chance: a water lily's
+        // lone pad, a line from its foot to its tip, stood on edge and
+        // showed as a streak from above. Where the plane through the
+        // line that its leaves face most nearly is level (a pad on the
+        // water, a rosette's leaf on the ground), its card lies there;
+        // a lone leaf held up keeps a card facing out, or turning, that
+        // draws it from the side.
+        let longest = members
+            .iter()
+            .max_by(|a, b| a.half.length().total_cmp(&b.half.length()))
+            .map_or(Vec3::X, |e| e.half);
+        let along = dominant(spread, longest + Vec3::new(1e-3, 2e-3, 3e-3));
+        let largest = across(along);
+        let middle = spread[0][0] + spread[1][1] + spread[2][2] - largest - least;
+        let mut faces = [[0.0; 3]; 3];
+        for e in &leaves {
+            add(&mut faces, outer(e.facing, e.area));
+        }
+        let facing = dominant(faces, thinnest + Vec3::new(1e-3, 2e-3, 3e-3));
+        let across_line = facing - along * facing.dot(along);
+        let lying = across_line.normalize_or(thinnest);
+        if !mass
+            && !leaves.is_empty()
+            && middle <= largest * SHEET * SHEET
+            && lying.y.abs() >= LEVEL
+        {
+            lying
+        }
         // So does a crown's spray spread in a sheet, its card baked
         // from four heights of eye ([`HEIGHTS`]): an oak's level spray
         // on a card of its own lay flat, a streak seen from the side.
-        if least <= across(outward) * SHEET * SHEET && !mass {
+        else if least <= across(outward) * SHEET * SHEET && !mass {
             thinnest
         } else {
             outward

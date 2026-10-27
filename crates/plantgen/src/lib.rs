@@ -1293,5 +1293,7 @@ pub mod venation;
 /// yarrow's draw a third light. A head drawn as a small impostor takes
 /// only its own rays and flowers, not its neighbours' and the leaves round
 /// it, which were drawn again on their own cards: a fennel's low cards no
-/// longer hide half as much sky again as the plant.
+/// longer hide half as much sky again as the plant. A lone leaf lying
+/// level (a water lily's pad) lies on its card's plane, not on edge: a
+/// water lily's low cards no longer hide a third less sky from 45 degrees.
 pub const GENERATOR_REVISION: u32 = 171;
