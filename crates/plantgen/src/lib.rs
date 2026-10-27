@@ -1284,4 +1284,14 @@ pub mod venation;
 /// (only a crown's keep theirs as sharp as one), so no plant's atlas
 /// grows. Spanish moss's cards no longer hide four times the sky the moss
 /// does, nor a fescue's impostor twice.
-pub const GENERATOR_REVISION: u32 = 170;
+/// 171: heads of flowers whole on the card tiers. Every plant but a tree
+/// or a shrub bakes its heads seen face on (an umbel, a corymb, a
+/// capitulum, a single flower) as its full model draws them, flower by
+/// flower on their rays, not as the second level's one flat card
+/// (`billboards::WholeHeads`): a wild carrot's far impostor no longer
+/// hides half as much sky again as the plant from 45 degrees up, nor a
+/// yarrow's draw a third light. A head drawn as a small impostor takes
+/// only its own rays and flowers, not its neighbours' and the leaves round
+/// it, which were drawn again on their own cards: a fennel's low cards no
+/// longer hide half as much sky again as the plant.
+pub const GENERATOR_REVISION: u32 = 171;

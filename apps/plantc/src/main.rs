@@ -2629,6 +2629,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             supersample: 2,
             figure: true,
             frame_height: None,
+            frame_reach: None,
             focus,
         },
     );
@@ -2737,6 +2738,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                     } else {
                         tallest
                     }),
+                    frame_reach: None,
                     focus: None,
                 },
             ));
@@ -2828,6 +2830,16 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             if wants("full") { 0 } else { 3 },
         );
         full.vary_by_plant(&looks, seed);
+        // Every column is framed as the plant drawn whole is, so the
+        // tiers share its scale.
+        let full_cards = full.card_mesh();
+        let reach = full
+            .wood
+            .positions
+            .iter()
+            .chain(&full_cards.positions)
+            .map(|p| f64::from(p[0].hypot(p[2])))
+            .fold(0.1, f64::max);
         let shot = |view: View, focus: Option<(f64, f64)>| PreviewOptions {
             width: size,
             height: size * 3 / 2,
@@ -2835,6 +2847,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             supersample: 2,
             figure: false,
             frame_height: Some(graph.height * 1.05),
+            frame_reach: Some(reach),
             focus: focus.map(|(f, s)| (Vec3::new(0.0, graph.height * f, 0.0), graph.height * s)),
         };
         // `--views side,oblique,close`: one picture each, in a folder of
@@ -2861,14 +2874,13 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
         let bark = templates
             .bark
             .map_or(raster::Material::Opaque, raster::Material::Bark);
-        let full_cards = full.card_mesh();
         let full_tone = plantgen::billboards::tone(
             &[(&full.wood, bark), (&full_cards, raster::Material::Card)],
             &templates,
             TONE_PIXELS,
         );
         let mut rows = vec![format!(
-            "{{\"species\":\"{}\",\"tier\":\"full\",\"height_m\":{:.2},\"triangles\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.3},{:.3}]}}",
+            "{{\"species\":\"{}\",\"tier\":\"full\",\"height_m\":{:.2},\"triangles\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.6},{:.6}]}}",
             spec.id,
             graph.height,
             full.triangle_count(),
@@ -2888,6 +2900,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 &looks,
                 &bodies,
                 &spec.appearance,
+                spec.growth_form,
                 &templates,
                 &quality.lods,
             )
@@ -2921,7 +2934,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 TONE_PIXELS,
             );
             rows.push(format!(
-                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"wood\":{},\"cards\":{},\"card_triangles\":{},\"texels\":{},\"coverage\":{:.3},\"atlas\":[{},{}],\"atlas_fill\":{:.3},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.3},{:.3}]}}",
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"wood\":{},\"cards\":{},\"card_triangles\":{},\"texels\":{},\"coverage\":{:.3},\"atlas\":[{},{}],\"atlas_fill\":{:.3},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.6},{:.6}]}}",
                 spec.id,
                 tier.name,
                 stats.triangles(),
@@ -2964,7 +2977,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
                 TONE_PIXELS,
             );
             rows.push(format!(
-                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"pictures\":{},\"texels\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.3},{:.3}]}}",
+                "{{\"species\":\"{}\",\"tier\":\"{}\",\"triangles\":{},\"pictures\":{},\"texels\":{},\"tone\":[{:.4},{:.4}],\"overdraw\":[{:.2},{:.2}],\"cover\":[{:.6},{:.6}]}}",
                 spec.id,
                 far.name,
                 carded.stats.card_triangles,
@@ -3095,6 +3108,7 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
                     supersample: 3,
                     figure: false,
                     frame_height: None,
+                    frame_reach: None,
                     focus: Some((Vec3::Y * (length * middle), length * frame)),
                 },
             ));
@@ -3290,6 +3304,7 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                     supersample: 3,
                     figure: false,
                     frame_height: None,
+                    frame_reach: None,
                     focus: Some((
                         Vec3::Y
                             * if lift > 0.0 {
@@ -3415,6 +3430,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
                     supersample: 2,
                     figure: true,
                     frame_height: Some(tallest),
+                    frame_reach: None,
                     focus: None,
                 },
             ));

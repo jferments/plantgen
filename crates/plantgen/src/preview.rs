@@ -58,6 +58,10 @@ pub struct PreviewOptions {
     /// Frame this height (metres) instead of the plant's own, so renders
     /// of different ages share a scale.
     pub frame_height: Option<f64>,
+    /// Frame this reach from the plant's axis (metres) instead of what is
+    /// drawn, so a plant's tiers share a scale with it (a card turned to
+    /// the eye reaches further unturned).
+    pub frame_reach: Option<f64>,
     /// Frame a close-up instead: this point of the plant frame, with this
     /// many metres of it from the bottom of the picture to the top, and
     /// no figure.
@@ -270,13 +274,14 @@ pub fn render_with(
     ];
     items.extend_from_slice(extra);
     let (low, high) = raster::bounds(&items).unwrap_or((Vec3::ZERO, Vec3::new(1.0, 1.0, 1.0)));
-    let reach = low
-        .x
-        .abs()
-        .max(high.x.abs())
-        .max(low.z.abs())
-        .max(high.z.abs())
-        .max(0.1);
+    let reach = options.frame_reach.unwrap_or_else(|| {
+        low.x
+            .abs()
+            .max(high.x.abs())
+            .max(low.z.abs())
+            .max(high.z.abs())
+            .max(0.1)
+    });
     let framed = options.frame_height.unwrap_or(high.y);
     let (figure_mesh, figure_height, gap) = scale(framed, reach);
     let figure_x = reach + gap;
