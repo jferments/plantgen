@@ -93,6 +93,7 @@
     },
     "spine": {
       "part_of": "stem",
+      "also_part_of": ["leaf"],
       "category": "organ",
       "when": {"spines": ["areoles", "thorns", "prickles", "leaf_spines"]},
       "why": "a hard, sharp point that arms a plant, whichever organ it is made from (the spines character says which): a thorn, a shoot (PO:0025172); a prickle, from the bark's skin (PO:0025169); a leaf, stipule or leaf stalk turned spine (PO:0025173, PO:0025174, PO:0025613); or a cactus's spines from an areole. The Plant Ontology has no one term for them all"
