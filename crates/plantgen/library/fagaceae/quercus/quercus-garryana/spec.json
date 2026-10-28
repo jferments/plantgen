@@ -12,24 +12,11 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "space_density": 4,
-      "internode": 0.2,
-      "max_shoot": 3,
-      "bud_break": 1.4,
-      "branch_angle": 55,
-      "apical_young": 0.62,
-      "apical": 0.5,
-      "apical_years": 20,
       "spur_pairs": 3,
-      "leaf_angle": 55,
-      "lean": 6,
-      "wiggle": 9,
-      "droop": 0.02,
       "bloom_area": 0.72,
       "blooms": 1,
       "bloom_size": 0.045,
-      "bloom_angle": 60,
-      "path_half": 15.2
+      "bloom_angle": 60
     }
   },
   "growth": {
@@ -134,6 +121,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_spread": 1.05,
     "crown_see_through": 0.12,
     "trunk_fork_height_m": 5,
     "bark_colour": [84, 82, 76],
@@ -174,6 +162,7 @@
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.33, 0.32, 0.3], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 1 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/): a few tortuous scaffold limbs (2) in the photos where renders draw about 6 straight ones; Sargent (p. 296): 'stout ascending or spreading branches forming a broad compact head'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 296): 'stout ascending or spreading branches forming a broad compact head'. Spreading, as open-grown trees in iNaturalist photographs (batch inat-2026-10-23, picks 21 and 68) hold their big limbs past half way to level; Silvics of North America vol. 2 (1990, Stein, Quercus garryana) calls the old open-grown trees 'large spreading trees'. Was ascending until 2026-10-24."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990, Stein, Quercus garryana): an open-grown tree 8 m tall and 8 m in crown spread bore a fair acorn crop; the record tree is 36.6 m tall with a crown spread of 38.4 m (1.05); open-grown trees have 'dense, rounded crowns' on very large, crooked branches. So an open-grown Oregon white oak is about as wide as it is tall, where the genus value (0.92) is the Urban Tree Database's street oaks."},
     "traits.limb_course": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990, Stein, Quercus garryana), Growth and Yield: 'Typically, open-grown trees have short boles bearing very large, crooked branches that form dense, rounded crowns'; forest-grown trees have 'slim, straight boles, fine side branches'."},
     "traits.trunk_fork_stems": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990, Stein, Quercus garryana): open-grown trees' short boles bear 'very large, crooked branches'; counted on iNaturalist photographs of open-grown trees (batch inat-2026-10-23, picks 21 and 68; imagekit woody-forms group 1, 2026-10-19: a few scaffold limbs, 2): the trunk divides into two."},
     "appearance.bark_look.stages.mature.colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'light gray or almost white' (FNA), 'light grayish-brown' (Sudworth)"},
@@ -204,11 +193,6 @@
     },
     "traits.petiole_length_m": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "Abrams vol. 1 (1923), as Quercus garryana: petioles pubescent, 15-25 mm long."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Quercus garryana (gwddagg_v2.2_species.csv, read): specific gravity 0.65 (wsg_est, the database's hierarchical-model species mean, from 5 records in 4 sources); trunks 0.65, branches 0.65. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
-    "generator.params.path_half": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
-    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -217,7 +201,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
+      "note": "Its blooms are hand-set from general knowledge of the species. Its growth takes the broadleaf trees' rules throughout since 2026-10-28, where a hand-set free-space density, internode, shoot length, bud break, branch and leaf angles, apical control, lean, wiggle, droop and path_half (fitted to the height reference) made a short, sparse ball of tufts unlike its photographs. Its trunk is the pipe model's from its leaves, by the broadleaf trees' rules (2026-10-23). Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "SourceInferred",
