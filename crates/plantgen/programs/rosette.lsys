@@ -297,11 +297,13 @@ decompose Lf(i, m, c, l, k) : m == 1 ->
 decompose Lf(i, m, c, l, k) -> ;
 interpret Ls(u, d) -> !(trunk_radius * (0.3 + 0.7 * min(1, (age + 1 - u) / leaf_life)) + girth_rate * (age + 1 - u)) F(d);
 
-# A dead leaf greys as it weathers (revision 7), last in the program so
-# that the random draws above keep their places: from grey_years after it
-# died, with an even chance a year, so a skirt shades from straw at the
-# top to grey below. It falls when it would have.
-rule Dv(s) : grey_years > 0 && age + dt >= grey_years && rand() < 0.5 -> Dg(s, age + dt);
+# A dead leaf greys as it weathers (revision 7): between half and one and
+# a half times grey_years after it died, a share set by the last digits
+# of its length (no draw, so the lineage programs' draws keep their
+# places), so a skirt shades from straw at the top to grey below. It
+# falls when it would have.
+rule Dv(s) : grey_years > 0
+    && age + dt >= grey_years * (0.5 + s * 10000 - floor(s * 10000)) -> Dg(s, age + dt);
 rule Dg(s, g) : g + age + dt >= dead_life -> ;
 interpret Dg(s, g) : girth_rate > 0 ->
     &(90) f(trunk_radius + girth_rate * (leaf_life + g + age)) ^(90) &(dead_angle) grey(s);

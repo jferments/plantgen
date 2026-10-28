@@ -289,7 +289,7 @@
     "generator.params.grey_years": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "FEIS says only that the dead leaves persist and fold down. In iNaturalist photographs (imagekit) a branch's thatch is straw-coloured just below the living leaves and weathered grey further down. A dead leaf greys from six years after it died, with an even chance a year, so about half of the thatch is grey; set by eye 2026-10-28."
+      "note": "FEIS says only that the dead leaves persist and fold down. In iNaturalist photographs (imagekit) a branch's thatch is straw-coloured just below the living leaves and weathered grey further down. A dead leaf greys between three and nine years after it died (grey_years 6), so about two thirds of the thatch is grey; set by eye 2026-10-28."
     },
     "appearance.organs.blade.solid.base": {
       "evidence": "SourceInferred",
