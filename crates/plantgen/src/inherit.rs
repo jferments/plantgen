@@ -2115,6 +2115,10 @@ fn fill_defaults(
 /// `crate::spec::MALE` writes it.
 pub const MALE: &str = "_male";
 
+/// The end of a weathered organ's name (`dead_grey`), as
+/// `crate::spec::GREY` writes it.
+pub const GREY: &str = "_grey";
+
 /// The organ type of a program's buds (`herb`, `column`).
 pub const BUD: &str = "bud";
 
@@ -2145,7 +2149,7 @@ fn closed_flower(looks: &Map<String, Value>) -> Option<Value> {
 /// bud does in its season (spec rework P5). A look filled in stands farthest of
 /// all, as a default parameter does, so any rule may set what it holds. A
 /// male plant's organ takes none: it stands for the organ it is the male
-/// of.
+/// of; nor a weathered one (`dead_grey`), which stands for its organ greyed.
 fn fill_looks(
     spec: &mut Map<String, Value>,
     programs: &Programs,
@@ -2168,7 +2172,7 @@ fn fill_looks(
         let Some(look) = defaults.get(kind) else {
             continue;
         };
-        if organ.ends_with(MALE) {
+        if organ.ends_with(MALE) || organ.ends_with(GREY) {
             continue;
         }
         let Value::Object(looks) = appearance
