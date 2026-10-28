@@ -4,8 +4,9 @@
 //! the same bytes twice, the pictures pack into one atlas, the far
 //! impostor is one card with a picture from every way, a cholla's thin
 //! joints are baked, an agave's long leaves are drawn whole, a yarrow's
-//! corymbs are small impostors baked from its full model, and a plant
-//! with no pictures still packs into an atlas.
+//! corymbs are small impostors baked from its full model, a wild carrot's
+//! umbels are baked flower by flower, a water lily's lone pads lie level,
+//! and a plant with no pictures still packs into an atlas.
 //! `cargo test --release -p plantgen --test billboards`.
 
 use plantgen::billboards::{self, CORNERS, CardPlant, CardStats, FAR, HEIGHTS, TIERS};
@@ -17,7 +18,7 @@ use plantgen::lsys::Limits;
 use plantgen::mesh::Mesh;
 use plantgen::package::DEFAULT_DAY;
 use plantgen::quality::STANDARD;
-use plantgen::raster::Turn;
+use plantgen::raster::{Material, Turn};
 use plantgen::spec::PlantSpec;
 use plantgen::templates::Templates;
 
@@ -244,6 +245,7 @@ fn the_far_impostor_is_one_card_seen_from_every_way() {
             looks,
             bodies,
             &spec.appearance,
+            spec.growth_form,
             templates,
             &STANDARD.lods,
             &FAR,
@@ -369,4 +371,96 @@ fn a_sagebrushs_crown_cards_are_baked_from_each_height() {
         }
         assert!(turned > 0, "{}: no crown card turns", tier.name);
     }
+}
+
+#[test]
+fn a_wild_carrots_umbels_are_baked_flower_by_flower() {
+    // From the second level, where its umbel is one flat card, the far
+    // impostor hid half as much sky again as the carrot from 45 degrees.
+    let (whole, far) = with_plant("daucus-carota", |drawn, looks, bodies, spec, templates| {
+        let full = plantgen::mesh::build(
+            drawn,
+            looks,
+            bodies,
+            &spec.appearance,
+            &STANDARD.lods[0].for_height(drawn.height),
+            0,
+        );
+        let bark = templates.bark.map_or(Material::Opaque, Material::Bark);
+        let whole = billboards::tone(
+            &[(&full.wood, bark), (&full.card_mesh(), Material::Card)],
+            templates,
+            160,
+        );
+        let plant = billboards::impostor(
+            drawn,
+            looks,
+            bodies,
+            &spec.appearance,
+            spec.growth_form,
+            templates,
+            &STANDARD.lods,
+            &FAR,
+        );
+        let mut baked = templates.clone();
+        baked.baked.clone_from(&plant.pictures);
+        let far = billboards::tone(&[(&plant.cards, Material::Baked)], &baked, 160);
+        (whole, far)
+    });
+    for (view, (whole, far)) in whole.cover.iter().zip(far.cover).enumerate() {
+        let ratio = far / whole;
+        assert!(
+            (0.8..=1.2).contains(&ratio),
+            "view {view}: the impostor hides {ratio:.2} of the sky the plant does"
+        );
+    }
+}
+
+#[test]
+fn a_water_lilys_lone_pads_lie_on_the_water() {
+    // A pad alone on its card stood on edge, as any plane through a lone
+    // leaf's middle line was as good as another, and from 45 degrees the
+    // low cards hid a third less sky than the plant.
+    let (whole, low) = with_plant(
+        "nymphaea-odorata",
+        |drawn, looks, bodies, spec, templates| {
+            let full = plantgen::mesh::build(
+                drawn,
+                looks,
+                bodies,
+                &spec.appearance,
+                &STANDARD.lods[0].for_height(drawn.height),
+                0,
+            );
+            let bark = templates.bark.map_or(Material::Opaque, Material::Bark);
+            let whole = billboards::tone(
+                &[(&full.wood, bark), (&full.card_mesh(), Material::Card)],
+                templates,
+                160,
+            );
+            let plant = billboards::build(
+                drawn,
+                looks,
+                bodies,
+                &spec.appearance,
+                spec.growth_form,
+                templates,
+                &STANDARD.lods,
+                &TIERS[0],
+            );
+            let mut baked = templates.clone();
+            baked.baked.clone_from(&plant.pictures);
+            let low = billboards::tone(
+                &[(&plant.wood, bark), (&plant.cards, Material::Baked)],
+                &baked,
+                160,
+            );
+            (whole, low)
+        },
+    );
+    let ratio = low.cover[1] / whole.cover[1];
+    assert!(
+        (0.8..=1.2).contains(&ratio),
+        "from 45 degrees the low cards hide {ratio:.2} of the sky the plant does"
+    );
 }
