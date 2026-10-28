@@ -1612,6 +1612,7 @@ const SALT_LOBES: u64 = 0x6c6f_6265;
 const SALT_SETTINGS: u64 = 0x7365_7474;
 const SALT_BUMPS: u64 = 0x6275_6d70;
 const SALT_UNITS: u64 = 0x756e_6974;
+const SALT_MASSES: u64 = 0x6d61_7373;
 
 /// The outline of a `space@2` or `space@4` envelope and whether its
 /// points renew.
@@ -1631,6 +1632,53 @@ struct Outline {
     seed: u64,
     /// `space@4`'s sub-crowns, where the crown is several.
     units: Option<Units>,
+    /// `space@4`'s masses, where its free space is a cluster of them.
+    masses: Option<Masses>,
+}
+
+/// A crown's free space as a cluster of rounded masses with gaps between
+/// them: one ball in each cell of a coarse lattice, `cell` metres on a
+/// side, its centre drawn in the cell and its radius `share` of the cell,
+/// so twigs gather into masses with sky between them where a crown filled
+/// evenly would show none.
+struct Masses {
+    cell: f64,
+    share: f64,
+}
+
+impl Masses {
+    /// The share of space the balls fill, their centres taken as
+    /// scattered at random one per cell: `1 - exp(-4/3 π share³)`.
+    fn filled(share: f64) -> f64 {
+        1.0 - math::exp(-4.0 / 3.0 * math::PI * share * share * share)
+    }
+
+    /// Whether the point of lattice cell `index` is kept where the crown
+    /// is whole: a share `filled` of them, so with the lattice packed
+    /// closer by that share the points are as many as without masses.
+    fn keep(&self, seed: u64, index: [i64; 3]) -> bool {
+        let [x, y, z] = index;
+        // Lattice coordinates are small whole numbers; the casts keep their bits.
+        #[allow(clippy::cast_sign_loss)]
+        let hash = hash_words(&[seed, SALT_MASSES, x as u64, y as u64, z as u64]);
+        unit(hash) < Self::filled(self.share)
+    }
+
+    /// Whether `point` lies in one of the plant's masses.
+    fn admit(&self, seed: u64, point: Vec3) -> bool {
+        let reach = self.share * self.cell;
+        #[allow(clippy::cast_possible_truncation)]
+        let home = [point.x, point.y, point.z].map(|v| (v / self.cell).floor() as i64);
+        let near = |d: i64| (d - 1)..=(d + 1);
+        near(home[0]).any(|x| {
+            near(home[1]).any(|y| {
+                near(home[2]).any(|z| {
+                    let centre = attraction_point(seed ^ SALT_MASSES, [x, y, z], self.cell);
+                    (centre - point).length() <= reach
+                })
+            })
+        })
+    }
 }
 
 /// A crown made of sub-crowns (sequential reiteration, Barthélémy and
@@ -1857,6 +1905,8 @@ fn fronted_settings(
         bumps,
         bump_size,
         units,
+        masses,
+        mass_share,
     ] = values
     else {
         return Err(invalid("space", "wrong number of settings".into()));
@@ -1870,14 +1920,17 @@ fn fronted_settings(
         && fullness > 0.0
         && (0.0..1.0).contains(&lobe_depth)
         && (0.0..1.0).contains(&bumps)
-        && bump_size > 0.0)
+        && bump_size > 0.0
+        && masses >= 0.0
+        && mass_share > 0.0)
     {
         return Err(invalid(
             "space",
             format!(
-                "spread, fullness and bump_size must be positive, ratio not negative, and \
-                 widest, lobe_depth and bumps lie in [0, 1); found {spread}, {fullness}, \
-                 {bump_size}, {ratio}, {widest}, {lobe_depth} and {bumps}"
+                "spread, fullness, bump_size and mass_share must be positive, ratio and \
+                 masses not negative, and widest, lobe_depth and bumps lie in [0, 1); found \
+                 {spread}, {fullness}, {bump_size}, {mass_share}, {ratio}, {masses}, {widest}, \
+                 {lobe_depth} and {bumps}"
             ),
         ));
     }
@@ -1924,11 +1977,39 @@ fn fronted_settings(
             extent,
             seed,
         ),
+        masses: (masses > 0.0).then_some(Masses {
+            cell: masses,
+            share: mass_share,
+        }),
     });
     Ok((
         vec![
-            1.0, base, height, extent, density, influence, kill, angle, renew, 0.5, 2.0, lobes,
-            lobe_depth, bumps, bump_size,
+            1.0,
+            base,
+            height,
+            extent,
+            // The masses hold the crown's points, packed closer by as much
+            // as they leave out, and a twig takes up the space round it in
+            // the same measure, so its leaves gather and are as many.
+            if masses > 0.0 {
+                density / Masses::filled(mass_share)
+            } else {
+                density
+            },
+            influence,
+            if masses > 0.0 {
+                kill * math::pow(Masses::filled(mass_share), 1.0 / 3.0)
+            } else {
+                kill
+            },
+            angle,
+            renew,
+            0.5,
+            2.0,
+            lobes,
+            lobe_depth,
+            bumps,
+            bump_size,
         ],
         outline,
     ))
@@ -2140,6 +2221,7 @@ fn colonize(
                 bump_size,
                 seed,
                 units: None,
+                masses: None,
             })
         }
         _ => return Err(invalid("space", "wrong number of settings".into())),
@@ -2328,6 +2410,18 @@ fn colonize(
                 let point = cell.point;
                 let relative = (point.y - base) / (height - base);
                 let radial = math::sqrt(point.x * point.x + point.z * point.z);
+                // A crown no wider than a mass is whole, its points thinned
+                // back to the plant's own density: a young tree's shoots
+                // find their space as before, until its masses part.
+                if let Some(masses) = outline.as_ref().and_then(|outline| outline.masses.as_ref())
+                    && !if radial > masses.cell {
+                        masses.admit(seed, point)
+                    } else {
+                        masses.keep(seed, [x, y, z])
+                    }
+                {
+                    continue;
+                }
                 match (&outline, bounds) {
                     (Some(outline), Some((least, most))) => {
                         if !(0.0..=1.0).contains(&relative) {
@@ -3969,10 +4063,10 @@ mod tests {
     fn space_4_narrows_a_crown_among_neighbours_and_toward_their_side() {
         // base, height, radius, spread, density, influence, kill, angle,
         // renew, ratio, gravitropism, phototropism, widest, fullness,
-        // lobes, lobe_depth, bumps, bump_size, units.
+        // lobes, lobe_depth, bumps, bump_size, units, masses, mass_share.
         let shaped = [
             2.0, 12.0, 4.0, 1.0, 20.0, 1.5, 0.4, 80.0, 1.0, 0.4, 0.0, 0.3, 0.5, 2.0, 0.0, 0.0, 0.0,
-            3.0, 0.0,
+            3.0, 0.0, 0.0, 0.5,
         ];
         let edge = Neighbourhood {
             density: 0.3,
@@ -4010,12 +4104,46 @@ mod tests {
     }
 
     #[test]
+    fn space_4_masses_leave_gaps_between_rounded_masses() {
+        let masses = Masses {
+            cell: 2.0,
+            share: 0.5,
+        };
+        // Every ball's centre is free space.
+        for cell in [[0, 0, 0], [3, -1, 2], [-4, 5, 1]] {
+            let centre = attraction_point(7 ^ SALT_MASSES, cell, 2.0);
+            assert!(masses.admit(7, centre));
+        }
+        // Balls a cell apart, half a cell in radius, leave about half the
+        // space empty: neither all of it nor none.
+        let mut inside = 0_u32;
+        for x in 0..20 {
+            for y in 0..20 {
+                for z in 0..20 {
+                    let at = |i: i32| 0.3 * f64::from(i) + 0.05;
+                    inside += u32::from(masses.admit(7, Vec3::new(at(x), at(y), at(z))));
+                }
+            }
+        }
+        let share = f64::from(inside) / 8000.0;
+        assert!((0.25..0.75).contains(&share), "{share}");
+        // The whole core keeps about the share the balls fill.
+        let kept = (0..8000_i64)
+            .filter(|&i| masses.keep(7, [i % 20, i / 20 % 20, i / 400]))
+            .count();
+        #[allow(clippy::cast_precision_loss)]
+        let kept = kept as f64 / 8000.0;
+        assert!((kept - Masses::filled(0.5)).abs() < 0.03, "{kept}");
+        assert!((share - Masses::filled(0.5)).abs() < 0.1, "{share}");
+    }
+
+    #[test]
     fn space_4_sub_crowns_keep_the_width_and_part_at_the_top() {
         // As above, in the open: a crown 2 to 12 m up, 4 m wide at 7 m.
         let settings = |units: f64| {
             [
                 2.0, 12.0, 4.0, 1.0, 20.0, 1.5, 0.4, 80.0, 1.0, 0.4, 0.0, 0.3, 0.5, 2.0, 0.0, 0.0,
-                0.0, 3.0, units,
+                0.0, 3.0, units, 0.0, 0.5,
             ]
         };
         let outline = |units: f64| {
