@@ -102,6 +102,8 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   from bud to fruit or from blade to thatch, and a leaf takes one of five
   forms from deep shade to full sun, smaller and more deeply cut in the
   sun.
+  How broadleaf trees are grown and checked against photographs is in
+  [docs/TREES.md](docs/TREES.md).
 - **Output.** Meshes at four levels of detail and impostors for the
   distance. They come with organ card textures drawn from each species'
   looks, solid spines and part meshes for flowers, fruit and cones, with
