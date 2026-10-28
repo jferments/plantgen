@@ -78,7 +78,8 @@
 # killed tip dies back to a blunt knob between the crowns that wake
 # below it, its stem closing over a stem's radius; before, its flat cut
 # end showed between them as a bare disc. A hanging dead leaf greys
-# grey_years after it died (a `grey` organ), so a skirt is straw only
+# grey_years after it died (a `dead_grey` organ, drawn as `dead`
+# greyed unless the species gives it a look), so a skirt is straw only
 # near the leaves.
 #
 # One step is one year. Angles are degrees; lengths are metres.
@@ -160,7 +161,7 @@ module Rc;                    # a forked tip's dead knob
 
 organ blade leaf area leaf_area;
 organ dead leaf area dead_area;
-organ grey leaf area dead_area;
+organ dead_grey leaf area dead_area;
 organ flower flower area flower_area;
 
 axiom /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), 0, 0);
@@ -306,5 +307,5 @@ rule Dv(s) : grey_years > 0
     && age + dt >= grey_years * (0.5 + s * 10000 - floor(s * 10000)) -> Dg(s, age + dt);
 rule Dg(s, g) : g + age + dt >= dead_life -> ;
 interpret Dg(s, g) : girth_rate > 0 ->
-    &(90) f(trunk_radius + girth_rate * (leaf_life + g + age)) ^(90) &(dead_angle) grey(s);
-interpret Dg(s, g) -> &(dead_angle) grey(s);
+    &(90) f(trunk_radius + girth_rate * (leaf_life + g + age)) ^(90) &(dead_angle) dead_grey(s);
+interpret Dg(s, g) -> &(dead_angle) dead_grey(s);

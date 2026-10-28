@@ -1339,7 +1339,7 @@ pub mod venation;
 /// between the branches that wake below it, not a flat cut end. A
 /// rosette adds 36 leaves a year, not 22, their bases twice as wide as
 /// the blade, so it is a dense ball. Its hanging dead leaves grey from
-/// about six years after they die (a `grey` organ), so a branch's thatch
+/// about six years after they die (a `dead_grey` organ), so a branch's thatch
 /// is straw only below the living leaves. Teeth shorter than 2 mm (a
 /// Joshua tree's, a beargrass's) are drawn as one flat triangle a face,
 /// half a raised tooth's triangles: a 120-year Joshua tree is about

@@ -170,7 +170,7 @@
           0.09
         ]
       },
-      "grey": {
+      "dead_grey": {
         "shape": {
           "template": "blade",
           "taper": 1,
@@ -296,7 +296,7 @@
       "source": "usfs-feis",
       "note": "FEIS Yucca brevifolia (read 2026-10-27): leaves have enlarged bases where they attach to the branch. A leaf's base is drawn twice as wide as its blade at its widest (about 2 cm), so the bases close round the stem inside a rosette; the share was set by eye 2026-10-28 against iNaturalist photographs (imagekit)."
     },
-    "appearance.organs.grey": {
+    "appearance.organs.dead_grey": {
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A weathered dead leaf's grey, chosen by eye 2026-10-28 from the thatch on old branches in iNaturalist photographs (imagekit)."
