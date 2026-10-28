@@ -668,10 +668,40 @@ fn fit_plane(
         if mass {
             turn = Turn::Facing;
         }
+        // A clump whose parts lie along a line (a lone leaf, a row of
+        // them) lies in every plane through that line, and which is
+        // thinnest, or whether one faces out, is chance: a water lily's
+        // lone pad, a line from its foot to its tip, stood on edge and
+        // showed as a streak from above. Where the plane through the
+        // line that its leaves face most nearly is level (a pad on the
+        // water, a rosette's leaf on the ground), its card lies there;
+        // a lone leaf held up keeps a card facing out, or turning, that
+        // draws it from the side.
+        let longest = members
+            .iter()
+            .max_by(|a, b| a.half.length().total_cmp(&b.half.length()))
+            .map_or(Vec3::X, |e| e.half);
+        let along = dominant(spread, longest + Vec3::new(1e-3, 2e-3, 3e-3));
+        let largest = across(along);
+        let middle = spread[0][0] + spread[1][1] + spread[2][2] - largest - least;
+        let mut faces = [[0.0; 3]; 3];
+        for e in &leaves {
+            add(&mut faces, outer(e.facing, e.area));
+        }
+        let facing = dominant(faces, thinnest + Vec3::new(1e-3, 2e-3, 3e-3));
+        let across_line = facing - along * facing.dot(along);
+        let lying = across_line.normalize_or(thinnest);
+        if !mass
+            && !leaves.is_empty()
+            && middle <= largest * SHEET * SHEET
+            && lying.y.abs() >= LEVEL
+        {
+            lying
+        }
         // So does a crown's spray spread in a sheet, its card baked
         // from four heights of eye ([`HEIGHTS`]): an oak's level spray
         // on a card of its own lay flat, a streak seen from the side.
-        if least <= across(outward) * SHEET * SHEET && !mass {
+        else if least <= across(outward) * SHEET * SHEET && !mass {
             thinnest
         } else {
             outward
@@ -945,6 +975,8 @@ fn copy_triangle(to: &mut Mesh, from: &Mesh, t: usize) {
         to.sheds
             .push(from.sheds.get(i).copied().unwrap_or(f32::INFINITY));
         to.levels.push(from.levels.get(i).copied().unwrap_or(0));
+        to.segments
+            .push(from.segments.get(i).copied().unwrap_or(mesh::NO_SEGMENT));
         to.indices.push(index);
     }
 }
@@ -1211,12 +1243,14 @@ fn whole_leaves(
 
 /// What every tier of a plant is baked from: the plant at the second of
 /// the package's mesh levels with every organ a card of its own and every
-/// axis however fine, and its shadow from each way the sun can shine
-/// ([`SUN_DIRECTIONS`]). The shadows took a quarter of a tree's bake; made
-/// once, they serve all its tiers.
+/// axis however fine, but its heads seen face on as it is drawn whole
+/// ([`WholeHeads`]), and its shadow from each way the sun can shine
+/// ([`SUN_DIRECTIONS`]). The shadows took a quarter of a tree's bake;
+/// made once, they serve all its tiers.
 pub struct Source {
     mesh: PlantMesh,
     sky: Sky,
+    heads: Option<WholeHeads>,
 }
 
 impl Source {
@@ -1228,26 +1262,277 @@ impl Source {
         looks: &[Look],
         bodies: &[BodyLook],
         appearance: &Appearance,
+        form: GrowthForm,
         templates: &Templates,
         levels: &[LodSpec; 4],
     ) -> Self {
         let height = graph.height.max(0.01);
         // Every axis, however fine (a fern's rachis, a grass's culm): the
         // pictures are where they still show.
-        let mesh = mesh::build(
-            graph,
-            looks,
-            bodies,
-            appearance,
-            &LodSpec {
-                min_radius: 0.0,
-                ..levels[1].for_height(height)
-            },
-            1,
-        );
-        let sky = Sky::new(&mesh.wood, &mesh.card_mesh(), templates);
-        Self { mesh, sky }
+        let at = |level: usize| {
+            mesh::build(
+                graph,
+                looks,
+                bodies,
+                appearance,
+                &LodSpec {
+                    min_radius: 0.0,
+                    ..levels[level].for_height(height)
+                },
+                level,
+            )
+        };
+        let mesh = at(1);
+        // A crown's full model is millions of triangles.
+        let heads = if crowned(form) {
+            None
+        } else {
+            WholeHeads::new(&mesh, &at(0), graph, looks)
+        };
+        let mut source = Self {
+            mesh,
+            sky: Sky { maps: Vec::new() },
+            heads,
+        };
+        // Its shadow as it is baked: a head drawn whole lay in the shadow
+        // of its own flat card, and a wild carrot's cards drew a quarter
+        // dark from 45 degrees up.
+        let drawn = source.drawn();
+        source.sky = Sky::new(&drawn.wood, &drawn.cards, templates);
+        source
     }
+
+    /// The whole source as baked: its cards and its wood, its heads seen
+    /// face on drawn whole.
+    fn drawn(&self) -> Baked {
+        let all: Vec<usize> = (0..self.mesh.cards.len()).collect();
+        let wood: Vec<usize> = (0..self.mesh.wood.triangle_count()).collect();
+        self.drawn_of(&all, &wood)
+    }
+
+    /// The source's cards `cards` and wood triangles `wood` as baked: a
+    /// head seen face on among the cards drawn as the plant drawn whole
+    /// draws it, with its parts there in place of the second level's.
+    fn drawn_of(&self, cards: &[usize], wood: &[usize]) -> Baked {
+        let heads = self.heads.as_ref();
+        let kept: Vec<Card> = cards
+            .iter()
+            .filter(|&&i| heads.is_none_or(|h| !h.dropped[i]))
+            .map(|&i| self.mesh.cards[i])
+            .collect();
+        let mut out = Baked {
+            cards: PlantMesh {
+                cards: kept,
+                ..PlantMesh::default()
+            }
+            .card_mesh(),
+            wood: Mesh::default(),
+        };
+        for &t in wood {
+            if heads.is_none_or(|h| !h.replaced[t]) {
+                copy_triangle(&mut out.wood, &self.mesh.wood, t);
+            }
+        }
+        if let Some(heads) = heads {
+            for &i in cards {
+                if let Some(h) = heads.head_of_card[i] {
+                    let (on_cards, on_wood) = &heads.parts[h];
+                    for &t in on_cards {
+                        copy_triangle(&mut out.cards, &heads.cards, t);
+                    }
+                    for &t in on_wood {
+                        copy_triangle(&mut out.wood, &heads.wood, t);
+                    }
+                }
+            }
+        }
+        out
+    }
+}
+
+/// A plant's heads of flowers seen face on ([`face_on`]), a capitulum, a
+/// single flower, an umbel or a corymb, as the plant drawn whole draws
+/// them: flower by flower on their rays. The second level draws an umbel
+/// as one flat card, a disc from above and a line from the side; baked
+/// from it, a wild carrot's far impostor hid half as much sky again as the
+/// plant from 45 degrees up and its cards drew a quarter dark. The rest
+/// of the plant keeps the second level: drawn whole, grasses' cards drew
+/// up to a third dark.
+struct WholeHeads {
+    /// The plant drawn whole: its cards and its wood.
+    cards: Mesh,
+    wood: Mesh,
+    /// Which head each of the second level's cards is, if it is one.
+    head_of_card: Vec<Option<usize>>,
+    /// The second level's cards a head's parts replace: the head's own
+    /// card and any other within its reach on what bears it.
+    dropped: Vec<bool>,
+    /// The second level's wood triangles they replace.
+    replaced: Vec<bool>,
+    /// Each head's triangles of `cards` and of `wood`.
+    parts: Vec<(Vec<usize>, Vec<usize>)>,
+}
+
+impl WholeHeads {
+    /// The heads of `coarse`, the second level, as `whole` draws them: the
+    /// parts of `whole` borne on what bears a head's card or on its
+    /// branches, within [`HEAD_REACH`] of the card's reach from its middle,
+    /// each the nearest such head's. `None` without heads.
+    fn new(
+        coarse: &PlantMesh,
+        whole: &PlantMesh,
+        graph: &PlantGraph,
+        looks: &[Look],
+    ) -> Option<Self> {
+        // Each head: the segment that bears it, its middle and its reach.
+        let mut heads: Vec<(u32, Vec3, f64)> = Vec::new();
+        let mut head_of_card = vec![None; coarse.cards.len()];
+        for (i, card) in coarse.cards.iter().enumerate() {
+            if card.segment == mesh::NO_SEGMENT
+                || !looks.get(usize::from(card.template)).is_some_and(face_on)
+            {
+                continue;
+            }
+            let length = f64::from(card.length);
+            let middle = v3(card.base) + v3(card.heading) * (length * 0.5);
+            let reach = 0.5 * length.hypot(f64::from(card.width)) * HEAD_REACH;
+            head_of_card[i] = Some(heads.len());
+            heads.push((card.segment, middle, reach));
+        }
+        if heads.is_empty() {
+            return None;
+        }
+        // The heads each segment is nearest under.
+        let mut on: Vec<Vec<usize>> = vec![Vec::new(); graph.segments.len()];
+        for (h, &(segment, _, _)) in heads.iter().enumerate() {
+            if let Some(list) = on.get_mut(segment as usize) {
+                list.push(h);
+            }
+        }
+        let mut root: Vec<Option<Option<usize>>> = vec![None; graph.segments.len()];
+        let mut path = Vec::new();
+        for s in 0..root.len() {
+            let mut at = s;
+            let found = loop {
+                if let Some(known) = root[at] {
+                    break known;
+                }
+                if !on[at].is_empty() {
+                    break Some(at);
+                }
+                path.push(at);
+                match graph.segments[at].parent {
+                    Some(parent) if (parent as usize) < root.len() => at = parent as usize,
+                    _ => break None,
+                }
+            };
+            root[at] = Some(found);
+            for p in path.drain(..) {
+                root[p] = Some(found);
+            }
+        }
+        // The head a part borne on `segment` at `centre` is part of, if any.
+        let head_at = |segment: u32, centre: Vec3| -> Option<usize> {
+            let r = root.get(segment as usize).copied().flatten().flatten()?;
+            on[r]
+                .iter()
+                .map(|&h| (h, (centre - heads[h].1).length()))
+                .filter(|&(h, d)| d <= heads[h].2)
+                .min_by(|a, b| a.1.total_cmp(&b.1).then(a.0.cmp(&b.0)))
+                .map(|(h, _)| h)
+        };
+        let head_of = |mesh: &Mesh, t: usize| -> Option<usize> {
+            let corners = [0, 1, 2].map(|k| mesh.indices[t * 3 + k] as usize);
+            let segment = mesh.segments.get(corners[0]).copied()?;
+            let centre = corners
+                .iter()
+                .fold(Vec3::ZERO, |sum, &i| sum + v3(mesh.positions[i]))
+                * (1.0 / 3.0);
+            head_at(segment, centre)
+        };
+        let cards = whole.card_mesh();
+        let mut parts = vec![(Vec::new(), Vec::new()); heads.len()];
+        for t in 0..cards.triangle_count() {
+            if let Some(h) = head_of(&cards, t) {
+                parts[h].0.push(t);
+            }
+        }
+        for t in 0..whole.wood.triangle_count() {
+            if let Some(h) = head_of(&whole.wood, t) {
+                parts[h].1.push(t);
+            }
+        }
+        let dropped = coarse
+            .cards
+            .iter()
+            .zip(&head_of_card)
+            .map(|(card, head)| {
+                let middle = v3(card.base) + v3(card.heading) * (f64::from(card.length) * 0.5);
+                head.is_some() || head_at(card.segment, middle).is_some()
+            })
+            .collect();
+        let replaced = (0..coarse.wood.triangle_count())
+            .map(|t| head_of(&coarse.wood, t).is_some())
+            .collect();
+        Some(Self {
+            cards,
+            wood: whole.wood.clone(),
+            head_of_card,
+            dropped,
+            replaced,
+            parts,
+        })
+    }
+}
+
+/// Whether a plant of `form` has a crown: a heap of leafy masses, round
+/// from every side.
+fn crowned(form: GrowthForm) -> bool {
+    matches!(
+        form,
+        GrowthForm::ExcurrentTree
+            | GrowthForm::DecurrentTree
+            | GrowthForm::ScaleLeavedTree
+            | GrowthForm::Shrub
+    )
+}
+
+/// Whether a look is a head of flowers seen face on: a capitulum, a single
+/// flower, an umbel or a corymb, which looks unlike from above and from the
+/// side.
+fn face_on(look: &Look) -> bool {
+    matches!(
+        look.shape,
+        Shape::Umbel(_) | Shape::Head(_) | Shape::Flower(_)
+    )
+}
+
+/// Which of `graph`'s segments are among `roots` or branch from one.
+fn branches_of(graph: &PlantGraph, roots: impl IntoIterator<Item = u32>) -> Vec<bool> {
+    let mut own: Vec<Option<bool>> = vec![None; graph.segments.len()];
+    for s in roots {
+        if let Some(slot) = own.get_mut(s as usize) {
+            *slot = Some(true);
+        }
+    }
+    let mut path = Vec::new();
+    for s in 0..own.len() {
+        let mut at = s;
+        let found = loop {
+            if let Some(known) = own[at] {
+                break known;
+            }
+            path.push(at);
+            match graph.segments[at].parent {
+                Some(parent) if (parent as usize) < own.len() => at = parent as usize,
+                _ => break false,
+            }
+        };
+        for p in path.drain(..) {
+            own[p] = Some(found);
+        }
+    }
+    own.into_iter().map(|o| o == Some(true)).collect()
 }
 
 /// Every tier of `graph` from one [`Source`], by name: [`TIERS`]' cards,
@@ -1262,7 +1547,7 @@ pub fn tiers(
     templates: &Templates,
     levels: &[LodSpec; 4],
 ) -> Vec<(&'static str, CardPlant)> {
-    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    let from = Source::new(graph, looks, bodies, appearance, form, templates, levels);
     let mut out: Vec<(&'static str, CardPlant)> = TIERS
         .iter()
         .map(|tier| {
@@ -1291,7 +1576,7 @@ pub fn build(
     levels: &[LodSpec; 4],
     tier: &CardTier,
 ) -> CardPlant {
-    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    let from = Source::new(graph, looks, bodies, appearance, form, templates, levels);
     build_from(
         &from, graph, looks, bodies, appearance, form, templates, levels, tier,
     )
@@ -1312,13 +1597,7 @@ pub fn build_from(
     tier: &CardTier,
 ) -> CardPlant {
     let height = graph.height.max(0.01);
-    let crowned = matches!(
-        form,
-        GrowthForm::ExcurrentTree
-            | GrowthForm::DecurrentTree
-            | GrowthForm::ScaleLeavedTree
-            | GrowthForm::Shrub
-    );
+    let crowned = crowned(form);
     // A crown is a heap of leafy masses, round from every side. A
     // conifer's too: its cards facing out along its tiers were seen edge
     // on from the side, and a Douglas fir's and a redcedar's card tiers
@@ -1369,7 +1648,15 @@ pub fn build_from(
     };
     // Tubes take at most two thirds as many triangles as the cards:
     // thicker wood is kept first, and the rest is baked into the cards.
-    let wood_budget = tier.cards(height) * (CORNERS - 2) * 2 / 3;
+    // A rosette's stem is bare wood that holds its rosettes up at its
+    // tips (a Joshua tree's forking branches): baked onto a rosette's
+    // card, which turns to the eye, a piece of branch swings off the
+    // tree. Its wood is all kept, as tubes of the tier's few sides.
+    let wood_budget = if form == GrowthForm::RosetteSucculent {
+        usize::MAX
+    } else {
+        tier.cards(height) * (CORNERS - 2) * 2 / 3
+    };
     let mut keep = height * tier.keep;
     let mut coarse = coarse_at(keep);
     let mut tube_triangles = 0;
@@ -1725,13 +2012,7 @@ pub fn build_from(
     let faced: Vec<bool> = (0..headed)
         .map(|h| {
             organ_cards.iter().zip(&heads).any(|(card, head)| {
-                *head == Some(h)
-                    && looks.get(usize::from(card.template)).is_some_and(|look| {
-                        matches!(
-                            look.shape,
-                            Shape::Umbel(_) | Shape::Head(_) | Shape::Flower(_)
-                        )
-                    })
+                *head == Some(h) && looks.get(usize::from(card.template)).is_some_and(face_on)
             })
         })
         .collect();
@@ -1811,8 +2092,10 @@ pub fn build_from(
 
     // Each group's parts: its organ cards, and its thin wood's triangles.
     let mut group_cards: Vec<Vec<Card>> = vec![Vec::new(); groups];
+    let mut group_card_ids: Vec<Vec<usize>> = vec![Vec::new(); groups];
     for (i, card) in organ_cards.iter().enumerate() {
         group_cards[group[i]].push(*card);
+        group_card_ids[group[i]].push(i);
     }
     let mut group_wood: Vec<Mesh> = vec![Mesh::default(); groups];
     // Each thin segment's triangles, and its mean colour.
@@ -2058,19 +2341,12 @@ pub fn build_from(
     // does, and a tussock's minimal cards a third more than it; so did
     // thin stems drawn as strips a texel wide.
     let draw = |g: usize| -> Baked {
-        let cards = PlantMesh {
-            cards: group_cards[g].clone(),
-            ..PlantMesh::default()
-        }
-        .card_mesh();
-        let mut wood = Mesh::default();
-        for &(t, _, _) in &group_triangles[g] {
-            copy_triangle(&mut wood, &source.wood, t);
-        }
-        for &t in &group_solids[g] {
-            copy_triangle(&mut wood, &source.wood, t);
-        }
-        Baked { cards, wood }
+        let wood: Vec<usize> = group_triangles[g]
+            .iter()
+            .map(|&(t, _, _)| t)
+            .chain(group_solids[g].iter().copied())
+            .collect();
+        from.drawn_of(&group_card_ids[g], &wood)
     };
     // Each card's bounds are those of what it draws.
     for plane in &mut planes {
@@ -2169,7 +2445,7 @@ pub fn build_from(
     // Heads seen face on are baked from the full model, where an umbel or
     // a corymb is drawn flower by flower on its rays: the coarser level
     // draws it as one flat card, a line from the side.
-    let fine = planes.iter().any(|p| p.views).then(|| {
+    let fine = (from.heads.is_none() && planes.iter().any(|p| p.views)).then(|| {
         let fine = mesh::build(
             graph,
             looks,
@@ -2195,8 +2471,9 @@ pub fn build_from(
             let mid = plane.centre
                 + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
                 + plane.up * ((plane.low.1 + plane.high.1) * 0.5);
+            // Drawn whole already where the source draws its heads so.
             let drawn = match &fine {
-                Some((wood, cards)) => near_head(&drawn, mid, wood, cards),
+                Some((wood, cards)) => near_head(&drawn, mid, wood, cards, graph),
                 None => drawn,
             };
             let (covered, area) = add_views(&mut out, &drawn, mid, side, templates, &sky);
@@ -2783,16 +3060,18 @@ pub const FAR: ImpostorTier = ImpostorTier {
 /// Build `graph` as an impostor ([`ImpostorTier`]), baked from the same
 /// full plant as [`build`]'s cards.
 #[must_use]
+#[allow(clippy::too_many_arguments)]
 pub fn impostor(
     graph: &PlantGraph,
     looks: &[Look],
     bodies: &[BodyLook],
     appearance: &Appearance,
+    form: GrowthForm,
     templates: &Templates,
     levels: &[LodSpec; 4],
     tier: &ImpostorTier,
 ) -> CardPlant {
-    let from = Source::new(graph, looks, bodies, appearance, templates, levels);
+    let from = Source::new(graph, looks, bodies, appearance, form, templates, levels);
     impostor_from(&from, templates, tier)
 }
 
@@ -2800,9 +3079,12 @@ pub fn impostor(
 #[must_use]
 #[allow(clippy::too_many_lines)]
 pub fn impostor_from(from: &Source, templates: &Templates, tier: &ImpostorTier) -> CardPlant {
-    let (source, sky) = (&from.mesh, &from.sky);
-    let grown = source.card_mesh();
-    let items = [(&source.wood, Material::Opaque), (&grown, Material::Card)];
+    let sky = &from.sky;
+    let Baked {
+        cards: grown,
+        wood: source_wood,
+    } = from.drawn();
+    let items = [(&source_wood, Material::Opaque), (&grown, Material::Card)];
     let Some((low, high)) = raster::bounds(&items) else {
         return CardPlant::default();
     };
@@ -2810,7 +3092,7 @@ pub fn impostor_from(from: &Source, templates: &Templates, tier: &ImpostorTier) 
     let radius = grown
         .positions
         .iter()
-        .chain(&source.wood.positions)
+        .chain(&source_wood.positions)
         .map(|p| (v3(*p) - centre).length())
         .fold(1e-3, f64::max);
     // Every part as it is, as on the cards ([`build`]): its pictures keep
@@ -2826,7 +3108,7 @@ pub fn impostor_from(from: &Source, templates: &Templates, tier: &ImpostorTier) 
         let mut picture = bake(
             &Shot {
                 cards: &cards,
-                wood: &source.wood,
+                wood: &source_wood,
                 mid: centre,
                 right: up.cross(way),
                 up,
@@ -2942,8 +3224,13 @@ fn ways_round(around: usize) -> Vec<Vec3> {
 const HEAD_REACH: f64 = 2.0;
 
 /// The triangles of the full model (`wood`, `cards`) within
-/// [`HEAD_REACH`] of a head's coarse card (`coarse`) round `mid`.
-fn near_head(coarse: &Baked, mid: Vec3, wood: &Mesh, cards: &Mesh) -> Baked {
+/// [`HEAD_REACH`] of a head's coarse card (`coarse`) round `mid`, borne
+/// on the segments that bear that card or on their branches: the head's
+/// own rays and flowers. Taken by reach alone, a fennel's heads, crowded
+/// in a crown of thread-like leaves, took their neighbours and the leaves
+/// round them too, all drawn again on cards of their own, and the low
+/// cards hid half as much sky again as the plant.
+fn near_head(coarse: &Baked, mid: Vec3, wood: &Mesh, cards: &Mesh, graph: &PlantGraph) -> Baked {
     let reach = coarse
         .cards
         .positions
@@ -2951,13 +3238,27 @@ fn near_head(coarse: &Baked, mid: Vec3, wood: &Mesh, cards: &Mesh) -> Baked {
         .map(|p| (v3(*p) - mid).length())
         .fold(0.0, f64::max)
         * HEAD_REACH;
+    // The segments that bear the head and their branches.
+    let bears = coarse.cards.segments.iter().any(|&s| s != mesh::NO_SEGMENT);
+    let own = branches_of(graph, coarse.cards.segments.iter().copied());
+    let under = |s: u32| own.get(s as usize).copied().unwrap_or(false);
     let take = |from: &Mesh| {
         let mut to = Mesh::default();
         for t in 0..from.triangle_count() {
-            let centre = (0..3).fold(Vec3::ZERO, |sum, k| {
-                sum + v3(from.positions[from.indices[t * 3 + k] as usize])
-            }) * (1.0 / 3.0);
-            if (centre - mid).length() <= reach {
+            let corners = [0, 1, 2].map(|k| from.indices[t * 3 + k] as usize);
+            let centre = corners
+                .iter()
+                .fold(Vec3::ZERO, |sum, &i| sum + v3(from.positions[i]))
+                * (1.0 / 3.0);
+            if (centre - mid).length() > reach {
+                continue;
+            }
+            let segment = from
+                .segments
+                .get(corners[0])
+                .copied()
+                .unwrap_or(mesh::NO_SEGMENT);
+            if !bears || under(segment) {
                 copy_triangle(&mut to, from, t);
             }
         }

@@ -48,9 +48,30 @@
 # the ground as its parent's stem goes. Before, an old agave's crown stood
 # on a bare cylinder of every internode it had grown.
 #
+# Revision 5 (branching rosettes): a forking rosette's branches fork
+# again by the length they have grown, not only when they flower. A
+# Joshua tree's tip dies when it flowers or when insects kill it, and two
+# or three branches grow from below it; its trunk grows 0.9 to 3 m before
+# it first forks, and its branches then fork every 0.6 to 0.9 m (USDA
+# FEIS, Yucca brevifolia). The first fork stays as it was, by flower_age
+# and bloom; a branch (n 1) forks once it has grown fork_length, and on
+# average fork_spread / 2 later. A branch's leaves are sized by the
+# plant's age, not its own, since a new crown on an old tree bears full
+# leaves. Its stem thickens girth_rate metres a year, so an old trunk is
+# thicker than the branches it carries. Only forking rosettes (fork 1)
+# take the new rules, which come last so that every other rosette keeps
+# its random draws.
+#
+# Revision 6 (leaves on a thick stem): where the stem thickens, a leaf
+# grows from its surface, not its axis, so the leaf bases hide the stem
+# inside a rosette; a leaf standing up grows nearer the axis, by the sine
+# of its angle, so the young leaves close over the bud as a cone. A dead
+# leaf hangs from the surface too, so that it folds down along the stem
+# (FEIS: "fold down, covering the branches") rather than inside it.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem rosette 4;
+lsystem rosette 6;
 
 # The plant.
 param vigour_spread;          # a rosette grows exp(gauss() * vigour_spread) times as fast
@@ -81,6 +102,9 @@ param forks_low;              # crowns that wake below a flowered tip
 param forks_high;
 param fork_angle;             # angle a new crown leans out from the old axis
 param upturn;                 # how strongly a leaning crown's stem turns back up, radians a metre
+param fork_length;            # a branch's growth before it may fork
+param fork_spread;            # forks fall over this much more growth
+param girth_rate;             # metres a year a forking rosette's stem thickens
 param stemless;               # 1: the stem below the living leaves is not drawn
 # Flowering.
 param flower_age;             # the first year a crown may flower
@@ -115,6 +139,8 @@ module Fk(j);                 # j crowns still to wake below a flowered tip
 module Pp;                    # a pup on its runner
 module In;                    # a stemless rosette's internode, which goes with its leaf
 module Dn(h);                 # a pup's drop to the ground, h at its birth
+module Sg(l);                 # a forking rosette's stem, l long, thickening with age
+module Lf(i, m, c);           # a forking rosette's cohort of leaves, as Lc
 
 organ blade leaf area leaf_area;
 organ dead leaf area dead_area;
@@ -128,7 +154,7 @@ rule Y(v, n, p) : n < 0 -> Y(v, n, p);
 rule Y(v, n, p) : once > 0 && age * v >= flower_age && rand() < bloom ->
     [ Sm Sk ] Y(v, -1, p);
 # A forking crown in flower: the stalk ends it, and crowns wake below.
-rule Y(v, n, p) : fork > 0 && age * v >= flower_age && rand() < bloom ->
+rule Y(v, n, p) : fork > 0 && n == 0 && age * v >= flower_age && rand() < bloom ->
     [ Sm Sk ] Fk(round(uniform(forks_low, forks_high + 0.999) - 0.5));
 # A crown in flower that goes on.
 rule Y(v, n, p) : once == 0 && fork == 0 && age * v >= flower_age && rand() < bloom ->
@@ -136,7 +162,7 @@ rule Y(v, n, p) : once == 0 && fork == 0 && age * v >= flower_age && rand() < bl
 # A pup.
 rule Y(v, n, p) : pups > p && age >= pup_age && rand() < pup_rate ->
     [ Pp ] !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
-rule Y(v, n, p) -> !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
+rule Y(v, n, p) : fork == 0 -> !((stemless > 0 ? max(0.5 * trunk_radius, stalk_radius) : trunk_radius)) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
 
 # This year's leaves, a little apart up the stem, each turned on round
 # the spiral and opening out. Leaves are sized by the crown's age.
@@ -153,8 +179,18 @@ decompose Lc(i, m, c) : m < 1 -> ;
 rule Lv(s, a) : age + dt >= leaf_life && skirt > 0 -> Dv(s);
 rule Lv(s, a) : age + dt >= leaf_life -> ;
 rule Dv(s) : age + dt >= dead_life -> ;
+# A thickening stem (revision 5) bears its leaves on its surface, so
+# their bases hide it in the rosette: a leaf standing up nearer the
+# axis, so the young leaves close over the bud as a cone. It carries its
+# dead leaves out there, where they hang, as it grows wider under them.
+interpret Lv(s, a) : girth_rate > 0 ->
+    &(90) f((trunk_radius + girth_rate * age)
+        * sin(min(lerp(young_angle, old_angle, 1 - exp(-age / open_years)) + a, 90) * 0.0174533))
+    ^(90) &(lerp(young_angle, old_angle, 1 - exp(-age / open_years)) + a) blade(s);
 interpret Lv(s, a) ->
     &(lerp(young_angle, old_angle, 1 - exp(-age / open_years)) + a) blade(s);
+interpret Dv(s) : girth_rate > 0 ->
+    &(90) f(trunk_radius + girth_rate * (leaf_life + age)) ^(90) &(dead_angle) dead(s);
 interpret Dv(s) -> &(dead_angle) dead(s);
 
 # The stalk: the bare foot, then the flowering head, as a spike or a
@@ -177,7 +213,7 @@ decompose Bh(l) -> !(stalk_radius * 0.3) F(l * 0.4) Hd(0, max(3, round(flowers /
 # Crowns that wake below a flowered tip, leaning out round it.
 decompose Fk(j) : j > 0 ->
     [ /(360 * j / max(1, forks_high) + uniform(-25, 25)) &(fork_angle * uniform(0.7, 1.3))
-      Y(exp(gauss() * vigour_spread), 0, pups) ]
+      Y(exp(gauss() * vigour_spread), 1, pups) ]
     Fk(j - 1);
 decompose Fk(j) -> ;
 
@@ -208,3 +244,26 @@ decompose Pp ->
     /(uniform(0, 360)) &(90) f(pup_distance * uniform(0.6, 1.4)) ^(90)
     Y(exp(gauss() * vigour_spread), 0, pups);
 interpret Dn(h) -> f(-h * max(0, 1 - age / leaf_life));
+
+# A forking rosette (revision 5), last in the program so that the random
+# draws above keep their places. A branch forks once it has grown
+# fork_length, with a chance a year that puts the fork on average
+# fork_spread / 2 later: its tip dies, flowering or eaten, and crowns
+# wake below it.
+rule Y(v, n, p) : fork > 0 && n > 0 && age * v * trunk_rate >= fork_length
+    && rand() < 2 * trunk_rate * v / max(fork_spread, 0.001) ->
+    [ Sm Sk ] Fk(round(uniform(forks_low, forks_high + 0.999) - 0.5));
+# Its stem grows under the crown and thickens with age; its leaves are
+# sized by the plant's age.
+rule Y(v, n, p) : fork > 0 ->
+    Sg(trunk_rate * v) Lf(0, max(1, round(leaf_rate * v)), t * v) Y(v, n, p);
+interpret Sg(l) -> !(trunk_radius + girth_rate * age) T(0, 1, 0, upturn * l) F(l);
+# Its leaves stand on the year's stem, as thick as it is.
+decompose Lf(i, m, c) : m > 1 ->
+    Lf(i, floor(m / 2), c) Lf(i + floor(m / 2), m - floor(m / 2), c);
+decompose Lf(i, m, c) : m == 1 ->
+    F(internode) /(divergence + gauss() * 3)
+    [ Lv(leaf_length * (leaf_seed + (1 - leaf_seed) * (1 - exp(-c / size_years)))
+         * uniform(1 - leaf_spread, 1 + leaf_spread),
+         gauss() * angle_spread) ];
+decompose Lf(i, m, c) -> ;

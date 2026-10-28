@@ -1289,4 +1289,36 @@ pub mod venation;
 /// USDA Urban Tree Database (`height_growth_rate`, five species and four
 /// genera), not at a rate set by hand: a young southern magnolia no longer
 /// grows half again as wide as the database's magnolias of its age.
-pub const GENERATOR_REVISION: u32 = 171;
+/// 172: heads of flowers whole on the card tiers. Every plant but a tree
+/// or a shrub bakes its heads seen face on (an umbel, a corymb, a
+/// capitulum, a single flower) as its full model draws them, flower by
+/// flower on their rays, not as the second level's one flat card
+/// (`billboards::WholeHeads`): a wild carrot's far impostor no longer
+/// hides half as much sky again as the plant from 45 degrees up, nor a
+/// yarrow's draw a third light. A head drawn as a small impostor takes
+/// only its own rays and flowers, not its neighbours' and the leaves round
+/// it, which were drawn again on their own cards: a fennel's low cards no
+/// longer hide half as much sky again as the plant. A lone leaf lying
+/// level (a water lily's pad) lies on its card's plane, not on edge: a
+/// water lily's low cards no longer hide a third less sky from 45 degrees.
+/// 173: a Joshua tree branches as the Forest Service describes it
+/// (`rosette` revision 5). Its branches fork again every 0.6 to 0.9 m
+/// they grow, its tip killed by flowering or insects, not only when a
+/// crown flowers, so an old tree carries dozens of rosettes on a spreading
+/// crown rather than two or three on parallel columns; it grows 3.8 cm
+/// a year, not 2; its stem thickens with age, so a 120-year trunk is
+/// about 40 cm across and its branches 10 to 25; and a new branch's
+/// leaves are full size. Its card tiers keep a rosette plant's wood as
+/// tubes: pieces of branch baked onto rosette cards swung off the tree as
+/// the cards turned.
+///
+/// 174: a Joshua tree's leaves and bark as the Forest Service and
+/// photographs show them (`rosette` revision 6). Its dead leaves fold
+/// down along the branches instead of standing out like a brush, and
+/// hang about 25 years, not 40, so old wood shows; its rosettes open
+/// into balls (oldest leaves at 105 degrees, not 60), their leaves
+/// growing from the stem's surface so no bare stem shows among them;
+/// its old trunk wears dark, corky plates about 10 cm long, and its
+/// young branches the grey-tan of their leaf bases; its leaves are olive,
+/// not bluish green.
+pub const GENERATOR_REVISION: u32 = 174;
