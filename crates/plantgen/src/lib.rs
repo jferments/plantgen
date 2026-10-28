@@ -1331,4 +1331,18 @@ pub mod venation;
 /// tips gather light as the other broadleaf trees' do, saturating at 0.3
 /// of full light (sapindaceae 11), so an old bigleaf maple holds more of
 /// the leaf per crown area the Urban Tree Database measures.
-pub const GENERATOR_REVISION: u32 = 175;
+/// 176: a Joshua tree's rosettes as photographs show them (`rosette`
+/// revision 7). Its leaves stand evenly up each year's stem, not in a
+/// ring at the year's top with bare stem between, and its stem narrows
+/// inside the living leaves to its bud, so no flat-topped stem stands up
+/// through a rosette; a flowered or killed tip dies back to a blunt knob
+/// between the branches that wake below it, not a flat cut end. A
+/// rosette adds 36 leaves a year, not 22, their bases twice as wide as
+/// the blade, so it is a dense ball. Its hanging dead leaves grey from
+/// about six years after they die (a `grey` organ), so a branch's thatch
+/// is straw only below the living leaves. Teeth shorter than 2 mm (a
+/// Joshua tree's, a beargrass's) are drawn as one flat triangle a face,
+/// half a raised tooth's triangles: a 120-year Joshua tree is about
+/// 5.1 M triangles at full detail, not 5.7 M, with three fifths more
+/// leaves.
+pub const GENERATOR_REVISION: u32 = 176;
