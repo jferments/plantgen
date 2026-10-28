@@ -3,18 +3,19 @@
 //! in it, the cards stay inside the full plant's reach, a build gives
 //! the same bytes twice, the pictures pack into one atlas, the far
 //! impostor is one card with a picture from every way, a cholla's thin
-//! joints are baked, an agave's long leaves are drawn whole, and a
-//! yarrow's corymbs are small impostors baked from its full model, and a
-//! wild carrot's umbels are baked flower by flower, and a water lily's
-//! lone pads lie level.
+//! joints are baked, an agave's long leaves are drawn whole, a yarrow's
+//! corymbs are small impostors baked from its full model, a wild carrot's
+//! umbels are baked flower by flower, a water lily's lone pads lie level,
+//! and a plant with no pictures still packs into an atlas.
 //! `cargo test --release -p plantgen --test billboards`.
 
-use plantgen::billboards::{self, CORNERS, CardPlant, FAR, HEIGHTS, TIERS};
+use plantgen::billboards::{self, CORNERS, CardPlant, CardStats, FAR, HEIGHTS, TIERS};
 use plantgen::body::BodyLook;
 use plantgen::graph::PlantGraph;
 use plantgen::grow::{GrowthSettings, grow};
 use plantgen::looks::Look;
 use plantgen::lsys::Limits;
+use plantgen::mesh::Mesh;
 use plantgen::package::DEFAULT_DAY;
 use plantgen::quality::STANDARD;
 use plantgen::raster::{Material, Turn};
@@ -217,6 +218,23 @@ fn pictures_pack_into_one_atlas() {
         }
         assert!(atlas.fill(&plant.pictures) > 0.5);
     }
+}
+
+/// A tier with no pictures (a bare snag's, all wood) still packs into an
+/// atlas an image can hold: After's `--plant-cards` build of
+/// acer-macrophyllum stopped on "cannot encode PNG: Zero height not
+/// allowed" (2026-10-27).
+#[test]
+fn a_plant_with_no_pictures_has_a_one_texel_atlas() {
+    let plant = CardPlant {
+        wood: Mesh::default(),
+        cards: Mesh::default(),
+        pictures: Vec::new(),
+        stats: CardStats::default(),
+    };
+    let atlas = plant.atlas();
+    assert_eq!((atlas.width, atlas.height), (1, 1));
+    assert!(atlas.places.is_empty());
 }
 
 #[test]

@@ -630,7 +630,8 @@ pub struct TierCost {
     /// How wide a texel of its pictures is on its cards, metres
     /// ([`crate::billboards::CardPlant::texel`]): it stays as sharp as
     /// baked while a texel covers at most a screen pixel, so up to a
-    /// screen radius of [`ImpostorRecord::radius`] / `texel` pixels.
+    /// screen radius of [`ImpostorRecord::radius`] / `texel` pixels. 0
+    /// when it has no pictures.
     pub texel: f64,
 }
 
@@ -2228,13 +2229,19 @@ pub fn summary(manifest: &Manifest) -> String {
                     .iter()
                     .map(|tier| {
                         let cost = &tier.cost;
+                        // A tier with no pictures (a bare snag, all wood)
+                        // has no texel to blur.
+                        let sharp = if cost.texel > 0.0 {
+                            format!("sharp to {:.0} px", keyframe.impostor.radius / cost.texel)
+                        } else {
+                            "no pictures".to_string()
+                        };
                         format!(
-                            "{} {} cards {} triangles {:.2} M texels sharp to {:.0} px",
+                            "{} {} cards {} triangles {:.2} M texels {sharp}",
                             tier.name,
                             cost.cards,
                             cost.wood_triangles + cost.card_triangles + cost.leaf_triangles,
                             millions(cost.seen_texels),
-                            keyframe.impostor.radius / cost.texel.max(1e-9)
                         )
                     })
                     .collect();

@@ -1284,7 +1284,12 @@ pub mod venation;
 /// (only a crown's keep theirs as sharp as one), so no plant's atlas
 /// grows. Spanish moss's cards no longer hide four times the sky the moss
 /// does, nor a fescue's impostor twice.
-/// 171: heads of flowers whole on the card tiers. Every plant but a tree
+/// 171: a broadleaf tree's crown grows toward its full size at the rate
+/// its lineage's open-grown trees approach their greatest height in the
+/// USDA Urban Tree Database (`height_growth_rate`, five species and four
+/// genera), not at a rate set by hand: a young southern magnolia no longer
+/// grows half again as wide as the database's magnolias of its age.
+/// 172: heads of flowers whole on the card tiers. Every plant but a tree
 /// or a shrub bakes its heads seen face on (an umbel, a corymb, a
 /// capitulum, a single flower) as its full model draws them, flower by
 /// flower on their rays, not as the second level's one flat card
@@ -1296,7 +1301,7 @@ pub mod venation;
 /// longer hide half as much sky again as the plant. A lone leaf lying
 /// level (a water lily's pad) lies on its card's plane, not on edge: a
 /// water lily's low cards no longer hide a third less sky from 45 degrees.
-/// 172: a Joshua tree branches as the Forest Service describes it
+/// 173: a Joshua tree branches as the Forest Service describes it
 /// (`rosette` revision 5). Its branches fork again every 0.6 to 0.9 m
 /// they grow, its tip killed by flowering or insects, not only when a
 /// crown flowers, so an old tree carries dozens of rosettes on a spreading
@@ -1307,7 +1312,7 @@ pub mod venation;
 /// tubes: pieces of branch baked onto rosette cards swung off the tree as
 /// the cards turned.
 ///
-/// 173: a Joshua tree's leaves and bark as the Forest Service and
+/// 174: a Joshua tree's leaves and bark as the Forest Service and
 /// photographs show them (`rosette` revision 6). Its dead leaves fold
 /// down along the branches instead of standing out like a brush, and
 /// hang about 25 years, not 40, so old wood shows; its rosettes open
@@ -1316,4 +1321,4 @@ pub mod venation;
 /// its old trunk wears dark, corky plates about 10 cm long, and its
 /// young branches the grey-tan of their leaf bases; its leaves are olive,
 /// not bluish green.
-pub const GENERATOR_REVISION: u32 = 173;
+pub const GENERATOR_REVISION: u32 = 174;
