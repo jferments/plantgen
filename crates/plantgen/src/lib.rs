@@ -1321,4 +1321,14 @@ pub mod venation;
 /// its old trunk wears dark, corky plates about 10 cm long, and its
 /// young branches the grey-tan of their leaf bases; its leaves are olive,
 /// not bluish green.
-pub const GENERATOR_REVISION: u32 = 174;
+/// 175: a broadleaf tree's free space is a cluster of rounded masses with
+/// gaps between them (`mass_size`, `mass_share`; `space@4` `masses`), and
+/// half of its lateral buds about to grow a long shoot die instead
+/// (`bud_loss`; Thomas 2014, Dmyterko and Bruchwald 2010; broadleaf 30),
+/// so crowns show lumpy outlines and sky between masses, not smooth eggs;
+/// within a mass twigs take up as much less room round them as the mass
+/// packs its free space closer, so a crown keeps its leaf area. A maple's
+/// tips gather light as the other broadleaf trees' do, saturating at 0.3
+/// of full light (sapindaceae 11), so an old bigleaf maple holds more of
+/// the leaf per crown area the Urban Tree Database measures.
+pub const GENERATOR_REVISION: u32 = 175;

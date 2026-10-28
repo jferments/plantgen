@@ -53,9 +53,17 @@
 # Revision 10 (sub-crowns): a maple's region is broadleaf 29's sub-crowns
 # where its trunk divides into scaffold limbs (crown_units).
 #
+# Revision 11 (masses): a maple's tips gather light as broadleaf's do,
+# saturating at light_half 0.3, so its shaded shoots inside the crown keep
+# growing and leafing: counted in proportion to their light, an old
+# bigleaf maple held 0.6 times the leaf per crown area of the Urban Tree
+# Database's, the least of the broadleaf trees. Its crown now stays within
+# the string's module limit, which revision 6 kept it to by counting light
+# in proportion.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 10 extends broadleaf;
+lsystem sapindaceae 11 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -151,12 +159,13 @@ param sprout_light = 0.25;
 param dormant_angle = 60;
 param space_renew = 1;
 
-# The lobed envelope draws the crown, and light counts in proportion
-# (revision 6; see above).
+# The lobed envelope draws the crown (revision 6; see above). A tip's
+# light gathers as the other broadleaf trees' do, half of full light's at
+# 0.3 of it (revision 11), where it counted in proportion.
 param room_width = 1;
 param room_height = 1;
 param crown_phototropism = 0.3; # the region's front turns this far toward its light
-param light_half = 0;
+param light_half = 0.3;
 param flux = 3;
 
 # Shoots rise toward the light against their weight when rise > 0, the
