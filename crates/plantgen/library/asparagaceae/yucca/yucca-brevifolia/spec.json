@@ -14,7 +14,7 @@
     "params": {
       "vigour_spread": 0.15,
       "lean": 5,
-      "leaf_rate": 22,
+      "leaf_rate": 36,
       "leaf_life": 6,
       "leaf_length": 0.3,
       "leaf_seed": 0.3,
@@ -52,7 +52,8 @@
       "dead_area": 0.0175,
       "fork_length": 0.6,
       "fork_spread": 0.3,
-      "girth_rate": 0.0017
+      "girth_rate": 0.0017,
+      "grey_years": 6
     }
   },
   "growth": {
@@ -127,7 +128,7 @@
           "fold": 0.35,
           "thickness": 0.4,
           "widest": 0.15,
-          "base": 0.8,
+          "base": 2.0,
           "taper": 1.0,
           "arch": 4,
           "teeth": {
@@ -167,6 +168,23 @@
           0.16,
           0.135,
           0.09
+        ]
+      },
+      "dead_grey": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.035
+        },
+        "colour": [
+          0.2,
+          0.19,
+          0.17
+        ],
+        "shade": [
+          0.1,
+          0.095,
+          0.085
         ]
       },
       "flower": {
@@ -262,6 +280,26 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS Yucca brevifolia (read 2026-10-27): dead leaves \"fold down, covering the branches\", and leaves have enlarged bases where they attach to the branch. A young branch, under 5 cm in radius, is drawn in the grey-tan of its leaf bases and thatch, which hide its wood, turning to the bark's colour by 15 cm. The colour and the radius were set by eye against iNaturalist photographs (imagekit), 2026-10-27."
+    },
+    "generator.params.leaf_rate": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "No count of the leaves a rosette adds a year was found. 36 a year, about 200 living leaves to a rosette over their six years, set by eye 2026-10-28 against iNaturalist photographs (imagekit), where rosettes are dense balls through which no stem shows; at 22 the stem showed through every rosette."
+    },
+    "generator.params.grey_years": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "FEIS says only that the dead leaves persist and fold down. In iNaturalist photographs (imagekit) a branch's thatch is straw-coloured just below the living leaves and weathered grey further down. A dead leaf greys between three and nine years after it died (grey_years 6), so about two thirds of the thatch is grey; set by eye 2026-10-28."
+    },
+    "appearance.organs.blade.solid.base": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS Yucca brevifolia (read 2026-10-27): leaves have enlarged bases where they attach to the branch. A leaf's base is drawn twice as wide as its blade at its widest (about 2 cm), so the bases close round the stem inside a rosette; the share was set by eye 2026-10-28 against iNaturalist photographs (imagekit)."
+    },
+    "appearance.organs.dead_grey": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A weathered dead leaf's grey, chosen by eye 2026-10-28 from the thatch on old branches in iNaturalist photographs (imagekit)."
     },
     "generator.params.trunk_rate": {
       "evidence": "SourceInferred",
