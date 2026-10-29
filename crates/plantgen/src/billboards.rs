@@ -1970,7 +1970,59 @@ pub fn build_from(
             copy_triangle(&mut wood, &coarse.wood, t);
         }
     }
-
+    // A fleshy body kept whole is drawn smooth: it takes the sun its own
+    // relief and spines keep from its skin in the full plant (the ribs'
+    // walls, a body's shade on another), from the full plant's wood
+    // without its organs and the cards on its own segments
+    // ([`Sky::shading`]), but not the shadows the kept tubes cast
+    // on each other, which a renderer draws itself, nor the leaves',
+    // whose cards carry their own. Smooth and in the open, a saguaro's
+    // column drew a quarter lighter than the plant; shaded by the arms
+    // twice, a pincushion cactus's cards a sixth darker, and shaded by
+    // its leaves, a cushion plant's mound a fifth.
+    let fleshy: Vec<usize> = (0..wood.positions.len())
+        .filter(|&i| {
+            wood.segment(i)
+                .and_then(|s| graph.segments.get(s as usize))
+                .is_some_and(|s| s.body != 0)
+        })
+        .collect();
+    if !fleshy.is_empty() {
+        let mut skin = Mesh::default();
+        for t in 0..source.wood.triangle_count() {
+            if !(0..3).all(|k| organ_at(source.wood.indices[t * 3 + k] as usize)) {
+                copy_triangle(&mut skin, &source.wood, t);
+            }
+        }
+        // Its spines are cards on its own segments.
+        let spines = PlantMesh {
+            cards: source
+                .cards
+                .iter()
+                .filter(|c| {
+                    graph
+                        .segments
+                        .get(c.segment as usize)
+                        .is_some_and(|s| s.body != 0)
+                })
+                .copied()
+                .collect(),
+            ..PlantMesh::default()
+        }
+        .card_mesh();
+        let relief = Sky::new(&skin, &spines, templates);
+        let own = Sky::new(&wood, &Mesh::default(), templates);
+        for i in fleshy {
+            let (p, n) = (v3(wood.positions[i]), v3(wood.normals[i]));
+            let shading = (relief.shading(p, n) / own.shading(p, n).max(1e-3)).min(1.0);
+            for channel in &mut wood.colors[i][..3] {
+                #[allow(clippy::cast_possible_truncation)]
+                {
+                    *channel *= shading as f32;
+                }
+            }
+        }
+    }
     let k = tier
         .cards(height)
         .saturating_sub(leaves.triangle_count().div_ceil(CORNERS - 2))
@@ -2000,6 +2052,7 @@ pub fn build_from(
             if !bearing.get(at).copied().unwrap_or(false) {
                 continue;
             }
+            let own_head = looks.get(usize::from(card.template)).is_some_and(signature);
             let mut walked = 0.0;
             loop {
                 if axis_of[at] != usize::MAX {
@@ -2007,9 +2060,24 @@ pub fn build_from(
                     break;
                 }
                 let g = &graph.segments[at];
+                // A head on a stem kept as a tube (a wild carrot's one
+                // stout stem) is its own card too, one for all the head's
+                // parts on that stem's tip. Baked with the clump around
+                // it, a carrot's umbel lay level on its card and was gone
+                // from the side. Only the head's own parts: the leaves
+                // on a camas's scape stay with their clumps.
+                if !crowned && g.radius >= keep && g.body == 0 && own_head {
+                    head[i] = ribbons.len() + at;
+                    break;
+                }
                 walked += (g.end - g.start).length();
+                // Down the head's own stem as far as it goes: a carrot's
+                // stem narrows below `keep` a third of its height under
+                // the umbel.
                 match g.parent {
-                    Some(parent) if walked < graph.height * RIBBON_LENGTH => at = parent as usize,
+                    Some(parent) if walked < graph.height * RIBBON_LENGTH || !g.lateral => {
+                        at = parent as usize;
+                    }
                     _ => break,
                 }
             }
@@ -2020,6 +2088,14 @@ pub fn build_from(
         let mut used: Vec<usize> = head.iter().copied().filter(|&a| a != usize::MAX).collect();
         used.sort_unstable();
         used.dedup();
+        // The ribbons' heads first, then the tubes', up to the tier's
+        // share of the cards; the rest are baked with their clumps.
+        #[allow(
+            clippy::cast_precision_loss,
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss
+        )]
+        used.truncate(((tier.cards(height) as f64 * tier.heads) as usize).max(ribbons.len()));
         head.iter()
             .map(|a| used.iter().position(|u| u == a))
             .collect::<Vec<Option<usize>>>()
@@ -2116,7 +2192,7 @@ pub fn build_from(
         group_card_ids[group[i]].push(i);
     }
     let mut group_wood: Vec<Mesh> = vec![Mesh::default(); groups];
-    // Each thin segment's triangles, and its mean colour.
+    // Each thin segment's triangles, and its bark's mean colour.
     // Each triangle, the thin segment it is baked with, and whether it
     // is bark (an organ's triangle, a yarrow's cut blade along its
     // rachis, is drawn however thin the rachis).
@@ -2171,12 +2247,19 @@ pub fn build_from(
         }
         #[allow(clippy::cast_possible_truncation)]
         let segment = segment as u32;
-        let (sum, count) = &mut segment_colour[segment as usize];
-        for &i in &corners {
-            for c in 0..3 {
-                sum[c] += f64::from(source.wood.colors[i][c]);
+        // A ribbon stands for its stem: only the stem's bark colours it,
+        // not the leaves along it, which their cards draw. With them, a
+        // carrot's and a yarrow's flowering stems were drawn in the
+        // foliage's dark green, not their own pale green, and their
+        // minimal cards drew a third darker than the plant from the side.
+        if barked {
+            let (sum, count) = &mut segment_colour[segment as usize];
+            for &i in &corners {
+                for c in 0..3 {
+                    sum[c] += f64::from(source.wood.colors[i][c]);
+                }
+                *count += 1.0;
             }
-            *count += 1.0;
         }
         let Some(&e) = wood_element.get(segment as usize) else {
             continue;
@@ -2403,6 +2486,14 @@ pub fn build_from(
         plane.low = low;
         plane.high = high;
     }
+    // A card with nothing to draw has no frame: framed from infinity to
+    // infinity it left every other card a few texels (a camas's low
+    // cards, once its raceme took its own card).
+    planes.retain(|p| {
+        [p.low.0, p.low.1, p.high.0, p.high.1]
+            .iter()
+            .all(|v| v.is_finite())
+    });
     // Texels per metre, the same on every card.
     let area: f64 = planes
         .iter()
@@ -2835,6 +2926,13 @@ pub const SHEET: f64 = 0.5;
 /// Axes this share of the plant's height or longer may be ribbons.
 const RIBBON_LENGTH: f64 = 0.1;
 
+/// How far a ribbon's normals lean out toward its edges, as the tangent
+/// of their lean, so that it is lit as the stem it stands for: across a
+/// tube's seen face its light is π/4 of a flat face's, and normals
+/// leaning `k` at the edges, drawn between, give asinh(k)/k. Lit flat, a
+/// grass's culms drew its card tiers a sixth brighter than the grass.
+const RIBBON_ROUND: f64 = 1.57;
+
 /// The free-standing thin axes that bear a flower, a head or a fruit
 /// along them, longest first, as many as `budget` triangles allow
 /// (`2 (RIBBON_POINTS - 1)` each): each its segments, base first.
@@ -2945,6 +3043,10 @@ fn ribbon(
     } else {
         appearance.bark.map(f64::from)
     };
+    // Each face has its own corners, with its own normal: a ribbon drawn
+    // from behind with its front's normal was lit as if turned from the
+    // sun, and a yarrow's flowering stems on the far side of the plant
+    // drew dark.
     let first = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
     for (i, &(p, r)) in picked.iter().enumerate() {
         let along = if i + 1 < picked.len() {
@@ -2958,29 +3060,34 @@ fn ribbon(
             .normalize_or_else(|| any_perpendicular(along))
             * (r.max(least * 0.5));
         let normal = side.cross(along).normalize_or(out_dir);
-        for corner in [p - side, p + side] {
-            #[allow(clippy::cast_possible_truncation)]
-            out.push(Vertex {
-                position: corner,
-                normal,
-                uv: [0.0, 0.0],
-                color: [colour[0] as f32, colour[1] as f32, colour[2] as f32, 1.0],
-                born: 0.0,
-                shed: None,
-                level: 1,
-                segment: mesh::NO_SEGMENT,
-            });
+        let across = side.normalize_or(Vec3::X);
+        for facing in [normal, -normal] {
+            for (corner, lean) in [(p - side, -RIBBON_ROUND), (p + side, RIBBON_ROUND)] {
+                #[allow(clippy::cast_possible_truncation)]
+                out.push(Vertex {
+                    position: corner,
+                    normal: (facing + across * lean).normalize_or(facing),
+                    uv: [0.0, 0.0],
+                    color: [colour[0] as f32, colour[1] as f32, colour[2] as f32, 1.0],
+                    born: 0.0,
+                    shed: None,
+                    level: 1,
+                    segment: mesh::NO_SEGMENT,
+                });
+            }
         }
     }
     for i in 0..u32::try_from(RIBBON_POINTS - 1).unwrap_or(0) {
+        // Front corners, then back corners, at this point and the next.
         let (a, b, c, d) = (
-            first + 2 * i,
-            first + 2 * i + 1,
-            first + 2 * i + 2,
-            first + 2 * i + 3,
+            first + 4 * i,
+            first + 4 * i + 1,
+            first + 4 * i + 4,
+            first + 4 * i + 5,
         );
+        let (e, f, g, h) = (a + 2, b + 2, c + 2, d + 2);
         out.indices
-            .extend_from_slice(&[a, b, d, a, d, c, a, d, b, a, c, d]);
+            .extend_from_slice(&[a, b, d, a, d, c, e, h, f, e, g, h]);
     }
 }
 
@@ -4227,6 +4334,21 @@ impl Sky {
         };
         #[allow(clippy::cast_possible_truncation)]
         Some((c.map(|v| (v * scale) as f32), normal))
+    }
+
+    /// The share of the sun from above the horizon that reaches a surface
+    /// at `p` facing `normal`, as it would reach it in the open, 1 when
+    /// none would.
+    fn shading(&self, p: Vec3, normal: Vec3) -> f64 {
+        let (mut lit, mut open) = (0.0, 0.0);
+        for (d, seen) in self.seen(p, normal) {
+            if d.y > 0.0 {
+                let facing = normal.dot(d).max(0.0);
+                lit += facing * seen;
+                open += facing;
+            }
+        }
+        if open > 1e-9 { lit / open } else { 1.0 }
     }
 
     /// The four spherical-harmonic coefficients of the sun's visibility at

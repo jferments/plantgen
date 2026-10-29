@@ -1579,6 +1579,68 @@ fn rib_profile(u: f64, sharpness: f64) -> f64 {
     (1.0 - sharpness) * cos + sharpness * (1.0 - sin)
 }
 
+/// Samples across one rib for [`unfolded_skin`].
+const UNFOLDED_SAMPLES: usize = 48;
+
+/// How a level that draws `ribs` ribs only as shading colours its skin:
+/// the share of the valley's colour the folds show, and the share of the
+/// light they take, both as the folded skin is seen from all round. In a
+/// cross-section of folds `depth` deep, each point takes the light it
+/// sees between its neighbouring crests (the cosine-weighted share of its
+/// half of the section left open) and is seen as much as it is open. A
+/// smooth skin took the sun the folds shade themselves from: a saguaro's
+/// card tiers drew a quarter lighter than the plant, whose ribs' walls
+/// stand in their own shadow.
+fn unfolded_skin(ribs: u32, depth: f64, sharpness: f64) -> (f64, f64) {
+    let n = UNFOLDED_SAMPLES;
+    #[allow(clippy::cast_precision_loss)]
+    let point = |k: isize| {
+        let u = (k as f64 / n as f64).rem_euclid(1.0);
+        let t = 2.0 * PI * k as f64 / (n as f64 * f64::from(ribs.max(1)));
+        let r = 1.0 - depth * (1.0 - rib_profile(u, sharpness));
+        (
+            r * math::cos(t),
+            r * math::sin(t),
+            1.0 - rib_profile(u, sharpness),
+        )
+    };
+    #[allow(clippy::cast_possible_wrap)]
+    let n = n as isize;
+    let (mut weight, mut deep, mut light) = (0.0, 0.0, 0.0);
+    for k in 0..n {
+        let (x, y, valley) = point(k);
+        let ((ax, ay, _), (bx, by, _)) = (point(k - 1), point(k + 1));
+        let ds = (bx - ax).hypot(by - ay) * 0.5;
+        let (tx, ty) = ((bx - ax) / (2.0 * ds), (by - ay) / (2.0 * ds));
+        // Outward: away from the axis.
+        let (nx, ny) = if ty * x - tx * y >= 0.0 {
+            (ty, -tx)
+        } else {
+            (-ty, tx)
+        };
+        let mut rise = [0.0_f64; 2];
+        for j in (k - n)..=(k + n) {
+            if j == k {
+                continue;
+            }
+            let (qx, qy, _) = point(j);
+            let (dx, dy) = (qx - x, qy - y);
+            let (up, across) = (dx * nx + dy * ny, dx * tx + dy * ty);
+            let side = usize::from(across > 0.0);
+            rise[side] = rise[side].max(math::atan2(up, across.abs()));
+        }
+        let open = math::cos(rise[0]).midpoint(math::cos(rise[1]));
+        weight += ds * open;
+        deep += ds * open * valley;
+        light += ds * open * open;
+    }
+    if weight > 0.0 {
+        (deep / weight, light / weight)
+    } else {
+        (0.0, 1.0)
+    }
+}
+
 /// `angle` wrapped into `[-π, π)`.
 fn wrap(angle: f64) -> f64 {
     (angle + PI).rem_euclid(2.0 * PI) - PI
@@ -2517,9 +2579,12 @@ impl Body<'_> {
         let dome_step = if surface.bump_width > 0.0 { step } else { 0.0 };
         let rings = self.line.rings(&self.detail, step, dome_step);
         let valley = look.valley_colour();
-        // Ribs too fine for this level still shade the skin.
-        let skin = if look.ribs.is_some() && !surface.folded {
-            mix(look.colour, valley, 0.35)
+        // Ribs too fine for this level still shade the skin, as much as
+        // their folds would ([`unfolded_skin`]).
+        let skin = if look.ribs.is_some() && !surface.folded && surface.ribs > 0 {
+            let (deep, light) = unfolded_skin(surface.ribs, surface.depth, surface.sharpness);
+            #[allow(clippy::cast_possible_truncation)]
+            mix(look.colour, valley, deep).map(|channel| channel * light as f32)
         } else {
             look.colour
         };
