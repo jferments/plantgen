@@ -1141,9 +1141,11 @@ fn open_crowns_hold_the_leaf_area_of_open_grown_trees() {
         ("fraxinus-latifolia", 50.0, 2.1, 17.2),
         // Longview, as Populus balsamifera subsp. trichocarpa: 12 trees 35 to 60.
         ("populus-tristis", 40.0, 4.2, 14.8),
-        // Sacramento's valley oaks (Quercus lobata), white oaks as it is:
-        // 18 trees 60 to 200.
-        ("quercus-garryana", 80.0, 1.9, 5.3),
+        // The database has no Oregon white oak, so its genus: 174 oaks of
+        // nine species in its cities, 60 to 200 years old. Until 2026-10-29
+        // Sacramento's 18 valley oaks (Quercus lobata, 1.9 to 5.3), a
+        // white oak of a hot valley, stood in for it.
+        ("quercus-garryana", 80.0, 2.0, 8.0),
         // Longview's European white birches: 9 trees 35 to 60.
         ("betula-papyrifera", 40.0, 1.8, 11.1),
     ] {
