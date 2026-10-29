@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "spur_pairs": 3,
       "bloom_area": 0.72,
       "blooms": 1,
       "bloom_size": 0.045,
@@ -121,7 +120,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "crown_spread": 1.05,
+    "crown_spread": 1.2,
     "crown_see_through": 0.12,
     "trunk_fork_height_m": 5,
     "bark_colour": [84, 82, 76],
@@ -162,14 +161,13 @@
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.33, 0.32, 0.3], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.leader": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Imagekit woody-forms group 1 (2026-10-19, plantgen-claude project-files/image-data/woody-forms-2026-10-19/): a few tortuous scaffold limbs (2) in the photos where renders draw about 6 straight ones; Sargent (p. 296): 'stout ascending or spreading branches forming a broad compact head'."},
     "traits.limb_angle": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 296): 'stout ascending or spreading branches forming a broad compact head'. Spreading, as open-grown trees in iNaturalist photographs (batch inat-2026-10-23, picks 21 and 68) hold their big limbs past half way to level; Silvics of North America vol. 2 (1990, Stein, Quercus garryana) calls the old open-grown trees 'large spreading trees'. Was ascending until 2026-10-24."},
-    "traits.crown_spread": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990, Stein, Quercus garryana): an open-grown tree 8 m tall and 8 m in crown spread bore a fair acorn crop; the record tree is 36.6 m tall with a crown spread of 38.4 m (1.05); open-grown trees have 'dense, rounded crowns' on very large, crooked branches. So an open-grown Oregon white oak is about as wide as it is tall, where the genus value (0.92) is the Urban Tree Database's street oaks."},
+    "traits.crown_spread": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Crown width over height of mature open-grown trees photographed from the side (2026-10-29, plantgen-claude project-files/tree-shape/oak-2026-10-28/CROWN-SPREAD.md): inat:176481460 1.2, inat:104548990 at least 1.1 (one side hidden), inat:94634072 1.0 to 1.35 (two photographs); middle value 1.2. Silvics of North America vol. 2 (1990, Stein) agrees that open-grown trees spread: 'dense, rounded crowns' on very large, crooked branches; a young open-grown tree 8 m tall with 8 m of crown spread bore a fair acorn crop, and the record tree is 36.6 m tall with a crown spread of 38.4 m (1.05). The genus value (0.92) is the Urban Tree Database's street oaks."},
     "traits.limb_course": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990, Stein, Quercus garryana), Growth and Yield: 'Typically, open-grown trees have short boles bearing very large, crooked branches that form dense, rounded crowns'; forest-grown trees have 'slim, straight boles, fine side branches'."},
     "traits.trunk_fork_stems": {"evidence": "SourceInferred", "source": "silvics-1990-hardwoods", "note": "Silvics of North America vol. 2 (1990, Stein, Quercus garryana): open-grown trees' short boles bear 'very large, crooked branches'; counted on iNaturalist photographs of open-grown trees (batch inat-2026-10-23, picks 21 and 68; imagekit woody-forms group 1, 2026-10-19: a few scaffold limbs, 2): the trunk divides into two."},
     "appearance.bark_look.stages.mature.colour": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "text: 'light gray or almost white' (FNA), 'light grayish-brown' (Sudworth)"},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"The leaves are deciduous\"."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"Its fall color is unspectacular, with many trees turning plain brown\". Colour ours."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Quercus Garryana: \"stout branchlets coated at first with thick pale rufous pubescence, pubescent or tomentose and light or dark orange color during their first winter, becoming glabrous and rather bright reddish brown in their second year and ultimately gray\". Colour chosen by eye between the pubescent orange and the reddish brown."},
-    "generator.params.spur_pairs": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "An oak's leaves crowd at its twig tips, where the internodes are short (University of Washington botany notes), and a short growth unit bears about 5 to 8 leaves (Hallé, Oldeman and Tomlinson 1978, the general figure for preformed short shoots); three pairs is six. With single leaves at their flora length (woody forms, 2026-10-17), two pairs left the open-grown crown at 2.0 m² of leaf per m² of crown, the bottom of the Urban Tree Database's valley oaks, where Karlik and McKay (2002) measured 4.4 under a blue oak's crown."},
     "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Open-grown trees in iNaturalist research-grade photographs (observations 28744863, 28832264, 83148498) spread wider than tall on a few big limbs that rise from a short trunk and arch outward."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
