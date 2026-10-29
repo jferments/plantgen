@@ -1951,8 +1951,9 @@ fn on_stalk(
 /// accent colour its card painted the petiole in, a hundredth as thick as
 /// it is long and at least half a millimetre, cast toward the plant's
 /// stem `hairs` where it states them, which the stalk bears as a
-/// [`crate::hairs::Tube`]. A sprayed leaf ([`Look::spray`]) gets its shoot
-/// and petiole instead, in the `twig` colour.
+/// [`crate::hairs::Tube`]. A sprayed leaf ([`Look::spray`]) gets its
+/// petiole, in that accent colour, and its node's shoot, in the `twig`
+/// colour, reaching no farther than the node's farthest leaf.
 pub(crate) fn petioles(
     graph: &PlantGraph,
     looks: &[Look],
@@ -1961,6 +1962,20 @@ pub(crate) fn petioles(
     plant: &mut PlantMesh,
 ) {
     let mesh = &mut plant.wood;
+    // Each node's shoot reaches as far as its farthest leaf hangs from it,
+    // not past it: a year's shoot ends at its last leaves and bud, so no
+    // bare shoot tip sticks out of the crown.
+    let mut reaches = std::collections::BTreeMap::new();
+    for organ in &graph.organs {
+        if let Some(sprayed) = looks
+            .get(usize::from(organ.organ))
+            .filter(|look| look.stalk().is_none())
+            .and_then(|look| sprayed(organ, look))
+        {
+            let reach = reaches.entry(sprayed.node).or_insert(0.0_f64);
+            *reach = reach.max((sprayed.along - organ.position).length());
+        }
+    }
     let mut shoots = std::collections::BTreeSet::new();
     for organ in &graph.organs {
         let Some(look) = looks.get(usize::from(organ.organ)) else {
@@ -1968,14 +1983,23 @@ pub(crate) fn petioles(
         };
         let Some(stalk) = look.stalk() else {
             if let Some(sprayed) = sprayed(organ, look) {
-                // A sprayed leaf's petiole, and its node's shoot once, as
-                // young wood.
-                let colour = crate::hairs::cast_wood(twig, 1.0, hairs);
+                // A sprayed leaf's petiole in its accent colour, as a
+                // stalked leaf's, and its node's shoot once, as young wood.
+                let wood = crate::hairs::cast_wood(twig, 1.0, hairs);
+                let accent = crate::hairs::cast_wood(look.accent, 1.0, hairs);
                 let first = mesh.positions.len();
-                let shoot = shoots
-                    .insert(sprayed.node)
-                    .then_some((organ.position, sprayed.tip));
-                for (from, to) in shoot.into_iter().chain([(sprayed.along, sprayed.base)]) {
+                let shoot = shoots.insert(sprayed.node).then(|| {
+                    let full = sprayed.tip - organ.position;
+                    let reach = reaches.get(&sprayed.node).copied().unwrap_or(0.0);
+                    let tip =
+                        organ.position + full.normalize_or(Vec3::Y) * reach.min(full.length());
+                    (organ.position, tip, wood)
+                });
+                for (from, to, colour) in
+                    shoot
+                        .into_iter()
+                        .chain([(sprayed.along, sprayed.base, accent)])
+                {
                     let reach = to - from;
                     let length = reach.length();
                     if length > 0.0 {
