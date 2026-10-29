@@ -895,6 +895,7 @@ impl Appearance {
         organs: &[(&str, OrganKind)],
     ) -> std::borrow::Cow<'_, BTreeMap<String, OrganLook>> {
         let males = self.males(organs.iter().map(|(name, _)| *name));
+        let greys = self.greys(organs.iter().map(|(name, _)| *name));
         let bare: Vec<&String> = self
             .organs
             .iter()
@@ -907,7 +908,7 @@ impl Appearance {
             })
             .map(|(name, _)| name)
             .collect();
-        if males.is_empty() && bare.is_empty() {
+        if males.is_empty() && greys.is_empty() && bare.is_empty() {
             return std::borrow::Cow::Borrowed(&self.organs);
         }
         let mut own = self.organs.clone();
@@ -921,6 +922,11 @@ impl Appearance {
                 own.insert(male, male_look(look));
             }
         }
+        for (grey, of) in greys {
+            if let Some(look) = self.organs.get(&of) {
+                own.insert(grey, grey_look(look));
+            }
+        }
         std::borrow::Cow::Owned(own)
     }
 
@@ -932,6 +938,19 @@ impl Appearance {
             .filter(|name| !self.organs.contains_key(*name))
             .filter_map(|name| {
                 let of = name.strip_suffix(MALE)?;
+                Some((name.to_string(), of.to_string()))
+            })
+            .collect()
+    }
+
+    /// The weathered organs among `organs` that have no look of their
+    /// own, each with the organ it stands for (`dead` for `dead_grey`).
+    fn greys<'a>(&self, organs: impl IntoIterator<Item = &'a str>) -> Vec<(String, String)> {
+        organs
+            .into_iter()
+            .filter(|name| !self.organs.contains_key(*name))
+            .filter_map(|name| {
+                let of = name.strip_suffix(GREY)?;
                 Some((name.to_string(), of.to_string()))
             })
             .collect()
@@ -1144,6 +1163,26 @@ pub const SEX: &str = "sex";
 /// the species gives it a look, it is drawn as that organ is on a male
 /// plant ([`male_look`]).
 pub const MALE: &str = "_male";
+
+/// The suffix of a program's organ that an organ turns into as it
+/// weathers (`dead_grey` for `dead`, a rosette's hanging dead leaf greyed):
+/// unless the species gives it a look, it is drawn as that organ greyed
+/// ([`grey_look`]).
+pub const GREY: &str = "_grey";
+
+/// How an organ whose look is `look` is drawn weathered: its colours
+/// three quarters of the way to the grey of their own lightness.
+#[must_use]
+pub fn grey_look(look: &OrganLook) -> OrganLook {
+    let grey = |colour: [f32; 3]| {
+        let light = 0.2126 * colour[0] + 0.7152 * colour[1] + 0.0722 * colour[2];
+        colour.map(|channel| channel + (light - channel) * 0.75)
+    };
+    let mut weathered = look.clone();
+    weathered.colour = look.colour.map(grey);
+    weathered.shade = look.shade.map(grey);
+    weathered
+}
 
 /// How a male plant draws an organ whose look is `look` on a plant that
 /// fruits: as it is in bud and flower, and fallen where it would set

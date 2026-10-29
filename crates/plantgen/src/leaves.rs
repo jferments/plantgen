@@ -227,6 +227,11 @@ const MIN_STATIONS: usize = 3;
 const NARROW_M: f64 = 0.02;
 /// Levels a solid leaf may cover.
 pub const MAX_LEVELS: u8 = 2;
+/// Teeth shorter than this, metres, are drawn flat (a Joshua tree's or a
+/// beargrass's denticulate margin): a raised tooth's four faces cost four
+/// times a plain leaf's triangles on a toothed yucca, for a point about a
+/// pixel wide from a metre and a half away.
+const FLAT_TOOTH_M: f64 = 0.002;
 
 impl SolidLeaf {
     /// Whether level `level` draws this leaf solid.
@@ -512,9 +517,21 @@ impl Leaf {
                 let apex = edge + out * reach;
                 let a = edge - tangent * (reach * 0.6);
                 let b = edge + tangent * (reach * 0.6);
+                let base = mesh.positions.len();
+                if teeth.length < FLAT_TOOTH_M {
+                    // A minute tooth, a few pixels at arm's length, is one
+                    // flat triangle in the margin's plane, a face each way
+                    // on its own corners: half a raised tooth's triangles.
+                    for corner in [a, b, apex, a, apex, b] {
+                        mesh.push(self.vertex(corner, teeth.colour));
+                    }
+                    let v = |k: usize| u32::try_from(base + k).unwrap_or(0);
+                    mesh.indices
+                        .extend_from_slice(&[v(0), v(2), v(1), v(3), v(5), v(4)]);
+                    continue;
+                }
                 let lift = face * (reach * 0.25);
                 let corners = [a, b, apex, edge + lift];
-                let base = mesh.positions.len();
                 for corner in corners {
                     mesh.push(self.vertex(corner, teeth.colour));
                 }

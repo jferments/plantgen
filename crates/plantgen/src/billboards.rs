@@ -1771,8 +1771,26 @@ pub fn build_from(
         .collect();
     let leaf_normal = |within: u32| leaf_normals.get(leaf_of(within)).copied().flatten();
     let mut wood_element = vec![usize::MAX; graph.segments.len()];
+    // A rosette plant's stem where it narrows past the kept tubes to the
+    // bud inside a rosette, hidden by the leaves round it: the thin wood
+    // that goes on along the axis of kept wood. Baked onto a card that
+    // turns to the eye, it swung off the rosette as a dark chip (a Joshua
+    // tree's minimal cards from 45 degrees); it is left out. Its side
+    // axes (a flowering stalk) are baked as before.
+    let mut bud_stem = vec![false; graph.segments.len()];
     for (s, segment) in graph.segments.iter().enumerate() {
-        if segment.radius >= keep || segment.body != 0 || ribboned[s] {
+        if form == GrowthForm::RosetteSucculent
+            && segment.radius < keep
+            && segment.body == 0
+            && let Some(parent) = segment.parent.map(|p| p as usize)
+            && let Some(up) = graph.segments.get(parent)
+            && up.order == segment.order
+            && up.body == 0
+            && (up.radius >= keep || bud_stem[parent])
+        {
+            bud_stem[s] = true;
+        }
+        if segment.radius >= keep || segment.body != 0 || ribboned[s] || bud_stem[s] {
             continue;
         }
         let along = segment.end - segment.start;
