@@ -1346,17 +1346,21 @@ pub mod venation;
 /// 5.1 M triangles at full detail, not 5.7 M, with three fifths more
 /// leaves.
 ///
-/// 177: card tiers keep more of the plant's tone. A flowering stem drawn
-/// as a ribbon takes its bark's colour, not the leaves' along it, each
-/// face lit by its own normal, rounded like the stem it stands for (a
-/// yarrow's near cards drew two fifths darker than the yarrow from the
+/// 177: card tiers keep the plant's tone and look. A flowering stem
+/// drawn as a ribbon takes its bark's colour, not the leaves' along it,
+/// each face lit by its own normal, rounded like the stem it stands for
+/// (a yarrow's near cards drew two fifths darker than the yarrow from the
 /// side, a carrot's minimal cards half as bright). A flower head on a
-/// stem kept as a tube is its own turning card, as one on a ribbon is (a
+/// stem kept as a tube is its own turning card, as one on a ribbon is,
+/// and heads seen face on keep their cards on the minimal tier too (a
 /// carrot's umbel no longer lies level on a clump's card, gone from the
-/// side). A fleshy body kept whole takes the sun its own ribs and spines
-/// keep from its skin in the full plant, and ribs a level draws only as
-/// shading darken the skin by their folds' own shade, not a fixed share
-/// (a saguaro's card tiers drew a quarter brighter than the plant). A card with nothing to draw is dropped:
-/// framed without bounds it left every other card a few texels (a
-/// cyclamen's and a trout lily's low cards).
+/// side). A card is baked from the side it is seen from, a level one from
+/// above (a cyclamen's minimal cards showed its leaves' maroon
+/// undersides). A body kept as a tube draws its spines and areoles in its
+/// skin, not on cards (a peyote's wool floated beside it as white chips,
+/// a saguaro's spines stood round it as hair), and a ribbed body's ribs
+/// are folded on the low cards; ribs a level draws only as shading darken
+/// the skin by their folds' own shade, not a fixed share. A card with
+/// nothing to draw is dropped: framed without bounds it left every other
+/// card a few texels (a cyclamen's and a trout lily's low cards).
 pub const GENERATOR_REVISION: u32 = 177;

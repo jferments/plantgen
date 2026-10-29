@@ -104,6 +104,11 @@ pub struct CardTier {
     /// with none, heads are baked with the rest and ribbons are as many
     /// as the wood allows.
     pub heads: f64,
+    /// The level of detail its fleshy bodies are drawn at
+    /// ([`crate::body`]): the low tier folds a body's ribs, as a
+    /// saguaro's pleats and a hedgehog cactus's ridges show from any
+    /// distance it is drawn at; the minimal tier draws them as shading.
+    pub body_level: usize,
 }
 
 /// A Steam Deck or an integrated GPU at 60 frames a second.
@@ -118,6 +123,7 @@ pub const LOW: CardTier = CardTier {
     sides: 4,
     bend: 25.0,
     heads: 1.0 / 3.0,
+    body_level: 2,
 };
 
 /// The weakest machines.
@@ -132,6 +138,7 @@ pub const MINIMAL: CardTier = CardTier {
     sides: 3,
     bend: 40.0,
     heads: 0.0,
+    body_level: 3,
 };
 
 pub const TIERS: [CardTier; 2] = [LOW, MINIMAL];
@@ -718,6 +725,21 @@ fn fit_plane(
     {
         turn = Turn::Facing;
     }
+    // A card is baked from the side it is seen from: a level one from
+    // above, an upright one from outside the plant. Either way round
+    // fits the parts as well, and a cyclamen's level leaves baked from
+    // below drew their maroon undersides where the plant shows its
+    // marbled tops.
+    let seen = if normal.y.abs() >= LEVEL {
+        Vec3::Y
+    } else {
+        centre - foliage_centre
+    };
+    let normal = if normal.dot(seen) < 0.0 {
+        -normal
+    } else {
+        normal
+    };
     (centre, normal, flat, turn)
 }
 
@@ -1681,12 +1703,28 @@ pub fn build_from(
     }
     let (source, sky) = (&from.mesh, &from.sky);
 
+    // A body kept as a tube draws its spines and areoles in its own skin,
+    // as the far levels of a body do ([`crate::body`]): baked onto cards
+    // of their own, which lie where the clump of them is fitted and not on
+    // the tube's coarser surface, a peyote's tufts of wool floated beside
+    // it as white chips and a saguaro's spines stood round its column as
+    // a halo of hair. A body baked whole (a cholla's thin joints) keeps
+    // its spines with it.
+    let armature = |card: &Card| {
+        usize::from(card.template) >= looks.len()
+            && graph
+                .segments
+                .get(card.segment as usize)
+                .is_some_and(|s| s.body != 0 && !(s.order > 0 && s.radius < keep.min(trunk)))
+    };
     // Elements: organ cards, then thin wood segments.
     let mut elements = Vec::new();
     let organ_cards: Vec<Card> = source.cards.clone();
     for card in &organ_cards {
         let (base, heading, left) = (v3(card.base), v3(card.heading), v3(card.left));
         let length = f64::from(card.length);
+        // Left out of the cards, it pulls no group toward it.
+        let length = if armature(card) { 1e-6 } else { length };
         elements.push(Element {
             centre: base + heading * (length * 0.5),
             facing: heading.cross(left).normalize_or(Vec3::Z),
@@ -1935,7 +1973,16 @@ pub fn build_from(
     flush(&mut chunk, &mut elements, &mut solid_chunks);
 
     // Tubes: the coarsest level's wood at least `keep` in radius, and
-    // fleshy bodies on the stem or as thick.
+    // fleshy bodies on the stem or as thick. A body with ribs is drawn at
+    // the tier's level of a body's detail, which folds them on the low
+    // cards; one without (a cholla's tubercled joints) gains nothing
+    // from it but rings, and stays at the coarsest.
+    let ribbed = |mesh: &Mesh, i: usize| {
+        mesh.segment(i)
+            .and_then(|s| graph.segments.get(s as usize))
+            .and_then(|s| bodies.get(usize::from(s.body).checked_sub(1)?))
+            .is_some_and(|look| look.ribs.is_some())
+    };
     let mut wood = Mesh::default();
     for t in 0..coarse.wood.triangle_count() {
         let corners = [0, 1, 2].map(|k| coarse.wood.indices[t * 3 + k] as usize);
@@ -1960,7 +2007,9 @@ pub fn build_from(
             .and_then(|s| graph.segments.get(s as usize))
             .is_some_and(|s| s.body != 0)
         {
-            !thin_body(&coarse.wood, corners[0], keep)
+            // A ribbed body is drawn below at the tier's own level.
+            !(tier.body_level != 3 && ribbed(&coarse.wood, corners[0]))
+                && !thin_body(&coarse.wood, corners[0], keep)
         } else {
             thin.nearest(centre, &graph.segments).is_none_or(|(s, d)| {
                 graph.segments[s].within.is_none() || d > keep * LEAF_AXIS_REACH
@@ -1970,56 +2019,20 @@ pub fn build_from(
             copy_triangle(&mut wood, &coarse.wood, t);
         }
     }
-    // A fleshy body kept whole is drawn smooth: it takes the sun its own
-    // relief and spines keep from its skin in the full plant (the ribs'
-    // walls, a body's shade on another), from the full plant's wood
-    // without its organs and the cards on its own segments
-    // ([`Sky::shading`]), but not the shadows the kept tubes cast
-    // on each other, which a renderer draws itself, nor the leaves',
-    // whose cards carry their own. Smooth and in the open, a saguaro's
-    // column drew a quarter lighter than the plant; shaded by the arms
-    // twice, a pincushion cactus's cards a sixth darker, and shaded by
-    // its leaves, a cushion plant's mound a fifth.
-    let fleshy: Vec<usize> = (0..wood.positions.len())
-        .filter(|&i| {
-            wood.segment(i)
-                .and_then(|s| graph.segments.get(s as usize))
-                .is_some_and(|s| s.body != 0)
-        })
-        .collect();
-    if !fleshy.is_empty() {
-        let mut skin = Mesh::default();
-        for t in 0..source.wood.triangle_count() {
-            if !(0..3).all(|k| organ_at(source.wood.indices[t * 3 + k] as usize)) {
-                copy_triangle(&mut skin, &source.wood, t);
-            }
-        }
-        // Its spines are cards on its own segments.
-        let spines = PlantMesh {
-            cards: source
-                .cards
-                .iter()
-                .filter(|c| {
-                    graph
-                        .segments
-                        .get(c.segment as usize)
-                        .is_some_and(|s| s.body != 0)
-                })
-                .copied()
-                .collect(),
-            ..PlantMesh::default()
-        }
-        .card_mesh();
-        let relief = Sky::new(&skin, &spines, templates);
-        let own = Sky::new(&wood, &Mesh::default(), templates);
-        for i in fleshy {
-            let (p, n) = (v3(wood.positions[i]), v3(wood.normals[i]));
-            let shading = (relief.shading(p, n) / own.shading(p, n).max(1e-3)).min(1.0);
-            for channel in &mut wood.colors[i][..3] {
-                #[allow(clippy::cast_possible_truncation)]
-                {
-                    *channel *= shading as f32;
-                }
+    if tier.body_level != 3 {
+        let mut bodies_drawn = PlantMesh::default();
+        crate::body::build_between(
+            graph,
+            bodies,
+            looks.len(),
+            tier.body_level,
+            0.0,
+            &mut bodies_drawn,
+        );
+        for t in 0..bodies_drawn.wood.triangle_count() {
+            let first = bodies_drawn.wood.indices[t * 3] as usize;
+            if ribbed(&bodies_drawn.wood, first) && !thin_body(&bodies_drawn.wood, first, keep) {
+                copy_triangle(&mut wood, &bodies_drawn.wood, t);
             }
         }
     }
@@ -2082,8 +2095,24 @@ pub fn build_from(
                 }
             }
         }
+        // A tier without heads' cards bakes the ribbons' heads with their
+        // clumps (a grass's spikes, a raceme), but not heads seen face on
+        // (an umbel, a corymb, a capitulum): lying on a clump's card, a
+        // carrot's umbel was gone from the side on the minimal cards. They
+        // take no more of the cards than the low tier's heads would.
+        let ribbon_heads = ribbons.len();
         if tier.heads <= 0.0 {
-            head.fill(usize::MAX);
+            let mut faced = vec![false; ribbon_heads + graph.segments.len()];
+            for (card, &a) in organ_cards.iter().zip(&head) {
+                if a != usize::MAX && looks.get(usize::from(card.template)).is_some_and(face_on) {
+                    faced[a] = true;
+                }
+            }
+            for a in &mut head {
+                if *a != usize::MAX && !faced[*a] {
+                    *a = usize::MAX;
+                }
+            }
         }
         let mut used: Vec<usize> = head.iter().copied().filter(|&a| a != usize::MAX).collect();
         used.sort_unstable();
@@ -2095,7 +2124,11 @@ pub fn build_from(
             clippy::cast_possible_truncation,
             clippy::cast_sign_loss
         )]
-        used.truncate(((tier.cards(height) as f64 * tier.heads) as usize).max(ribbons.len()));
+        used.truncate(if tier.heads > 0.0 {
+            ((tier.cards(height) as f64 * tier.heads) as usize).max(ribbon_heads)
+        } else {
+            (tier.cards(height) as f64 * LOW.heads) as usize
+        });
         head.iter()
             .map(|a| used.iter().position(|u| u == a))
             .collect::<Vec<Option<usize>>>()
@@ -2188,6 +2221,9 @@ pub fn build_from(
     let mut group_cards: Vec<Vec<Card>> = vec![Vec::new(); groups];
     let mut group_card_ids: Vec<Vec<usize>> = vec![Vec::new(); groups];
     for (i, card) in organ_cards.iter().enumerate() {
+        if armature(card) {
+            continue;
+        }
         group_cards[group[i]].push(*card);
         group_card_ids[group[i]].push(i);
     }
@@ -4334,21 +4370,6 @@ impl Sky {
         };
         #[allow(clippy::cast_possible_truncation)]
         Some((c.map(|v| (v * scale) as f32), normal))
-    }
-
-    /// The share of the sun from above the horizon that reaches a surface
-    /// at `p` facing `normal`, as it would reach it in the open, 1 when
-    /// none would.
-    fn shading(&self, p: Vec3, normal: Vec3) -> f64 {
-        let (mut lit, mut open) = (0.0, 0.0);
-        for (d, seen) in self.seen(p, normal) {
-            if d.y > 0.0 {
-                let facing = normal.dot(d).max(0.0);
-                lit += facing * seen;
-                open += facing;
-            }
-        }
-        if open > 1e-9 { lit / open } else { 1.0 }
     }
 
     /// The four spherical-harmonic coefficients of the sun's visibility at

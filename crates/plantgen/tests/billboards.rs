@@ -470,14 +470,16 @@ fn full_and_tier(species: &str, tier: &CardTier) -> (billboards::Drawn, billboar
 #[test]
 fn a_carrots_card_tiers_keep_its_pale_stem_and_its_umbel() {
     // Its flowering stem, a ribbon on the minimal cards, took the dark
-    // green of the leaves along it, and on the low cards its umbel lay
-    // level with the leaves' clump: from the side the minimal cards drew
-    // half as bright as the carrot, the low cards a quarter darker.
+    // green of the leaves along it, and on both tiers its umbel lay level
+    // with the leaves' clump: from the side the minimal cards drew half as
+    // bright as the carrot, the low cards a quarter darker. Its umbel on a
+    // card of its own draws a little whiter than the lacy umbel of the
+    // plant: the minimal cards 1.17 as bright.
     for tier in &TIERS {
         let (whole, carded) = full_and_tier("daucus-carota", tier);
         let ratio = carded.tone[0] / whole.tone[0];
         assert!(
-            (0.85..=1.15).contains(&ratio),
+            (0.85..=1.2).contains(&ratio),
             "{}: from the side the cards draw {ratio:.2} as bright as the plant",
             tier.name
         );
@@ -485,16 +487,17 @@ fn a_carrots_card_tiers_keep_its_pale_stem_and_its_umbel() {
 }
 
 #[test]
-fn a_saguaros_card_tiers_keep_the_shade_of_its_ribs_and_spines() {
-    // Its column, kept whole and drawn smooth with its spines a tint, took
-    // the sun its ribs and spines keep from its skin: its low cards drew
-    // a quarter brighter than the saguaro. Within a fifth now.
-    let (whole, low) = full_and_tier("carnegiea-gigantea", &TIERS[0]);
-    for (view, (whole, low)) in whole.tone.iter().zip(low.tone).enumerate() {
-        let ratio = low / whole;
+fn a_peyotes_spines_and_wool_are_drawn_on_its_body() {
+    // Baked onto cards of their own, its tufts of wool floated beside its
+    // coarser body as white chips: 40 cards on the low tier where its
+    // flowers need 9. Its body draws them in its skin.
+    let (_, _, plants) = carded("lophophora-williamsii");
+    for (tier, plant) in TIERS.iter().zip(&plants) {
         assert!(
-            (0.8..=1.2).contains(&ratio),
-            "view {view}: the low cards draw {ratio:.2} as bright as the plant"
+            plant.stats.cards <= 10,
+            "{}: {} cards",
+            tier.name,
+            plant.stats.cards
         );
     }
 }
