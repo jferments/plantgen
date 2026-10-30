@@ -1350,4 +1350,14 @@ pub mod venation;
 /// and its petiole takes the leaf's accent colour, not the twig's: a
 /// broadleaf crown's edge no longer bristles with bare orange shoot tips,
 /// read as needles in close-ups (Oregon white oak, 2026-10-29).
-pub const GENERATOR_REVISION: u32 = 177;
+/// 179: an epicormic broadleaf tree's dormant buds sprout only when
+/// released, once their light rises `sprout_rise` above the least they
+/// have stood in (Meier, Saunders and Michler 2012; broadleaf 31), not
+/// whenever lit: an
+/// open-grown Oregon white oak stands on a clean bole with two heavy
+/// scaffolds, not a whorl of thin level branches round its fork. Willows
+/// have no terminal bud (Salix `terminal_bud` false), so their shoots go
+/// on from their top lateral bud, and their hand-set growth values give
+/// way to the broadleaf rules, so they keep full crowns without the
+/// sprouts.
+pub const GENERATOR_REVISION: u32 = 179;
