@@ -330,6 +330,25 @@ fn a_yarrows_corymbs_are_drawn_solid() {
 }
 
 #[test]
+fn a_yarrows_cut_leaves_are_drawn_along_their_midribs() {
+    // Baked, its leaves' fine segments are each less than a texel, and
+    // the cards kept them as scattered dots with nothing joining them.
+    // Each leaf's midrib is a line in the leaf's own dark green now, as
+    // far as the tier's budget for them goes.
+    let (_, _, plants) = carded("achillea-millefolium");
+    for (tier, plant) in TIERS.iter().zip(&plants) {
+        let leafy = plant
+            .wood
+            .colors
+            .iter()
+            .filter(|c| c[1] > 1.6 * c[0] && c[1] > 2.0 * c[2])
+            .count();
+        println!("{}: {leafy} midrib corners", tier.name);
+        assert!(leafy >= 200, "{}: {leafy} midrib corners", tier.name);
+    }
+}
+
+#[test]
 fn a_sagebrushs_crown_cards_are_baked_from_each_height() {
     let (_, _, plants) = carded("artemisia-tridentata");
     for (tier, plant) in TIERS.iter().zip(&plants) {

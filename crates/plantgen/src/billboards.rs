@@ -2656,6 +2656,19 @@ pub fn build_from(
             texel * MIN_TEXELS,
         );
     }
+    // Cut leaves' midribs take at most twice as many triangles as the
+    // cards: 54 of a yarrow's 78 leaves on the low tier, the longest.
+    if !crowned {
+        lace_lines(
+            &mut out.wood,
+            graph,
+            looks,
+            &source.wood,
+            &whole,
+            texel * MIN_TEXELS,
+            tier.cards(height) * (CORNERS - 2) * 2,
+        );
+    }
     // Heads seen face on are baked from the full model, where an umbel or
     // a corymb is drawn flower by flower on its rays: the coarser level
     // draws it as one flat card, a line from the side.
@@ -3108,6 +3121,134 @@ fn ribbon_axes(graph: &PlantGraph, looks: &[Look], keep: f64, budget: usize) -> 
         .collect()
 }
 
+/// A leaf drawn in the wood whose blade fills less than this share of
+/// the band it reaches across from its heading bakes to dashes: a cut
+/// blade (a yarrow's fills 0.24, a wild carrot's 0.26, a fennel's 0.08)
+/// or a narrow one that arches away (a beargrass's, 0.14). Set by eye:
+/// of 42 plants surveyed, only these and a fishtail palm fall under it.
+pub const LACE: f64 = 0.3;
+
+/// The midribs of cut leaves in `wood` (a yarrow's, a wild carrot's)
+/// that the tier does not draw `whole`, longest first, as many as
+/// `budget` triangles allow, drawn as lines at least `least` wide in
+/// their blades' colour along the blades' own curve: baked, a cut leaf's segments are each less than a
+/// texel, and kept by coverage they scatter into dots with nothing
+/// joining them (a yarrow's leaves, close up). The midrib holds them
+/// together. A blade is told cut by [`LACE`].
+fn lace_lines(
+    out: &mut Mesh,
+    graph: &PlantGraph,
+    looks: &[Look],
+    wood: &Mesh,
+    whole: &[bool],
+    least: f64,
+    budget: usize,
+) {
+    // Each line runs from the leaf's foot through the middles of its
+    // blade's two halves.
+    const BINS: usize = 2;
+    // Each leaf drawn in the wood, by the segment that bears it.
+    let mut borne: std::collections::HashMap<u32, Vec<usize>> = std::collections::HashMap::new();
+    for (o, organ) in graph.organs.iter().enumerate() {
+        let drawn = looks
+            .get(usize::from(organ.organ))
+            .is_some_and(|look| !signature(look));
+        if let (true, Some(segment)) = (drawn, organ.segment) {
+            borne.entry(segment).or_default().push(o);
+        }
+    }
+    if borne.is_empty() {
+        return;
+    }
+    // Each leaf's triangles: how far along its heading, where, how big.
+    let mut pieces: Vec<Vec<(f64, Vec3, f64)>> = vec![Vec::new(); graph.organs.len()];
+    let mut widths = vec![0.0_f64; graph.organs.len()];
+    let mut colours = vec![([0.0_f64; 3], 0.0_f64); graph.organs.len()];
+    for t in 0..wood.triangle_count() {
+        let corners = [0, 1, 2].map(|k| wood.indices[t * 3 + k] as usize);
+        if whole[t] || corners.iter().any(|&i| bark_radius(wood, i).is_some()) {
+            continue;
+        }
+        let Some(on) = wood.segment(corners[0]).and_then(|s| borne.get(&s)) else {
+            continue;
+        };
+        let [a, b, c] = corners.map(|i| v3(wood.positions[i]));
+        let centre = (a + b + c) * (1.0 / 3.0);
+        let place = |o: usize| {
+            let organ = &graph.organs[o];
+            let along = (centre - organ.position).dot(organ.heading).max(0.0);
+            (
+                along,
+                (centre - (organ.position + organ.heading * along)).length(),
+            )
+        };
+        let Some(&o) = on
+            .iter()
+            .min_by(|&&x, &&y| place(x).1.total_cmp(&place(y).1))
+        else {
+            continue;
+        };
+        let (along, off) = place(o);
+        widths[o] = widths[o].max(off);
+        pieces[o].push((along, centre, (b - a).cross(c - a).length() * 0.5));
+        let (sum, count) = &mut colours[o];
+        for &i in &corners {
+            for k in 0..3 {
+                sum[k] += f64::from(wood.colors[i][k]);
+            }
+            *count += 1.0;
+        }
+    }
+    let mut lines: Vec<(f64, Vec<(Vec3, f64)>, [f64; 3])> = Vec::new();
+    for (o, leaf) in pieces.iter().enumerate() {
+        let reach = leaf.iter().map(|p| p.0).fold(0.0, f64::max);
+        if reach < 4.0 * least {
+            continue;
+        }
+        // How far out it reaches from its heading: a cut blade (a
+        // yarrow's) fills little of that band, as does a narrow one that
+        // arches away from it (a beargrass's), and both bake to dashes.
+        let area: f64 = leaf.iter().map(|p| p.2).sum();
+        if area >= LACE * reach * 2.0 * widths[o].max(least) {
+            continue;
+        }
+        // The blade's own curve: its area's middle in each half.
+        let mut middles = [(Vec3::ZERO, 0.0_f64); BINS];
+        for &(along, centre, area) in leaf {
+            #[allow(
+                clippy::cast_precision_loss,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            let bin = ((along / reach * BINS as f64) as usize).min(BINS - 1);
+            middles[bin].0 = middles[bin].0 + centre * area;
+            middles[bin].1 += area;
+        }
+        let mut path = vec![(graph.organs[o].position, 0.0)];
+        path.extend(
+            middles
+                .iter()
+                .filter(|m| m.1 > 0.0)
+                .map(|m| (m.0 * (1.0 / m.1), 0.0)),
+        );
+        if path.len() < 2 {
+            continue;
+        }
+        let (sum, count) = colours[o];
+        lines.push((reach, path, sum.map(|c| c / count.max(1.0))));
+    }
+    lines.sort_by(|a, b| b.0.total_cmp(&a.0));
+    let mut spent = 0;
+    for (_, path, colour) in lines {
+        let cost = 4 * (path.len() - 1);
+        if spent + cost > budget {
+            break;
+        }
+        spent += cost;
+        strip(out, &path, colour, least);
+    }
+}
+
 /// Draw `axis` as a ribbon at least `least` wide, facing out from the
 /// plant's middle, both faces.
 fn ribbon(
@@ -3150,6 +3291,13 @@ fn ribbon(
     } else {
         appearance.bark.map(f64::from)
     };
+    strip(out, &picked, colour, least);
+}
+
+/// Draw the line through `picked` (each point and its radius) as a strip
+/// at least `least` wide in `colour`, facing out from the plant's middle,
+/// both faces, lit as the round axis it stands for ([`RIBBON_ROUND`]).
+fn strip(out: &mut Mesh, picked: &[(Vec3, f64)], colour: [f64; 3], least: f64) {
     // Each face has its own corners, with its own normal: a ribbon drawn
     // from behind with its front's normal was lit as if turned from the
     // sun, and a yarrow's flowering stems on the far side of the plant
@@ -3184,7 +3332,7 @@ fn ribbon(
             }
         }
     }
-    for i in 0..u32::try_from(RIBBON_POINTS - 1).unwrap_or(0) {
+    for i in 0..u32::try_from(picked.len().saturating_sub(1)).unwrap_or(0) {
         // Front corners, then back corners, at this point and the next.
         let (a, b, c, d) = (
             first + 4 * i,

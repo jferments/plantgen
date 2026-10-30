@@ -1378,5 +1378,7 @@ pub mod venation;
 /// (a pincushion drew cream). Tubercles too fine for a level shade its
 /// skin as their mounds shade each other, round the body and along it,
 /// as unfolded ribs already do (a living rock's low cards drew 1.7 times
-/// as bright as the plant, a pincushion's 1.6).
+/// as bright as the plant, a pincushion's 1.6). A cut leaf's midrib is
+/// drawn on the cards as a thin line along its blade, in its colour (a
+/// yarrow's, a carrot's and a fennel's leaves baked to scattered dots).
 pub const GENERATOR_REVISION: u32 = 178;
