@@ -301,9 +301,21 @@
 # never grow (Thomas 2014, pp. 258-259). mass_size 0 and bud_loss 0 grow
 # a plant as before.
 #
+# Revision 31 (released sprouts): with sprout_rise, a dormant bud sprouts
+# only when it is released, as epicormic buds are (Meier, Saunders and
+# Michler 2012): it keeps the least light it has stood in, and sprouts
+# once its light has risen sprout_rise above that, as when a limb above
+# it is shed, and it is still past sprout_light. Without it a dormant bud
+# sprouts whenever it has sprout_light, so in a young open-grown tree
+# every node's dormant bud grows out at once, a second lateral at every
+# node: a whorl of thin level branches round an oak's fork, where
+# photographs show a clean bole and two or three heavy scaffolds.
+# sprout_rise 0, as every lineage but the epicormic ones gives it, grows
+# a plant as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 30;
+lsystem broadleaf 31;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -383,6 +395,7 @@ param shed_age;
 param dormant_buds;           # 1: each node keeps a dormant bud that sprouts where light reaches
 param dormant_years;          # years a dormant bud lives
 param sprout_light;           # light at which a dormant bud sprouts
+param sprout_rise = 0;        # light a dormant bud must gain over the least it has stood in before it sprouts (its release); 0: it sprouts whenever lit
 param dormant_angle;          # a dormant bud's angle from its shoot
 param space_renew;            # 1: free space returns where the plant's parts are shed
 param terminal_bloom;         # chance a year that a long shoot ends in flowers and forks
@@ -463,7 +476,7 @@ module Wk(k, s);                          # k short-shoot buds (s as K's) still 
 module Wl(k);                             # k leaves still to place round it
 module Bt(n);                             # n blooms still to place at a long shoot's tip
 module K(s) queries light, vigour, position;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
-module D queries light, space;            # a dormant bud
+module D(l) queries light, space;         # a dormant bud, l the least light it has stood in
 module R(n);                              # the base of a many-stemmed plant: n stems still to send up
 module Mp(n, u, l);                       # a flat shoot's nodes still to form this year, as M's
 module Ab(s, p);                          # a shoot's tip at the end of its year: lost, carried on by a lateral, or going on (p 1: a flat shoot)
@@ -771,10 +784,13 @@ rule K(s) : light >= spur_light && (blooms <= 0 || t < adult_age || bloom_stalk 
 # from buds that wait on its limbs, not from the branching of its tips
 # (Ishii and Ford 2001), and sprouts fill a crown's gaps and inside. With
 # dormant_buds, each node keeps one, a quarter turn round from its
-# laterals; it sprouts into a long shoot when light reaches it with free
-# space before it, and dies after dormant_years.
-rule D : age >= dormant_years -> ;
-rule D : light >= sprout_light && space > 0 -> incline(set_point, incline_rate) S A(0);
+# laterals; it sprouts into a long shoot when light reaches it (with
+# sprout_rise, when its light rises that much above the least it has
+# stood in: revision 31) with free space before it, and dies after
+# dormant_years.
+rule D(l) : age >= dormant_years -> ;
+rule D(l) : light >= sprout_light && (sprout_rise <= 0 || light >= l + sprout_rise) && space > 0 -> incline(set_point, incline_rate) S A(0);
+rule D(l) : light < l -> D(light);
 
 # A growth unit's node whose buds may not grow long shoots: short-shoot
 # buds (K) in place of lateral buds (B), the short_share of the unit's
@@ -794,24 +810,24 @@ decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && (dormant_
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) incline(set_point, incline_rate) S B ] [ /(180) &(branch_angle) incline(set_point, incline_rate) S B ]
     leaf(leaf_size, 0, leaf_angle, 1) leaf(leaf_size, 180, leaf_angle, 1)
-    [ /(90) &(dormant_angle) D ]
+    [ /(90) &(dormant_angle) D(1) ]
     /(divergence) M(n - 1, u, l);
 decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && (dormant_buds > 0 || leaves_per_node < 3) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     leaf(leaf_size, 0, leaf_angle, 1) leaf(leaf_size, 180, leaf_angle, 1)
-    [ /(90) &(dormant_angle) D ]
+    [ /(90) &(dormant_angle) D(1) ]
     /(divergence) M(n - 1, u, l);
 decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0
                     && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) incline(set_point, incline_rate) S B ] leaf(leaf_size, 0, leaf_angle, 1)
-    [ /(180) &(dormant_angle) D ]
+    [ /(180) &(dormant_angle) D(1) ]
     /(divergence) M(n - 1, u, l);
 decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l)
     [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] leaf(leaf_size, 0, leaf_angle, 1)
-    [ /(180) &(dormant_angle) D ]
+    [ /(180) &(dormant_angle) D(1) ]
     /(divergence) M(n - 1, u, l);
 decompose M(n, u, l) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || dormant_buds > 0 || leaves_per_node < 3)
                     && (thorns <= 0 || (thorn_share >= 1 && thorn_pair > 0)) ->
@@ -961,13 +977,13 @@ decompose Mp(n, u, l) : n > 0
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l) $
     [ +(branch_angle * (frac(n / 2) < 0.25 ? 1 : -1)) incline(plagio_set, incline_rate) S B ]
     [ +(leaf_angle * (frac(n / 2) < 0.25 ? 1 : -1)) $ leaf(leaf_size) ]
-    [ &(dormant_angle) D ]
+    [ &(dormant_angle) D(1) ]
     Mp(n - 1, u, l);
 decompose Mp(n, u, l) : n > 0 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(l) $
     [ +(branch_angle * (frac(n / 2) < 0.25 ? 1 : -1)) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     [ +(leaf_angle * (frac(n / 2) < 0.25 ? 1 : -1)) $ leaf(leaf_size) ]
-    [ &(dormant_angle) D ]
+    [ &(dormant_angle) D(1) ]
     Mp(n - 1, u, l);
 decompose Mp(n, u, l) : n <= 0 -> ;
 
