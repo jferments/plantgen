@@ -2600,6 +2600,27 @@ impl Body<'_> {
         } else {
             look.colour
         };
+        // So do tubercles too fine for it, round the body and along it: a
+        // smooth pincushion took the sun its mounds shade each other from.
+        let skin = match look.tubercles.as_ref() {
+            Some(tubercles) if surface.bump_width <= 0.0 && look.areoles.spacing > 0.0 => {
+                let widest = self
+                    .line
+                    .stations
+                    .iter()
+                    .map(|station| station.radius)
+                    .fold(0.0, f64::max);
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let rows = |spacing: f64| (2.0 * PI * widest / spacing).round().max(3.0) as u32;
+                let spacing = look.areoles.spacing;
+                let (_, around) = unfolded_skin(rows(spacing), tubercles.height, 0.0);
+                let (_, along) =
+                    unfolded_skin(rows(spacing * tubercles.stretch), tubercles.height, 0.0);
+                #[allow(clippy::cast_possible_truncation)]
+                skin.map(|channel| channel * (around * along) as f32)
+            }
+            _ => skin,
+        };
         let cork = look.cork.as_ref();
         let cork_line = look.cork_line(self.graph.age);
         let wobble_phase = unit(mix64(self.axis.id ^ 0xC0E4)) * 2.0 * PI;

@@ -479,6 +479,22 @@ fn a_carrots_card_tiers_keep_its_pale_stem_and_its_umbel() {
 }
 
 #[test]
+fn tubercled_bodies_keep_their_tone_on_the_cards() {
+    // Smooth where the plant is all mounds, a living rock's and a
+    // pincushion's coarse bodies took the sun their tubercles shade each
+    // other from: the low cards drew 1.7 and 1.6 times as bright as the
+    // plant from the side.
+    for species in ["ariocarpus-fissuratus", "cochemiea-grahamii"] {
+        let (whole, carded) = full_and_tier(species, &TIERS[0]);
+        let ratio = carded.tone[0] / whole.tone[0];
+        assert!(
+            ratio <= 1.3,
+            "{species}: from the side the cards draw {ratio:.2} as bright as the plant"
+        );
+    }
+}
+
+#[test]
 fn a_peyotes_spines_and_wool_are_drawn_on_its_body() {
     // Baked onto cards of their own, its tufts of wool floated beside its
     // coarser body as white chips: 40 cards on the low tier where its
