@@ -1368,8 +1368,8 @@ pub mod venation;
 /// the skin by their folds' own shade, not a fixed share. A card with
 /// nothing to draw is dropped: framed without bounds it left every other
 /// card a few texels (a cyclamen's and a trout lily's low cards). A
-/// flat-topped head seen face on (a yarrow's corymb, a carrot's umbel)
-/// is drawn on the cards as a small solid dome of its own colours, white
+/// flat-topped head of many flowers seen face on (a yarrow's corymb, a
+/// carrot's umbel; not a daisy, a goldenrod's plume or a raceme) is drawn on the cards as a small solid dome of its own colours, white
 /// over a cone of its rays, in about 20 triangles and no texels: baked
 /// it blurred to a grey smudge. Organs borne on a spiny body sit out on
 /// the skin the tiers swell for its spines (a pincushion's ring of

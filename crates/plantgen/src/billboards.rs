@@ -2171,9 +2171,10 @@ pub fn build_from(
     let headed = heads.iter().flatten().copied().max().map_or(0, |h| h + 1);
     // Heads of flowers seen face on (a capitulum, a single flower, an
     // umbel or a corymb) look unlike from above and from the side.
-    // A head drawn solid is flat-topped, its flowers spread wider than
-    // they stand tall: a goldenrod's panicle of small upturned heads is
-    // a plume, and drawn as a disc it floated over its stems.
+    // A head drawn solid is many small flowers, flat-topped, spread wider
+    // than they stand tall. A goldenrod's panicle of small upturned heads
+    // is a plume: drawn as a disc it floated over its stems. A daisy is
+    // one flower, sharp on its card: drawn as a disc it lost its eye.
     let flat = |h: usize| {
         // Each flower or inflorescence card spans its centre ± its half.
         let flowers: Vec<(Vec3, Vec3)> = elements
@@ -2194,7 +2195,14 @@ pub fn build_from(
             .iter()
             .map(|(p, half)| (p.x - mid.x).hypot(p.z - mid.z) + half.x.hypot(half.z))
             .fold(0.0, f64::max);
-        flowers.is_empty() || high - low <= 2.0 * across
+        let many = flowers.len() > 1
+            || organ_cards.iter().zip(&heads).any(|(card, head)| {
+                *head == Some(h)
+                    && looks
+                        .get(usize::from(card.template))
+                        .is_some_and(|look| look.inflorescence.is_some())
+            });
+        many && high - low <= 2.0 * across
     };
     let faced: Vec<bool> = (0..headed)
         .map(|h| {
