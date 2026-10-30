@@ -1350,4 +1350,35 @@ pub mod venation;
 /// and its petiole takes the leaf's accent colour, not the twig's: a
 /// broadleaf crown's edge no longer bristles with bare orange shoot tips,
 /// read as needles in close-ups (Oregon white oak, 2026-10-29).
-pub const GENERATOR_REVISION: u32 = 177;
+///
+/// 178: card tiers keep the plant's tone and look. A flowering stem
+/// drawn as a ribbon takes its bark's colour, not the leaves' along it,
+/// each face lit by its own normal, rounded like the stem it stands for
+/// (a yarrow's near cards drew two fifths darker than the yarrow from the
+/// side, a carrot's minimal cards half as bright). A flower head on a
+/// stem kept as a tube is its own turning card, as one on a ribbon is,
+/// and heads seen face on keep their cards on the minimal tier too (a
+/// carrot's umbel no longer lies level on a clump's card, gone from the
+/// side). A card is baked from the side it is seen from, a level one from
+/// above (a cyclamen's minimal cards showed its leaves' maroon
+/// undersides). A body kept as a tube draws its spines and areoles in its
+/// skin, not on cards (a peyote's wool floated beside it as white chips,
+/// a saguaro's spines stood round it as hair), and a ribbed body's ribs
+/// are folded on the low cards; ribs a level draws only as shading darken
+/// the skin by their folds' own shade, not a fixed share. A card with
+/// nothing to draw is dropped: framed without bounds it left every other
+/// card a few texels (a cyclamen's and a trout lily's low cards). A
+/// flat-topped head of many flowers seen face on (a yarrow's corymb, a
+/// carrot's umbel; not a daisy, a goldenrod's plume or a raceme) is drawn on the cards as a small solid dome of its own colours, white
+/// over a cone of its rays, in about 20 triangles and no texels: baked
+/// it blurred to a grey smudge. Organs borne on a spiny body sit out on
+/// the skin the tiers swell for its spines (a pincushion's ring of
+/// flowers was sunk in it), and spines hide `1 - exp(-a / area)` of the
+/// skin the far levels tint, as overlapping outlines do, not up to 85%
+/// (a pincushion drew cream). Tubercles too fine for a level shade its
+/// skin as their mounds shade each other, round the body and along it,
+/// as unfolded ribs already do (a living rock's low cards drew 1.7 times
+/// as bright as the plant, a pincushion's 1.6). A cut leaf's midrib is
+/// drawn on the cards as a thin line along its blade, in its colour (a
+/// yarrow's, a carrot's and a fennel's leaves baked to scattered dots).
+pub const GENERATOR_REVISION: u32 = 178;
