@@ -1345,4 +1345,9 @@ pub mod venation;
 /// half a raised tooth's triangles: a 120-year Joshua tree is about
 /// 5.1 M triangles at full detail, not 5.7 M, with three fifths more
 /// leaves.
-pub const GENERATOR_REVISION: u32 = 176;
+/// 177: a sprayed leaf's shoot (`spray`) ends at the farthest leaf its
+/// node hangs on it, not up to two leaf lengths out whatever its leaves,
+/// and its petiole takes the leaf's accent colour, not the twig's: a
+/// broadleaf crown's edge no longer bristles with bare orange shoot tips,
+/// read as needles in close-ups (Oregon white oak, 2026-10-29).
+pub const GENERATOR_REVISION: u32 = 177;

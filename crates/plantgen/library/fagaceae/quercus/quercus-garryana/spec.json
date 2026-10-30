@@ -59,14 +59,6 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "simple",
-          "widest": 0.6,
-          "tip": 0.15,
-          "base": 0.35,
-          "tooth_depth": 0.2,
-          "round": 0.8
-        },
         "families": {
           "plasticity": 0.8
         }
@@ -148,9 +140,12 @@
     "life_span": "perennial",
     "woodiness": "woody",
     "rosette": "none",
-    "leaf_width_m": {"min": 0.03, "max": 0.08},
+    "leaf_width_m": {"min": 0.05, "max": 0.13},
     "leaf_shape": "obovate",
     "leaf_margin": "entire",
+    "leaf_incision": "cleft",
+    "leaf_lobes": {"min": 5, "max": 8},
+    "leaf_lobe_apex": "rounded",
     "inflorescence_length_m": {"min": 0.03, "max": 0.1},
     "fruit_size_m": {"min": 0.02, "max": 0.03},
     "leaf_apex": "rounded"
@@ -209,7 +204,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark, glossy green leaves; pale grey, furrowed bark carrying moss and lichen. Fruit (plant roadmap P4), as in mid-July: green acorns about 2.5 cm long in shallow, scaly cups, singly or in pairs. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; acorns green in summer, ripe and falling in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): light grey bark, furrowed and checkered into scaly ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves of the outer crown small, narrow and deeply lobed, shade leaves inside it larger, broader and shallower, as in other oaks; set from general knowledge of sun and shade leaves and juvenile foliage, not measured. Leaf (plant roadmap P4): the lobes rounded (`round` 0.8), as Oregon white oak's are. Single leaves at their flora length since woody forms (2026-10-17), not sprigs, so `leaf_area` is the area the leaf draws."
+      "note": "Colours chosen by eye: dark, glossy green leaves; pale grey, furrowed bark carrying moss and lichen. Fruit (plant roadmap P4), as in mid-July: green acorns about 2.5 cm long in shallow, scaly cups, singly or in pairs. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; acorns green in summer, ripe and falling in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): light grey bark, furrowed and checkered into scaly ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves of the outer crown small, narrow and deeply lobed, shade leaves inside it larger, broader and shallower, as in other oaks; set from general knowledge of sun and shade leaves and juvenile foliage, not measured. Single leaves at their flora length since woody forms (2026-10-17), not sprigs, so `leaf_area` is the area the leaf draws."
     },
     "taxon": {
       "evidence": "Authored",
@@ -245,8 +240,11 @@
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L172855), as no source read gives it."},
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L172855), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L172855), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L172855), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 296): leaves 4 to 6 inches long, 2 to 5 inches wide (5 to 13 cm). Was a model estimate of 3 to 8 cm until 2026-10-29, which drew a blade under half as wide as long."},
     "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L172855), as no source read gives it."},
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (sargent-1922, p. 296): leaves 'coarsely pinnatifid-lobed'; Abrams vol. 1 (1923, abrams-1923): 'coarsely pinnatifid'. Pinnatifid: cut halfway or more to the midrib, so cleft. Until 2026-10-29 the leaf was drawn as an unlobed obovate blade."},
+    "traits.leaf_lobes": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Lobes counted, the end one with them, on mature leaves in iNaturalist photographs (imagekit batch inat-2026-10-29): inat:50740108 7, inat:28493777 7, inat:143546854 6, inat:423653860 7, inat:463164519 8, inat:96508256 5. The floras read (Sargent, Abrams) give no count."},
+    "traits.leaf_lobe_apex": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The lobes end rounded or blunt in the same six photographs; the spec drew them rounded (round 0.8) by hand until 2026-10-29."},
     "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L172855), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L172855), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L172855), as no source read gives it."},
