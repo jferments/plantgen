@@ -737,6 +737,18 @@ impl BodyLook {
         (self.tint_aged(0.0), spines::cover(self, spacing * width))
     }
 
+    /// How far the far levels swell the skin to stand for the spines they
+    /// no longer draw: as far out as they reach, by the share they hide.
+    #[must_use]
+    pub fn swell(&self) -> f64 {
+        let (_, cover) = self.tint();
+        if cover > 0.0 {
+            f64::from(spines::reach(self).out) * cover
+        } else {
+            0.0
+        }
+    }
+
     /// The far colour of spines and felt where the spines are `grey` of
     /// the way to their greying colour (0 young, 1 fully grey).
     #[must_use]
@@ -2520,7 +2532,7 @@ impl Body<'_> {
         let (tint, cover) = look.tint();
         let tinted = detail.spines == Spines::Tint && cover > 0.0;
         if tinted {
-            surface.swell = f64::from(spines::reach(look).out) * cover;
+            surface.swell = look.swell();
         }
 
         let first = out.wood.positions.len();

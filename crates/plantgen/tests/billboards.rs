@@ -295,46 +295,38 @@ fn an_agaves_long_leaves_are_drawn_whole() {
 }
 
 #[test]
-fn a_yarrows_corymbs_are_seen_from_every_way() {
+fn a_yarrows_corymbs_are_drawn_solid() {
+    // Pictured from nine ways, its corymbs blurred to white smudges close
+    // up, where the low cards are the nearest version a weak machine
+    // draws. Each is a solid dome over a shallow cone now, its colour the
+    // corymb's from above: no picture turns to the eye for it.
     let (height, _, plants) = carded("achillea-millefolium");
-    let low = &plants[0];
-    let views = billboards::HEAD_AROUND * 2 + 1;
-    let heads: Vec<usize> = low
-        .pictures
-        .iter()
-        .enumerate()
-        .filter_map(|(i, p)| match p.turn {
-            Turn::Views { first, count } if first == i => {
-                assert_eq!(count, views);
-                Some(i)
-            }
-            _ => None,
-        })
-        .collect();
-    assert!(!heads.is_empty(), "no head drawn from every way");
-    assert!(low.stats.cards <= TIERS[0].cards(height));
-    // A clump turned to the eye ([`HEIGHTS`]) has a picture from each.
-    let turned = low
-        .pictures
-        .iter()
-        .enumerate()
-        .filter(|(i, p)| matches!(p.turn, Turn::Heights { first, .. } if first == *i))
-        .count();
-    assert_eq!(
-        low.pictures.len(),
-        low.stats.cards + heads.len() * (views - 1) + turned * (HEIGHTS.len() - 1),
-        "one card for a head's views"
-    );
-    // Seen level, its flowers stand on rays: the lower half of the
-    // picture is not empty, as a flat card's would be.
-    for &first in &heads {
-        let level = &low.pictures[first];
-        let lower = level.color[..level.width * (level.height / 2)]
-            .iter()
-            .filter(|c| c[3] >= 0.5)
-            .count();
-        assert!(lower > 0, "head {first}: nothing below its flowers");
+    for (tier, plant) in TIERS.iter().zip(&plants) {
+        assert!(
+            !plant
+                .pictures
+                .iter()
+                .any(|p| matches!(p.turn, Turn::Views { .. })),
+            "{}: a head drawn as pictures",
+            tier.name
+        );
+        assert!(
+            plant.stats.wood_triangles >= billboards::HEAD_SIDES * 2,
+            "{}: no solid head among {} wood triangles",
+            tier.name,
+            plant.stats.wood_triangles
+        );
+        assert!(plant.stats.cards <= tier.cards(height));
     }
+    // Their tops are near white, as the photographs show them.
+    let low = &plants[0];
+    let whitest = low
+        .wood
+        .colors
+        .iter()
+        .map(|c| c[0].min(c[1]).min(c[2]))
+        .fold(0.0_f32, f32::max);
+    assert!(whitest > 0.35, "the whitest head colour is {whitest:.2}");
 }
 
 #[test]
@@ -472,14 +464,14 @@ fn a_carrots_card_tiers_keep_its_pale_stem_and_its_umbel() {
     // Its flowering stem, a ribbon on the minimal cards, took the dark
     // green of the leaves along it, and on both tiers its umbel lay level
     // with the leaves' clump: from the side the minimal cards drew half as
-    // bright as the carrot, the low cards a quarter darker. Its umbel on a
-    // card of its own draws a little whiter than the lacy umbel of the
-    // plant: the minimal cards 1.17 as bright.
+    // bright as the carrot, the low cards a quarter darker. Its umbel
+    // drawn solid is narrower from the side than the lacy umbel of the
+    // plant: the low cards 0.84 as bright.
     for tier in &TIERS {
         let (whole, carded) = full_and_tier("daucus-carota", tier);
         let ratio = carded.tone[0] / whole.tone[0];
         assert!(
-            (0.85..=1.2).contains(&ratio),
+            (0.8..=1.2).contains(&ratio),
             "{}: from the side the cards draw {ratio:.2} as bright as the plant",
             tier.name
         );

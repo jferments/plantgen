@@ -1346,7 +1346,7 @@ pub mod venation;
 /// 5.1 M triangles at full detail, not 5.7 M, with three fifths more
 /// leaves.
 ///
-/// 177: card tiers keep the plant's tone and look. A flowering stem
+/// 178: card tiers keep the plant's tone and look. A flowering stem
 /// drawn as a ribbon takes its bark's colour, not the leaves' along it,
 /// each face lit by its own normal, rounded like the stem it stands for
 /// (a yarrow's near cards drew two fifths darker than the yarrow from the
@@ -1362,5 +1362,13 @@ pub mod venation;
 /// are folded on the low cards; ribs a level draws only as shading darken
 /// the skin by their folds' own shade, not a fixed share. A card with
 /// nothing to draw is dropped: framed without bounds it left every other
-/// card a few texels (a cyclamen's and a trout lily's low cards).
-pub const GENERATOR_REVISION: u32 = 177;
+/// card a few texels (a cyclamen's and a trout lily's low cards). A
+/// flat-topped head seen face on (a yarrow's corymb, a carrot's umbel)
+/// is drawn on the cards as a small solid dome of its own colours, white
+/// over a cone of its rays, in about 20 triangles and no texels: baked
+/// it blurred to a grey smudge. Organs borne on a spiny body sit out on
+/// the skin the tiers swell for its spines (a pincushion's ring of
+/// flowers was sunk in it), and spines hide `1 - exp(-a / area)` of the
+/// skin the far levels tint, as overlapping outlines do, not up to 85%
+/// (a pincushion drew cream).
+pub const GENERATOR_REVISION: u32 = 178;
