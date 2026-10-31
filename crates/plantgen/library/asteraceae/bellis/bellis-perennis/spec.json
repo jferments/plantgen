@@ -1,0 +1,231 @@
+{
+  "schema": 1,
+  "id": "bellis-perennis",
+  "taxon": {
+    "scientific_name": "Bellis perennis",
+    "common_name": "common daisy",
+    "plant_name_id": 2922692,
+    "family": "Asteraceae",
+    "genus": "Bellis"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 3,
+    "step": 1,
+    "keyframes": [
+      2,
+      3
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.1,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "height_typical_m": {
+      "min": 0.03,
+      "max": 0.15
+    },
+    "height_max_m": 0.2,
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.006,
+      "max": 0.04
+    },
+    "leaf_width_m": {
+      "min": 0.004,
+      "max": 0.02
+    },
+    "leaf_shape": "spatulate",
+    "leaf_margin": "crenate",
+    "leaf_apex": "rounded",
+    "perennation": "rhizome",
+    "ray_length_m": {
+      "min": 0.004,
+      "max": 0.008,
+      "high": 0.011
+    },
+    "ray_colour": [
+      234,
+      233,
+      230
+    ],
+    "disc_colour": [
+      192,
+      171,
+      43
+    ],
+    "flowering_months": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruit_size_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "fruiting_months": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "cauline_leaves": "none"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Bellis perennis, plant_name_id 2922692 (Library 1.0 candidate r2)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Asteraceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20: a rhizomatous herb with a basal rosette and single heads on leafless peduncles."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown three years, a small perennial that flowers from its first spring."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open: lawns and waste places (FNA)."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20: peduncles (3-)5-15(-20) cm; the middle, 10 cm, at three years."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: perennials (B. perennis)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: peduncles (3-)5-15(-20) cm, which carry the heads above the rosette."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: peduncles to 20 cm."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: leaves basal, alternate in the rosette."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: blades 6-40 mm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: blades 4-20 mm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: blades with attenuate bases and rounded apices on winged petioles: spatulate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2922692): crenate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: apices rounded."
+    },
+    "traits.perennation": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: rhizomes short, erect."
+    },
+    "traits.ray_length_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: ray corollas 4-8(-11) mm."
+    },
+    "traits.ray_colour": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10-31",
+      "note": "FNA vol. 20: rays white above, often pink-tinged beneath. Median of the white pixels in 12 flowering photographs (observations 114757428, 59910354, 64220079, 105854456, 103642455, 107314466, 261852618, 124619415, ...; batch pilot-asteraceae-2026-10-31d): sRGB [234, 233, 230]."
+    },
+    "traits.disc_colour": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10-31",
+      "note": "FNA vol. 20: disc corollas pale yellow. Median of the yellow pixels in 14 flowering photographs (batch pilot-asteraceae-2026-10-31d): sRGB [192, 171, 43]."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2922692): March to October; FNA says spring to summer."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: cypselae 1-2 mm."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2922692): April to October."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: perennials, scapiform; leaves basal (mostly), sometimes cauline and reduced in species outside the flora; B. perennis has leafless scapes from its rosette."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America vol. 20 (eFloras), drafted species facts of 2026-10-15, and iNaturalist photographs",
+        "licence": "facts only"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Added in the daisy-family pilot of 2026-10-31 (plantgen-claude project-files/roadmap/pilot-asteraceae/): every character from FNA, the drafted facts or measured photographs, drawn by the rules its taxa hold."
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Bellis",
+  "traits": {
+    "capitulum_kind": "radiate",
+    "inflorescence": "solitary",
+    "involucre_diameter_m": {
+      "min": 0.009,
+      "max": 0.013
+    },
+    "involucre_height_m": {
+      "min": 0.004,
+      "max": 0.006,
+      "low": 0.003,
+      "high": 0.008
+    },
+    "phyllaries": {
+      "min": 13,
+      "max": 14
+    },
+    "phyllary_series": 2,
+    "receptacle": "epaleate",
+    "receptacle_shape": "conic",
+    "ray_florets": {
+      "min": 35,
+      "max": 90
+    },
+    "disc_florets": {
+      "min": 60,
+      "max": 80
+    },
+    "pappus": "absent",
+    "rosette": "basal",
+    "woodiness": "herbaceous"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: heads radiate."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: heads borne singly."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: involucres hemispheric, [3-]4-6[-8] x 9-13 mm."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: involucres [3-]4-6[-8] mm tall."
+    },
+    "traits.phyllaries": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: phyllaries 13-14+."
+    },
+    "traits.phyllary_series": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: in (1-)2(-3) series."
+    },
+    "traits.receptacle": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: receptacles pitted, epaleate."
+    },
+    "traits.receptacle_shape": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: receptacles conic, elongating with age."
+    },
+    "traits.ray_florets": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: ray florets 35-90, in 3-4 series."
+    },
+    "traits.disc_florets": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: disc florets 60-80+."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: pappi none."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20, Bellis perennis: leaves basal on long winged petioles; heads on leafless peduncles."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 20, genus Bellis: herbs."
+    }
+  }
+}
