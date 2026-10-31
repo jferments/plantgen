@@ -122,6 +122,8 @@
     "division_pattern": "pinnate",
     "division_order": {"min": 2, "max": 3},
     "inflorescence": "corymb",
+    "units_per_inflorescence": {"min": 20, "max": 60, "low": 10},
+    "inflorescence_outline": "flat_topped",
     "capitulum_kind": "radiate",
     "involucre_height_m": 0.004,
     "involucre_diameter_m": {"min": 0.007, "max": 0.01},
@@ -228,6 +230,8 @@
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): mostly 2-3 times pinnatifid."
     },
+    "traits.units_per_inflorescence": {"evidence": "Authored", "source": "fna-online", "note": "Heads (10-)20-60+ in corymbiform arrays (FNA vol. 20, under Senecio jacobaea)."},
+    "traits.inflorescence_outline": {"evidence": "SourceInferred", "source": "fna-online", "note": "Corymbiform arrays (FNA vol. 20, Senecio jacobaea): level-topped."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",

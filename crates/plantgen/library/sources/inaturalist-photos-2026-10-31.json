@@ -1,0 +1,10 @@
+{
+  "id": "inaturalist-photos-2026-10-31",
+  "title": "iNaturalist research-grade photographs measured by eye for counts and shapes (flowering observations under CC0, CC BY or CC BY-NC, fetched with imagekit into batch pilot-asteraceae-2026-10-31; observation ids in each note)",
+  "authors": "iNaturalist contributors (each photograph's observer, as its observation credits)",
+  "year": 2026,
+  "url": "https://www.inaturalist.org/observations",
+  "licence": "photographs CC0, CC BY or CC BY-NC; only measurements taken from them are kept, never the images",
+  "tier": 3,
+  "kind": "observations"
+}

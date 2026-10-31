@@ -10,9 +10,15 @@
     "life_span": "perennial",
     "leaf_arrangement": "alternate",
     "receptacle_shape": {"conic": "often", "convex": "often"},
-    "inflorescence": "corymb"
+    "inflorescence": "corymb",
+    "involucre_diameter_m": {"min": 0.002, "max": 0.003, "high": 0.005}
   },
   "evidence": {
+    "traits.involucre_diameter_m": {
+      "evidence": "Authored",
+      "source": "fna-19",
+      "note": "FNA's account of the genus: involucres campanulate to hemispheric, mostly 2-3(-5+) mm in diameter."
+    },
     "traits.wood_density_basic_kg_m3": {
       "evidence": "SourceInferred",
       "source": "gwdd-v2",

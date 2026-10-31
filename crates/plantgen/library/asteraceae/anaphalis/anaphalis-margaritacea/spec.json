@@ -65,7 +65,6 @@
       },
       "flower": {
         "shape": { "template": "head", "disc": 0.5, "phyllaries": 40, "series": 5, "spread": 60, "bracts": [0.95, 0.95, 0.92] },
-        "inflorescence": { "flowers": 40, "size": 0.11, "spread": 25, "peduncle": 0.2 },
         "colour": [0.95, 0.95, 0.9],
         "accent": [0.85, 0.75, 0.4]
       }
@@ -91,6 +90,8 @@
       "max": 0.02
     },
     "inflorescence": "corymb",
+    "units_per_inflorescence": {"min": 10, "max": 60},
+    "inflorescence_outline": "flat_topped",
     "involucre_diameter_m": {"min": 0.006, "max": 0.008, "high": 0.01},
     "involucre_height_m": {"min": 0.005, "max": 0.007},
     "leaf_length_m": {"min": 0.05, "max": 0.15},
@@ -163,6 +164,8 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
+    "traits.units_per_inflorescence": {"evidence": "Measured", "source": "inaturalist-photos-2026-10-31", "note": "Heads per array counted by eye in 18 flowering photographs (batch pilot-asteraceae-2026-10-31b): about 10 to 60."},
+    "traits.inflorescence_outline": {"evidence": "SourceInferred", "source": "fna-online", "note": "Corymbiform arrays (FNA, Anaphalis); level to slightly domed in the photographs."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "gleason-cronquist-1991",

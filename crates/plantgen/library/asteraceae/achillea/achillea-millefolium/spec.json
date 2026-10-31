@@ -64,7 +64,6 @@
       },
       "flower": {
         "shape": { "ray_width": 1.1, "disc": 0.5, "involucre": 1.8 },
-        "inflorescence": { "size": 0.075, "spread": 40, "peduncle": 0.55 },
         "colour": [0.92, 0.9, 0.84],
         "accent": [0.85, 0.8, 0.6]
       }
@@ -89,9 +88,11 @@
     "leaf_shape": {"oblong": "often", "lanceolate": "often"},
     "inflorescence": "corymb",
     "units_per_inflorescence": {"min": 10, "max": 100},
+    "inflorescence_outline": "flat_topped",
     "phyllaries": {"min": 20, "max": 30},
     "phyllary_series": 3,
     "ray_florets": {"min": 5, "max": 8, "low": 3},
+    "ray_length_m": {"min": 0.0015, "max": 0.003},
     "disc_florets": {"min": 10, "max": 20},
     "receptacle_shape": "convex",
     "fruit_size_m": {"min": 0.001, "max": 0.002},
@@ -113,6 +114,8 @@
     "leaf_apex": "mucronate"
   },
   "evidence": {
+    "traits.ray_length_m": {"evidence": "Authored", "source": "fna-19", "note": "Ray laminae 1.5-3 x 1.5-3 mm (FNA, Achillea millefolium)."},
+    "traits.inflorescence_outline": {"evidence": "SourceInferred", "source": "fna-19", "note": "Heads in corymbiform arrays (FNA); level across the top in the flowering photographs of inaturalist-photos-2026-10-31, a few slightly domed."},
     "traits.division_planes": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
