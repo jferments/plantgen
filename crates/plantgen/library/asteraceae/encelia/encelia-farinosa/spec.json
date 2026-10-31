@@ -61,8 +61,6 @@
     "seeds": [1, 2, 3]
   },
   "appearance": {
-    "foliage": [0.62, 0.66, 0.58],
-    "foliage_shade": [0.217, 0.231, 0.203],
     "variation": 0.15,
     "organs": {
       "leaf": {
@@ -100,6 +98,10 @@
   "tier": "procedural_proxy",
   "traits": {
     "bark_colour": [140, 133, 115],
+    "leaf_colour": [144, 148, 144],
+    "leaf_hairs": "tomentose",
+    "leaf_hairs_beneath": "tomentose",
+    "stem_hairs": "tomentose",
     "height_max_m": {
       "min": 1,
       "max": 1.6
@@ -138,6 +140,10 @@
     "leaf_apex": {"obtuse": "usually", "acute": "often"}
   },
   "evidence": {
+    "traits.leaf_hairs": {"evidence": "Authored", "source": "fna-online", "note": "FNA, Encelia farinosa: leaf blades silver or gray, faces tomentose."},
+    "traits.leaf_hairs_beneath": {"evidence": "Authored", "source": "fna-online", "note": "FNA, Encelia farinosa: faces tomentose (both)."},
+    "traits.stem_hairs": {"evidence": "Authored", "source": "fna-online", "note": "FNA, Encelia farinosa: stems branched distally, tomentose."},
+    "traits.leaf_colour": {"evidence": "Measured", "source": "inaturalist-photos-2026-10-31", "note": "FNA (fna-online): blades silver or gray, tomentose. The lit leaf faces in four photographs showing the leaves (observations 347867380, 254859704, 466637406, 41365445; batch pilot-asteraceae-2026-10-31b): mean of the brighter half of the grey (low-saturation) pixels in each, [128,129,131], [155,152,141], [189,187,181], [134,143,148]; the middle two averaged, [144, 148, 144]. It replaces the hand-set foliage [0.62, 0.66, 0.58], linear light, which drew the shrub white."},
     "traits.bark_colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "The bark colour chosen by eye for appearance (see its note), as a screen colour: it stood as appearance.bark [0.55, 0.52, 0.45], which is linear light, so the trunk drew pale grey to white beside photographs of the species (2026-10-23). It stands here in sRGB, as bark colours are picked, and the bark rule (tracheophyta) turns it into linear light."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
