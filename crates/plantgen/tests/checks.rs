@@ -87,6 +87,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the climber program first flowers in its second year (a shoot turns adult once the vine is adult_age old, counted from 0), so Malabar spinach, which flowers in its first, is drawn flowering at 2 years",
     ),
     (
+        "cichorium-intybus",
+        "fruit_size_m",
+        "chicory's cypselae, 2 to 3 mm (FNA), are drawn as a capitulum's small achene, under 1 mm, as for the bursages",
+    ),
+    (
         "cornus-nuttallii",
         "crown_see_through",
         "its photographs show no sky through its crown; drawn four times over (form::MOST_DRAWN) it still shows about 9% between its shoots",

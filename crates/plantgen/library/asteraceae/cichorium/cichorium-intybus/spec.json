@@ -1,0 +1,216 @@
+{
+  "schema": 1,
+  "id": "cichorium-intybus",
+  "taxon": {
+    "scientific_name": "Cichorium intybus",
+    "common_name": "chicory",
+    "plant_name_id": 2901597,
+    "family": "Asteraceae",
+    "genus": "Cichorium"
+  },
+  "growth_form": "forb",
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.75,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1.2
+    },
+    "height_max_m": 1.5,
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.35
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.08,
+      "high": 0.12
+    },
+    "leaf_shape": "oblanceolate",
+    "leaf_margin": "dentate",
+    "leaf_incision": {
+      "lobed": "often",
+      "none": "often"
+    },
+    "division_pattern": "pinnate",
+    "inflorescence": "solitary",
+    "flowering_position": "both",
+    "ligulate_colour": [
+      157,
+      157,
+      232
+    ],
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Cichorium intybus, plant_name_id 2901597 (Library 1.0 candidate r2)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Asteraceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 19: a perennial herb with a basal rosette and branched flowering stems."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown four years, as a perennial herb flowers from its second."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the species grows in disturbed open sites (FNA)."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901597): usual height 0.3-1.2 m; the middle at three years."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 19, Cichorium intybus: perennials (sometimes flowering the first year)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901597): 0.3-1.2 m; FNA gives no height for the species."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901597)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 19, Cichorium: leaves basal and cauline, alternate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 19, Cichorium intybus: blades of basal leaves 5-35+ cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 19, Cichorium intybus: blades of basal leaves 1-8(-12+) cm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901597): oblanceolate basal blades."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901597): dentate."
+    },
+    "traits.leaf_incision": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10-31",
+      "note": "Basal leaves pinnately lobed (runcinate) in some flowering photographs and merely toothed in others (batch pilot-asteraceae-2026-10-31c)."
+    },
+    "traits.division_pattern": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10-31",
+      "note": "The lobes of the lobed basal leaves are pinnate, along the midrib (batch pilot-asteraceae-2026-10-31c)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 19, Cichorium: heads mostly in axillary, nearly sessile glomerules, some borne singly on elongate peduncles; drawn as single heads at the nodes and tips."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA vol. 19, Cichorium: heads axillary along the branches and at their tips."
+    },
+    "traits.ligulate_colour": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10-31",
+      "note": "FNA vol. 19: corollas usually blue, sometimes pink or white. Median colour of the blue petal pixels in six close-up photographs (observations 283894255, 722265102, 734839792, 29255340, 147562047, 30308946): sRGB [157, 157, 232]."
+    },
+    "traits.flowering_months": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10-31",
+      "note": "FNA vol. 19 gives Apr-Jul; the drafted facts (species-facts-2026-10-15, L2901597) Jun-Oct; flowering photographs from the northern hemisphere are dated May to November, most June to September (batch pilot-asteraceae-2026-10-31c). Apr-Oct covers the flora and the photographs."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "fna-online",
+      "note": "FNA vol. 19, Cichorium intybus: cypselae 2-3 mm."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901597): fruit Aug-Oct."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America vol. 19 (eFloras), drafted species facts of 2026-10-15, and iNaturalist photographs",
+        "licence": "facts only"
+      }
+    ],
+    "contributors": [
+      "PlantGen"
+    ],
+    "notes": "Added in the daisy-family pilot of 2026-10-31 (plantgen-claude project-files/roadmap/pilot-asteraceae/): every character from FNA, the drafted facts or measured photographs, drawn by the rules its taxa hold."
+  }
+}

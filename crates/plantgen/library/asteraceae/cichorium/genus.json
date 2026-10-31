@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cichorium",
+  "traits": {
+    "capitulum_kind": "liguliflorous",
+    "ligulate_florets": {"min": 8, "max": 25},
+    "involucre_diameter_m": {"min": 0.003, "max": 0.005, "high": 0.007},
+    "phyllary_series": 2,
+    "pappus": "scales",
+    "rosette": "basal",
+    "woodiness": "herbaceous"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA vol. 19, genus Cichorium: florets all ligulate (tribe Cichorieae), 8-25+ a head."},
+    "traits.ligulate_florets": {"evidence": "Authored", "source": "fna-online", "note": "FNA vol. 19, genus Cichorium: florets 8-25+."},
+    "traits.involucre_diameter_m": {"evidence": "Authored", "source": "fna-online", "note": "FNA vol. 19, genus Cichorium: involucres more or less cylindric, 3-5+ mm in diameter."},
+    "traits.phyllary_series": {"evidence": "Authored", "source": "fna-online", "note": "FNA vol. 19, genus Cichorium: phyllaries 10-15+ in 2+ series."},
+    "traits.pappus": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA vol. 19, Cichorium intybus: pappi 0.01-0.2 mm, a minute crown of scales."},
+    "traits.rosette": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA vol. 19, Cichorium: basal leaves, the cauline ones smaller and narrower upward."},
+    "traits.woodiness": {"evidence": "SourceInferred", "source": "fna-online", "note": "FNA vol. 19, genus Cichorium: annuals, biennials or perennials, herbs."}
+  }
+}
