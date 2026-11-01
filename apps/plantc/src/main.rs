@@ -2635,6 +2635,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             view,
             supersample: 2,
             figure,
+            fit_plant: !figure,
             frame_height: None,
             frame_reach: None,
             focus,
@@ -2740,6 +2741,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                     view: View::Side,
                     supersample: 2,
                     figure: true,
+                    fit_plant: false,
                     frame_height: Some(if graph.height < tallest * 0.3 {
                         graph.height
                     } else {
@@ -2853,6 +2855,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             view,
             supersample: 2,
             figure: false,
+            fit_plant: false,
             frame_height: Some(graph.height * 1.05),
             frame_reach: Some(reach),
             focus: focus.map(|(f, s)| (Vec3::new(0.0, graph.height * f, 0.0), graph.height * s)),
@@ -3114,6 +3117,7 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
                     view: View::ThreeQuarter,
                     supersample: 3,
                     figure: false,
+                    fit_plant: false,
                     frame_height: None,
                     frame_reach: None,
                     focus: Some((Vec3::Y * (length * middle), length * frame)),
@@ -3310,6 +3314,7 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                     view: View::ThreeQuarter,
                     supersample: 3,
                     figure: false,
+                    fit_plant: false,
                     frame_height: None,
                     frame_reach: None,
                     focus: Some((
@@ -3436,6 +3441,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
                     view,
                     supersample: 2,
                     figure: true,
+                    fit_plant: false,
                     frame_height: Some(tallest),
                     frame_reach: None,
                     focus: None,
