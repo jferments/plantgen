@@ -21,6 +21,16 @@ PLANTNET = "7a3679ef-5582-4aaa-81f0-8c2545cafc81"  # Pl@ntNet automatically iden
 ORGANS = ("bark", "flower", "fruit", "habit", "leaf", "other")
 
 
+def media_licence(media: dict, occ: dict) -> str:
+    """The photo's licence: Pl@ntNet writes "<creator> (cc-by-sa)", so the part in brackets is read too,
+    then the occurrence's own."""
+    raw = media.get("license") or ""
+    lic = licences.norm(raw)
+    if not lic and raw.rstrip().endswith(")") and "(" in raw:
+        lic = licences.norm(raw.rstrip()[:-1].rsplit("(", 1)[1])
+    return lic or licences.norm(occ.get("license"))
+
+
 def organ_of(media: dict) -> str | None:
     """The organ a Pl@ntNet photo's observer tagged, from GBIF's title "<name>: <organ>"."""
     title = (media.get("title") or "").strip()
@@ -45,7 +55,7 @@ def fetch(args, dl) -> None:
             for i, media in enumerate(occ.get("media") or []):
                 if organ and organ_of(media) != organ:
                     continue
-                lic = licences.norm(media.get("license") or occ.get("license"))
+                lic = media_licence(media, occ)
                 if lic not in dl.allowed or not media.get("identifier") or dl.known("gbif", f"{occ['key']}-{i}"):
                     continue
                 cand = {

@@ -170,7 +170,7 @@ class GbifOrgan(Base):
         organs = ["flower", "habit", "leaf", "habit", "fruit", "habit"]
         self.occs = [{"key": 900 + i, "license": "http://creativecommons.org/licenses/by-sa/4.0/",
                       "media": [{"type": "StillImage", "title": f"Daucus carota L.: {o}",
-                                 "license": "cc-by-sa", "creator": f"obs{i}",
+                                 "license": f"obs{i} (cc-by-sa)", "creator": f"obs{i}",
                                  "identifier": f"https://bs.plantnet.org/image/o/photos/{900 + i}/x"}]}
                      for i, o in enumerate(organs)]
 
@@ -191,6 +191,7 @@ class GbifOrgan(Base):
         self.assertEqual(len(rows), 3, "three of the six photos are tagged habit")
         self.assertEqual(self.queries[0]["datasetKey"], gbif.PLANTNET)
         self.assertTrue(all("habit" in r["source"]["why"] for r in rows))
+        self.assertEqual({r["source"]["licence"] for r in rows}, {"cc-by-sa"}, "the licence in brackets is read")
 
     def test_organ_from_title(self):
         from imagekit.fetch import gbif
