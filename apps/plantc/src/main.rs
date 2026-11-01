@@ -14,6 +14,7 @@ use std::sync::OnceLock;
 use std::time::Instant;
 use std::{env, fmt, fs};
 
+use plantgen::api;
 use plantgen::body::BodyLook;
 use plantgen::checks;
 use plantgen::conditions::Conditions;
@@ -134,6 +135,7 @@ fn run() -> Result<(), Failure> {
         "bark" => bark_command(&args),
         "build" => build_command(&args),
         "export" => export_command(&args),
+        "variants" => variants_command(&args),
         "inspect" => inspect_command(&args),
         "sources" => sources_command(&args),
         "help" | "--help" | "-h" => print_usage(),
@@ -365,6 +367,21 @@ Usage:
       its own; the static package is unchanged. With --cards yes it also
       holds each keyframe's baked-card tiers (low and minimal cards, the
       far impostor; see `plantc tiers`), under a key of its own.
+  plantc variants <species|spec.json> --count N [--out DIR] [--first-seed N]
+                 [--env ENV] [--age N] [--day N] [--quality draft|standard]
+                 [--threads N] [--shade attribute|baked]
+                 [--compress none|quantize|meshopt] [--attributes all|wind|none]
+                 [--triangles N[,N,N,N]] [--max-mib N]
+      Make N distinct plants of a species, ready to import: each grown from
+      its own seed (from --first-seed, 1 unless given, counting up) and
+      written as plantc export writes one (STEM-lod0.glb to STEM-lod3.glb
+      and STEM.json), into DIR (default variants/<species>), with
+      variants.json listing every plant's seed, size, files, triangles and
+      a fingerprint of its bytes. Seed n is the same plant however many are
+      made; the seeds the spec lists are the plants its package keeps.
+      Without --env, the species' typical site; without --age, its oldest
+      keyframe. --threads plants grow at once (every core unless given);
+      the files do not depend on it. The export flags are plantc export's.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -4262,35 +4279,19 @@ fn profiled(spec: &PlantSpec, inputs: Inputs, options: &Options) -> Result<Input
 }
 
 #[allow(clippy::too_many_lines)]
-fn export_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(
-        args,
-        &[
-            "out",
-            "format",
-            "quality",
-            "program",
-            "day",
-            "env",
-            "seed",
-            "age",
-            "shade",
-            "compress",
-            "attributes",
-            "triangles",
-            "max-mib",
-            "profile",
-            "bark-look",
-            "bark-texels",
-            "bark-period",
-        ],
-    )?;
-    match options.flags.get("format").map(String::as_str) {
-        None | Some("glb") => {}
-        Some(other) => {
-            return Err(format!("unknown format `{other}`; plantc exports glb").into());
-        }
-    }
+/// The flags `plantc export` and `plantc variants` share: how bark is
+/// shaded, compression, attributes and a triangle or size budget.
+fn export_options(
+    options: &Options,
+) -> Result<
+    (
+        export::Shade,
+        export::Compression,
+        export::Attributes,
+        export::Budget,
+    ),
+    Failure,
+> {
     let shade = match options.flags.get("shade").map(String::as_str) {
         None | Some("attribute") => export::Shade::Attribute,
         Some("baked") => export::Shade::Baked,
@@ -4339,6 +4340,39 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             })
             .transpose()?,
     };
+    Ok((shade, compression, attributes, budget))
+}
+
+fn export_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &[
+            "out",
+            "format",
+            "quality",
+            "program",
+            "day",
+            "env",
+            "seed",
+            "age",
+            "shade",
+            "compress",
+            "attributes",
+            "triangles",
+            "max-mib",
+            "profile",
+            "bark-look",
+            "bark-texels",
+            "bark-period",
+        ],
+    )?;
+    match options.flags.get("format").map(String::as_str) {
+        None | Some("glb") => {}
+        Some(other) => {
+            return Err(format!("unknown format `{other}`; plantc exports glb").into());
+        }
+    }
+    let (shade, compression, attributes, budget) = export_options(&options)?;
     // Bark from a record, or `spec` for the plant's own; the look is found
     // once the plant is.
     let bark_source = options.flags.get("bark-look").cloned();
@@ -4505,6 +4539,106 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
                 "  {whole:.1} MiB in all, over {bytes:.1} MiB: less than the coarsest drawings take"
             );
         }
+    }
+    Ok(())
+}
+
+fn variants_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &[
+            "out",
+            "count",
+            "first-seed",
+            "env",
+            "age",
+            "day",
+            "quality",
+            "threads",
+            "shade",
+            "compress",
+            "attributes",
+            "triangles",
+            "max-mib",
+        ],
+    )?;
+    let (shade, compression, attributes, budget) = export_options(&options)?;
+    let target = options.one_positional("a species")?;
+    let spec = load_spec(target)?;
+    let mut generator_options = api::Options::default();
+    generator_options.quality = options.quality()?;
+    generator_options.day = options.day()?;
+    let started = Instant::now();
+    let generator = api::Generator::of_in(&spec, library(), &generator_options)
+        .map_err(|error| error.to_string())?;
+    let count: usize = options
+        .number("count")?
+        .ok_or("`plantc variants` needs `--count N`, how many plants to make")?;
+    let mut variants = api::Variants::count(count);
+    if let Some(first) = options.number::<u64>("first-seed")? {
+        variants.first_seed = first;
+    }
+    if let Some(name) = options.flags.get("env") {
+        variants.environment = Some(Environment::from_name(name).ok_or_else(|| {
+            format!("unknown environment `{name}`; use open, edge, interior or suppressed")
+        })?);
+    }
+    variants.age = options.number("age")?;
+    if let Some(threads) = options.number::<usize>("threads")? {
+        variants.threads = threads.max(1);
+    }
+    variants.settings = export::Settings {
+        shade,
+        compression,
+        attributes,
+        budget,
+        bark: None,
+    };
+    let out = options
+        .flags
+        .get("out")
+        .map_or_else(|| Path::new("variants").join(&spec.id), PathBuf::from);
+    out!(
+        "making {count} plants of {} from seed {}, {} at {} years, into {}",
+        spec.id,
+        variants.first_seed,
+        variants
+            .environment
+            .unwrap_or_else(|| generator.default_environment())
+            .name(),
+        variants.age.unwrap_or_else(|| generator.default_age()),
+        out.display()
+    );
+    let finished = std::sync::atomic::AtomicUsize::new(0);
+    let set = generator
+        .write_variants_reporting(&variants, &out, &|plant| {
+            let done = finished.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
+            let bytes: usize = plant.levels.iter().map(|level| level.bytes).sum();
+            #[allow(clippy::cast_precision_loss)]
+            let mebibytes = bytes as f64 / 1_048_576.0;
+            // A closed output stops only the progress lines.
+            let _ = write_line(format_args!(
+                "  {done}/{count}  seed {}: {:.2} m tall, crown {:.2} m across, {} triangles near, \
+             {mebibytes:.1} MiB",
+                plant.seed,
+                plant.size.height,
+                plant.size.crown_radius * 2.0,
+                plant.levels.first().map_or(0, |level| level.triangles)
+            ));
+        })
+        .map_err(|error| error.to_string())?;
+    out!(
+        "made {} plants in {:.1} s: {}",
+        set.plants.len(),
+        started.elapsed().as_secs_f64(),
+        out.join(api::VARIANTS_FILE).display()
+    );
+    if !set.duplicates.is_empty() {
+        let seeds: Vec<String> = set.duplicates.iter().map(u64::to_string).collect();
+        out!(
+            "  drawn exactly as an earlier seed: {} (this species grows alike from those seeds)",
+            seeds.join(", ")
+        );
     }
     Ok(())
 }
