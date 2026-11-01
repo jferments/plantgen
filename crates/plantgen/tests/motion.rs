@@ -86,12 +86,24 @@ fn motion_packages_hold_bones_branches_and_bindings() {
         assert!(record["anchorage"]["moment"].as_f64().unwrap() > 0.0);
         assert!(record["perches"].is_array() && record["crossings"]["pairs"].is_u64());
         assert!(
-            record["material"]["assumed"]
+            record["material"]["estimated"]
                 .as_array()
                 .unwrap()
                 .iter()
                 .any(|key| key == "wood_modulus_green_mpa")
         );
+        // Break sites (S5): every bone has its foot, and every site a
+        // piece that weighs something.
+        for bone in bones {
+            let sites = bone["sites"].as_array().unwrap();
+            assert_eq!(sites[0]["along"].as_f64(), Some(0.0));
+            assert!(
+                sites
+                    .iter()
+                    .all(|site| site["piece"]["mass"].as_f64().unwrap() > 0.0)
+            );
+        }
+        assert!(record["failure"]["first"].is_string());
         for lod in &keyframe.lods {
             let bound =
                 motion::decode_binding(&built.objects[lod.binding.as_ref().unwrap()]).unwrap();

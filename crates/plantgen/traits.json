@@ -1454,6 +1454,14 @@
       "when": {"woodiness": ["woody", "semi"]},
       "why": "the modulus of elasticity of green wood in static bending: how stiff a living stem or branch is, its bending stiffness this times the section's second moment of area"
     },
+    "wood_class": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["softwood", "hardwood"],
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "the Wood Handbook's two classes of wood: softwood from gymnosperms, without vessels, and hardwood from angiosperms, with them; each has its own functions from density to strength and stiffness"
+    },
     "wood_rupture_green_mpa": {
       "group": "stem_and_bark",
       "organ": "stem",
