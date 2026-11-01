@@ -27,7 +27,6 @@
       "leaf_size": 0.14,
       "leaf_angle": 60,
       "leaf_years": 1,
-      "renew": 0,
       "adult_age": 4,
       "fruiting": 0.15,
       "fruit_size": 0.1,
@@ -121,7 +120,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a deciduous woody vine of streams and woodland in California and southern Oregon that climbs by tendrils into the crowns of oaks and willows and drapes over them in curtains of broad, heart-shaped, shallowly lobed leaves, turning red in autumn, with small purple grapes. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a deciduous woody vine of streams and woodland in California and southern Oregon that climbs by tendrils into the crowns of oaks and willows and drapes over them in curtains of broad, heart-shaped, shallowly lobed leaves, turning red in autumn, with small purple grapes. Not fitted to measurements. How often an old node leafs again comes from its deciduous habit by the vine form's rule (its renew 0 left the old canes bare, 2026-11-01)."
     },
     "allometry": {
       "evidence": "Authored",

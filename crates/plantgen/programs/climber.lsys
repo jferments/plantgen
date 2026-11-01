@@ -75,9 +75,23 @@
 # drooping shoot lies on the ground instead of under it. A host tree is
 # not part of the substrate, so a vine on one climbs as before.
 #
+# Revision 10 (sites plan S4, Joshi's review of the first site renders):
+# a clinging shoot passes the way to its host on to the internodes it lays
+# (fx, fy, fz). Their leaves turn their faces leaf_face of the way from
+# the host to the open side, as a climber's leaves stand off a wall or
+# trunk on their stalks with their blades to the light, in a mosaic;
+# before, they faced every way, many edge-on to the wall. Each internode
+# of a clinging shoot turns by a random angle, about wander degrees for
+# each 10 cm of stem whatever its internode (a random walk's spread grows
+# with the root of its length), so a plagiotropic juvenile shoot (ivy's)
+# wanders over its support instead of running straight up it; 0 keeps the
+# straight course. A node's bud keeps its internode's way to the host, so
+# the leaves it renews face out as well. And an old node of a plant whose
+# leaves stand in pairs leafs again with a pair.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem climber 9;
+lsystem climber 10;
 
 param vigour_spread;
 param shoots;                 # stems from the foot
@@ -102,6 +116,8 @@ param divergence;             # roll from one node to the next
 param leaves_per_node;        # leaves at a node: 1, or 2 (a pair, opposite)
 param leaf_years;
 param renew;                  # chance a year that an old node leafs again
+param leaf_face;              # how far a clinging shoot's leaves turn their faces from the host, 0 to 1
+param wander;                 # random turn of a clinging shoot per 10 cm of stem, degrees; 0 straight
 param adult_age;              # the first year the plant is adult and fruits
 param fruiting;               # chance of a fruit cluster at a free node
 param fruit_size;
@@ -119,7 +135,7 @@ param bloom_area = 0.5;       # leaf area of a bloom card 1 m long, m²
 
 module A(o, h, a) queries host, light;  # a shoot's tip: order, h years free, a 1 adult of its own habit
 module S queries vigour;      # the foot of a side shoot
-module M(n, o, w);            # n internodes still to lay this year; w 1 adult, 2 adult of its own habit
+module M(n, o, w, fx, fy, fz); # n internodes still to lay this year; w 1 adult, 2 adult of its own habit; (fx, fy, fz) toward the host it clings to, or 0
 module Sh(k, m);              # shoots k to k + m - 1 from the foot
 
 organ leaf leaf area leaf_area;
@@ -144,31 +160,32 @@ rule A(o, h, a) : h >= free_years -> ;
 rule A(o, h, a) : adult_rise > 0
                   && (a > 0 || (t >= adult_age && (gd >= reach || (o > 0 && light >= adult_light)))) ->
     adult(1) T(0, 1, 0, adult_rise)
-    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, 2) A(o, 0, 1);
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, 2, 0, 0, 0) A(o, 0, 1);
 rule A(o, h, a) : gd < cling ->
     adult(o > 0 && t >= adult_age && light >= adult_light ? 1 : 0) steer(gx, gy, gz, hug) T(0, 1, 0, climb)
     M(max(1, round(max_shoot * lerp(shade_shoot, 1, light))), o,
-      o > 0 && t >= adult_age && light >= adult_light ? 1 : 0) A(o, 0, 0);
+      o > 0 && t >= adult_age && light >= adult_light ? 1 : 0, gx, gy, gz) A(o, 0, 0);
 rule A(o, h, a) : gd < reach ->
     adult(o > 0 && t >= adult_age && light >= adult_light ? 1 : 0) steer(gx, gy, gz, seek)
     M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o,
-      o > 0 && t >= adult_age && light >= adult_light ? 1 : 0) A(o, 0, 0);
+      o > 0 && t >= adult_age && light >= adult_light ? 1 : 0, 0, 0, 0) A(o, 0, 0);
 rule A(o, h, a) ->
     adult(t >= adult_age ? 1 : 0) T(0, -1, 0, drape)
-    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, t >= adult_age ? 1 : 0)
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, t >= adult_age ? 1 : 0, 0, 0, 0)
     A(o, h + dt, 0);
 
 # One internode with its leaf, and perhaps a side shoot or fruit; a leaf
 # pair's internode is at the end, so the draws here keep their sites.
-decompose M(n, o, w) : n > 0 && leaves_per_node < 2 ->
+decompose M(n, o, w, fx, fy, fz) : n > 0 && leaves_per_node < 2 ->
     F(internode) /(divergence + gauss() * 10)
-    [ &(leaf_angle) $ leaf(leaf_size * uniform(0.85, 1.15)) ]
-    [ /(180) Lb ]
+    [ &(leaf_angle) $ face(-fx, -fy, -fz, leaf_face) leaf(leaf_size * uniform(0.85, 1.15)) ]
+    [ /(180) Lb(fx, fy, fz) ]
     Mb(o, w)
-    M(n - 1, o, w);
-decompose M(n, o, w) : n <= 0 -> ;
+    +(fx * fx + fy * fy + fz * fz > 0 ? wander * sqrt(internode * 10) * gauss() : 0)
+    M(n - 1, o, w, fx, fy, fz);
+decompose M(n, o, w, fx, fy, fz) : n <= 0 -> ;
 module Mb(o, w);              # what a node may carry besides its leaf
-module Lb;                    # a node's bud, which may leaf again
+module Lb(fx, fy, fz);        # a node's bud, which may leaf again; (fx, fy, fz) as its internode's
 module Fr(s);                 # a fruiting node's fruit s long, or its bloom (revision 8)
 decompose Mb(o, w) : o < max_order && rand() < branch_chance ->
     [ /(uniform(0, 360)) &(branch_angle) S A(o + 1, 0, w > 1 ? 1 : 0) ];
@@ -183,20 +200,28 @@ rule fruit(s) : age + dt >= 1 -> ;
 rule S : age > 1 && ntip == 0 -> %;
 
 # An old node leafs again.
-rule Lb : age >= 1 && rand() < renew * dt -> [ &(leaf_angle) $ leaf(leaf_size * uniform(0.8, 1.1)) ] Lb;
+rule Lb(fx, fy, fz) : leaves_per_node < 2 && age >= 1 && rand() < renew * dt ->
+    [ &(leaf_angle) $ face(-fx, -fy, -fz, leaf_face) leaf(leaf_size * uniform(0.8, 1.1)) ] Lb(fx, fy, fz);
 
 # An internode with its pair of opposite leaves (revision 7), last in the
 # program so every draw above keeps its site.
-decompose M(n, o, w) : n > 0 && leaves_per_node >= 2 ->
+decompose M(n, o, w, fx, fy, fz) : n > 0 && leaves_per_node >= 2 ->
     F(internode) /(divergence + gauss() * 10)
-    [ &(leaf_angle) $ leaf(leaf_size * uniform(0.85, 1.15)) ]
-    [ /(180) &(leaf_angle) $ leaf(leaf_size * uniform(0.85, 1.15)) ]
-    [ /(90) Lb ]
+    [ &(leaf_angle) $ face(-fx, -fy, -fz, leaf_face) leaf(leaf_size * uniform(0.85, 1.15)) ]
+    [ /(180) &(leaf_angle) $ face(-fx, -fy, -fz, leaf_face) leaf(leaf_size * uniform(0.85, 1.15)) ]
+    [ /(90) Lb(fx, fy, fz) ]
     Mb(o, w)
-    M(n - 1, o, w);
+    +(fx * fx + fy * fy + fz * fz > 0 ? wander * sqrt(internode * 10) * gauss() : 0)
+    M(n - 1, o, w, fx, fy, fz);
 
 # A fruiting node's fruit, or with blooms 1 its bloom, as long for
 # bloom_size as the fruit is for fruit_size (revision 8). It draws nothing
 # at random, so every draw above keeps its site.
 decompose Fr(s) : blooms > 0.5 -> &(bloom_angle - 150) bloom(bloom_size * s / fruit_size);
 decompose Fr(s) -> fruit(s);
+
+# An old node of a plant whose leaves stand in pairs leafs again with a
+# pair (revision 10), last so every draw above keeps its site.
+rule Lb(fx, fy, fz) : leaves_per_node >= 2 && age >= 1 && rand() < renew * dt ->
+    [ &(leaf_angle) $ face(-fx, -fy, -fz, leaf_face) leaf(leaf_size * uniform(0.8, 1.1)) ]
+    [ /(180) &(leaf_angle) $ face(-fx, -fy, -fz, leaf_face) leaf(leaf_size * uniform(0.8, 1.1)) ] Lb(fx, fy, fz);

@@ -10,3 +10,9 @@ param vigour_spread = 0.1;
 param shade_shoot = 0.4;   # share of them it grows in deep shade
 param reach = 3;           # how far a shoot senses its host
 param divergence = 137.5;  # roll from one node to the next
+# A juvenile shoot is plagiotropic: it creeps and climbs over its support
+# on its aerial roots in every direction, not straight up (FEIS, Waggy
+# 2010, after Stein and Fosket 1969), so a clinging shoot's internodes
+# turn about 30 degrees at random (climber revision 10). Hand-set, against
+# photographs of ivy on walls (2026-11-01).
+param wander = 30;
