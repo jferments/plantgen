@@ -485,12 +485,16 @@ fn a_carrots_card_tiers_keep_its_pale_stem_and_its_umbel() {
     // with the leaves' clump: from the side the minimal cards drew half as
     // bright as the carrot, the low cards a quarter darker. Its umbel
     // drawn solid is narrower from the side than the lacy umbel of the
-    // plant: the low cards 0.84 as bright.
+    // plant: the low cards 0.84 as bright. Since its umbellets pack the
+    // umbel edge to edge (revision 180) the plant shows the side a fuller
+    // white band and the same dome draws 0.69 as bright; a dome wide
+    // enough to match it draws 1.5 times as bright as the plant from 45
+    // degrees, so the side may fall to 0.65 (owner's choice, 2026-11-01).
     for tier in &TIERS {
         let (whole, carded) = full_and_tier("daucus-carota", tier);
         let ratio = carded.tone[0] / whole.tone[0];
         assert!(
-            (0.8..=1.2).contains(&ratio),
+            (0.65..=1.2).contains(&ratio),
             "{}: from the side the cards draw {ratio:.2} as bright as the plant",
             tier.name
         );
