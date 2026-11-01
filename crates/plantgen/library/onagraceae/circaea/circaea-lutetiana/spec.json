@@ -45,6 +45,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "flowering_branches": {"min": 1, "max": 4},
     "life_span": "perennial",
     "perennation": "rhizome",
     "height_typical_m": {
@@ -116,6 +117,11 @@
     "notes": "Procedural proxy added with the nightshades work (2026-10-17): every character from the floras in the nightshades notes (plantgen-claude project-files/nightshades/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
   },
   "evidence": {
+    "traits.flowering_branches": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown vol. 2 (1913), Circaea lutetiana: \"Erect, branching, finely pubescent, at least above\", its racemes ending the stem and its branches: our reading, 1 to 4 flowering branches."
+    },
     "taxon": {
       "evidence": "SourceInferred",
       "source": "wcvp-v16",

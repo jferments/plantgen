@@ -91,7 +91,6 @@
         },
         "inflorescence": {
           "flowers": 20,
-          "size": 0.15,
           "spread": 45,
           "peduncle": 0.05,
           "branch": {

@@ -200,10 +200,11 @@ Usage:
                 [--age N] [--view side|eye|three-quarter|oblique|top|under]
                 [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
-                [--focus X,Y,Z [--span METRES]] [--parts on]
+                [--focus X,Y,Z [--span METRES]] [--parts on] [--figure off]
                 [--conditions FILE|JSON [--from-age N]]
       Render one variant at one age, with a 1.8 m figure for scale, or
-      a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
+      a rod in 10 cm stripes beside a plant lower than 1.5 m (--figure
+      off draws neither, for plant-identification models). --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
       the plant, metres from its foot with +Y up; --focus leaf:F,
       blade:F, bloom:F, stalk:F or stem:F frames the middle of the leaf,
@@ -2656,6 +2657,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "parts",
             "conditions",
             "from-age",
+            "figure",
         ],
     )?;
     let day = options.day()?;
@@ -2682,6 +2684,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     if parted && level != 0 {
         return Err("`--parts` draws the nearest level: use it with `--lod 0`".into());
     }
+    let figure = match options.flags.get("figure").map(String::as_str) {
+        None | Some("on") => true,
+        Some("off") => false,
+        Some(other) => return Err(format!("`--figure` must be on or off, found `{other}`").into()),
+    };
     let quality = options.quality()?;
     let lod = quality.lods.get(level).ok_or("`--lod` must be 0 to 3")?;
     let size: usize = options.number("size")?.unwrap_or(900);
@@ -2827,7 +2834,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             height: size * 5 / 4,
             view,
             supersample: 2,
-            figure: true,
+            figure,
+            fit_plant: !figure,
             frame_height: None,
             frame_reach: None,
             focus,
@@ -2933,6 +2941,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                     view: View::Side,
                     supersample: 2,
                     figure: true,
+                    fit_plant: false,
                     frame_height: Some(if graph.height < tallest * 0.3 {
                         graph.height
                     } else {
@@ -3046,6 +3055,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             view,
             supersample: 2,
             figure: false,
+            fit_plant: false,
             frame_height: Some(graph.height * 1.05),
             frame_reach: Some(reach),
             focus: focus.map(|(f, s)| (Vec3::new(0.0, graph.height * f, 0.0), graph.height * s)),
@@ -3307,6 +3317,7 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
                     view: View::ThreeQuarter,
                     supersample: 3,
                     figure: false,
+                    fit_plant: false,
                     frame_height: None,
                     frame_reach: None,
                     focus: Some((Vec3::Y * (length * middle), length * frame)),
@@ -3503,6 +3514,7 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                     view: View::ThreeQuarter,
                     supersample: 3,
                     figure: false,
+                    fit_plant: false,
                     frame_height: None,
                     frame_reach: None,
                     focus: Some((
@@ -3629,6 +3641,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
                     view,
                     supersample: 2,
                     figure: true,
+                    fit_plant: false,
                     frame_height: Some(tallest),
                     frame_reach: None,
                     focus: None,
