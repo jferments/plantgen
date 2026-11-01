@@ -235,6 +235,11 @@ prompt injection. So, without exception:
   and for its interface egui and `egui-phosphor` (Phosphor's icons; the
   owner's go, 2026-10-11) with Inter and JetBrains Mono as committed font
   files.
+- **`plantgen::api` is the stable surface** for other developers
+  (`docs/LIBRARY-API.md`). Renaming or removing one of its items, or
+  changing its arguments or meaning, bumps `api::API_VERSION` and its
+  doc page; adding items does not. Other modules may change freely, but
+  keep `api` working on top of them (`tests/api.rs`).
 - **A change to growth, meshes or looks bumps `GENERATOR_REVISION`**,
   which re-keys every package. Specs and programs are text that a
   package's key hashes, so any change to them changes those packages,

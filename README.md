@@ -141,7 +141,14 @@ cargo build --release
 ./target/release/plantc lineup pseudotsuga-menziesii acer-macrophyllum --out lineup.png
 ./target/release/plantc build carnegiea-gigantea --out plants
 ./target/release/plantc export pseudotsuga-menziesii --age 20 --out exports
+./target/release/plantc variants achillea-millefolium --count 50
 ```
+
+To use PlantGen from your own Rust code, or to make many distinct plants
+of a species at once (`plantc variants`), see
+[docs/LIBRARY-API.md](docs/LIBRARY-API.md): `plantgen::api` is the
+versioned entry point that holds still while the rest of the crate
+changes.
 
 `plantc help` lists every command: growing a plant and printing its size
 at every age, rendering it at one age or every age, its organs through the
