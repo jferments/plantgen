@@ -617,3 +617,60 @@ fn atlas_draws_the_looks_and_compares_their_areas() {
     assert!(message.contains("petal"), "{message}");
     fs::remove_dir_all(&dir).unwrap();
 }
+
+#[test]
+fn variants_writes_distinct_plants_ready_to_import() {
+    let dir = scratch("variants");
+    let spec = small_spec_file(&dir);
+    let out = dir.join("firs");
+    let made = stdout(&plantc(&[
+        "variants",
+        spec.to_str().unwrap(),
+        "--count",
+        "3",
+        "--first-seed",
+        "6",
+        "--quality",
+        "draft",
+        "--compress",
+        "quantize",
+        "--threads",
+        "2",
+        "--out",
+        out.to_str().unwrap(),
+    ]));
+    assert!(made.contains("made 3 plants"), "{made}");
+    let set: serde_json::Value =
+        serde_json::from_slice(&fs::read(out.join("variants.json")).unwrap()).unwrap();
+    let plants = set["plants"].as_array().unwrap();
+    let seeds: Vec<u64> = plants
+        .iter()
+        .map(|plant| plant["seed"].as_u64().unwrap())
+        .collect();
+    assert_eq!(seeds, [6, 7, 8]);
+    // Seed 7 is the one its spec lists.
+    let packaged: Vec<bool> = plants
+        .iter()
+        .map(|plant| plant["packaged"].as_bool().unwrap())
+        .collect();
+    assert_eq!(packaged, [false, true, false]);
+    assert_eq!(set["duplicates"].as_array().unwrap().len(), 0);
+    for seed in seeds {
+        for level in 0..4 {
+            let file = out.join(format!(
+                "pseudotsuga-menziesii-open-{seed}-6y-lod{level}.glb"
+            ));
+            assert!(
+                fs::read(&file).unwrap().starts_with(b"glTF"),
+                "{}",
+                file.display()
+            );
+        }
+    }
+    assert!(
+        !plantc(&["variants", spec.to_str().unwrap()])
+            .status
+            .success()
+    );
+    fs::remove_dir_all(&dir).unwrap();
+}

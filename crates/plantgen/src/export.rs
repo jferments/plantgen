@@ -436,6 +436,58 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
             variants.len()
         ))
     })?;
+    grow_chosen(inputs, variant, chosen, age)
+}
+
+/// Grow the inputs' spec in `environment` from any `seed`, over all its
+/// years, keeping it at `age`. A seed the spec lists in that environment
+/// grows the variant its package keeps, bit for bit; any other seed grows
+/// a plant of its own, the same on every machine, its parameters drawn
+/// across their spreads by the seed alone
+/// ([`PlantSpec::seeded_params`](crate::spec::PlantSpec::seeded_params)),
+/// so seed 7 is the same plant however many others are grown beside it.
+///
+/// # Errors
+///
+/// When the age is not within the spec's years, or the plant does not
+/// grow.
+pub fn grow_seed(
+    inputs: &Inputs,
+    environment: Environment,
+    seed: u64,
+    age: f64,
+) -> Result<Plant, PackageError> {
+    let spec = &inputs.spec;
+    let variants = spec.variant_list();
+    let listed = variants.iter().position(|variant| {
+        variant.environment == environment && variant.seed == seed && variant.class.is_none()
+    });
+    let chosen = match listed {
+        Some(index) => variants[index],
+        None => crate::spec::Variant {
+            environment,
+            seed,
+            neighbourhood: spec
+                .variants
+                .neighbourhoods
+                .get(&environment)
+                .copied()
+                .unwrap_or_else(|| spec.neighbourhood(environment)),
+            class: None,
+            substrate: None,
+        },
+    };
+    // A seed the package does not keep gets an index past its variants,
+    // so no package check takes it for one it keeps.
+    grow_chosen(inputs, listed.unwrap_or(variants.len()), &chosen, age)
+}
+
+fn grow_chosen(
+    inputs: &Inputs,
+    variant: usize,
+    chosen: &crate::spec::Variant,
+    age: f64,
+) -> Result<Plant, PackageError> {
     if !(age > 0.0 && age <= inputs.spec.growth.years) {
         return Err(format_error(format!(
             "{} grows for {} years; an age must be above 0 and at most that, found {age}",
