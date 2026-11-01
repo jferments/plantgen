@@ -31,6 +31,7 @@ pub mod bend;
 pub mod billboards;
 pub mod blooms;
 pub mod body;
+pub mod breakage;
 pub mod budget;
 pub mod capitula;
 pub mod checks;

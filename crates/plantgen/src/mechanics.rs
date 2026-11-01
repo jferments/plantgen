@@ -422,7 +422,7 @@ impl Beams {
     }
 
     /// The run of beam `root` and its descendants.
-    fn run(&self, root: usize) -> std::ops::Range<usize> {
+    pub(crate) fn run(&self, root: usize) -> std::ops::Range<usize> {
         root..root + 1 + self.beyond[root] as usize
     }
 
