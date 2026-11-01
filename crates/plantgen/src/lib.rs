@@ -1392,4 +1392,13 @@ pub mod venation;
 /// as bright as the plant, a pincushion's 1.6). A cut leaf's midrib is
 /// drawn on the cards as a thin line along its blade, in its colour (a
 /// yarrow's, a carrot's and a fennel's leaves baked to scattered dots).
-pub const GENERATOR_REVISION: u32 = 179;
+/// 181: an export drawn to a budget comes down between two levels: the
+/// organs of a type solid on one level and cards on the next (cut leaves,
+/// solid leaves, flowers and fruit) go over to their cards a share at a
+/// time over the second half of the way, and a part mesh past its
+/// coarsest step keeps that step while fewer of its organs stay solid,
+/// instead of each falling in one step (a yarrow drew 200 000 triangles or
+/// 576, nothing between); the search halves every other step; and an
+/// export may draw its levels as tiers (`export::Budget::tiers`).
+/// Packages draw as before.
+pub const GENERATOR_REVISION: u32 = 181;

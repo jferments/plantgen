@@ -99,7 +99,8 @@ pub fn part_meshes(looks: &[Look]) -> Vec<PartMesh> {
 /// [`part_meshes`] with each type within `share` of its finest part
 /// mesh's triangles, drawn up to [`coarsest`] steps coarser to fit: an
 /// export drawn to a budget (`crate::export`) draws its parts coarser, and
-/// a type whose coarsest part mesh does not fit keeps its cards. At
+/// a type whose coarsest part mesh does not fit is drawn at that step
+/// (fewer of its organs are then drawn solid, `crate::budget`). At
 /// `share` 1 or more, every type at its finest.
 #[must_use]
 pub fn part_meshes_within(looks: &[Look], share: f64) -> Vec<PartMesh> {
@@ -178,10 +179,22 @@ fn part_mesh(looks: &[Look], index: usize, share: f64) -> Option<PartMesh> {
     if fits(&finest, cap) {
         return Some(part(finest));
     }
-    (1..=coarsest(&looks[index])).find_map(|coarse| {
-        let variants = variants_at(looks, index, coarse)?;
-        fits(&variants, cap).then(|| part(variants))
-    })
+    // Past its coarsest step the type keeps that step, and the share of
+    // its organs drawn solid falls instead (`crate::budget`), rather than
+    // all of them turning to cards at once.
+    let mut coarsest_drawn = None;
+    for coarse in 1..=coarsest(&looks[index]) {
+        let Some(variants) = variants_at(looks, index, coarse) else {
+            continue;
+        };
+        if fits(&variants, cap) {
+            return Some(part(variants));
+        }
+        if fits(&variants, usize::MAX) {
+            coarsest_drawn = Some(variants);
+        }
+    }
+    Some(part(coarsest_drawn.unwrap_or(finest)))
 }
 
 /// Whether every variant draws something and holds at most `cap`
@@ -1003,8 +1016,10 @@ mod tests {
     #[test]
     fn only_a_compound_cluster_is_merged_to_fit_a_share() {
         // Too many drupelets for a small share: as a raceme the cluster
-        // keeps its cards rather than become one solid; as a panicle each
-        // of its racemes is merged into one. At its finest each is whole.
+        // is never merged into one solid to fit, and keeps its coarsest
+        // step (fewer of its organs are then drawn solid, `crate::budget`);
+        // as a panicle each of its racemes is merged into one. At its
+        // finest each is whole.
         let fruit = Shape::Fruit(Fruit {
             kind: FruitKind::Drupelets,
             ..Fruit::default()
@@ -1013,7 +1028,10 @@ mod tests {
         let whole = part_meshes(std::slice::from_ref(&raceme));
         assert_eq!(whole.len(), 1);
         let share = 8192.0 / whole[0].triangles() as f64;
-        assert!(part_meshes_within(&[raceme], share).is_empty());
+        let kept = part_meshes_within(&[raceme], share);
+        assert_eq!(kept.len(), 1);
+        assert!(kept[0].triangles() <= whole[0].triangles());
+        assert!(kept[0].triangles() > 8192, "{}", kept[0].triangles());
         let mut panicle = look(fruit);
         let spec = Inflorescence {
             kind: Some(ClusterKind::Panicle),

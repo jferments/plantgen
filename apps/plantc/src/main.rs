@@ -351,7 +351,7 @@ Usage:
                  [--env ENV] [--age N] [--day N] [--quality draft|standard]
                  [--threads N] [--shade attribute|baked]
                  [--compress none|quantize|meshopt] [--attributes all|wind|none]
-                 [--triangles N[,N,N,N]] [--max-mib N]
+                 [--triangles N[,N,N,N]] [--max-mib N] [--levels tiers|package]
       Make N distinct plants of a species, ready to import: each grown from
       its own seed (from --first-seed, 1 unless given, counting up) and
       written as plantc export writes one (STEM-lod0.glb to STEM-lod3.glb
@@ -361,7 +361,8 @@ Usage:
       made; the seeds the spec lists are the plants its package keeps.
       Without --env, the species' typical site; without --age, its oldest
       keyframe. --threads plants grow at once (every core unless given);
-      the files do not depend on it. The export flags are plantc export's.
+      the files do not depend on it. Levels are tiers (max, high, mid,
+      low) unless --levels package; the export flags are plantc export's.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -370,7 +371,7 @@ Usage:
                 [--compress none|quantize|meshopt]
                 [--attributes all|wind|none]
                 [--triangles N[,N,N,N]] [--max-mib N]
-                [--profile static|motion]
+                [--profile static|motion] [--levels package|tiers]
                 [--bark-look spec|FILE.json [--bark-texels N] [--bark-period M]]
       Write one variant at one age as glTF 2.0 binary files that need no
       PlantGen code, one per level of detail (STEM-lod0.glb to
@@ -414,6 +415,11 @@ Usage:
       the wood split by stage and given texture coordinates in tiles and
       tangents. Where one stage gives way to the next, the wood wears
       textures that mix them in steps of a quarter, in patches.
+      --levels tiers draws the levels as tiers for games, max, high, mid
+      and low: the nearest as the package draws it, then the most detail
+      within an eighth, a 64th and a 512th of its triangles (high at
+      least 20k and at most 500k, mid 2k to 50k, low 200 to 5k), each at
+      most half the one before.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
@@ -3895,9 +3901,12 @@ fn profiled(spec: &PlantSpec, inputs: Inputs, options: &Options) -> Result<Input
 
 #[allow(clippy::too_many_lines)]
 /// The flags `plantc export` and `plantc variants` share: how bark is
-/// shaded, compression, attributes and a triangle or size budget.
+/// shaded, compression, attributes, a triangle or size budget, and
+/// whether the levels are the package's or tiers (`--levels`; tiers when
+/// `tiers_by_default` and the flag is not given).
 fn export_options(
     options: &Options,
+    tiers_by_default: bool,
 ) -> Result<
     (
         export::Shade,
@@ -3932,13 +3941,13 @@ fn export_options(
             return Err(format!("unknown attributes `{other}`; use all, wind or none").into());
         }
     };
-    let budget = export::Budget {
-        triangles: options
+    let mut budget = export::Budget::new(
+        options
             .flags
             .get("triangles")
             .map(|given| triangle_budget(given))
             .transpose()?,
-        bytes: options
+        options
             .flags
             .get("max-mib")
             .map(|given| {
@@ -3954,6 +3963,14 @@ fn export_options(
                     .ok_or_else(|| format!("--max-mib takes a size above 0, found `{given}`"))
             })
             .transpose()?,
+    );
+    budget.tiers = match options.flags.get("levels").map(String::as_str) {
+        None => tiers_by_default,
+        Some("package") => false,
+        Some("tiers") => true,
+        Some(other) => {
+            return Err(format!("unknown levels `{other}`; use package or tiers").into());
+        }
     };
     Ok((shade, compression, attributes, budget))
 }
@@ -3975,6 +3992,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             "attributes",
             "triangles",
             "max-mib",
+            "levels",
             "profile",
             "bark-look",
             "bark-texels",
@@ -3987,7 +4005,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             return Err(format!("unknown format `{other}`; plantc exports glb").into());
         }
     }
-    let (shade, compression, attributes, budget) = export_options(&options)?;
+    let (shade, compression, attributes, budget) = export_options(&options, false)?;
     // Bark from a record, or `spec` for the plant's own; the look is found
     // once the plant is.
     let bark_source = options.flags.get("bark-look").cloned();
@@ -4175,9 +4193,10 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
             "attributes",
             "triangles",
             "max-mib",
+            "levels",
         ],
     )?;
-    let (shade, compression, attributes, budget) = export_options(&options)?;
+    let (shade, compression, attributes, budget) = export_options(&options, true)?;
     let target = options.one_positional("a species")?;
     let spec = load_spec(target)?;
     let mut generator_options = api::Options::default();

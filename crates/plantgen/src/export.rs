@@ -196,9 +196,10 @@ impl Attributes {
     }
 }
 
-/// The most an export's levels may hold; with neither, each level is
-/// drawn as the package draws it.
+/// The most an export's levels may hold; with none of them, each level
+/// is drawn as the package draws it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[non_exhaustive]
 pub struct Budget {
     /// Most triangles each level draws, nearest first, counted as a
     /// renderer draws them (each instance of a part mesh too). Levels
@@ -211,13 +212,38 @@ pub struct Budget {
     /// farther level a quarter of the one before; then the nearest takes
     /// whatever the farther ones leave.
     pub bytes: Option<usize>,
+    /// Draw the levels as tiers, max, high, mid and low: the nearest as
+    /// the package draws it, each farther one the most detail within its
+    /// share of the nearest's triangles ([`crate::budget::tier_triangles`]),
+    /// so every plant gets levels spaced alike, whatever its size and
+    /// organs. With `triangles` too, each level keeps the lower of the two.
+    pub tiers: bool,
 }
 
 impl Budget {
+    /// Most triangles per level, `bytes` in all, or both.
+    #[must_use]
+    pub fn new(triangles: Option<[usize; LEVELS]>, bytes: Option<usize>) -> Self {
+        Self {
+            triangles,
+            bytes,
+            tiers: false,
+        }
+    }
+
+    /// The tiers ([`Self::tiers`]), with no other limit.
+    #[must_use]
+    pub fn tiers() -> Self {
+        Self {
+            tiers: true,
+            ..Self::default()
+        }
+    }
+
     /// Whether it limits anything.
     #[must_use]
     pub fn is_some(&self) -> bool {
-        self.triangles.is_some() || self.bytes.is_some()
+        self.triangles.is_some() || self.bytes.is_some() || self.tiers
     }
 
     /// `nearest` triangles for the nearest level and a quarter of the
@@ -787,14 +813,23 @@ fn budgeted(
         drawn: staged.as_ref().unwrap_or(&plant.graph),
         tried: HashMap::new(),
     };
-    let triangles = |level: usize| budget.triangles.map(|triangles| triangles[level]);
+    // Tiers: shares of the nearest level's triangles as the package
+    // draws it.
+    let tiers = if budget.tiers {
+        Some(crate::budget::tier_triangles(trials.triangles(0.0).0))
+    } else {
+        None
+    };
+    let most = match (budget.triangles, tiers) {
+        (Some(given), Some(tiers)) => {
+            Some(std::array::from_fn(|level| given[level].min(tiers[level])))
+        }
+        (given, tiers) => given.or(tiers),
+    };
+    let triangles = |level: usize| most.map(|triangles: [usize; LEVELS]| triangles[level]);
     #[allow(clippy::cast_precision_loss)]
     let low = |level: usize| {
-        if budget.triangles.is_some() {
-            0.0
-        } else {
-            level as f64
-        }
+        if most.is_some() { 0.0 } else { level as f64 }
     };
     // Each level's share of the bytes, before the nearest takes what the
     // others leave: the coarsest drawing's, which no drawing goes below
@@ -815,12 +850,22 @@ fn budgeted(
         }
     }
     let mut dials: Vec<f64> = Vec::with_capacity(LEVELS);
+    // A tier draws at most half the tier before it, so no two tiers are
+    // one drawing where a plant's drawings fall in steps.
+    let mut caps: [Option<usize>; LEVELS] = std::array::from_fn(triangles);
     for (level, &bytes) in given.iter().enumerate() {
         let finest = low(level).max(dials.last().copied().unwrap_or(0.0));
-        let (dial, _) =
-            crate::budget::most_detail(finest, |dial| trials.taken(dial, triangles(level), bytes))?;
+        if budget.tiers
+            && let Some(&before) = dials.last()
+        {
+            let half = trials.triangles(before).0 / 2;
+            caps[level] = caps[level].map(|cap| cap.min(half));
+        }
+        let cap = caps[level];
+        let (dial, _) = crate::budget::most_detail(finest, |dial| trials.taken(dial, cap, bytes))?;
         dials.push(dial);
     }
+    let triangles = |level: usize| caps[level];
     // The nearest level takes the bytes the others leave.
     if let Some(bytes) = budget.bytes {
         let mut others = 0;
