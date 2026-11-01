@@ -3575,7 +3575,8 @@ pub struct Inflorescence {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub peduncle: Option<f64>,
     /// One unit's length (a flower's or head's width), or a branch's,
-    /// 0.005 to 1: 0.15, or 0.4 where the axis bears branches.
+    /// 0.005 to 1: 0.15, or 0.4 where the axis bears branches; a compound
+    /// umbel's umbellets as long as packs them edge to edge.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub size: Option<f64>,
     /// How much smaller the upper units and branches are, 0 to 1: the top
