@@ -443,7 +443,8 @@ impl Cluster {
     fn packed_umbellet(n: u32, spread: f64, peduncle: f64, umbellet: &Self) -> f64 {
         let tan = |degrees: f64| math::tan(math::radians(degrees.clamp(0.0, 70.0)));
         let top = (1.0 - peduncle.clamp(0.0, 0.95)) * tan(spread);
-        let wide = (2.0 * (1.0 - umbellet.peduncle.clamp(0.0, 0.95)) * tan(umbellet.spread)).max(0.2);
+        let wide =
+            (2.0 * (1.0 - umbellet.peduncle.clamp(0.0, 0.95)) * tan(umbellet.spread)).max(0.2);
         let across = 2.0 * top * math::sqrt(0.82 / f64::from(n.max(1)));
         (across / wide).clamp(0.05, 0.6)
     }
