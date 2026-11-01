@@ -1085,7 +1085,7 @@ impl Package {
     }
 }
 
-fn png(width: usize, height: usize, rgba: &[u8]) -> Result<Vec<u8>, PackageError> {
+pub(crate) fn png(width: usize, height: usize, rgba: &[u8]) -> Result<Vec<u8>, PackageError> {
     raster::encode_png(width, height, rgba)
         .map_err(|error| format_error(format!("cannot encode PNG: {error}")))
 }
@@ -3330,7 +3330,7 @@ pub fn decode_card_mesh(bytes: &[u8]) -> Result<Mesh, PackageError> {
 
 /// A tier's pictures packed by `atlas` as the `card-albedo`, `card-normal`
 /// and `card-sun` layers, RGBA8 rows from the top (see the module).
-fn card_atlas(
+pub(crate) fn card_atlas(
     plant: &crate::billboards::CardPlant,
     atlas: &crate::billboards::Atlas,
 ) -> [Vec<u8>; 3] {

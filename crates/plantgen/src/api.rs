@@ -59,8 +59,9 @@ pub use crate::spec::{Environment, PlantSpec};
 /// renamed, removed, or changes its arguments or meaning; items added
 /// beside them leave it as it is. 2: [`Budget`] gained `tiers` and is
 /// made with [`Budget::new`] or [`Budget::tiers`], so fields added later
-/// break nothing; [`Variants`] draws tiers unless chosen.
-pub const API_VERSION: u32 = 2;
+/// break nothing; [`Variants`] draws tiers unless chosen. 3: [`Level`]
+/// gained `cards`, the baked-card tier a level is drawn as.
+pub const API_VERSION: u32 = 3;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
 pub const VARIANTS_FILE: &str = "variants.json";

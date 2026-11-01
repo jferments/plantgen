@@ -87,12 +87,22 @@ its triangles, kept within 20,000 to 500,000, 2,000 to 50,000 and 200 to
 5,000. Between two of the package's levels, organs go over to cards a
 share at a time, so a budget anywhere in between is met. A triangle budget
 given with tiers caps each tier too. Measured: yarrow 1.07M, 131k, 9.9k
-and 576 triangles; a 60-year Douglas-fir 616M, 483k, 49k and 4.9k (which
-takes minutes to search on one core, against seconds for package levels).
+and 1.4k triangles (its low tier baked cards); a 60-year Douglas-fir
+616M, 483k, 49k and 4.9k (which takes minutes to search on one core,
+against seconds for package levels).
 
-Some plants cannot reach every tier yet: a herb whose leaves are a few
-large cut blades, or whose parts are drawn in big steps, keeps a coarser
-low or a closer high and mid.
+The low tier is the plant's baked cards where they take fewer triangles
+than mid and at most 5,000: its leaves, flowers and twigs as a few dozen
+cards whose pictures are baked from the whole plant, over one texture of
+at most 1,024 texels a side (`Level::cards` names the tier, and the index
+lists it). A lacy herb's own cards thin to nothing drawn that small, and
+baked ones keep its outline. Cards that a PlantGen package turns to the
+eye stand fixed in a file, as a star of three.
+
+Some plants cannot reach every tier yet: a cactus whose skin and spines
+are drawn in big steps keeps a much coarser mid (Graham's fishhook
+cactus: 136k triangles high, 394 mid), and a cholla's many joints keep
+every farther tier at its coarsest drawing (about 95k).
 
 ## Seeds and variants
 

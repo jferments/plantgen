@@ -664,6 +664,17 @@ fn tiers_space_the_levels_by_shares_of_the_full_drawing() {
     assert_eq!(drawn[0], plain.levels[0].summary.triangles);
     let targets = plantgen::budget::tier_triangles(drawn[0]);
     for level in 1..drawn.len() {
+        if tiers.levels[level].cards.is_some() {
+            // Baked cards: fewer than the tier before, within the low
+            // tier's most.
+            assert_eq!(level, export::LEVELS - 1);
+            assert!(drawn[level] < drawn[level - 1], "{drawn:?}");
+            assert!(
+                drawn[level] <= plantgen::budget::TIER_CAPS[level],
+                "{drawn:?}"
+            );
+            continue;
+        }
         let fits = tiers.levels[level].budget.unwrap().fits;
         assert!(
             !fits || (drawn[level] <= targets[level] && drawn[level] <= drawn[level - 1] / 2),
@@ -691,4 +702,43 @@ fn a_budget_between_two_levels_is_met_as_organs_go_over_to_cards() {
     let exported = export::export(&inputs, &plant, &settings, None).unwrap();
     let nearest = exported.levels[0].summary.triangles;
     assert!((10_000..=30_000).contains(&nearest), "{nearest}");
+}
+
+#[test]
+fn a_lacy_herbs_low_tier_is_its_baked_cards() {
+    // A yarrow's own cards thin to nothing drawn small; its low tier is
+    // the cards baked from the whole plant, every one fixed where it
+    // stands, over one atlas.
+    let spec = PlantSpec::builtin("achillea-millefolium").unwrap();
+    let inputs = Inputs::new(&spec, &quality::STANDARD).unwrap();
+    let library = plantgen::library::Library::builtin();
+    let variant = export::typical_variant(&spec, library);
+    let plant = export::grow(&inputs, variant, export::oldest_age(&spec)).unwrap();
+    let settings = Settings {
+        budget: Budget::tiers(),
+        ..Settings::default()
+    };
+    let exported = export::export(&inputs, &plant, &settings, None).unwrap();
+    let low = &exported.levels[export::LEVELS - 1];
+    assert_eq!(low.cards, Some("low-cards"));
+    let mid = exported.levels[export::LEVELS - 2].summary.triangles;
+    assert!(
+        low.summary.triangles < mid,
+        "{} against {mid}",
+        low.summary.triangles
+    );
+    let glb = Glb::read(&low.glb).unwrap();
+    let json = &glb.json;
+    let materials = json["materials"].as_array().unwrap();
+    let baked = materials
+        .iter()
+        .find(|material| material["name"] == "baked cards")
+        .expect("a baked cards material");
+    assert_eq!(baked["alphaMode"], "MASK");
+    assert_eq!(json["images"].as_array().unwrap().len(), 1);
+    let index: serde_json::Value = serde_json::from_slice(&exported.index).unwrap();
+    assert_eq!(index["files"][3]["cards"], "low-cards");
+    // The same plant, the same bytes.
+    let again = export::export(&inputs, &plant, &settings, None).unwrap();
+    assert_eq!(again.levels[3].glb, low.glb);
 }
