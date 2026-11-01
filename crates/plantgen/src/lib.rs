@@ -24,6 +24,7 @@
 //! ([`rng`]) and every transcendental function goes through `libm`
 //! ([`math`]).
 
+pub mod api;
 pub mod bark;
 pub mod bark_look;
 pub mod bend;
