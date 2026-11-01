@@ -9,7 +9,7 @@
 //! and a plant with no pictures still packs into an atlas.
 //! `cargo test --release -p plantgen --test billboards`.
 
-use plantgen::billboards::{self, CORNERS, CardPlant, CardStats, FAR, HEIGHTS, TIERS};
+use plantgen::billboards::{self, CORNERS, CardPlant, CardStats, CardTier, FAR, HEIGHTS, TIERS};
 use plantgen::body::BodyLook;
 use plantgen::graph::PlantGraph;
 use plantgen::grow::{GrowthSettings, grow};
@@ -295,45 +295,56 @@ fn an_agaves_long_leaves_are_drawn_whole() {
 }
 
 #[test]
-fn a_yarrows_corymbs_are_seen_from_every_way() {
+fn a_yarrows_corymbs_are_drawn_solid() {
+    // Pictured from nine ways, its corymbs blurred to white smudges close
+    // up, where the low cards are the nearest version a weak machine
+    // draws. Each is a solid dome over a shallow cone now, its colour the
+    // corymb's from above: no picture turns to the eye for it.
     let (height, _, plants) = carded("achillea-millefolium");
+    for (tier, plant) in TIERS.iter().zip(&plants) {
+        assert!(
+            !plant
+                .pictures
+                .iter()
+                .any(|p| matches!(p.turn, Turn::Views { .. })),
+            "{}: a head drawn as pictures",
+            tier.name
+        );
+        assert!(
+            plant.stats.wood_triangles >= billboards::HEAD_SIDES * 2,
+            "{}: no solid head among {} wood triangles",
+            tier.name,
+            plant.stats.wood_triangles
+        );
+        assert!(plant.stats.cards <= tier.cards(height));
+    }
+    // Their tops are near white, as the photographs show them.
     let low = &plants[0];
-    let views = billboards::HEAD_AROUND * 2 + 1;
-    let heads: Vec<usize> = low
-        .pictures
+    let whitest = low
+        .wood
+        .colors
         .iter()
-        .enumerate()
-        .filter_map(|(i, p)| match p.turn {
-            Turn::Views { first, count } if first == i => {
-                assert_eq!(count, views);
-                Some(i)
-            }
-            _ => None,
-        })
-        .collect();
-    assert!(!heads.is_empty(), "no head drawn from every way");
-    assert!(low.stats.cards <= TIERS[0].cards(height));
-    // A clump turned to the eye ([`HEIGHTS`]) has a picture from each.
-    let turned = low
-        .pictures
-        .iter()
-        .enumerate()
-        .filter(|(i, p)| matches!(p.turn, Turn::Heights { first, .. } if first == *i))
-        .count();
-    assert_eq!(
-        low.pictures.len(),
-        low.stats.cards + heads.len() * (views - 1) + turned * (HEIGHTS.len() - 1),
-        "one card for a head's views"
-    );
-    // Seen level, its flowers stand on rays: the lower half of the
-    // picture is not empty, as a flat card's would be.
-    for &first in &heads {
-        let level = &low.pictures[first];
-        let lower = level.color[..level.width * (level.height / 2)]
+        .map(|c| c[0].min(c[1]).min(c[2]))
+        .fold(0.0_f32, f32::max);
+    assert!(whitest > 0.35, "the whitest head colour is {whitest:.2}");
+}
+
+#[test]
+fn a_yarrows_cut_leaves_are_drawn_along_their_midribs() {
+    // Baked, its leaves' fine segments are each less than a texel, and
+    // the cards kept them as scattered dots with nothing joining them.
+    // Each leaf's midrib is a line in the leaf's own dark green now, as
+    // far as the tier's budget for them goes.
+    let (_, _, plants) = carded("achillea-millefolium");
+    for (tier, plant) in TIERS.iter().zip(&plants) {
+        let leafy = plant
+            .wood
+            .colors
             .iter()
-            .filter(|c| c[3] >= 0.5)
+            .filter(|c| c[1] > 1.6 * c[0] && c[1] > 2.0 * c[2])
             .count();
-        assert!(lower > 0, "head {first}: nothing below its flowers");
+        println!("{}: {leafy} midrib corners", tier.name);
+        assert!(leafy >= 200, "{}: {leafy} midrib corners", tier.name);
     }
 }
 
@@ -421,46 +432,99 @@ fn a_water_lilys_lone_pads_lie_on_the_water() {
     // A pad alone on its card stood on edge, as any plane through a lone
     // leaf's middle line was as good as another, and from 45 degrees the
     // low cards hid a third less sky than the plant.
-    let (whole, low) = with_plant(
-        "nymphaea-odorata",
-        |drawn, looks, bodies, spec, templates| {
-            let full = plantgen::mesh::build(
-                drawn,
-                looks,
-                bodies,
-                &spec.appearance,
-                &STANDARD.lods[0].for_height(drawn.height),
-                0,
-            );
-            let bark = templates.bark.map_or(Material::Opaque, Material::Bark);
-            let whole = billboards::tone(
-                &[(&full.wood, bark), (&full.card_mesh(), Material::Card)],
-                templates,
-                160,
-            );
-            let plant = billboards::build(
-                drawn,
-                looks,
-                bodies,
-                &spec.appearance,
-                spec.growth_form,
-                templates,
-                &STANDARD.lods,
-                &TIERS[0],
-            );
-            let mut baked = templates.clone();
-            baked.baked.clone_from(&plant.pictures);
-            let low = billboards::tone(
-                &[(&plant.wood, bark), (&plant.cards, Material::Baked)],
-                &baked,
-                160,
-            );
-            (whole, low)
-        },
-    );
+    let (whole, low) = full_and_tier("nymphaea-odorata", &TIERS[0]);
     let ratio = low.cover[1] / whole.cover[1];
     assert!(
         (0.8..=1.2).contains(&ratio),
         "from 45 degrees the low cards hide {ratio:.2} of the sky the plant does"
     );
+}
+
+/// How `species` draws in full and on card tier `tier` ([`billboards::tone`]).
+fn full_and_tier(species: &str, tier: &CardTier) -> (billboards::Drawn, billboards::Drawn) {
+    with_plant(species, |drawn, looks, bodies, spec, templates| {
+        let full = plantgen::mesh::build(
+            drawn,
+            looks,
+            bodies,
+            &spec.appearance,
+            &STANDARD.lods[0].for_height(drawn.height),
+            0,
+        );
+        let bark = templates.bark.map_or(Material::Opaque, Material::Bark);
+        let whole = billboards::tone(
+            &[(&full.wood, bark), (&full.card_mesh(), Material::Card)],
+            templates,
+            160,
+        );
+        let plant = billboards::build(
+            drawn,
+            looks,
+            bodies,
+            &spec.appearance,
+            spec.growth_form,
+            templates,
+            &STANDARD.lods,
+            tier,
+        );
+        let mut baked = templates.clone();
+        baked.baked.clone_from(&plant.pictures);
+        let carded = billboards::tone(
+            &[(&plant.wood, bark), (&plant.cards, Material::Baked)],
+            &baked,
+            160,
+        );
+        (whole, carded)
+    })
+}
+
+#[test]
+fn a_carrots_card_tiers_keep_its_pale_stem_and_its_umbel() {
+    // Its flowering stem, a ribbon on the minimal cards, took the dark
+    // green of the leaves along it, and on both tiers its umbel lay level
+    // with the leaves' clump: from the side the minimal cards drew half as
+    // bright as the carrot, the low cards a quarter darker. Its umbel
+    // drawn solid is narrower from the side than the lacy umbel of the
+    // plant: the low cards 0.84 as bright.
+    for tier in &TIERS {
+        let (whole, carded) = full_and_tier("daucus-carota", tier);
+        let ratio = carded.tone[0] / whole.tone[0];
+        assert!(
+            (0.8..=1.2).contains(&ratio),
+            "{}: from the side the cards draw {ratio:.2} as bright as the plant",
+            tier.name
+        );
+    }
+}
+
+#[test]
+fn tubercled_bodies_keep_their_tone_on_the_cards() {
+    // Smooth where the plant is all mounds, a living rock's and a
+    // pincushion's coarse bodies took the sun their tubercles shade each
+    // other from: the low cards drew 1.7 and 1.6 times as bright as the
+    // plant from the side.
+    for species in ["ariocarpus-fissuratus", "cochemiea-grahamii"] {
+        let (whole, carded) = full_and_tier(species, &TIERS[0]);
+        let ratio = carded.tone[0] / whole.tone[0];
+        assert!(
+            ratio <= 1.3,
+            "{species}: from the side the cards draw {ratio:.2} as bright as the plant"
+        );
+    }
+}
+
+#[test]
+fn a_peyotes_spines_and_wool_are_drawn_on_its_body() {
+    // Baked onto cards of their own, its tufts of wool floated beside its
+    // coarser body as white chips: 40 cards on the low tier where its
+    // flowers need 9. Its body draws them in its skin.
+    let (_, _, plants) = carded("lophophora-williamsii");
+    for (tier, plant) in TIERS.iter().zip(&plants) {
+        assert!(
+            plant.stats.cards <= 10,
+            "{}: {} cards",
+            tier.name,
+            plant.stats.cards
+        );
+    }
 }

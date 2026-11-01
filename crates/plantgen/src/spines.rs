@@ -858,7 +858,9 @@ pub fn template(look: &BodyLook, view: View, size: usize) -> Drawn {
 
 /// Share of a body's surface its spines and felt hide, seen from outside,
 /// for `area` square metres of surface per areole: the weight of the spine
-/// colour where a far level draws only the body.
+/// colour where a far level draws only the body. Spines overlap as they
+/// thicken, so their outlines `a` hide `1 - exp(-a / area)` of the skin
+/// (as in [`cover_factor`]): a dense pincushion still shows its green.
 #[must_use]
 pub fn cover(look: &BodyLook, area: f64) -> f64 {
     if area <= 0.0 {
@@ -875,7 +877,7 @@ pub fn cover(look: &BodyLook, area: f64) -> f64 {
         // levels' mean colour with the nearest level's across the cacti.
         hidden += count * set.length * lying * set.width * 0.35;
     }
-    (hidden / area).clamp(0.0, 0.85)
+    (1.0 - crate::math::exp(-hidden / area)).clamp(0.0, 0.85)
 }
 
 /// How many times broader `look`'s spines (all but its glochids) must be

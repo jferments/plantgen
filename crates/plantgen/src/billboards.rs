@@ -104,6 +104,11 @@ pub struct CardTier {
     /// with none, heads are baked with the rest and ribbons are as many
     /// as the wood allows.
     pub heads: f64,
+    /// The level of detail its fleshy bodies are drawn at
+    /// ([`crate::body`]): the low tier folds a body's ribs, as a
+    /// saguaro's pleats and a hedgehog cactus's ridges show from any
+    /// distance it is drawn at; the minimal tier draws them as shading.
+    pub body_level: usize,
 }
 
 /// A Steam Deck or an integrated GPU at 60 frames a second.
@@ -118,6 +123,7 @@ pub const LOW: CardTier = CardTier {
     sides: 4,
     bend: 25.0,
     heads: 1.0 / 3.0,
+    body_level: 2,
 };
 
 /// The weakest machines.
@@ -132,6 +138,7 @@ pub const MINIMAL: CardTier = CardTier {
     sides: 3,
     bend: 40.0,
     heads: 0.0,
+    body_level: 3,
 };
 
 pub const TIERS: [CardTier; 2] = [LOW, MINIMAL];
@@ -718,6 +725,21 @@ fn fit_plane(
     {
         turn = Turn::Facing;
     }
+    // A card is baked from the side it is seen from: a level one from
+    // above, an upright one from outside the plant. Either way round
+    // fits the parts as well, and a cyclamen's level leaves baked from
+    // below drew their maroon undersides where the plant shows its
+    // marbled tops.
+    let seen = if normal.y.abs() >= LEVEL {
+        Vec3::Y
+    } else {
+        centre - foliage_centre
+    };
+    let normal = if normal.dot(seen) < 0.0 {
+        -normal
+    } else {
+        normal
+    };
     (centre, normal, flat, turn)
 }
 
@@ -1266,6 +1288,8 @@ impl Source {
         templates: &Templates,
         levels: &[LodSpec; 4],
     ) -> Self {
+        let lifted = seated(graph, bodies);
+        let graph = lifted.as_ref().unwrap_or(graph);
         let height = graph.height.max(0.01);
         // Every axis, however fine (a fern's rachis, a grass's culm): the
         // pictures are where they still show.
@@ -1535,6 +1559,37 @@ fn branches_of(graph: &PlantGraph, roots: impl IntoIterator<Item = u32>) -> Vec<
     own.into_iter().map(|o| o == Some(true)).collect()
 }
 
+/// `graph` with the organs borne on a spiny body lifted out of its skin
+/// as far as the tiers' coarse body swells it ([`BodyLook::swell`]), as a
+/// pincushion's flowers stand above its spines; `None` where none is.
+/// Sunk in the swollen skin, a pincushion's ring of flowers was hidden.
+fn seated(graph: &PlantGraph, bodies: &[BodyLook]) -> Option<PlantGraph> {
+    let swell: Vec<f64> = bodies.iter().map(BodyLook::swell).collect();
+    let lift = |organ: &crate::graph::GraphOrgan| {
+        let segment = &graph.segments[usize::try_from(organ.segment?).ok()?];
+        let by = *swell.get(usize::from(segment.body).checked_sub(1)?)?;
+        (by > 0.0).then_some((segment, by))
+    };
+    if !graph.organs.iter().any(|organ| lift(organ).is_some()) {
+        return None;
+    }
+    let mut seated = graph.clone();
+    for organ in &mut seated.organs {
+        let Some((segment, by)) = lift(organ) else {
+            continue;
+        };
+        // Out from the nearest point of the body's axis: round its sides,
+        // and over its tip, up.
+        let axis = segment.end - segment.start;
+        let along = ((organ.position - segment.start).dot(axis) / axis.length_squared().max(1e-12))
+            .clamp(0.0, 1.0);
+        let out = (organ.position - (segment.start + axis * along))
+            .normalize_or(axis.normalize_or(Vec3::Y));
+        organ.position = organ.position + out * by;
+    }
+    Some(seated)
+}
+
 /// Every tier of `graph` from one [`Source`], by name: [`TIERS`]' cards,
 /// then the [`FAR`] impostor.
 #[must_use]
@@ -1596,6 +1651,8 @@ pub fn build_from(
     levels: &[LodSpec; 4],
     tier: &CardTier,
 ) -> CardPlant {
+    let lifted = seated(graph, bodies);
+    let graph = lifted.as_ref().unwrap_or(graph);
     let height = graph.height.max(0.01);
     let crowned = crowned(form);
     // A crown is a heap of leafy masses, round from every side. A
@@ -1681,12 +1738,28 @@ pub fn build_from(
     }
     let (source, sky) = (&from.mesh, &from.sky);
 
+    // A body kept as a tube draws its spines and areoles in its own skin,
+    // as the far levels of a body do ([`crate::body`]): baked onto cards
+    // of their own, which lie where the clump of them is fitted and not on
+    // the tube's coarser surface, a peyote's tufts of wool floated beside
+    // it as white chips and a saguaro's spines stood round its column as
+    // a halo of hair. A body baked whole (a cholla's thin joints) keeps
+    // its spines with it.
+    let armature = |card: &Card| {
+        usize::from(card.template) >= looks.len()
+            && graph
+                .segments
+                .get(card.segment as usize)
+                .is_some_and(|s| s.body != 0 && !(s.order > 0 && s.radius < keep.min(trunk)))
+    };
     // Elements: organ cards, then thin wood segments.
     let mut elements = Vec::new();
     let organ_cards: Vec<Card> = source.cards.clone();
     for card in &organ_cards {
         let (base, heading, left) = (v3(card.base), v3(card.heading), v3(card.left));
         let length = f64::from(card.length);
+        // Left out of the cards, it pulls no group toward it.
+        let length = if armature(card) { 1e-6 } else { length };
         elements.push(Element {
             centre: base + heading * (length * 0.5),
             facing: heading.cross(left).normalize_or(Vec3::Z),
@@ -1935,7 +2008,16 @@ pub fn build_from(
     flush(&mut chunk, &mut elements, &mut solid_chunks);
 
     // Tubes: the coarsest level's wood at least `keep` in radius, and
-    // fleshy bodies on the stem or as thick.
+    // fleshy bodies on the stem or as thick. A body with ribs is drawn at
+    // the tier's level of a body's detail, which folds them on the low
+    // cards; one without (a cholla's tubercled joints) gains nothing
+    // from it but rings, and stays at the coarsest.
+    let ribbed = |mesh: &Mesh, i: usize| {
+        mesh.segment(i)
+            .and_then(|s| graph.segments.get(s as usize))
+            .and_then(|s| bodies.get(usize::from(s.body).checked_sub(1)?))
+            .is_some_and(|look| look.ribs.is_some())
+    };
     let mut wood = Mesh::default();
     for t in 0..coarse.wood.triangle_count() {
         let corners = [0, 1, 2].map(|k| coarse.wood.indices[t * 3 + k] as usize);
@@ -1960,7 +2042,9 @@ pub fn build_from(
             .and_then(|s| graph.segments.get(s as usize))
             .is_some_and(|s| s.body != 0)
         {
-            !thin_body(&coarse.wood, corners[0], keep)
+            // A ribbed body is drawn below at the tier's own level.
+            !(tier.body_level != 3 && ribbed(&coarse.wood, corners[0]))
+                && !thin_body(&coarse.wood, corners[0], keep)
         } else {
             thin.nearest(centre, &graph.segments).is_none_or(|(s, d)| {
                 graph.segments[s].within.is_none() || d > keep * LEAF_AXIS_REACH
@@ -1970,7 +2054,23 @@ pub fn build_from(
             copy_triangle(&mut wood, &coarse.wood, t);
         }
     }
-
+    if tier.body_level != 3 {
+        let mut bodies_drawn = PlantMesh::default();
+        crate::body::build_between(
+            graph,
+            bodies,
+            looks.len(),
+            tier.body_level,
+            0.0,
+            &mut bodies_drawn,
+        );
+        for t in 0..bodies_drawn.wood.triangle_count() {
+            let first = bodies_drawn.wood.indices[t * 3] as usize;
+            if ribbed(&bodies_drawn.wood, first) && !thin_body(&bodies_drawn.wood, first, keep) {
+                copy_triangle(&mut wood, &bodies_drawn.wood, t);
+            }
+        }
+    }
     let k = tier
         .cards(height)
         .saturating_sub(leaves.triangle_count().div_ceil(CORNERS - 2))
@@ -2000,6 +2100,7 @@ pub fn build_from(
             if !bearing.get(at).copied().unwrap_or(false) {
                 continue;
             }
+            let own_head = looks.get(usize::from(card.template)).is_some_and(signature);
             let mut walked = 0.0;
             loop {
                 if axis_of[at] != usize::MAX {
@@ -2007,19 +2108,62 @@ pub fn build_from(
                     break;
                 }
                 let g = &graph.segments[at];
+                // A head on a stem kept as a tube (a wild carrot's one
+                // stout stem) is its own card too, one for all the head's
+                // parts on that stem's tip. Baked with the clump around
+                // it, a carrot's umbel lay level on its card and was gone
+                // from the side. Only the head's own parts: the leaves
+                // on a camas's scape stay with their clumps.
+                if !crowned && g.radius >= keep && g.body == 0 && own_head {
+                    head[i] = ribbons.len() + at;
+                    break;
+                }
                 walked += (g.end - g.start).length();
+                // Down the head's own stem as far as it goes: a carrot's
+                // stem narrows below `keep` a third of its height under
+                // the umbel.
                 match g.parent {
-                    Some(parent) if walked < graph.height * RIBBON_LENGTH => at = parent as usize,
+                    Some(parent) if walked < graph.height * RIBBON_LENGTH || !g.lateral => {
+                        at = parent as usize;
+                    }
                     _ => break,
                 }
             }
         }
+        // A tier without heads' cards bakes the ribbons' heads with their
+        // clumps (a grass's spikes, a raceme), but not heads seen face on
+        // (an umbel, a corymb, a capitulum): lying on a clump's card, a
+        // carrot's umbel was gone from the side on the minimal cards. They
+        // take no more of the cards than the low tier's heads would.
+        let ribbon_heads = ribbons.len();
         if tier.heads <= 0.0 {
-            head.fill(usize::MAX);
+            let mut faced = vec![false; ribbon_heads + graph.segments.len()];
+            for (card, &a) in organ_cards.iter().zip(&head) {
+                if a != usize::MAX && looks.get(usize::from(card.template)).is_some_and(face_on) {
+                    faced[a] = true;
+                }
+            }
+            for a in &mut head {
+                if *a != usize::MAX && !faced[*a] {
+                    *a = usize::MAX;
+                }
+            }
         }
         let mut used: Vec<usize> = head.iter().copied().filter(|&a| a != usize::MAX).collect();
         used.sort_unstable();
         used.dedup();
+        // The ribbons' heads first, then the tubes', up to the tier's
+        // share of the cards; the rest are baked with their clumps.
+        #[allow(
+            clippy::cast_precision_loss,
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss
+        )]
+        used.truncate(if tier.heads > 0.0 {
+            ((tier.cards(height) as f64 * tier.heads) as usize).max(ribbon_heads)
+        } else {
+            (tier.cards(height) as f64 * LOW.heads) as usize
+        });
         head.iter()
             .map(|a| used.iter().position(|u| u == a))
             .collect::<Vec<Option<usize>>>()
@@ -2027,11 +2171,45 @@ pub fn build_from(
     let headed = heads.iter().flatten().copied().max().map_or(0, |h| h + 1);
     // Heads of flowers seen face on (a capitulum, a single flower, an
     // umbel or a corymb) look unlike from above and from the side.
+    // A head drawn solid is many small flowers, flat-topped, spread wider
+    // than they stand tall. A goldenrod's panicle of small upturned heads
+    // is a plume: drawn as a disc it floated over its stems. A daisy is
+    // one flower, sharp on its card: drawn as a disc it lost its eye.
+    let flat = |h: usize| {
+        // Each flower or inflorescence card spans its centre ± its half.
+        let flowers: Vec<(Vec3, Vec3)> = elements
+            .iter()
+            .zip(&heads)
+            .filter(|(e, head)| **head == Some(h) && !e.wood)
+            .map(|(e, _)| (e.centre, e.half))
+            .collect();
+        let n = flowers.len().max(1);
+        #[allow(clippy::cast_precision_loss)]
+        let mid = flowers.iter().fold(Vec3::ZERO, |sum, &(p, _)| sum + p) * (1.0 / n as f64);
+        let (low, high) = flowers
+            .iter()
+            .fold((f64::INFINITY, f64::NEG_INFINITY), |(lo, hi), (p, half)| {
+                (lo.min(p.y - half.y.abs()), hi.max(p.y + half.y.abs()))
+            });
+        let across = flowers
+            .iter()
+            .map(|(p, half)| (p.x - mid.x).hypot(p.z - mid.z) + half.x.hypot(half.z))
+            .fold(0.0, f64::max);
+        let many = flowers.len() > 1
+            || organ_cards.iter().zip(&heads).any(|(card, head)| {
+                *head == Some(h)
+                    && looks
+                        .get(usize::from(card.template))
+                        .is_some_and(|look| look.inflorescence.is_some())
+            });
+        many && high - low <= 2.0 * across
+    };
     let faced: Vec<bool> = (0..headed)
         .map(|h| {
-            organ_cards.iter().zip(&heads).any(|(card, head)| {
-                *head == Some(h) && looks.get(usize::from(card.template)).is_some_and(face_on)
-            })
+            flat(h)
+                && organ_cards.iter().zip(&heads).any(|(card, head)| {
+                    *head == Some(h) && looks.get(usize::from(card.template)).is_some_and(face_on)
+                })
         })
         .collect();
     let rest: Vec<usize> = (0..elements.len())
@@ -2112,11 +2290,14 @@ pub fn build_from(
     let mut group_cards: Vec<Vec<Card>> = vec![Vec::new(); groups];
     let mut group_card_ids: Vec<Vec<usize>> = vec![Vec::new(); groups];
     for (i, card) in organ_cards.iter().enumerate() {
+        if armature(card) {
+            continue;
+        }
         group_cards[group[i]].push(*card);
         group_card_ids[group[i]].push(i);
     }
     let mut group_wood: Vec<Mesh> = vec![Mesh::default(); groups];
-    // Each thin segment's triangles, and its mean colour.
+    // Each thin segment's triangles, and its bark's mean colour.
     // Each triangle, the thin segment it is baked with, and whether it
     // is bark (an organ's triangle, a yarrow's cut blade along its
     // rachis, is drawn however thin the rachis).
@@ -2171,12 +2352,19 @@ pub fn build_from(
         }
         #[allow(clippy::cast_possible_truncation)]
         let segment = segment as u32;
-        let (sum, count) = &mut segment_colour[segment as usize];
-        for &i in &corners {
-            for c in 0..3 {
-                sum[c] += f64::from(source.wood.colors[i][c]);
+        // A ribbon stands for its stem: only the stem's bark colours it,
+        // not the leaves along it, which their cards draw. With them, a
+        // carrot's and a yarrow's flowering stems were drawn in the
+        // foliage's dark green, not their own pale green, and their
+        // minimal cards drew a third darker than the plant from the side.
+        if barked {
+            let (sum, count) = &mut segment_colour[segment as usize];
+            for &i in &corners {
+                for c in 0..3 {
+                    sum[c] += f64::from(source.wood.colors[i][c]);
+                }
+                *count += 1.0;
             }
-            *count += 1.0;
         }
         let Some(&e) = wood_element.get(segment as usize) else {
             continue;
@@ -2308,8 +2496,8 @@ pub fn build_from(
         // yarrow's corymb, an umbel, a daisy) looks unlike from above and
         // from the side, a disc of flowers over a cone of rays or a cup
         // of bracts: lying flat it would be a line from the side, and
-        // turned it would show the disc. It is drawn as a small impostor
-        // ([`HEAD_AROUND`]).
+        // turned it would show the disc. It is drawn solid
+        // ([`solid_head`]).
         let views = g < headed && faced[g];
         let turn = if g < headed && !views {
             Turn::Facing
@@ -2403,6 +2591,14 @@ pub fn build_from(
         plane.low = low;
         plane.high = high;
     }
+    // A card with nothing to draw has no frame: framed from infinity to
+    // infinity it left every other card a few texels (a camas's low
+    // cards, once its raceme took its own card).
+    planes.retain(|p| {
+        [p.low.0, p.low.1, p.high.0, p.high.1]
+            .iter()
+            .all(|v| v.is_finite())
+    });
     // Texels per metre, the same on every card.
     let area: f64 = planes
         .iter()
@@ -2426,8 +2622,8 @@ pub fn build_from(
             .map(|p| {
                 let (w, h) = (p.high.0 - p.low.0, p.high.1 - p.low.1);
                 if p.views {
-                    let (side, _) = tile(w.max(h), w.max(h), tile_density, tier.most_texels);
-                    side * side * head_ways().len()
+                    // Drawn solid ([`solid_head`]): no texels.
+                    0
                 } else {
                     let (tw, th) = tile(w, h, tile_density, tier.most_texels);
                     let paid = if p.heights.is_some() && !turning {
@@ -2460,6 +2656,19 @@ pub fn build_from(
             texel * MIN_TEXELS,
         );
     }
+    // Cut leaves' midribs take at most twice as many triangles as the
+    // cards: 54 of a yarrow's 78 leaves on the low tier, the longest.
+    if !crowned {
+        lace_lines(
+            &mut out.wood,
+            graph,
+            looks,
+            &source.wood,
+            &whole,
+            texel * MIN_TEXELS,
+            tier.cards(height) * (CORNERS - 2) * 2,
+        );
+    }
     // Heads seen face on are baked from the full model, where an umbel or
     // a corymb is drawn flower by flower on its rays: the coarser level
     // draws it as one flat card, a line from the side.
@@ -2485,7 +2694,6 @@ pub fn build_from(
         let (w, h) = (plane.high.0 - plane.low.0, plane.high.1 - plane.low.1);
         if plane.views {
             let drawn = draw(plane.group);
-            let (side, _) = tile(w.max(h), w.max(h), tile_density, tier.most_texels);
             let mid = plane.centre
                 + plane.right * ((plane.low.0 + plane.high.0) * 0.5)
                 + plane.up * ((plane.low.1 + plane.high.1) * 0.5);
@@ -2494,8 +2702,8 @@ pub fn build_from(
                 Some((wood, cards)) => near_head(&drawn, mid, wood, cards, graph),
                 None => drawn,
             };
-            let (covered, area) = add_views(&mut out, &drawn, mid, side, templates, &sky);
-            return (out, covered, area);
+            out.wood = solid_head(&drawn, templates, &sky);
+            return (out, 0.0, 0.0);
         }
         let (tw, th) = tile(w, h, tile_density, tier.most_texels);
         // The picture's frame: the group's extent, grown to the texels'
@@ -2594,6 +2802,9 @@ pub fn build_from(
     let mut covered_area = 0.0;
     let mut card_area = 0.0;
     for (part, covered, area) in baked {
+        for t in 0..part.wood.triangle_count() {
+            copy_triangle(&mut out.wood, &part.wood, t);
+        }
         join_cards(&mut out, part);
         covered_area += covered;
         card_area += area;
@@ -2835,6 +3046,13 @@ pub const SHEET: f64 = 0.5;
 /// Axes this share of the plant's height or longer may be ribbons.
 const RIBBON_LENGTH: f64 = 0.1;
 
+/// How far a ribbon's normals lean out toward its edges, as the tangent
+/// of their lean, so that it is lit as the stem it stands for: across a
+/// tube's seen face its light is π/4 of a flat face's, and normals
+/// leaning `k` at the edges, drawn between, give asinh(k)/k. Lit flat, a
+/// grass's culms drew its card tiers a sixth brighter than the grass.
+const RIBBON_ROUND: f64 = 1.57;
+
 /// The free-standing thin axes that bear a flower, a head or a fruit
 /// along them, longest first, as many as `budget` triangles allow
 /// (`2 (RIBBON_POINTS - 1)` each): each its segments, base first.
@@ -2903,6 +3121,134 @@ fn ribbon_axes(graph: &PlantGraph, looks: &[Look], keep: f64, budget: usize) -> 
         .collect()
 }
 
+/// A leaf drawn in the wood whose blade fills less than this share of
+/// the band it reaches across from its heading bakes to dashes: a cut
+/// blade (a yarrow's fills 0.24, a wild carrot's 0.26, a fennel's 0.08)
+/// or a narrow one that arches away (a beargrass's, 0.14). Set by eye:
+/// of 42 plants surveyed, only these and a fishtail palm fall under it.
+pub const LACE: f64 = 0.3;
+
+/// The midribs of cut leaves in `wood` (a yarrow's, a wild carrot's)
+/// that the tier does not draw `whole`, longest first, as many as
+/// `budget` triangles allow, drawn as lines at least `least` wide in
+/// their blades' colour along the blades' own curve: baked, a cut leaf's segments are each less than a
+/// texel, and kept by coverage they scatter into dots with nothing
+/// joining them (a yarrow's leaves, close up). The midrib holds them
+/// together. A blade is told cut by [`LACE`].
+fn lace_lines(
+    out: &mut Mesh,
+    graph: &PlantGraph,
+    looks: &[Look],
+    wood: &Mesh,
+    whole: &[bool],
+    least: f64,
+    budget: usize,
+) {
+    // Each line runs from the leaf's foot through the middles of its
+    // blade's two halves.
+    const BINS: usize = 2;
+    // Each leaf drawn in the wood, by the segment that bears it.
+    let mut borne: std::collections::HashMap<u32, Vec<usize>> = std::collections::HashMap::new();
+    for (o, organ) in graph.organs.iter().enumerate() {
+        let drawn = looks
+            .get(usize::from(organ.organ))
+            .is_some_and(|look| !signature(look));
+        if let (true, Some(segment)) = (drawn, organ.segment) {
+            borne.entry(segment).or_default().push(o);
+        }
+    }
+    if borne.is_empty() {
+        return;
+    }
+    // Each leaf's triangles: how far along its heading, where, how big.
+    let mut pieces: Vec<Vec<(f64, Vec3, f64)>> = vec![Vec::new(); graph.organs.len()];
+    let mut widths = vec![0.0_f64; graph.organs.len()];
+    let mut colours = vec![([0.0_f64; 3], 0.0_f64); graph.organs.len()];
+    for t in 0..wood.triangle_count() {
+        let corners = [0, 1, 2].map(|k| wood.indices[t * 3 + k] as usize);
+        if whole[t] || corners.iter().any(|&i| bark_radius(wood, i).is_some()) {
+            continue;
+        }
+        let Some(on) = wood.segment(corners[0]).and_then(|s| borne.get(&s)) else {
+            continue;
+        };
+        let [a, b, c] = corners.map(|i| v3(wood.positions[i]));
+        let centre = (a + b + c) * (1.0 / 3.0);
+        let place = |o: usize| {
+            let organ = &graph.organs[o];
+            let along = (centre - organ.position).dot(organ.heading).max(0.0);
+            (
+                along,
+                (centre - (organ.position + organ.heading * along)).length(),
+            )
+        };
+        let Some(&o) = on
+            .iter()
+            .min_by(|&&x, &&y| place(x).1.total_cmp(&place(y).1))
+        else {
+            continue;
+        };
+        let (along, off) = place(o);
+        widths[o] = widths[o].max(off);
+        pieces[o].push((along, centre, (b - a).cross(c - a).length() * 0.5));
+        let (sum, count) = &mut colours[o];
+        for &i in &corners {
+            for k in 0..3 {
+                sum[k] += f64::from(wood.colors[i][k]);
+            }
+            *count += 1.0;
+        }
+    }
+    let mut lines: Vec<(f64, Vec<(Vec3, f64)>, [f64; 3])> = Vec::new();
+    for (o, leaf) in pieces.iter().enumerate() {
+        let reach = leaf.iter().map(|p| p.0).fold(0.0, f64::max);
+        if reach < 4.0 * least {
+            continue;
+        }
+        // How far out it reaches from its heading: a cut blade (a
+        // yarrow's) fills little of that band, as does a narrow one that
+        // arches away from it (a beargrass's), and both bake to dashes.
+        let area: f64 = leaf.iter().map(|p| p.2).sum();
+        if area >= LACE * reach * 2.0 * widths[o].max(least) {
+            continue;
+        }
+        // The blade's own curve: its area's middle in each half.
+        let mut middles = [(Vec3::ZERO, 0.0_f64); BINS];
+        for &(along, centre, area) in leaf {
+            #[allow(
+                clippy::cast_precision_loss,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            let bin = ((along / reach * BINS as f64) as usize).min(BINS - 1);
+            middles[bin].0 = middles[bin].0 + centre * area;
+            middles[bin].1 += area;
+        }
+        let mut path = vec![(graph.organs[o].position, 0.0)];
+        path.extend(
+            middles
+                .iter()
+                .filter(|m| m.1 > 0.0)
+                .map(|m| (m.0 * (1.0 / m.1), 0.0)),
+        );
+        if path.len() < 2 {
+            continue;
+        }
+        let (sum, count) = colours[o];
+        lines.push((reach, path, sum.map(|c| c / count.max(1.0))));
+    }
+    lines.sort_by(|a, b| b.0.total_cmp(&a.0));
+    let mut spent = 0;
+    for (_, path, colour) in lines {
+        let cost = 4 * (path.len() - 1);
+        if spent + cost > budget {
+            break;
+        }
+        spent += cost;
+        strip(out, &path, colour, least);
+    }
+}
+
 /// Draw `axis` as a ribbon at least `least` wide, facing out from the
 /// plant's middle, both faces.
 fn ribbon(
@@ -2945,6 +3291,17 @@ fn ribbon(
     } else {
         appearance.bark.map(f64::from)
     };
+    strip(out, &picked, colour, least);
+}
+
+/// Draw the line through `picked` (each point and its radius) as a strip
+/// at least `least` wide in `colour`, facing out from the plant's middle,
+/// both faces, lit as the round axis it stands for ([`RIBBON_ROUND`]).
+fn strip(out: &mut Mesh, picked: &[(Vec3, f64)], colour: [f64; 3], least: f64) {
+    // Each face has its own corners, with its own normal: a ribbon drawn
+    // from behind with its front's normal was lit as if turned from the
+    // sun, and a yarrow's flowering stems on the far side of the plant
+    // drew dark.
     let first = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
     for (i, &(p, r)) in picked.iter().enumerate() {
         let along = if i + 1 < picked.len() {
@@ -2958,29 +3315,34 @@ fn ribbon(
             .normalize_or_else(|| any_perpendicular(along))
             * (r.max(least * 0.5));
         let normal = side.cross(along).normalize_or(out_dir);
-        for corner in [p - side, p + side] {
-            #[allow(clippy::cast_possible_truncation)]
-            out.push(Vertex {
-                position: corner,
-                normal,
-                uv: [0.0, 0.0],
-                color: [colour[0] as f32, colour[1] as f32, colour[2] as f32, 1.0],
-                born: 0.0,
-                shed: None,
-                level: 1,
-                segment: mesh::NO_SEGMENT,
-            });
+        let across = side.normalize_or(Vec3::X);
+        for facing in [normal, -normal] {
+            for (corner, lean) in [(p - side, -RIBBON_ROUND), (p + side, RIBBON_ROUND)] {
+                #[allow(clippy::cast_possible_truncation)]
+                out.push(Vertex {
+                    position: corner,
+                    normal: (facing + across * lean).normalize_or(facing),
+                    uv: [0.0, 0.0],
+                    color: [colour[0] as f32, colour[1] as f32, colour[2] as f32, 1.0],
+                    born: 0.0,
+                    shed: None,
+                    level: 1,
+                    segment: mesh::NO_SEGMENT,
+                });
+            }
         }
     }
-    for i in 0..u32::try_from(RIBBON_POINTS - 1).unwrap_or(0) {
+    for i in 0..u32::try_from(picked.len().saturating_sub(1)).unwrap_or(0) {
+        // Front corners, then back corners, at this point and the next.
         let (a, b, c, d) = (
-            first + 2 * i,
-            first + 2 * i + 1,
-            first + 2 * i + 2,
-            first + 2 * i + 3,
+            first + 4 * i,
+            first + 4 * i + 1,
+            first + 4 * i + 4,
+            first + 4 * i + 5,
         );
+        let (e, f, g, h) = (a + 2, b + 2, c + 2, d + 2);
         out.indices
-            .extend_from_slice(&[a, b, d, a, d, c, a, d, b, a, c, d]);
+            .extend_from_slice(&[a, b, d, a, d, c, e, h, f, e, g, h]);
     }
 }
 
@@ -3206,16 +3568,6 @@ struct Baked {
     wood: Mesh,
 }
 
-/// Pictures round a flat-topped head at each height of eye, level and
-/// from 45 degrees above; one more from straight above. A head is much
-/// alike round its axis, so a few do.
-pub const HEAD_AROUND: usize = 4;
-
-/// The ways a flat-topped head is baked from ([`HEAD_AROUND`]).
-fn head_ways() -> Vec<Vec3> {
-    ways_round(HEAD_AROUND)
-}
-
 /// `around` ways round the plant level, as many from 45 degrees above,
 /// and one from straight above: the ways an impostor is baked from.
 fn ways_round(around: usize) -> Vec<Vec3> {
@@ -3288,109 +3640,213 @@ fn near_head(coarse: &Baked, mid: Vec3, wood: &Mesh, cards: &Mesh, graph: &Plant
     }
 }
 
-/// Bake `drawn` round `mid` from each of [`head_ways`], `side` texels a
-/// side, and add it to `out` as one card showing the nearest: a small
-/// impostor. The covered and the card's area, square metres.
-fn add_views(
-    out: &mut CardPlant,
-    drawn: &Baked,
-    mid: Vec3,
-    side: usize,
-    templates: &Templates,
-    sky: &Sky,
-) -> (f64, f64) {
-    let radius = drawn
-        .cards
-        .positions
-        .iter()
-        .chain(&drawn.wood.positions)
-        .map(|p| (v3(*p) - mid).length())
-        .fold(1e-3, f64::max);
-    let ways = head_ways();
-    let first = out.pictures.len();
-    let mut union: Option<Texture> = None;
-    let mut covered = 0.0;
-    #[allow(clippy::cast_precision_loss)]
-    let texel = radius * 2.0 / side as f64;
-    for &way in &ways {
-        let up = (Vec3::Y - way * Vec3::Y.dot(way)).normalize_or_else(|| Vec3::Z);
-        let mut picture = bake(
+/// Vertices round a solid head's rim ([`solid_head`]).
+pub const HEAD_SIDES: usize = 10;
+
+/// Texels a side of the pictures a solid head takes its colours from.
+const HEAD_SAMPLE: usize = 24;
+
+/// A head of flowers seen face on (a corymb, an umbel, a capitulum) drawn
+/// solid: a low dome over a shallow cone, of the head's own breadth, its
+/// top the colour the head shows from above and its underside the colour
+/// it shows from the side. Baked into a small picture seen from every
+/// side, a yarrow's corymb blurred to a white smudge close up, where the
+/// low cards are the nearest a weak machine draws (Joshi chose solid heads
+/// on 2026-10-30). Its breadth is the head's own, narrowed by the share of
+/// its disc its flowers fill from above, so a lacy umbel covers no more
+/// than its flowers do.
+fn solid_head(drawn: &Baked, templates: &Templates, sky: &Sky) -> Mesh {
+    let mut out = Mesh::default();
+    let cards = &drawn.cards;
+    let (mut centre, mut total) = (Vec3::ZERO, 0.0);
+    // Its flowers and bracts, as cards or drawn whole; not its stalks.
+    let parts: Vec<[Vec3; 3]> = [cards, &drawn.wood]
+        .into_iter()
+        .flat_map(|mesh| {
+            mesh.indices.chunks_exact(3).filter_map(move |tri| {
+                let corners = [0, 1, 2].map(|k| tri[k] as usize);
+                corners
+                    .iter()
+                    .all(|&i| bark_radius(mesh, i).is_none())
+                    .then(|| corners.map(|i| v3(mesh.positions[i])))
+            })
+        })
+        .collect();
+    for &[a, b, c] in &parts {
+        let n = (b - a).cross(c - a);
+        let area = n.length() * 0.5;
+        if area <= 0.0 {
+            continue;
+        }
+        centre = centre + (a + b + c) * (area / 3.0);
+        total += area;
+    }
+    if total <= 0.0 {
+        return out;
+    }
+    let centre = centre * (1.0 / total);
+    // Its axis runs from its stalks (its peduncle and rays) to its
+    // flowers: an umbel's rays and a corymb's branches meet below it. A
+    // yarrow's corymb with its rays is a cone as tall as it is broad, so
+    // neither the way it is thinnest nor the way its flowers face (each
+    // tilted round the head) holds it upright.
+    let wood = &drawn.wood;
+    let (mut stalks, mut weight) = (Vec3::ZERO, 0.0);
+    for tri in wood.indices.chunks_exact(3) {
+        let corners = [0, 1, 2].map(|k| tri[k] as usize);
+        if corners.iter().all(|&i| bark_radius(wood, i).is_some()) {
+            let [a, b, c] = corners.map(|i| v3(wood.positions[i]));
+            let area = (b - a).cross(c - a).length() * 0.5;
+            stalks = stalks + (a + b + c) * (area / 3.0);
+            weight += area;
+        }
+    }
+    let stalks = (weight > 0.0).then(|| stalks * (1.0 / weight));
+    let axis = stalks.map_or(Vec3::Y, |stalks| (centre - stalks).normalize_or(Vec3::Y));
+    let axis = if axis.y < 0.0 { -axis } else { axis };
+    let (mut heights, mut radii) = (Vec::new(), Vec::new());
+    for p in parts.iter().flatten() {
+        let d = *p - centre;
+        let h = d.dot(axis);
+        heights.push(h);
+        radii.push((d - axis * h).length());
+    }
+    let at = |values: &mut Vec<f64>, share: f64| {
+        values.sort_by(f64::total_cmp);
+        #[allow(
+            clippy::cast_precision_loss,
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss
+        )]
+        let i = ((values.len() - 1) as f64 * share).round() as usize;
+        values[i]
+    };
+    // Past a stray ray or petal tip.
+    let breadth = at(&mut radii, 0.9).max(1e-4);
+    let top = at(&mut heights, 0.95);
+    let bottom = at(&mut heights, 0.05);
+    // What it shows from above and from the side.
+    let across = any_perpendicular(axis);
+    let look = |way: Vec3, up: Vec3| {
+        bake(
             &Shot {
-                cards: &drawn.cards,
+                cards,
                 wood: &drawn.wood,
-                mid,
+                mid: centre,
                 right: up.cross(way),
                 up,
                 normal: way,
-                size: (radius * 2.0, radius * 2.0),
-                texels: (side, side),
+                size: (breadth * 2.0, breadth * 2.0),
+                texels: (HEAD_SAMPLE, HEAD_SAMPLE),
             },
             templates,
             sky,
-        );
-        keep_coverage(&mut picture);
-        fill_empty(&mut picture);
-        picture.turn = Turn::Views {
-            first,
-            count: ways.len(),
-        };
-        picture.pivot = mid.to_f32();
-        #[allow(clippy::cast_possible_truncation)]
-        {
-            picture.extent = [radius as f32; 3];
-        }
-        match &mut union {
-            Some(union) => {
-                for (to, from) in union.color.iter_mut().zip(&picture.color) {
-                    to[3] = to[3].max(from[3]);
-                }
-            }
-            None => union = Some(picture.clone()),
-        }
-        #[allow(clippy::cast_precision_loss)]
-        {
-            covered += picture.color.iter().filter(|c| c[3] >= 0.5).count() as f64 * texel * texel;
-        }
-        out.stats.texels += side * side;
-        out.stats.seen_texels += side * side;
-        out.pictures.push(picture);
-    }
-    let Some(outline) = union.as_ref().and_then(outline) else {
-        out.pictures.truncate(first);
-        return (0.0, 0.0);
+        )
     };
-    // Baked facing the first way; it turns as it is drawn.
-    let way = ways[0];
-    let up = (Vec3::Y - way * Vec3::Y.dot(way)).normalize_or_else(|| Vec3::Z);
-    let right = up.cross(way);
+    let mean = |picture: &Texture, keep: &dyn Fn(usize, usize) -> bool| {
+        let (mut sum, mut count, mut inside) = ([0.0_f64; 3], 0.0, 0.0);
+        for y in 0..picture.height {
+            for x in 0..picture.width {
+                if !keep(x, y) {
+                    continue;
+                }
+                inside += 1.0;
+                // Weighed by coverage: an umbel's flowers are each less
+                // than a texel.
+                let c = picture.color[y * picture.width + x];
+                let a = f64::from(c[3]);
+                for (s, v) in sum.iter_mut().zip(c) {
+                    *s += f64::from(v) * a;
+                }
+                count += a;
+            }
+        }
+        (
+            (count > 1e-6).then(|| sum.map(|s| s / count)),
+            count / f64::max(inside, 1.0),
+        )
+    };
     #[allow(clippy::cast_precision_loss)]
-    let index_alpha = first as f32;
-    let start = u32::try_from(out.cards.positions.len()).unwrap_or(u32::MAX);
-    for &(u, v) in &outline {
-        #[allow(clippy::cast_possible_truncation)]
-        out.cards.push(Vertex {
-            position: mid + right * ((u - 0.5) * radius * 2.0) + up * ((v - 0.5) * radius * 2.0),
-            normal: way,
-            uv: [u as f32, v as f32],
-            color: [1.0, 1.0, 1.0, index_alpha],
-            born: 0.0,
-            shed: None,
-            level: 3,
-            segment: mesh::NO_SEGMENT,
-        });
-    }
-    let n = u32::try_from(outline.len()).unwrap_or(0);
-    for i in 1..n.saturating_sub(1) {
-        out.cards
-            .indices
-            .extend_from_slice(&[start, start + i, start + i + 1]);
-    }
-    #[allow(clippy::cast_precision_loss)]
-    let views = ways.len() as f64;
-    (
-        covered / views,
-        polygon_area(&outline) * radius * radius * 4.0,
-    )
+    let half = HEAD_SAMPLE as f64 * 0.5;
+    let in_disc = |x: usize, y: usize| {
+        #[allow(clippy::cast_precision_loss)]
+        let (u, v) = (x as f64 + 0.5 - half, y as f64 + 0.5 - half);
+        u.hypot(v) <= half
+    };
+    let (top_colour, filled) = mean(&look(axis, across), &in_disc);
+    let Some(top_colour) = top_colour else {
+        return out;
+    };
+    // Seen from the side its rim shows its flowers, as the upper half of
+    // the side view does (rows run from the bottom), and its underside
+    // what it shows from below: a wild carrot's umbel drew as a dark
+    // sliver from the side while the plant shows a white band.
+    let (rim_colour, _) = mean(&look(across, axis), &|_, y| y >= HEAD_SAMPLE / 2);
+    let rim_colour = rim_colour.unwrap_or(top_colour);
+    let (under_colour, _) = mean(&look(-axis, across), &in_disc);
+    let under_colour = under_colour.unwrap_or(rim_colour);
+    let radius = breadth * filled.sqrt().clamp(0.35, 1.0);
+    let rim = top - (radius * 0.2).min((top - bottom) * 0.5);
+    // Its underside reaches down over its rays, at most as deep as it is
+    // broad: a yarrow's corymb is a cone of branches under its flowers.
+    let rays = stalks.map_or(bottom, |stalks| (stalks - centre).dot(axis));
+    let foot = bottom.min(rays).max(rim - radius);
+    let side = axis.cross(across);
+    let round = |i: usize| {
+        #[allow(clippy::cast_precision_loss)]
+        let a = std::f64::consts::TAU * i as f64 / HEAD_SIDES as f64;
+        across * crate::math::cos(a) + side * crate::math::sin(a)
+    };
+    // A fan from `tip` out to the rim `height` up the axis, its normals
+    // leaning out by `lean`, its colours `[tip, rim]`.
+    let mut fan =
+        |tip: Vec3, tip_normal: Vec3, height: f64, lean: f64, colours: [[f64; 3]; 2], up: bool| {
+            #[allow(clippy::cast_possible_truncation)]
+            let colours = colours.map(|c| [c[0] as f32, c[1] as f32, c[2] as f32, 1.0]);
+            let vertex = |position: Vec3, normal: Vec3, color: [f32; 4]| Vertex {
+                position,
+                normal,
+                uv: [0.0, 0.0],
+                color,
+                born: 0.0,
+                shed: None,
+                level: 3,
+                segment: mesh::NO_SEGMENT,
+            };
+            let first = out.push(vertex(tip, tip_normal, colours[0]));
+            for i in 0..HEAD_SIDES {
+                let out_way = round(i);
+                out.push(vertex(
+                    centre + axis * height + out_way * radius,
+                    (tip_normal + out_way * lean).normalize_or(tip_normal),
+                    colours[1],
+                ));
+            }
+            #[allow(clippy::cast_possible_truncation)]
+            let n = HEAD_SIDES as u32;
+            for i in 0..n {
+                let (a, b) = (first + 1 + i, first + 1 + (i + 1) % n);
+                out.indices
+                    .extend_from_slice(&if up { [first, a, b] } else { [first, b, a] });
+            }
+        };
+    fan(
+        centre + axis * top,
+        axis,
+        rim,
+        0.5,
+        [top_colour, rim_colour],
+        true,
+    );
+    fan(
+        centre + axis * foot,
+        -axis,
+        rim,
+        1.5,
+        [under_colour, rim_colour],
+        false,
+    );
+    out
 }
 
 /// Where a turned card's pictures lie ([`add_heights`]): about `centre`,

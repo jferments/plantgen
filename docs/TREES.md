@@ -32,7 +32,10 @@ A broadleaf tree is grown one year at a time, after Pałubicki et al.
   Only some of its buds grow long shoots (at the tip, as in oaks, or at
   the base, as in shrubs); the next ones grow short shoots that leaf out
   each year while they have light; the rest stay dormant and may sprout
-  later where light reaches them.
+  later where light reaches them. An epicormic tree's (oaks', willows')
+  dormant buds wait to be released: they sprout only when their light
+  rises above the least they have stood in, as when a limb above is shed,
+  so a young open-grown oak keeps a clean bole and heavy scaffolds.
 - **Shade kills.** Buds below `shade_death` die, a branch with no living
   bud is shed, and the lower stem clears itself.
 - **Wood carries load.** Branches thicken by the pipe model, bend under
@@ -98,7 +101,7 @@ trait has one rule in a rank file that sets the program's parameters:
 | "excurrent / decurrent", "trunk dividing low" | `leader`, `trunk_fork_stems` | a lasting leader, or a fork into scaffold limbs and sub-crowns |
 | "branchlets without a terminal bud" | `terminal_bud` | the tip dies each year and the top lateral bud carries the shoot on, so twigs zigzag |
 | "flat sprays" | `branch_orientation` | shoots on limbs grow level with leaves to either side |
-| self-pruning, epicormic sprouts | `self_pruning`, `epicormic` | shedding of starved limbs, dormant buds that sprout in light |
+| self-pruning, epicormic sprouts | `self_pruning`, `epicormic` | shedding of starved limbs, dormant buds that sprout in light (epicormic: when released) |
 | shade tolerance | `shade_tolerance` | how far down the crown keeps leaves |
 
 `plantc spec SPECIES` shows which file set each value, and `plantc rules`
