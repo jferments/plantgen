@@ -2,8 +2,9 @@
   "schema": 1,
   "rank": "genus",
   "name": "Salix",
-  "traits": {"epicormic": true, "perianth": "absent"},
+  "traits": {"epicormic": true, "perianth": "absent", "terminal_bud": false},
   "evidence": {
+    "traits.terminal_bud": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, 'Willow' (read 2026-10-30): 'All the buds are lateral; no absolutely terminal bud is ever formed.' A willow's shoot goes on each year from its uppermost lateral bud, so its axes are sympodial."},
     "traits.perianth": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 257: Salix and Populus are the extreme of the family's floral reduction, their flowers in catkins with no perianth (nectar glands in its place in Salix)."},
     "traits.epicormic": {
       "evidence": "SourceInferred",

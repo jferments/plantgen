@@ -122,7 +122,7 @@
     "trunk_fork_stems": 2,
     "leaf_habit": "deciduous",
     "leaf_colour_autumn": [140, 100, 55],
-    "crown_form": "spreading",
+    "crown_form": "rounded",
     "height_max_m": {
       "min": 15,
       "max": 20
@@ -163,7 +163,7 @@
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"The leaves are deciduous\"."},
     "traits.leaf_colour_autumn": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Quercus garryana (read 2026-10-18): \"Its fall color is unspectacular, with many trees turning plain brown\". Colour ours."},
     "appearance.twig": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Sargent's Manual (2nd ed. 1922, read at the Internet Archive, 2026-10-17), as Quercus Garryana: \"stout branchlets coated at first with thick pale rufous pubescence, pubescent or tomentose and light or dark orange color during their first winter, becoming glabrous and rather bright reddish brown in their second year and ultimately gray\". Colour chosen by eye between the pubescent orange and the reddish brown."},
-    "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Open-grown trees in iNaturalist research-grade photographs (observations 28744863, 28832264, 83148498) spread wider than tall on a few big limbs that rise from a short trunk and arch outward."},
+    "traits.crown_form": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "Abrams vol. 1 (1923), as Quercus garryana: 'stout spreading branches forming a broad rounded compact head'; Silvics of North America vol. 2 (1990, Stein): open-grown trees' very large, crooked branches 'form dense, rounded crowns'; Sargent (p. 296): 'a broad compact head'. How much wider than tall it is, is crown_spread's. Was spreading until 2026-10-30, from iNaturalist photographs (observations 28744863, 28832264, 83148498) of trees wider than tall: its limbs arched level past about 7 m of wood and the crown grew in flat leafy shelves, where the photographs show a dome on limbs that rise before they arch out (plantgen-claude project-files/tree-shape/oak-limbs-2026-10-29/LIMBS.md)."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
