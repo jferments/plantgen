@@ -1391,4 +1391,12 @@ pub mod venation;
 /// as bright as the plant, a pincushion's 1.6). A cut leaf's midrib is
 /// drawn on the cards as a thin line along its blade, in its colour (a
 /// yarrow's, a carrot's and a fennel's leaves baked to scattered dots).
-pub const GENERATOR_REVISION: u32 = 179;
+///
+/// 180: a compound umbel whose taxa leave the umbellet size unset packs
+/// its umbellets edge to edge across the umbel's top, from its ray count,
+/// ray spread and the umbellets' own spread (`Cluster::packed_umbellet`);
+/// six carrot-family species drop their hand-typed umbellet sizes for it
+/// (a poison hemlock's umbel had drawn as separate small tufts). Six
+/// forbs state their flowering side branches from floras (Abrams;
+/// Britton and Brown 1913).
+pub const GENERATOR_REVISION: u32 = 180;
