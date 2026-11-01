@@ -128,6 +128,7 @@ fn run() -> Result<(), Failure> {
         "measure" => measure_command(&args),
         "measure-mask" => measure_mask_command(&args),
         "mechanics" => mechanics_command(&args),
+        "breakage" => breakage_command(&args),
         "validate" => validate_command(&args),
         "ground" => ground_command(&args),
         "bark" => bark_command(&args),
@@ -260,6 +261,16 @@ Usage:
                 [--view side|eye|three-quarter|oblique|top|under] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
+  plantc breakage <species|spec.json> [--env ENV] [--seed N] [--years N]
+                  [--foliage-cd CD] [--vogel B] [--z0 M] [--rows N]
+      Grow a species to its oldest keyframe, or N years, and print where
+      it breaks in a steady wind (plant motion S5): its wood's strength
+      (stated, or estimated from its density by the Wood Handbook's
+      functions), the wind at 10 m that snaps its stem and where, the wind
+      that turns it over on its roots, and its N weakest break sites with
+      the piece each drops. --foliage-cd and --vogel set the foliage's drag
+      coefficient at 10 m/s and how it streamlines (defaults 0.1, -0.7),
+      --z0 the ground's roughness (default 0.03 m).
   plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]
                    [--bones N] [--piece M] [--frequencies fast|exact]
                    [--modulus MPA] [--moisture SHARE]
@@ -1654,6 +1665,171 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+/// `plantc breakage`: where a grown plant breaks in wind (plant motion S5).
+#[allow(clippy::too_many_lines)]
+fn breakage_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::breakage::{self, Drag};
+    use plantgen::motion::{self, Motion};
+    let options = Options::parse(
+        args,
+        &["env", "seed", "years", "foliage-cd", "vogel", "z0", "rows"],
+    )?;
+    let [id] = options.positional.as_slice() else {
+        return Err("`plantc breakage` takes one species".into());
+    };
+    let spec = load_spec(id)?;
+    let traits = library()
+        .traits_of(&spec.id)
+        .map_err(|error| error.to_string())?;
+    let motion = Motion::of(&traits);
+    let environment = options.environment(&spec)?;
+    let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+    let years = options.number("years")?.unwrap_or(spec.growth.years);
+    let growth = grow_variant(&spec, None, environment, seed, vec![years], years)?;
+    let Some(graph) = growth.keyframes.last() else {
+        return Err(format!("{} grew nothing", spec.id).into());
+    };
+    let defaults = Drag::default();
+    let drag = Drag {
+        foliage: options.number("foliage-cd")?.unwrap_or(defaults.foliage),
+        vogel: options.number("vogel")?.unwrap_or(defaults.vogel),
+        z0: options.number("z0")?.unwrap_or(defaults.z0),
+        ..defaults
+    };
+    let found = motion.of_graph(graph, &growth.organ_types);
+    let material = &found.material;
+    let record = motion::record(&found, &motion, graph, &growth.organ_types);
+    let started = Instant::now();
+    let broken = breakage::breakage(&found, record.anchorage.moment, &drag);
+    let took = started.elapsed();
+    let said = |key: &str| {
+        if motion.estimated.contains(&key) {
+            " (estimated from density)"
+        } else if motion.assumed.contains(&key) {
+            " (assumed)"
+        } else {
+            " (stated)"
+        }
+    };
+    out!(
+        "{} ({}), seed {seed}, {:.0} years, {:.1} m, {:.0} kg",
+        spec.taxon.name(),
+        spec.id,
+        graph.age,
+        graph.height,
+        found.mass()
+    );
+    out!(
+        "wood {:.0} kg/m3 basic{}; rupture {:.1} MPa{}; modulus {:.0} MPa{} along the grain",
+        material.wood_density / (1.0 + traits_moisture(&traits)),
+        said("wood_density_basic_kg_m3"),
+        material.rupture.unwrap_or(0.0) / 1.0e6,
+        said("wood_rupture_green_mpa"),
+        material.modulus / 1.0e6,
+        said("wood_modulus_green_mpa"),
+    );
+    let leaf_area: f64 = found.beams.leaf_area.iter().sum();
+    let wood_area: f64 = (0..found.beams.len())
+        .map(|b| (found.beams.radius[b][0] + found.beams.radius[b][1]) * found.beams.length[b])
+        .sum();
+    out!(
+        "{leaf_area:.0} m2 of leaves (one side), {wood_area:.0} m2 of wood seen side on; \
+         leaves {:.2} kg/m2{}",
+        material.leaf_mass.unwrap_or(0.0),
+        said("leaf_mass_fresh_kg_m2")
+    );
+    out!(
+        "drag: wood Cd {}, foliage Cd {} at {} m/s with Vogel exponent {} (assumed), z0 {} m",
+        drag.wood,
+        drag.foliage,
+        drag.reference,
+        drag.vogel,
+        drag.z0
+    );
+    let wind = |w: Option<f64>| {
+        w.map_or_else(
+            || format!("> {:.0} m/s", breakage::FASTEST),
+            |w| format!("{w:.1} m/s"),
+        )
+    };
+    let failure = &broken.failure;
+    let snap_height = failure
+        .snap_bone
+        .and_then(|bone| {
+            broken.sites[bone as usize]
+                .iter()
+                .find(|site| (site.along - failure.snap_along).abs() < 1.0e-12)
+        })
+        .map_or(0.0, |site| site.point[1]);
+    out!(
+        "stem snaps at {} (10 m wind), {:.1} m up; roots turn over at {} \
+         (anchorage {:.0} kN m, assumed); fails first by {}",
+        wind(failure.snap),
+        snap_height,
+        wind(failure.overturn),
+        record.anchorage.moment / 1000.0,
+        failure.first
+    );
+    let all: Vec<(usize, &breakage::Site)> = broken
+        .sites
+        .iter()
+        .enumerate()
+        .flat_map(|(bone, sites)| sites.iter().map(move |site| (bone, site)))
+        .collect();
+    let inside = all.iter().filter(|(_, site)| site.along > 0.0).count();
+    out!(
+        "{} bones, {} break sites ({} along a bone, not at its foot); found in {:.1} ms",
+        found.bones.len(),
+        all.len(),
+        inside,
+        took.as_secs_f64() * 1000.0
+    );
+    let rows = options.number::<usize>("rows")?.unwrap_or(12);
+    let mut order = all.clone();
+    order.sort_by(|a, b| {
+        let key = |s: &breakage::Site| s.wind.unwrap_or(f64::INFINITY);
+        key(a.1).total_cmp(&key(b.1)).then(a.0.cmp(&b.0))
+    });
+    out!(
+        "{:>5} {:>5} {:>6} {:>7} {:>8} {:>10} {:>9} {:>6}",
+        "bone",
+        "depth",
+        "along",
+        "cm",
+        "height",
+        "wind m/s",
+        "piece kg",
+        "bones"
+    );
+    for (bone, site) in order.iter().take(rows) {
+        out!(
+            "{:>5} {:>5} {:>6.2} {:>7.1} {:>8.2} {:>10} {:>9.2} {:>6}",
+            bone,
+            found.bones[*bone].depth,
+            site.along,
+            site.radius * 200.0,
+            site.point[1],
+            site.wind
+                .map_or_else(|| "-".to_string(), |w| format!("{w:.1}")),
+            site.piece.mass,
+            site.piece.bones.len()
+        );
+    }
+    Ok(())
+}
+
+/// A species' green moisture share, as stated or the motion stand-in.
+fn traits_moisture(traits: &serde_json::Map<String, serde_json::Value>) -> f64 {
+    traits
+        .get("wood_moisture_green_share")
+        .and_then(plantgen::checks::Stated::of)
+        .map_or(0.8, |stated| {
+            stated
+                .typical
+                .unwrap_or(f64::midpoint(stated.min, stated.max))
+        })
+}
+
 /// `plantc mechanics`: a grown plant as beams and bones (plant motion S1).
 #[allow(clippy::too_many_lines)]
 fn mechanics_command(args: &[String]) -> Result<(), Failure> {
@@ -1783,6 +1959,7 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
     let motion = plantgen::motion::Motion {
         material,
         assumed: Vec::new(),
+        estimated: Vec::new(),
         settings,
     };
     let started = Instant::now();
