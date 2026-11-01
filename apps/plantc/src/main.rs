@@ -202,6 +202,7 @@ Usage:
                 [--size PIXELS] [--quality draft|standard]
                 [--focus X,Y,Z [--span METRES]] [--parts on]
                 [--conditions FILE|JSON [--from-age N]]
+                [--break snap|WIND|bone:N [--fallen off]]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
@@ -217,7 +218,11 @@ Usage:
       draws every flower, fruit, cone and needle shoot as its part mesh,
       as WorldLab does near the camera; with --focus, only those within
       four spans (at least 1 m) of the focus, the rest as cards. --conditions grows it in a place
-      as plantc grow does (the place itself is not drawn).
+      as plantc grow does (the place itself is not drawn). --break
+      draws it broken where plantc breakage finds it fails: snap at its
+      stem's weakest section, WIND at every site a steady wind of WIND m/s
+      at 10 m breaks, bone:N at bone N's weakest site; torn stubs stay on
+      it and the pieces lie on the ground, unless --fallen off.
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
       print each one's size at the end and where its leaves lean. The
@@ -264,14 +269,14 @@ Usage:
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
   plantc breakage <species|spec.json> [--env ENV] [--seed N] [--years N]
-                  [--foliage-cd CD] [--vogel B] [--z0 M] [--rows N]
+                  [--crown C,N] [--z0 M] [--rows N]
       Grow a species to its oldest keyframe, or N years, and print where
       it breaks in a steady wind (plant motion S5): its wood's strength
       (stated, or estimated from its density by the Wood Handbook's
       functions), the wind at 10 m that snaps its stem and where, the wind
       that turns it over on its roots, and its N weakest break sites with
-      the piece each drops. --foliage-cd and --vogel set the foliage's drag
-      coefficient at 10 m/s and how it streamlines (defaults 0.1, -0.7),
+      the piece each drops. --crown sets the crown's drag, Cd = C u^-N on
+      its silhouette (default as the species states, else 2.34,0.88),
       --z0 the ground's roughness (default 0.03 m).
   plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]
                    [--bones N] [--piece M] [--frequencies fast|exact]
@@ -1687,10 +1692,7 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
 fn breakage_command(args: &[String]) -> Result<(), Failure> {
     use plantgen::breakage::{self, Drag};
     use plantgen::motion::{self, Motion};
-    let options = Options::parse(
-        args,
-        &["env", "seed", "years", "foliage-cd", "vogel", "z0", "rows"],
-    )?;
+    let options = Options::parse(args, &["env", "seed", "years", "crown", "z0", "rows"])?;
     let [id] = options.positional.as_slice() else {
         return Err("`plantc breakage` takes one species".into());
     };
@@ -1698,7 +1700,7 @@ fn breakage_command(args: &[String]) -> Result<(), Failure> {
     let traits = library()
         .traits_of(&spec.id)
         .map_err(|error| error.to_string())?;
-    let motion = Motion::of(&traits);
+    let motion = Motion::of(&traits).with_flare(&spec.appearance);
     let environment = options.environment(&spec)?;
     let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
     let years = options.number("years")?.unwrap_or(spec.growth.years);
@@ -1706,18 +1708,27 @@ fn breakage_command(args: &[String]) -> Result<(), Failure> {
     let Some(graph) = growth.keyframes.last() else {
         return Err(format!("{} grew nothing", spec.id).into());
     };
-    let defaults = Drag::default();
-    let drag = Drag {
-        foliage: options.number("foliage-cd")?.unwrap_or(defaults.foliage),
-        vogel: options.number("vogel")?.unwrap_or(defaults.vogel),
-        z0: options.number("z0")?.unwrap_or(defaults.z0),
-        ..defaults
+    let mut drag = Drag {
+        z0: options.number("z0")?.unwrap_or(motion.drag.z0),
+        ..motion.drag
     };
+    if let Some(text) = options.flags.get("crown") {
+        let numbers: Vec<f64> = text
+            .split(',')
+            .map(|part| part.trim().parse::<f64>())
+            .collect::<Result<_, _>>()
+            .map_err(|_| format!("`--crown` expects C,N, found `{text}`"))?;
+        let [at_rest, streamlining] = numbers[..] else {
+            return Err(format!("`--crown` expects C,N, found `{text}`").into());
+        };
+        drag.crown.at_rest = at_rest;
+        drag.crown.streamlining = streamlining;
+    }
     let found = motion.of_graph(graph, &growth.organ_types);
     let material = &found.material;
     let record = motion::record(&found, &motion, graph, &growth.organ_types);
     let started = Instant::now();
-    let broken = breakage::breakage(&found, record.anchorage.moment, &drag);
+    let broken = breakage::breakage(&found, record.anchorage.moment, &drag, motion.flare);
     let took = started.elapsed();
     let said = |key: &str| {
         if motion.estimated.contains(&key) {
@@ -1746,21 +1757,38 @@ fn breakage_command(args: &[String]) -> Result<(), Failure> {
         said("wood_modulus_green_mpa"),
     );
     let leaf_area: f64 = found.beams.leaf_area.iter().sum();
-    let wood_area: f64 = (0..found.beams.len())
-        .map(|b| (found.beams.radius[b][0] + found.beams.radius[b][1]) * found.beams.length[b])
-        .sum();
+    let exposure = drag.exposure(&found.beams);
     out!(
-        "{leaf_area:.0} m2 of leaves (one side), {wood_area:.0} m2 of wood seen side on; \
-         leaves {:.2} kg/m2{}",
+        "{leaf_area:.0} m2 of leaves (one side), {:.2} kg/m2{}; crown {:.1} to {:.1} m up, \
+         {:.1} to {:.1} m wide, silhouette {:.0} to {:.0} m2",
         material.leaf_mass.unwrap_or(0.0),
-        said("leaf_mass_fresh_kg_m2")
+        said("leaf_mass_fresh_kg_m2"),
+        exposure.base,
+        exposure.top,
+        exposure.width.iter().copied().fold(f64::INFINITY, f64::min),
+        exposure.width.iter().copied().fold(0.0, f64::max),
+        exposure
+            .silhouette
+            .iter()
+            .copied()
+            .fold(f64::INFINITY, f64::min),
+        exposure.silhouette.iter().copied().fold(0.0, f64::max),
     );
     out!(
-        "drag: wood Cd {}, foliage Cd {} at {} m/s with Vogel exponent {} (assumed), z0 {} m",
+        "drag: crown Cd {} u^-{} on its silhouette, u held to 10..{} m/s{} (Cd {:.2} at 10 m/s, \
+         {:.2} at {}); wood below the crown Cd {}; z0 {} m",
+        drag.crown.at_rest,
+        drag.crown.streamlining,
+        drag.crown.tested_to,
+        if options.flags.contains_key("crown") {
+            " (given)"
+        } else {
+            said("crown_drag")
+        },
+        drag.crown.coefficient(10.0),
+        drag.crown.coefficient(drag.crown.tested_to),
+        drag.crown.tested_to,
         drag.wood,
-        drag.foliage,
-        drag.reference,
-        drag.vogel,
         drag.z0
     );
     let wind = |w: Option<f64>| {
@@ -1780,11 +1808,13 @@ fn breakage_command(args: &[String]) -> Result<(), Failure> {
         .map_or(0.0, |site| site.point[1]);
     out!(
         "stem snaps at {} (10 m wind), {:.1} m up; roots turn over at {} \
-         (anchorage {:.0} kN m, assumed); fails first by {}",
+         (anchorage {:.0} kN m, {:.0} N m per kg of stem{}); fails first by {}",
         wind(failure.snap),
         snap_height,
         wind(failure.overturn),
         record.anchorage.moment / 1000.0,
+        motion.anchorage,
+        said("anchorage"),
         failure.first
     );
     let all: Vec<(usize, &breakage::Site)> = broken
@@ -1978,6 +2008,9 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
         assumed: Vec::new(),
         estimated: Vec::new(),
         settings,
+        anchorage: plantgen::motion::ANCHORAGE_PER_KG,
+        drag: plantgen::breakage::Drag::default(),
+        flare: None,
     };
     let started = Instant::now();
     let record = plantgen::motion::record(&found, &motion, graph, &growth.organ_types);
@@ -2650,6 +2683,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "parts",
             "conditions",
             "from-age",
+            "break",
+            "fallen",
         ],
     )?;
     let day = options.day()?;
@@ -2676,6 +2711,15 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     if parted && level != 0 {
         return Err("`--parts` draws the nearest level: use it with `--lod 0`".into());
     }
+    let breaking = options.flags.get("break").cloned();
+    if parted && breaking.is_some() {
+        return Err("`--break` draws without `--parts`".into());
+    }
+    let fallen = match options.flags.get("fallen").map(String::as_str) {
+        None | Some("on") => true,
+        Some("off") => false,
+        Some(other) => return Err(format!("`--fallen` must be on or off, found `{other}`").into()),
+    };
     let quality = options.quality()?;
     let lod = quality.lods.get(level).ok_or("`--lod` must be 0 to 3")?;
     let size: usize = options.number("size")?.unwrap_or(900);
@@ -2749,6 +2793,18 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             .map(|point| (point, (span * 4.0).max(1.0)));
         plantgen::parts::place_near(&mut plant, &looks, &parts, near);
         plant
+    } else if let Some(how) = &breaking {
+        broken_mesh(
+            &spec,
+            graph,
+            &growth.organ_types,
+            how,
+            fallen,
+            &looks,
+            &bodies,
+            &lod.for_height(graph.height),
+            level,
+        )?
     } else {
         mesh::build(
             graph,
@@ -2847,6 +2903,133 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         }
     );
     Ok(())
+}
+
+/// `plantc render --break HOW`: the plant broken where its break sites
+/// say (plant motion S5): `snap` at its stem's weakest section, a wind
+/// speed (m/s at 10 m) at every site that wind breaks, or `bone:N` at
+/// bone N's weakest site. Its torn stubs drawn on it, and unless `fallen`
+/// is off the pieces lying on the ground with their torn ends.
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
+fn broken_mesh(
+    spec: &PlantSpec,
+    graph: &PlantGraph,
+    types: &[OrganType],
+    how: &str,
+    fallen: bool,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    lod: &mesh::LodSpec,
+    level: usize,
+) -> Result<PlantMesh, Failure> {
+    use plantgen::damage::{self, Break, Grain, Toughness};
+    let traits = library()
+        .traits_of(&spec.id)
+        .map_err(|error| error.to_string())?;
+    let motion = plantgen::motion::Motion::of(&traits).with_flare(&spec.appearance);
+    let found = motion.of_graph(graph, types);
+    let record = plantgen::motion::record(&found, &motion, graph, types);
+    let broken =
+        plantgen::breakage::breakage(&found, record.anchorage.moment, &motion.drag, motion.flare);
+    let at = |site: &plantgen::breakage::Site| Break {
+        segment: found.beams.segment[site.beam as usize],
+        toward: Vec3::new(site.direction[0], site.direction[1], site.direction[2]),
+    };
+    let breaks: Vec<Break> = if how == "snap" {
+        let failure = &broken.failure;
+        let bone = failure
+            .snap_bone
+            .ok_or("no wind up to the fastest searched snaps its stem")?;
+        broken.sites[bone as usize]
+            .iter()
+            .filter(|site| (site.along - failure.snap_along).abs() < 1.0e-12)
+            .map(at)
+            .collect()
+    } else if let Some(bone) = how.strip_prefix("bone:") {
+        let bone: usize = bone
+            .parse()
+            .map_err(|_| format!("`--break bone:N` takes a bone number, found `{bone}`"))?;
+        let sites = broken
+            .sites
+            .get(bone)
+            .ok_or_else(|| format!("there is no bone {bone}"))?;
+        sites.last().map(at).into_iter().collect()
+    } else {
+        let wind: f64 = how.parse().map_err(|_| {
+            format!("`--break` takes snap, bone:N or a wind speed in m/s, found `{how}`")
+        })?;
+        // One wind for the scene: the way it blew to break the first.
+        let chosen: Vec<&plantgen::breakage::Site> = broken
+            .sites
+            .iter()
+            .flatten()
+            .filter(|site| site.wind.is_some_and(|at| at <= wind))
+            .collect();
+        let first = chosen.iter().min_by(|a, b| {
+            a.wind
+                .partial_cmp(&b.wind)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+        let toward = first.map_or(Vec3::X, |site| {
+            Vec3::new(site.direction[0], site.direction[1], site.direction[2])
+        });
+        chosen
+            .into_iter()
+            .map(|site| Break { toward, ..at(site) })
+            .collect()
+    };
+    let damaged = damage::apply(graph, &breaks);
+    let toughness = Toughness::of_traits(&traits);
+    let grain = Grain {
+        sapwood: Grain::SAPWOOD,
+        heartwood: None,
+        bark: spec.appearance.bark,
+    };
+    let mut plant = mesh::build(
+        &damaged.standing,
+        looks,
+        bodies,
+        &spec.appearance,
+        lod,
+        level,
+    );
+    for stub in &damaged.stubs {
+        damage::append(
+            &mut plant.wood,
+            &damage::fracture(stub, toughness, &grain, lod.ring_edge),
+        );
+        out!(
+            "broken at {:.2},{:.2},{:.2} m, {:.0} cm across",
+            stub.point.x,
+            stub.point.y,
+            stub.point.z,
+            stub.radius * 200.0
+        );
+    }
+    if fallen {
+        let lying = plantgen::spec::Appearance {
+            flare: None,
+            bottle: None,
+            ..spec.appearance.clone()
+        };
+        for piece in &damaged.pieces {
+            let more = mesh::build(&piece.graph, looks, bodies, &lying, lod, level);
+            damage::append(&mut plant.wood, &more.wood);
+            plant.cards.extend(more.cards);
+            plant.tufts.extend(more.tufts);
+            damage::append(
+                &mut plant.wood,
+                &damage::fracture(&piece.end, toughness, &grain, lod.ring_edge),
+            );
+        }
+    }
+    out!(
+        "{} breaks, {} pieces fallen{}",
+        damaged.stubs.len(),
+        damaged.pieces.len(),
+        if fallen { "" } else { " (not drawn)" }
+    );
+    Ok(plant)
 }
 
 /// A guest's mesh drawn on its host's: the host's wood and cards, then the

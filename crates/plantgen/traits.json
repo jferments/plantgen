@@ -1462,6 +1462,46 @@
       "when": {"woodiness": ["woody", "semi"]},
       "why": "the Wood Handbook's two classes of wood: softwood from gymnosperms, without vessels, and hardwood from angiosperms, with them; each has its own functions from density to strength and stiffness"
     },
+    "anchorage_per_stem_kg": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "N m/kg",
+      "range": [20, 400],
+      "optional": true,
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "how firmly a tree is rooted: the turning moment at its stem's foot that pulls it over, per kg of its stem's green weight (ForestGALES's C_reg, a straight-line fit through zero to tree-pulling tests)"
+    },
+    "crown_drag_at_rest": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0.5, 10],
+      "optional": true,
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "C in a crown's drag coefficient on its silhouette at rest, Cd = C u^-N (u in m/s), fitted to whole trees in a wind tunnel: how hard the wind pushes a crown before it streamlines"
+    },
+    "crown_drag_streamlining": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "ratio",
+      "range": [0, 1.5],
+      "optional": true,
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "N in Cd = C u^-N: how fast a crown's drag coefficient falls as its leaves and twigs fold and stream back in stronger wind"
+    },
+    "crown_drag_tested_to_ms": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m/s",
+      "range": [10, 60],
+      "optional": true,
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "the fastest wind the crown drag fit was measured at; above it the coefficient is held, not extrapolated"
+    },
     "wood_rupture_green_mpa": {
       "group": "stem_and_bark",
       "organ": "stem",

@@ -3,6 +3,7 @@
   "rank": "genus",
   "name": "Pseudotsuga",
   "traits": {
+    "anchorage_per_stem_kg": 153, "crown_drag_at_rest": 2.4, "crown_drag_streamlining": 0.7, "crown_drag_tested_to_ms": 25,
     "leaf_life_years": {"min": 6, "max": 8},
     "cone_maturation_years": 1,
     "cone_posture": "pendent"
@@ -48,6 +49,10 @@
     }
   },
   "evidence": {
+    "traits.anchorage_per_stem_kg": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for Douglas-fir: C_reg 153 N m per kg of green stem, the mean over its four soil groups and three rooting depths, from tree-pulling tests (Nicoll et al. 2006 and others, listed in the Critical Resistive Moments vignette). A species with its own pulling tests states its own."},
+    "traits.crown_drag_at_rest": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for Douglas-fir: crown drag coefficient on the silhouette Cd = C u^-N with C 2.4, N 0.7, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_streamlining": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for Douglas-fir: crown drag coefficient on the silhouette Cd = C u^-N with C 2.4, N 0.7, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_tested_to_ms": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for Douglas-fir: crown drag coefficient on the silhouette Cd = C u^-N with C 2.4, N 0.7, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
     "appearance.bark_look.thickness": {"evidence": "SourceInferred", "source": "ffe-fvs-guide", "note": "The genus's bark thickness as its reference species', pseudotsuga-menziesii (plantgen-claude project-files/bark/records/pseudotsuga-menziesii.json): text: FOFEM 0.063; checks FEIS 2.5 cm at 30 cm, 6 cm at 60 cm"},
     "appearance.bark_look.stages.young": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "The genus's young stage as its reference species, pseudotsuga-menziesii, shows it (plantgen-claude project-files/bark/records/pseudotsuga-menziesii.json): until_diameter_m: text: Sudworth 'little broken ... until 12 to 14 inches'; mottle: text: 'often chalky in patches' (Sudworth); size inferred; blisters: text: 'numerous resin blisters' (FEIS); size and density inferred (photo)"},
     "appearance.bark_look.stages.mature": {"evidence": "SourceInferred", "source": "sudworth-1908", "note": "The genus's mature stage as its reference species, pseudotsuga-menziesii, shows it (plantgen-claude project-files/bark/records/pseudotsuga-menziesii.json): fissures.network: text: 'great ridges, which are connected at intervals by narrower cross ridges' (Sudworth); fissures.width_share: word: 'deep, wide furrows' (Sudworth); fissures.depth_share: word: 'deeply-furrowed' (FEIS); fissures.spacing_m: inferred (photo)"},
