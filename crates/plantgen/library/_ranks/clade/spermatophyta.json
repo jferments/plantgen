@@ -56,6 +56,12 @@
       },
       "why": "Where a taxon's old limbs and trunk sprout, buds that did not grow stay dormant under the bark and grow a new shoot where light comes back to them (delayed reiteration)."
     },
+    "generator.params.sprout_rise": {
+      "map": {
+        "epicormic": {"true": 0.1, "false": 0}
+      },
+      "why": "An epicormic bud sprouts when it is released, when the light it stands in rises, as when a limb above it is shed or a neighbour falls, not as soon as it is lit: so a young open-grown tree's dormant buds wait, and its bole and scaffolds stay clean."
+    },
     "generator.params.shed_ratio": {
       "map": {
         "self_pruning": {"true": 0.05, "false": 0}
@@ -220,6 +226,11 @@
       "evidence": "SourceInferred",
       "source": "meier-2012-epicormic",
       "note": "Meier, Saunders and Michler (2012, read in full): epicormic shoots grow from buds that stay dormant on the stem, single or in clusters, released when the light or the tree's state changes. The program keeps one dormant bud a node where the taxon is epicormic."
+    },
+    "rules.generator.params.sprout_rise": {
+      "evidence": "SourceInferred",
+      "source": "meier-2012-epicormic",
+      "note": "Meier, Saunders and Michler (2012, read in full): epicormic buds are 'released' to sprout when the light or the tree's state changes, as after thinning or the loss of a limb. The rise that counts as a release, 0.1 of full light over the least the bud has stood in, is the model's choice: the Oregon white oak looked alike from 0.05 to 0.2 (trials 2026-10-30)."
     },
     "rules.generator.params.shed_ratio": {
       "evidence": "Authored",

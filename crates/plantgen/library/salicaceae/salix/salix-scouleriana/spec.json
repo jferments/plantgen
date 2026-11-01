@@ -10,23 +10,6 @@
     "plant_name_id": 2920474
   },
   "growth_form": "decurrent_tree",
-  "generator": {
-    "params": {
-      "crown_rate": 0.07,
-      "space_density": 12,
-      "internode": 0.2,
-      "max_shoot": 4,
-      "branch_angle": 40,
-      "apical_young": 0.62,
-      "apical": 0.52,
-      "spur_pairs": 2,
-      "leaf_angle": 45,
-      "lean": 10,
-      "wiggle": 7,
-      "droop": 0.025,
-      "path_half": 4.25
-    }
-  },
   "growth": {
     "years": 25,
     "step": 1,
@@ -231,11 +214,6 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as the FEIS review read gives no months."
-    },
-    "generator.params": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Pacific willow's values, changed by hand for Scouler's willow: a smaller, multistemmed tree-shrub with slender stems from a low fork (FEIS, Anderson 2001: \"may be multistemmed\", \"slender stems and branches\"), and leaves obovate to oblanceolate. path_half fitted so it grows to its reference height. Not fitted to measurements. Its crown's width is the broadleaf trees' rule from the measured width over height of open-grown trees of its lineage (crown_spread, USDA Urban Tree Database) since 2026-10-23, in place of a hand-set crown_radius. Its crown's base is the broadleaf trees' rule from the measured share of the tree's height below its crown (crown_base_share, USDA Urban Tree Database), and its stem divides only where its flora or photographs say its leader is lost or that it stands on several stems, since 2026-10-24, in place of hand-set crown_base and fork values."
     },
     "allometry": {
       "evidence": "Authored",

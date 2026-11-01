@@ -1350,8 +1350,18 @@ pub mod venation;
 /// and its petiole takes the leaf's accent colour, not the twig's: a
 /// broadleaf crown's edge no longer bristles with bare orange shoot tips,
 /// read as needles in close-ups (Oregon white oak, 2026-10-29).
+/// 178: an epicormic broadleaf tree's dormant buds sprout only when
+/// released, once their light rises `sprout_rise` above the least they
+/// have stood in (Meier, Saunders and Michler 2012; broadleaf 31), not
+/// whenever lit: an
+/// open-grown Oregon white oak stands on a clean bole with two heavy
+/// scaffolds, not a whorl of thin level branches round its fork. Willows
+/// have no terminal bud (Salix `terminal_bud` false), so their shoots go
+/// on from their top lateral bud, and their hand-set growth values give
+/// way to the broadleaf rules, so they keep full crowns without the
+/// sprouts.
 ///
-/// 178: card tiers keep the plant's tone and look. A flowering stem
+/// 179: card tiers keep the plant's tone and look. A flowering stem
 /// drawn as a ribbon takes its bark's colour, not the leaves' along it,
 /// each face lit by its own normal, rounded like the stem it stands for
 /// (a yarrow's near cards drew two fifths darker than the yarrow from the
@@ -1381,4 +1391,4 @@ pub mod venation;
 /// as bright as the plant, a pincushion's 1.6). A cut leaf's midrib is
 /// drawn on the cards as a thin line along its blade, in its colour (a
 /// yarrow's, a carrot's and a fennel's leaves baked to scattered dots).
-pub const GENERATOR_REVISION: u32 = 178;
+pub const GENERATOR_REVISION: u32 = 179;
