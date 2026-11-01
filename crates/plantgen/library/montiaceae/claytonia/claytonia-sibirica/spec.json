@@ -79,6 +79,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "flowering_branches": {"min": 0, "max": 3},
     "height_typical_m": {
       "min": 0.15,
       "max": 0.45
@@ -133,6 +134,11 @@
     ]
   },
   "evidence": {
+    "traits.flowering_branches": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944), Montia sibirica: \"racemes open, lax, 6-30 cm. long, 1-4 on each stem ... in vigorous plants the racemes branched with 2 (sometimes 1) small stem leaves subtending the branches\": 0 to 3 flowering branches beside the terminal raceme."
+    },
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
