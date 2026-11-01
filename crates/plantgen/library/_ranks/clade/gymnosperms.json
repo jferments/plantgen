@@ -8,7 +8,8 @@
       "cones": "usually",
       "solitary_seeds": "rarely"
     },
-    "woodiness": "woody"
+    "woodiness": "woody",
+    "wood_class": "softwood"
   },
   "evidence": {
     "traits.reproduction": {
@@ -20,6 +21,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson's conspectus (vol. 1, 2nd ed., 1959): the gymnosperms (cycads, Ginkgo, conifers, Gnetales) are trees and shrubs, with wood; none is a herb."
+    },
+    "traits.wood_class": {
+      "evidence": "SourceInferred",
+      "source": "wood-handbook-2021",
+      "note": "Wood Handbook 2021 (FPL-GTR-282), chapter 2: botanically, softwoods are gymnosperms or conifers, seeds not enclosed in an ovary, their wood without vessels; table 5-11a gives softwoods their own functions from specific gravity to green strength and stiffness."
     }
   }
 }
