@@ -243,6 +243,29 @@ pub fn render_with(
     templates: &Templates,
     options: &PreviewOptions,
 ) -> Image {
+    render_on(plant, extra, templates, options, true)
+}
+
+/// [`render_with`] on no ground of its own: the plants of a site stand on
+/// its mesh, drawn among `extra` (`crate::site`), with nothing beneath.
+#[must_use]
+pub fn render_on_site(
+    plant: &PlantMesh,
+    extra: &[(&Mesh, Material)],
+    templates: &Templates,
+    options: &PreviewOptions,
+) -> Image {
+    render_on(plant, extra, templates, options, false)
+}
+
+#[allow(clippy::too_many_lines)]
+fn render_on(
+    plant: &PlantMesh,
+    extra: &[(&Mesh, Material)],
+    templates: &Templates,
+    options: &PreviewOptions,
+    with_ground: bool,
+) -> Image {
     let solid = !plant.tufts.is_empty() && !templates.bodies.is_empty();
     let cards = if solid {
         let first = templates.first_spine_template();
@@ -302,7 +325,10 @@ pub fn render_with(
     let distance = (height * 0.5 / half_fov).max(half_width / (half_fov * aspect)) * 1.12 + reach;
     // Ground far past the frame, so its edge never shows below the horizon.
     let ground_mesh = ground((distance * 30.0).max(200.0));
-    let mut meshes = vec![(&ground_mesh, Material::Opaque)];
+    let mut meshes = Vec::new();
+    if with_ground {
+        meshes.push((&ground_mesh, Material::Opaque));
+    }
     if options.figure && options.focus.is_none() {
         meshes.push((&figure_mesh, Material::Opaque));
     }

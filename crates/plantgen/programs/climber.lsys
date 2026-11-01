@@ -68,9 +68,16 @@
 # Malabar spinach's spikes of pink flowers, then its black berries). The
 # node draws as before, so a vine with blooms 0 grows as it did.
 #
+# Revision 9 (sites plan S4): a stem rests on the substrate (`rest`, 1 cm
+# above it), as a herb's sprawling stems do: a shoot that hugs a wall,
+# rock or log that the substrate holds runs along its face instead of
+# into it, as ivy's stems lie pressed to a wall by their roots, and a
+# drooping shoot lies on the ground instead of under it. A host tree is
+# not part of the substrate, so a vine on one climbs as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem climber 8;
+lsystem climber 9;
 
 param vigour_spread;
 param shoots;                 # stems from the foot
@@ -128,7 +135,7 @@ axiom Sh(0, max(1, round(shoots)));
 
 decompose Sh(k, m) : m > 1 -> Sh(k, floor(m / 2)) Sh(k + floor(m / 2), m - floor(m / 2));
 decompose Sh(k, m) : m == 1 ->
-    [ /(k * 360 / max(1, shoots) + uniform(-20, 20)) &(uniform(20, 50)) S A(0, 0, 0) ];
+    [ /(k * 360 / max(1, shoots) + uniform(-20, 20)) &(uniform(20, 50)) S rest(0.01) A(0, 0, 0) ];
 decompose Sh(k, m) -> ;
 
 # A shoot's tip: adult of its own habit, clinging, seeking or hanging
