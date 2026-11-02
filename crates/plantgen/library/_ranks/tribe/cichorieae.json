@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Cichorieae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "capitulum_kind": "liguliflorous",
+    "receptacle": {
+      "epaleate": "usually",
+      "paleate": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Cichorieae (read on eFloras 2026-11-02): every floret of a head strap-shaped (liguliflorous); receptacle mostly without chaff."
+    }
+  }
+}

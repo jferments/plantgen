@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Erechtites",
+  "parent": "tribe/senecioneae",
+  "traits": {
+    "capitulum_kind": "disciform"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Erechtites (read on eFloras 2026-11-02): heads disciform."
+    }
+  }
+}

@@ -1418,4 +1418,13 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-pub const GENERATOR_REVISION: u32 = 182;
+///
+/// 183: Asteraceae's tribes stand between its genera and the family
+/// (`_ranks/tribe/`, from Flora of North America's tribe and genus
+/// accounts), carrying a head's kind and receptacle where the tribe or
+/// genus settles them, so a big sagebrush's heads draw discoid. A head may
+/// be stated only across, rays and all (`head_diameter_m`). An Asteraceae
+/// herb that leaves them unset bears a leafy node about every leaf's width
+/// up its stem, leaves nearly to its foot, a wide rosette and heads facing
+/// up, as the built-in daisy-family herbs mostly do.
+pub const GENERATOR_REVISION: u32 = 183;

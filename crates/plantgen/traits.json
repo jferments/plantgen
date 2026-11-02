@@ -3002,6 +3002,15 @@
       "range": [0.0005, 0.3],
       "why": "the ring of phyllaries from the head's foot to the tips of the inner ones, which floras give before its width (involucres 3-4 x 2-4 cm)"
     },
+    "head_diameter_m": {
+      "group": "flowers",
+      "organ": "capitulum",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.6],
+      "optional": true,
+      "why": "a head across its open florets, rays and all, which floras give where they measure the whole head and not its involucre (heads 2-4 cm across); a species stating its involucre and rays is drawn from those"
+    },
     "phyllaries": {
       "group": "flowers",
       "organ": "capitulum",

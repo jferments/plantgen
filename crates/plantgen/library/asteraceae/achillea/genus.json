@@ -2,6 +2,7 @@
   "schema": 1,
   "rank": "genus",
   "name": "Achillea",
+  "parent": "tribe/anthemideae",
   "traits": {
     "wood_density_basic_kg_m3": 450,
     "capitulum_kind": "radiate",
@@ -9,7 +10,10 @@
     "pappus": "absent",
     "life_span": "perennial",
     "leaf_arrangement": "alternate",
-    "receptacle_shape": {"conic": "often", "convex": "often"},
+    "receptacle_shape": {
+      "conic": "often",
+      "convex": "often"
+    },
     "inflorescence": "corymb"
   },
   "evidence": {

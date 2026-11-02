@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Eutrochium",
+  "parent": "tribe/eupatorieae",
+  "traits": {
+    "capitulum_kind": "discoid"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Eutrochium (read on eFloras 2026-11-02): heads discoid."
+    }
+  }
+}

@@ -2231,6 +2231,43 @@ mod tests {
         }
     }
 
+    /// A head a flora gives only across, rays and all (`head_diameter_m`,
+    /// "heads 2-4 cm across"), is drawn that wide where its involucre and
+    /// rays are not stated, radiate or discoid.
+    #[test]
+    fn a_head_stated_across_is_drawn_that_wide() {
+        for (id, folder_path) in [
+            ("baileya-multiradiata", "library/asteraceae/baileya"),
+            ("cirsium-vulgare", "library/asteraceae/cirsium"),
+        ] {
+            let entry = Library::builtin().entry(id).unwrap();
+            let mut own: serde_json::Value = serde_json::from_str(entry.own_source()).unwrap();
+            let note = own["evidence"]["traits.involucre_diameter_m"].clone();
+            assert!(note.is_object(), "{id} cites its involucre");
+            for key in ["involucre_diameter_m", "ray_length_m"] {
+                own["traits"].as_object_mut().unwrap().remove(key);
+                own["evidence"]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove(&format!("traits.{key}"));
+            }
+            own["traits"]["head_diameter_m"] = serde_json::json!(0.05);
+            own["evidence"]["traits.head_diameter_m"] = note;
+            let folder = Folder::new(&format!("head-across-{id}"));
+            folder.write(
+                &format!("{folder_path}/{id}/spec.json"),
+                &serde_json::to_string_pretty(&own).unwrap(),
+            );
+            let library = Library::from_dir(&folder.0).unwrap();
+            let spec = library.inherited(id).unwrap().spec;
+            assert_eq!(
+                spec["generator"]["params"]["flower_size"],
+                serde_json::json!(0.05),
+                "{id}"
+            );
+        }
+    }
+
     /// Old ids find the taxa renamed from them, in constants and in the
     /// library; every alias stands for a taxon the library holds, with a
     /// note citing its source; a taxon below a species sits in its

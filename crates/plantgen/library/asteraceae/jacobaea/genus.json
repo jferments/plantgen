@@ -2,10 +2,14 @@
   "schema": 1,
   "rank": "genus",
   "name": "Jacobaea",
+  "parent": "tribe/senecioneae",
   "traits": {
     "phyllary_series": 1,
     "receptacle": "epaleate",
-    "receptacle_shape": {"flat": "often", "convex": "often"},
+    "receptacle_shape": {
+      "flat": "often",
+      "convex": "often"
+    },
     "pappus": "bristles",
     "leaf_arrangement": "alternate"
   },

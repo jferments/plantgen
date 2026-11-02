@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Heliantheae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "capitulum_kind": {
+      "radiate": "usually",
+      "discoid": "sometimes",
+      "disciform": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Heliantheae (read on eFloras 2026-11-02): heads usually with rays (rays rarely none), sometimes discoid."
+    }
+  }
+}

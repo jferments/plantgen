@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Helianthus",
+  "parent": "tribe/heliantheae",
+  "traits": {
+    "capitulum_kind": {
+      "radiate": "usually",
+      "discoid": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Helianthus (read on eFloras 2026-11-02): heads usually radiate, rarely discoid."
+    }
+  }
+}

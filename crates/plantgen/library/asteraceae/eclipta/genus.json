@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Eclipta",
+  "parent": "tribe/heliantheae",
+  "traits": {
+    "capitulum_kind": "radiate"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Eclipta (read on eFloras 2026-11-02): heads radiate."
+    }
+  }
+}

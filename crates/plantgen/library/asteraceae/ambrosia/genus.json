@@ -2,11 +2,15 @@
   "schema": 1,
   "rank": "genus",
   "name": "Ambrosia",
+  "parent": "tribe/heliantheae",
   "traits": {
     "sexual_system": "monoecious",
     "pappus": "absent",
     "capitulum_kind": "discoid",
-    "leaf_arrangement": {"alternate": "usually", "opposite": "sometimes"}
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    }
   },
   "evidence": {
     "traits.sexual_system": {

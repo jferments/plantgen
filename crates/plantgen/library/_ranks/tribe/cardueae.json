@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Cardueae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "capitulum_kind": {
+      "discoid": "usually",
+      "disciform": "sometimes"
+    },
+    "receptacle": {
+      "epaleate": "usually"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Cardueae (read on eFloras 2026-11-02): heads mostly of disc florets alone, sometimes with a ring of different outer florets; no true rays; receptacle usually without chaff, often bristly."
+    }
+  }
+}

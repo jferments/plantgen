@@ -2,17 +2,31 @@
   "schema": 1,
   "rank": "genus",
   "name": "Anaphalis",
+  "parent": "tribe/gnaphalieae",
   "traits": {
-    "capitulum_kind": {"disciform": "often", "discoid": "often"},
+    "capitulum_kind": {
+      "disciform": "often",
+      "discoid": "often"
+    },
     "receptacle": "epaleate",
-    "receptacle_shape": {"flat": "often", "convex": "often"},
+    "receptacle_shape": {
+      "flat": "often",
+      "convex": "often"
+    },
     "life_span": "perennial",
     "woodiness": "herbaceous",
     "leaf_arrangement": "alternate",
     "leaf_margin": "entire",
-    "sexual_system": {"dioecious": "often", "polygamous": "often"},
+    "sexual_system": {
+      "dioecious": "often",
+      "polygamous": "often"
+    },
     "pappus": "bristles",
-    "disc_colour": [235, 215, 130],
+    "disc_colour": [
+      235,
+      215,
+      130
+    ],
     "rhizome_habit": "long_creeping"
   },
   "evidence": {

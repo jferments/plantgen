@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Senecioneae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "receptacle": "epaleate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Senecioneae (read on eFloras 2026-11-02): heads discoid, disciform or radiate (the genus decides); phyllaries mostly in one or two rows; receptacle without chaff."
+    }
+  }
+}

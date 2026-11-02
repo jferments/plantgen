@@ -2,15 +2,23 @@
   "schema": 1,
   "rank": "genus",
   "name": "Hypochaeris",
+  "parent": "tribe/cichorieae",
   "traits": {
     "capitulum_kind": "liguliflorous",
-    "ligulate_florets": {"min": 20, "max": 100},
+    "ligulate_florets": {
+      "min": 20,
+      "max": 100
+    },
     "receptacle": "paleate",
     "receptacle_shape": "flat",
     "rosette": "basal",
     "woodiness": "herbaceous",
     "inflorescence": "solitary",
-    "ligulate_colour": [245, 200, 30],
+    "ligulate_colour": [
+      245,
+      200,
+      30
+    ],
     "pappus": "bristles"
   },
   "evidence": {

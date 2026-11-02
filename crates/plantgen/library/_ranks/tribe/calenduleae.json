@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Calenduleae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "capitulum_kind": "radiate",
+    "receptacle": "epaleate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Calenduleae (read on eFloras 2026-11-02): heads radiate, rays in one or two rows; receptacle without chaff."
+    }
+  }
+}
