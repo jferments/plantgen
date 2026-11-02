@@ -39,7 +39,7 @@ use crate::mesh::{Mesh, PlantMesh};
 
 /// The motion objects' revision: a change to what they hold or how they
 /// are computed moves it, and with it the key of every motion package.
-pub const MECHANICS_REVISION: u32 = 3;
+pub const MECHANICS_REVISION: u32 = 4;
 
 /// The bone a vertex or card the ground bears is bound to.
 pub const GROUND: u32 = 0xFFFF;
@@ -77,7 +77,7 @@ pub const FROM_DENSITY: [(&str, [f64; 4]); 2] = [
 pub const RUPTURE_SPREAD: f64 = 0.16;
 
 /// A species' class of wood (`wood_class`), hardwood where unstated.
-fn wood_class(traits: &Map<String, Value>) -> &'static str {
+pub(crate) fn wood_class(traits: &Map<String, Value>) -> &'static str {
     let softwood = match traits.get("wood_class") {
         Some(Value::String(class)) => class == "softwood",
         Some(Value::Object(states)) => {
@@ -125,10 +125,10 @@ pub const TWIG: f64 = 0.02;
 pub const BRUSH: f64 = 0.005;
 
 /// The turning moment that overturns a plant, N m per kg of its stem's
-/// wood (assumed): a middling value of the straight-line fits that
-/// tree-pulling studies give for the critical turning moment against stem
-/// mass (for example Nicoll et al. 2006, Canadian Journal of Forest
-/// Research 36), until species and soils state their own.
+/// green wood, where its species does not state its own
+/// (`anchorage_per_stem_kg`, `ForestGALES`'s `C_reg` from tree-pulling
+/// studies, 86 to 254 over its species and soils): a middling value
+/// (assumed).
 pub const ANCHORAGE_PER_KG: f64 = 150.0;
 
 /// How far the stem's foot turns, radians, as its roots give way at the
@@ -151,6 +151,23 @@ pub struct Motion {
     /// The characters estimated from the wood's density ([`FROM_DENSITY`]).
     pub estimated: Vec<&'static str>,
     pub settings: Settings,
+    /// The overturning moment per kg of stem, N m/kg.
+    pub anchorage: f64,
+    /// The wind and drag its break sites are found with.
+    pub drag: crate::breakage::Drag,
+    /// Its stems' root flare, `amount` and `height` m, as drawn
+    /// ([`Motion::with_flare`]); none until given.
+    pub flare: Option<(f64, f64)>,
+}
+
+/// A number `traits` states for `key`: its typical value, or the middle of
+/// its range.
+fn stated(traits: &Map<String, Value>, key: &str) -> Option<f64> {
+    crate::checks::Stated::of(traits.get(key).unwrap_or(&Value::Null)).map(|stated| {
+        stated
+            .typical
+            .unwrap_or(f64::midpoint(stated.min, stated.max))
+    })
 }
 
 impl Motion {
@@ -190,7 +207,24 @@ impl Motion {
             }
         }
         assumed.push("damping");
-        assumed.push("anchorage");
+        let anchorage = stated(traits, "anchorage_per_stem_kg").unwrap_or_else(|| {
+            assumed.push("anchorage");
+            ANCHORAGE_PER_KG
+        });
+        let crown = if let (Some(at_rest), Some(streamlining), Some(tested_to)) = (
+            stated(traits, "crown_drag_at_rest"),
+            stated(traits, "crown_drag_streamlining"),
+            stated(traits, "crown_drag_tested_to_ms"),
+        ) {
+            crate::breakage::Crown {
+                at_rest,
+                streamlining,
+                tested_to,
+            }
+        } else {
+            assumed.push("crown_drag");
+            crate::breakage::Crown::BROADLEAF
+        };
         let material = Material::of(&filled).expect("every needed value is filled");
         Self {
             material,
@@ -200,6 +234,25 @@ impl Motion {
                 modes: 0,
                 ..Settings::default()
             },
+            anchorage,
+            drag: crate::breakage::Drag {
+                crown,
+                ..crate::breakage::Drag::default()
+            },
+            flare: None,
+        }
+    }
+
+    /// The same, with the root flare `appearance` draws its stems with, so
+    /// a stem is as strong near the ground as it is drawn thick.
+    #[must_use]
+    pub fn with_flare(self, appearance: &crate::spec::Appearance) -> Self {
+        Self {
+            flare: appearance
+                .flare
+                .as_ref()
+                .map(|flare| (flare.amount, flare.height)),
+            ..self
         }
     }
 
@@ -210,7 +263,7 @@ impl Motion {
         let m = &self.material;
         let s = &self.settings;
         format!(
-            "{MECHANICS_REVISION} {:?} {:?} {:?} {:?} {:?} {:?} {:?} {} {:?} {:?} {}",
+            "{MECHANICS_REVISION} {:?} {:?} {:?} {:?} {:?} {:?} {:?} {} {:?} {:?} {} {:?} {:?} {:?}",
             m.wood_density,
             m.modulus,
             m.rupture,
@@ -221,7 +274,10 @@ impl Motion {
             s.bones,
             s.piece,
             s.bend_share,
-            s.exact
+            s.exact,
+            self.anchorage,
+            self.drag,
+            self.flare
         )
         .into_bytes()
     }
@@ -252,8 +308,8 @@ pub struct Record {
     pub failure: crate::breakage::Failure,
 }
 
-/// What holds the plant up at its foot (assumed per kg of stem; see
-/// [`ANCHORAGE_PER_KG`] and [`ROOT_TURN`]).
+/// What holds the plant up at its foot (per kg of stem, as its species
+/// states or [`ANCHORAGE_PER_KG`]; see [`ROOT_TURN`]).
 #[derive(Debug, Clone, Copy, PartialEq, Serialize)]
 pub struct Anchorage {
     /// The turning moment at the stem's foot that overturns it, N m.
@@ -426,9 +482,8 @@ pub fn record(
 ) -> Record {
     let material = &found.material;
     let around = Surroundings::of(graph, types, found);
-    let holds = anchorage(found);
-    let mut broken =
-        crate::breakage::breakage(found, holds.moment, &crate::breakage::Drag::default());
+    let holds = anchorage(found, motion.anchorage);
+    let mut broken = crate::breakage::breakage(found, holds.moment, &motion.drag, motion.flare);
     let bones = found
         .bones
         .iter()
@@ -799,16 +854,16 @@ impl Surroundings {
     }
 }
 
-/// What holds the plant up at its foot: [`ANCHORAGE_PER_KG`] per kg of its
-/// stems' wood, and the stiffness that gives way at [`ROOT_TURN`].
-fn anchorage(found: &Mechanics) -> Anchorage {
+/// What holds the plant up at its foot: `per_kg` N m per kg of its stems'
+/// wood, and the stiffness that gives way at [`ROOT_TURN`].
+fn anchorage(found: &Mechanics, per_kg: f64) -> Anchorage {
     let stem: f64 = found
         .bones
         .iter()
         .filter(|bone| bone.depth == 0)
         .map(|bone| (bone.mass - bone.leaf_mass).max(0.0))
         .sum();
-    let moment = ANCHORAGE_PER_KG * stem;
+    let moment = per_kg * stem;
     Anchorage {
         moment,
         stiffness: moment / ROOT_TURN,
@@ -1210,6 +1265,25 @@ mod tests {
         assert!((made.anchorage.moment - ANCHORAGE_PER_KG * stem).abs() < 1.0e-6);
         assert!((made.anchorage.stiffness * ROOT_TURN - made.anchorage.moment).abs() < 1.0e-6);
         assert!(motion.assumed.contains(&"anchorage"));
+    }
+
+    #[test]
+    fn stated_anchorage_and_crown_drag_are_taken_and_unstated_ones_named() {
+        let traits: Map<String, Value> = serde_json::from_str(
+            r#"{"anchorage_per_stem_kg": 153, "crown_drag_at_rest": 2.4,
+                "crown_drag_streamlining": 0.7, "crown_drag_tested_to_ms": 25}"#,
+        )
+        .unwrap();
+        let motion = Motion::of(&traits);
+        assert!((motion.anchorage - 153.0).abs() < 1.0e-12);
+        assert!((motion.drag.crown.at_rest - 2.4).abs() < 1.0e-12);
+        assert!((motion.drag.crown.tested_to - 25.0).abs() < 1.0e-12);
+        assert!(!motion.assumed.contains(&"anchorage"));
+        assert!(!motion.assumed.contains(&"crown_drag"));
+        let bare = Motion::of(&Map::new());
+        assert!(bare.assumed.contains(&"anchorage") && bare.assumed.contains(&"crown_drag"));
+        assert_eq!(bare.drag.crown, crate::breakage::Crown::BROADLEAF);
+        assert_ne!(motion.key_bytes(), bare.key_bytes());
     }
 
     #[test]
