@@ -11,6 +11,7 @@
   "growth_form": "graminoid",
   "tier": "procedural_proxy",
   "traits": {
+    "trampling_tolerance": "tolerant",
     "life_span": "annual",
     "woodiness": "herbaceous",
     "height_typical_m": {
@@ -88,6 +89,7 @@
     }
   },
   "evidence": {
+    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China, Poa annua: a 'weed of disturbed ground' whose stoloniferous plants come up 'possibly in response to trampling'; Wikipedia (read 2026-11-02) adds that it makes many golf putting greens and grows on footpaths."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

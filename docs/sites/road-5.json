@@ -2421,6 +2421,40 @@
   }
  ],
  "holes": [],
+ "traffic": [
+  {
+   "points_m": [
+    [
+     -2.5,
+     -1.5
+    ],
+    [
+     2.5,
+     -1.5
+    ]
+   ],
+   "spread_m": 0.254,
+   "load": 1.0,
+   "track_m": 0.75,
+   "body_m": 0.9
+  },
+  {
+   "points_m": [
+    [
+     -2.5,
+     1.5
+    ],
+    [
+     2.5,
+     1.5
+    ]
+   ],
+   "spread_m": 0.254,
+   "load": 1.0,
+   "track_m": 0.75,
+   "body_m": 0.9
+  }
+ ],
  "made_by": {
   "maker": "docs/sites/make_road.py",
   "decay": 0.5,

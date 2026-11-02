@@ -87,6 +87,7 @@ pub mod spikelets;
 pub mod spines;
 pub mod stand;
 pub mod substrate;
+pub mod succession;
 pub mod templates;
 pub mod texture;
 pub mod traits;

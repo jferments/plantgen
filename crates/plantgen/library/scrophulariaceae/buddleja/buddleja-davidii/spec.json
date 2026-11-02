@@ -11,6 +11,7 @@
   "growth_form": "shrub",
   "tier": "procedural_proxy",
   "traits": {
+    "seed_dispersal": ["wind"],
     "life_span": "perennial",
     "woodiness": "woody",
     "height_typical_m": {
@@ -84,6 +85,7 @@
     ]
   },
   "evidence": {
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Buddleja davidii (read 2026-11-02): 'The seeds are very small, and wind-dispersed'."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

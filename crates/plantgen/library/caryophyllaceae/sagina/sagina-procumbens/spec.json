@@ -11,6 +11,7 @@
   "growth_form": "forb",
   "tier": "procedural_proxy",
   "traits": {
+    "seed_dispersal": ["animal"],
     "trampling_tolerance": "tolerant",
     "life_span": "perennial",
     "woodiness": "herbaceous",
@@ -75,6 +76,7 @@
     "leaf_hairs": "glabrous"
   },
   "evidence": {
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Sagina procumbens (read 2026-11-02): on Gough Island its 'seeds were most likely introduced from visitors' footwear and/or clothing', carried on feet."},
     "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Sagina procumbens: grows in 'gravelly or sandy soils along roadsides, sidewalk cracks, margins of paths or lawns'."},
     "taxon": {
       "evidence": "Authored",

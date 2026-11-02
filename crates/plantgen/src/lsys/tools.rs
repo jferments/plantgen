@@ -692,12 +692,6 @@ pub fn run(
 /// 1 when the surroundings say nothing of the soil, which is then as deep
 /// as roots go.
 fn soil_supply(scene: &Scene, surroundings: &dyn Surroundings, values: &[f64]) -> f64 {
-    let (depth, spread, demand, per_height) = (
-        values[0].max(0.0),
-        values[1].max(0.0),
-        values[2].max(0.0),
-        values[3].max(0.0),
-    );
     let sideways = |p: Vec3| p.x.hypot(p.z);
     let crown = scene
         .segments
@@ -705,18 +699,74 @@ fn soil_supply(scene: &Scene, surroundings: &dyn Surroundings, values: &[f64]) -
         .map(|segment| sideways(segment.end).max(sideways(segment.start)))
         .chain(scene.organs.iter().map(|organ| sideways(organ.position)))
         .fold(0.0_f64, f64::max);
-    let reach = spread * crown;
-    let down = (scene.height * per_height).min(depth);
-    if crown <= 0.0 || reach <= 0.0 || down <= 0.0 || demand <= 0.0 {
-        return 1.0;
+    SoilNeed::from_settings(values).ratio(crown, scene.height, |reach, down| {
+        surroundings.soil_volume(reach, down)
+    })
+}
+
+/// What a plant's roots ask of the soil: `soil@1`'s settings, evaluated
+/// (soil depth design D1). [`soil_supply`] reads them each step; the
+/// yearly arrival step of a pavement tile ([`crate::succession`]) reads
+/// them once, for a plant of a size it estimates.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct SoilNeed {
+    /// Deepest the roots reach, metres.
+    pub depth: f64,
+    /// How far out the roots reach, as a multiple of the crown's radius.
+    pub spread: f64,
+    /// Rootable soil the crown needs per square metre it covers, m³/m².
+    pub demand: f64,
+    /// Metres of root depth per metre of the plant's height.
+    pub per_height: f64,
+}
+
+impl SoilNeed {
+    fn from_settings(values: &[f64]) -> Self {
+        Self {
+            depth: values[0].max(0.0),
+            spread: values[1].max(0.0),
+            demand: values[2].max(0.0),
+            per_height: values[3].max(0.0),
+        }
     }
-    let Some(supply) = surroundings.soil_volume(reach, down) else {
-        return 1.0;
-    };
-    let area = std::f64::consts::PI * crown * crown;
-    let open = std::f64::consts::PI * reach * reach * down;
-    let need = (demand * area).min(open);
-    (supply / need).clamp(0.0, 1.0)
+
+    /// The `soil@1` settings of `program` with its parameter values
+    /// `globals`, or `None` when it has no soil tool.
+    #[must_use]
+    pub fn of_program(program: &Program, globals: &[f64]) -> Option<Self> {
+        let config = program.tool(ToolKind::Soil)?;
+        let clock = Clock {
+            step: 0,
+            t: 0.0,
+            dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
+        };
+        let mut stack = Vec::new();
+        Some(Self::from_settings(&settings(
+            config, globals, clock, 0, &mut stack,
+        )))
+    }
+
+    /// The ratio of supply to demand, 0 to 1, for a crown `crown` metres
+    /// in radius on a plant `height` metres tall, where `volume(reach,
+    /// depth)` is the rootable soil within `reach` of the foot and `depth`
+    /// below it (`None` where nothing is known, which gives 1).
+    #[must_use]
+    pub fn ratio(&self, crown: f64, height: f64, volume: impl Fn(f64, f64) -> Option<f64>) -> f64 {
+        let reach = self.spread * crown;
+        let down = (height * self.per_height).min(self.depth);
+        if crown <= 0.0 || reach <= 0.0 || down <= 0.0 || self.demand <= 0.0 {
+            return 1.0;
+        }
+        let Some(supply) = volume(reach, down) else {
+            return 1.0;
+        };
+        let area = std::f64::consts::PI * crown * crown;
+        let open = std::f64::consts::PI * reach * reach * down;
+        let need = (self.demand * area).min(open);
+        (supply / need).clamp(0.0, 1.0)
+    }
 }
 
 /// Which nodes stand on a limb: a `[ ]` branch from an axis that goes on

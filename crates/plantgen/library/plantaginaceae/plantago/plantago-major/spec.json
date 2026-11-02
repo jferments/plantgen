@@ -11,6 +11,7 @@
   "growth_form": "forb",
   "tier": "procedural_proxy",
   "traits": {
+    "trampling_tolerance": "tolerant",
     "life_span": "perennial",
     "woodiness": "herbaceous",
     "height_typical_m": {
@@ -84,6 +85,7 @@
     "cauline_leaves": "none"
   },
   "evidence": {
+    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Plantago major (read 2026-11-02): 'The ability of greater plantain to survive frequent trampling and colonise compacted soils'."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

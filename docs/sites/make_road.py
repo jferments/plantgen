@@ -31,6 +31,11 @@ THICKNESS = 0.08
 BASE = 0.25
 DECAYS = [0.2, 0.5, 0.8]
 WHEEL_PATHS = [-2.25, -0.75, 0.75, 2.25]  # Z of each lane's two wheel paths
+# How far wheels wander to each side of a wheel path: the standard
+# deviation of where tyres pass, 10 inches, the default lateral wander of
+# the AASHTO Mechanistic-Empirical Pavement Design Guide.
+WANDER = 0.254
+LANES = [-1.5, 1.5]  # Z of each lane's middle
 
 
 def wander(rng, start, end, step=0.05, sway=0.012):
@@ -152,6 +157,10 @@ def tile(decay, x0, seed):
         "surface": "asphalt",
         "cracks": cracks,
         "holes": [{k: v for k, v in h.items() if k != "centre"} for h in holes],
+        # Each lane's vehicles, for `plantc cracks --traffic` (plan K3):
+        # wheels in its two wheel paths, a body 1.8 m wide.
+        "traffic": [{"points_m": [[x0, z], [x1, z]], "spread_m": WANDER, "load": 1.0,
+                     "track_m": 0.75, "body_m": 0.9} for z in LANES],
         "made_by": {"maker": "docs/sites/make_road.py", "decay": decay, "seed": seed},
     }, sites, holes
 
@@ -181,6 +190,32 @@ def ground_obj(x0, x1):
     return "\n".join(lines) + "\n"
 
 
+def seed_sources(x0, x1):
+    """Plants near the road that seed into its cracks (`plantc cracks`,
+    plan K3): the weeds of both verges, a blackberry thicket and a broom
+    at their ends, and beyond them a red alder, a black cottonwood and a
+    butterfly bush in a garden. Chosen by eye for a Pacific Northwest
+    street."""
+    rng = random.Random(11)
+    verge = ["taraxacum-sect-taraxacum", "plantago-major", "holcus-lanatus",
+             "dactylis-glomerata", "hypochaeris-radicata", "trifolium-repens",
+             "poa-annua", "cirsium-vulgare", "polygonum-aviculare", "sagina-procumbens"]
+    sources = []
+    for side in (-1, 1):
+        x = x0 - 0.8
+        while x < x1 + 0.8:
+            z = side * (ROAD_WIDTH / 2 + rng.uniform(0.15, VERGE - 0.2))
+            sources.append({"species": rng.choice(verge), "at": [round(x, 3), round(z, 3)], "years": 3})
+            x += rng.uniform(0.4, 1.0)
+    sources += [
+        {"species": "rubus-armeniacus", "at": [x0 - 0.5, -4.2], "years": 8},
+        {"species": "rubus-armeniacus", "at": [x1 + 0.3, 4.4], "years": 8},
+        {"species": "cytisus-scoparius", "at": [x1 - 1.0, -4.5], "years": 6},
+        {"species": "buddleja-davidii", "at": [0.0, 8.0], "years": 8},
+    ]
+    return sources
+
+
 def main():
     x0 = -TILE_LENGTH * len(DECAYS) / 2
     plants = []
@@ -208,12 +243,14 @@ def main():
                            "at": [round(h["centre"][0], 3), round(h["centre"][1], 3)],
                            "seed": 1, "years": 4})
     obj = ground_obj(x0, x0 + TILE_LENGTH * len(DECAYS))
+    sources = seed_sources(x0, x0 + TILE_LENGTH * len(DECAYS))
     (HERE / "road.obj").write_text(obj)
     site = {
         "mesh": "road.obj",
         "materials": {"verge": {"as": "soil", "colour": [0.20, 0.28, 0.12]}},
         "pavements": tiles,
         "plants": plants,
+        "seed_sources": sources,
     }
     (HERE / "road.json").write_text(json.dumps(site, indent=1) + "\n")
     print(f"wrote {len(tiles)} tiles and {len(plants)} plants")

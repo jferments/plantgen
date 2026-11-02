@@ -11,6 +11,7 @@
   "growth_form": "forb",
   "tier": "procedural_proxy",
   "traits": {
+    "trampling_tolerance": "tolerant",
     "seedbank": "short_term",
     "seed_dispersal": ["animal", "water"],
     "life_span": "annual",
@@ -93,6 +94,7 @@
     }
   },
   "evidence": {
+    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: 'It tolerates trampling' and is 'commonly found in areas with trampled, compacted soil'."},
     "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: 'Prostrate knotweed seeds form a persistent seed bank' (how long not given, so the shorter persistent class)."},
     "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: 'Prostrate knotweed seeds are dispersed by birds, mammals, and water'; also by vehicles."},
     "taxon": {

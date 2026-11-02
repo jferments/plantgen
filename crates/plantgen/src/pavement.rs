@@ -53,6 +53,16 @@ pub const SUBGRADE_M: f64 = 0.3;
 /// reach it only through the subgrade; a host whose old road's subgrade
 /// has loosened says so in its tile.
 pub const SUBGRADE_ROOTABLE: f64 = 0.0;
+/// Width of a crack that lets in enough rain to wet the base under it
+/// fully (pavement-cracks plan K3): rain reaches the base under a sound
+/// slab only through its openings, so a hairline crack wets less of it
+/// than a wide one or a hole. An estimate, to check against infiltration
+/// measurements.
+pub const WETTING_WIDTH_M: f64 = 0.01;
+/// How far from an opening the water it lets in spreads through the
+/// base, metres: the base's wetness falls off as exp(-d / this). An
+/// estimate.
+pub const WETTING_REACH_M: f64 = 0.25;
 
 /// Most cells a tile may rasterise to.
 pub const MAX_PAVEMENT_CELLS: usize = 16_000_000;
@@ -96,6 +106,11 @@ pub struct CrackTile {
     pub cracks: Vec<Crack>,
     #[serde(default)]
     pub holes: Vec<Hole>,
+    /// Where wheels and feet pass and how often (pavement-cracks plan K3):
+    /// what is trodden or driven over there dies more, so a busy lane's
+    /// wheel paths stay barer than its edges. None when left out.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub traffic: Vec<TrafficPath>,
     /// What made it, for the record (a decay level, years since upkeep);
     /// growth does not read it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -130,6 +145,40 @@ pub struct Hole {
     /// Soil lying in it, up from its bottom.
     pub fill_m: f64,
 }
+
+/// A path of traffic over a tile: a lane's vehicles, a footpath.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct TrafficPath {
+    /// Its centre line (X, Z), at least two points: a lane's middle, a
+    /// footpath's line.
+    pub points_m: Vec<[f64; 2]>,
+    /// How far to each side vehicles or feet wander from the line: the
+    /// standard deviation of where they pass, metres.
+    pub spread_m: f64,
+    /// How heavy it is, 0 to 1: 1 is a lane in daily use, where nothing
+    /// that does not bear trampling lives under its wheels.
+    pub load: f64,
+    /// Half the distance between a vehicle's wheels, metres: its tyres run
+    /// this far to each side of the line. 0 (the default) for feet, which
+    /// tread the line itself.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub track_m: f64,
+    /// Half a vehicle's width, metres: within it, anything taller than
+    /// [`VEHICLE_CLEARANCE_M`] is struck as if trodden on. 0 (the default)
+    /// for feet.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub body_m: f64,
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f64) -> bool {
+    *value == 0.0
+}
+
+/// How high a vehicle's underside rides, metres: a car's ground clearance
+/// is about 15 cm, so a plant taller than that in a lane is struck.
+pub const VEHICLE_CLEARANCE_M: f64 = 0.15;
 
 impl CrackTile {
     /// A tile from its JSON.
@@ -195,6 +244,15 @@ impl CrackTile {
                 self.surface
             ));
         }
+        for path in &self.traffic {
+            if path.points_m.len() < 2 {
+                return Err("a traffic path needs at least two points".to_owned());
+            }
+            finite("traffic spread_m", path.spread_m, 1.0e-3, 100.0)?;
+            finite("traffic load", path.load, 0.0, 1.0)?;
+            finite("traffic track_m", path.track_m, 0.0, 10.0)?;
+            finite("traffic body_m", path.body_m, 0.0, 10.0)?;
+        }
         for (n, crack) in self.cracks.iter().enumerate() {
             let points = crack.points_m.len();
             if points < 2 || crack.width_m.len() != points || crack.fill_m.len() != points {
@@ -256,6 +314,22 @@ pub struct Pavement {
     nearest_open: Vec<u32>,
     /// Distance from each cell to the nearest sound cell, in cells.
     to_sound: Vec<f32>,
+    traffic: Vec<TrafficPath>,
+}
+
+/// An opening in a tile where a plant can come up (pavement-cracks plan
+/// K3): the deepest soil within a patch, with the crack or hole it is in.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Opening {
+    pub x: f64,
+    pub z: f64,
+    /// Height of the soil's surface.
+    pub soil_top: f64,
+    /// Depth of soil from its surface to the opening's bottom, metres.
+    pub soil_depth: f64,
+    /// How wide the opening is there, metres: a crack's width, or across
+    /// a hole.
+    pub width: f64,
 }
 
 /// Linear colours of pavings, weathered, and of soil in a crack.
@@ -401,6 +475,7 @@ impl Pavement {
             to_open,
             nearest_open,
             to_sound,
+            traffic: tile.traffic.clone(),
         })
     }
 
@@ -489,6 +564,107 @@ impl Pavement {
         })
     }
 
+    /// The openings a plant can come up in, one for each square patch
+    /// `patch` metres wide holding any: the cell with the deepest soil
+    /// there, the widest of those on a tie. In the raster's order, so the
+    /// same tile gives the same list.
+    #[must_use]
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    pub fn openings(&self, patch: f64) -> Vec<Opening> {
+        let per = ((patch / self.cell).round() as usize).max(1);
+        let mut found = Vec::new();
+        for pk in (0..self.nz).step_by(per) {
+            for pi in (0..self.nx).step_by(per) {
+                let mut best: Option<(usize, f32, f32)> = None;
+                for k in pk..(pk + per).min(self.nz) {
+                    for i in pi..(pi + per).min(self.nx) {
+                        let at = k * self.nx + i;
+                        if self.soil_top[at].is_nan() {
+                            continue;
+                        }
+                        let depth = self.soil_top[at] - self.floor[at];
+                        let width = self.width_at(at);
+                        if best.is_none_or(|(_, d, w)| depth > d || (depth == d && width > w)) {
+                            best = Some((at, depth, width));
+                        }
+                    }
+                }
+                if let Some((at, depth, width)) = best {
+                    let (x, z) = self.centre_of(at);
+                    found.push(Opening {
+                        x,
+                        z,
+                        soil_top: f64::from(self.soil_top[at]),
+                        soil_depth: f64::from(depth.max(0.0)),
+                        width: f64::from(width),
+                    });
+                }
+            }
+        }
+        found
+    }
+
+    /// How wet the ground under cell `at` is kept, 0 to 1: water comes in
+    /// through the nearest opening, as much as its width lets in
+    /// ([`WETTING_WIDTH_M`]), and spreads through the base
+    /// ([`WETTING_REACH_M`]).
+    fn wetness(&self, at: usize) -> f64 {
+        let gap = f64::from(self.to_open[at]) * self.cell;
+        if !gap.is_finite() {
+            return 0.0;
+        }
+        let near = self.nearest_open[at] as usize;
+        let width = f64::from(self.width_at(near));
+        (width / WETTING_WIDTH_M).min(1.0) * (-gap / WETTING_REACH_M).exp()
+    }
+
+    #[allow(clippy::cast_possible_truncation)]
+    fn width_at(&self, at: usize) -> f32 {
+        let share = self.share[at];
+        if share < 1.0 {
+            share * self.cell as f32
+        } else {
+            (2.0 * self.to_sound[at] + 1.0) * self.cell as f32
+        }
+    }
+
+    /// How heavily a plant `height` metres tall at (`x`, `z`) is trodden
+    /// or driven over, 0 to 1: the most any traffic path gives. Under its
+    /// wheels (or feet) a path's load falls off as a normal curve of its
+    /// spread; a plant taller than [`VEHICLE_CLEARANCE_M`] is struck
+    /// anywhere under a vehicle's body, as wide as the body and the
+    /// vehicles' wander.
+    #[must_use]
+    pub fn wear(&self, x: f64, z: f64, height: f64) -> f64 {
+        self.traffic
+            .iter()
+            .map(|path| {
+                let gap = path
+                    .points_m
+                    .windows(2)
+                    .map(|pair| {
+                        let (a, b) = (pair[0], pair[1]);
+                        let (dx, dz) = (b[0] - a[0], b[1] - a[1]);
+                        let length2 = (dx * dx + dz * dz).max(1.0e-18);
+                        let t = (((x - a[0]) * dx + (z - a[1]) * dz) / length2).clamp(0.0, 1.0);
+                        (a[0] + dx * t - x).hypot(a[1] + dz * t - z)
+                    })
+                    .fold(f64::INFINITY, f64::min);
+                let wheel = (gap - path.track_m).abs() / path.spread_m;
+                let mut wear = path.load * (-0.5 * wheel * wheel).exp();
+                if path.body_m > 0.0 && height > VEHICLE_CLEARANCE_M {
+                    let past = (gap - path.body_m).max(0.0) / path.spread_m;
+                    wear = wear.max(path.load * (-0.5 * past * past).exp());
+                }
+                wear
+            })
+            .fold(0.0, f64::max)
+    }
+
     /// The rootable share of the ground under (`x`, `z`) by height (soil
     /// depth design D1): layers from the top down as (top, bottom, share),
     /// the last reaching down for ever. The slab counts nothing, the soil
@@ -499,6 +675,7 @@ impl Pavement {
     #[must_use]
     pub fn column(&self, x: f64, z: f64) -> Option<Vec<(f64, f64, f64)>> {
         let at = self.cell_of(x, z)?;
+        let wet = self.wetness(at);
         let slab_bottom = self.top - self.thickness;
         let base_bottom = slab_bottom - self.base;
         let subgrade_bottom = base_bottom - self.subgrade;
@@ -513,11 +690,11 @@ impl Pavement {
             from = from.min(low);
         }
         if from > base_bottom {
-            layers.push((from, base_bottom, self.base_rootable));
+            layers.push((from, base_bottom, self.base_rootable * wet));
         }
         let from = from.min(base_bottom);
         if from > subgrade_bottom {
-            layers.push((from, subgrade_bottom, self.subgrade_rootable));
+            layers.push((from, subgrade_bottom, self.subgrade_rootable * wet));
         }
         // Roots reach the ground below only through what they passed, so
         // native soil under the subgrade counts no more than the least
@@ -528,7 +705,7 @@ impl Pavement {
         } else {
             1.0
         };
-        layers.push((from.min(subgrade_bottom), f64::NEG_INFINITY, passed));
+        layers.push((from.min(subgrade_bottom), f64::NEG_INFINITY, passed * wet));
         Some(layers)
     }
 
@@ -850,6 +1027,7 @@ mod tests {
                 depth_m: 0.15,
                 fill_m: 0.1,
             }],
+            traffic: Vec::new(),
             made_by: None,
         }
     }
@@ -930,13 +1108,18 @@ mod tests {
         let near = |a: f64, b: f64| (a - b).abs() < 1.0e-6;
         assert_eq!(sound.len(), 3);
         assert!(near(sound[0].0, -0.08) && near(sound[0].1, -0.28));
-        assert!(near(sound[0].2, BASE_ROOTABLE));
+        // 30 cm from an 8 mm crack, the base is kept a quarter as wet as
+        // under a hole, and roots use that much less of it.
+        let wet = 0.8 * (-0.3 / WETTING_REACH_M).exp();
+        assert!((sound[0].2 - BASE_ROOTABLE * wet).abs() < 0.01, "{sound:?}");
         assert!(near(sound[1].1, -0.28 - SUBGRADE_M));
         assert!(sound[2].1.is_infinite() && near(sound[2].2, SUBGRADE_ROOTABLE));
-        // The hole's soil, 5 to 15 cm down, then the base below its bottom.
+        // The hole's soil, 5 to 15 cm down, then the base below its bottom,
+        // wetted fully.
         let hole = pavement.column(0.7, 0.8).unwrap();
         assert!(near(hole[0].0, -0.05) && near(hole[0].1, -0.15) && near(hole[0].2, 1.0));
         assert!(near(hole[1].0, -0.15) && near(hole[1].1, -0.28));
+        assert!(near(hole[1].2, BASE_ROOTABLE));
         assert!(pavement.column(2.0, 0.5).is_none());
     }
 }
