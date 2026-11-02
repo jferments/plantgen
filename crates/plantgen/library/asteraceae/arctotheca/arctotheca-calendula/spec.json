@@ -21,16 +21,20 @@
     "rosette": "basal",
     "leaf_length_m": {
       "min": 0.05,
-      "max": 0.25
+      "max": 0.2,
+      "low": 0.02,
+      "high": 0.3
     },
     "leaf_width_m": {
       "min": 0.02,
-      "max": 0.06
+      "max": 0.05,
+      "low": 0.01,
+      "high": 0.07
     },
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
-    "leaf_shape": "oblanceolate",
-    "leaf_margin": "dentate",
+    "leaf_shape": "obovate",
+    "leaf_margin": "spiny",
     "sexual_system": "hermaphrodite",
     "flowering_months": [
       7,
@@ -61,10 +65,30 @@
       40
     ],
     "head_diameter_m": {
-      "min": 0.03,
-      "max": 0.06
+      "min": 0.04,
+      "max": 0.07
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "leaf_incision": "parted",
+    "division_pattern": "pinnate",
+    "ray_florets": {
+      "min": 11,
+      "max": 17,
+      "high": 25
+    },
+    "ray_length_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "ray_width_m": {
+      "min": 0.002,
+      "max": 0.004
+    },
+    "disc_colour": [
+      80,
+      82,
+      100
+    ]
   },
   "evidence": {
     "taxon": {
@@ -103,14 +127,14 @@
       "note": "A model estimate (confidence high, record L3075560), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3075560), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): leaves obovate, (2-)5-20(-30+) x (1-)2-5(-7) cm, margins pinnatisect (lyrate to runcinate), remotely prickly."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3075560), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): leaves obovate, (2-)5-20(-30+) x (1-)2-5(-7) cm, margins pinnatisect (lyrate to runcinate), remotely prickly."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -123,14 +147,14 @@
       "note": "A model estimate (confidence high, record L3075560), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3075560), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): leaves obovate, (2-)5-20(-30+) x (1-)2-5(-7) cm, margins pinnatisect (lyrate to runcinate), remotely prickly."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3075560), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): leaves obovate, (2-)5-20(-30+) x (1-)2-5(-7) cm, margins pinnatisect (lyrate to runcinate), remotely prickly. Here: remotely prickly."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -168,14 +192,44 @@
       "note": "A model estimate (confidence high, record L3075560), as no source read gives it, sRGB from the colour word."
     },
     "traits.head_diameter_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3075560), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): heads 4-7 cm diam. (across the rays); ray florets 11-17(-25), laminae adaxially yellow, 10-25 x 2-4 mm; disc florets: corollas yellow proximally, bluish distally."
     },
     "traits.inflorescence": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L3075560), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): leaves obovate, (2-)5-20(-30+) x (1-)2-5(-7) cm, margins pinnatisect (lyrate to runcinate), remotely prickly. Here: pinnatisect: cut most of the way to the midrib (parted)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): leaves obovate, (2-)5-20(-30+) x (1-)2-5(-7) cm, margins pinnatisect (lyrate to runcinate), remotely prickly."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): heads 4-7 cm diam. (across the rays); ray florets 11-17(-25), laminae adaxially yellow, 10-25 x 2-4 mm; disc florets: corollas yellow proximally, bluish distally."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): heads 4-7 cm diam. (across the rays); ray florets 11-17(-25), laminae adaxially yellow, 10-25 x 2-4 mm; disc florets: corollas yellow proximally, bluish distally."
+    },
+    "traits.ray_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): heads 4-7 cm diam. (across the rays); ray florets 11-17(-25), laminae adaxially yellow, 10-25 x 2-4 mm; disc florets: corollas yellow proximally, bluish distally."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): heads 4-7 cm diam. (across the rays); ray florets 11-17(-25), laminae adaxially yellow, 10-25 x 2-4 mm; disc florets: corollas yellow proximally, bluish distally. sRGB by eye from the words and the species' photos. Here: bluish distally over yellow: a dark blue-grey eye."
     }
   },
   "provenance": {

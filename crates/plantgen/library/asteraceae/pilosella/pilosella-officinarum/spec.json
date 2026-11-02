@@ -21,16 +21,21 @@
     "leaf_habit": "evergreen",
     "rosette": "basal",
     "leaf_length_m": {
-      "min": 0.02,
-      "max": 0.1
+      "min": 0.01,
+      "max": 0.045,
+      "high": 0.075
     },
     "leaf_width_m": {
       "min": 0.005,
-      "max": 0.015
+      "max": 0.012,
+      "high": 0.018
     },
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
-    "leaf_shape": "oblanceolate",
+    "leaf_shape": {
+      "oblanceolate": "often",
+      "elliptic": "often"
+    },
     "leaf_margin": "entire",
     "sexual_system": "hermaphrodite",
     "flowering_months": [
@@ -64,7 +69,19 @@
       "min": 0.02,
       "max": 0.03
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "leaf_base_shape": "cuneate",
+    "leaf_apex": "acute",
+    "cauline_leaves": "none",
+    "involucre_height_m": {
+      "min": 0.0075,
+      "max": 0.009000000000000001
+    },
+    "rosette_leaves": {
+      "min": 5,
+      "max": 10,
+      "low": 2
+    }
   },
   "evidence": {
     "taxon": {
@@ -108,14 +125,14 @@
       "note": "A model estimate (confidence high, record L2927417), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2927417), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: leaves basal (2-)5-10+, cauline 0(-3); blades elliptic to +/- oblanceolate, 10-45(-75+) x 5-12(-18+) mm, bases cuneate, margins entire, apices acute; heads usually borne singly."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2927417), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: leaves basal (2-)5-10+, cauline 0(-3); blades elliptic to +/- oblanceolate, 10-45(-75+) x 5-12(-18+) mm, bases cuneate, margins entire, apices acute; heads usually borne singly."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -128,14 +145,14 @@
       "note": "A model estimate (confidence high, record L2927417), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2927417), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: leaves basal (2-)5-10+, cauline 0(-3); blades elliptic to +/- oblanceolate, 10-45(-75+) x 5-12(-18+) mm, bases cuneate, margins entire, apices acute; heads usually borne singly."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2927417), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: leaves basal (2-)5-10+, cauline 0(-3); blades elliptic to +/- oblanceolate, 10-45(-75+) x 5-12(-18+) mm, bases cuneate, margins entire, apices acute; heads usually borne singly."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -181,6 +198,31 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L2927417), as no source read gives it."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: leaves basal (2-)5-10+, cauline 0(-3); blades elliptic to +/- oblanceolate, 10-45(-75+) x 5-12(-18+) mm, bases cuneate, margins entire, apices acute; heads usually borne singly."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: leaves basal (2-)5-10+, cauline 0(-3); blades elliptic to +/- oblanceolate, 10-45(-75+) x 5-12(-18+) mm, bases cuneate, margins entire, apices acute; heads usually borne singly."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: leaves basal (2-)5-10+, cauline 0(-3); blades elliptic to +/- oblanceolate, 10-45(-75+) x 5-12(-18+) mm, bases cuneate, margins entire, apices acute; heads usually borne singly. Here: no stem leaves (rarely up to 3): a leafless scape from the rosette."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: heads usually borne singly, rarely 2(-3); involucres hemispheric to obconic, 7.5-9 mm; florets 60-120+; corollas yellow (often each with abaxial red stripe), 8-13+ mm."
+    },
+    "traits.rosette_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Pilosella officinarum (read 2026-11-02): Hieracium pilosella: leaves basal (2-)5-10+, cauline 0(-3); blades elliptic to +/- oblanceolate, 10-45(-75+) x 5-12(-18+) mm, bases cuneate, margins entire, apices acute; heads usually borne singly. Here: the basal leaves, (2-)5-10+."
     }
   },
   "provenance": {

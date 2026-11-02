@@ -64,7 +64,21 @@
       "min": 0.03,
       "max": 0.07
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "leaf_incision": "cleft",
+    "division_pattern": "pinnate",
+    "division_order": {
+      "min": 1,
+      "max": 2
+    },
+    "involucre_height_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "involucre_diameter_m": {
+      "min": 0.02,
+      "max": 0.07
+    }
   },
   "evidence": {
     "taxon": {
@@ -133,9 +147,9 @@
       "note": "A model estimate (confidence high, record L3041051), as no source read gives it."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3041051), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Carduus nutans (read 2026-11-02): basal tapering to winged petioles, blades 10-40 cm, margins 1-2x-pinnately lobed; cauline sessile, shorter, margins less divided; stems' wing spines 2-10 mm."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -181,6 +195,31 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L3041051), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Carduus nutans (read 2026-11-02): basal tapering to winged petioles, blades 10-40 cm, margins 1-2x-pinnately lobed; cauline sessile, shorter, margins less divided; stems' wing spines 2-10 mm. Here: a thistle's pinnately lobed blade cut past halfway (cleft), less on the stem."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Carduus nutans (read 2026-11-02): basal tapering to winged petioles, blades 10-40 cm, margins 1-2x-pinnately lobed; cauline sessile, shorter, margins less divided; stems' wing spines 2-10 mm."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Carduus nutans (read 2026-11-02): basal tapering to winged petioles, blades 10-40 cm, margins 1-2x-pinnately lobed; cauline sessile, shorter, margins less divided; stems' wing spines 2-10 mm."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Carduus nutans (read 2026-11-02): heads borne singly or in corymbiform arrays, often nodding, 20-40 mm; involucres hemispheric, 20-60 x 20-70 mm."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Carduus nutans (read 2026-11-02): heads borne singly or in corymbiform arrays, often nodding, 20-40 mm; involucres hemispheric, 20-60 x 20-70 mm."
     }
   },
   "provenance": {

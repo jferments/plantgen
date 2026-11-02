@@ -60,7 +60,18 @@
       "min": 0.03,
       "max": 0.05
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "leaf_incision": "dissected",
+    "division_pattern": "pinnate",
+    "division_order": {
+      "min": 1,
+      "max": 2
+    },
+    "terminal_leaflet": true,
+    "involucre_height_m": {
+      "min": 0.015,
+      "max": 0.025
+    }
   },
   "evidence": {
     "taxon": {
@@ -104,9 +115,9 @@
       "note": "A model estimate (confidence high, record L3049312), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3049312), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea scabiosa (read 2026-11-02): basal and proximal cauline petiolate, blades 10-25 cm, margins usually 1-2-pinnately divided into linear or oblong segments; mid and distal cauline smaller, entire or once dissected."
     },
     "traits.leaf_width_m": {
       "evidence": "Authored",
@@ -177,6 +188,31 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L3049312), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea scabiosa (read 2026-11-02): basal and proximal cauline petiolate, blades 10-25 cm, margins usually 1-2-pinnately divided into linear or oblong segments; mid and distal cauline smaller, entire or once dissected. Here: divided into linear or oblong segments (dissected)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea scabiosa (read 2026-11-02): basal and proximal cauline petiolate, blades 10-25 cm, margins usually 1-2-pinnately divided into linear or oblong segments; mid and distal cauline smaller, entire or once dissected."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea scabiosa (read 2026-11-02): basal and proximal cauline petiolate, blades 10-25 cm, margins usually 1-2-pinnately divided into linear or oblong segments; mid and distal cauline smaller, entire or once dissected."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea scabiosa (read 2026-11-02): basal and proximal cauline petiolate, blades 10-25 cm, margins usually 1-2-pinnately divided into linear or oblong segments; mid and distal cauline smaller, entire or once dissected. Here: a pinnately divided blade ends in a segment."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea scabiosa (read 2026-11-02): heads borne singly or few in open cymiform arrays, pedunculate; involucres ovoid to hemispheric, becoming campanulate, 15-25 mm."
     }
   },
   "provenance": {

@@ -22,16 +22,19 @@
     "rosette": "none",
     "perennation": "rhizome",
     "leaf_length_m": {
-      "min": 0.05,
-      "max": 0.2
+      "min": 0.03,
+      "max": 0.3
     },
     "leaf_width_m": {
       "min": 0.01,
-      "max": 0.05
+      "max": 0.06
     },
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
-    "leaf_shape": "lanceolate",
+    "leaf_shape": {
+      "oblong": "often",
+      "elliptic": "often"
+    },
     "leaf_margin": "spiny",
     "sexual_system": "dioecious",
     "flowering_months": [
@@ -64,7 +67,17 @@
       "min": 0.01,
       "max": 0.025
     },
-    "inflorescence": "solitary"
+    "inflorescence": "corymb",
+    "leaf_incision": "lobed",
+    "division_pattern": "pinnate",
+    "involucre_height_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "involucre_diameter_m": {
+      "min": 0.01,
+      "max": 0.02
+    }
   },
   "evidence": {
     "taxon": {
@@ -113,14 +126,14 @@
       "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -133,14 +146,14 @@
       "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -183,9 +196,29 @@
       "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
     },
     "traits.inflorescence": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): heads 1-many, borne singly or in corymbiform or paniculiform arrays; involucres 1-2 x 1-2 cm; corollas purple (white or pink)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm. Here: shallowly to deeply pinnatifid, drawn at its shallow, commoner end (lobed)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): heads 1-many, borne singly or in corymbiform or paniculiform arrays; involucres 1-2 x 1-2 cm; corollas purple (white or pink)."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): heads 1-many, borne singly or in corymbiform or paniculiform arrays; involucres 1-2 x 1-2 cm; corollas purple (white or pink)."
     }
   },
   "provenance": {

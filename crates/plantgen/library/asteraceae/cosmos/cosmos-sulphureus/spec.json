@@ -21,15 +21,16 @@
     "leaf_habit": "deciduous",
     "rosette": "none",
     "leaf_length_m": {
-      "min": 0.08,
-      "max": 0.2
+      "min": 0.05,
+      "max": 0.12,
+      "high": 0.25
     },
     "leaf_width_m": {
       "min": 0.04,
       "max": 0.1
     },
     "leaf_arrangement": "opposite",
-    "leaf_division": "compound",
+    "leaf_division": "simple",
     "leaf_shape": "lanceolate",
     "leaf_margin": "entire",
     "sexual_system": "hermaphrodite",
@@ -65,7 +66,36 @@
       "min": 0.03,
       "max": 0.06
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "leaf_incision": "dissected",
+    "division_pattern": "pinnate",
+    "division_order": {
+      "min": 1,
+      "max": 3
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.07
+    },
+    "leaf_lobe_width_m": {
+      "min": 0.002,
+      "max": 0.005
+    },
+    "terminal_leaflet": true,
+    "involucre_diameter_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "ray_length_m": {
+      "min": 0.018000000000000002,
+      "max": 0.03
+    },
+    "ray_apex": "toothed",
+    "disc_colour": [
+      236,
+      186,
+      40
+    ]
   },
   "evidence": {
     "taxon": {
@@ -109,9 +139,9 @@
       "note": "A model estimate (confidence high, record L3117604), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3117604), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire."
     },
     "traits.leaf_width_m": {
       "evidence": "Authored",
@@ -124,9 +154,9 @@
       "note": "A model estimate (confidence high, record L3117604), as no source read gives it."
     },
     "traits.leaf_division": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3117604), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire."
     },
     "traits.leaf_shape": {
       "evidence": "Authored",
@@ -134,9 +164,9 @@
       "note": "A model estimate (confidence high, record L3117604), as no source read gives it."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3117604), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -182,6 +212,56 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L3117604), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire. Here: a blade pinnately lobed up to three times into narrow lobes is cut into fine segments (dissected)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire."
+    },
+    "traits.leaf_lobe_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): petioles 1-7 cm; blades 5-12(-25) cm, ultimate lobes 2-5 mm wide, margins sparsely spinulose-ciliate; genus: blades usually 1-3-pinnately lobed, ultimate margins usually entire. Here: a pinnately lobed blade ends in a lobe."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): peduncles 10-20 cm; involucres 6-10 mm diam.; ray corollas intensely yellow to red-orange, laminae obovate, 18-30 mm, apices +/- truncate, denticulate; genus: disc corollas yellow."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): peduncles 10-20 cm; involucres 6-10 mm diam.; ray corollas intensely yellow to red-orange, laminae obovate, 18-30 mm, apices +/- truncate, denticulate; genus: disc corollas yellow."
+    },
+    "traits.ray_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): peduncles 10-20 cm; involucres 6-10 mm diam.; ray corollas intensely yellow to red-orange, laminae obovate, 18-30 mm, apices +/- truncate, denticulate; genus: disc corollas yellow. Here: truncate and denticulate."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cosmos sulphureus (read 2026-11-02): peduncles 10-20 cm; involucres 6-10 mm diam.; ray corollas intensely yellow to red-orange, laminae obovate, 18-30 mm, apices +/- truncate, denticulate; genus: disc corollas yellow. sRGB by eye from the words and the species' photos."
     }
   },
   "provenance": {

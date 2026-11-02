@@ -1433,5 +1433,13 @@ pub mod venation;
 /// herb that leaves them unset bears a leafy node about every leaf's width
 /// up its stem (no more leaves than the 32 an angiosperm shoot bears at
 /// most), leaves nearly to its foot, a wide rosette and heads facing up, as
-/// the built-in daisy-family herbs mostly do.
+/// the built-in daisy-family herbs mostly do. A dissected blade draws on
+/// the compound card, as the built-in yarrow and poppy chose by hand: its
+/// flora's lobes are its segments (`leaf_lobes` now counts a dissected
+/// blade's), as wide as the flora measures them (`leaf_lobe_width_m`), so
+/// a prairie coneflower's leaf draws 3 to 14 narrow lobes on a winged
+/// midrib where it drew one broad blade. A daisy-family herb with a basal
+/// rosette draws its rosette (`rosette_leaves`, else 6), where the family
+/// program drew none unless the species set it by hand: a mouse-ear
+/// hawkweed's leafless scapes stood on no leaves.
 pub const GENERATOR_REVISION: u32 = 185;

@@ -2,5 +2,18 @@
   "schema": 1,
   "rank": "genus",
   "name": "Tagetes",
-  "parent": "tribe/heliantheae"
+  "parent": "tribe/heliantheae",
+  "traits": {
+    "receptacle_shape": {
+      "convex": "often",
+      "conic": "often"
+    }
+  },
+  "evidence": {
+    "traits.receptacle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Tagetes (read on eFloras 2026-11-02): receptacles convex to conic."
+    }
+  }
 }

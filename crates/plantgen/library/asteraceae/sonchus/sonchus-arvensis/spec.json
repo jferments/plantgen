@@ -23,7 +23,8 @@
     "perennation": "rhizome",
     "leaf_length_m": {
       "min": 0.06,
-      "max": 0.4
+      "max": 0.4,
+      "low": 0.03
     },
     "leaf_width_m": {
       "min": 0.02,
@@ -65,6 +66,13 @@
     "inflorescence_length_m": {
       "min": 0.1,
       "max": 0.3
+    },
+    "leaf_incision": "lobed",
+    "division_pattern": "pinnate",
+    "leaf_lobe_apex": "acute",
+    "involucre_height_m": {
+      "min": 0.01,
+      "max": 0.017
     }
   },
   "evidence": {
@@ -114,14 +122,14 @@
       "note": "A model estimate (confidence high, record L3062474), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3062474), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus arvensis (read 2026-11-02): mid cauline blades oblong to lanceolate, (3-)6-40 x 2-15 cm, bases auriculate, margins usually pinnately lobed, lobes +/- deltate, terminals usually larger than laterals, dentate or entire; genus: teeth often +/- prickly."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3062474), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus arvensis (read 2026-11-02): mid cauline blades oblong to lanceolate, (3-)6-40 x 2-15 cm, bases auriculate, margins usually pinnately lobed, lobes +/- deltate, terminals usually larger than laterals, dentate or entire; genus: teeth often +/- prickly."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -134,14 +142,14 @@
       "note": "A model estimate (confidence high, record L3062474), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3062474), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus arvensis (read 2026-11-02): mid cauline blades oblong to lanceolate, (3-)6-40 x 2-15 cm, bases auriculate, margins usually pinnately lobed, lobes +/- deltate, terminals usually larger than laterals, dentate or entire; genus: teeth often +/- prickly."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3062474), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus arvensis (read 2026-11-02): mid cauline blades oblong to lanceolate, (3-)6-40 x 2-15 cm, bases auriculate, margins usually pinnately lobed, lobes +/- deltate, terminals usually larger than laterals, dentate or entire; genus: teeth often +/- prickly."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -192,6 +200,26 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L3062474), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus arvensis (read 2026-11-02): mid cauline blades oblong to lanceolate, (3-)6-40 x 2-15 cm, bases auriculate, margins usually pinnately lobed, lobes +/- deltate, terminals usually larger than laterals, dentate or entire; genus: teeth often +/- prickly."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus arvensis (read 2026-11-02): mid cauline blades oblong to lanceolate, (3-)6-40 x 2-15 cm, bases auriculate, margins usually pinnately lobed, lobes +/- deltate, terminals usually larger than laterals, dentate or entire; genus: teeth often +/- prickly."
+    },
+    "traits.leaf_lobe_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus arvensis (read 2026-11-02): mid cauline blades oblong to lanceolate, (3-)6-40 x 2-15 cm, bases auriculate, margins usually pinnately lobed, lobes +/- deltate, terminals usually larger than laterals, dentate or entire; genus: teeth often +/- prickly. Here: deltate lobes, drawn pointed."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus arvensis (read 2026-11-02): involucres 10-17+ mm."
     }
   },
   "provenance": {

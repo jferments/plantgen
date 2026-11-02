@@ -21,15 +21,18 @@
     "rosette": "basal",
     "leaf_length_m": {
       "min": 0.06,
-      "max": 0.3
+      "max": 0.35
     },
     "leaf_width_m": {
-      "min": 0.02,
-      "max": 0.1
+      "min": 0.01,
+      "max": 0.15
     },
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
-    "leaf_shape": "oblanceolate",
+    "leaf_shape": {
+      "oblanceolate": "often",
+      "oblong": "often"
+    },
     "leaf_margin": "dentate",
     "sexual_system": "hermaphrodite",
     "flowering_months": [
@@ -68,7 +71,14 @@
       "min": 0.015,
       "max": 0.025
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "leaf_incision": "cleft",
+    "division_pattern": "pinnate",
+    "leaf_lobe_apex": "acute",
+    "involucre_height_m": {
+      "min": 0.009000000000000001,
+      "max": 0.013000000000000001
+    }
   },
   "evidence": {
     "taxon": {
@@ -107,14 +117,14 @@
       "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -127,14 +137,14 @@
       "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -180,6 +190,26 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate. Here: runcinately lobed: backward-pointing lobes cut past halfway (cleft)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
+    },
+    "traits.leaf_lobe_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate. Here: deltate to lanceolate lobes, drawn pointed."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): involucres 9-13+ mm."
     }
   },
   "provenance": {

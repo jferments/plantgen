@@ -79,7 +79,57 @@
       "min": 0.01,
       "max": 0.025
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": {
+      "min": 3,
+      "max": 7
+    },
+    "terminal_leaflet": true,
+    "leaflet_length_m": {
+      "min": 0.025,
+      "max": 0.08,
+      "low": 0.01
+    },
+    "leaflet_width_m": {
+      "min": 0.01,
+      "max": 0.04,
+      "low": 0.005
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.03,
+      "high": 0.07
+    },
+    "involucre_height_m": {
+      "min": 0.005,
+      "max": 0.006
+    },
+    "involucre_diameter_m": {
+      "min": 0.007,
+      "max": 0.008,
+      "low": 0.006
+    },
+    "ray_florets": {
+      "min": 5,
+      "max": 8,
+      "low": 3
+    },
+    "ray_length_m": {
+      "min": 0.007,
+      "max": 0.015
+    },
+    "disc_florets": {
+      "min": 20,
+      "max": 40,
+      "high": 80
+    },
+    "disc_colour": [
+      232,
+      196,
+      50
+    ]
   },
   "evidence": {
     "taxon": {
@@ -138,14 +188,14 @@
       "note": "A model estimate (confidence high, record L2925686), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2925686), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2925686), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -191,6 +241,71 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L2925686), as no source read gives it."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate. Here: the primary lobes are stalked leaflets in Bidens pilosa, so the leaf stays compound."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): petioles 10-30(-70) mm; blades ovate to lanceolate or 1-pinnately lobed, primary lobes 3-7, ovate to lanceolate, (10-)25-80+ x (5-)10-40+ mm, bases truncate to cuneate, ultimate margins serrate, apices acute to attenuate."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): heads usually borne singly; involucres 5-6 x (6-)7-8 mm; ray florets 0 or (3-)5-8+, laminae whitish to pinkish, 2-3 or 7-15+ mm; disc florets 20-40(-80+), corollas yellowish."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): heads usually borne singly; involucres 5-6 x (6-)7-8 mm; ray florets 0 or (3-)5-8+, laminae whitish to pinkish, 2-3 or 7-15+ mm; disc florets 20-40(-80+), corollas yellowish."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): heads usually borne singly; involucres 5-6 x (6-)7-8 mm; ray florets 0 or (3-)5-8+, laminae whitish to pinkish, 2-3 or 7-15+ mm; disc florets 20-40(-80+), corollas yellowish."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): heads usually borne singly; involucres 5-6 x (6-)7-8 mm; ray florets 0 or (3-)5-8+, laminae whitish to pinkish, 2-3 or 7-15+ mm; disc florets 20-40(-80+), corollas yellowish."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): heads usually borne singly; involucres 5-6 x (6-)7-8 mm; ray florets 0 or (3-)5-8+, laminae whitish to pinkish, 2-3 or 7-15+ mm; disc florets 20-40(-80+), corollas yellowish."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Bidens pilosa (read 2026-11-02): heads usually borne singly; involucres 5-6 x (6-)7-8 mm; ray florets 0 or (3-)5-8+, laminae whitish to pinkish, 2-3 or 7-15+ mm; disc florets 20-40(-80+), corollas yellowish. sRGB by eye from the words and the species' photos."
     }
   },
   "provenance": {

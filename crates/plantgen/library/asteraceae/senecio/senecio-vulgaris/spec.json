@@ -24,8 +24,9 @@
       "max": 0.1
     },
     "leaf_width_m": {
-      "min": 0.01,
-      "max": 0.04
+      "min": 0.005,
+      "max": 0.02,
+      "high": 0.04
     },
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
@@ -80,7 +81,14 @@
       "min": 0.004,
       "max": 0.005
     },
-    "inflorescence": "solitary"
+    "inflorescence": "corymb",
+    "leaf_incision": "lobed",
+    "division_pattern": "pinnate",
+    "leaf_base_shape": "attenuate",
+    "units_per_inflorescence": {
+      "min": 8,
+      "max": 20
+    }
   },
   "evidence": {
     "taxon": {
@@ -119,14 +127,14 @@
       "note": "A model estimate (confidence high, record L3082278), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3082278), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): petiolate; blades ovate to oblanceolate, 2-10 x 0.5-2(-4) cm, bases tapered, margins lobulate to dentate, ultimate margins often secondarily dentate to denticulate (distal sessile)."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3082278), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): petiolate; blades ovate to oblanceolate, 2-10 x 0.5-2(-4) cm, bases tapered, margins lobulate to dentate, ultimate margins often secondarily dentate to denticulate (distal sessile)."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -139,14 +147,14 @@
       "note": "A model estimate (confidence high, record L3082278), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3082278), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): petiolate; blades ovate to oblanceolate, 2-10 x 0.5-2(-4) cm, bases tapered, margins lobulate to dentate, ultimate margins often secondarily dentate to denticulate (distal sessile)."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3082278), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): petiolate; blades ovate to oblanceolate, 2-10 x 0.5-2(-4) cm, bases tapered, margins lobulate to dentate, ultimate margins often secondarily dentate to denticulate (distal sessile)."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -194,9 +202,29 @@
       "note": "A model estimate (confidence high, record L3082278), as no source read gives it."
     },
     "traits.inflorescence": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3082278), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): heads 8-20 in loose, corymbiform arrays; ray florets 0."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): petiolate; blades ovate to oblanceolate, 2-10 x 0.5-2(-4) cm, bases tapered, margins lobulate to dentate, ultimate margins often secondarily dentate to denticulate (distal sessile). Here: lobulate: cut into small lobes."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): petiolate; blades ovate to oblanceolate, 2-10 x 0.5-2(-4) cm, bases tapered, margins lobulate to dentate, ultimate margins often secondarily dentate to denticulate (distal sessile)."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): petiolate; blades ovate to oblanceolate, 2-10 x 0.5-2(-4) cm, bases tapered, margins lobulate to dentate, ultimate margins often secondarily dentate to denticulate (distal sessile)."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Senecio vulgaris (read 2026-11-02): heads 8-20 in loose, corymbiform arrays; ray florets 0."
     }
   },
   "provenance": {

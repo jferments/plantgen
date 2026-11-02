@@ -1979,8 +1979,8 @@
       "organ": "leaf",
       "type": "count",
       "range": [0, 50],
-      "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
-      "why": "lobes on a lobed leaf"
+      "when": {"leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
+      "why": "lobes on a lobed leaf, or a dissected blade's primary segments as floras count them ('lobes 3-14', a prairie coneflower's 1-2-pinnatifid blade)"
     },
     "leaf_lobe_apex": {
       "group": "leaves",
@@ -1990,6 +1990,16 @@
       "optional": true,
       "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
       "why": "the tips of a lobed blade's lobes: pointed (a jimsonweed's 'lobes acute', Britton and Brown), blunt, or rounded (a white oak's)"
+    },
+    "leaf_lobe_width_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.5],
+      "optional": true,
+      "when": {"leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
+      "why": "a cut blade's lobes' or ultimate segments' width, as floras measure it ('ultimate lobes 2-5 mm wide', a sulphur cosmos's; 'lobes 0.2-3.5 cm wide', a grey-headed coneflower's): a dissected blade's segments drawn that wide"
     },
     "leaflets": {
       "group": "leaves",

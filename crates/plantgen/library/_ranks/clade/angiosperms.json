@@ -316,8 +316,8 @@
     },
     "appearance.organs.*.shape.leaflets": {
       "template": "compound",
-      "map": {"division_pattern": {"pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((pinnae - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnae / 2), 2, 40)) : (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))"}, "palmate": {"rule": "clamp(round(division_order >= 2 ? pinnae : leaflets), 3, 17)"}}},
-      "why": "A compound leaf divided once draws its leaflets; one divided twice (or more), its pinnae. A pinnate leaf's count is the nearest odd one if it ends in a leaflet, else the nearest even one, up to 41; a palmate leaf draws 3 to 17."
+      "map": {"division_pattern": {"pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((first(pinnae, leaf_lobes) - 1) / 2) + 1, 3, 41) : clamp(2 * round(first(pinnae, leaf_lobes) / 2), 2, 40)) : (terminal_leaflet ? clamp(2 * round((first(leaflets, leaf_lobes) - 1) / 2) + 1, 3, 41) : clamp(2 * round(first(leaflets, leaf_lobes) / 2), 2, 40))"}, "palmate": {"rule": "clamp(round(division_order >= 2 ? first(pinnae, leaf_lobes) : first(leaflets, leaf_lobes)), 3, 17)"}}},
+      "why": "A compound leaf divided once draws its leaflets; one divided twice (or more), its pinnae. A dissected blade, drawn on this card, draws the primary segments its flora counts as lobes. A pinnate leaf's count is the nearest odd one if it ends in a leaflet, else the nearest even one, up to 41; a palmate leaf draws 3 to 17."
     },
     "appearance.organs.*.shape.interjected": {
       "template": "compound",
@@ -627,8 +627,8 @@
       "why": "A spur is drawn as long as its length over the flower's radius, up to three radii."
     },
     "appearance.organs.leaf.shape.template": {
-      "map": {"leaf_division": {"compound": "compound", "simple": {"map": {"leaf_incision": {"none": "simple", "lobed": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "cleft": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "parted": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "dissected": "lobed"}}, "else": "simple"}}},
-      "why": "A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
+      "map": {"leaf_division": {"compound": "compound", "simple": {"map": {"leaf_incision": {"none": "simple", "lobed": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "cleft": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "parted": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "dissected": "compound"}}, "else": "simple"}}},
+      "why": "A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade dissected into fine segments on it too, its segments run together along a winged rachis (as yarrow, California poppy, burrobush and ragwort are drawn); a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
     },
     "generator.params.thorns": {
       "map": {"spines": {"none": 0, "thorns": {"map": {"thorn_position": {"lateral": 1, "terminal": 0, "both": 1}}, "else": 1}, "prickles": 1}},
@@ -702,8 +702,8 @@
       "why": "A thorn or prickle is drawn in the colour its flora gives it, or else in its bark's: the young stem's skin it grows from."
     },
     "appearance.organs.basal.shape.template": {
-      "map": {"leaf_division": {"compound": "compound", "simple": {"map": {"leaf_incision": {"none": "simple", "lobed": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "cleft": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "parted": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "dissected": "lobed"}}, "else": "simple"}}},
-      "why": "A rosette's leaves are the species' leaves, unless their own are stated. A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
+      "map": {"leaf_division": {"compound": "compound", "simple": {"map": {"leaf_incision": {"none": "simple", "lobed": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "cleft": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "parted": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "dissected": "compound"}}, "else": "simple"}}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated. A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade dissected into fine segments on it too, its segments run together along a winged rachis; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
     },
     "appearance.organs.bloom.shape.template": {
       "map": {"inflorescence_unit": {"flower": "flower", "capitulum": "head", "spikelet": "spikelet"}}, "else": "flower",
@@ -862,7 +862,7 @@
     "rules.appearance.organs.*.shape.leaflets": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind. A dissected blade's segments are its flora's lobes (C5 daisies, 2026-11-02): FNA counts a prairie coneflower's as 'lobes 3-14' and a tansy's as 'primary lobes 4-10 pairs'."
     },
     "rules.appearance.organs.*.shape.pinnules": {
       "evidence": "Authored",
@@ -1117,7 +1117,7 @@
     "rules.appearance.organs.leaf.shape.template": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "How PlantGen chooses an organ's card from the characters (species-spec pilot, 2026-10-14): only where no file at least as near chose one by hand."
+      "note": "How PlantGen chooses an organ's card from the characters (species-spec pilot, 2026-10-14): only where no file at least as near chose one by hand. A dissected blade goes on the compound card (C5 daisies, 2026-11-02) because every curated species with one chose it by hand: yarrow, California poppy, burrobush and tansy ragwort."
     },
     "rules.appearance.organs.basal.shape.template": {
       "evidence": "Authored",

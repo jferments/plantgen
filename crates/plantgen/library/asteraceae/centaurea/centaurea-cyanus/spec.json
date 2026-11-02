@@ -62,7 +62,12 @@
       "min": 0.02,
       "max": 0.035
     },
-    "inflorescence": "solitary"
+    "inflorescence": "cyme",
+    "leaf_apex": "acute",
+    "involucre_height_m": {
+      "min": 0.012,
+      "max": 0.016
+    }
   },
   "evidence": {
     "taxon": {
@@ -106,9 +111,9 @@
       "note": "A model estimate (confidence high, record L2926089), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2926089), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea cyanus (read 2026-11-02): basal leaf blades linear-lanceolate, 3-10 cm, margins entire or with remote linear lobes, apices acute; cauline linear, usually entire, loosely gray-tomentose."
     },
     "traits.leaf_width_m": {
       "evidence": "Authored",
@@ -126,14 +131,14 @@
       "note": "A model estimate (confidence high, record L2926089), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2926089), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea cyanus (read 2026-11-02): basal leaf blades linear-lanceolate, 3-10 cm, margins entire or with remote linear lobes, apices acute; cauline linear, usually entire, loosely gray-tomentose."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2926089), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea cyanus (read 2026-11-02): basal leaf blades linear-lanceolate, 3-10 cm, margins entire or with remote linear lobes, apices acute; cauline linear, usually entire, loosely gray-tomentose."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -176,9 +181,19 @@
       "note": "A model estimate (confidence high, record L2926089), as no source read gives it."
     },
     "traits.inflorescence": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2926089), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea cyanus (read 2026-11-02): heads radiant, in open, rounded or +/- flat-topped cymiform arrays, pedunculate; involucres campanulate, 12-16 mm."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea cyanus (read 2026-11-02): basal leaf blades linear-lanceolate, 3-10 cm, margins entire or with remote linear lobes, apices acute; cauline linear, usually entire, loosely gray-tomentose."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Centaurea cyanus (read 2026-11-02): heads radiant, in open, rounded or +/- flat-topped cymiform arrays, pedunculate; involucres campanulate, 12-16 mm."
     }
   },
   "provenance": {

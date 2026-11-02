@@ -20,17 +20,23 @@
     "height_max_m": 0.7,
     "rosette": "none",
     "leaf_length_m": {
-      "min": 0.03,
-      "max": 0.08
+      "min": 0.01,
+      "max": 0.05,
+      "high": 0.12
     },
     "leaf_width_m": {
-      "min": 0.01,
-      "max": 0.02
+      "min": 0.004,
+      "max": 0.012,
+      "high": 0.035
     },
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
-    "leaf_shape": "oblanceolate",
-    "leaf_margin": "dentate",
+    "leaf_shape": {
+      "oblong": "often",
+      "spatulate": "often",
+      "linear": "sometimes"
+    },
+    "leaf_margin": "entire",
     "sexual_system": "monoecious",
     "flowering_months": [
       5,
@@ -65,7 +71,28 @@
       "min": 0.04,
       "max": 0.06
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "petiole_length_m": {
+      "min": 0,
+      "max": 0.03
+    },
+    "ray_florets": {
+      "min": 8,
+      "max": 14
+    },
+    "ray_length_m": {
+      "min": 0.013000000000000001,
+      "max": 0.03
+    },
+    "disc_florets": {
+      "min": 40,
+      "max": 100
+    },
+    "disc_colour": [
+      128,
+      52,
+      44
+    ]
   },
   "evidence": {
     "taxon": {
@@ -104,14 +131,14 @@
       "note": "A model estimate (confidence high, record L3115709), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3115709), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): leaves cauline; petiolar bases 0-3+ cm; blades linear, oblong, or spatulate, 1-5(-12) cm x 4-12(-35) mm, margins usually entire, sometimes toothed or lobed."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3115709), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): leaves cauline; petiolar bases 0-3+ cm; blades linear, oblong, or spatulate, 1-5(-12) cm x 4-12(-35) mm, margins usually entire, sometimes toothed or lobed."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -124,14 +151,14 @@
       "note": "A model estimate (confidence high, record L3115709), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3115709), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): leaves cauline; petiolar bases 0-3+ cm; blades linear, oblong, or spatulate, 1-5(-12) cm x 4-12(-35) mm, margins usually entire, sometimes toothed or lobed."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3115709), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): leaves cauline; petiolar bases 0-3+ cm; blades linear, oblong, or spatulate, 1-5(-12) cm x 4-12(-35) mm, margins usually entire, sometimes toothed or lobed."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -177,6 +204,31 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L3115709), as no source read gives it."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): leaves cauline; petiolar bases 0-3+ cm; blades linear, oblong, or spatulate, 1-5(-12) cm x 4-12(-35) mm, margins usually entire, sometimes toothed or lobed."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): peduncles 3-10(-20) cm; ray florets usually 8-14, corollas usually reddish to purplish proximally, yellow to orange distally, 13-30+ mm; disc florets 40-100+, corollas yellowish to purple or brown, often bicolored."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): peduncles 3-10(-20) cm; ray florets usually 8-14, corollas usually reddish to purplish proximally, yellow to orange distally, 13-30+ mm; disc florets 40-100+, corollas yellowish to purple or brown, often bicolored."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): peduncles 3-10(-20) cm; ray florets usually 8-14, corollas usually reddish to purplish proximally, yellow to orange distally, 13-30+ mm; disc florets 40-100+, corollas yellowish to purple or brown, often bicolored."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): peduncles 3-10(-20) cm; ray florets usually 8-14, corollas usually reddish to purplish proximally, yellow to orange distally, 13-30+ mm; disc florets 40-100+, corollas yellowish to purple or brown, often bicolored. sRGB by eye from the words and the species' photos. Here: purple to brown, the colour its photos show."
     }
   },
   "provenance": {

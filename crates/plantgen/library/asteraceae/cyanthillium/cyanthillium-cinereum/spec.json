@@ -20,17 +20,19 @@
     "height_max_m": 1,
     "rosette": "none",
     "leaf_length_m": {
-      "min": 0.03,
-      "max": 0.07
+      "min": 0.02,
+      "max": 0.035,
+      "high": 0.05
     },
     "leaf_width_m": {
-      "min": 0.01,
-      "max": 0.04
+      "min": 0.012,
+      "max": 0.025,
+      "high": 0.03
     },
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_shape": "ovate",
-    "leaf_margin": "dentate",
+    "leaf_margin": "serrate",
     "sexual_system": "hermaphrodite",
     "flowering_months": [
       1,
@@ -84,7 +86,8 @@
     "inflorescence_length_m": {
       "min": 0.05,
       "max": 0.15
-    }
+    },
+    "leaf_base_shape": "cuneate"
   },
   "evidence": {
     "taxon": {
@@ -123,14 +126,14 @@
       "note": "A model estimate (confidence high, record L2929223), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2929223), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cyanthillium cinereum (read 2026-11-02): leaf blades 20-35(-50+) x 12-25(-30+) mm (including petioles); genus: petioles +/- winged, blades ovate to trullate, deltate, oblanceolate, or spatulate, bases +/- cuneate, margins serrate, apices rounded to acute. Here: the flora's blade with its petiole."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2929223), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cyanthillium cinereum (read 2026-11-02): leaf blades 20-35(-50+) x 12-25(-30+) mm (including petioles); genus: petioles +/- winged, blades ovate to trullate, deltate, oblanceolate, or spatulate, bases +/- cuneate, margins serrate, apices rounded to acute."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -143,14 +146,14 @@
       "note": "A model estimate (confidence high, record L2929223), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2929223), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cyanthillium cinereum (read 2026-11-02): leaf blades 20-35(-50+) x 12-25(-30+) mm (including petioles); genus: petioles +/- winged, blades ovate to trullate, deltate, oblanceolate, or spatulate, bases +/- cuneate, margins serrate, apices rounded to acute."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2929223), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cyanthillium cinereum (read 2026-11-02): leaf blades 20-35(-50+) x 12-25(-30+) mm (including petioles); genus: petioles +/- winged, blades ovate to trullate, deltate, oblanceolate, or spatulate, bases +/- cuneate, margins serrate, apices rounded to acute."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -206,6 +209,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L2929223), as no source read gives it."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cyanthillium cinereum (read 2026-11-02): leaf blades 20-35(-50+) x 12-25(-30+) mm (including petioles); genus: petioles +/- winged, blades ovate to trullate, deltate, oblanceolate, or spatulate, bases +/- cuneate, margins serrate, apices rounded to acute."
     }
   },
   "provenance": {

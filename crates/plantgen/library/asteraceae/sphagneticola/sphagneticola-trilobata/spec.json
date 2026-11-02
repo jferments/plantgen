@@ -21,16 +21,19 @@
     "leaf_habit": "evergreen",
     "rosette": "none",
     "leaf_length_m": {
-      "min": 0.04,
-      "max": 0.1
+      "min": 0.05,
+      "max": 0.18
     },
     "leaf_width_m": {
-      "min": 0.02,
+      "min": 0.01,
       "max": 0.05
     },
     "leaf_arrangement": "opposite",
     "leaf_division": "simple",
-    "leaf_shape": "obovate",
+    "leaf_shape": {
+      "ovate": "often",
+      "lanceolate": "often"
+    },
     "leaf_margin": "serrate",
     "sexual_system": "hermaphrodite",
     "flowering_months": [
@@ -66,7 +69,15 @@
       "min": 0.02,
       "max": 0.035
     },
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "leaf_incision": "lobed",
+    "division_pattern": "pinnate",
+    "leaf_lobes": 2,
+    "leaf_base_shape": "cuneate",
+    "ray_length_m": {
+      "min": 0.006,
+      "max": 0.015
+    }
   },
   "evidence": {
     "taxon": {
@@ -110,14 +121,14 @@
       "note": "A model estimate (confidence high, record L3122192), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3122192), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): leaf blades 5-18 x 1-5+ cm; genus: opposite, sessile or petiolate, blades usually 3-nerved, mostly trullate to lanceolate, often obscurely 3-lobed, bases +/- cuneate, margins entire or toothed."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3122192), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): leaf blades 5-18 x 1-5+ cm; genus: opposite, sessile or petiolate, blades usually 3-nerved, mostly trullate to lanceolate, often obscurely 3-lobed, bases +/- cuneate, margins entire or toothed."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -130,14 +141,14 @@
       "note": "A model estimate (confidence high, record L3122192), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3122192), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): leaf blades 5-18 x 1-5+ cm; genus: opposite, sessile or petiolate, blades usually 3-nerved, mostly trullate to lanceolate, often obscurely 3-lobed, bases +/- cuneate, margins entire or toothed. Here: trullate (trowel-shaped, broadest below the middle) to lanceolate."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3122192), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): leaf blades 5-18 x 1-5+ cm; genus: opposite, sessile or petiolate, blades usually 3-nerved, mostly trullate to lanceolate, often obscurely 3-lobed, bases +/- cuneate, margins entire or toothed."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -178,6 +189,31 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L3122192), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): leaf blades 5-18 x 1-5+ cm; genus: opposite, sessile or petiolate, blades usually 3-nerved, mostly trullate to lanceolate, often obscurely 3-lobed, bases +/- cuneate, margins entire or toothed."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): leaf blades 5-18 x 1-5+ cm; genus: opposite, sessile or petiolate, blades usually 3-nerved, mostly trullate to lanceolate, often obscurely 3-lobed, bases +/- cuneate, margins entire or toothed."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): leaf blades 5-18 x 1-5+ cm; genus: opposite, sessile or petiolate, blades usually 3-nerved, mostly trullate to lanceolate, often obscurely 3-lobed, bases +/- cuneate, margins entire or toothed. Here: 3-lobed: a lobe each side below the terminal one."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): leaf blades 5-18 x 1-5+ cm; genus: opposite, sessile or petiolate, blades usually 3-nerved, mostly trullate to lanceolate, often obscurely 3-lobed, bases +/- cuneate, margins entire or toothed."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sphagneticola trilobata (read 2026-11-02): ray laminae 6-15 mm."
     }
   },
   "provenance": {

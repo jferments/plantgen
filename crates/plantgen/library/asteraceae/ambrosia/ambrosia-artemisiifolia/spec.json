@@ -21,17 +21,22 @@
     "leaf_habit": "deciduous",
     "rosette": "none",
     "leaf_length_m": {
-      "min": 0.04,
-      "max": 0.1
+      "min": 0.025,
+      "max": 0.055,
+      "high": 0.09
     },
     "leaf_width_m": {
       "min": 0.02,
-      "max": 0.06
+      "max": 0.03,
+      "high": 0.05
     },
     "leaf_arrangement": "alternate",
-    "leaf_division": "compound",
-    "leaf_shape": "ovate",
-    "leaf_margin": "dentate",
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "lanceolate": "often",
+      "elliptic": "often"
+    },
+    "leaf_margin": "entire",
     "sexual_system": "monoecious",
     "flowering_months": [
       8,
@@ -66,7 +71,20 @@
     "inflorescence_length_m": {
       "min": 0.03,
       "max": 0.15
-    }
+    },
+    "leaf_incision": "dissected",
+    "division_pattern": "pinnate",
+    "division_order": {
+      "min": 1,
+      "max": 2
+    },
+    "petiole_length_m": {
+      "min": 0.025,
+      "max": 0.035,
+      "high": 0.06
+    },
+    "leaf_base_shape": "cuneate",
+    "terminal_leaflet": true
   },
   "evidence": {
     "taxon": {
@@ -110,14 +128,14 @@
       "note": "A model estimate (confidence high, record L2922382), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2922382), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2922382), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -125,19 +143,19 @@
       "note": "A model estimate (confidence high, record L2922382), as no source read gives it."
     },
     "traits.leaf_division": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2922382), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2922382), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed. Here: the narrower two of the flora's words for the blade, as a dissected blade's word is its segments'."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2922382), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -193,6 +211,36 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L2922382), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed. Here: a blade twice pinnately lobed is cut into fine segments (dissected)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed. Here: a pinnately lobed blade ends in a lobe."
     }
   },
   "provenance": {

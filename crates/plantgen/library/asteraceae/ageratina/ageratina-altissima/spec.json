@@ -22,12 +22,14 @@
     "rosette": "none",
     "perennation": "rhizome",
     "leaf_length_m": {
-      "min": 0.06,
-      "max": 0.15
+      "min": 0.04,
+      "max": 0.11,
+      "high": 0.13
     },
     "leaf_width_m": {
-      "min": 0.03,
-      "max": 0.1
+      "min": 0.025,
+      "max": 0.08,
+      "high": 0.09
     },
     "leaf_arrangement": "opposite",
     "leaf_division": "simple",
@@ -68,6 +70,18 @@
     "inflorescence_length_m": {
       "min": 0.05,
       "max": 0.15
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.03,
+      "low": 0.005,
+      "high": 0.05
+    },
+    "leaf_base_shape": "rounded",
+    "leaf_apex": "acuminate",
+    "involucre_height_m": {
+      "min": 0.004,
+      "max": 0.005
     }
   },
   "evidence": {
@@ -117,14 +131,14 @@
       "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -137,14 +151,14 @@
       "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -200,6 +214,26 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): heads clustered; involucres 4-5 mm."
     }
   },
   "provenance": {

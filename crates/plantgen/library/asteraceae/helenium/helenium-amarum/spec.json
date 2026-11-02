@@ -66,7 +66,37 @@
       "min": 0.015,
       "max": 0.03
     },
-    "inflorescence": "solitary"
+    "inflorescence": "panicle",
+    "involucre_height_m": {
+      "min": 0.005,
+      "max": 0.009000000000000001
+    },
+    "involucre_diameter_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "ray_florets": {
+      "min": 8,
+      "max": 10
+    },
+    "ray_length_m": {
+      "min": 0.0045000000000000005,
+      "max": 0.014
+    },
+    "ray_width_m": {
+      "min": 0.002,
+      "max": 0.01
+    },
+    "disc_florets": {
+      "min": 75,
+      "max": 250
+    },
+    "disc_colour": [
+      212,
+      168,
+      48
+    ],
+    "receptacle_shape": "hemispheric"
   },
   "evidence": {
     "taxon": {
@@ -130,14 +160,14 @@
       "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): basal blades linear to ovate, entire or pinnately toothed or lobed to pinnatifid; mid and distal blades linear, entire. Here: the stem's leaves, those seen at flowering."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): basal blades linear to ovate, entire or pinnately toothed or lobed to pinnatifid; mid and distal blades linear, entire."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -180,9 +210,49 @@
       "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
     },
     "traits.inflorescence": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.ray_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally. sRGB by eye from the words and the species' photos. Here: yellow to yellow-brown."
+    },
+    "traits.receptacle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally. Here: the disc hemispheric to globose."
     }
   },
   "provenance": {

@@ -22,17 +22,17 @@
     "rosette": "none",
     "perennation": "rhizome",
     "leaf_length_m": {
-      "min": 0.1,
-      "max": 0.3
+      "min": 0.08,
+      "max": 0.4
     },
     "leaf_width_m": {
-      "min": 0.08,
-      "max": 0.25
+      "min": 0.03,
+      "max": 0.2
     },
     "leaf_arrangement": "alternate",
-    "leaf_division": "compound",
-    "leaf_shape": "lanceolate",
-    "leaf_margin": "serrate",
+    "leaf_division": "simple",
+    "leaf_shape": "ovate",
+    "leaf_margin": "dentate",
     "sexual_system": "hermaphrodite",
     "flowering_months": [
       7,
@@ -61,7 +61,39 @@
       "min": 0.06,
       "max": 0.1
     },
-    "inflorescence": "solitary"
+    "inflorescence": "corymb",
+    "leaf_incision": "cleft",
+    "division_pattern": "pinnate",
+    "leaf_lobes": {
+      "min": 3,
+      "max": 11
+    },
+    "leaf_lobe_apex": "acute",
+    "units_per_inflorescence": {
+      "min": 2,
+      "max": 25
+    },
+    "ray_florets": {
+      "min": 8,
+      "max": 12
+    },
+    "ray_length_m": {
+      "min": 0.015,
+      "max": 0.05
+    },
+    "ray_width_m": {
+      "min": 0.004,
+      "max": 0.014
+    },
+    "disc_florets": {
+      "min": 150,
+      "max": 300
+    },
+    "disc_colour": [
+      206,
+      196,
+      82
+    ]
   },
   "evidence": {
     "taxon": {
@@ -110,14 +142,14 @@
       "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
     },
     "traits.leaf_length_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm."
     },
     "traits.leaf_width_m": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -125,19 +157,19 @@
       "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
     },
     "traits.leaf_division": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm."
     },
     "traits.leaf_shape": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm."
     },
     "traits.leaf_margin": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm."
     },
     "traits.sexual_system": {
       "evidence": "Authored",
@@ -180,9 +212,59 @@
       "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
     },
     "traits.inflorescence": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L3123636), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): heads (2-25) in loose, corymbiform arrays; ray florets 8-12, laminae 15-50 x 4-14 mm; disc florets 150-300+, corollas yellow to yellowish green (lobes yellow)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm. Here: the stem's leaves, lobed to pinnatifid: cut past halfway (cleft)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm."
+    },
+    "traits.leaf_lobe_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): blades broadly ovate to lanceolate, all but distalmost 1-2-pinnatifid or pinnately compound, leaflets/lobes 3-11, bases cuneate to attenuate or cordate, margins entire or dentate, apices acute to acuminate; cauline mostly lobed to pinnatifid, 8-40 x 3-20 cm."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): heads (2-25) in loose, corymbiform arrays; ray florets 8-12, laminae 15-50 x 4-14 mm; disc florets 150-300+, corollas yellow to yellowish green (lobes yellow)."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): heads (2-25) in loose, corymbiform arrays; ray florets 8-12, laminae 15-50 x 4-14 mm; disc florets 150-300+, corollas yellow to yellowish green (lobes yellow)."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): heads (2-25) in loose, corymbiform arrays; ray florets 8-12, laminae 15-50 x 4-14 mm; disc florets 150-300+, corollas yellow to yellowish green (lobes yellow)."
+    },
+    "traits.ray_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): heads (2-25) in loose, corymbiform arrays; ray florets 8-12, laminae 15-50 x 4-14 mm; disc florets 150-300+, corollas yellow to yellowish green (lobes yellow)."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): heads (2-25) in loose, corymbiform arrays; ray florets 8-12, laminae 15-50 x 4-14 mm; disc florets 150-300+, corollas yellow to yellowish green (lobes yellow)."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): heads (2-25) in loose, corymbiform arrays; ray florets 8-12, laminae 15-50 x 4-14 mm; disc florets 150-300+, corollas yellow to yellowish green (lobes yellow). sRGB by eye from the words and the species' photos."
     }
   },
   "provenance": {
