@@ -3236,7 +3236,14 @@ fn lace_lines(
         let drawn = looks
             .get(usize::from(organ.organ))
             .is_some_and(|look| !signature(look));
-        if let (true, Some(segment)) = (drawn, organ.segment) {
+        // A leaflet within a leaf (a fishtail palm's, along its frond's
+        // rachis) lies on its leaf's card, which hides its line: a
+        // fishtail palm's low cards spent 936 triangles on them.
+        let within = organ
+            .segment
+            .and_then(|s| graph.segments.get(s as usize))
+            .is_some_and(|s| s.within.is_some());
+        if let (true, false, Some(segment)) = (drawn, within, organ.segment) {
             borne.entry(segment).or_default().push(o);
         }
     }

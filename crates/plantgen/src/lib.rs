@@ -1477,4 +1477,9 @@ pub mod venation;
 /// head takes its thin branches with its flowers (`crate::billboards`):
 /// a beargrass's stalk top and panicle branches were baked onto the
 /// blades' cards and drew as specks up to 20 cm off the stalk.
-pub const GENERATOR_REVISION: u32 = 189;
+///
+/// 190: the card tiers draw no midrib lines for leaflets within a leaf,
+/// whose leaf's card hides them (`crate::billboards`): a fishtail palm's
+/// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
+/// 914, with no change in what they show.
+pub const GENERATOR_REVISION: u32 = 190;
