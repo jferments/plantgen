@@ -204,7 +204,7 @@ Usage:
                 [--focus X,Y,Z [--span METRES]] [--parts on] [--figure off]
                 [--conditions FILE|JSON [--from-age N]]
                 [--break snap|WIND|bone:N [--fallen off]] [--leaves off]
-                [--fell HEIGHT[,DEGREES] [--fallen off|notched]] [--turn DEGREES]
+                [--fell HEIGHT[,DEGREES] [--fallen off|notched] [--by saw|ax|beaver]] [--turn DEGREES]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m (--figure
       off draws neither, for plant-identification models). --focus
@@ -236,8 +236,13 @@ Usage:
       stem higher leaving a twelfth of it as the hinge (the US Forest
       Service's conventional undercut); the stump stands with its sawn
       top and the log lies down the fall (--fallen off: the stump
-      alone; --fallen notched: notch and back cut sawn, the tree still
-      standing on its hinge). --turn turns the plant DEGREES about its foot
+      alone; --fallen notched: the tree still standing, the notch cut,
+      or a beaver's band gnawed to the core). --by ax fells it with an
+      ax instead (the Forest Service ax manual: a front notch half the
+      stem deep, a back notch a sixth higher leaving a sixth, both with
+      chopped 45-degree faces, chips round the stump); --by beaver
+      gnaws it down (Morgan 1868: a band two thirds of the stem high,
+      the stump and log ends left conical, chips at the foot). --turn turns the plant DEGREES about its foot
       (anticlockwise from above) before the view, --focus points with it.
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
@@ -2741,6 +2746,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "leaves",
             "turn",
             "fell",
+            "by",
         ],
     )?;
     let day = options.day()?;
@@ -2772,6 +2778,10 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         return Err("`--break` draws without `--parts`".into());
     }
     let felling = options.flags.get("fell").cloned();
+    let by = options.flags.get("by").cloned();
+    if by.is_some() && felling.is_none() {
+        return Err("`--by` says how `--fell` cuts; give `--fell` too".into());
+    }
     if felling.is_some() && (parted || breaking.is_some()) {
         return Err("`--fell` draws without `--parts` or `--break`".into());
     }
@@ -2878,6 +2888,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             &spec,
             graph,
             how,
+            by.as_deref().unwrap_or("saw"),
             if notched {
                 Felling::Notched
             } else if fallen {
@@ -3631,6 +3642,7 @@ fn felled_mesh(
     spec: &PlantSpec,
     graph: &PlantGraph,
     how: &str,
+    by: &str,
     stage: Felling,
     looks: &[Look],
     bodies: &[BodyLook],
@@ -3638,7 +3650,7 @@ fn felled_mesh(
     level: usize,
 ) -> Result<PlantMesh, Failure> {
     use plantgen::damage::{self, Grain, Toughness};
-    use plantgen::felling::{self, Cut, Notch};
+    use plantgen::felling::{self, Cut, Method};
     let numbers: Vec<f64> = how
         .split(',')
         .map(|part| part.trim().parse::<f64>())
@@ -3658,11 +3670,19 @@ fn felled_mesh(
         .appearance
         .bark_look(&spec.id)
         .map_err(|error| error.to_string())?;
+    let method = match by {
+        "saw" => Method::SAW,
+        "ax" | "axe" => Method::AX,
+        "beaver" => Method::BEAVER,
+        other => {
+            return Err(format!("`--by` is saw, ax or beaver, found `{other}`").into());
+        }
+    };
     let angle = degrees.to_radians();
     let cut = Cut {
         height,
         toward: Vec3::new(angle.cos(), 0.0, angle.sin()),
-        notch: Notch::CONVENTIONAL,
+        method,
     };
     let felled = felling::fell(
         graph,
@@ -3692,15 +3712,25 @@ fn felled_mesh(
         );
     }
     let d = 2.0 * felled.stump.radius;
+    let how_cut = match method {
+        Method::Notched(notch) => format!(
+            "notch {:.0} cm deep, hinge {:.0} cm long and {:.1} cm thick, stump shot {:.1} cm",
+            notch.depth * d * 100.0,
+            felled.hinge.length * 100.0,
+            felled.hinge.thickness * 100.0,
+            felled.hinge.height * 100.0
+        ),
+        Method::Gnawed(gnaw) => format!(
+            "gnawed band {:.0} cm high, core {:.1} cm across",
+            gnaw.band * d * 100.0,
+            felled.hinge.thickness * 100.0
+        ),
+    };
     out!(
-        "felled at {height:.2} m towards {degrees:.0} degrees: stem {:.0} cm across, bark {:.1} cm, {} rings; notch {:.0} cm deep, hinge {:.0} cm long and {:.1} cm thick, stump shot {:.1} cm",
+        "felled by {by} at {height:.2} m towards {degrees:.0} degrees: stem {:.0} cm across, bark {:.1} cm, {} rings; {how_cut}",
         d * 100.0,
         felled.stump.bark * 100.0,
         felled.stump.rings,
-        Notch::CONVENTIONAL.depth * d * 100.0,
-        felled.hinge.length * 100.0,
-        felled.hinge.thickness * 100.0,
-        felled.hinge.height * 100.0
     );
     if stage == Felling::Notched {
         // The tree as it stood, flare and all, the notch cut from it.

@@ -1,4 +1,7 @@
-//! A tree felled with a saw (plant motion S5, slice B3).
+//! A tree felled with a saw, an ax or by beavers (plant motion S5, slice
+//! B3). [`Method`] says which: the saw's conventional undercut (below),
+//! the ax's front and back notches ([`Notch::AX`]) or a beaver's gnawed
+//! hourglass ([`Gnaw::BEAVER`]).
 //!
 //! [`fell`] cuts a grown, drawn [`PlantGraph`] through its stem the way a
 //! sawyer fells a tree with the conventional undercut of the USDA Forest
@@ -42,6 +45,13 @@ pub struct Notch {
     /// The holding wood left between the back cut and the notch: the
     /// hinge's thickness.
     pub hinge: f64,
+    /// The angle the back cut's upper face makes with the level, radians:
+    /// none for a saw's flat back cut, a sloping face for an ax's back
+    /// notch.
+    pub back_angle: f64,
+    /// Whether the faces are chopped (an ax's blows leave flat facets,
+    /// each tilted its own way) rather than sawn flat.
+    pub chopped: bool,
 }
 
 impl Notch {
@@ -54,17 +64,117 @@ impl Notch {
         angle: math::PI / 4.0,
         step: 1.0 / 12.0,
         hinge: 1.0 / 12.0,
+        back_angle: 0.0,
+        chopped: false,
+    };
+
+    /// Felling with an ax alone, as the Forest Service's ax manual draws it
+    /// (Weisgerber, *An Ax to Grind*, MTDC 9923-2823, 1999, "Felling"): a
+    /// front notch "about one-third to one-half of the diameter of the
+    /// tree when felling strictly with an ax", its upper face chopped at
+    /// 45 degrees to a level floor (the manual's figure: 6 inches open on
+    /// a 12-inch tree), and a back notch of the same form "a minimum of 2
+    /// inches higher on the stump than the front notch", cut "to within
+    /// about 2 inches of the tip of the V" (a sixth of that tree each).
+    pub const AX: Self = Self {
+        depth: 0.5,
+        angle: math::PI / 4.0,
+        step: 1.0 / 6.0,
+        hinge: 1.0 / 6.0,
+        back_angle: math::PI / 4.0,
+        chopped: true,
+    };
+
+    /// How far above the notch's floor the cuts reach on the log's side:
+    /// the sloping cut's top, or the back notch's, whichever is higher, as
+    /// a share of the diameter.
+    #[must_use]
+    pub fn top(&self) -> f64 {
+        let front = self.depth * math::tan(self.angle);
+        let back =
+            self.step + (1.0 - self.depth - self.hinge).max(0.0) * math::tan(self.back_angle);
+        front.max(back)
+    }
+}
+
+/// A tree gnawed down by beavers, as shares of the stem's diameter at the
+/// cut. Lewis H. Morgan, *The American Beaver and His Works* (1868, pp.
+/// 171-176, Plate XV), from trees he cut out of the woods: beavers gnaw
+/// "round and round the tree continuously", evenly "until it is cut on
+/// all sides more than half way to the centre", then deepest on one side,
+/// "toward which it is then most likely to fall"; the cut is a band 8
+/// inches high on a yellow birch 13.5 inches across and 12 inches on one
+/// of 17 (about two thirds of the diameter), begun 6 or 7 inches above the
+/// ground, and both ends are left "conical"; "the chips at the foot of a
+/// fresh cut tree are quite abundant", up to 3.5 inches long, 1 to 1.5
+/// wide and a quarter of an inch thick.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Gnaw {
+    /// The gnawed band's height up the stem.
+    pub band: f64,
+    /// The core left uncut when the tree breaks: its diameter.
+    pub core: f64,
+    /// How far the core lies behind the stem's axis, away from the fall:
+    /// the gnawing goes deepest on the side the tree falls to.
+    pub offset: f64,
+}
+
+impl Gnaw {
+    /// Morgan's beaver cuttings: the band two thirds of the diameter; the
+    /// core a seventh of it, as in his Plate XV (fig. 1, measured off the
+    /// plate; assumed for the moment the tree breaks), a fifteenth behind
+    /// the axis (assumed).
+    pub const BEAVER: Self = Self {
+        band: 2.0 / 3.0,
+        core: 1.0 / 7.0,
+        offset: 1.0 / 15.0,
     };
 }
 
-/// Where and which way a tree is felled: the notch's floor `height` m
-/// above the stem's foot, the notch facing `toward` (level), cut as
-/// `notch` says.
+/// How a tree is cut down.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Method {
+    /// A notch and a back cut, sawn or chopped.
+    Notched(Notch),
+    /// Gnawed round, as beavers do.
+    Gnawed(Gnaw),
+}
+
+impl Method {
+    /// The Forest Service's conventional undercut with a chain saw.
+    pub const SAW: Self = Self::Notched(Notch::CONVENTIONAL);
+    /// The Forest Service's ax felling.
+    pub const AX: Self = Self::Notched(Notch::AX);
+    /// Morgan's beaver cutting.
+    pub const BEAVER: Self = Self::Gnawed(Gnaw::BEAVER);
+
+    /// How far above the cut's floor the log's side of it reaches, as a
+    /// share of the diameter.
+    #[must_use]
+    pub fn top(&self) -> f64 {
+        match self {
+            Self::Notched(notch) => notch.top(),
+            Self::Gnawed(gnaw) => gnaw.band,
+        }
+    }
+
+    /// The notch, or for a gnawed tree the saw's (unused).
+    fn notch(&self) -> Notch {
+        match self {
+            Self::Notched(notch) => *notch,
+            Self::Gnawed(_) => Notch::CONVENTIONAL,
+        }
+    }
+}
+
+/// Where and which way a tree is felled: the cut's floor (the notch's, or
+/// the bottom of a beaver's gnawed band) `height` m above the stem's foot,
+/// falling `toward` (level), cut as `method` says.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Cut {
     pub height: f64,
     pub toward: Vec3,
-    pub notch: Notch,
+    pub method: Method,
 }
 
 /// Which side of the cut a [`Kerf`] is.
@@ -95,7 +205,10 @@ pub struct Kerf {
     /// thickness, m.
     pub radius: f64,
     pub bark: f64,
-    pub notch: Notch,
+    pub method: Method,
+    /// How far the ground lies below `origin`, down the stem: the cut's
+    /// height, where the chips fall.
+    pub ground: f64,
     /// Growth rings across the section: the plant's age in years.
     pub rings: u32,
     /// The segment that bears it in its graph, for binding, and the wind
@@ -208,7 +321,7 @@ pub fn fell(
     });
     let radius = r_cut * flared;
     let diameter = 2.0 * radius;
-    let top = cut.notch.depth * diameter * math::tan(cut.notch.angle);
+    let top = cut.method.top() * diameter;
     // The stem is cut at the notch's floor and, for the log, where the
     // sloping cut leaves the bark: the wood between is drawn by the kerfs.
     let upper = split(&mut g, below, point);
@@ -354,7 +467,8 @@ pub fn fell(
         front,
         radius,
         bark,
-        notch: cut.notch,
+        method: cut.method,
+        ground: cut.height.max(0.0),
         rings,
         segment: hold_index,
         level: 0,
@@ -374,14 +488,26 @@ pub fn fell(
         seed: seed ^ 0xB077,
         ..stump
     };
-    let behind = radius - cut.notch.depth * diameter;
-    let middle = behind - 0.5 * cut.notch.hinge * diameter;
-    let hinge = Hinge {
-        centre: point + front * middle + up * (0.5 * cut.notch.step * diameter),
-        along: up.cross(front).normalize_or(Vec3::Z),
-        length: 2.0 * math::sqrt((radius * radius - behind * behind).max(0.0)),
-        thickness: cut.notch.hinge * diameter,
-        height: cut.notch.step * diameter,
+    let hinge = match cut.method {
+        Method::Notched(notch) => {
+            let behind = radius - notch.depth * diameter;
+            let middle = behind - 0.5 * notch.hinge * diameter;
+            Hinge {
+                centre: point + front * middle + up * (0.5 * notch.step * diameter),
+                along: up.cross(front).normalize_or(Vec3::Z),
+                length: 2.0 * math::sqrt((radius * radius - behind * behind).max(0.0)),
+                thickness: notch.hinge * diameter,
+                height: notch.step * diameter,
+            }
+        }
+        // The core the tree breaks at, the band's middle.
+        Method::Gnawed(gnaw) => Hinge {
+            centre: point - front * (gnaw.offset * diameter) + up * (0.5 * top),
+            along: up.cross(front).normalize_or(Vec3::Z),
+            length: gnaw.core * diameter,
+            thickness: gnaw.core * diameter,
+            height: 0.0,
+        },
     };
     // The log as it stood: the same segments, unmoved, from the notch's
     // floor up, at their own radii; `notch_out` cuts the notch from its
@@ -505,24 +631,49 @@ pub fn kerf(kerf: &Kerf, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh
     let side = up.cross(front);
     let at = |u: f64, v: f64, y: f64| kerf.origin + front * u + side * v + up * y;
     let draw = |salt: u64| rng::unit(rng::combine(kerf.seed, salt));
-    let notch = kerf.notch;
+    let notch = kerf.method.notch();
     // The parts, along the fall: the notch's floor from `back` to the
     // front, the holding wood from `heel` to `back`, the back cut behind.
     let back = r - notch.depth * d;
     let heel = back - notch.hinge * d;
     let shot = notch.step * d;
     let torn = 0.5 * shot;
-    let block = notch.depth * d * math::tan(notch.angle);
+    let block = notch.top() * d;
     let stump = kerf.side == Side::Stump;
     let notched = kerf.side == Side::Notched;
-    // Each part's face height at `u` above the notch's floor. The stump's
-    // floor is lifted a hair so it does not fight the stem's own end.
+    // An ax's blows each leave a flat facet tilted its own way: blows
+    // about 6 cm across the face and 3.5 cm along it (assumed, about the
+    // width of an ax's bit and the bite of a blow), staggered in rows.
+    let facet = |u: f64, v: f64, part: usize| {
+        if !notch.chopped {
+            return 0.0;
+        }
+        let (along, across) = (0.035, 0.06);
+        let row = (u / along).floor();
+        let column = (v / across + 0.5 * row).floor();
+        #[allow(clippy::cast_possible_truncation)]
+        let salt = 0xC40B_0000_0000
+            ^ ((row as i64).cast_unsigned() << 20)
+            ^ ((column as i64).cast_unsigned() & 0xF_FFFF)
+            ^ ((part as u64) << 40);
+        let (lu, lv) = (
+            u - (row + 0.5) * along,
+            v - (column + 0.5 - 0.5 * row) * across,
+        );
+        0.005 * (draw(salt) - 0.3)
+            + 0.35 * (draw(salt ^ 1) - 0.5) * lu
+            + 0.35 * (draw(salt ^ 2) - 0.5) * lv
+    };
+    // Each part's face height at (`u`, `v`) above the notch's floor. The
+    // stump's floor is lifted a hair so it does not fight the stem's own
+    // end; an ax's back notch slopes up to the bark behind.
     let lift = (0.01 * r).max(0.003);
-    let face = |part: usize, u: f64| match (stump, part) {
-        (true, 0) => lift,
-        (false, 0) => (u - back).max(0.0) * math::tan(notch.angle),
+    let face = |part: usize, u: f64, v: f64| match (stump, part) {
+        (true, 0) => lift + facet(u, v, 0).abs(),
+        (false, 0) => (u - back).max(0.0) * math::tan(notch.angle) + facet(u, v, 0),
         (_, 1) => torn,
-        _ => shot,
+        (true, _) => shot + facet(u, v, 2).abs(),
+        (false, _) => shot + (heel - u).max(0.0) * math::tan(notch.back_angle) + facet(u, v, 2),
     };
     let part_of = |u: f64| {
         if u >= back {
@@ -547,7 +698,7 @@ pub fn kerf(kerf: &Kerf, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh
         Floor,
         Slope,
     }
-    let slope = |u: f64| (u - back).max(0.0) * math::tan(notch.angle);
+    let slope = |u: f64, v: f64| (u - back).max(0.0) * math::tan(notch.angle) + facet(u, v, 0);
     let caps: Vec<(usize, f64, f64, Face)> = if notched {
         vec![
             (0, back, f64::INFINITY, Face::Floor),
@@ -629,6 +780,144 @@ pub fn kerf(kerf: &Kerf, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh
     let sectors = ((2.0 * math::PI * r / edge).round() as usize).clamp(24, 160);
     #[allow(clippy::cast_precision_loss)]
     let angle_of = |sector: usize| 2.0 * math::PI * sector as f64 / sectors as f64;
+    // Chips lying round the foot, `count` of them, sizes drawn between the
+    // bounds given, out from the bark about `spread` m (fewer further out);
+    // `barked` of them carry bark on their face.
+    let chips = |out: &mut Mesh,
+                 count: usize,
+                 length: (f64, f64),
+                 width: (f64, f64),
+                 thick: (f64, f64),
+                 spread: f64,
+                 barked: f64| {
+        let ground = -kerf.ground;
+        #[allow(clippy::cast_precision_loss)]
+        for k in 0..count {
+            let salt = 0xC41F_0000_0000 ^ k as u64;
+            let l = length.0 + (length.1 - length.0) * draw(salt);
+            let w = width.0 + (width.1 - width.0) * draw(salt ^ 1);
+            let t = thick.0 + (thick.1 - thick.0) * draw(salt ^ 2);
+            let round = 2.0 * math::PI * draw(salt ^ 3);
+            let out_by = r + 0.02 + spread * -math::ln(1.0 - 0.95 * draw(salt ^ 4));
+            let (cu, cv) = (out_by * math::cos(round), out_by * math::sin(round));
+            let yaw = 2.0 * math::PI * draw(salt ^ 5);
+            let tilt = 0.3 * (draw(salt ^ 6) - 0.5);
+            let lifted = 0.003 * (k % 4) as f64;
+            let (ca, sa) = (math::cos(yaw), math::sin(yaw));
+            let corner = |i: f64, j: f64, h: f64| {
+                let (du, dv) = (
+                    ca * i * 0.5 * l - sa * j * 0.5 * w,
+                    sa * i * 0.5 * l + ca * j * 0.5 * w,
+                );
+                at(
+                    cu + du,
+                    cv + dv,
+                    ground + 0.5 * t + lifted + h * 0.5 * t + tilt * i * 0.5 * l,
+                )
+            };
+            let toward = |i: f64, j: f64| front * (ca * i - sa * j) + side * (sa * i + ca * j);
+            #[allow(clippy::cast_possible_truncation)]
+            let fresh = shade(wood, (0.9 + 0.2 * draw(salt ^ 8)) as f32);
+            let top = if draw(salt ^ 7) < barked {
+                shade(grain.bark, 1.0)
+            } else {
+                fresh
+            };
+            let quads = [
+                (
+                    [
+                        (-1.0, -1.0, 1.0),
+                        (1.0, -1.0, 1.0),
+                        (1.0, 1.0, 1.0),
+                        (-1.0, 1.0, 1.0),
+                    ],
+                    up,
+                    top,
+                ),
+                (
+                    [
+                        (-1.0, -1.0, -1.0),
+                        (1.0, -1.0, -1.0),
+                        (1.0, 1.0, -1.0),
+                        (-1.0, 1.0, -1.0),
+                    ],
+                    -up,
+                    fresh,
+                ),
+                (
+                    [
+                        (1.0, -1.0, -1.0),
+                        (1.0, 1.0, -1.0),
+                        (1.0, 1.0, 1.0),
+                        (1.0, -1.0, 1.0),
+                    ],
+                    toward(1.0, 0.0),
+                    fresh,
+                ),
+                (
+                    [
+                        (-1.0, -1.0, -1.0),
+                        (-1.0, 1.0, -1.0),
+                        (-1.0, 1.0, 1.0),
+                        (-1.0, -1.0, 1.0),
+                    ],
+                    toward(-1.0, 0.0),
+                    fresh,
+                ),
+                (
+                    [
+                        (-1.0, 1.0, -1.0),
+                        (1.0, 1.0, -1.0),
+                        (1.0, 1.0, 1.0),
+                        (-1.0, 1.0, 1.0),
+                    ],
+                    toward(0.0, 1.0),
+                    fresh,
+                ),
+                (
+                    [
+                        (-1.0, -1.0, -1.0),
+                        (1.0, -1.0, -1.0),
+                        (1.0, -1.0, 1.0),
+                        (-1.0, -1.0, 1.0),
+                    ],
+                    toward(0.0, -1.0),
+                    fresh,
+                ),
+            ];
+            for (q, want, colour) in quads {
+                let p: Vec<Vec3> = q.iter().map(|&(i, j, h)| corner(i, j, h)).collect();
+                triangle(out, p[0], p[1], p[2], want, colour);
+                triangle(out, p[0], p[2], p[3], want, colour);
+            }
+        }
+    };
+    if let Method::Gnawed(gnaw) = kerf.method {
+        gnawed(
+            &mut out, kerf, gnaw, toughness, edge, &bands, sectors, &triangle,
+        );
+        if kerf.side != Side::Butt {
+            // Morgan's chips: up to 3.5 by 1.5 inches, a quarter inch
+            // thick. Half the wood gnawed out lies as chips (assumed: he
+            // found them "quite abundant", or few where the beavers ate
+            // the wood).
+            let band = gnaw.band * d;
+            let removed = math::PI * r * r * band * (2.0 / 3.0);
+            let chip = 0.06 * 0.03 * 0.006;
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let count = ((0.5 * removed / chip).round() as usize).min(800);
+            chips(
+                &mut out,
+                count,
+                (0.03, 0.09),
+                (0.02, 0.038),
+                (0.004, 0.007),
+                0.25,
+                0.15,
+            );
+        }
+        return out;
+    }
     for (r0, r1, colour) in &bands {
         for sector in 0..sectors {
             let (a0, a1) = (angle_of(sector), angle_of(sector + 1));
@@ -656,9 +945,9 @@ pub fn kerf(kerf: &Kerf, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh
                 };
                 let p = |(u, v): (f64, f64)| {
                     let y = match kind {
-                        Face::Own => face(part, u),
-                        Face::Floor => lift,
-                        Face::Slope => slope(u),
+                        Face::Own => face(part, u, v),
+                        Face::Floor => lift + facet(u, v, 1).abs(),
+                        Face::Slope => slope(u, v),
                     };
                     at(u, v, y)
                 };
@@ -687,15 +976,24 @@ pub fn kerf(kerf: &Kerf, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh
         if half <= 0.0 {
             continue;
         }
-        let (y0, y1) = (face(lower, u), face(upper, u));
-        let (a, b, c, e) = (
-            at(u, -half, y0),
-            at(u, half, y0),
-            at(u, half, y1),
-            at(u, -half, y1),
-        );
-        triangle(&mut out, a, b, c, front, bare);
-        triangle(&mut out, a, c, e, front, bare);
+        // In pieces across, so a chopped face's facets meet the wall.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let pieces = ((2.0 * half / edge).ceil() as usize).clamp(1, 64);
+        #[allow(clippy::cast_precision_loss)]
+        for k in 0..pieces {
+            let (v0, v1) = (
+                -half + 2.0 * half * k as f64 / pieces as f64,
+                -half + 2.0 * half * (k + 1) as f64 / pieces as f64,
+            );
+            let (a, b, c, e) = (
+                at(u, v0, face(lower, u, v0)),
+                at(u, v1, face(lower, u, v1)),
+                at(u, v1, face(upper, u, v1)),
+                at(u, v0, face(upper, u, v0)),
+            );
+            triangle(&mut out, a, b, c, front, bare);
+            triangle(&mut out, a, c, e, front, bare);
+        }
     }
     // The bark round the outside, from the stem's own end to the faces
     // (the stump) or from the faces to where the log's wood resumes (the
@@ -728,20 +1026,16 @@ pub fn kerf(kerf: &Kerf, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh
         if notched {
             continue;
         }
+        let (c0, s0, c1, s1) = (
+            r * math::cos(a0),
+            r * math::sin(a0),
+            r * math::cos(a1),
+            r * math::sin(a1),
+        );
         let (low0, low1, high0, high1) = if stump {
-            (
-                0.0,
-                0.0,
-                face(part, r * math::cos(a0)),
-                face(part, r * math::cos(a1)),
-            )
+            (0.0, 0.0, face(part, c0, s0), face(part, c1, s1))
         } else {
-            (
-                face(part, r * math::cos(a0)),
-                face(part, r * math::cos(a1)),
-                block,
-                block,
-            )
+            (face(part, c0, s0), face(part, c1, s1), block, block)
         };
         if high0 - low0 < 1.0e-9 && high1 - low1 < 1.0e-9 {
             continue;
@@ -807,25 +1101,248 @@ pub fn kerf(kerf: &Kerf, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh
             triangle(&mut out, t0, t2, t3, outward, fibre);
         }
     }
+    if notch.chopped && kerf.side != Side::Butt {
+        // An ax's chips, from the notches' wedges: each wedge about half
+        // its depth times its height across four fifths of the stem; chips
+        // 6 to 12 cm long, 3 to 6 wide and 1 to 2 thick (assumed), most
+        // of them lying where they flew, up to a few metres off.
+        let front_wedge = 0.5 * (notch.depth * d).powi(2) * math::tan(notch.angle) * 0.8 * d;
+        let back_depth = (1.0 - notch.depth - notch.hinge).max(0.0) * d;
+        let back_wedge = 0.5 * back_depth * back_depth * math::tan(notch.back_angle) * 0.8 * d;
+        let removed = front_wedge + if notched { 0.0 } else { back_wedge };
+        let chip = 0.09 * 0.045 * 0.015;
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let count = ((removed / chip).round() as usize).min(400);
+        chips(
+            &mut out,
+            count,
+            (0.06, 0.12),
+            (0.03, 0.06),
+            (0.01, 0.02),
+            0.6,
+            0.3,
+        );
+    }
     out
 }
 
+/// Draws one flat-shaded triangle into a mesh, facing a way, in a colour.
+type Paint<'a> = dyn Fn(&mut Mesh, Vec3, Vec3, Vec3, Vec3, [f32; 4]) + 'a;
+
+/// A beaver's cut (`kerf` with `gnaw`): the stump's end, the log's or both
+/// in a tree still standing, each a cone narrowing from the bark to the
+/// core, hollowed a little between, scored with bites; the core torn
+/// through, its fibres standing out.
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
+fn gnawed(
+    out: &mut Mesh,
+    kerf: &Kerf,
+    gnaw: Gnaw,
+    toughness: Toughness,
+    edge: f64,
+    bands: &[(f64, f64, [f32; 4])],
+    sectors: usize,
+    triangle: &Paint<'_>,
+) {
+    let r = kerf.radius.max(1.0e-4);
+    let d = 2.0 * r;
+    let up = kerf.up.normalize_or(Vec3::Y);
+    let front = (kerf.front - up * up.dot(kerf.front)).normalize_or(Vec3::X);
+    let side = up.cross(front);
+    let at = |u: f64, v: f64, y: f64| kerf.origin + front * u + side * v + up * y;
+    let draw = |salt: u64| rng::unit(rng::combine(kerf.seed, salt));
+    let band = gnaw.band * d;
+    let middle = 0.5 * band;
+    let core = (0.5 * gnaw.core * d).max(1.0e-4);
+    let (cu, cv) = (-gnaw.offset * d, 0.0);
+    let lift = (0.01 * r).max(0.003);
+    // From the core's centre to the bark along the unit (du, dv).
+    let to_bark = |du: f64, dv: f64| {
+        let b = cu * du + cv * dv;
+        -b + math::sqrt((b * b - (cu * cu + cv * cv) + r * r).max(0.0))
+    };
+    // How far out from the core's edge to the bark (0 to 1), how far from
+    // the core's centre, and the angle round it.
+    let place = |u: f64, v: f64| {
+        let (du, dv) = (u - cu, v - cv);
+        let rho = du.hypot(dv).max(1.0e-9);
+        let reach = to_bark(du / rho, dv / rho);
+        let t = ((rho - core) / (reach - core).max(1.0e-6)).clamp(0.0, 1.0);
+        (t, rho, dv.atan2(du))
+    };
+    // A bite: a scoop as big as Morgan's chips, about 3 cm round the stem
+    // and 4 cm along the cut, up to 8 mm deep (a chip's thickness and a
+    // little more), in rows staggered round it.
+    let bite = |rho: f64, angle: f64| {
+        let (round, along) = (0.03, 0.04);
+        let column = (angle * 0.5 * (core + r) / round).floor();
+        #[allow(clippy::cast_possible_truncation)]
+        let column = (column as i64).cast_unsigned() & 0xF_FFFF;
+        let at_row = rho / along + draw(0xB17E_0000 ^ column);
+        let row = at_row.floor();
+        let f = at_row - row;
+        #[allow(clippy::cast_possible_truncation)]
+        let salt = 0xB17F_0000_0000 ^ (column << 20) ^ ((row as i64).cast_unsigned() & 0xF_FFFF);
+        (0.003 + 0.005 * draw(salt)) * 4.0 * f * (1.0 - f)
+    };
+    // The cones: steeper near the core (Morgan's plate), the stump's rising
+    // from the bark at the band's foot, the log's falling from its top.
+    let lower = |u: f64, v: f64| {
+        let (t, rho, angle) = place(u, v);
+        (middle * math::pow(1.0 - t, 1.3) - bite(rho, angle)).max(lift)
+    };
+    let upper = |u: f64, v: f64| {
+        let (t, rho, angle) = place(u, v);
+        (band - middle * math::pow(1.0 - t, 1.3) + bite(rho, angle)).min(band - lift)
+    };
+    let in_core = |u: f64, v: f64| (u - cu).hypot(v - cv) < core;
+    let notched = kerf.side == Side::Notched;
+    let faces: &[bool] = match kerf.side {
+        Side::Stump => &[false],
+        Side::Butt => &[true],
+        Side::Notched => &[false, true],
+    };
+    #[allow(clippy::cast_precision_loss)]
+    let angle_of = |sector: usize| 2.0 * math::PI * sector as f64 / sectors as f64;
+    for (r0, r1, colour) in bands {
+        for sector in 0..sectors {
+            let (a0, a1) = (angle_of(sector), angle_of(sector + 1));
+            let cell = [
+                (r0 * math::cos(a0), r0 * math::sin(a0)),
+                (r1 * math::cos(a0), r1 * math::sin(a0)),
+                (r1 * math::cos(a1), r1 * math::sin(a1)),
+                (r0 * math::cos(a1), r0 * math::sin(a1)),
+            ];
+            let mid = f64::midpoint(*r0, *r1);
+            let am = f64::midpoint(a0, a1);
+            let (mu, mv) = (mid * math::cos(am), mid * math::sin(am));
+            // Standing, the cones meet round the core, whole wood.
+            if in_core(mu, mv) && !notched {
+                // The core, torn through: rough and darker.
+                let upper_side = kerf.side == Side::Butt;
+                let torn = [colour[0] * 0.85, colour[1] * 0.85, colour[2] * 0.85, 1.0];
+                let ragged = |u: f64, v: f64| {
+                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                    let salt = 0x7041_0000_0000
+                        ^ (((u / edge).round() as i64 as u64 & 0xF_FFFF) << 20)
+                        ^ ((v / edge).round() as i64 as u64 & 0xF_FFFF);
+                    let rough = 0.2 * core * draw(salt);
+                    if upper_side {
+                        middle - rough
+                    } else {
+                        middle + rough
+                    }
+                };
+                let p = |(u, v): (f64, f64)| at(u, v, ragged(u, v));
+                let want = if upper_side { -up } else { up };
+                triangle(out, p(cell[0]), p(cell[1]), p(cell[2]), want, torn);
+                triangle(out, p(cell[0]), p(cell[2]), p(cell[3]), want, torn);
+                continue;
+            }
+            for &upper_face in faces {
+                let p = |(u, v): (f64, f64)| {
+                    at(u, v, if upper_face { upper(u, v) } else { lower(u, v) })
+                };
+                let want = if upper_face { -up } else { up };
+                triangle(out, p(cell[0]), p(cell[1]), p(cell[2]), want, *colour);
+                triangle(out, p(cell[0]), p(cell[2]), p(cell[3]), want, *colour);
+            }
+        }
+    }
+    if notched {
+        return;
+    }
+    // The core's fibres, torn out: up from the stump, down from the log,
+    // the longest about the core's width for middling wood.
+    let sign = if kerf.side == Side::Butt { -1.0 } else { 1.0 };
+    let step = edge.max(0.3 * core);
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let across = ((2.0 * core / step).ceil() as usize).clamp(2, 40);
+    let fibre = {
+        let (_, _, colour) = bands[0];
+        [colour[0] * 0.95, colour[1] * 0.95, colour[2] * 0.95, 1.0]
+    };
+    #[allow(clippy::cast_precision_loss)]
+    for i in 0..across {
+        for j in 0..across {
+            let cell = 2.0 * core / across as f64;
+            let (u0, v0) = (cu - core + cell * i as f64, cv - core + cell * j as f64);
+            let (u1, v1) = (u0 + cell, v0 + cell);
+            let (um, vm) = (f64::midpoint(u0, u1), f64::midpoint(v0, v1));
+            if !in_core(um, vm) {
+                continue;
+            }
+            let salt = 0xF1B1_0000_0000 ^ ((i as u64) << 16) ^ j as u64;
+            let length = core * toughness.reach() * (0.3 + 0.7 * draw(salt));
+            let inset = 0.15 * cell;
+            let (u0, u1, v0, v1) = (u0 + inset, u1 - inset, v0 + inset, v1 - inset);
+            let base = middle;
+            let tip = |u: f64, v: f64| {
+                let slant = 0.3 * length * ((u - u0) / (u1 - u0).max(1.0e-9) - 0.5);
+                at(u, v, base + sign * (length + slant))
+            };
+            let corners = [(u0, v0), (u1, v0), (u1, v1), (u0, v1)];
+            for k in 0..4 {
+                let (a, b) = (corners[k], corners[(k + 1) % 4]);
+                let out_dir =
+                    front * (f64::midpoint(a.0, b.0) - um) + side * (f64::midpoint(a.1, b.1) - vm);
+                let (p0, p1) = (at(a.0, a.1, base), at(b.0, b.1, base));
+                let (p2, p3) = (tip(b.0, b.1), tip(a.0, a.1));
+                triangle(out, p0, p1, p2, out_dir, fibre);
+                triangle(out, p0, p2, p3, out_dir, fibre);
+            }
+            let (t0, t1, t2, t3) = (tip(u0, v0), tip(u1, v0), tip(u1, v1), tip(u0, v1));
+            triangle(out, t0, t1, t2, up * sign, fibre);
+            triangle(out, t0, t2, t3, up * sign, fibre);
+        }
+    }
+}
+
 /// Cuts the notch `kerf` out of `wood`, the stem as it stood above the
-/// notch's floor: the wood under the sloping cut, in front of the notch's
-/// back, goes, its triangles clipped along the cut.
+/// cut's floor: for a notch, the wood under the sloping cut in front of the
+/// notch's back goes, its triangles clipped along the cut; for a beaver's
+/// gnawing, the band all round.
 pub fn notch_out(wood: &mut Mesh, kerf: &Kerf) {
     let r = kerf.radius.max(1.0e-4);
     let d = 2.0 * r;
     let up = kerf.up.normalize_or(Vec3::Y);
     let front = (kerf.front - up * up.dot(kerf.front)).normalize_or(Vec3::X);
-    let back = r - kerf.notch.depth * d;
-    let rise = math::tan(kerf.notch.angle);
-    // Above the sloping cut where positive.
-    let above = |p: [f32; 3]| {
+    let local = |p: &[f32; 3]| {
         let q = Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2])) - kerf.origin;
-        q.dot(up) - (q.dot(front) - back) * rise
+        (q.dot(front), q.dot(up))
     };
-    let side: Vec<f64> = wood.positions.iter().map(|p| above(*p)).collect();
+    let triangles = std::mem::take(&mut wood.indices);
+    wood.indices = match kerf.method {
+        Method::Notched(notch) => {
+            let back = r - notch.depth * d;
+            let rise = math::tan(notch.angle);
+            // Above the sloping cut where positive.
+            let side: Vec<f64> = wood
+                .positions
+                .iter()
+                .map(|p| {
+                    let (u, y) = local(p);
+                    y - (u - back) * rise
+                })
+                .collect();
+            keep_where(wood, &triangles, &side)
+        }
+        Method::Gnawed(gnaw) => {
+            let band = gnaw.band * d;
+            let heights: Vec<f64> = wood.positions.iter().map(|p| local(p).1).collect();
+            let below: Vec<f64> = heights.iter().map(|y| -y).collect();
+            let above: Vec<f64> = heights.iter().map(|y| y - band).collect();
+            let mut kept = keep_where(wood, &triangles, &below);
+            kept.extend(keep_where(wood, &triangles, &above));
+            kept
+        }
+    };
+}
+
+/// The parts of `triangles` of `wood` where `side` (one value for each of
+/// its vertices so far) is at least 0, clipped where an edge crosses 0 with
+/// new vertices added to `wood`.
+fn keep_where(wood: &mut Mesh, triangles: &[u32], side: &[f64]) -> Vec<u32> {
     let bound = wood.segments.len();
     let cut = |wood: &mut Mesh, a: usize, b: usize| -> u32 {
         let t = side[a] / (side[a] - side[b]);
@@ -861,7 +1378,6 @@ pub fn notch_out(wood: &mut Mesh, kerf: &Kerf) {
         }
         index
     };
-    let triangles = std::mem::take(&mut wood.indices);
     let mut kept = Vec::with_capacity(triangles.len());
     for t in triangles.as_chunks::<3>().0 {
         let corners = [t[0] as usize, t[1] as usize, t[2] as usize];
@@ -870,8 +1386,8 @@ pub fn notch_out(wood: &mut Mesh, kerf: &Kerf) {
             3 => kept.extend_from_slice(t),
             0 => {}
             count => {
-                // Walk the triangle's edges, keeping what lies above the
-                // cut and crossing it where an edge does.
+                // Walk the triangle's edges, keeping what lies on the kept
+                // side and crossing over where an edge does.
                 let mut polygon = Vec::with_capacity(4);
                 for k in 0..3 {
                     let (a, b) = (corners[k], corners[(k + 1) % 3]);
@@ -889,7 +1405,7 @@ pub fn notch_out(wood: &mut Mesh, kerf: &Kerf) {
             }
         }
     }
-    wood.indices = kept;
+    kept
 }
 
 /// The convex polygon `cell` in (u, v) clipped to `lo <= u < hi`.
@@ -978,12 +1494,148 @@ mod tests {
     }
 
     fn felled() -> Felled {
+        felled_by(Method::SAW)
+    }
+
+    fn felled_by(method: Method) -> Felled {
         let cut = Cut {
             height: 0.3,
             toward: Vec3::X,
-            notch: Notch::CONVENTIONAL,
+            method,
         };
         fell(&tree(), &cut, None, None, &Drag::default()).expect("a stem at 0.3 m")
+    }
+
+    /// The mesh's vertices in the kerf's frame: (u along the fall, v
+    /// across, y up from the floor).
+    fn local(mesh: &Mesh, kerf: &Kerf) -> Vec<(f64, f64, f64)> {
+        let side = kerf.up.cross(kerf.front);
+        mesh.positions
+            .iter()
+            .map(|p| {
+                let q = Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2])) - kerf.origin;
+                (q.dot(kerf.front), q.dot(side), q.dot(kerf.up))
+            })
+            .collect()
+    }
+
+    #[test]
+    fn an_ax_leaves_a_stump_stepped_a_sixth_and_a_log_end_peaked_like_a_roof() {
+        let felled = felled_by(Method::AX);
+        let r = felled.stump.radius;
+        let d = 2.0 * r;
+        assert!((Notch::AX.top() - 0.5).abs() < 1.0e-12);
+        let grain = Grain {
+            sapwood: Grain::SAPWOOD,
+            heartwood: None,
+            bark: [0.3, 0.25, 0.2],
+        };
+        let stump = kerf(&felled.stump, Toughness { work: 55.7 }, &grain, 0.005);
+        // Chips lie on the ground round the stump.
+        let points = local(&stump, &felled.stump);
+        assert!(points.iter().any(|(_, _, y)| *y < -0.25));
+        // Behind the bridge the back notch's floor stands a sixth higher.
+        let heel = r - (Notch::AX.depth + Notch::AX.hinge) * d;
+        let behind: Vec<f64> = points
+            .iter()
+            .filter(|(u, v, y)| *u < heel - 0.1 * r && u.hypot(*v) < 0.8 * r && *y > -0.01)
+            .map(|(_, _, y)| *y)
+            .collect();
+        assert!(!behind.is_empty());
+        assert!(behind.iter().all(|y| *y > d / 6.0 - 0.003), "{behind:?}");
+        // The log's end, as it stood: lowest at the bridge, rising to the
+        // bark in front and behind.
+        let as_stood = Kerf {
+            side: Side::Butt,
+            ..felled.stump
+        };
+        let butt = local(
+            &kerf(&as_stood, Toughness { work: 55.7 }, &grain, 0.005),
+            &as_stood,
+        );
+        let height_near = |at: f64| {
+            butt.iter()
+                .filter(|(u, v, _)| (u - at).abs() < 0.08 * r && v.abs() < 0.3 * r)
+                .map(|(_, _, y)| *y)
+                .fold(f64::INFINITY, f64::min)
+        };
+        let (fore, bridge, aft) = (
+            height_near(0.8 * r),
+            height_near(-0.1 * r),
+            height_near(-0.8 * r),
+        );
+        assert!(
+            fore > bridge + 0.4 * r && aft > bridge + 0.4 * r,
+            "{fore} {bridge} {aft}"
+        );
+    }
+
+    #[test]
+    fn a_beaver_gnaws_an_hourglass_two_cones_meeting_at_a_torn_core() {
+        let felled = felled_by(Method::BEAVER);
+        let r = felled.stump.radius;
+        let d = 2.0 * r;
+        let band = Gnaw::BEAVER.band * d;
+        let grain = Grain {
+            sapwood: Grain::SAPWOOD,
+            heartwood: None,
+            bark: [0.3, 0.25, 0.2],
+        };
+        let mesh = kerf(&felled.stump, Toughness { work: 55.7 }, &grain, 0.005);
+        let points = local(&mesh, &felled.stump);
+        // Chips at the foot.
+        assert!(points.iter().filter(|(_, _, y)| *y < -0.25).count() > 100);
+        // The stump's cone: low at the bark, up to half the band at the
+        // core.
+        let core_u = -Gnaw::BEAVER.offset * d;
+        let rim: Vec<f64> = points
+            .iter()
+            .filter(|(u, v, y)| u.hypot(*v) > 0.85 * r && u.hypot(*v) < r && *y > -0.01)
+            .map(|(_, _, y)| *y)
+            .collect();
+        let near_core: Vec<f64> = points
+            .iter()
+            .filter(|(u, v, y)| {
+                let rho = (u - core_u).hypot(*v);
+                rho > 0.6 * Gnaw::BEAVER.core * d && rho < 0.9 * Gnaw::BEAVER.core * d && *y > -0.01
+            })
+            .map(|(_, _, y)| *y)
+            .collect();
+        let mean = |values: &[f64]| values.iter().sum::<f64>() / values.len().max(1) as f64;
+        assert!(mean(&rim) < 0.15 * band, "{}", mean(&rim));
+        assert!(mean(&near_core) > 0.35 * band, "{}", mean(&near_core));
+        assert!(points.iter().all(|(_, _, y)| *y < band));
+        // The log's cone mirrors it: down from the band's top to the core.
+        let as_stood = Kerf {
+            side: Side::Butt,
+            ..felled.stump
+        };
+        let butt = local(
+            &kerf(&as_stood, Toughness { work: 55.7 }, &grain, 0.005),
+            &as_stood,
+        );
+        assert!(butt.iter().all(|(_, _, y)| *y > 0.2 * band));
+        // Standing, half gnawed: the band is cut from the tree's own wood.
+        let mut wood = Mesh::default();
+        for (x, y) in [(r, 0.5 * band), (r, -0.01), (r, band + 0.01)] {
+            wood.push(Vertex::plain(
+                felled.notch.origin + Vec3::new(x, y, 0.0),
+                Vec3::X,
+                [0.5, 0.4, 0.3],
+            ));
+        }
+        wood.push(Vertex::plain(
+            felled.notch.origin + Vec3::new(r, 0.5 * band, 0.01),
+            Vec3::X,
+            [0.5, 0.4, 0.3],
+        ));
+        wood.indices.extend_from_slice(&[0, 3, 1, 0, 2, 3]);
+        notch_out(&mut wood, &felled.notch);
+        for at in &wood.indices {
+            let y = f64::from(wood.positions[*at as usize][1]) - felled.notch.origin.y;
+            assert!(y <= 1.0e-4 || y >= band - 1.0e-4, "{y}");
+        }
+        assert!(!wood.indices.is_empty());
     }
 
     #[test]
@@ -1123,8 +1775,8 @@ mod tests {
         }
         notch_out(&mut wood, &felled.notch);
         assert_eq!(wood.triangle_count(), 1 + 2);
-        let back = r - felled.notch.notch.depth * 2.0 * r;
-        let rise = math::tan(felled.notch.notch.angle);
+        let back = r - Notch::CONVENTIONAL.depth * 2.0 * r;
+        let rise = math::tan(Notch::CONVENTIONAL.angle);
         for at in &wood.indices {
             let p = wood.positions[*at as usize];
             let (u, h) = (f64::from(p[0]), f64::from(p[1]) - floor);
