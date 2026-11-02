@@ -1,0 +1,257 @@
+{
+  "schema": 1,
+  "id": "polygonum-aviculare",
+  "taxon": {
+    "scientific_name": "Polygonum aviculare",
+    "family": "Polygonaceae",
+    "genus": "Polygonum",
+    "plant_name_id": 2574669,
+    "common_name": "prostrate knotweed"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.4
+    },
+    "height_max_m": 0.8,
+    "rosette": "none",
+    "leaf_length_m": {
+      "min": 0.006,
+      "max": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.002,
+      "max": 0.012
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "elliptic": "usually",
+      "lanceolate": "often"
+    },
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruit_type": "achene",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "flower_colour": [
+      235,
+      140,
+      180
+    ],
+    "flower_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "flower_symmetry": "actinomorphic",
+    "inflorescence": "cyme",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.002,
+      "max": 0.005
+    },
+    "stem_posture": {
+      "prostrate": "usually",
+      "ascending": "sometimes"
+    },
+    "trailing_branches": true,
+    "petiole_length_m": {
+      "min": 0.0003,
+      "max": 0.009
+    },
+    "leaf_apex": "acute",
+    "stem_length_m": {
+      "min": 0.05,
+      "max": 0.6
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2574669), as no source read gives it."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.trailing_branches": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    },
+    "traits.stem_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Polygonum aviculare): stems prostrate to erect, branched, flexuous, 5-200 cm; ocrea 3-15 mm, distal part silvery, hyaline; petiole 0.3-9 mm; blade narrowly elliptic, lanceolate, elliptic, obovate or spatulate, 6-50(-60) x 0.5-22 mm, apex acute, obtuse or rounded. Inflorescences axillary cymes, 1-6(-8)-flowered; tepals green or reddish brown with white, pink or red margins."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  }
+}

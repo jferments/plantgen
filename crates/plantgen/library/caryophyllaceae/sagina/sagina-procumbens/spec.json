@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "id": "sagina-procumbens",
+  "taxon": {
+    "scientific_name": "Sagina procumbens",
+    "family": "Caryophyllaceae",
+    "genus": "Sagina",
+    "plant_name_id": 2485289,
+    "common_name": "procumbent pearlwort"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "height_max_m": 0.1,
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.004,
+      "max": 0.017
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "flower_colour": [
+      245,
+      245,
+      238
+    ],
+    "flower_size_m": {
+      "min": 0.002,
+      "max": 0.004
+    },
+    "flower_symmetry": "actinomorphic",
+    "inflorescence": "solitary",
+    "stem_posture": "prostrate",
+    "trailing_branches": true,
+    "leaf_apex": "mucronate",
+    "leaf_hairs": "glabrous"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2485289), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.stem_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.trailing_branches": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Sagina procumbens): perennial, often mat-forming, glabrous. Stems ascending or, more frequently, procumbent, rooting at nodes, giving rise to secondary tufts or rosettes, few- to many-branched, slender. Basal leaves frequently in primary rosettes, blade linear, 8-17 mm, apex apiculate to somewhat aristate; cauline blade linear, 4-15 mm proximally, 2.5-6 mm distally. Flowers axillary or terminal, 4-merous; petals 0.8-1 mm, shorter than or equaling sepals 1.5-2.5 mm. Flora of China: stems 3-10 cm tall; leaves 2-10 x 1-2 mm."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  }
+}
