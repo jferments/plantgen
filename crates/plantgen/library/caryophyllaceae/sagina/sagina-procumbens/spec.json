@@ -76,8 +76,8 @@
     "leaf_hairs": "glabrous"
   },
   "evidence": {
-    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Sagina procumbens (read 2026-11-02): on Gough Island its 'seeds were most likely introduced from visitors' footwear and/or clothing', carried on feet."},
-    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Sagina procumbens: grows in 'gravelly or sandy soils along roadsides, sidewalk cracks, margins of paths or lawns'."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Sagina procumbens (read 2026-11-02): it reached Gough Island as seed on visitors' boots or clothes, so feet carry it."},
+    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Sagina procumbens: grows on gravel and sand by roads, in pavement cracks and at the edges of paths and lawns."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

@@ -85,7 +85,7 @@
     ]
   },
   "evidence": {
-    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Buddleja davidii (read 2026-11-02): 'The seeds are very small, and wind-dispersed'."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Buddleja davidii (read 2026-11-02): its tiny seed travels on the wind."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

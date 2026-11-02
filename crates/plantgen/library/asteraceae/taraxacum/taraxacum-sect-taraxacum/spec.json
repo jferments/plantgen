@@ -84,8 +84,8 @@
     "cauline_leaves": "none"
   },
   "evidence": {
-    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: 'Common dandelion creates a long-lived seedbank'."},
-    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: 'its prolific production of wind-dispersed seed'."},
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: its seed lives long in the soil."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: it makes a great deal of seed that the wind carries."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

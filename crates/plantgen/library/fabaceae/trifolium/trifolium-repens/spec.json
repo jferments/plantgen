@@ -120,7 +120,7 @@
     "flower_colour": [235, 235, 225]
   },
   "evidence": {
-    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Trifolium repens: 'The seeds are dispersed by wind, water, birds, and grazing animals'."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Trifolium repens: wind, water, birds and grazing animals all carry its seed."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

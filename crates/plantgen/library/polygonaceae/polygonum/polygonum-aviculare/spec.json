@@ -94,9 +94,9 @@
     }
   },
   "evidence": {
-    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: 'It tolerates trampling' and is 'commonly found in areas with trampled, compacted soil'."},
-    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: 'Prostrate knotweed seeds form a persistent seed bank' (how long not given, so the shorter persistent class)."},
-    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: 'Prostrate knotweed seeds are dispersed by birds, mammals, and water'; also by vehicles."},
+    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: it bears trampling and is common on trodden, compacted soil."},
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: its seed persists in the soil; for how long is not given, so the shorter persistent class."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: birds, mammals and water carry its seed, and vehicles too."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

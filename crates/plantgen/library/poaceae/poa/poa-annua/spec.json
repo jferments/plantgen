@@ -89,7 +89,7 @@
     }
   },
   "evidence": {
-    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China, Poa annua: a 'weed of disturbed ground' whose stoloniferous plants come up 'possibly in response to trampling'; Wikipedia (read 2026-11-02) adds that it makes many golf putting greens and grows on footpaths."},
+    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "flora-of-china", "note": "Flora of China, Poa annua: a weed of disturbed ground, whose plants may put out rooting stolons where trodden; Wikipedia (read 2026-11-02) adds that it makes many golf greens and grows on footpaths."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

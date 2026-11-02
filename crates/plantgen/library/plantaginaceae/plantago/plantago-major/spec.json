@@ -85,7 +85,7 @@
     "cauline_leaves": "none"
   },
   "evidence": {
-    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Plantago major (read 2026-11-02): 'The ability of greater plantain to survive frequent trampling and colonise compacted soils'."},
+    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Plantago major (read 2026-11-02): it survives being trodden on often and takes hold in compacted soil."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

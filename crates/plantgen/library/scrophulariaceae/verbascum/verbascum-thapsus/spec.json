@@ -173,8 +173,8 @@
     ]
   },
   "evidence": {
-    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Verbascum thapsus: 'the long-lived common mullein seed bank'."},
-    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Verbascum thapsus: 'Common mullein seeds have no morphological adaptations for long-distance dispersal'; median distance 1 m."},
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Verbascum thapsus: its seed lives long in the soil."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Verbascum thapsus: the seed has nothing to carry it far and lands a metre away at the median."},
     "traits.flowering_branches": {
       "evidence": "SourceInferred",
       "source": "britton-brown-1913",
