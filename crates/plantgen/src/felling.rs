@@ -307,7 +307,7 @@ pub fn fell(
     hold.parent = Some(stump_top);
     hold.lateral = false;
     hold.start = point;
-    hold.end = point + up * 1.0e-3;
+    hold.end = point + up * 1.0e-4;
     hold.radius = r_cut;
     let hold_index = u32::try_from(standing.segments.len()).unwrap_or(u32::MAX);
     standing.segments.push(hold);
@@ -457,7 +457,7 @@ pub fn kerf(kerf: &Kerf, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh
     let stump = kerf.side == Side::Stump;
     // Each part's face height at `u` above the notch's floor. The stump's
     // floor is lifted a hair so it does not fight the stem's own end.
-    let lift = 0.002 * r;
+    let lift = (0.01 * r).max(0.003);
     let face = |part: usize, u: f64| match (stump, part) {
         (true, 0) => lift,
         (false, 0) => (u - back).max(0.0) * math::tan(notch.angle),
@@ -805,7 +805,7 @@ mod tests {
     fn the_stump_stands_to_the_cut_and_the_log_lies_down_the_fall() {
         let felled = felled();
         assert!(
-            (felled.standing.height - 0.301).abs() < 1.0e-6,
+            (felled.standing.height - 0.3001).abs() < 1.0e-6,
             "{}",
             felled.standing.height
         );
