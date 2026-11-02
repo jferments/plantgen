@@ -718,11 +718,11 @@ fn fit_plane(
     // its parts' than a fixed card does: a herb's leaves held every way
     // round a stem drawn on a fixed card hide a third less of the sky
     // from the side than the plant, as the card goes edge on.
-    if !flat
-        && turn == Turn::Fixed
-        && normal.y.abs() < LEVEL
-        && turned_covers_closer(members, normal)
-    {
+    // A level clump too: a tussock's wedge of blades arching out from its
+    // foot spreads wider than it stands tall, and on a level card lifted
+    // to the blades' tips it was a streak from the side, floating over
+    // the plant (beargrass).
+    if !flat && turn == Turn::Fixed && turned_covers_closer(members, normal) {
         turn = Turn::Facing;
     }
     // A card is baked from the side it is seen from: a level one from
@@ -2443,15 +2443,23 @@ pub fn build_from(
         }
         // A level card lies at the top of its parts, not their middle:
         // what lies on a surface (a water lily's pads on the water, a
-        // rosette on the ground) is drawn on it, not into it.
-        let centre = if normal.y.abs() >= LEVEL {
-            let lift = cards
-                .positions
-                .iter()
-                .chain(&wood.positions)
-                .map(|p| v3(*p).y - centre.y)
-                .fold(0.0, f64::max);
-            centre + Vec3::Y * lift
+        // rosette on the ground) is drawn on it, not into it. Only parts
+        // in a thin layer do, rising at most [`SHEET`] of how far they
+        // spread: a tussock's blades rise from the ground to their tips,
+        // and with them a flower stalk, and lifted to their top its card
+        // floated over the plant (beargrass).
+        let centre = if normal.y.abs() >= LEVEL && turn == Turn::Fixed {
+            let (mut lift, mut spread) = (0.0_f64, 0.0_f64);
+            for p in cards.positions.iter().chain(&wood.positions) {
+                let d = v3(*p) - centre;
+                lift = lift.max(d.y);
+                spread = spread.max(d.x.hypot(d.z));
+            }
+            if lift <= spread * SHEET {
+                centre + Vec3::Y * lift
+            } else {
+                centre
+            }
         } else {
             centre
         };

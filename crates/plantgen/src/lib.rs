@@ -1418,4 +1418,12 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-pub const GENERATOR_REVISION: u32 = 182;
+/// 186: a level clump of the card tiers turns to the eye where that
+/// draws its cover closer to its parts' than a fixed card, as an upright
+/// one already did, and a level card is lifted to its parts' top only
+/// where they lie in a thin layer (`crate::billboards`): a beargrass's
+/// wedges of blades were plates lifted to the blades' tips and the
+/// flower stalk's top, floating over the plant. Its low cards hid 1.35
+/// times the plant's sky from the side, now 1.06; its minimal cards 0.53,
+/// now 0.75. (183 to 185 are #312, #315 and #316.)
+pub const GENERATOR_REVISION: u32 = 186;
