@@ -204,7 +204,7 @@ Usage:
                 [--focus X,Y,Z [--span METRES]] [--parts on] [--figure off]
                 [--conditions FILE|JSON [--from-age N]]
                 [--break snap|WIND|bone:N [--fallen off]] [--leaves off]
-                [--fell HEIGHT[,DEGREES] [--fallen off]] [--turn DEGREES]
+                [--fell HEIGHT[,DEGREES] [--fallen off|notched]] [--turn DEGREES]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m (--figure
       off draws neither, for plant-identification models). --focus
@@ -235,7 +235,9 @@ Usage:
       (0 = +X, 90 = +Z; 0 unless given), a back cut a twelfth of the
       stem higher leaving a twelfth of it as the hinge (the US Forest
       Service's conventional undercut); the stump stands with its sawn
-      top and the log lies down the fall. --turn turns the plant DEGREES about its foot
+      top and the log lies down the fall (--fallen off: the stump
+      alone; --fallen notched: notch and back cut sawn, the tree still
+      standing on its hinge). --turn turns the plant DEGREES about its foot
       (anticlockwise from above) before the view, --focus points with it.
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
@@ -2773,9 +2775,12 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     if felling.is_some() && (parted || breaking.is_some()) {
         return Err("`--fell` draws without `--parts` or `--break`".into());
     }
+    let notched =
+        felling.is_some() && options.flags.get("fallen").map(String::as_str) == Some("notched");
     let fallen = match options.flags.get("fallen").map(String::as_str) {
         None | Some("on") => true,
         Some("off") => false,
+        Some("notched") if felling.is_some() => false,
         Some(other) => return Err(format!("`--fallen` must be on or off, found `{other}`").into()),
     };
     let leaves = match options.flags.get("leaves").map(String::as_str) {
@@ -2873,7 +2878,13 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             &spec,
             graph,
             how,
-            fallen,
+            if notched {
+                Felling::Notched
+            } else if fallen {
+                Felling::Fallen
+            } else {
+                Felling::Stump
+            },
             &looks,
             &bodies,
             &lod.for_height(graph.height),
@@ -3602,14 +3613,25 @@ fn broken_mesh(
     Ok(plant)
 }
 
+/// How far `plantc render --fell` draws the felling.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Felling {
+    /// Notch and back cut sawn, the tree still standing on its hinge.
+    Notched,
+    /// The stump alone.
+    Stump,
+    /// The stump and the log lying down the fall.
+    Fallen,
+}
+
 /// `plantc render --fell HEIGHT[,DEGREES]`: the plant felled with a saw at
 /// HEIGHT m, falling towards DEGREES (0 = +X, 90 = +Z).
-#[allow(clippy::too_many_arguments)]
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
 fn felled_mesh(
     spec: &PlantSpec,
     graph: &PlantGraph,
     how: &str,
-    fallen: bool,
+    stage: Felling,
     looks: &[Look],
     bodies: &[BodyLook],
     lod: &mesh::LodSpec,
@@ -3663,10 +3685,12 @@ fn felled_mesh(
         lod,
         level,
     );
-    damage::append(
-        &mut plant.wood,
-        &felling::kerf(&felled.stump, toughness, &grain, lod.ring_edge),
-    );
+    if stage != Felling::Notched {
+        damage::append(
+            &mut plant.wood,
+            &felling::kerf(&felled.stump, toughness, &grain, lod.ring_edge),
+        );
+    }
     let d = 2.0 * felled.stump.radius;
     out!(
         "felled at {height:.2} m towards {degrees:.0} degrees: stem {:.0} cm across, bark {:.1} cm, {} rings; notch {:.0} cm deep, hinge {:.0} cm long and {:.1} cm thick, stump shot {:.1} cm",
@@ -3678,7 +3702,19 @@ fn felled_mesh(
         felled.hinge.thickness * 100.0,
         felled.hinge.height * 100.0
     );
-    if fallen {
+    if stage == Felling::Notched {
+        // The tree as it stood, flare and all, the notch cut from it.
+        let mut more = mesh::build(&felled.upright, looks, bodies, &spec.appearance, lod, level);
+        felling::notch_out(&mut more.wood, &felled.notch);
+        damage::append(&mut plant.wood, &more.wood);
+        plant.cards.extend(more.cards);
+        plant.tufts.extend(more.tufts);
+        damage::append(
+            &mut plant.wood,
+            &felling::kerf(&felled.notch, toughness, &grain, lod.ring_edge),
+        );
+    }
+    if stage == Felling::Fallen {
         let lying = plantgen::spec::Appearance {
             flare: None,
             bottle: None,
