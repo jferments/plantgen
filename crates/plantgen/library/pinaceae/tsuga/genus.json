@@ -3,11 +3,16 @@
   "rank": "genus",
   "name": "Tsuga",
   "traits": {
+    "anchorage_per_stem_kg": 158, "crown_drag_at_rest": 1.51, "crown_drag_streamlining": 0.68, "crown_drag_tested_to_ms": 25,
     "foliage_ranks": "two_ranked",
     "cone_maturation_years": 1,
     "cone_posture": "pendent"
   },
   "evidence": {
+    "traits.anchorage_per_stem_kg": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for western hemlock: C_reg 158 N m per kg of green stem, the mean over its four soil groups and three rooting depths, from tree-pulling tests (Nicoll et al. 2006 and others, listed in the Critical Resistive Moments vignette). A species with its own pulling tests states its own."},
+    "traits.crown_drag_at_rest": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for western hemlock: crown drag coefficient on the silhouette Cd = C u^-N with C 1.51, N 0.68, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_streamlining": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for western hemlock: crown drag coefficient on the silhouette Cd = C u^-N with C 1.51, N 0.68, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_tested_to_ms": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for western hemlock: crown drag coefficient on the silhouette Cd = C u^-N with C 1.51, N 0.68, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

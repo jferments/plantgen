@@ -1,0 +1,10 @@
+{
+  "id": "fgr-forestgales",
+  "title": "fgr: R version of the ForestGALES wind risk model (version 0.0.0.9009.1.2, 2020): species parameters (crown drag after Mayhead 1973 and later wind-tunnel studies; anchorage C_reg from tree-pulling tests, Nicoll et al. 2006 and others) and vignettes",
+  "authors": "Locatelli, T., Gardiner, B., Hale, S. and Nicoll, B. (Forest Research)",
+  "year": 2020,
+  "url": "https://github.com/tom-locatelli/fgr",
+  "licence": "GPL-3 software; facts only",
+  "tier": 1,
+  "kind": "dataset"
+}

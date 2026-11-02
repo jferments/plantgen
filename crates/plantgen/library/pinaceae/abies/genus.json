@@ -3,6 +3,7 @@
   "rank": "genus",
   "name": "Abies",
   "traits": {
+    "anchorage_per_stem_kg": 163, "crown_drag_at_rest": 3.93, "crown_drag_streamlining": 0.73, "crown_drag_tested_to_ms": 23,
     "leaf_life_years": {"min": 8, "max": 10},
     "cone_maturation_years": 1,
     "cone_posture": "erect",
@@ -10,6 +11,10 @@
     "architectural_model": "massart"
   },
   "evidence": {
+    "traits.anchorage_per_stem_kg": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for noble, grand and balsam fir: C_reg 163 N m per kg of green stem, the mean over its four soil groups and three rooting depths and over those species, from tree-pulling tests (Nicoll et al. 2006 and others, listed in the Critical Resistive Moments vignette). A species with its own pulling tests states its own."},
+    "traits.crown_drag_at_rest": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for noble, grand and balsam fir: crown drag coefficient on the silhouette Cd = C u^-N with C 3.93, N 0.73, fitted between 10 and 23 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_streamlining": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for noble, grand and balsam fir: crown drag coefficient on the silhouette Cd = C u^-N with C 3.93, N 0.73, fitted between 10 and 23 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_tested_to_ms": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for noble, grand and balsam fir: crown drag coefficient on the silhouette Cd = C u^-N with C 3.93, N 0.73, fitted between 10 and 23 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
     "traits.architectural_model": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 485 names Abies among the trees of Massart's model: an erect monopodial trunk with rhythmic, regular tiers of horizontal branches."},
     "traits": {
       "evidence": "SourceInferred",
