@@ -488,10 +488,7 @@ fn levels_drawn_to_a_triangle_budget_fit_it() {
     // A third of the nearest level's triangles: its needle shoots must
     // draw coarser or as cards.
     let nearest = plain.levels[0].summary.triangles / 3;
-    let budget = Budget {
-        triangles: Some(Budget::quartering(nearest)),
-        bytes: None,
-    };
+    let budget = Budget::new(Some(Budget::quartering(nearest)), None);
     let settings = Settings {
         compression: Compression::Quantize,
         budget,
@@ -533,10 +530,7 @@ fn levels_drawn_to_a_byte_budget_fit_it_together() {
     let plant = export::grow(&inputs, 0, 8.0).unwrap();
     let settings = |bytes| Settings {
         compression: Compression::Meshopt,
-        budget: Budget {
-            triangles: None,
-            bytes,
-        },
+        budget: Budget::new(None, bytes),
         ..Settings::default()
     };
     let whole = |exported: &export::Export| -> usize {
@@ -648,4 +642,103 @@ fn bark_draws_as_a_baked_material_per_stage() {
             .len();
         assert_eq!(primitives, 1);
     }
+}
+
+#[test]
+fn tiers_space_the_levels_by_shares_of_the_full_drawing() {
+    let inputs = Inputs::new(&small_spec(), &TINY).unwrap();
+    let plant = export::grow(&inputs, 0, 8.0).unwrap();
+    let plain = export::export(&inputs, &plant, &Settings::default(), None).unwrap();
+    let settings = Settings {
+        budget: Budget::tiers(),
+        ..Settings::default()
+    };
+    let tiers = export::export(&inputs, &plant, &settings, None).unwrap();
+    let drawn: Vec<usize> = tiers
+        .levels
+        .iter()
+        .map(|level| level.summary.triangles)
+        .collect();
+    // The nearest is the package's; each farther one within its share and
+    // at most half the one before, unless the coarsest drawing is more.
+    assert_eq!(drawn[0], plain.levels[0].summary.triangles);
+    let targets = plantgen::budget::tier_triangles(drawn[0]);
+    for level in 1..drawn.len() {
+        if tiers.levels[level].cards.is_some() {
+            // Baked cards: fewer than the tier before, within the low
+            // tier's most.
+            assert_eq!(level, export::LEVELS - 1);
+            assert!(drawn[level] < drawn[level - 1], "{drawn:?}");
+            assert!(
+                drawn[level] <= plantgen::budget::TIER_CAPS[level],
+                "{drawn:?}"
+            );
+            continue;
+        }
+        let fits = tiers.levels[level].budget.unwrap().fits;
+        assert!(
+            !fits || (drawn[level] <= targets[level] && drawn[level] <= drawn[level - 1] / 2),
+            "{drawn:?} against {targets:?}"
+        );
+    }
+    assert!(drawn[3] < drawn[0], "{drawn:?}");
+}
+
+#[test]
+fn a_budget_between_two_levels_is_met_as_organs_go_over_to_cards() {
+    // A yarrow's cut leaves are solid up to level 1 and cards on level 2:
+    // 200 000 triangles there, under 1 000 here. A budget between gets a
+    // drawing between, not the coarser level.
+    let spec = PlantSpec::builtin("achillea-millefolium").unwrap();
+    let inputs = Inputs::new(&spec, &quality::STANDARD).unwrap();
+    let library = plantgen::library::Library::builtin();
+    let variant = export::typical_variant(&spec, library);
+    let plant = export::grow(&inputs, variant, export::oldest_age(&spec)).unwrap();
+    let budget = Budget::new(Some([30_000; export::LEVELS]), None);
+    let settings = Settings {
+        budget,
+        ..Settings::default()
+    };
+    let exported = export::export(&inputs, &plant, &settings, None).unwrap();
+    let nearest = exported.levels[0].summary.triangles;
+    assert!((10_000..=30_000).contains(&nearest), "{nearest}");
+}
+
+#[test]
+fn a_lacy_herbs_low_tier_is_its_baked_cards() {
+    // A yarrow's own cards thin to nothing drawn small; its low tier is
+    // the cards baked from the whole plant, every one fixed where it
+    // stands, over one atlas.
+    let spec = PlantSpec::builtin("achillea-millefolium").unwrap();
+    let inputs = Inputs::new(&spec, &quality::STANDARD).unwrap();
+    let library = plantgen::library::Library::builtin();
+    let variant = export::typical_variant(&spec, library);
+    let plant = export::grow(&inputs, variant, export::oldest_age(&spec)).unwrap();
+    let settings = Settings {
+        budget: Budget::tiers(),
+        ..Settings::default()
+    };
+    let exported = export::export(&inputs, &plant, &settings, None).unwrap();
+    let low = &exported.levels[export::LEVELS - 1];
+    assert_eq!(low.cards, Some("low-cards"));
+    let mid = exported.levels[export::LEVELS - 2].summary.triangles;
+    assert!(
+        low.summary.triangles < mid,
+        "{} against {mid}",
+        low.summary.triangles
+    );
+    let glb = Glb::read(&low.glb).unwrap();
+    let json = &glb.json;
+    let materials = json["materials"].as_array().unwrap();
+    let baked = materials
+        .iter()
+        .find(|material| material["name"] == "baked cards")
+        .expect("a baked cards material");
+    assert_eq!(baked["alphaMode"], "MASK");
+    assert_eq!(json["images"].as_array().unwrap().len(), 1);
+    let index: serde_json::Value = serde_json::from_slice(&exported.index).unwrap();
+    assert_eq!(index["files"][3]["cards"], "low-cards");
+    // The same plant, the same bytes.
+    let again = export::export(&inputs, &plant, &settings, None).unwrap();
+    assert_eq!(again.levels[3].glb, low.glb);
 }

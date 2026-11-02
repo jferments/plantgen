@@ -73,6 +73,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "flowering_branches": {"min": 0, "max": 3},
     "height_typical_m": {
       "min": 0.2,
       "max": 0.5
@@ -118,6 +119,11 @@
     ]
   },
   "evidence": {
+    "traits.flowering_branches": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Phacelia hastata: \"stems few to numerous, ascending, simple or few-branched ... flowers numerous in dense, paniculate or racemose cymes\": 0 to 3 flowering branches."
+    },
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

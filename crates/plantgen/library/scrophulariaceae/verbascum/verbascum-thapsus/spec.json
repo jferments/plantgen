@@ -113,6 +113,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "flowering_branches": {"min": 0, "max": 2},
     "height_typical_m": {
       "min": 0.3,
       "max": 2.0,
@@ -170,6 +171,11 @@
     ]
   },
   "evidence": {
+    "traits.flowering_branches": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown vol. 3 (1913), Verbascum Thapsus: \"Erect, stout, simple or with some erect branches ... numerous in dense elongated spikes rarely branched above\": 0 to 2 flowering branches."
+    },
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

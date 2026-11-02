@@ -200,11 +200,12 @@ Usage:
                 [--age N] [--view side|eye|three-quarter|oblique|top|under]
                 [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
-                [--focus X,Y,Z [--span METRES]] [--parts on]
+                [--focus X,Y,Z [--span METRES]] [--parts on] [--figure off]
                 [--conditions FILE|JSON [--from-age N]]
                 [--break snap|WIND|bone:N [--fallen off]] [--leaves off]
       Render one variant at one age, with a 1.8 m figure for scale, or
-      a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
+      a rod in 10 cm stripes beside a plant lower than 1.5 m (--figure
+      off draws neither, for plant-identification models). --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
       the plant, metres from its foot with +Y up; --focus leaf:F,
       blade:F, bloom:F, stalk:F or stem:F frames the middle of the leaf,
@@ -372,7 +373,7 @@ Usage:
                  [--env ENV] [--age N] [--day N] [--quality draft|standard]
                  [--threads N] [--shade attribute|baked]
                  [--compress none|quantize|meshopt] [--attributes all|wind|none]
-                 [--triangles N[,N,N,N]] [--max-mib N]
+                 [--triangles N[,N,N,N]] [--max-mib N] [--levels tiers|package]
       Make N distinct plants of a species, ready to import: each grown from
       its own seed (from --first-seed, 1 unless given, counting up) and
       written as plantc export writes one (STEM-lod0.glb to STEM-lod3.glb
@@ -382,7 +383,8 @@ Usage:
       made; the seeds the spec lists are the plants its package keeps.
       Without --env, the species' typical site; without --age, its oldest
       keyframe. --threads plants grow at once (every core unless given);
-      the files do not depend on it. The export flags are plantc export's.
+      the files do not depend on it. Levels are tiers (max, high, mid,
+      low) unless --levels package; the export flags are plantc export's.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -391,7 +393,7 @@ Usage:
                 [--compress none|quantize|meshopt]
                 [--attributes all|wind|none]
                 [--triangles N[,N,N,N]] [--max-mib N]
-                [--profile static|motion]
+                [--profile static|motion] [--levels package|tiers]
                 [--bark-look spec|FILE.json [--bark-texels N] [--bark-period M]]
       Write one variant at one age as glTF 2.0 binary files that need no
       PlantGen code, one per level of detail (STEM-lod0.glb to
@@ -435,6 +437,14 @@ Usage:
       the wood split by stage and given texture coordinates in tiles and
       tangents. Where one stage gives way to the next, the wood wears
       textures that mix them in steps of a quarter, in patches.
+      --levels tiers draws the levels as tiers for games, max, high, mid
+      and low: the nearest as the package draws it, then the most detail
+      within an eighth, a 64th and a 512th of its triangles (high at
+      least 20k and at most 500k, mid 2k to 50k, low 200 to 5k), each at
+      most half the one before. Low is the plant's baked cards (its
+      package's low-cards tier, every card fixed where it stands, over
+      one texture) where they take fewer triangles than mid and at most
+      5k: a lacy herb's own cards thin to nothing drawn that small.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
@@ -2690,6 +2700,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "from-age",
             "break",
             "fallen",
+            "figure",
             "leaves",
         ],
     )?;
@@ -2730,6 +2741,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         None | Some("on") => true,
         Some("off") => false,
         Some(other) => return Err(format!("`--leaves` must be on or off, found `{other}`").into()),
+    };
+    let figure = match options.flags.get("figure").map(String::as_str) {
+        None | Some("on") => true,
+        Some("off") => false,
+        Some(other) => return Err(format!("`--figure` must be on or off, found `{other}`").into()),
     };
     let quality = options.quality()?;
     let lod = quality.lods.get(level).ok_or("`--lod` must be 0 to 3")?;
@@ -2893,7 +2909,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             height: size * 5 / 4,
             view,
             supersample: 2,
-            figure: true,
+            figure,
+            fit_plant: !figure,
             frame_height: None,
             frame_reach: None,
             focus,
@@ -3145,6 +3162,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                     view: View::Side,
                     supersample: 2,
                     figure: true,
+                    fit_plant: false,
                     frame_height: Some(if graph.height < tallest * 0.3 {
                         graph.height
                     } else {
@@ -3258,6 +3276,7 @@ fn tiers_command(args: &[String]) -> Result<(), Failure> {
             view,
             supersample: 2,
             figure: false,
+            fit_plant: false,
             frame_height: Some(graph.height * 1.05),
             frame_reach: Some(reach),
             focus: focus.map(|(f, s)| (Vec3::new(0.0, graph.height * f, 0.0), graph.height * s)),
@@ -3519,6 +3538,7 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
                     view: View::ThreeQuarter,
                     supersample: 3,
                     figure: false,
+                    fit_plant: false,
                     frame_height: None,
                     frame_reach: None,
                     focus: Some((Vec3::Y * (length * middle), length * frame)),
@@ -3715,6 +3735,7 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                     view: View::ThreeQuarter,
                     supersample: 3,
                     figure: false,
+                    fit_plant: false,
                     frame_height: None,
                     frame_reach: None,
                     focus: Some((
@@ -3841,6 +3862,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
                     view,
                     supersample: 2,
                     figure: true,
+                    fit_plant: false,
                     frame_height: Some(tallest),
                     frame_reach: None,
                     focus: None,
@@ -4290,9 +4312,12 @@ fn profiled(spec: &PlantSpec, inputs: Inputs, options: &Options) -> Result<Input
 
 #[allow(clippy::too_many_lines)]
 /// The flags `plantc export` and `plantc variants` share: how bark is
-/// shaded, compression, attributes and a triangle or size budget.
+/// shaded, compression, attributes, a triangle or size budget, and
+/// whether the levels are the package's or tiers (`--levels`; tiers when
+/// `tiers_by_default` and the flag is not given).
 fn export_options(
     options: &Options,
+    tiers_by_default: bool,
 ) -> Result<
     (
         export::Shade,
@@ -4327,13 +4352,13 @@ fn export_options(
             return Err(format!("unknown attributes `{other}`; use all, wind or none").into());
         }
     };
-    let budget = export::Budget {
-        triangles: options
+    let mut budget = export::Budget::new(
+        options
             .flags
             .get("triangles")
             .map(|given| triangle_budget(given))
             .transpose()?,
-        bytes: options
+        options
             .flags
             .get("max-mib")
             .map(|given| {
@@ -4349,6 +4374,14 @@ fn export_options(
                     .ok_or_else(|| format!("--max-mib takes a size above 0, found `{given}`"))
             })
             .transpose()?,
+    );
+    budget.tiers = match options.flags.get("levels").map(String::as_str) {
+        None => tiers_by_default,
+        Some("package") => false,
+        Some("tiers") => true,
+        Some(other) => {
+            return Err(format!("unknown levels `{other}`; use package or tiers").into());
+        }
     };
     Ok((shade, compression, attributes, budget))
 }
@@ -4370,6 +4403,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             "attributes",
             "triangles",
             "max-mib",
+            "levels",
             "profile",
             "bark-look",
             "bark-texels",
@@ -4382,7 +4416,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             return Err(format!("unknown format `{other}`; plantc exports glb").into());
         }
     }
-    let (shade, compression, attributes, budget) = export_options(&options)?;
+    let (shade, compression, attributes, budget) = export_options(&options, false)?;
     // Bark from a record, or `spec` for the plant's own; the look is found
     // once the plant is.
     let bark_source = options.flags.get("bark-look").cloned();
@@ -4570,9 +4604,10 @@ fn variants_command(args: &[String]) -> Result<(), Failure> {
             "attributes",
             "triangles",
             "max-mib",
+            "levels",
         ],
     )?;
-    let (shade, compression, attributes, budget) = export_options(&options)?;
+    let (shade, compression, attributes, budget) = export_options(&options, true)?;
     let target = options.one_positional("a species")?;
     let spec = load_spec(target)?;
     let mut generator_options = api::Options::default();
