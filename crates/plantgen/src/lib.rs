@@ -1418,13 +1418,20 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-///
-/// 183: Asteraceae's tribes stand between its genera and the family
+/// 183: a fleshy body's far levels coarsen it to a budget as the near
+/// levels do (30 000 and 6 000 triangles of skin), down to five-sided
+/// rings a few apart with one ring over a dome: a pencil cholla's skin
+/// drew 242 000 triangles on the third level and 95 000 on the farthest,
+/// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
+/// An export's low tier keeps a plant of bodies solid while it is within
+/// twice the tier's most, as baked cards draw its joints as scraps.
+/// 185: Asteraceae's tribes stand between its genera and the family
 /// (`_ranks/tribe/`, from Flora of North America's tribe and genus
 /// accounts), carrying a head's kind and receptacle where the tribe or
 /// genus settles them, so a big sagebrush's heads draw discoid. A head may
 /// be stated only across, rays and all (`head_diameter_m`). An Asteraceae
 /// herb that leaves them unset bears a leafy node about every leaf's width
-/// up its stem, leaves nearly to its foot, a wide rosette and heads facing
-/// up, as the built-in daisy-family herbs mostly do.
-pub const GENERATOR_REVISION: u32 = 183;
+/// up its stem (no more leaves than the 32 an angiosperm shoot bears at
+/// most), leaves nearly to its foot, a wide rosette and heads facing up, as
+/// the built-in daisy-family herbs mostly do.
+pub const GENERATOR_REVISION: u32 = 185;
