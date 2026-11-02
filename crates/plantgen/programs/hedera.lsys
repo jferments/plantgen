@@ -16,3 +16,9 @@ param divergence = 137.5;  # roll from one node to the next
 # turn about 30 degrees at random (climber revision 10). Hand-set, against
 # photographs of ivy on walls (2026-11-01).
 param wander = 30;
+# A juvenile shoot lies pressed to its support by its aerial roots, its
+# leaves held out on their stalks with the blades flat to the open side
+# in a mosaic, as photographs of ivy on walls and trunks show (sites plan
+# S4, 2026-11-01): a clinging shoot's leaves turn most of the way to face
+# away from the support (climber revision 10). Hand-set.
+param leaf_face = 0.8;

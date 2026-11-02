@@ -78,9 +78,10 @@
 # Revision 10 (sites plan S4, Joshi's review of the first site renders):
 # a clinging shoot passes the way to its host on to the internodes it lays
 # (fx, fy, fz). Their leaves turn their faces leaf_face of the way from
-# the host to the open side, as a climber's leaves stand off a wall or
-# trunk on their stalks with their blades to the light, in a mosaic;
-# before, they faced every way, many edge-on to the wall. Each internode
+# the host to the open side, as a root climber's leaves stand off a wall
+# or trunk on their stalks with their blades to the light, in a mosaic
+# (ivy's, with leaf_face 0.8; 0, a twiner's or tendril climber's leaves
+# stand as they are attached). Each internode
 # of a clinging shoot turns by a random angle, about wander degrees for
 # each 10 cm of stem whatever its internode (a random walk's spread grows
 # with the root of its length), so a plagiotropic juvenile shoot (ivy's)
