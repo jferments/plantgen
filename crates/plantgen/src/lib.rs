@@ -1471,4 +1471,10 @@ pub mod venation;
 /// flower stalk's top, floating over the plant. Its low cards hid 1.35
 /// times the plant's sky from the side, now 1.06; its minimal cards 0.53,
 /// now 0.75.
-pub const GENERATOR_REVISION: u32 = 188;
+///
+/// 189: on the card tiers, a rosette plant's flowering stalk kept as a
+/// tube up to where it narrows is a ribbon from there on, and a ribbon's
+/// head takes its thin branches with its flowers (`crate::billboards`):
+/// a beargrass's stalk top and panicle branches were baked onto the
+/// blades' cards and drew as specks up to 20 cm off the stalk.
+pub const GENERATOR_REVISION: u32 = 189;
