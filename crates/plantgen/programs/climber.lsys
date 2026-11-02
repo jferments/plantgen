@@ -90,9 +90,15 @@
 # the leaves it renews face out as well. And an old node of a plant whose
 # leaves stand in pairs leafs again with a pair.
 #
+# Revision 11 (sites plan S4, buildings and fences): a shoot whose tip
+# comes within clear_gap of a surface its host keeps clear (gc, a site's
+# window or door) is cut back there, as a gardener keeps a window clear of
+# ivy each year; the vine grows on from its other shoots. With no such
+# surface gc is past reach and nothing changes.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem climber 10;
+lsystem climber 11;
 
 param vigour_spread;
 param shoots;                 # stems from the foot
@@ -133,6 +139,7 @@ param blooms = 0;             # 1: a fruiting node bears a bloom, a flower clust
 param bloom_size = 0.05;      # bloom card length
 param bloom_angle = 60;       # angle of a bloom to its shoot; past 90 it hangs
 param bloom_area = 0.5;       # leaf area of a bloom card 1 m long, m²
+param clear_gap = 0.1;        # a tip this near a surface kept clear is cut back
 
 module A(o, h, a) queries host, light;  # a shoot's tip: order, h years free, a 1 adult of its own habit
 module S queries vigour;      # the foot of a side shoot
@@ -158,6 +165,7 @@ decompose Sh(k, m) -> ;
 # A shoot's tip: adult of its own habit, clinging, seeking or hanging
 # free.
 rule A(o, h, a) : h >= free_years -> ;
+rule A(o, h, a) : gc < clear_gap -> ;
 rule A(o, h, a) : adult_rise > 0
                   && (a > 0 || (t >= adult_age && (gd >= reach || (o > 0 && light >= adult_light)))) ->
     adult(1) T(0, 1, 0, adult_rise)

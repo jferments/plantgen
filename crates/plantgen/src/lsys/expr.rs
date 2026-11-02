@@ -12,7 +12,7 @@ use crate::rng::{hash_words, normal, unit};
 /// Values the environment tools wrote for one module in the last step.
 pub type EnvValues = [f64; ENV_FIELDS];
 
-pub const ENV_FIELDS: usize = 31;
+pub const ENV_FIELDS: usize = 32;
 
 /// The environment fields a rule can read, grouped by the query that
 /// provides them.
@@ -74,6 +74,10 @@ pub enum EnvField {
     /// branches from an axis that goes on past them, so not the stems a
     /// fork divides into (crown form B).
     Limb,
+    /// `gc`: distance from the module to the nearest surface its host
+    /// keeps clear (a site's window or door, sites plan S4), metres; past
+    /// `host@1`'s reach when there is none within it.
+    Gc,
 }
 
 impl EnvField {
@@ -109,6 +113,7 @@ impl EnvField {
         (Self::Ly, "ly"),
         (Self::Lz, "lz"),
         (Self::Limb, "limb"),
+        (Self::Gc, "gc"),
     ];
 
     #[must_use]
@@ -126,7 +131,7 @@ impl EnvField {
             Self::Light | Self::Lx | Self::Ly | Self::Lz => Query::Light,
             Self::Vigour | Self::Qsum | Self::Nseg | Self::Ntip => Query::Vigour,
             Self::Space | Self::Sx | Self::Sy | Self::Sz => Query::Space,
-            Self::Gd | Self::Gx | Self::Gy | Self::Gz => Query::Host,
+            Self::Gd | Self::Gx | Self::Gy | Self::Gz | Self::Gc => Query::Host,
             Self::Sd | Self::Snx | Self::Sny | Self::Snz | Self::Smat => Query::Substrate,
             _ => Query::Position,
         }

@@ -1439,4 +1439,11 @@ pub mod venation;
 /// bare but for a tuft at the top). Ivy's internode is 0.045 m, measured
 /// on a photo, with its yearly length, branching, bend and renewal per
 /// metre kept.
-pub const GENERATOR_REVISION: u32 = 184;
+///
+/// 185: a site's surfaces say what each face is: a thin part (a fence
+/// board, a wire, a pane) stands as a slab of its own thickness, a face may
+/// refuse climbers, and a face kept clear (a window, a door) cuts back a
+/// climber's tip that comes within `clear_gap` of it (climber 11, `gc`).
+/// A plant set under the eaves stands on the soil, not the roof. Stock
+/// hosts have no clear surface, so plants off a site grow as before.
+pub const GENERATOR_REVISION: u32 = 185;
