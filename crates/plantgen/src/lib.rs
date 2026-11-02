@@ -1411,4 +1411,10 @@ pub mod venation;
 /// 576, nothing between); the search halves every other step; and an
 /// export may draw its levels as tiers (`export::Budget::tiers`).
 /// Packages draw as before.
-pub const GENERATOR_REVISION: u32 = 181;
+/// 182: an export's low tier is the plant's baked low-cards tier where
+/// that takes fewer triangles than mid and at most 5 000
+/// (`export::Level::cards`): each card that turns to the eye stands fixed
+/// as a star of three, and one baked from above lies level, over one
+/// atlas of at most 1 024 texels a side. A beargrass's low tier covered
+/// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
+pub const GENERATOR_REVISION: u32 = 182;

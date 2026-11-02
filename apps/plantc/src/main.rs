@@ -431,7 +431,10 @@ Usage:
       and low: the nearest as the package draws it, then the most detail
       within an eighth, a 64th and a 512th of its triangles (high at
       least 20k and at most 500k, mid 2k to 50k, low 200 to 5k), each at
-      most half the one before.
+      most half the one before. Low is the plant's baked cards (its
+      package's low-cards tier, every card fixed where it stands, over
+      one texture) where they take fewer triangles than mid and at most
+      5k: a lacy herb's own cards thin to nothing drawn that small.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
