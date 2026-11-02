@@ -64,6 +64,9 @@ pub struct End {
     pub level: u8,
     /// Seeds its splinters.
     pub seed: u64,
+    /// How far its splinters reach, against a break straight across the
+    /// grain (1): a wound torn along the grain leaves short ones.
+    pub torn: f64,
 }
 
 /// A fallen piece: its graph, laid on the ground, and its torn end.
@@ -109,6 +112,15 @@ const STRIP_RADIUS: f64 = 0.5;
 /// How deep a split branch's socket and wound sit in the stem, in the
 /// branch's radii.
 const SOCKET: f64 = 0.3;
+
+/// How deep the scar a split leaves sits under the stem's surface, in the
+/// branch's radii: nearly flush.
+const WOUND_SINK: f64 = 0.1;
+
+/// How far the splinters of a split's wound reach, against a break across
+/// the grain: the strip peels away along the grain and leaves the scar
+/// ragged but nearly flush.
+const WOUND_TORN: f64 = 0.15;
 
 /// Green wood's density, kg/m³, for a falling piece's weight: freshly
 /// felled wood is about as heavy as water, a little less.
@@ -305,16 +317,24 @@ pub fn apply(
                 if how == Tear::Split {
                     let out = (axis - host_axis * axis.dot(host_axis)).normalize_or(Vec3::X);
                     let skin = first.start + out * host.radius;
-                    let wound = skin - host_axis * (0.5 * STRIP * r) - out * (SOCKET * r);
-                    stubs.push(End {
-                        point: wound,
-                        axis: out,
-                        radius: STRIP_RADIUS * r,
-                        tension: -host_axis,
-                        segment: remap[parent as usize],
-                        level: level_of(host.order),
-                        seed: rng::combine(first.id, 0x0057_4F55_4E44),
-                    });
+                    // The scar the strip leaves: pale torn wood down the
+                    // stem from the socket, one ragged patch a radius.
+                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                    let patches = STRIP.round().max(1.0) as u64;
+                    for patch in 0..patches {
+                        #[allow(clippy::cast_precision_loss)]
+                        let down = (patch as f64 + 0.5) * r;
+                        stubs.push(End {
+                            point: skin - host_axis * down - out * (WOUND_SINK * r),
+                            axis: out,
+                            radius: STRIP_RADIUS * r,
+                            tension: -host_axis,
+                            segment: remap[parent as usize],
+                            level: level_of(host.order),
+                            seed: rng::combine(first.id, 0x0057_4F55_4E44 + patch),
+                            torn: WOUND_TORN,
+                        });
+                    }
                     let mut wood = first.clone();
                     wood.id = rng::combine(first.id, 0x0053_5452_4950);
                     wood.parent = Some(0);
@@ -354,6 +374,7 @@ pub fn apply(
             segment: stub,
             level,
             seed: first.id,
+            torn: 1.0,
         });
         let off = Fall {
             axis,
@@ -599,6 +620,7 @@ fn fallen(
         segment: 0,
         level: fall.level,
         seed: rng::combine(base.id, 0x5049_4543),
+        torn: 1.0,
     };
     Piece {
         graph: PlantGraph {
@@ -759,7 +781,7 @@ impl Grain {
 pub fn fracture(end: &End, toughness: Toughness, grain: &Grain, edge: f64) -> Mesh {
     let mut out = Mesh::default();
     let r = end.radius.max(1.0e-4);
-    let reach = toughness.reach() * 2.0 * r;
+    let reach = toughness.reach() * 2.0 * r * end.torn.clamp(0.0, 1.0);
     let axis = end.axis.normalize_or(Vec3::Y);
     let u = (end.tension - axis * axis.dot(end.tension)).normalize_or(Vec3::X);
     let v = axis.cross(u);
@@ -1091,15 +1113,17 @@ mod tests {
             &Drag::default(),
         );
         assert_eq!(damaged.tears, vec![Tear::Split]);
-        // A wound on the stem below the junction, and the socket's end.
-        assert_eq!(damaged.stubs.len(), 2);
-        let wound = &damaged.stubs[0];
-        assert!(wound.point.y < 2.0 - 0.06, "{:?}", wound.point);
-        assert!(
-            (wound.axis - Vec3::X).length() < 1.0e-9,
-            "it faces out of the stem"
-        );
-        let socket = &damaged.stubs[1];
+        // A scar down the stem below the junction, and the socket's end.
+        assert_eq!(damaged.stubs.len(), 5);
+        for wound in &damaged.stubs[..4] {
+            assert!(wound.point.y < 2.0, "{:?}", wound.point);
+            assert!(
+                (wound.axis - Vec3::X).length() < 1.0e-9,
+                "it faces out of the stem"
+            );
+        }
+        assert!(damaged.stubs[3].point.y < 2.0 - 3.0 * 0.06);
+        let socket = &damaged.stubs[4];
         assert!(
             socket.point.x < 0.09,
             "the socket sits inside the stem's surface"
@@ -1226,6 +1250,7 @@ mod tests {
             segment: 3,
             level: 0,
             seed: 7,
+            torn: 1.0,
         };
         let grain = Grain {
             sapwood: Grain::SAPWOOD,
