@@ -766,5 +766,8 @@ fn a_chollas_far_levels_draw_its_joints_coarser() {
     };
     let (second, farthest) = (skin(2), skin(3));
     assert!(second <= 40_000, "{second}");
-    assert!(farthest <= 20_000 && farthest < second, "{farthest} against {second}");
+    assert!(
+        farthest <= 20_000 && farthest < second,
+        "{farthest} against {second}"
+    );
 }
