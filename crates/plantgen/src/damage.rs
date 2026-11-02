@@ -406,8 +406,9 @@ pub fn apply(
                 0.0
             },
             strip,
+            laid: None,
         };
-        pieces.push(fallen(graph, b, run, &off, drag));
+        pieces.push(fallen(graph, b, run, &off, drag).0);
     }
     for organ in &graph.organs {
         match organ.segment {
@@ -434,7 +435,7 @@ pub fn apply(
     }
 }
 
-fn level_of(order: u16) -> u8 {
+pub(crate) fn level_of(order: u16) -> u8 {
     match order {
         0 => 0,
         1 => 1,
@@ -457,15 +458,41 @@ fn level_away(toward: Vec3, axis: Vec3) -> Vec3 {
 
 /// How a piece comes off: its broken segment's axis and tension side, its
 /// wood's level, how it tore, and the strip of stem wood a split takes.
-struct Fall {
-    axis: Vec3,
-    tension: Vec3,
-    level: u8,
-    tear: Tear,
-    strip: Option<GraphSegment>,
+pub(crate) struct Fall {
+    pub(crate) axis: Vec3,
+    pub(crate) tension: Vec3,
+    pub(crate) level: u8,
+    pub(crate) tear: Tear,
+    pub(crate) strip: Option<GraphSegment>,
     /// How far out from the break's axis its butt lands: the stem's radius
     /// for a limb split out of it, which drops beside the stem.
-    beside: f64,
+    pub(crate) beside: f64,
+    /// A felled stem: it falls straight down `toward`, the way its notch
+    /// faces, and lies with its first segment's start this far along the
+    /// fall from where it stood, m.
+    pub(crate) laid: Option<f64>,
+}
+
+/// Where [`fallen`] put a piece: turned about `about` by `turn`, rolled
+/// about its new axis by `roll`, then moved by `shift`.
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct Placed {
+    about: Vec3,
+    turn: Turn,
+    roll: Turn,
+    shift: Vec3,
+}
+
+impl Placed {
+    /// Where the point `p` of the piece as it stood now lies.
+    pub(crate) fn point(&self, p: Vec3) -> Vec3 {
+        self.about + self.direction(p - self.about) + self.shift
+    }
+
+    /// Where the direction `v` of the piece as it stood now points.
+    pub(crate) fn direction(&self, v: Vec3) -> Vec3 {
+        self.roll.apply(self.turn.apply(v))
+    }
 }
 
 /// How far the wind at `wind` m/s at 10 m, on the profile `drag`, carries
@@ -493,13 +520,13 @@ fn drift(mass: f64, area: f64, height: f64, wind: f64, drag: &crate::breakage::D
 /// The piece `run` (segments in graph order, its first the broken one)
 /// taken out of `graph` and laid on the ground as `fall` says.
 #[allow(clippy::too_many_lines)]
-fn fallen(
+pub(crate) fn fallen(
     graph: &PlantGraph,
     b: &Break,
     run: &[u32],
     fall: &Fall,
     drag: &crate::breakage::Drag,
-) -> Piece {
+) -> (Piece, Placed) {
     let axis = fall.axis;
     let mut index_of = std::collections::HashMap::with_capacity(run.len());
     for (new, old) in run.iter().enumerate() {
@@ -604,6 +631,14 @@ fn fallen(
             }
         }
         (about, chosen, Turn::about(Vec3::Y, 0.0), Vec3::ZERO)
+    } else if let Some(laid) = fall.laid {
+        // A felled stem turns about its hinge straight down the fall,
+        // the hinge tears as the notch closes, and it drops beside its
+        // stump.
+        let turn = Turn::between(length, toward);
+        let roll = rest(&segments, &organs, pivot, &turn, toward);
+        let shift = Vec3::Y * (r - pivot.y) + toward * laid;
+        (pivot, turn, roll, shift)
     } else if fall.level == 0 || fall.tear == Tear::Split {
         // A stem topples down the wind, its own way round where it
         // already leans, and its butt slides off the stump down the fall.
@@ -671,19 +706,26 @@ fn fallen(
         seed: rng::combine(base.id, 0x5049_4543),
         torn: 1.0,
     };
-    Piece {
-        graph: PlantGraph {
-            age: graph.age,
-            height,
-            segments,
-            organs,
-            structures: graph.structures.clone(),
+    (
+        Piece {
+            graph: PlantGraph {
+                age: graph.age,
+                height,
+                segments,
+                organs,
+                structures: graph.structures.clone(),
+            },
+            end,
         },
-        end,
-    }
+        Placed {
+            about,
+            turn,
+            roll,
+            shift,
+        },
+    )
 }
 
-/// A rotation, as the shortest turn between two directions.
 /// How a piece lying along `along` rolls to rest: onto its broad side, the
 /// way a fallen limb settles with its crown's spread along the ground
 /// rather than standing up off it. Of the rolls about its axis, the one
@@ -732,8 +774,9 @@ fn rest(
     Turn::about(along, best.2)
 }
 
+/// A rotation, as the shortest turn between two directions.
 #[derive(Debug, Clone, Copy)]
-struct Turn {
+pub(crate) struct Turn {
     axis: Vec3,
     cos: f64,
     sin: f64,

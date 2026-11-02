@@ -204,7 +204,7 @@ Usage:
                 [--focus X,Y,Z [--span METRES]] [--parts on] [--figure off]
                 [--conditions FILE|JSON [--from-age N]]
                 [--break snap|WIND|bone:N [--fallen off]] [--leaves off]
-                [--turn DEGREES]
+                [--fell HEIGHT[,DEGREES] [--fallen off]] [--turn DEGREES]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m (--figure
       off draws neither, for plant-identification models). --focus
@@ -230,7 +230,12 @@ Usage:
       thicker one splits out with a strip of the stem; tough wood often
       breaks hinged, the piece hanging from its break. --leaves off
       draws the wood alone (cards and tufts left out), to see wounds
-      the foliage hides. --turn turns the plant DEGREES about its foot
+      the foliage hides. --fell fells it with a saw: a notch a third
+      of the stem deep at HEIGHT m (0.3 unless given), facing DEGREES
+      (0 = +X, 90 = +Z; 0 unless given), a back cut a twelfth of the
+      stem higher leaving a twelfth of it as the hinge (the US Forest
+      Service's conventional undercut); the stump stands with its sawn
+      top and the log lies down the fall. --turn turns the plant DEGREES about its foot
       (anticlockwise from above) before the view, --focus points with it.
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
@@ -2725,6 +2730,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "figure",
             "leaves",
             "turn",
+            "fell",
         ],
     )?;
     let day = options.day()?;
@@ -2754,6 +2760,10 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let breaking = options.flags.get("break").cloned();
     if parted && breaking.is_some() {
         return Err("`--break` draws without `--parts`".into());
+    }
+    let felling = options.flags.get("fell").cloned();
+    if felling.is_some() && (parted || breaking.is_some()) {
+        return Err("`--fell` draws without `--parts` or `--break`".into());
     }
     let fallen = match options.flags.get("fallen").map(String::as_str) {
         None | Some("on") => true,
@@ -2850,6 +2860,17 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             .map(|point| (point, (span * 4.0).max(1.0)));
         plantgen::parts::place_near(&mut plant, &looks, &parts, near);
         plant
+    } else if let Some(how) = &felling {
+        felled_mesh(
+            &spec,
+            graph,
+            how,
+            fallen,
+            &looks,
+            &bodies,
+            &lod.for_height(graph.height),
+            level,
+        )?
     } else if let Some(how) = &breaking {
         broken_mesh(
             &spec,
@@ -3488,6 +3509,110 @@ fn broken_mesh(
         damaged.pieces.len(),
         if fallen { "" } else { " (not drawn)" }
     );
+    Ok(plant)
+}
+
+/// `plantc render --fell HEIGHT[,DEGREES]`: the plant felled with a saw at
+/// HEIGHT m, falling towards DEGREES (0 = +X, 90 = +Z).
+#[allow(clippy::too_many_arguments)]
+fn felled_mesh(
+    spec: &PlantSpec,
+    graph: &PlantGraph,
+    how: &str,
+    fallen: bool,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    lod: &mesh::LodSpec,
+    level: usize,
+) -> Result<PlantMesh, Failure> {
+    use plantgen::damage::{self, Grain, Toughness};
+    use plantgen::felling::{self, Cut, Notch};
+    let numbers: Vec<f64> = how
+        .split(',')
+        .map(|part| part.trim().parse::<f64>())
+        .collect::<Result<_, _>>()
+        .map_err(|_| format!("`--fell` takes HEIGHT or HEIGHT,DEGREES, found `{how}`"))?;
+    let (height, degrees) = match numbers[..] {
+        [height] => (height, 0.0),
+        [height, degrees] => (height, degrees),
+        _ => return Err(format!("`--fell` takes HEIGHT or HEIGHT,DEGREES, found `{how}`").into()),
+    };
+    let traits = library()
+        .traits_of(&spec.id)
+        .map_err(|error| error.to_string())?;
+    let motion = plantgen::motion::Motion::of(&traits);
+    let toughness = Toughness::of_traits(&traits);
+    let look = spec
+        .appearance
+        .bark_look(&spec.id)
+        .map_err(|error| error.to_string())?;
+    let angle = degrees.to_radians();
+    let cut = Cut {
+        height,
+        toward: Vec3::new(angle.cos(), 0.0, angle.sin()),
+        notch: Notch::CONVENTIONAL,
+    };
+    let felled = felling::fell(
+        graph,
+        &cut,
+        look.as_ref().map(|look| &look.thickness),
+        spec.appearance.flare.as_ref(),
+        &motion.drag,
+    )
+    .ok_or_else(|| format!("{} has no stem standing {height} m up", spec.id))?;
+    let grain = Grain {
+        sapwood: Grain::SAPWOOD,
+        heartwood: None,
+        bark: spec.appearance.bark,
+    };
+    let mut plant = mesh::build(
+        &felled.standing,
+        looks,
+        bodies,
+        &spec.appearance,
+        lod,
+        level,
+    );
+    damage::append(
+        &mut plant.wood,
+        &felling::kerf(&felled.stump, toughness, &grain, lod.ring_edge),
+    );
+    let d = 2.0 * felled.stump.radius;
+    out!(
+        "felled at {height:.2} m towards {degrees:.0} degrees: stem {:.0} cm across, bark {:.1} cm, {} rings; notch {:.0} cm deep, hinge {:.0} cm long and {:.1} cm thick, stump shot {:.1} cm",
+        d * 100.0,
+        felled.stump.bark * 100.0,
+        felled.stump.rings,
+        Notch::CONVENTIONAL.depth * d * 100.0,
+        felled.hinge.length * 100.0,
+        felled.hinge.thickness * 100.0,
+        felled.hinge.height * 100.0
+    );
+    if fallen {
+        let lying = plantgen::spec::Appearance {
+            flare: None,
+            bottle: None,
+            ..spec.appearance.clone()
+        };
+        let more = mesh::build(&felled.log, looks, bodies, &lying, lod, level);
+        damage::append(&mut plant.wood, &more.wood);
+        plant.cards.extend(more.cards);
+        plant.tufts.extend(more.tufts);
+        damage::append(
+            &mut plant.wood,
+            &felling::kerf(&felled.butt, toughness, &grain, lod.ring_edge),
+        );
+        out!(
+            "log {:.1} m long lies towards {degrees:.0} degrees, its butt {:.2} m from the stump's centre",
+            felled
+                .log
+                .segments
+                .iter()
+                .map(|segment| segment.end.x.hypot(segment.end.z))
+                .fold(0.0, f64::max),
+            felled.butt.origin.x.hypot(felled.butt.origin.z)
+        );
+    }
     Ok(plant)
 }
 
