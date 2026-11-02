@@ -1786,6 +1786,7 @@ pub fn build_from(
         looks,
         if crowned { 0.0 } else { keep },
         wood_budget.saturating_sub(tube_triangles),
+        form == GrowthForm::RosetteSucculent,
     )
     .into_iter()
     .take(if tier.heads > 0.0 {
@@ -2122,6 +2123,61 @@ pub fn build_from(
                 // Down the head's own stem as far as it goes: a carrot's
                 // stem narrows below `keep` a third of its height under
                 // the umbel.
+                match g.parent {
+                    Some(parent) if walked < graph.height * RIBBON_LENGTH || !g.lateral => {
+                        at = parent as usize;
+                    }
+                    _ => break,
+                }
+            }
+        }
+        // A ribbon's head takes its thin branches and pedicels (a
+        // panicle's) with its flowers: baked with the clumps below, a
+        // beargrass's panicle drew its branches as specks on the leaves'
+        // cards, beside its stalk. Branches off a tube (an agave's) stay
+        // as they were: on a head's card they drew as specks too.
+        let mut carded = vec![false; ribbons.len() + graph.segments.len()];
+        for &a in &head {
+            if a != usize::MAX {
+                carded[a] = true;
+            }
+        }
+        let mut branch = vec![false; graph.segments.len()];
+        for organ in &graph.organs {
+            if let Some(s) = organ.segment
+                && looks.get(usize::from(organ.organ)).is_some_and(signature)
+            {
+                let mut at = s as usize;
+                let mut walked = 0.0;
+                while !branch[at] {
+                    branch[at] = true;
+                    let g = &graph.segments[at];
+                    walked += (g.end - g.start).length();
+                    match g.parent {
+                        Some(parent) if walked < graph.height * RIBBON_LENGTH => {
+                            at = parent as usize;
+                        }
+                        _ => break,
+                    }
+                }
+            }
+        }
+        head.resize(elements.len(), usize::MAX);
+        for (s, &e) in wood_element.iter().enumerate() {
+            if e == usize::MAX || !branch[s] {
+                continue;
+            }
+            let mut at = s;
+            let mut walked = 0.0;
+            loop {
+                let g = &graph.segments[at];
+                if axis_of[at] != usize::MAX || g.radius >= keep {
+                    if axis_of[at] != usize::MAX && carded[axis_of[at]] {
+                        head[e] = axis_of[at];
+                    }
+                    break;
+                }
+                walked += (g.end - g.start).length();
                 match g.parent {
                     Some(parent) if walked < graph.height * RIBBON_LENGTH || !g.lateral => {
                         at = parent as usize;
@@ -3064,7 +3120,13 @@ const RIBBON_ROUND: f64 = 1.57;
 /// The free-standing thin axes that bear a flower, a head or a fruit
 /// along them, longest first, as many as `budget` triangles allow
 /// (`2 (RIBBON_POINTS - 1)` each): each its segments, base first.
-fn ribbon_axes(graph: &PlantGraph, looks: &[Look], keep: f64, budget: usize) -> Vec<Vec<usize>> {
+fn ribbon_axes(
+    graph: &PlantGraph,
+    looks: &[Look],
+    keep: f64,
+    budget: usize,
+    tails: bool,
+) -> Vec<Vec<usize>> {
     let n = graph.segments.len();
     let mut next = vec![None; n];
     for (s, segment) in graph.segments.iter().enumerate() {
@@ -3108,10 +3170,23 @@ fn ribbon_axes(graph: &PlantGraph, looks: &[Look], keep: f64, budget: usize) -> 
             chain.push(following);
             cursor = following;
         }
-        let thin = chain.iter().all(|&s| {
+        let thin_at = |s: usize| {
             let g = &graph.segments[s];
             g.radius < keep && g.body == 0 && g.within.is_none()
-        });
+        };
+        // With `tails`, an axis kept as a tube up to where it narrows (a
+        // beargrass's or a sotol's flowering stalk) is a ribbon from there
+        // on: a rosette's stem past its rosette is left out, and with it
+        // the stalk's top, whose panicle's branches lay on the leaves'
+        // cards and drew as specks beside the stalk. A forb's stem baked
+        // above its tube (a wild carrot's) is drawn there already: as a
+        // ribbon it stood beside the tube's last, coarse step.
+        let tail = chain
+            .iter()
+            .rposition(|&s| !thin_at(s))
+            .map_or(0, |i| i + 1);
+        let chain = chain.split_off(tail);
+        let thin = !chain.is_empty() && (tails || tail == 0);
         let bears = chain.iter().any(|&s| signature[s]);
         let length: f64 = chain
             .iter()

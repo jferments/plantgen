@@ -550,3 +550,35 @@ fn a_tussocks_cards_stand_among_its_blades() {
         );
     }
 }
+
+#[test]
+fn a_beargrasss_panicle_stays_on_its_stalk() {
+    // A beargrass's flowering stalk is a tube up to where it narrows.
+    // Its top and its panicle's branches were baked with the blades:
+    // cards rising from the tussock to the panicle's top drew them as
+    // specks up to half a metre off the stalk on the low cards.
+    let (top, height) = with_plant("nolina-microcarpa", |drawn, _, _, _, _| {
+        let top = drawn
+            .segments
+            .iter()
+            .map(|s| s.end)
+            .fold(drawn.segments[0].end, |a, b| if b.y > a.y { b } else { a });
+        (top, drawn.height)
+    });
+    let (_, _, plants) = carded("nolina-microcarpa");
+    let cards = &plants[0].cards;
+    for t in cards.indices.chunks(3) {
+        let corners = [t[0], t[1], t[2]].map(|i| cards.positions[i as usize]);
+        if corners.iter().all(|p| f64::from(p[1]) < height * 0.7) {
+            continue;
+        }
+        let (x, z) = corners.iter().fold((0.0, 0.0), |(x, z), p| {
+            (x + f64::from(p[0]) / 3.0, z + f64::from(p[2]) / 3.0)
+        });
+        let off = (x - top.x).hypot(z - top.z);
+        assert!(
+            off <= height * 0.1,
+            "a card reaching the panicle lies {off:.2} m off the stalk (the plant is {height:.2} m)"
+        );
+    }
+}
