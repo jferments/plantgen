@@ -196,9 +196,10 @@ impl Attributes {
     }
 }
 
-/// The most an export's levels may hold; with neither, each level is
-/// drawn as the package draws it.
+/// The most an export's levels may hold; with none of them, each level
+/// is drawn as the package draws it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[non_exhaustive]
 pub struct Budget {
     /// Most triangles each level draws, nearest first, counted as a
     /// renderer draws them (each instance of a part mesh too). Levels
@@ -211,13 +212,38 @@ pub struct Budget {
     /// farther level a quarter of the one before; then the nearest takes
     /// whatever the farther ones leave.
     pub bytes: Option<usize>,
+    /// Draw the levels as tiers, max, high, mid and low: the nearest as
+    /// the package draws it, each farther one the most detail within its
+    /// share of the nearest's triangles ([`crate::budget::tier_triangles`]),
+    /// so every plant gets levels spaced alike, whatever its size and
+    /// organs. With `triangles` too, each level keeps the lower of the two.
+    pub tiers: bool,
 }
 
 impl Budget {
+    /// Most triangles per level, `bytes` in all, or both.
+    #[must_use]
+    pub fn new(triangles: Option<[usize; LEVELS]>, bytes: Option<usize>) -> Self {
+        Self {
+            triangles,
+            bytes,
+            tiers: false,
+        }
+    }
+
+    /// The tiers ([`Self::tiers`]), with no other limit.
+    #[must_use]
+    pub fn tiers() -> Self {
+        Self {
+            tiers: true,
+            ..Self::default()
+        }
+    }
+
     /// Whether it limits anything.
     #[must_use]
     pub fn is_some(&self) -> bool {
-        self.triangles.is_some() || self.bytes.is_some()
+        self.triangles.is_some() || self.bytes.is_some() || self.tiers
     }
 
     /// `nearest` triangles for the nearest level and a quarter of the
@@ -315,6 +341,8 @@ pub struct Level {
     pub detail: Detail,
     /// Drawn to a budget: its share of it.
     pub budget: Option<LevelBudget>,
+    /// Drawn as a baked-card tier ([`crate::billboards`]): its name.
+    pub cards: Option<&'static str>,
 }
 
 /// A level's share of a [`Budget`]: its triangles, and the bytes it was
@@ -632,6 +660,7 @@ impl Drawn<'_> {
             shades: &self.shades,
             pieces: &pieces,
             parts: &self.parts,
+            baked: None,
         };
         let (glb, position_step) = level_glb(
             &drawing,
@@ -649,6 +678,7 @@ impl Drawn<'_> {
             position_step,
             detail: self.detail,
             budget: None,
+            cards: None,
         })
     }
 }
@@ -787,14 +817,23 @@ fn budgeted(
         drawn: staged.as_ref().unwrap_or(&plant.graph),
         tried: HashMap::new(),
     };
-    let triangles = |level: usize| budget.triangles.map(|triangles| triangles[level]);
+    // Tiers: shares of the nearest level's triangles as the package
+    // draws it.
+    let tiers = if budget.tiers {
+        Some(crate::budget::tier_triangles(trials.triangles(0.0).0))
+    } else {
+        None
+    };
+    let most = match (budget.triangles, tiers) {
+        (Some(given), Some(tiers)) => {
+            Some(std::array::from_fn(|level| given[level].min(tiers[level])))
+        }
+        (given, tiers) => given.or(tiers),
+    };
+    let triangles = |level: usize| most.map(|triangles: [usize; LEVELS]| triangles[level]);
     #[allow(clippy::cast_precision_loss)]
     let low = |level: usize| {
-        if budget.triangles.is_some() {
-            0.0
-        } else {
-            level as f64
-        }
+        if most.is_some() { 0.0 } else { level as f64 }
     };
     // Each level's share of the bytes, before the nearest takes what the
     // others leave: the coarsest drawing's, which no drawing goes below
@@ -815,12 +854,22 @@ fn budgeted(
         }
     }
     let mut dials: Vec<f64> = Vec::with_capacity(LEVELS);
+    // A tier draws at most half the tier before it, so no two tiers are
+    // one drawing where a plant's drawings fall in steps.
+    let mut caps: [Option<usize>; LEVELS] = std::array::from_fn(triangles);
     for (level, &bytes) in given.iter().enumerate() {
         let finest = low(level).max(dials.last().copied().unwrap_or(0.0));
-        let (dial, _) =
-            crate::budget::most_detail(finest, |dial| trials.taken(dial, triangles(level), bytes))?;
+        if budget.tiers
+            && let Some(&before) = dials.last()
+        {
+            let half = trials.triangles(before).0 / 2;
+            caps[level] = caps[level].map(|cap| cap.min(half));
+        }
+        let cap = caps[level];
+        let (dial, _) = crate::budget::most_detail(finest, |dial| trials.taken(dial, cap, bytes))?;
         dials.push(dial);
     }
+    let triangles = |level: usize| caps[level];
     // The nearest level takes the bytes the others leave.
     if let Some(bytes) = budget.bytes {
         let mut others = 0;
@@ -862,7 +911,302 @@ fn budgeted(
         });
         files.push(written);
     }
+    // Tiers: the farthest is the plant's low baked-card tier where that
+    // draws it in fewer triangles than the tier before and within the low
+    // tier's most ([`crate::budget::TIER_CAPS`], or a triangle budget
+    // given): cards baked at the tier's size keep a lacy herb's outline,
+    // where its own cards thin to nothing when drawn small.
+    if budget.tiers {
+        let last = LEVELS - 1;
+        let before = files[last - 1].summary.triangles;
+        let most = budget
+            .triangles
+            .map_or(crate::budget::TIER_CAPS[last], |given| given[last]);
+        let carded = baked_level(inputs, plant, settings, last, file(last))?;
+        let drawn = carded.summary.triangles;
+        if drawn < before && drawn <= most {
+            let mut carded = carded;
+            carded.budget = files[last].budget.map(|given| LevelBudget {
+                triangles: Some(most),
+                fits: given.bytes.is_none_or(|bytes| carded.glb.len() <= bytes),
+                ..given
+            });
+            files[last] = carded;
+        }
+    }
     Ok(files)
+}
+
+/// The views a baked card that turns to the eye is fixed for, in a file
+/// no shader turns: about the plant from three sides, level, so a card
+/// stands as a star of three; and from straight above, for a crown's
+/// card baked from four heights.
+const FIXED_VIEWS: [(f64, f64); 4] = [(0.0, 0.0), (120.0, 0.0), (240.0, 0.0), (0.0, 90.0)];
+
+/// `plant`'s low baked-card tier ([`crate::billboards::LOW`]) as level
+/// `level`, named `file`: its wood as tubes and its cards fixed
+/// ([`fixed_cards`]) over one atlas.
+fn baked_level(
+    inputs: &Inputs,
+    plant: &Plant,
+    settings: Settings,
+    level: usize,
+    file: String,
+) -> Result<Level, PackageError> {
+    let tier = &crate::billboards::LOW;
+    let staged = crate::looks::staged(&plant.graph, &inputs.sizes, &inputs.looks);
+    let drawn = staged.as_ref().unwrap_or(&plant.graph);
+    let carded = crate::billboards::build(
+        drawn,
+        &inputs.looks,
+        &inputs.bodies,
+        &inputs.spec.appearance,
+        inputs.spec.growth_form,
+        &inputs.templates,
+        &inputs.quality.lods,
+        tier,
+    );
+    let mut atlas = carded.atlas();
+    let mut baked = inputs.templates.clone();
+    baked.baked.clone_from(&carded.pictures);
+    let mut cards = fixed_cards(&carded.cards, &baked, drawn.height);
+    // A far tier needs no more than [`BAKED_SIDE`] texels a side: the atlas
+    // is halved until it fits, padded first so each halving is whole.
+    let mut halvings = 0;
+    while atlas.width.max(atlas.height) >> halvings > BAKED_SIDE {
+        halvings += 1;
+    }
+    let (full_width, full_height) = (atlas.width, atlas.height);
+    let step = 1_usize << halvings;
+    atlas.width = full_width.div_ceil(step) * step;
+    atlas.height = full_height.div_ceil(step) * step;
+    // Each vertex's uv within its picture, to the atlas's, rows from the
+    // top as glTF reads an image.
+    #[allow(clippy::cast_precision_loss)]
+    let (width, height) = (atlas.width as f32, atlas.height as f32);
+    for (uv, colour) in cards.uvs.iter_mut().zip(&mut cards.colors) {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let index = colour[3].max(0.0).round() as usize;
+        if let (Some(picture), Some(&(x, y))) =
+            (carded.pictures.get(index), atlas.places.get(index))
+        {
+            #[allow(clippy::cast_precision_loss)]
+            let (pw, ph, x, y) = (
+                picture.width as f32,
+                picture.height as f32,
+                x as f32,
+                y as f32,
+            );
+            *uv = [(x + uv[0] * pw) / width, 1.0 - (y + uv[1] * ph) / height];
+        }
+        *colour = [1.0, 1.0, 1.0, 1.0];
+    }
+    let [mut albedo, _, _] = package::card_atlas(&carded, &atlas);
+    bleed(&mut albedo, atlas.width, atlas.height);
+    let (mut side_x, mut side_y) = (atlas.width, atlas.height);
+    for _ in 0..halvings {
+        albedo = halved(&albedo, side_x, side_y);
+        (side_x, side_y) = (side_x / 2, side_y / 2);
+    }
+    let baked = Baked {
+        cards,
+        albedo: package::png(side_x, side_y, &albedo)?,
+    };
+    let mesh = PlantMesh {
+        wood: carded.wood.clone(),
+        ..PlantMesh::default()
+    };
+    let pieces = Pieces {
+        placements: Vec::new(),
+        spines: None,
+        cards: Vec::new(),
+    };
+    let detail = Detail::level(&inputs.quality, plant.graph.height, level);
+    let drawing = Drawing {
+        plant: &mesh,
+        shades: &[],
+        pieces: &pieces,
+        parts: &[],
+        baked: Some(&baked),
+    };
+    let (glb, position_step) = level_glb(&drawing, inputs, settings, None, &|step| {
+        let mut value = metadata(inputs, plant, Some((level, &detail, step)), settings);
+        value["cards"] = json!(tier.name);
+        value
+    });
+    let summary = gltf::check(&glb).map_err(|error| format_error(format!("{file}: {error}")))?;
+    Ok(Level {
+        file,
+        glb,
+        summary,
+        position_step,
+        detail,
+        budget: None,
+        cards: Some(tier.name),
+    })
+}
+
+/// `cards`, a baked-card tier's cards with their pictures in `baked`, with
+/// every card that turns to the eye ([`crate::raster::Turn`]) fixed as it
+/// turns for each of [`FIXED_VIEWS`]: a file no shader turns draws them
+/// so. The view from above is kept only for a card it shows another
+/// picture on (a crown's, baked from above), as a card facing the eye
+/// would lie on the ground.
+fn fixed_cards(cards: &Mesh, baked: &crate::templates::Templates, height: f64) -> Mesh {
+    use crate::raster::{Camera, Projection, Turn};
+    let picture = |mesh: &Mesh, vertex: usize| {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let index = mesh.colors[vertex][3].max(0.0).round() as usize;
+        index
+    };
+    let turns = |vertex: usize| {
+        baked
+            .baked
+            .get(picture(cards, vertex))
+            .is_some_and(|texture| texture.turn != Turn::Fixed)
+    };
+    let mut out = Mesh::default();
+    add_triangles(&mut out, cards, &|corner| !turns(corner));
+    if !(0..cards.positions.len()).any(turns) {
+        return out;
+    }
+    let middle = Vec3::new(0.0, height * 0.5, 0.0);
+    for (k, &(azimuth, elevation)) in FIXED_VIEWS.iter().enumerate() {
+        let (a, e) = (math::radians(azimuth), math::radians(elevation));
+        let toward = Vec3::new(
+            math::cos(e) * math::sin(a),
+            math::sin(e),
+            math::cos(e) * math::cos(a),
+        );
+        let camera = Camera {
+            eye: middle + toward * (height.max(1.0) * 10.0),
+            target: middle,
+            up: if elevation > 45.0 { Vec3::Z } else { Vec3::Y },
+            projection: Projection::Orthographic {
+                half_height: height.max(0.1),
+            },
+        };
+        let turned = crate::raster::turned(cards, baked, &camera);
+        let from_above = k == FIXED_VIEWS.len() - 1;
+        add_triangles(&mut out, &turned, &|corner| {
+            turns(corner) && (!from_above || picture(&turned, corner) != picture(cards, corner))
+        });
+    }
+    out
+}
+
+/// Append to `out` the triangles of `mesh` whose first corner `keep`
+/// takes, with their vertices.
+fn add_triangles(out: &mut Mesh, mesh: &Mesh, keep: &dyn Fn(usize) -> bool) {
+    let mut placed: HashMap<u32, u32> = HashMap::new();
+    for triangle in mesh.indices.as_chunks::<3>().0 {
+        if !keep(triangle[0] as usize) {
+            continue;
+        }
+        for &corner in triangle {
+            let index = *placed.entry(corner).or_insert_with(|| {
+                let v = corner as usize;
+                out.positions.push(mesh.positions[v]);
+                out.normals.push(mesh.normals[v]);
+                out.uvs.push(mesh.uvs.get(v).copied().unwrap_or_default());
+                out.colors.push(mesh.colors[v]);
+                out.births.push(mesh.births.get(v).copied().unwrap_or(0.0));
+                out.sheds
+                    .push(mesh.sheds.get(v).copied().unwrap_or(f32::INFINITY));
+                out.levels.push(mesh.levels.get(v).copied().unwrap_or(3));
+                #[allow(clippy::cast_possible_truncation)]
+                let index = out.positions.len() as u32 - 1;
+                index
+            });
+            out.indices.push(index);
+        }
+    }
+}
+
+/// The most texels along a side of a baked-card tier's atlas in an
+/// export: a tier drawn far off, whose plant is a few hundred pixels
+/// tall at most, and a file a tenth the size of the package's atlas.
+const BAKED_SIDE: usize = 1024;
+
+/// An RGBA8 image `width` by `height` (both even) at half the size, each
+/// texel the mean of four, their colours weighted by coverage.
+fn halved(rgba: &[u8], width: usize, height: usize) -> Vec<u8> {
+    let (w, h) = (width / 2, height / 2);
+    let mut out = vec![0_u8; w * h * 4];
+    for y in 0..h {
+        for x in 0..w {
+            let (mut colour, mut alpha, mut plain) = ([0_u32; 3], 0_u32, [0_u32; 3]);
+            for (dx, dy) in [(0, 0), (1, 0), (0, 1), (1, 1)] {
+                let at = ((2 * y + dy) * width + 2 * x + dx) * 4;
+                let a = u32::from(rgba[at + 3]);
+                for c in 0..3 {
+                    colour[c] += u32::from(rgba[at + c]) * a;
+                    plain[c] += u32::from(rgba[at + c]);
+                }
+                alpha += a;
+            }
+            let at = (y * w + x) * 4;
+            for c in 0..3 {
+                let value = colour[c].checked_div(alpha).unwrap_or(plain[c] / 4);
+                #[allow(clippy::cast_possible_truncation)]
+                {
+                    out[at + c] = value as u8;
+                }
+            }
+            #[allow(clippy::cast_possible_truncation)]
+            {
+                out[at + 3] = (alpha / 4) as u8;
+            }
+        }
+    }
+    out
+}
+
+/// Give an RGBA8 atlas's empty texels the colour of their covered
+/// neighbours, a few texels out, so its smaller mipmap levels do not
+/// darken the cards' edges toward black.
+fn bleed(rgba: &mut [u8], width: usize, height: usize) {
+    let mut known: Vec<bool> = rgba
+        .as_chunks::<4>()
+        .0
+        .iter()
+        .map(|texel| texel[3] > 0)
+        .collect();
+    for _ in 0..8 {
+        let (before, was) = (rgba.to_vec(), known.clone());
+        for y in 0..height {
+            for x in 0..width {
+                let at = y * width + x;
+                if was[at] {
+                    continue;
+                }
+                let (mut sum, mut count) = ([0_u32; 3], 0_u32);
+                for (nx, ny) in [
+                    (x.wrapping_sub(1), y),
+                    (x + 1, y),
+                    (x, y.wrapping_sub(1)),
+                    (x, y + 1),
+                ] {
+                    if nx >= width || ny >= height || !was[ny * width + nx] {
+                        continue;
+                    }
+                    for c in 0..3 {
+                        sum[c] += u32::from(before[(ny * width + nx) * 4 + c]);
+                    }
+                    count += 1;
+                }
+                if count > 0 {
+                    for c in 0..3 {
+                        #[allow(clippy::cast_possible_truncation)]
+                        {
+                            rgba[at * 4 + c] = sum[c].checked_div(count).unwrap_or(0) as u8;
+                        }
+                    }
+                    known[at] = true;
+                }
+            }
+        }
+    }
 }
 
 /// Check `levels`, drawn with their shades apart, against the package's.
@@ -1806,6 +2150,16 @@ struct Drawing<'a> {
     shades: &'a [f32],
     pieces: &'a Pieces,
     parts: &'a [PartMesh],
+    /// A baked-card tier's cards and their atlas, drawn beside its wood.
+    baked: Option<&'a Baked>,
+}
+
+/// A baked-card tier's cards ([`crate::billboards`]) as a glTF file draws
+/// them: every card fixed where it stands, its uvs in the tier's atlas,
+/// and the atlas's colour and coverage as a PNG.
+struct Baked {
+    cards: Mesh,
+    albedo: Vec<u8>,
 }
 
 /// A motion export's rig (plant motion S2): the plant's bones
@@ -1992,6 +2346,7 @@ fn level_glb(
         shades,
         pieces,
         parts,
+        baked,
     } = *drawing;
     let templates = &inputs.templates;
     let quantize = settings.compression != Compression::None;
@@ -2176,6 +2531,33 @@ fn level_glb(
         });
         arrays.keep(settings.attributes);
         bind(&mut arrays, quads, None);
+        primitives.push((arrays, material));
+    }
+    // A baked-card tier's cards: one primitive over the tier's atlas.
+    if let Some(baked) = baked.filter(|baked| !baked.cards.indices.is_empty()) {
+        let image = document.png("baked cards", &baked.albedo);
+        let sampler = *sampler.get_or_insert_with(|| {
+            document.sampler(json!({
+                "magFilter": gltf::LINEAR,
+                "minFilter": gltf::LINEAR_MIPMAP_LINEAR,
+                "wrapS": gltf::CLAMP_TO_EDGE,
+                "wrapT": gltf::CLAMP_TO_EDGE,
+            }))
+        });
+        let texture = document.texture(image, sampler);
+        let material = document.material(json!({
+            "name": "baked cards",
+            "pbrMetallicRoughness": {
+                "baseColorTexture": { "index": texture },
+                "metallicFactor": 0,
+                "roughnessFactor": number(0.8),
+            },
+            "alphaMode": "MASK",
+            "alphaCutoff": 0.5,
+            "doubleSided": true,
+        }));
+        let mut arrays = Arrays::of(&baked.cards, true, &|_| [1.0; 3]);
+        arrays.keep(settings.attributes);
         primitives.push((arrays, material));
     }
     if !primitives.is_empty() {
@@ -2638,6 +3020,9 @@ fn index(
                             "cluster": file.detail.lod.cluster,
                             "detail": level_detail(&file.detail),
                         });
+                        if let Some(cards) = file.cards {
+                            entry["cards"] = json!(cards);
+                        }
                         if let Some(given) = file.budget {
                             entry["budget"] = json!({
                                 "triangles": given.triangles,

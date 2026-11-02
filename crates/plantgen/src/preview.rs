@@ -55,6 +55,12 @@ pub struct PreviewOptions {
     /// Draw a scale beside the plant: a 1.8 m figure, or a striped rod
     /// beside a plant lower than [`SMALL_PLANT`].
     pub figure: bool,
+    /// Frame the plant alone, as tall as it is, even when no figure is
+    /// drawn and it is lower than the scale would be: a plant-
+    /// identification model is shown the plant filling the picture, as
+    /// in photos of it. Off, a figureless render keeps the scale's frame,
+    /// so renders with and without a figure match.
+    pub fit_plant: bool,
     /// Frame this height (metres) instead of the plant's own, so renders
     /// of different ages share a scale.
     pub frame_height: Option<f64>,
@@ -285,7 +291,11 @@ pub fn render_with(
     let framed = options.frame_height.unwrap_or(high.y);
     let (figure_mesh, figure_height, gap) = scale(framed, reach);
     let figure_x = reach + gap;
-    let height = framed.max(figure_height * 1.1);
+    let height = if options.fit_plant && !options.figure {
+        framed
+    } else {
+        framed.max(figure_height * 1.1)
+    };
 
     #[allow(clippy::cast_precision_loss)]
     let aspect = options.width as f64 / options.height as f64;

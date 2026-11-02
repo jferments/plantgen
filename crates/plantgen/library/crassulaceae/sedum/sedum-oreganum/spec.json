@@ -81,6 +81,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "flowering_branches": {"min": 0, "max": 4},
     "height_typical_m": {
       "min": 0.08,
       "max": 0.15
@@ -128,6 +129,11 @@
     ]
   },
   "evidence": {
+    "traits.flowering_branches": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944), Sedum oreganum: flowering stems \"simple or with 3 or 4 branches from near the middle\"."
+    },
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

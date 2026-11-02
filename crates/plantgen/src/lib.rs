@@ -1394,4 +1394,28 @@ pub mod venation;
 /// as bright as the plant, a pincushion's 1.6). A cut leaf's midrib is
 /// drawn on the cards as a thin line along its blade, in its colour (a
 /// yarrow's, a carrot's and a fennel's leaves baked to scattered dots).
-pub const GENERATOR_REVISION: u32 = 179;
+///
+/// 180: a compound umbel whose taxa leave the umbellet size unset packs
+/// its umbellets edge to edge across the umbel's top, from its ray count,
+/// ray spread and the umbellets' own spread (`Cluster::packed_umbellet`);
+/// six carrot-family species drop their hand-typed umbellet sizes for it
+/// (a poison hemlock's umbel had drawn as separate small tufts). Six
+/// forbs state their flowering side branches from floras (Abrams;
+/// Britton and Brown 1913).
+///
+/// 181: an export drawn to a budget comes down between two levels: the
+/// organs of a type solid on one level and cards on the next (cut leaves,
+/// solid leaves, flowers and fruit) go over to their cards a share at a
+/// time over the second half of the way, and a part mesh past its
+/// coarsest step keeps that step while fewer of its organs stay solid,
+/// instead of each falling in one step (a yarrow drew 200 000 triangles or
+/// 576, nothing between); the search halves every other step; and an
+/// export may draw its levels as tiers (`export::Budget::tiers`).
+/// Packages draw as before.
+/// 182: an export's low tier is the plant's baked low-cards tier where
+/// that takes fewer triangles than mid and at most 5 000
+/// (`export::Level::cards`): each card that turns to the eye stands fixed
+/// as a star of three, and one baked from above lies level, over one
+/// atlas of at most 1 024 texels a side. A beargrass's low tier covered
+/// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
+pub const GENERATOR_REVISION: u32 = 182;
