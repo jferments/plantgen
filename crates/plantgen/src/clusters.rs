@@ -993,6 +993,13 @@ pub struct CardFrame {
     pub aspect: f64,
     /// The crossing card's width, relative: 1 for a standing card.
     pub cross: Option<f64>,
+    /// For a facing card on pedicels or rays (an umbel, a compound umbel
+    /// or a corymb), along the organ where its lowest pedicel or ray
+    /// leaves the axis: the levels that draw it as its card stand the card
+    /// on a cone from there to its rim (`crate::mesh`), as the pedicels
+    /// spread under its flowers. Lying alone, a yarrow's corymb card was a
+    /// line from the side, floating over its stem.
+    pub stand: Option<f64>,
 }
 
 impl CardFrame {
@@ -1022,12 +1029,19 @@ impl CardFrame {
                     math::sqrt(p.base.x * p.base.x + p.base.z * p.base.z) + 0.5 * p.length * largest
                 })
                 .fold(0.0, f64::max);
+            let foot = if top.is_finite() { top } else { 1.0 };
+            let lowest = laid.lowest();
+            let stalked = matches!(
+                cluster.kind,
+                ClusterKind::Umbel | ClusterKind::CompoundUmbel | ClusterKind::Corymb
+            );
             return Self {
                 mount: Mount::Facing,
-                foot: if top.is_finite() { top } else { 1.0 },
+                foot,
                 length: (2.0 * reach * 1.04).clamp(0.1, 4.0),
                 aspect: 1.0,
                 cross: None,
+                stand: (stalked && lowest.is_finite() && lowest < foot).then_some(lowest.max(0.0)),
             };
         }
         let width = unit.across();
@@ -1070,6 +1084,7 @@ impl CardFrame {
             length,
             aspect: (2.0 * reach * 1.04 / length).clamp(0.1, 2.0),
             cross: Some(1.0),
+            stand: None,
         }
     }
 }

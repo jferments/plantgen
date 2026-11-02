@@ -1447,4 +1447,41 @@ pub mod venation;
 /// climber's tip that comes within `clear_gap` of it (climber 11, `gc`).
 /// A plant set under the eaves stands on the soil, not the roof. Stock
 /// hosts have no clear surface, so plants off a site grow as before.
-pub const GENERATOR_REVISION: u32 = 185;
+///
+/// 186: going from a level that draws a card per organ to one that
+/// clusters them, an export's clusters grow from an eighth of the coarser
+/// level's size (`budget::CLUSTER_START`) instead of from nothing, so the
+/// tiers between such levels land on other dials. With the drawings a
+/// search has already made kept for its last step, and a plant's leaf
+/// clusters laid out on idle cores, a 30-year Douglas fir's tiers take
+/// 52 s instead of 160 s. Packages draw as before.
+///
+/// 187: a facing card of a cluster on pedicels or rays (an umbel, a
+/// compound umbel, a corymb) stands on its peduncle and a cone of six
+/// sides up to it, as broad as its flowers fill it, on the levels that
+/// draw it as a card and do not merge it with its neighbours
+/// (`clusters::CardFrame::stand`, `mesh::STAND_SIDES`): a yarrow's
+/// corymbs were lines floating over their stems from the side. Eight of
+/// 180 species change on their high and mid tiers, and ten on the
+/// card tiers baked from those levels.
+///
+/// 188: a level clump of the card tiers turns to the eye where that
+/// draws its cover closer to its parts' than a fixed card, as an upright
+/// one already did, and a level card is lifted to its parts' top only
+/// where they lie in a thin layer (`crate::billboards`): a beargrass's
+/// wedges of blades were plates lifted to the blades' tips and the
+/// flower stalk's top, floating over the plant. Its low cards hid 1.35
+/// times the plant's sky from the side, now 1.06; its minimal cards 0.53,
+/// now 0.75.
+///
+/// 189: on the card tiers, a rosette plant's flowering stalk kept as a
+/// tube up to where it narrows is a ribbon from there on, and a ribbon's
+/// head takes its thin branches with its flowers (`crate::billboards`):
+/// a beargrass's stalk top and panicle branches were baked onto the
+/// blades' cards and drew as specks up to 20 cm off the stalk.
+///
+/// 190: the card tiers draw no midrib lines for leaflets within a leaf,
+/// whose leaf's card hides them (`crate::billboards`): a fishtail palm's
+/// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
+/// 914, with no change in what they show.
+pub const GENERATOR_REVISION: u32 = 190;

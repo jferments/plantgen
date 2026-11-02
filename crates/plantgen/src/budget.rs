@@ -27,7 +27,8 @@
 //! organ to one that clusters them, the first half of the way draws a
 //! growing share of the bent cards flat, the smallest first
 //! ([`Detail::flat`]; a bent card takes 16 triangles, a flat one 2), and
-//! the clusters grow from nothing over the second half.
+//! over the second half the clusters grow geometrically from
+//! [`CLUSTER_START`] of the coarser level's size to all of it.
 //!
 //! Each step along the dial draws fewer triangles, mostly: a coarser
 //! level's sticks can stand in for more wood than the thin twigs they
@@ -36,6 +37,13 @@
 
 use crate::mesh::LodSpec;
 use crate::quality::Quality;
+
+/// The share of a level's cluster size that clusters start from, going
+/// from a level that draws a card per organ to one that clusters them.
+/// Clusters grown from nothing were each one organ for most of the way:
+/// a Douglas fir's million needles, each a cluster weighed for its cover,
+/// took 25 seconds a drawing, and drew as many cards as no clusters.
+pub const CLUSTER_START: f64 = 0.125;
 
 /// The coarsest dial: three levels past the farthest, where a tree keeps
 /// its stems and thickest limbs and its leaves are a few cards.
@@ -133,7 +141,10 @@ impl Detail {
             if t < 0.5 {
                 (0.0, 2.0 * t)
             } else {
-                (b.cluster * (2.0 * t - 1.0), 1.0)
+                (
+                    geometric(b.cluster * CLUSTER_START, b.cluster, 2.0 * t - 1.0),
+                    1.0,
+                )
             }
         } else {
             let cluster = geometric(a.cluster, b.cluster, t);
@@ -379,7 +390,9 @@ mod tests {
         assert!((quarter.flat - 0.5).abs() < 1e-12 && quarter.lod.cluster.abs() < 1e-12);
         let three = at(1.75);
         assert!((three.flat - 1.0).abs() < 1e-12);
-        assert!((three.lod.cluster - 0.5 * STANDARD.lods[2].cluster).abs() < 1e-12);
+        // Half way from an eighth of the cluster size to all of it.
+        let half_way = STANDARD.lods[2].cluster * CLUSTER_START.sqrt();
+        assert!((three.lod.cluster - half_way).abs() < 1e-9 * half_way.max(1.0));
         assert!((at(2.0).flat - 1.0).abs() < 1e-12);
     }
 
