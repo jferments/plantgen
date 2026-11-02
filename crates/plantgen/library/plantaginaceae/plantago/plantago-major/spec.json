@@ -80,7 +80,8 @@
     },
     "leaf_venation": "parallel",
     "leaf_base_shape": "cuneate",
-    "leaf_apex": "obtuse"
+    "leaf_apex": "obtuse",
+    "cauline_leaves": "none"
   },
   "evidence": {
     "taxon": {
@@ -232,6 +233,11 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china",
       "note": "Flora of China (Plantago major): leaves basal; petiole 1-10(-26) cm; blade broadly ovate to broadly elliptic, 3-18(-30) x 2-11(-21) cm, veins (3 or)5 or 7, base cuneate, subrounded or cordate, +- decurrent onto petiole, margin remotely dentate to subentire, apex acute to obtuse. Spikes narrowly cylindric, 1-20(-40) cm; peduncle 2-18(-45) cm. Corolla white; anthers purplish or white. Fl. Jun-Aug."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (Plantago major): leaves basal; spikes on peduncles 2-18(-45) cm."
     }
   },
   "provenance": {

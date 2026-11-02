@@ -21,11 +21,11 @@
     "rosette": "none",
     "leaf_length_m": {
       "min": 0.02,
-      "max": 0.05
+      "max": 0.1
     },
     "leaf_width_m": {
       "min": 0.004,
-      "max": 0.01
+      "max": 0.015
     },
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
@@ -69,7 +69,8 @@
     "inflorescence_length_m": {
       "min": 0.1,
       "max": 0.4
-    }
+    },
+    "cauline_leaves": "reduced"
   },
   "evidence": {
     "taxon": {
@@ -83,9 +84,9 @@
       "note": "A model estimate (confidence high, record L2926303), as no source read gives it, from its coarse growth form."
     },
     "traits.life_span": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (Erigeron canadensis): herbs, annual, 50-100 cm tall or more; stems erect, branched above, densely leafy; basal leaves withered at anthesis; lower petiolate, oblanceolate, [2-]6-10 x [0.4-]1-1.5 cm; mid and upper subsessile or sessile, linear-lanceolate or linear, smaller; capitula 3-4 mm in diam., numerous, in terminal, large paniculiform synflorescences; ray florets white."
     },
     "traits.woodiness": {
       "evidence": "Authored",
@@ -109,13 +110,13 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America (Conyza canadensis = Erigeron canadensis): plants erect, (3-)50-200(-350+) cm, branched mostly distally; leaves: proximal blades oblanceolate to linear, 20-50(-100+) x 4-10(-15+) mm, toothed to entire; distal similar, smaller, entire. Heads usually in paniculiform arrays; involucres 3-4 mm; ray laminae 0.3-1 mm."
+      "source": "flora-of-china",
+      "note": "Flora of China (Erigeron canadensis): herbs, annual, 50-100 cm tall or more; stems erect, branched above, densely leafy; basal leaves withered at anthesis; lower petiolate, oblanceolate, [2-]6-10 x [0.4-]1-1.5 cm; mid and upper subsessile or sessile, linear-lanceolate or linear, smaller; capitula 3-4 mm in diam., numerous, in terminal, large paniculiform synflorescences; ray florets white."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
-      "source": "fna-online",
-      "note": "Flora of North America (Conyza canadensis = Erigeron canadensis): plants erect, (3-)50-200(-350+) cm, branched mostly distally; leaves: proximal blades oblanceolate to linear, 20-50(-100+) x 4-10(-15+) mm, toothed to entire; distal similar, smaller, entire. Heads usually in paniculiform arrays; involucres 3-4 mm; ray laminae 0.3-1 mm."
+      "source": "flora-of-china",
+      "note": "Flora of China (Erigeron canadensis): herbs, annual, 50-100 cm tall or more; stems erect, branched above, densely leafy; basal leaves withered at anthesis; lower petiolate, oblanceolate, [2-]6-10 x [0.4-]1-1.5 cm; mid and upper subsessile or sessile, linear-lanceolate or linear, smaller; capitula 3-4 mm in diam., numerous, in terminal, large paniculiform synflorescences; ray florets white."
     },
     "traits.leaf_arrangement": {
       "evidence": "Authored",
@@ -186,6 +187,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high, record L2926303), as no source read gives it."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China (Erigeron canadensis): herbs, annual, 50-100 cm tall or more; stems erect, branched above, densely leafy; basal leaves withered at anthesis; lower petiolate, oblanceolate, [2-]6-10 x [0.4-]1-1.5 cm; mid and upper subsessile or sessile, linear-lanceolate or linear, smaller; capitula 3-4 mm in diam., numerous, in terminal, large paniculiform synflorescences; ray florets white."
     }
   },
   "provenance": {

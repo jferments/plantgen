@@ -78,7 +78,8 @@
       245,
       200,
       30
-    ]
+    ],
+    "cauline_leaves": "none"
   },
   "evidence": {
     "taxon": {
@@ -182,9 +183,9 @@
       "note": "A model estimate (confidence high, record L2916959), as no source read gives it, sRGB from the colour word."
     },
     "traits.inflorescence": {
-      "evidence": "Authored",
-      "source": "species-facts-2026-10-15",
-      "note": "A model estimate (confidence high, record L2916959), as no source read gives it."
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): leaves 20+, basal; stems 1-10+, erect or ascending, leafless, each with one head (involucres 14-25 mm)."
     },
     "traits.inflorescence_length_m": {
       "evidence": "Authored",
@@ -215,6 +216,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America (Taraxacum officinale): plants (1-)5-40(-60) cm; stems 1-10+, erect or ascending; leaves 20+, horizontal to erect; petioles narrowly winged; blades oblanceolate, oblong or obovate (often runcinate), (4-)5-45 x (0.7-)1-10 cm, bases attenuate to narrowly cuneate, margins usually shallowly to deeply lobed to lacerate or toothed, lobes retrorse, broadly to narrowly triangular, acute to long-acuminate; involucres 14-25 mm; florets 40-100+, corollas yellow (orange-yellow), 15-22 mm."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (Taraxacum officinale): leaves 20+, basal; stems 1-10+, erect or ascending, leafless, each with one head (involucres 14-25 mm)."
     }
   },
   "provenance": {
