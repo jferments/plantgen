@@ -10,13 +10,14 @@
 //! - **Loads.** The plant's own weight, as grown, and a steady wind blowing
 //!   level from one of [`DIRECTIONS`] directions with the logarithmic
 //!   profile of the motion contract, `U(z) = U10 ln((z − d)/z0) /
-//!   ln((10 − d)/z0)`. Wood takes `½ ρ Cd A |Uₙ| Uₙ` on its frontal area
-//!   from the wind's part across it; foliage takes `½ ρ Cf A Uᵣ² (U/Uᵣ)^(2+B)`
-//!   on its one-sided leaf area, so its drag grows more slowly than the
-//!   square of the wind as leaves and twigs streamline (Vogel's exponent
-//!   `B`, negative). Both scale with powers of `U10` alone, so one pass of
-//!   the beam model per direction gives every section's moment at every
-//!   wind.
+//!   ln((10 − d)/z0)`. The crown takes the drag Mayhead measured on
+//!   whole trees in a wind tunnel, `½ ρ Cd S U²` on its silhouette `S`
+//!   (`ForestGALES`'s diamond, width times depth over two) with `Cd = C
+//!   u^(−N)` falling as it streamlines ([`Crown`]), shared among its
+//!   leaves by area at the wind at each; wood below the crown takes
+//!   `½ ρ Cd A |Uₙ| Uₙ` on its frontal area from the wind's part across
+//!   it. One pass of the beam model per direction gives every section's
+//!   moment per unit of each, at every wind.
 //! - **Critical wind.** For each beam, the slowest `U10` at which the
 //!   bending moment at its start, weight and wind together, reaches its
 //!   breaking moment, in the worst direction ([`Critical`]).
@@ -29,10 +30,10 @@
 //!   (the anchorage's overturning moment), whichever comes first being how
 //!   the plant fails ([`Failure`]).
 //!
-//! The drag coefficients and Vogel's exponent are stand-ins ([`Drag`]),
-//! listed in the record's `assumed`, until measured crown drag is read;
-//! the junction of a branch with its stem is taken as strong as the
-//! branch. Small deflections only, as in [`crate::mechanics`]: the loads
+//! The species states its crown's `C` and `N` and its anchorage per kg
+//! of stem (`ForestGALES`'s parameters, from tree-pulling and wind-tunnel
+//! studies; [`crate::motion`]); the junction of a branch with its stem is
+//! taken as strong as the branch. Small deflections only, as in [`crate::mechanics`]: the loads
 //! act on the grown shape.
 
 use serde::Serialize;
@@ -52,6 +53,41 @@ pub const FASTEST: f64 = 90.0;
 const STEP: f64 = 3.0;
 const TOLERANCE: f64 = 0.01;
 
+/// The slowest wind at which crown drag was measured, m/s: below it a
+/// crown's coefficient is taken as at this speed (as `ForestGALES` does).
+pub const SLOWEST_TESTED: f64 = 10.0;
+
+/// How a crown's drag falls as it streamlines: Mayhead's (1973) power
+/// fits to whole trees in a wind tunnel, `Cd = C u^(−N)` on the crown's
+/// silhouette at rest, `u` held between [`SLOWEST_TESTED`] and the
+/// fastest wind tested (`ForestGALES`, `drag_fun`).
+#[derive(Debug, Clone, Copy, PartialEq, Serialize)]
+pub struct Crown {
+    /// `C`.
+    pub at_rest: f64,
+    /// `N`.
+    pub streamlining: f64,
+    /// The fastest wind tested, m/s.
+    pub tested_to: f64,
+}
+
+impl Crown {
+    /// The mean of `ForestGALES`'s three broadleaves (birch, beech, oak):
+    /// the stand-in for a plant whose crown drag is not stated.
+    pub const BROADLEAF: Self = Self {
+        at_rest: 2.34,
+        streamlining: 0.88,
+        tested_to: 20.0,
+    };
+
+    /// The drag coefficient on the silhouette at wind `u`, m/s.
+    #[must_use]
+    pub fn coefficient(&self, u: f64) -> f64 {
+        let held = u.clamp(SLOWEST_TESTED, self.tested_to.max(SLOWEST_TESTED));
+        self.at_rest * math::pow(held, -self.streamlining)
+    }
+}
+
 /// The wind and drag a plant is loaded with.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize)]
 pub struct Drag {
@@ -60,21 +96,11 @@ pub struct Drag {
     /// Roughness length and displacement height of the wind profile, m.
     pub z0: f64,
     pub d: f64,
-    /// Drag coefficient of wood on its frontal area (a circular cylinder
-    /// below the drag crisis).
+    /// Drag coefficient of wood below the crown on its frontal area (a
+    /// circular cylinder below the drag crisis).
     pub wood: f64,
-    /// Drag coefficient of foliage on its one-sided leaf area at the
-    /// reference speed (assumed).
-    pub foliage: f64,
-    /// The reference speed of the foliage's coefficient, m/s.
-    pub reference: f64,
-    /// Vogel's exponent: foliage drag grows as `U^(2 + vogel)` (assumed).
-    pub vogel: f64,
-    /// Wood thinner than this, m of radius (a twig, as the motion contract
-    /// draws the line), is part of the crown: it streamlines and shelters
-    /// within it, so its drag is counted in the foliage's, not as an open
-    /// cylinder (assumed).
-    pub crown: f64,
+    /// The crown's drag on its silhouette.
+    pub crown: Crown,
 }
 
 impl Default for Drag {
@@ -84,12 +110,32 @@ impl Default for Drag {
             z0: 0.03,
             d: 0.0,
             wood: 1.2,
-            foliage: 0.1,
-            reference: 10.0,
-            vogel: -0.7,
-            crown: 0.02,
+            crown: Crown::BROADLEAF,
         }
     }
+}
+
+/// What each beam's drag scales with, whatever the wind's direction
+/// ([`Drag::exposure`]).
+#[derive(Debug, Clone, PartialEq)]
+pub struct Exposure {
+    /// Per beam, the wood's `½ ρ Cd A U(z)²` per unit wind at its middle;
+    /// zero for wood in the crown, whose drag its silhouette carries.
+    pub wood: Vec<f64>,
+    /// Per beam, its share of the crown's drag per unit wind and unit
+    /// silhouette and coefficient: `½ ρ` times its share of the leaf area
+    /// times `U(z)²` at its end.
+    pub leaves: Vec<f64>,
+    /// The crown's silhouette across each of the [`DIRECTIONS`], m²: the
+    /// diamond `width × depth / 2` `ForestGALES` takes.
+    pub silhouette: [f64; DIRECTIONS],
+    /// The crown's width across each direction, its foot and its top, m.
+    pub width: [f64; DIRECTIONS],
+    pub base: f64,
+    pub top: f64,
+    /// The crown's mean wind per unit wind at 10 m (root mean square over
+    /// its leaves): the wind its coefficient is taken at.
+    pub reference: f64,
 }
 
 impl Drag {
@@ -112,69 +158,111 @@ impl Drag {
         Vec3::new(math::cos(angle), 0.0, math::sin(angle))
     }
 
-    /// What each beam's drag scales with, whatever the wind's direction:
-    /// the wood's `½ ρ Cd A U(z)²` per unit wind at its middle, and the
-    /// foliage's `½ ρ Cf A Uᵣ^(−B) U(z)^(2+B)` at its end.
+    /// The crown and what each beam's drag scales with. The crown is the
+    /// leaves' extent, each beam's leaves spread half the side of their
+    /// one-sided area round its end; wood whose middle is below it takes
+    /// its own drag, and the crown's drag is shared among its leaves by
+    /// area at the wind at each.
     #[must_use]
-    pub fn exposure(&self, beams: &Beams) -> (Vec<f64>, Vec<f64>) {
-        let exponent = 2.0 + self.vogel;
-        let reference = math::pow(self.reference, -self.vogel);
-        (0..beams.len())
+    pub fn exposure(&self, beams: &Beams) -> Exposure {
+        let n = beams.len();
+        let total: f64 = beams.leaf_area.iter().sum();
+        let mut base = f64::INFINITY;
+        let mut top = f64::NEG_INFINITY;
+        let mut low = [f64::INFINITY; DIRECTIONS];
+        let mut high = [f64::NEG_INFINITY; DIRECTIONS];
+        let across: Vec<Vec3> = (0..DIRECTIONS)
+            .map(|index| {
+                let w = Self::direction(index);
+                Vec3::new(-w.z, 0.0, w.x)
+            })
+            .collect();
+        let mut leaves = vec![0.0; n];
+        let mut square = 0.0;
+        #[allow(clippy::needless_range_loop)]
+        for beam in 0..n {
+            let area = beams.leaf_area[beam];
+            if area <= 0.0 {
+                continue;
+            }
+            let end = beams.end[beam];
+            let spread = 0.5 * area.sqrt();
+            base = base.min(end.y - spread);
+            top = top.max(end.y + spread);
+            for (index, side) in across.iter().enumerate() {
+                let at = end.dot(*side);
+                low[index] = low[index].min(at - spread);
+                high[index] = high[index].max(at + spread);
+            }
+            let speed = self.profile(end.y);
+            leaves[beam] = 0.5 * self.rho * area / total * speed * speed;
+            square += area / total * speed * speed;
+        }
+        let leafy = total > 0.0;
+        if !leafy {
+            base = f64::INFINITY;
+            top = 0.0;
+        }
+        let depth = if leafy { top - base.max(0.0) } else { 0.0 };
+        let mut width = [0.0; DIRECTIONS];
+        let mut silhouette = [0.0; DIRECTIONS];
+        for index in 0..DIRECTIONS {
+            if leafy {
+                width[index] = high[index] - low[index];
+                silhouette[index] = 0.5 * width[index] * depth;
+            }
+        }
+        let wood = (0..n)
             .map(|beam| {
                 let middle = f64::midpoint(beams.start[beam].y, beams.end[beam].y);
+                if middle >= base {
+                    return 0.0;
+                }
                 let speed = self.profile(middle);
                 let [r0, r1] = beams.radius[beam];
-                let wood = if f64::midpoint(r0, r1) >= self.crown {
-                    0.5 * self.rho * self.wood * (r0 + r1) * beams.length[beam] * speed * speed
-                } else {
-                    0.0
-                };
-                let area = beams.leaf_area[beam];
-                let foliage = if area > 0.0 {
-                    0.5 * self.rho
-                        * self.foliage
-                        * area
-                        * reference
-                        * math::pow(self.profile(beams.end[beam].y), exponent)
-                } else {
-                    0.0
-                };
-                (wood, foliage)
+                0.5 * self.rho * self.wood * (r0 + r1) * beams.length[beam] * speed * speed
             })
-            .unzip()
+            .collect();
+        Exposure {
+            wood,
+            leaves,
+            silhouette,
+            width,
+            base: if leafy { base.max(0.0) } else { 0.0 },
+            top,
+            reference: square.sqrt(),
+        }
     }
 
     /// Loads at each beam's end per unit wind, for wind blowing along
-    /// `direction`, from each beam's [`Drag::exposure`]: the wood's, which
-    /// scale as `U10²`, from the wind's part across the beam, and the
-    /// foliage's, which scale as `U10^(2 + vogel)`. Half of each beam's
+    /// direction `index`, from `exposure`: the wood's, which scale as
+    /// `U10²`, from the wind's part across the beam, and the crown's,
+    /// which scale as its coefficient times `U10²`. Half of each beam's
     /// wood drag is at its end and half at its parent's, as its mass is.
     #[must_use]
-    pub fn loads(
-        beams: &Beams,
-        exposure: &(Vec<f64>, Vec<f64>),
-        direction: Vec3,
-    ) -> (Vec<Vec3>, Vec<Vec3>) {
+    pub fn loads(beams: &Beams, exposure: &Exposure, index: usize) -> (Vec<Vec3>, Vec<Vec3>) {
         let n = beams.len();
+        let direction = Self::direction(index);
+        let silhouette = exposure.silhouette[index];
         let mut wood = vec![Vec3::ZERO; n];
         let mut foliage = vec![Vec3::ZERO; n];
         for beam in 0..n {
             let axis = beams.axis[beam];
             let across = direction - axis * axis.dot(direction);
-            let force = across * (exposure.0[beam] * across.length());
+            let force = across * (exposure.wood[beam] * across.length());
             wood[beam] += force * 0.5;
             if let Some(parent) = beams.parent[beam] {
                 wood[parent as usize] += force * 0.5;
             }
-            foliage[beam] = direction * exposure.1[beam];
+            foliage[beam] = direction * (exposure.leaves[beam] * silhouette);
         }
         (wood, foliage)
     }
 
-    /// What its record says it assumed.
+    /// What its record says it assumed whatever the species states.
     #[must_use]
     pub fn assumed() -> Vec<&'static str> {
-        vec!["foliage_drag", "vogel", "crown_wood", "junction"]
+        vec!["junction"]
     }
 }
 
@@ -220,7 +308,7 @@ struct Moments {
 }
 
 impl Moments {
-    fn of(beams: &Beams, drag: &Drag) -> Self {
+    fn of(beams: &Beams, exposure: &Exposure) -> Self {
         let roots: Vec<usize> = (0..beams.len())
             .filter(|&beam| beams.parent[beam].is_none())
             .collect();
@@ -232,12 +320,11 @@ impl Moments {
             })
         };
         let weight = carried(beams, &beams.weights());
-        let exposure = drag.exposure(beams);
         let mut wood = Vec::with_capacity(DIRECTIONS);
         let mut foliage = Vec::with_capacity(DIRECTIONS);
         let mut feet = [vec![foot(&weight)], Vec::new(), Vec::new()];
         for index in 0..DIRECTIONS {
-            let (w, f) = Drag::loads(beams, &exposure, Drag::direction(index));
+            let (w, f) = Drag::loads(beams, exposure, index);
             let (w, f) = (carried(beams, &w), carried(beams, &f));
             feet[1].push(foot(&w));
             feet[2].push(foot(&f));
@@ -267,7 +354,7 @@ impl Moments {
     fn critical(
         strength: f64,
         winds: &[Wind],
-        exponent: f64,
+        pace: &Pace,
         bending: impl Fn(usize, Wind) -> f64,
     ) -> Critical {
         let mut best: Option<(f64, usize)> = None;
@@ -288,7 +375,7 @@ impl Moments {
                     let (mut a, mut b) = (low.speed, high.speed);
                     while b - a > TOLERANCE {
                         let mid = f64::midpoint(a, b);
-                        if bending(index, Wind::at(mid, exponent)) >= strength {
+                        if bending(index, pace.at(mid)) >= strength {
                             b = mid;
                         } else {
                             a = mid;
@@ -308,7 +395,8 @@ impl Moments {
     }
 }
 
-/// A wind speed and the powers of it that drag scales with.
+/// A wind speed and what drag scales with at it: its square for wood,
+/// and for the crown its coefficient at the crown's wind times the square.
 #[derive(Debug, Clone, Copy, PartialEq)]
 struct Wind {
     speed: f64,
@@ -316,12 +404,20 @@ struct Wind {
     foliage: f64,
 }
 
-impl Wind {
-    fn at(speed: f64, exponent: f64) -> Self {
-        Self {
+/// How a crown's coefficient follows the wind at 10 m.
+struct Pace {
+    crown: Crown,
+    /// The crown's wind per unit wind at 10 m ([`Exposure::reference`]).
+    reference: f64,
+}
+
+impl Pace {
+    fn at(&self, speed: f64) -> Wind {
+        let square = speed * speed;
+        Wind {
             speed,
-            square: speed * speed,
-            foliage: math::pow(speed, exponent),
+            square,
+            foliage: self.crown.coefficient(speed * self.reference) * square,
         }
     }
 
@@ -331,10 +427,10 @@ impl Wind {
         clippy::cast_sign_loss,
         clippy::cast_precision_loss
     )]
-    fn grid(exponent: f64) -> Vec<Self> {
+    fn grid(&self) -> Vec<Wind> {
         let steps = (FASTEST / STEP).round() as usize;
         (0..=steps)
-            .map(|step| Self::at(STEP * step as f64, exponent))
+            .map(|step| self.at(STEP * step as f64))
             .collect()
     }
 }
@@ -368,13 +464,17 @@ pub struct Site {
     /// The level direction that wind blows towards.
     pub direction: [f64; 3],
     pub piece: Piece,
+    /// The beam whose start it is (not recorded: hosts have `along`).
+    #[serde(skip)]
+    pub beam: u32,
 }
 
 /// How the plant fails as a whole.
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct Failure {
-    /// The wind that snaps a stem at its weakest section, m/s at 10 m,
-    /// with the stem bone and the place along it.
+    /// The wind that snaps a stem at its weakest section at least a twig's
+    /// radius thick ([`crate::motion::TWIG`]), m/s at 10 m, with the stem
+    /// bone and the place along it.
     pub snap: Option<f64>,
     pub snap_bone: Option<u32>,
     pub snap_along: f64,
@@ -443,18 +543,40 @@ fn piece(found: &Mechanics, beam: usize, bone_first: &[Option<u32>]) -> Piece {
 }
 
 /// The break sites and failure of `found`, with the anchorage's
-/// overturning moment `anchorage` (N m), loaded by `drag`.
+/// overturning moment `anchorage` (N m), loaded by `drag`. A stem with a
+/// root `flare` (`amount`, `height` m: its radius `1 + amount e^(−y /
+/// height)` times its wood's, as [`crate::mesh`] draws it) is that much
+/// stronger near the ground.
 #[must_use]
 #[allow(clippy::too_many_lines)]
-pub fn breakage(found: &Mechanics, anchorage: f64, drag: &Drag) -> Breakage {
+pub fn breakage(
+    found: &Mechanics,
+    anchorage: f64,
+    drag: &Drag,
+    flare: Option<(f64, f64)>,
+) -> Breakage {
     let beams = &found.beams;
     let n = beams.len();
-    let moments = Moments::of(beams, drag);
-    let exponent = 2.0 + drag.vogel;
-    let winds = Wind::grid(exponent);
+    let exposure = drag.exposure(beams);
+    let moments = Moments::of(beams, &exposure);
+    let pace = Pace {
+        crown: drag.crown,
+        reference: exposure.reference,
+    };
+    let winds = pace.grid();
     let rupture = found.material.rupture.unwrap_or(0.0);
+    // The stems, bones of depth 0, flare at their feet.
+    let mut stem = vec![false; n];
+    for bone in found.bones.iter().filter(|bone| bone.depth == 0) {
+        for &beam in &bone.beams {
+            stem[beam as usize] = true;
+        }
+    }
     let strength = |beam: usize| {
-        let r = beams.radius[beam][0];
+        let mut r = beams.radius[beam][0];
+        if let Some((amount, height)) = flare.filter(|_| stem[beam]) {
+            r *= 1.0 + amount * math::exp(-beams.start[beam].y.max(0.0) / height.max(1.0e-3));
+        }
         rupture * 0.25 * math::PI * r * r * r
     };
     // Only a bone's own beams can be a site; a beam riding a bone breaks
@@ -474,7 +596,7 @@ pub fn breakage(found: &Mechanics, anchorage: f64, drag: &Drag) -> Breakage {
                 };
             }
             let axis = beams.axis[beam];
-            Moments::critical(strength(beam), &winds, exponent, |index, wind| {
+            Moments::critical(strength(beam), &winds, &pace, |index, wind| {
                 moments.bending(beam, index, wind, axis)
             })
         })
@@ -532,8 +654,14 @@ pub fn breakage(found: &Mechanics, anchorage: f64, drag: &Drag) -> Breakage {
                 wind: c.wind,
                 direction: [c.direction.x, c.direction.y, c.direction.z],
                 piece: piece(found, beam, &bone_first),
+                beam: u32::try_from(beam).unwrap_or(u32::MAX),
             });
-            if bone.depth == 0 && slower(c.wind, snap.0) {
+            // A stem snaps where it is wood, not twig: its leader's tip
+            // breaking is not the stem failing.
+            if bone.depth == 0
+                && beams.radius[beam][0] >= crate::motion::TWIG
+                && slower(c.wind, snap.0)
+            {
                 snap = (c.wind, u32::try_from(index).ok(), along);
             }
         }
@@ -545,7 +673,7 @@ pub fn breakage(found: &Mechanics, anchorage: f64, drag: &Drag) -> Breakage {
     let overturn = if !has_roots || anchorage <= 0.0 {
         None
     } else {
-        Moments::critical(anchorage, &winds, exponent, |index, wind| {
+        Moments::critical(anchorage, &winds, &pace, |index, wind| {
             let m = moments.foot[0][0]
                 + moments.foot[1][index] * wind.square
                 + moments.foot[2][index] * wind.foliage;
@@ -632,7 +760,7 @@ mod tests {
         let graph = rod(10.0, 0.1, 0.1, 20);
         let found = mechanics::mechanics(&graph, &[], &material(), &Settings::default());
         let drag = Drag::default();
-        let broken = breakage(&found, 0.0, &drag);
+        let broken = breakage(&found, 0.0, &drag, None);
         let stem = &broken.sites[0];
         assert_eq!(stem.len(), 1, "a uniform rod's weakest section is its foot");
         let wind = stem[0].wind.expect("breaks below the fastest wind");
@@ -667,8 +795,10 @@ mod tests {
         };
         let mut found = mechanics::mechanics(&graph, &[], &material(), &whole);
         let top = found.beams.len() - 1;
-        found.beams.leaf_area[top] = 30.0;
-        let broken = breakage(&found, 0.0, &Drag::default());
+        for beam in top - 3..=top {
+            found.beams.leaf_area[beam] = 8.0;
+        }
+        let broken = breakage(&found, 0.0, &Drag::default(), None);
         let stem = &broken.sites[0];
         assert_eq!(stem.len(), 2);
         let (foot, up) = (&stem[0], &stem[1]);
@@ -688,37 +818,80 @@ mod tests {
     fn a_weak_anchorage_overturns_before_the_stem_snaps() {
         let graph = rod(10.0, 0.1, 0.1, 20);
         let found = mechanics::mechanics(&graph, &[], &material(), &Settings::default());
-        let strong = breakage(&found, 1.0e12, &Drag::default());
+        let strong = breakage(&found, 1.0e12, &Drag::default(), None);
         assert_eq!(strong.failure.first, "snap");
         assert!(strong.failure.overturn.is_none());
-        let weak = breakage(&found, 2_000.0, &Drag::default());
+        let weak = breakage(&found, 2_000.0, &Drag::default(), None);
         assert_eq!(weak.failure.first, "overturn");
         assert!(weak.failure.overturn.unwrap() < weak.failure.snap.unwrap());
     }
 
+    /// Leaves on the rod's top eight beams, `area` m² each.
+    fn crowned(found: &mut Mechanics, area: f64) {
+        let n = found.beams.len();
+        for beam in n - 8..n {
+            found.beams.leaf_area[beam] = area;
+        }
+    }
+
     #[test]
-    fn leaves_that_streamline_need_a_faster_wind_to_break_the_stem() {
+    fn the_crown_takes_its_silhouette_and_wood_within_it_takes_none() {
         let graph = rod(10.0, 0.1, 0.1, 20);
         let mut found = mechanics::mechanics(&graph, &[], &material(), &Settings::default());
-        let bare = breakage(&found, 0.0, &Drag::default())
+        crowned(&mut found, 4.0);
+        let drag = Drag::default();
+        let exposure = drag.exposure(&found.beams);
+        // Leaves at 6.5 to 10 m, each spread 1 m round its beam's end.
+        assert!((exposure.top - 11.0).abs() < 1.0e-9);
+        assert!((exposure.base - 5.5).abs() < 1.0e-9);
+        assert!((exposure.width[0] - 2.0).abs() < 1.0e-9);
+        assert!((exposure.silhouette[0] - 5.5).abs() < 1.0e-9);
+        for beam in 0..found.beams.len() {
+            let middle = f64::midpoint(found.beams.start[beam].y, found.beams.end[beam].y);
+            assert_eq!(exposure.wood[beam] > 0.0, middle < 5.5, "{beam}");
+        }
+        let share: f64 = exposure.leaves.iter().sum();
+        let square = exposure.reference * exposure.reference;
+        assert!((share - 0.5 * drag.rho * square).abs() < 1.0e-9);
+    }
+
+    #[test]
+    fn crowns_that_streamline_need_a_faster_wind_to_break_the_stem() {
+        let graph = rod(10.0, 0.1, 0.1, 20);
+        let mut found = mechanics::mechanics(&graph, &[], &material(), &Settings::default());
+        let bare = breakage(&found, 0.0, &Drag::default(), None)
             .failure
             .snap
             .unwrap();
-        // 40 m² of leaves at the top.
-        let top = found.beams.len() - 1;
-        found.beams.leaf_area[top] = 40.0;
+        crowned(&mut found, 4.0);
         let stiff = Drag {
-            vogel: 0.0,
+            crown: Crown {
+                streamlining: 0.0,
+                ..Crown::BROADLEAF
+            },
             ..Drag::default()
         };
-        let rigid = breakage(&found, 0.0, &stiff).failure.snap.unwrap();
-        let bending = breakage(&found, 0.0, &Drag::default())
+        let rigid = breakage(&found, 0.0, &stiff, None).failure.snap.unwrap();
+        let bending = breakage(&found, 0.0, &Drag::default(), None)
             .failure
             .snap
             .unwrap();
         assert!(rigid < bare);
-        // Above the reference speed streamlined leaves drag less.
-        assert!(rigid > Drag::default().reference);
-        assert!(bending > rigid && bending < bare);
+        // Above the slowest wind tested a streamlined crown drags less.
+        assert!(rigid > SLOWEST_TESTED);
+        assert!(bending > rigid);
+    }
+
+    #[test]
+    fn a_crowns_coefficient_is_held_to_the_winds_tested() {
+        let crown = Crown {
+            at_rest: 2.4,
+            streamlining: 0.7,
+            tested_to: 25.0,
+        };
+        let at = |u: f64| 2.4 * math::pow(u, -0.7);
+        assert!((crown.coefficient(3.0) - at(10.0)).abs() < 1.0e-12);
+        assert!((crown.coefficient(15.0) - at(15.0)).abs() < 1.0e-12);
+        assert!((crown.coefficient(40.0) - at(25.0)).abs() < 1.0e-12);
     }
 }
