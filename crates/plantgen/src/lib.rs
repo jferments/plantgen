@@ -1419,7 +1419,6 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-///
 /// 183: a fleshy body's far levels coarsen it to a budget as the near
 /// levels do (30 000 and 6 000 triangles of skin), down to five-sided
 /// rings a few apart with one ring over a dome: a pencil cholla's skin
@@ -1431,7 +1430,8 @@ pub mod venation;
 /// 184: plants grow on a mesh you hand over (`site`); `host@1` holds a
 /// site's fixed triangles. Climber 9: a stem rests on the substrate, so
 /// ivy's stems lie on a wall's face. Climber 10: a clinging shoot's
-/// leaves, renewed ones too, face away from its host (`leaf_face`), and
+/// leaves, renewed ones too, face away from its host (`leaf_face`, 0.8
+/// for Hedera, a root climber; 0 for twiners and tendril climbers), and
 /// its internodes wander (`wander`, 30 for Hedera); a paired-leaf vine
 /// renews a pair. Deciduous vines renew their leaves on old wood every
 /// year (an orange honeysuckle and a California grape had set renew 0,
