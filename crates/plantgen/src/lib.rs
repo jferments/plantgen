@@ -1445,4 +1445,12 @@ pub mod venation;
 /// climber's tip that comes within `clear_gap` of it (climber 11, `gc`).
 /// A plant set under the eaves stands on the soil, not the roof. Stock
 /// hosts have no clear surface, so plants off a site grow as before.
-pub const GENERATOR_REVISION: u32 = 185;
+///
+/// 186: going from a level that draws a card per organ to one that
+/// clusters them, an export's clusters grow from an eighth of the coarser
+/// level's size (`budget::CLUSTER_START`) instead of from nothing, so the
+/// tiers between such levels land on other dials. With the drawings a
+/// search has already made kept for its last step, and a plant's leaf
+/// clusters laid out on idle cores, a 30-year Douglas fir's tiers take
+/// 52 s instead of 160 s. Packages draw as before.
+pub const GENERATOR_REVISION: u32 = 186;
