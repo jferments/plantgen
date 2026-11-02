@@ -1,0 +1,249 @@
+{
+  "schema": 1,
+  "id": "cirsium-arvense",
+  "taxon": {
+    "scientific_name": "Cirsium arvense",
+    "family": "Asteraceae",
+    "genus": "Cirsium",
+    "plant_name_id": 2901650,
+    "common_name": "creeping thistle"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1.2
+    },
+    "height_max_m": 1.5,
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.3
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.06
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "oblong": "often",
+      "elliptic": "often"
+    },
+    "leaf_margin": "spiny",
+    "sexual_system": "dioecious",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.0025,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ],
+    "disc_colour": [
+      130,
+      60,
+      140
+    ],
+    "head_diameter_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "inflorescence": "corymb",
+    "leaf_incision": "lobed",
+    "division_pattern": "pinnate",
+    "involucre_height_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "involucre_diameter_m": {
+      "min": 0.01,
+      "max": 0.02
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.perennation": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.disc_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.head_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2901650), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): heads 1-many, borne singly or in corymbiform or paniculiform arrays; involucres 1-2 x 1-2 cm; corollas purple (white or pink)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm. Here: shallowly to deeply pinnatifid, drawn at its shallow, commoner end (lobed)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): blades oblong to elliptic, 3-30 x 1-6 cm, margins entire and spinulose, dentate, or shallowly to deeply pinnatifid, lobes well separated, main spines 1-7 mm."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): heads 1-many, borne singly or in corymbiform or paniculiform arrays; involucres 1-2 x 1-2 cm; corollas purple (white or pink)."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): heads 1-many, borne singly or in corymbiform or paniculiform arrays; involucres 1-2 x 1-2 cm; corollas purple (white or pink)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.3 m typical at least to 1.5 m at most: the middle, 0.9 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 67%, which spans that range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.67
+    }
+  ]
+}

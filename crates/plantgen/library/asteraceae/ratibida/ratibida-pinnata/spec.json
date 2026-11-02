@@ -1,0 +1,313 @@
+{
+  "schema": 1,
+  "id": "ratibida-pinnata",
+  "taxon": {
+    "scientific_name": "Ratibida pinnata",
+    "family": "Asteraceae",
+    "genus": "Ratibida",
+    "plant_name_id": 3123553,
+    "common_name": "grey-headed coneflower"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.5
+    },
+    "height_max_m": 1.8,
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.4
+    },
+    "leaf_width_m": {
+      "min": 0.03,
+      "max": 0.15
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "serrate",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      150,
+      150,
+      150
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ],
+    "ray_colour": [
+      240,
+      205,
+      40
+    ],
+    "head_diameter_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "inflorescence": "solitary",
+    "leaf_incision": "dissected",
+    "division_pattern": "pinnate",
+    "leaf_lobe_width_m": {
+      "min": 0.002,
+      "max": 0.035
+    },
+    "division_order": 1,
+    "terminal_leaflet": true,
+    "ray_florets": {
+      "min": 6,
+      "max": 15
+    },
+    "ray_length_m": {
+      "min": 0.016,
+      "max": 0.06
+    },
+    "ray_width_m": {
+      "min": 0.004,
+      "max": 0.015
+    },
+    "involucre_diameter_m": {
+      "min": 0.01,
+      "max": 0.018000000000000002
+    },
+    "disc_florets": {
+      "min": 100,
+      "max": 200
+    },
+    "disc_colour": [
+      118,
+      104,
+      80
+    ],
+    "leaf_lobes": {
+      "min": 3,
+      "max": 9
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.perennation": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm. Here: the lobes narrowly lanceolate to ovate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.ray_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.head_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3123553), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm. Here: pinnatifid to pinnate: cut to or nearly to the midrib into narrow segments (dissected)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm."
+    },
+    "traits.leaf_lobe_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm. Here: a pinnatifid blade ends in a lobe."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): ray florets 6-15, laminae linear-elliptic to oblong-oblanceolate, 16-60 x 4-15 mm; discs ellipsoid to globular or ovoid, 10-25 x 10-18 mm; disc florets 100-200+, corollas greenish yellow, often purplish distally."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): ray florets 6-15, laminae linear-elliptic to oblong-oblanceolate, 16-60 x 4-15 mm; discs ellipsoid to globular or ovoid, 10-25 x 10-18 mm; disc florets 100-200+, corollas greenish yellow, often purplish distally."
+    },
+    "traits.ray_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): ray florets 6-15, laminae linear-elliptic to oblong-oblanceolate, 16-60 x 4-15 mm; discs ellipsoid to globular or ovoid, 10-25 x 10-18 mm; disc florets 100-200+, corollas greenish yellow, often purplish distally."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): ray florets 6-15, laminae linear-elliptic to oblong-oblanceolate, 16-60 x 4-15 mm; discs ellipsoid to globular or ovoid, 10-25 x 10-18 mm; disc florets 100-200+, corollas greenish yellow, often purplish distally. Here: the disc's width."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): ray florets 6-15, laminae linear-elliptic to oblong-oblanceolate, 16-60 x 4-15 mm; discs ellipsoid to globular or ovoid, 10-25 x 10-18 mm; disc florets 100-200+, corollas greenish yellow, often purplish distally."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): ray florets 6-15, laminae linear-elliptic to oblong-oblanceolate, 16-60 x 4-15 mm; discs ellipsoid to globular or ovoid, 10-25 x 10-18 mm; disc florets 100-200+, corollas greenish yellow, often purplish distally. sRGB by eye from the words and the species' photos. Here: greenish yellow, purplish distally: a grey-brown disc."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ratibida pinnata (read 2026-11-02): leaves 5-40 x 3-15+ cm, pinnatifid to pinnate, lobes 3-9, narrowly lanceolate to ovate, 1-15 x 0.2-3.5 cm. Here: its lobes, drawn as the blade's segments."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.6 m typical at least to 1.8 m at most: the middle, 1.2 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 50%, which spans that range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.5
+    }
+  ]
+}

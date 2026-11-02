@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Eupatorieae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "capitulum_kind": "discoid",
+    "receptacle": {
+      "epaleate": "usually",
+      "paleate": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Eupatorieae (read on eFloras 2026-11-02): heads of disc florets only, never with rays; receptacle mostly without chaff."
+    }
+  }
+}

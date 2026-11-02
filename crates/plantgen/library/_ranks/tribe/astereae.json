@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Astereae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "receptacle": {
+      "epaleate": "usually",
+      "paleate": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Astereae (read on eFloras 2026-11-02): heads discoid, disciform or radiate (the genus decides); receptacle usually without chaff."
+    }
+  }
+}

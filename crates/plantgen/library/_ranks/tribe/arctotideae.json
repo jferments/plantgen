@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Arctotideae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "capitulum_kind": {
+      "radiate": "usually",
+      "discoid": "rarely"
+    },
+    "receptacle": {
+      "epaleate": "usually"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Arctotideae (read on eFloras 2026-11-02): heads usually radiate; receptacle usually without chaff."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Ratibida",
+  "parent": "tribe/heliantheae",
+  "traits": {
+    "capitulum_kind": "radiate",
+    "receptacle_shape": {
+      "conic": "usually",
+      "hemispheric": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Ratibida (read on eFloras 2026-11-02): heads radiate."
+    },
+    "traits.receptacle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Ratibida (read on eFloras 2026-11-02): receptacles subspheric to columnar."
+    }
+  }
+}

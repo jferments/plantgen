@@ -1,0 +1,283 @@
+{
+  "schema": 1,
+  "id": "helenium-amarum",
+  "taxon": {
+    "scientific_name": "Helenium amarum",
+    "family": "Asteraceae",
+    "genus": "Helenium",
+    "plant_name_id": 3115721,
+    "common_name": "bitter sneezeweed"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
+    "height_max_m": 1,
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.08
+    },
+    "leaf_width_m": {
+      "min": 0.0005,
+      "max": 0.002
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "ray_colour": [
+      240,
+      205,
+      40
+    ],
+    "head_diameter_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "inflorescence": "panicle",
+    "involucre_height_m": {
+      "min": 0.005,
+      "max": 0.009000000000000001
+    },
+    "involucre_diameter_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "ray_florets": {
+      "min": 8,
+      "max": 10
+    },
+    "ray_length_m": {
+      "min": 0.0045000000000000005,
+      "max": 0.014
+    },
+    "ray_width_m": {
+      "min": 0.002,
+      "max": 0.01
+    },
+    "disc_florets": {
+      "min": 75,
+      "max": 250
+    },
+    "disc_colour": [
+      212,
+      168,
+      48
+    ],
+    "receptacle_shape": "hemispheric"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): basal blades linear to ovate, entire or pinnately toothed or lobed to pinnatifid; mid and distal blades linear, entire. Here: the stem's leaves, those seen at flowering."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): basal blades linear to ovate, entire or pinnately toothed or lobed to pinnatifid; mid and distal blades linear, entire."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.ray_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.head_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3115721), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.ray_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally. sRGB by eye from the words and the species' photos. Here: yellow to yellow-brown."
+    },
+    "traits.receptacle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally. Here: the disc hemispheric to globose."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.2 m typical at least to 1 m at most: the middle, 0.6 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 67%, which spans that range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.67
+    }
+  ]
+}

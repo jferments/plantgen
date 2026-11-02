@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Bellis",
+  "parent": "tribe/astereae",
+  "traits": {
+    "capitulum_kind": "radiate",
+    "cauline_leaves": "none"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Bellis (read on eFloras 2026-11-02): heads radiate."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Bellis (read on eFloras 2026-11-02): plants scapiform, leaves mostly basal."
+    }
+  }
+}

@@ -2,12 +2,22 @@
   "schema": 1,
   "rank": "genus",
   "name": "Eriophyllum",
+  "parent": "tribe/heliantheae",
   "traits": {
     "leaf_arrangement": "alternate",
     "phyllary_series": 1,
-    "receptacle": {"epaleate": "usually"},
-    "disc_colour": [245, 200, 30],
-    "pappus": {"scales": "usually", "absent": "rarely"}
+    "receptacle": {
+      "epaleate": "usually"
+    },
+    "disc_colour": [
+      245,
+      200,
+      30
+    ],
+    "pappus": {
+      "scales": "usually",
+      "absent": "rarely"
+    }
   },
   "evidence": {
     "traits.leaf_arrangement": {

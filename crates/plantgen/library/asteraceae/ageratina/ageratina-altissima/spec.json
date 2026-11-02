@@ -1,0 +1,264 @@
+{
+  "schema": 1,
+  "id": "ageratina-altissima",
+  "taxon": {
+    "scientific_name": "Ageratina altissima",
+    "family": "Asteraceae",
+    "genus": "Ageratina",
+    "plant_name_id": 3126945,
+    "common_name": "white snakeroot"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1.2
+    },
+    "height_max_m": 1.5,
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.11,
+      "high": 0.13
+    },
+    "leaf_width_m": {
+      "min": 0.025,
+      "max": 0.08,
+      "high": 0.09
+    },
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_shape": "ovate",
+    "leaf_margin": "serrate",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      8,
+      9,
+      10
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "fruit_colour_ripe": [
+      30,
+      25,
+      30
+    ],
+    "fruiting_months": [
+      9,
+      10,
+      11
+    ],
+    "disc_colour": [
+      245,
+      245,
+      238
+    ],
+    "head_diameter_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
+    "inflorescence": "corymb",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.03,
+      "low": 0.005,
+      "high": 0.05
+    },
+    "leaf_base_shape": "rounded",
+    "leaf_apex": "acuminate",
+    "involucre_height_m": {
+      "min": 0.004,
+      "max": 0.005
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.perennation": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.disc_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.head_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3126945), as no source read gives it."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.leaf_base_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): petioles (5-)10-30(-50) mm; blades usually deltate-ovate to ovate or broadly lanceolate, 4-11(-13) x 2.5-8(-9) cm, bases usually rounded to truncate or obtuse, margins coarsely and doubly incised-serrate, apices usually acuminate."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Ageratina altissima (read 2026-11-02): heads clustered; involucres 4-5 mm."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.3 m typical at least to 1.5 m at most: the middle, 0.9 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 67%, which spans that range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.67
+    }
+  ]
+}

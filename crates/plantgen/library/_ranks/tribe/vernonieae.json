@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Vernonieae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "capitulum_kind": "discoid",
+    "receptacle": {
+      "epaleate": "usually"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Vernonieae (read on eFloras 2026-11-02): heads of disc florets only; receptacle usually without chaff."
+    }
+  }
+}

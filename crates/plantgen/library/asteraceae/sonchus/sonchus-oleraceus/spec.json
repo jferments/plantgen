@@ -1,0 +1,240 @@
+{
+  "schema": 1,
+  "id": "sonchus-oleraceus",
+  "taxon": {
+    "scientific_name": "Sonchus oleraceus",
+    "family": "Asteraceae",
+    "genus": "Sonchus",
+    "plant_name_id": 2929055,
+    "common_name": "common sowthistle"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "annual",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1
+    },
+    "height_max_m": 1.5,
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.06,
+      "max": 0.35
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.15
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "oblanceolate": "often",
+      "oblong": "often"
+    },
+    "leaf_margin": "dentate",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.0025,
+      "max": 0.0035
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "ligulate_colour": [
+      240,
+      205,
+      40
+    ],
+    "head_diameter_m": {
+      "min": 0.015,
+      "max": 0.025
+    },
+    "inflorescence": "solitary",
+    "leaf_incision": "cleft",
+    "division_pattern": "pinnate",
+    "leaf_lobe_apex": "acute",
+    "involucre_height_m": {
+      "min": 0.009000000000000001,
+      "max": 0.013000000000000001
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.ligulate_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.head_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929055), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate. Here: runcinately lobed: backward-pointing lobes cut past halfway (cleft)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate."
+    },
+    "traits.leaf_lobe_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): mid cauline blades spatulate or oblong to obovate or lanceolate, 6-35 x 1-15 cm, bases auriculate, margins usually pinnately (often runcinately) lobed, lobes +/- deltate to lanceolate, terminals usually larger than laterals, entire or dentate. Here: deltate to lanceolate lobes, drawn pointed."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Sonchus oleraceus (read 2026-11-02): involucres 9-13+ mm."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.3 m typical at least to 1.5 m at most: the middle, 0.9 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 67%, which spans that range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.67
+    }
+  ]
+}

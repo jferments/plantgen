@@ -2,14 +2,23 @@
   "schema": 1,
   "rank": "genus",
   "name": "Solidago",
+  "parent": "tribe/astereae",
   "traits": {
     "life_span": "perennial",
     "woodiness": "herbaceous",
     "leaf_arrangement": "alternate",
     "capitulum_kind": "radiate",
     "pappus": "bristles",
-    "ray_colour": [245, 200, 30],
-    "disc_colour": [245, 200, 30]
+    "ray_colour": [
+      245,
+      200,
+      30
+    ],
+    "disc_colour": [
+      245,
+      200,
+      30
+    ]
   },
   "evidence": {
     "traits.life_span": {

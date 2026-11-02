@@ -1,0 +1,290 @@
+{
+  "schema": 1,
+  "id": "tanacetum-vulgare",
+  "taxon": {
+    "scientific_name": "Tanacetum vulgare",
+    "family": "Asteraceae",
+    "genus": "Tanacetum",
+    "plant_name_id": 2929189,
+    "common_name": "tansy"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 1.2
+    },
+    "height_max_m": 1.5,
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.2
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.1
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "dentate",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      7,
+      8,
+      9
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.0012,
+      "max": 0.002
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ],
+    "head_diameter_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "inflorescence": "corymb",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "leaf_incision": "dissected",
+    "division_pattern": "pinnate",
+    "division_order": {
+      "min": 1,
+      "max": 2
+    },
+    "terminal_leaflet": true,
+    "units_per_inflorescence": {
+      "min": 20,
+      "max": 200
+    },
+    "involucre_diameter_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "capitulum_kind": "disciform",
+    "disc_colour": [
+      236,
+      188,
+      28
+    ],
+    "leaf_lobes": {
+      "min": 9,
+      "max": 21
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.perennation": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate. Here: the lobes lance-linear to lanceolate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.head_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L2929189), as no source read gives it."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate. Here: lobed to a winged rachis into lobes often lobed again (dissected)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate. Here: a pinnately lobed blade ends in a lobe."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): heads 20-200 in compact, corymbiform arrays; involucres 5-10 mm diam.; ray florets 0 (heads disciform, peripheral pistillate florets); disc corollas 2-3 mm, yellow."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): heads 20-200 in compact, corymbiform arrays; involucres 5-10 mm diam.; ray florets 0 (heads disciform, peripheral pistillate florets); disc corollas 2-3 mm, yellow."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): heads 20-200 in compact, corymbiform arrays; involucres 5-10 mm diam.; ray florets 0 (heads disciform, peripheral pistillate florets); disc corollas 2-3 mm, yellow. Here: no rays: a button of yellow florets."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): heads 20-200 in compact, corymbiform arrays; involucres 5-10 mm diam.; ray florets 0 (heads disciform, peripheral pistillate florets); disc corollas 2-3 mm, yellow. sRGB by eye from the words and the species' photos."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate. Here: 4-10 pairs of primary lobes and the terminal one, drawn as the blade's segments."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.5 m typical at least to 1.5 m at most: the middle, 1.0 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 50%, which spans that range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.0,
+      "tolerance": 0.5
+    }
+  ]
+}

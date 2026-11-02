@@ -2,11 +2,24 @@
   "schema": 1,
   "rank": "genus",
   "name": "Leucanthemum",
+  "parent": "tribe/anthemideae",
   "traits": {
-    "capitulum_kind": {"radiate": "usually", "discoid": "rarely"},
-    "disc_florets": {"min": 120, "max": 200},
-    "phyllaries": {"min": 35, "max": 60},
-    "phyllary_series": {"min": 3, "max": 4},
+    "capitulum_kind": {
+      "radiate": "usually",
+      "discoid": "rarely"
+    },
+    "disc_florets": {
+      "min": 120,
+      "max": 200
+    },
+    "phyllaries": {
+      "min": 35,
+      "max": 60
+    },
+    "phyllary_series": {
+      "min": 3,
+      "max": 4
+    },
     "receptacle": "epaleate",
     "receptacle_shape": "convex",
     "pappus": "absent"

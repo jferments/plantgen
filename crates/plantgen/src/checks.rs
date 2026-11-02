@@ -159,7 +159,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 44] = [
+pub const SIZES: [(&str, Judged); 45] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -183,6 +183,7 @@ pub const SIZES: [(&str, Judged); 44] = [
     ("spur_length_m", Judged::Organs),
     ("involucre_diameter_m", Judged::Organs),
     ("involucre_height_m", Judged::Organs),
+    ("head_diameter_m", Judged::Organs),
     ("ray_length_m", Judged::Organs),
     ("pappus_length_m", Judged::Organs),
     ("spikelet_length_m", Judged::Organs),
@@ -2748,6 +2749,9 @@ fn unit_sizes(
                     length * d.involucre_height,
                 );
                 tally.add("ray_length_m", organ, part, length * d.ray_length);
+                // The head is drawn as wide as its organ's length, rays and
+                // all (the layout's lengths are in half that width).
+                tally.add("head_diameter_m", organ, part, length);
                 tally.add("pappus_length_m", organ, part, length * d.pappus_length);
                 head_counts(head, (organ, part), tally);
             }

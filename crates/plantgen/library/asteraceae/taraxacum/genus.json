@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Taraxacum",
+  "parent": "tribe/cichorieae",
+  "traits": {
+    "cauline_leaves": "none"
+  },
+  "evidence": {
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Taraxacum (read on eFloras 2026-11-02): stems scapiform, leaves basal in rosettes."
+    }
+  }
+}

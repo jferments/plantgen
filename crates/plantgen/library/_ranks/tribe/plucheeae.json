@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Plucheeae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "capitulum_kind": "disciform",
+    "receptacle": {
+      "epaleate": "usually"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Plucheeae (read on eFloras 2026-11-02): heads with threadlike pistillate outer florets round the disc (disciform), no rays."
+    }
+  }
+}

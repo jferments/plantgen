@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Youngia",
+  "parent": "tribe/cichorieae",
+  "traits": {
+    "cauline_leaves": {
+      "none": "often",
+      "reduced": "often"
+    }
+  },
+  "evidence": {
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Youngia (read on eFloras 2026-11-02): stems often scapiform, leaves all or mostly basal."
+    }
+  }
+}

@@ -2,12 +2,16 @@
   "schema": 1,
   "rank": "genus",
   "name": "Encelia",
+  "parent": "tribe/heliantheae",
   "traits": {
     "life_span": "perennial",
     "leaf_arrangement": "alternate",
     "receptacle": "paleate",
     "receptacle_shape": "flat",
-    "pappus": {"absent": "often", "awns": "often"}
+    "pappus": {
+      "absent": "often",
+      "awns": "often"
+    }
   },
   "evidence": {
     "traits.life_span": {

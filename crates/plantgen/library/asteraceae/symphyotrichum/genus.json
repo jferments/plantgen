@@ -2,7 +2,15 @@
   "schema": 1,
   "rank": "genus",
   "name": "Symphyotrichum",
-  "traits": {"leaf_arrangement": "alternate", "pappus": "bristles"},
+  "parent": "tribe/astereae",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "pappus": "bristles",
+    "capitulum_kind": {
+      "radiate": "usually",
+      "disciform": "rarely"
+    }
+  },
   "evidence": {
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
@@ -13,6 +21,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, genus Aster (p. 310), which then held Symphyotrichum: pappus of nearly equal capillary persistent bristles."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, genus Symphyotrichum (read on eFloras 2026-11-02): heads usually radiate, rarely disciform."
     }
   }
 }

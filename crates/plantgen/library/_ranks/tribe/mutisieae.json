@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "tribe",
+  "name": "Mutisieae",
+  "parent": "family/asteraceae",
+  "traits": {
+    "receptacle": {
+      "epaleate": "usually"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vols. 19-21, tribe Mutisieae (read on eFloras 2026-11-02): florets of one to three kinds, often two-lipped; receptacle usually without chaff."
+    }
+  }
+}

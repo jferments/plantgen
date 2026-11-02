@@ -2,13 +2,19 @@
   "schema": 1,
   "rank": "genus",
   "name": "Cirsium",
+  "parent": "tribe/cardueae",
   "traits": {
     "capitulum_kind": "discoid",
-    "receptacle_shape": {"flat": "often", "convex": "often"},
+    "receptacle_shape": {
+      "flat": "often",
+      "convex": "often"
+    },
     "pappus": "bristles",
     "leaf_arrangement": "alternate",
     "woodiness": "herbaceous",
-    "leaf_margin": {"spiny": "usually"}
+    "leaf_margin": {
+      "spiny": "usually"
+    }
   },
   "evidence": {
     "traits": {

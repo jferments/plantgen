@@ -1,0 +1,285 @@
+{
+  "schema": 1,
+  "id": "senecio-inaequidens",
+  "taxon": {
+    "scientific_name": "Senecio inaequidens",
+    "family": "Asteraceae",
+    "genus": "Senecio",
+    "plant_name_id": 3081257,
+    "common_name": "narrow-leaved ragwort"
+  },
+  "growth_form": "forb",
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "semi",
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.7
+    },
+    "height_max_m": 1,
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "leaf_length_m": {
+      "min": 0.025,
+      "max": 0.079
+    },
+    "leaf_width_m": {
+      "min": 0.0006,
+      "max": 0.003
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "fruit_type": "cypsela",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "fruit_colour_ripe": [
+      120,
+      80,
+      45
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "capitulum_kind": "radiate",
+    "ray_colour": [
+      240,
+      205,
+      40
+    ],
+    "head_diameter_m": {
+      "min": 0.015,
+      "max": 0.025
+    },
+    "inflorescence": "corymb",
+    "inflorescence_posture": "erect",
+    "inflorescence_length_m": {
+      "min": 0.16,
+      "max": 0.35
+    },
+    "petiole_length_m": 0,
+    "leaf_apex": "acute",
+    "units_per_inflorescence": {
+      "min": 8,
+      "max": 50
+    },
+    "ray_florets": {
+      "min": 10,
+      "max": 14
+    },
+    "ray_length_m": {
+      "min": 0.0081,
+      "max": 0.015
+    },
+    "ray_width_m": {
+      "min": 0.0014,
+      "max": 0.0028
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "wcvp-v16",
+      "note": "Accepted name, family, genus and plant_name_id from WCVP v16 (Library 1.0 list); common name from the species-facts record."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it, from its coarse growth form."
+    },
+    "traits.life_span": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.woodiness": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): hojas 2.5-7.9 x 0.06-0.3 cm, lineares, subcarnosas, enteras o con 2-8 pares de dientes diminutos, revolutas, agudas, generalmente de base auriculada, sesiles."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): hojas 2.5-7.9 x 0.06-0.3 cm, lineares, subcarnosas, enteras o con 2-8 pares de dientes diminutos, revolutas, agudas, generalmente de base auriculada, sesiles."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): hojas 2.5-7.9 x 0.06-0.3 cm, lineares, subcarnosas, enteras o con 2-8 pares de dientes diminutos, revolutas, agudas, generalmente de base auriculada, sesiles."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): hojas 2.5-7.9 x 0.06-0.3 cm, lineares, subcarnosas, enteras o con 2-8 pares de dientes diminutos, revolutas, agudas, generalmente de base auriculada, sesiles. Here: entire or with a few minute teeth."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), Compositae (via GBIF species descriptions, read 2026-11-02): ligulate florets 10-14, 8.1-15 x 1.4-2.8 mm, yellow."
+    },
+    "traits.ray_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it, sRGB from the colour word."
+    },
+    "traits.head_diameter_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high, record L3081257), as no source read gives it."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): inflorescencias 16-35 x 12-21 cm, corimbiformes; capitulos 8-50; flores liguladas 10-14, de 8.1-15 x 1.4-2.8 mm, amarillas."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): hojas 2.5-7.9 x 0.06-0.3 cm, lineares, subcarnosas, enteras o con 2-8 pares de dientes diminutos, revolutas, agudas, generalmente de base auriculada, sesiles. Here: sessile."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): hojas 2.5-7.9 x 0.06-0.3 cm, lineares, subcarnosas, enteras o con 2-8 pares de dientes diminutos, revolutas, agudas, generalmente de base auriculada, sesiles."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): inflorescencias 16-35 x 12-21 cm, corimbiformes; capitulos 8-50; flores liguladas 10-14, de 8.1-15 x 1.4-2.8 mm, amarillas."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): inflorescencias 16-35 x 12-21 cm, corimbiformes; capitulos 8-50; flores liguladas 10-14, de 8.1-15 x 1.4-2.8 mm, amarillas."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): inflorescencias 16-35 x 12-21 cm, corimbiformes; capitulos 8-50; flores liguladas 10-14, de 8.1-15 x 1.4-2.8 mm, amarillas."
+    },
+    "traits.ray_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-iberica-16",
+      "note": "Flora iberica vol. XVI(3), via GBIF species descriptions, Senecio inaequidens (read 2026-11-02): inflorescencias 16-35 x 12-21 cm, corimbiformes; capitulos 8-50; flores liguladas 10-14, de 8.1-15 x 1.4-2.8 mm, amarillas."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.3 m typical at least to 1 m at most: the middle, 0.65 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 54%, which spans that range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen species facts 2026-10-15 (model estimates)",
+        "licence": "MIT, as PlantGen"
+      }
+    ],
+    "contributors": [
+      "PlantGen contributors"
+    ],
+    "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.65,
+      "tolerance": 0.54
+    }
+  ]
+}
