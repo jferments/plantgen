@@ -275,6 +275,24 @@ Usage:
       snap_m (0.05 m when left out) or is refused. docs/sites/road.json
       is a street with its cracks at three decay levels
       (docs/sites/make_road.py).
+  plantc cracks <site.json> [--years 0,2,5,10,20] [--traffic 0-1]
+                [--maintenance 0-1] [--seed N] [--pool ID,ID...]
+                [--explain 1] [--out FOLDER [--render 1] [--view VIEW]
+                [--size PIXELS] [--quality draft|standard]
+                [--focus X,Y,Z [--span METRES]]]
+      Which plants come up by themselves in a site's pavements, year by
+      year from bare slab (pavement-cracks plan K3, plantgen::succession):
+      seed from far off and from the document's seed_sources (plants
+      near the site: species, at [x, z], years), caught by each crack
+      and hole; seedlings that take hold as the soil there carries them;
+      growth held back by that soil; death by life span, drought,
+      trampling (the tiles' traffic lanes, scaled by --traffic), shade
+      and upkeep (--maintenance, a yearly chance of weeding). The pool
+      is the Pacific Northwest's pavement weeds unless --pool names
+      species. Prints the plants of each year in --years, by species and
+      by tile; with --explain, each species' soil supply by kind of
+      opening. With --out, writes the site with each year's plants
+      (SITE-year-N.json, for plantc site), and with --render 1 draws it.
   plantc tiers <species>... --out FOLDER [--seed N] [--size PIXELS] [--age YEARS]
                [--columns full,cards,far] [--view VIEW] [--focus F,S]
                [--views side,oblique,close]
