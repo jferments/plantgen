@@ -11,6 +11,7 @@
   "growth_form": "forb",
   "tier": "procedural_proxy",
   "traits": {
+    "trampling_tolerance": "tolerant",
     "life_span": "perennial",
     "woodiness": "herbaceous",
     "height_typical_m": {
@@ -74,6 +75,7 @@
     "leaf_hairs": "glabrous"
   },
   "evidence": {
+    "traits.trampling_tolerance": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Sagina procumbens: grows in 'gravelly or sandy soils along roadsides, sidewalk cracks, margins of paths or lawns'."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

@@ -11,6 +11,8 @@
   "growth_form": "forb",
   "tier": "procedural_proxy",
   "traits": {
+    "seedbank": "short_term",
+    "seed_dispersal": ["animal", "water"],
     "life_span": "annual",
     "woodiness": "herbaceous",
     "height_typical_m": {
@@ -91,6 +93,8 @@
     }
   },
   "evidence": {
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: 'Prostrate knotweed seeds form a persistent seed bank' (how long not given, so the shorter persistent class)."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Polygonum aviculare: 'Prostrate knotweed seeds are dispersed by birds, mammals, and water'; also by vehicles."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

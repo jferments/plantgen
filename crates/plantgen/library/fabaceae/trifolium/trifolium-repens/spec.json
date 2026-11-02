@@ -104,6 +104,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "seed_dispersal": ["wind", "water", "animal"],
     "life_span": "perennial",
     "division_order": 1,
     "leaflets": 3,
@@ -119,6 +120,7 @@
     "flower_colour": [235, 235, 225]
   },
   "evidence": {
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Trifolium repens: 'The seeds are dispersed by wind, water, birds, and grazing animals'."},
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",

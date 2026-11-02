@@ -94,6 +94,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "seedbank": "transient",
+    "seed_dispersal": ["wind"],
     "height_typical_m": {
       "min": 0.3,
       "max": 2.0,
@@ -122,6 +124,8 @@
     "leaf_length_m": {"min": 0.1, "max": 0.3}
   },
   "evidence": {
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Cirsium vulgare: reviews characterize it 'as having either a transient or a very small persistent seed bank'."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Cirsium vulgare: 'Bull thistle seeds are equipped with a feathery pappus that is suited to wind dispersal', though most land within a few metres."},
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",

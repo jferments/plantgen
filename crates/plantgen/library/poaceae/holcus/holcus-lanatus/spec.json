@@ -92,6 +92,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "seed_dispersal": ["wind"],
     "leaf_width_m": {
       "min": 0.004,
       "max": 0.008
@@ -128,6 +129,7 @@
     "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Holcus lanatus: 'Seeds are easily shed, and a large spikelet surface area encourages wind dispersal'; 90% fell within 5.2 m in a field study."},
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
       "source": "hitchcock-1935",

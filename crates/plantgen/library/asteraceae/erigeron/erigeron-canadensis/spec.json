@@ -11,6 +11,7 @@
   "growth_form": "forb",
   "tier": "procedural_proxy",
   "traits": {
+    "seed_dispersal": ["wind"],
     "life_span": "annual",
     "woodiness": "herbaceous",
     "height_typical_m": {
@@ -73,6 +74,7 @@
     "cauline_leaves": "reduced"
   },
   "evidence": {
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Conyza canadensis: cypselae 1-1.5 mm with a pappus of 15-25 white bristles 2-3 mm, a wind-borne seed (inferred from the pappus)."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

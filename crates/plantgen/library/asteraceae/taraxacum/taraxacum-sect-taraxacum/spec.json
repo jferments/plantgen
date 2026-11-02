@@ -11,6 +11,8 @@
   "growth_form": "forb",
   "tier": "procedural_proxy",
   "traits": {
+    "seedbank": "long_term",
+    "seed_dispersal": ["wind"],
     "life_span": "perennial",
     "woodiness": "herbaceous",
     "height_typical_m": {
@@ -82,6 +84,8 @@
     "cauline_leaves": "none"
   },
   "evidence": {
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: 'Common dandelion creates a long-lived seedbank'."},
+    "traits.seed_dispersal": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Taraxacum officinale: 'its prolific production of wind-dispersed seed'."},
     "taxon": {
       "evidence": "Authored",
       "source": "wcvp-v16",

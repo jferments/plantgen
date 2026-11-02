@@ -114,6 +114,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "seedbank": "long_term",
     "wood_density_basic_kg_m3": 640,
     "height_typical_m": {"min": 1, "max": 2},
     "woodiness": "woody",
@@ -144,6 +145,7 @@
     "flower_symmetry": "zygomorphic"
   },
   "evidence": {
+    "traits.seedbank": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS, Cytisus scoparius and C. striatus: hard seed coats 'enable seeds to survive in the soil seed bank for at least 5 years and possibly as long as 30 years'."},
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
