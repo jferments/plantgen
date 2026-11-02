@@ -275,12 +275,17 @@ impl Lattice {
     }
 }
 
-/// A host plant's wood as `host@1` sees it: its segments as capsules, in a
-/// grid of `HOST_CELL` cells for nearest-point queries (plant forms F7).
+/// What `host@1` reads: a host plant's wood, its segments as capsules
+/// (plant forms F7), and fixed surfaces a climber can hold to, such as the
+/// walls, poles and rocks of a site's mesh (`crate::site`, sites plan S4),
+/// as triangles; both in a grid of `HOST_CELL` cells for nearest-point
+/// queries.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Host {
     capsules: Vec<(Vec3, Vec3, f64)>,
     cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>>,
+    triangles: Vec<[Vec3; 3]>,
+    triangle_cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>>,
 }
 
 /// Edge of a host grid cell, metres.
@@ -305,25 +310,64 @@ impl Host {
                 }
             }
         }
-        Self { capsules, cells }
+        Self {
+            capsules,
+            cells,
+            triangles: Vec::new(),
+            triangle_cells: std::collections::HashMap::new(),
+        }
+    }
+
+    /// This host with fixed surfaces as well: `triangles`, each three
+    /// corners in the guest's frame wound counter-clockwise seen from
+    /// outside, so its front faces the air. Only the part of each that
+    /// lies within `within` (low and high corners) is indexed, so a large
+    /// triangle costs no more than the box round the guest.
+    #[must_use]
+    pub fn with_triangles(mut self, triangles: Vec<[Vec3; 3]>, within: (Vec3, Vec3)) -> Self {
+        let mut cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>> =
+            std::collections::HashMap::new();
+        for (index, corners) in triangles.iter().enumerate() {
+            let low = corners[0].min(corners[1]).min(corners[2]).max(within.0);
+            let high = corners[0].max(corners[1]).max(corners[2]).min(within.1);
+            if low.x > high.x || low.y > high.y || low.z > high.z {
+                continue;
+            }
+            let (low, high) = (cell_of(low), cell_of(high));
+            for x in low.0..=high.0 {
+                for y in low.1..=high.1 {
+                    for z in low.2..=high.2 {
+                        #[allow(clippy::cast_possible_truncation)]
+                        cells.entry((x, y, z)).or_default().push(index as u32);
+                    }
+                }
+            }
+        }
+        self.triangles = triangles;
+        self.triangle_cells = cells;
+        self
+    }
+
+    /// Whether the host has nothing to hold to.
+    #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.capsules.is_empty() && self.triangle_cells.is_empty()
     }
 
     /// The distance from `point` to the host's surface (negative inside
-    /// its wood) and the unit direction to the nearest surface point, when
-    /// the host is within `reach`.
+    /// its wood; never negative to a fixed surface) and the unit direction to the nearest
+    /// surface point, when the host is within `reach`.
     #[must_use]
     pub fn nearest(&self, point: Vec3, reach: f64) -> Option<(f64, Vec3)> {
         let low = cell_of(point - Vec3::new(reach, reach, reach));
         let high = cell_of(point + Vec3::new(reach, reach, reach));
         let mut best: Option<(f64, Vec3)> = None;
         let mut seen = HashSet::new();
+        let mut seen_triangles = HashSet::new();
         for x in low.0..=high.0 {
             for y in low.1..=high.1 {
                 for z in low.2..=high.2 {
-                    let Some(list) = self.cells.get(&(x, y, z)) else {
-                        continue;
-                    };
-                    for &index in list {
+                    for &index in self.cells.get(&(x, y, z)).into_iter().flatten() {
                         if !seen.insert(index) {
                             continue;
                         }
@@ -338,11 +382,67 @@ impl Host {
                             best = Some((surface, offset * (1.0 / centre.max(1.0e-9))));
                         }
                     }
+                    for &index in self.triangle_cells.get(&(x, y, z)).into_iter().flatten() {
+                        if !seen_triangles.insert(index) {
+                            continue;
+                        }
+                        let [a, b, c] = self.triangles[index as usize];
+                        let closest = closest_on_triangle(point, a, b, c);
+                        let offset = closest - point;
+                        let gap = offset.length();
+                        // A surface's distance is never negative: which
+                        // side of a lone triangle is inside is not known
+                        // without its neighbours, and a climber needs only
+                        // how far the surface is and which way.
+                        if gap <= reach && best.is_none_or(|(d, _)| gap < d) {
+                            let direction = if gap > 1.0e-9 {
+                                offset * (1.0 / gap)
+                            } else {
+                                -(b - a).cross(c - a).normalize_or(Vec3::Y)
+                            };
+                            best = Some((gap, direction));
+                        }
+                    }
                 }
             }
         }
         best
     }
+}
+
+/// The point of the triangle `a b c` nearest `p` (Ericson, Real-Time
+/// Collision Detection, 2005, section 5.1.5).
+#[must_use]
+pub fn closest_on_triangle(p: Vec3, a: Vec3, b: Vec3, c: Vec3) -> Vec3 {
+    let (ab, ac, ap) = (b - a, c - a, p - a);
+    let (d1, d2) = (ab.dot(ap), ac.dot(ap));
+    if d1 <= 0.0 && d2 <= 0.0 {
+        return a;
+    }
+    let bp = p - b;
+    let (d3, d4) = (ab.dot(bp), ac.dot(bp));
+    if d3 >= 0.0 && d4 <= d3 {
+        return b;
+    }
+    let vc = d1 * d4 - d3 * d2;
+    if vc <= 0.0 && d1 >= 0.0 && d3 <= 0.0 {
+        return a + ab * (d1 / (d1 - d3));
+    }
+    let cp = p - c;
+    let (d5, d6) = (ab.dot(cp), ac.dot(cp));
+    if d6 >= 0.0 && d5 <= d6 {
+        return c;
+    }
+    let vb = d5 * d2 - d1 * d6;
+    if vb <= 0.0 && d2 >= 0.0 && d6 <= 0.0 {
+        return a + ac * (d2 / (d2 - d6));
+    }
+    let va = d3 * d6 - d5 * d4;
+    if va <= 0.0 && (d4 - d3) >= 0.0 && (d5 - d6) >= 0.0 {
+        return b + (c - b) * ((d4 - d3) / ((d4 - d3) + (d5 - d6)));
+    }
+    let denom = 1.0 / (va + vb + vc);
+    a + ab * (vb * denom) + ac * (vc * denom)
 }
 
 fn cell_of(point: Vec3) -> (i32, i32, i32) {
