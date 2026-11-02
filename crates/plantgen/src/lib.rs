@@ -1422,8 +1422,8 @@ pub mod venation;
 /// sides up to it, as broad as its flowers fill it, on the levels that
 /// draw it as a card and do not merge it with its neighbours
 /// (`clusters::CardFrame::stand`, `mesh::STAND_SIDES`): a yarrow's
-/// corymbs were lines floating over their stems from the side. Ten of 180
-/// species change on their high and mid tiers, and eleven on the card
-/// tiers baked from those levels. (183 is the fleshy
+/// corymbs were lines floating over their stems from the side. Eight of
+/// 180 species change on their high and mid tiers, and eleven on the
+/// card tiers baked from those levels. (183 is the fleshy
 /// bodies' far levels, #312; 184 the faster tier search, #315.)
 pub const GENERATOR_REVISION: u32 = 185;
