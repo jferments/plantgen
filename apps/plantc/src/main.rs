@@ -118,6 +118,7 @@ fn run() -> Result<(), Failure> {
         "audit" => audit_command(&args),
         "grow" => grow_command(&args),
         "stand" => stand_command(&args),
+        "site" => site_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "tiers" => tiers_command(&args),
@@ -202,7 +203,8 @@ Usage:
                 [--size PIXELS] [--quality draft|standard]
                 [--focus X,Y,Z [--span METRES]] [--parts on] [--figure off]
                 [--conditions FILE|JSON [--from-age N]]
-                [--break snap|WIND|bone:N [--fallen off]]
+                [--break snap|WIND|bone:N [--fallen off]] [--leaves off]
+                [--turn DEGREES]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m (--figure
       off draws neither, for plant-identification models). --focus
@@ -223,7 +225,13 @@ Usage:
       draws it broken where plantc breakage finds it fails: snap at its
       stem's weakest section, WIND at every site a steady wind of WIND m/s
       at 10 m breaks, bone:N at bone N's weakest site; torn stubs stay on
-      it and the pieces lie on the ground, unless --fallen off.
+      it and the pieces lie on the ground, unless --fallen off. A
+      branch under half its stem's thickness breaks at its collar, a
+      thicker one splits out with a strip of the stem; tough wood often
+      breaks hinged, the piece hanging from its break. --leaves off
+      draws the wood alone (cards and tufts left out), to see wounds
+      the foliage hides. --turn turns the plant DEGREES about its foot
+      (anticlockwise from above) before the view, --focus points with it.
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
       print each one's size at the end and where its leaves lean. The
@@ -232,6 +240,33 @@ Usage:
       and north: the stand is a tile that wraps at its edges) and
       conditions (a place every plant grows in). Seeds default to each
       spec's first.
+  plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
+              [--day N] [--quality draft|standard]
+              [--focus X,Y,Z [--span METRES]]
+      Grow plants on a mesh you hand over (sites plan S4, grow here).
+      The document names mesh (an OBJ file, its path from the document's
+      folder), z_up (true when the file's +Z is up), materials (each
+      usemtl name as soil, rock, bark, wood or built, or an object of
+      as, the material, thin_m, a thin part's thickness in metres (a
+      fence's wire, a trellis's slat: open faces standing as a slab that
+      thick), climb false for a surface climbers do not hold to, clear
+      true for one kept clear (a window or door: shoots that reach it
+      are cut back each year), and colour, sRGB [r, g, b] to draw it in;
+      * for the rest, soil when left out), years, and plants: each
+      one's species, at ([x, z], or [x, y, z] for the ground at or below
+      y, in the mesh's units, metres), seed, years and optionally cut
+      (half_m, below_m, above_m and cell_m of the box round it; from its
+      size when left out). Each plant stands on the highest soil under
+      it (under eaves, on the ground below them; with no soil, the
+      highest surface) and grows in a substrate cut from the mesh round
+      its foot; a climber climbs the mesh's rock, bark, wood and built
+      faces in place of its stock host. Plants that grow in steps of one
+      length grow together, each making room for the others' crowns.
+      Prints each plant's size and how much of it stands in the mesh,
+      and with --out renders them on the mesh (one bark for all wood),
+      or with --focus a close-up of SPAN metres (default 2) round a point
+      in the mesh's frame. docs/sites/house.json is a house with windows
+      and a door kept clear, a picket fence and a wire fence.
   plantc tiers <species>... --out FOLDER [--seed N] [--size PIXELS] [--age YEARS]
                [--columns full,cards,far] [--view VIEW] [--focus F,S]
                [--views side,oblique,close]
@@ -2696,6 +2731,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "break",
             "fallen",
             "figure",
+            "leaves",
+            "turn",
         ],
     )?;
     let day = options.day()?;
@@ -2730,6 +2767,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         None | Some("on") => true,
         Some("off") => false,
         Some(other) => return Err(format!("`--fallen` must be on or off, found `{other}`").into()),
+    };
+    let leaves = match options.flags.get("leaves").map(String::as_str) {
+        None | Some("on") => true,
+        Some("off") => false,
+        Some(other) => return Err(format!("`--leaves` must be on or off, found `{other}`").into()),
     };
     let figure = match options.flags.get("figure").map(String::as_str) {
         None | Some("on") => true,
@@ -2770,7 +2812,14 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         false,
     )?;
     let (mut looks, sizes) = looks_of(&spec, &growth, day);
-    let graph = &*drawn(&growth.keyframes[0], &sizes, &looks);
+    let turn: f64 = options.number("turn")?.unwrap_or(0.0);
+    let staged = drawn(&growth.keyframes[0], &sizes, &looks);
+    let graph = &*if turn == 0.0 {
+        staged
+    } else {
+        Cow::Owned(turned(&staged, turn))
+    };
+    let focus = focus.map(|(point, span)| (spun(point, turn), span));
     let bodies = bodies_of(&spec, &growth);
     let mut bloom = None;
     let mut plant = if parted {
@@ -2832,6 +2881,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         )
     };
     plant.vary_by_plant(&looks, seed);
+    if !leaves {
+        // The wood alone, to see what foliage hides: a break's wounds.
+        plant.cards.clear();
+        plant.tufts.clear();
+    }
     // A guest is drawn on its host (plant forms F7), unless `--alone`.
     // Neither has fleshy bodies, so the templates are the organs' alone.
     let mut on = false;
@@ -2922,6 +2976,454 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+/// One plant of a site, ready to grow: its spec, foot, program,
+/// parameters and settings.
+type SitePlant = (PlantSpec, Vec3, Program, Vec<f64>, GrowthSettings);
+
+/// The height a species reaches at `age` years, and how far it spreads
+/// from its foot, as its facts state them: its growth targets
+/// (`allometry`), else its greatest height and crown width, else 2 m.
+fn site_size(spec: &PlantSpec, age: f64) -> (f64, f64) {
+    let traits = library().traits_of(&spec.id).unwrap_or_default();
+    let greatest = |name: &str| traits.get(name).and_then(plantgen::traits::greatest);
+    let tallest = greatest("height_max_m");
+    let target = spec
+        .allometry
+        .iter()
+        .filter(|point| point.age <= age + 1.0e-9)
+        .map(|point| point.height)
+        .fold(None, |best: Option<f64>, height| {
+            Some(best.map_or(height, |b| b.max(height)))
+        });
+    let height = target
+        .or_else(|| {
+            spec.allometry
+                .iter()
+                .map(|point| point.height)
+                .reduce(f64::min)
+        })
+        .or(tallest)
+        .unwrap_or(2.0)
+        .min(tallest.unwrap_or(f64::INFINITY));
+    let reach = greatest("crown_width_max_m").map_or(height * 0.6, |width| width * 0.5);
+    (height, reach.max(height * 0.3))
+}
+
+/// `plantc site`: plants grown on a mesh (`plantgen::site`).
+#[allow(clippy::too_many_lines)]
+/// A site material table's entry `name`: a material's name, or an object
+/// with the material (`as`), a thin part's thickness (`thin_m`), whether a
+/// climber may hold to it (`climb`), whether it is kept clear of plants
+/// (`clear`: what grows onto it is cut back) and the colour to draw it in
+/// (`colour`, sRGB 0 to 1).
+fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site::Surface, String> {
+    use plantgen::site::{Surface, material_named};
+    if let Some(material) = given.as_str() {
+        return Ok(Surface::solid(material_named(material)?));
+    }
+    let table = given
+        .as_object()
+        .ok_or_else(|| format!("site material `{name}` must be a name or an object"))?;
+    for key in table.keys() {
+        if !["as", "thin_m", "climb", "clear", "colour"].contains(&key.as_str()) {
+            return Err(format!(
+                "site material `{name}`: unknown field `{key}`; use as, thin_m, climb, clear, colour"
+            ));
+        }
+    }
+    let material = table
+        .get("as")
+        .and_then(serde_json::Value::as_str)
+        .ok_or_else(|| format!("site material `{name}` names its material in `as`"))?;
+    let mut surface = Surface::solid(material_named(material)?);
+    if let Some(thin) = table.get("thin_m") {
+        surface.thin_m = thin
+            .as_f64()
+            .filter(|t| t.is_finite() && *t >= 0.0)
+            .ok_or_else(|| format!("site material `{name}`: thin_m must be metres, 0 or more"))?;
+    }
+    if let Some(climb) = table.get("climb") {
+        surface.climb = climb
+            .as_bool()
+            .ok_or_else(|| format!("site material `{name}`: climb must be true or false"))?;
+    }
+    if let Some(clear) = table.get("clear") {
+        surface.clear = clear
+            .as_bool()
+            .ok_or_else(|| format!("site material `{name}`: clear must be true or false"))?;
+    }
+    if let Some(colour) = table.get("colour") {
+        let values: Vec<f64> = colour
+            .as_array()
+            .map(|values| {
+                values
+                    .iter()
+                    .filter_map(serde_json::Value::as_f64)
+                    .collect()
+            })
+            .unwrap_or_default();
+        let [r, g, b] = values[..] else {
+            return Err(format!(
+                "site material `{name}`: colour must be [r, g, b], sRGB 0 to 1"
+            ));
+        };
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let linear = |v: f64| {
+            plantgen::texture::srgb_to_linear((v.clamp(0.0, 1.0) * 255.0).round() as u8) as f32
+        };
+        surface.colour = Some([linear(r), linear(g), linear(b)]);
+    }
+    Ok(surface)
+}
+
+/// How near a surface kept clear a plant's stems and leaves may come
+/// before they are cut back, metres.
+const CLEAR_GAP_M: f64 = 0.05;
+
+fn site_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::site::{Cut, SiteMesh, Surface, climbable};
+    let options = Options::parse(
+        args,
+        &["out", "view", "size", "day", "quality", "focus", "span"],
+    )?;
+    let given = options.one_positional("a site document")?;
+    let text =
+        fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?;
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("invalid site: {error}"))?;
+    let folder = Path::new(given).parent().unwrap_or(Path::new("."));
+    let mesh_path = folder.join(
+        document["mesh"]
+            .as_str()
+            .ok_or("a site names its mesh, an OBJ file")?,
+    );
+    let mut names: BTreeMap<String, Surface> = BTreeMap::new();
+    if let Some(table) = document["materials"].as_object() {
+        for (name, given) in table {
+            names.insert(name.clone(), site_surface(name, given)?);
+        }
+    }
+    let fallback = names
+        .get("*")
+        .copied()
+        .unwrap_or(Surface::solid(plantgen::substrate::SOIL));
+    let material_of = |name: Option<&str>| -> Result<Surface, String> {
+        Ok(name
+            .and_then(|name| names.get(name))
+            .copied()
+            .unwrap_or(fallback))
+    };
+    let z_up = document["z_up"].as_bool().unwrap_or(false);
+    let obj = fs::read_to_string(&mesh_path)
+        .map_err(|error| format!("cannot read {}: {error}", mesh_path.display()))?;
+    let started = Instant::now();
+    let site_mesh = SiteMesh::from_obj(&obj, z_up, &material_of)
+        .map_err(|error| format!("{}: {error}", mesh_path.display()))?;
+    let site = &site_mesh;
+    let default_years = document["years"].as_f64();
+    let plants = document["plants"]
+        .as_array()
+        .ok_or("site plants must be a list")?;
+    let mut grown: Vec<SitePlant> = Vec::new();
+    let mut cuts = Vec::new();
+    for (number, plant) in plants.iter().enumerate() {
+        let id = plant["species"]
+            .as_str()
+            .ok_or("each plant names its species")?;
+        let spec = load_spec(id)?;
+        let at: Vec<f64> = plant["at"]
+            .as_array()
+            .map(|values| {
+                values
+                    .iter()
+                    .filter_map(serde_json::Value::as_f64)
+                    .collect()
+            })
+            .unwrap_or_default();
+        let (x, z, below) = match at[..] {
+            [x, z] => (x, z, None),
+            [x, y, z] => (x, z, Some(y)),
+            _ => {
+                return Err(
+                    format!("plant {number} ({id}): at must be [x, z] or [x, y, z]").into(),
+                );
+            }
+        };
+        let (ground, material) = site.footing(x, z, below).ok_or_else(|| {
+            format!("plant {number} ({id}): no upward-facing ground under ({x}, {z})")
+        })?;
+        let foot = Vec3::new(x, ground, z);
+        let seed = match &plant["seed"] {
+            serde_json::Value::Null => spec.variants.seeds[0],
+            seed => seed
+                .as_u64()
+                .ok_or("a plant's seed must be a whole number")?,
+        };
+        let years = plant["years"]
+            .as_f64()
+            .or(default_years)
+            .unwrap_or_else(|| spec.growth.keyframes.iter().copied().fold(0.0, f64::max));
+        let (height, reach) = site_size(&spec, years);
+        let mut cut = Cut::for_plant(height, reach);
+        if let Some(given) = plant["cut"].as_object() {
+            for (name, slot) in [
+                ("half_m", &mut cut.half_m),
+                ("below_m", &mut cut.below_m),
+                ("above_m", &mut cut.above_m),
+                ("cell_m", &mut cut.cell_m),
+            ] {
+                if let Some(value) = given.get(name) {
+                    *slot = value.as_f64().ok_or_else(|| {
+                        format!("plant {number} ({id}): cut {name} must be a number")
+                    })?;
+                }
+            }
+        }
+        let substrate = site.substrate_round(foot, cut)?;
+        let mut conditions = Conditions::preset(Environment::Open);
+        conditions.substrate = Some(substrate);
+        conditions.validate()?;
+        let host = site
+            .host_round(foot, cut, &climbable)
+            .map(std::sync::Arc::new);
+        let (program, params) = spec
+            .program_in(library())
+            .map_err(|error| error.to_string())?;
+        let params = spec.seeded_params(&program, &params, seed);
+        out!(
+            "  {id} on {} at ({x:.2}, {ground:.2}, {z:.2}); site cut {:.1} m round, {:.2} m cells{}",
+            ["air", "soil", "rock", "bark", "wood", "built"][usize::from(material)],
+            cut.half_m,
+            cut.cell_m,
+            if host.is_some() {
+                "; surfaces to climb"
+            } else {
+                ""
+            }
+        );
+        let settings = GrowthSettings {
+            seed,
+            dt: spec.growth.step,
+            years,
+            keyframes: vec![years],
+            conditions,
+            limits: Limits::default(),
+            host,
+        };
+        cuts.push(cut);
+        grown.push((spec, foot, program, params, settings));
+    }
+    if grown.is_empty() {
+        return Err("a site needs at least one plant".into());
+    }
+    let cut_seconds = started.elapsed().as_secs_f64();
+    let started = Instant::now();
+    let together = grown
+        .iter()
+        .all(|plant| plant.4.dt.to_bits() == grown[0].4.dt.to_bits());
+    let mut growths: Vec<Growth> = if together {
+        let members: Vec<plantgen::stand::Member<'_>> = grown
+            .iter()
+            .map(
+                |(_, foot, program, params, settings)| plantgen::stand::Member {
+                    program,
+                    params,
+                    settings,
+                    at_m: [foot.x, -foot.z],
+                },
+            )
+            .collect();
+        plantgen::stand::grow_stand(&members, None).map_err(|error| error.to_string())?
+    } else {
+        grown
+            .iter()
+            .map(|(spec, _, program, params, settings)| {
+                let mut grower = Grower::new(program, params, settings)
+                    .map_err(|error| format!("{}: {error}", spec.id))?;
+                loop {
+                    match grower.step(None) {
+                        Ok(true) => {}
+                        Ok(false) => break,
+                        Err(error) => return Err(format!("{}: {error}", spec.id)),
+                    }
+                }
+                Ok(grower.finish())
+            })
+            .collect::<Result<_, String>>()?
+    };
+    out!(
+        "{} plants on {} triangles: sites cut in {cut_seconds:.1} s, grown {} in {:.1} s",
+        grown.len(),
+        site.triangle_count(),
+        if together {
+            "together"
+        } else {
+            "one by one (their steps differ in length)"
+        },
+        started.elapsed().as_secs_f64()
+    );
+    for ((spec, foot, _, _, settings), growth) in grown.iter().zip(&mut growths) {
+        // What grew onto a surface kept clear is cut back.
+        let mut trimmed = (0, 0);
+        for graph in &mut growth.keyframes {
+            trimmed = site.cut_back(graph, *foot, CLEAR_GAP_M);
+        }
+        let Some(graph) = growth.keyframes.last() else {
+            continue;
+        };
+        let intrusion = settings.conditions.intrusion(graph)?;
+        out!(
+            "  {}: {}; {}{}",
+            spec.id,
+            describe(graph, &growth.organ_types),
+            intrusion.describe(),
+            if trimmed == (0, 0) {
+                String::new()
+            } else {
+                format!(
+                    "; {} segments and {} organs cut back from surfaces kept clear",
+                    trimmed.0, trimmed.1
+                )
+            }
+        );
+    }
+    let Some(out) = options.flags.get("out") else {
+        return Ok(());
+    };
+    // Draw: the plants about the middle of their feet, the lowest foot at
+    // height 0, on the part of the mesh round them.
+    let day = options.day()?;
+    let quality = options.quality()?;
+    let lod = &quality.lods[0];
+    let feet: Vec<Vec3> = grown.iter().map(|plant| plant.1).collect();
+    let low_foot = feet.iter().map(|foot| foot.y).fold(f64::INFINITY, f64::min);
+    #[allow(clippy::cast_precision_loss)]
+    let middle = feet.iter().fold(Vec3::ZERO, |sum, foot| sum + *foot) * (1.0 / feet.len() as f64);
+    let offset = Vec3::new(-middle.x, -low_foot, -middle.z);
+    let mut scene = PlantMesh::default();
+    let mut all_looks: Vec<Look> = Vec::new();
+    let mut bark = None;
+    let (mut low, mut high) = (
+        Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
+        Vec3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
+    );
+    for (((spec, foot, _, _, settings), growth), cut) in grown.iter().zip(&growths).zip(&cuts) {
+        let (looks, sizes) = looks_of(spec, growth, day);
+        let graph = &*drawn(&growth.keyframes[0], &sizes, &looks);
+        let bodies = bodies_of(spec, growth);
+        let mut plant = mesh::build(
+            graph,
+            &looks,
+            &bodies,
+            &spec.appearance,
+            &lod.for_height(graph.height),
+            0,
+        );
+        plant.vary_by_plant(&looks, settings.seed);
+        moved(&mut plant, *foot + offset);
+        scene = on_host(scene, plant, all_looks.len());
+        all_looks.extend(looks);
+        if bark.is_none() {
+            bark = spec.appearance.bark_params();
+        }
+        let reach = Vec3::new(cut.half_m, 0.0, cut.half_m);
+        low = low.min(*foot - reach - Vec3::new(0.0, 0.3, 0.0));
+        high = high.max(*foot + reach + Vec3::new(0.0, cut.above_m, 0.0));
+    }
+    if all_looks.len() > 255 {
+        return Err("too many organ types to draw at once; draw fewer species".into());
+    }
+    let ground = site.drawn(low, high, offset);
+    let templates = Templates::for_plant(&all_looks, &[]).with_bark(bark);
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::ThreeQuarter,
+    };
+    let pixels: usize = options.number("size")?.unwrap_or(1200);
+    // `--focus X,Y,Z` in the mesh's frame, framing `--span` metres.
+    let focus = match options.flags.get("focus") {
+        Some(text) => {
+            let point: Vec<f64> = text
+                .split(',')
+                .map(|part| part.trim().parse::<f64>())
+                .collect::<Result<_, _>>()
+                .map_err(|_| format!("`--focus` expects X,Y,Z in metres, found `{text}`"))?;
+            let [x, y, z] = point[..] else {
+                return Err(format!("`--focus` expects X,Y,Z in metres, found `{text}`").into());
+            };
+            let span: f64 = options.number("span")?.unwrap_or(2.0);
+            Some((Vec3::new(x, y, z) + offset, span))
+        }
+        None => None,
+    };
+    // Framed on the plants, not on all the mesh cut round them.
+    let plants_reach = grown
+        .iter()
+        .zip(&growths)
+        .filter_map(|((_, foot, ..), growth)| {
+            let graph = growth.keyframes.last()?;
+            let at = *foot + offset;
+            graph
+                .segments
+                .iter()
+                .map(|segment| segment.end)
+                .chain(graph.organs.iter().map(|organ| organ.position))
+                .map(|p| (p.x + at.x).abs().max((p.z + at.z).abs()))
+                .reduce(f64::max)
+        })
+        .fold(0.5, f64::max);
+    let image = preview::render_on_site(
+        &scene,
+        &[(&ground, raster::Material::Opaque)],
+        &templates,
+        &PreviewOptions {
+            width: pixels,
+            height: pixels * 3 / 4,
+            view,
+            supersample: 2,
+            figure: true,
+            frame_height: None,
+            frame_reach: Some(plants_reach * 1.15),
+            focus,
+            fit_plant: false,
+        },
+    );
+    let png = raster::encode_png(
+        image.width,
+        image.height,
+        &image.to_srgb8(Some(preview::SKY)),
+    )
+    .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
+    out!(
+        "wrote {out}: {} triangles of plants, {} of site",
+        scene.triangle_count(),
+        ground.triangle_count()
+    );
+    Ok(())
+}
+
+/// `plant` moved by `by`: its wood, cards, areoles and hairy stems.
+fn moved(plant: &mut PlantMesh, by: Vec3) {
+    let by = by.to_f32();
+    let shift = |p: &mut [f32; 3]| {
+        for (value, step) in p.iter_mut().zip(by) {
+            *value += step;
+        }
+    };
+    plant.wood.positions.iter_mut().for_each(shift);
+    for card in &mut plant.cards {
+        shift(&mut card.base);
+    }
+    for tuft in &mut plant.tufts {
+        shift(&mut tuft.position);
+    }
+    for tube in &mut plant.hair_tubes {
+        shift(&mut tube.start);
+        shift(&mut tube.end);
+    }
+}
+
 /// `plantc render --break HOW`: the plant broken where its break sites
 /// say (plant motion S5): `snap` at its stem's weakest section, a wind
 /// speed (m/s at 10 m) at every site that wind breaks, or `bone:N` at
@@ -2951,6 +3453,7 @@ fn broken_mesh(
     let at = |site: &plantgen::breakage::Site| Break {
         segment: found.beams.segment[site.beam as usize],
         toward: Vec3::new(site.direction[0], site.direction[1], site.direction[2]),
+        wind: site.wind.unwrap_or(0.0),
     };
     let breaks: Vec<Break> = if how == "snap" {
         let failure = &broken.failure;
@@ -2992,11 +3495,29 @@ fn broken_mesh(
         });
         chosen
             .into_iter()
-            .map(|site| Break { toward, ..at(site) })
+            .map(|site| Break {
+                toward,
+                wind,
+                ..at(site)
+            })
             .collect()
     };
-    let damaged = damage::apply(graph, &breaks);
     let toughness = Toughness::of_traits(&traits);
+    let damaged = damage::apply(graph, &breaks, toughness, &motion.drag);
+    let mut tears = [0_usize; 3];
+    for how in &damaged.tears {
+        tears[match how {
+            damage::Tear::Clean => 0,
+            damage::Tear::Hinged => 1,
+            damage::Tear::Split => 2,
+        }] += 1;
+    }
+    out!(
+        "tears: {} clean, {} hinged, {} split out of their stems",
+        tears[0],
+        tears[1],
+        tears[2]
+    );
     let grain = Grain {
         sapwood: Grain::SAPWOOD,
         heartwood: None,
@@ -3010,6 +3531,17 @@ fn broken_mesh(
         lod,
         level,
     );
+    for wound in &damaged.scars {
+        damage::append(&mut plant.wood, &damage::scar(wound, &grain, lod.ring_edge));
+        out!(
+            "split scar from {:.2},{:.2},{:.2} m down {:.2} m, facing {:.0} degrees (0 = +X, 90 = +Z)",
+            wound.top.x,
+            wound.top.y,
+            wound.top.z,
+            wound.length,
+            wound.out.z.atan2(wound.out.x).to_degrees()
+        );
+    }
     for stub in &damaged.stubs {
         damage::append(
             &mut plant.wood,
@@ -4150,6 +4682,34 @@ fn looks_of(spec: &PlantSpec, growth: &Growth, day: f64) -> (Vec<Look>, Vec<f64>
 
 /// `graph` as drawn with its organ types' `sizes` on a day: organs gone
 /// left out, the others at their stage's size (`looks::staged`).
+/// `point` turned `degrees` about the vertical through the plant's foot,
+/// anticlockwise seen from above.
+fn spun(point: Vec3, degrees: f64) -> Vec3 {
+    let (sin, cos) = degrees.to_radians().sin_cos();
+    Vec3::new(
+        point.x * cos + point.z * sin,
+        point.y,
+        -point.x * sin + point.z * cos,
+    )
+}
+
+/// `graph` turned `degrees` about the vertical through its foot
+/// (`plantc render --turn`), to look at a side of it a view does not face.
+fn turned(graph: &PlantGraph, degrees: f64) -> PlantGraph {
+    let mut out = graph.clone();
+    for segment in &mut out.segments {
+        segment.start = spun(segment.start, degrees);
+        segment.end = spun(segment.end, degrees);
+        segment.left = spun(segment.left, degrees);
+    }
+    for organ in &mut out.organs {
+        organ.position = spun(organ.position, degrees);
+        organ.heading = spun(organ.heading, degrees);
+        organ.left = spun(organ.left, degrees);
+    }
+    out
+}
+
 fn drawn<'a>(graph: &'a PlantGraph, sizes: &[f64], looks: &[Look]) -> Cow<'a, PlantGraph> {
     looks::staged(graph, sizes, looks).map_or(Cow::Borrowed(graph), Cow::Owned)
 }

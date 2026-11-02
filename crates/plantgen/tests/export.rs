@@ -771,3 +771,52 @@ fn a_chollas_far_levels_draw_its_joints_coarser() {
         "{farthest} against {second}"
     );
 }
+
+#[test]
+fn a_yarrows_corymb_cards_stand_on_their_pedicels() {
+    // On the levels that draw a yarrow's corymbs as cards, each card lies
+    // level at the top of a cone of wood from where its lowest pedicel
+    // leaves the axis, on its peduncle, as the full drawing's corymbs do;
+    // alone it was a line from the side, floating over its stem.
+    let spec = PlantSpec::builtin("achillea-millefolium").unwrap();
+    let inputs = Inputs::new(&spec, &quality::STANDARD).unwrap();
+    let library = plantgen::library::Library::builtin();
+    let variant = export::typical_variant(&spec, library);
+    let plant = export::grow(&inputs, variant, export::oldest_age(&spec)).unwrap();
+    let graph = &plant.graph;
+    let level = 2;
+    let lod = quality::STANDARD.lods[level].for_height(graph.height);
+    let mesh = plantgen::mesh::build_capped(
+        graph,
+        &inputs.looks,
+        &inputs.bodies,
+        &spec.appearance,
+        &lod,
+        level,
+        None,
+        None,
+    );
+    let mut stood = 0;
+    for organ in &graph.organs {
+        let look = &inputs.looks[usize::from(organ.organ)];
+        let Some(card) = look.inflorescence.as_ref().map(|c| c.card) else {
+            continue;
+        };
+        let Some(low) = card.stand else {
+            continue;
+        };
+        // A cone's apex lies on the organ's axis, between where its lowest
+        // pedicel leaves it and the card.
+        let heading = organ.heading.normalize_or(plantgen::math::Vec3::Y);
+        let near = mesh.wood.positions.iter().any(|p| {
+            let d = plantgen::math::Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]))
+                - organ.position;
+            let along = d.dot(heading) / organ.size;
+            let off = (d - heading * d.dot(heading)).length();
+            (low - 1e-6..card.foot).contains(&along) && off < 1e-6
+        });
+        assert!(near, "no stand under the corymb at {:?}", organ.position);
+        stood += 1;
+    }
+    assert!(stood >= 3, "{stood} corymbs");
+}

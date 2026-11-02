@@ -714,7 +714,16 @@ struct Trials<'a> {
     /// By the dial's bits: its triangles, and its file's bytes once
     /// written.
     tried: HashMap<u64, (usize, Option<usize>)>,
+    /// By the dial's bits, the drawings tried of at most
+    /// [`KEEP_TRIANGLES`]: a level drawn where one was tried is that
+    /// drawing, unless the cap on its sticks takes wood away.
+    kept: HashMap<u64, Drawn<'a>>,
 }
+
+/// The most triangles a tried drawing may hold to be kept for the level
+/// drawn at its dial: drawing a 30-year Douglas fir between its first and
+/// second levels took 28 seconds, once to try it and again to write it.
+const KEEP_TRIANGLES: usize = 4_000_000;
 
 impl<'a> Trials<'a> {
     fn detail(&self, dial: f64) -> Detail {
@@ -740,6 +749,10 @@ impl<'a> Trials<'a> {
         let drawing = self.draw(dial);
         let triangles = drawing.triangles(self.inputs);
         self.tried.insert(dial.to_bits(), (triangles, None));
+        if triangles <= KEEP_TRIANGLES {
+            self.kept.insert(dial.to_bits(), drawing);
+            return (triangles, None);
+        }
         (triangles, Some(drawing))
     }
 
@@ -753,7 +766,18 @@ impl<'a> Trials<'a> {
         if let Some(&(_, Some(bytes))) = self.tried.get(&dial.to_bits()) {
             return Ok(bytes);
         }
-        let drawing = drawn.unwrap_or_else(|| self.draw(dial));
+        let fresh;
+        let drawing = match (drawn, self.kept.get(&dial.to_bits())) {
+            (Some(drawing), _) => {
+                fresh = drawing;
+                &fresh
+            }
+            (None, Some(kept)) => kept,
+            (None, None) => {
+                fresh = self.draw(dial);
+                &fresh
+            }
+        };
         let bytes = drawing
             .file(
                 self.inputs,
@@ -816,6 +840,7 @@ fn budgeted(
         rig,
         drawn: staged.as_ref().unwrap_or(&plant.graph),
         tried: HashMap::new(),
+        kept: HashMap::new(),
     };
     // Tiers: shares of the nearest level's triangles as the package
     // draws it.
@@ -891,13 +916,21 @@ fn budgeted(
     let mut files: Vec<Level> = Vec::with_capacity(LEVELS);
     let mut finer = None;
     for (level, dial) in dials.into_iter().enumerate() {
-        let drawing = Drawn::at(
-            trials.drawn,
-            inputs,
-            trials.plant.seed,
-            trials.detail(dial),
-            finer,
-        );
+        // The drawing tried at this dial, as `Drawn::at` draws it while
+        // the cap on its sticks takes nothing away (`package::level_mesh`).
+        let drawing = trials
+            .kept
+            .remove(&dial.to_bits())
+            .filter(|tried| finer.is_none_or(|most| tried.mesh.wood.triangle_count() <= most))
+            .unwrap_or_else(|| {
+                Drawn::at(
+                    trials.drawn,
+                    inputs,
+                    trials.plant.seed,
+                    trials.detail(dial),
+                    finer,
+                )
+            });
         finer = Some(drawing.mesh.wood.triangle_count());
         let mut written = drawing.file(inputs, plant, settings, rig, level, file(level))?;
         let (drawn, bytes) = (written.summary.triangles, written.glb.len());
