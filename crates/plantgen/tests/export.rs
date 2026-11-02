@@ -742,3 +742,32 @@ fn a_lacy_herbs_low_tier_is_its_baked_cards() {
     let again = export::export(&inputs, &plant, &settings, None).unwrap();
     assert_eq!(again.levels[3].glb, low.glb);
 }
+
+#[test]
+fn a_chollas_far_levels_draw_its_joints_coarser() {
+    // A pencil cholla's thousand joints drew 242 000 triangles on the
+    // second level and 95 000 on the farthest; the far levels now coarsen
+    // a body as the near ones do, to their own budget.
+    let spec = PlantSpec::builtin("cylindropuntia-leptocaulis").unwrap();
+    let inputs = Inputs::new(&spec, &quality::STANDARD).unwrap();
+    let library = plantgen::library::Library::builtin();
+    let variant = export::typical_variant(&spec, library);
+    let plant = export::grow(&inputs, variant, export::oldest_age(&spec)).unwrap();
+    let skin = |level: usize| {
+        let mut mesh = plantgen::mesh::PlantMesh::default();
+        plantgen::body::build(
+            &plant.graph,
+            &inputs.bodies,
+            inputs.looks.len(),
+            level,
+            &mut mesh,
+        );
+        mesh.wood.triangle_count()
+    };
+    let (second, farthest) = (skin(2), skin(3));
+    assert!(second <= 40_000, "{second}");
+    assert!(
+        farthest <= 20_000 && farthest < second,
+        "{farthest} against {second}"
+    );
+}
