@@ -1425,4 +1425,9 @@ pub mod venation;
 /// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
 /// An export's low tier keeps a plant of bodies solid while it is within
 /// twice the tier's most, as baked cards draw its joints as scraps.
-pub const GENERATOR_REVISION: u32 = 183;
+/// 188: the card tiers draw no midrib lines for leaflets within a leaf,
+/// whose leaf's card hides them (`crate::billboards`): a fishtail palm's
+/// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
+/// 914, with no change in what they show. (184 to 187 are #306, #315,
+/// #316, #318 and #319, renumbered in landing order.)
+pub const GENERATOR_REVISION: u32 = 188;

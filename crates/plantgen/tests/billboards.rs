@@ -532,3 +532,17 @@ fn a_peyotes_spines_and_wool_are_drawn_on_its_body() {
         );
     }
 }
+
+#[test]
+fn a_palms_leaflets_draw_no_lines_under_their_fronds_cards() {
+    // A fishtail palm's leaflets lie along its fronds' rachises and are
+    // baked onto the fronds' cards. Their midribs drawn as lines too lay
+    // under those cards: 936 of the low tier's 1,632 triangles, unseen.
+    let (_, _, plants) = carded("caryota-mitis");
+    let low = &plants[0].stats;
+    assert!(
+        low.wood_triangles <= 400,
+        "the low tier's wood takes {} triangles",
+        low.wood_triangles
+    );
+}
