@@ -202,7 +202,7 @@ Usage:
                 [--size PIXELS] [--quality draft|standard]
                 [--focus X,Y,Z [--span METRES]] [--parts on]
                 [--conditions FILE|JSON [--from-age N]]
-                [--break snap|WIND|bone:N [--fallen off]]
+                [--break snap|WIND|bone:N [--fallen off]] [--leaves off]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
@@ -222,7 +222,12 @@ Usage:
       draws it broken where plantc breakage finds it fails: snap at its
       stem's weakest section, WIND at every site a steady wind of WIND m/s
       at 10 m breaks, bone:N at bone N's weakest site; torn stubs stay on
-      it and the pieces lie on the ground, unless --fallen off.
+      it and the pieces lie on the ground, unless --fallen off. A
+      branch under half its stem's thickness breaks at its collar, a
+      thicker one splits out with a strip of the stem; tough wood often
+      breaks hinged, the piece hanging from its break. --leaves off
+      draws the wood alone (cards and tufts left out), to see wounds
+      the foliage hides.
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
       print each one's size at the end and where its leaves lean. The
@@ -2685,6 +2690,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "from-age",
             "break",
             "fallen",
+            "leaves",
         ],
     )?;
     let day = options.day()?;
@@ -2719,6 +2725,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         None | Some("on") => true,
         Some("off") => false,
         Some(other) => return Err(format!("`--fallen` must be on or off, found `{other}`").into()),
+    };
+    let leaves = match options.flags.get("leaves").map(String::as_str) {
+        None | Some("on") => true,
+        Some("off") => false,
+        Some(other) => return Err(format!("`--leaves` must be on or off, found `{other}`").into()),
     };
     let quality = options.quality()?;
     let lod = quality.lods.get(level).ok_or("`--lod` must be 0 to 3")?;
@@ -2816,6 +2827,11 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         )
     };
     plant.vary_by_plant(&looks, seed);
+    if !leaves {
+        // The wood alone, to see what foliage hides: a break's wounds.
+        plant.cards.clear();
+        plant.tufts.clear();
+    }
     // A guest is drawn on its host (plant forms F7), unless `--alone`.
     // Neither has fleshy bodies, so the templates are the organs' alone.
     let mut on = false;
@@ -2934,6 +2950,7 @@ fn broken_mesh(
     let at = |site: &plantgen::breakage::Site| Break {
         segment: found.beams.segment[site.beam as usize],
         toward: Vec3::new(site.direction[0], site.direction[1], site.direction[2]),
+        wind: site.wind.unwrap_or(0.0),
     };
     let breaks: Vec<Break> = if how == "snap" {
         let failure = &broken.failure;
@@ -2975,11 +2992,29 @@ fn broken_mesh(
         });
         chosen
             .into_iter()
-            .map(|site| Break { toward, ..at(site) })
+            .map(|site| Break {
+                toward,
+                wind,
+                ..at(site)
+            })
             .collect()
     };
-    let damaged = damage::apply(graph, &breaks);
     let toughness = Toughness::of_traits(&traits);
+    let damaged = damage::apply(graph, &breaks, toughness, &motion.drag);
+    let mut tears = [0_usize; 3];
+    for how in &damaged.tears {
+        tears[match how {
+            damage::Tear::Clean => 0,
+            damage::Tear::Hinged => 1,
+            damage::Tear::Split => 2,
+        }] += 1;
+    }
+    out!(
+        "tears: {} clean, {} hinged, {} split out of their stems",
+        tears[0],
+        tears[1],
+        tears[2]
+    );
     let grain = Grain {
         sapwood: Grain::SAPWOOD,
         heartwood: None,

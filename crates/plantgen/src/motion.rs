@@ -39,7 +39,7 @@ use crate::mesh::{Mesh, PlantMesh};
 
 /// The motion objects' revision: a change to what they hold or how they
 /// are computed moves it, and with it the key of every motion package.
-pub const MECHANICS_REVISION: u32 = 4;
+pub const MECHANICS_REVISION: u32 = 5;
 
 /// The bone a vertex or card the ground bears is bound to.
 pub const GROUND: u32 = 0xFFFF;
