@@ -502,6 +502,27 @@ fn a_carrots_card_tiers_keep_its_pale_stem_and_its_umbel() {
 }
 
 #[test]
+fn a_yarrows_card_tiers_keep_its_tone_from_the_side() {
+    // Its leaves' midribs were lit as round stems facing out from the
+    // plant's middle, and its solid corymbs were cones as deep as they
+    // were broad, lit as their faces with a normal straight down at the
+    // foot: from the side the low cards drew 0.75 as bright as the plant
+    // and the corymbs half their cover. Each line is lit as its blade
+    // faces now, and each corymb's cone is as deep as its cover from the
+    // side says.
+    for tier in &TIERS {
+        let (whole, carded) = full_and_tier("achillea-millefolium", tier);
+        let ratio = carded.tone[0] / whole.tone[0];
+        println!("{}: tone from the side {ratio:.2}", tier.name);
+        assert!(
+            ratio >= 0.88,
+            "{}: from the side the cards draw {ratio:.2} as bright as the plant",
+            tier.name
+        );
+    }
+}
+
+#[test]
 fn tubercled_bodies_keep_their_tone_on_the_cards() {
     // Smooth where the plant is all mounds, a living rock's and a
     // pincushion's coarse bodies took the sun their tubercles shade each
