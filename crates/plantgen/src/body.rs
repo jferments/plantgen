@@ -813,16 +813,19 @@ enum Spines {
 
 /// Most triangles a plant's skin may take at each level before it is
 /// drawn coarser (see `build`): about what a tall conifer's wood takes at
-/// LOD0.
-const SKIN_TRIANGLES: [usize; 4] = [300_000, 120_000, usize::MAX, usize::MAX];
+/// LOD0, and on the far levels about what a tree's whole drawing takes
+/// there. A cholla's thousand joints drew 242,000 triangles on the second
+/// level and 95,000 on the farthest, where a Douglas fir draws 5,000.
+const SKIN_TRIANGLES: [usize; 4] = [300_000, 120_000, 30_000, 6_000];
 const MIN_PER_TUBERCLE: f64 = 1.5;
 /// Most a plant over its budget stretches a level's ring step and the
 /// turn and change of radius between rings, the fewest rings it leaves
 /// over a dome or a rounded foot, and the fewest vertices round a smooth
-/// ring.
-const MAX_RING_STRETCH: f64 = 2.0;
-const MIN_CAP_RINGS: u32 = 3;
-const MIN_SMOOTH_SIDES: u32 = 12;
+/// ring, at each level: a far level draws a joint a few pixels wide, as
+/// a five-sided tube of a ring or two.
+const MAX_RING_STRETCH: [f64; 4] = [2.0, 2.0, 4.0, 6.0];
+const MIN_CAP_RINGS: [u32; 4] = [3, 3, 1, 1];
+const MIN_SMOOTH_SIDES: [u32; 4] = [12, 12, 6, 5];
 /// How much less the far levels' spine tint covers deep in a rib valley
 /// than on a crest, where the areoles stand.
 const VALLEY_SHOWS: f64 = 0.5;
@@ -2197,9 +2200,14 @@ pub fn build_between(
             .get(axis.body)
             .is_some_and(|look| look.tubercles.is_some() && look.areoles.spacing > 0.0)
     });
-    let longest = detail.ring_step * MAX_RING_STRETCH;
-    let turns = detail.max_turn * MAX_RING_STRETCH;
-    let changes = detail.max_change * MAX_RING_STRETCH;
+    let (stretch, least_caps, least_sides) = (
+        MAX_RING_STRETCH[level],
+        MIN_CAP_RINGS[level],
+        MIN_SMOOTH_SIDES[level],
+    );
+    let longest = detail.ring_step * stretch;
+    let turns = detail.max_turn * stretch;
+    let changes = detail.max_change * stretch;
     // Each way in turn, until it is spent or stops paying.
     let mut way = u8::from(!tubercled);
     let mut last = usize::MAX;
@@ -2222,9 +2230,9 @@ pub fn build_between(
                 detail.per_tubercle =
                     (detail.per_tubercle / math::sqrt(over)).max(MIN_PER_TUBERCLE);
             }
-            0 | 1 if detail.cap_rings > MIN_CAP_RINGS => {
+            0 | 1 if detail.cap_rings > least_caps => {
                 way = 1;
-                detail.cap_rings = fewer(detail.cap_rings, MIN_CAP_RINGS);
+                detail.cap_rings = fewer(detail.cap_rings, least_caps);
             }
             0..=2 if detail.ring_step < longest => {
                 way = 2;
@@ -2232,9 +2240,9 @@ pub fn build_between(
                 detail.max_turn = (detail.max_turn * over).min(turns);
                 detail.max_change = (detail.max_change * over).min(changes);
             }
-            0..=3 if detail.smooth_sides > MIN_SMOOTH_SIDES => {
+            0..=3 if detail.smooth_sides > least_sides => {
                 way = 3;
-                detail.smooth_sides = fewer(detail.smooth_sides, MIN_SMOOTH_SIDES);
+                detail.smooth_sides = fewer(detail.smooth_sides, least_sides);
             }
             0..=4 if detail.per_rib > 2 => {
                 way = 4;

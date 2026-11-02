@@ -1417,4 +1417,11 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-pub const GENERATOR_REVISION: u32 = 182;
+/// 183: a fleshy body's far levels coarsen it to a budget as the near
+/// levels do (30 000 and 6 000 triangles of skin), down to five-sided
+/// rings a few apart with one ring over a dome: a pencil cholla's skin
+/// drew 242 000 triangles on the third level and 95 000 on the farthest,
+/// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
+/// An export's low tier keeps a plant of bodies solid while it is within
+/// twice the tier's most, as baked cards draw its joints as scraps.
+pub const GENERATOR_REVISION: u32 = 183;

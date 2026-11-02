@@ -99,10 +99,13 @@ lists it). A lacy herb's own cards thin to nothing drawn that small, and
 baked ones keep its outline. Cards that a PlantGen package turns to the
 eye stand fixed in a file, as a star of three.
 
-Some plants cannot reach every tier yet: a cactus whose skin and spines
-are drawn in big steps keeps a much coarser mid (Graham's fishhook
-cactus: 136k triangles high, 394 mid), and a cholla's many joints keep
-every farther tier at its coarsest drawing (about 95k).
+A plant of fleshy bodies (a cholla, a prickly pear) keeps its solid
+drawing as its low tier while that is within twice the tier's most,
+since cards draw its joints as scraps. Some plants cannot reach every
+tier yet: a small cactus's skin and spines are drawn in big steps, so its
+mid is much coarser than its share (Graham's fishhook cactus: 136k
+triangles high, 394 mid, which still keeps its outline), and a pencil
+cholla's thousand joints keep its mid and low at about 16k.
 
 ## Seeds and variants
 
