@@ -80,7 +80,7 @@ fn above_ground(eye: Vec3) -> Vec3 {
 }
 
 pub const SKY: [f32; 3] = [0.52, 0.62, 0.74];
-const GROUND: [f32; 3] = [0.16, 0.19, 0.11];
+pub const GROUND: [f32; 3] = [0.16, 0.19, 0.11];
 
 /// How many times brighter than the lighting gives the previews draw lit
 /// surfaces against the fixed [`SKY`], as a camera exposes for a sunlit
@@ -249,7 +249,21 @@ pub fn render_with(
     templates: &Templates,
     options: &PreviewOptions,
 ) -> Image {
-    render_on(plant, extra, templates, options, true)
+    render_on(plant, extra, templates, options, Some(&ground))
+}
+
+/// [`render_with`] on ground of the caller's: `ground(half)` gives it
+/// reaching `half` m round the plant, the preview's colour
+/// ([`GROUND`]) where it has nothing else to show (a pit in it).
+#[must_use]
+pub fn render_over(
+    plant: &PlantMesh,
+    extra: &[(&Mesh, Material)],
+    templates: &Templates,
+    options: &PreviewOptions,
+    ground: &dyn Fn(f64) -> Mesh,
+) -> Image {
+    render_on(plant, extra, templates, options, Some(ground))
 }
 
 /// [`render_with`] on no ground of its own: the plants of a site stand on
@@ -261,7 +275,7 @@ pub fn render_on_site(
     templates: &Templates,
     options: &PreviewOptions,
 ) -> Image {
-    render_on(plant, extra, templates, options, false)
+    render_on(plant, extra, templates, options, None)
 }
 
 #[allow(clippy::too_many_lines)]
@@ -270,7 +284,7 @@ fn render_on(
     extra: &[(&Mesh, Material)],
     templates: &Templates,
     options: &PreviewOptions,
-    with_ground: bool,
+    with_ground: Option<&dyn Fn(f64) -> Mesh>,
 ) -> Image {
     let solid = !plant.tufts.is_empty() && !templates.bodies.is_empty();
     let cards = if solid {
@@ -334,10 +348,10 @@ fn render_on(
     let half_width = f64::midpoint(right, reach);
     let distance = (height * 0.5 / half_fov).max(half_width / (half_fov * aspect)) * 1.12 + reach;
     // Ground far past the frame, so its edge never shows below the horizon.
-    let ground_mesh = ground((distance * 30.0).max(200.0));
+    let ground_mesh = with_ground.map(|ground| ground((distance * 30.0).max(200.0)));
     let mut meshes = Vec::new();
-    if with_ground {
-        meshes.push((&ground_mesh, Material::Opaque));
+    if let Some(ground_mesh) = &ground_mesh {
+        meshes.push((ground_mesh, Material::Opaque));
     }
     if options.figure && options.focus.is_none() {
         meshes.push((&figure_mesh, Material::Opaque));
