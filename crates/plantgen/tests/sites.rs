@@ -282,6 +282,9 @@ fn paved_garden() -> SiteMesh {
         top_m: 0.0,
         thickness_m: 0.08,
         base_m: 0.2,
+        base_rootable: None,
+        subgrade_m: None,
+        subgrade_rootable: None,
         surface: "asphalt".into(),
         cell_m: None,
         cracks: vec![Crack {
@@ -340,4 +343,103 @@ fn a_grass_comes_up_through_a_crack_and_nothing_roots_on_sound_slab() {
     let intrusion = conditions.intrusion(graph).unwrap();
     assert_eq!(intrusion.segments_in_solids, 0, "{}", intrusion.describe());
     assert!(intrusion.deepest_m <= 0.045, "{}", intrusion.describe());
+}
+
+/// The garden's ground paved 10 m across, a crack along z = 2.
+fn paved_lot() -> SiteMesh {
+    paved_lot_on(None, None)
+}
+
+/// The same, on a subgrade that deep and that rootable.
+fn paved_lot_on(subgrade_m: Option<f64>, subgrade_rootable: Option<f64>) -> SiteMesh {
+    use plantgen::pavement::{Crack, CrackTile, Pavement};
+    let mut site = garden();
+    let tile = CrackTile {
+        version: 1,
+        origin_m: [-5.0, -3.0],
+        size_m: [10.0, 8.0],
+        top_m: 0.0,
+        thickness_m: 0.08,
+        base_m: 0.2,
+        base_rootable: None,
+        subgrade_m,
+        subgrade_rootable,
+        surface: "asphalt".into(),
+        cell_m: None,
+        cracks: vec![Crack {
+            points_m: vec![[-4.0, 2.0], [4.0, 2.0]],
+            width_m: vec![0.01, 0.01],
+            fill_m: vec![0.04, 0.04],
+        }],
+        holes: Vec::new(),
+        made_by: None,
+    };
+    site.add_pavement(Pavement::new(&tile).unwrap());
+    site
+}
+
+/// Grows `species` at `foot` on `site` for `years`, its roots held to the
+/// soil the site gives them when `rooted`, and gives its height and its
+/// organs' count.
+fn grown_at(site: &SiteMesh, species: &str, foot: Vec3, years: f64, rooted: bool) -> (f64, usize) {
+    let spec = PlantSpec::builtin(species).unwrap();
+    let (program, params) = spec.program().unwrap();
+    let seed = spec.variants.seeds[0];
+    let cut = Cut::for_plant(2.0, 1.0);
+    let mut conditions = Conditions::preset(Environment::Open);
+    conditions.substrate = Some(site.substrate_round(foot, cut).unwrap());
+    if rooted {
+        conditions.rooting = site.rooting(foot);
+        assert!(conditions.rooting.is_some(), "no rooting table at {foot:?}");
+    }
+    let growth = grow(
+        &program,
+        &spec.seeded_params(&program, &params, seed),
+        &GrowthSettings {
+            seed,
+            dt: spec.growth.step,
+            years,
+            keyframes: vec![years],
+            conditions,
+            limits: Limits::default(),
+            host: None,
+        },
+    )
+    .unwrap();
+    let graph = &growth.keyframes[0];
+    (graph.height, graph.organs.len())
+}
+
+#[test]
+fn plants_rooted_in_a_crack_stay_smaller_than_in_open_ground() {
+    // Soil depth design D1: a crack holds a few litres of grit, and under
+    // it the base and the compacted subgrade let roots use little of their
+    // volume, so a plant in it grows as one short of water does.
+    let site = paved_lot();
+    let (y, _) = site.footing(0.0, 2.003, None).unwrap();
+    let crack = Vec3::new(0.0, y, 2.003);
+    let rooting = site.rooting(crack).unwrap();
+    // The crack's grit and the base: far less than open ground's.
+    let near = rooting.volume(0.2, 0.4);
+    let open = std::f64::consts::PI * 0.2 * 0.2 * 0.4;
+    assert!(near < 0.25 * open, "{near} m³ against {open}");
+    assert!(site.rooting(Vec3::new(0.0, 0.0, 5.5)).is_none());
+    // A grass in the street's crack; a tree in one in a lot laid on deep
+    // compacted fill, through which its roots reach little.
+    let lot = paved_lot_on(Some(2.0), Some(0.01));
+    for (species, years, site) in [
+        ("dactylis-glomerata", 3.0, &site),
+        ("alnus-rubra", 4.0, &lot),
+    ] {
+        let (free, free_organs) = grown_at(site, species, crack, years, false);
+        let (held, held_organs) = grown_at(site, species, crack, years, true);
+        eprintln!(
+            "{species}: {free:.2} m, {free_organs} organs free; {held:.2} m, {held_organs} organs in its crack"
+        );
+        assert!(
+            held < 0.8 * free,
+            "{species}: {held:.2} m in the crack, {free:.2} m free"
+        );
+        assert!(held_organs < free_organs, "{species}");
+    }
 }

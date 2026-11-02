@@ -189,6 +189,13 @@ pub enum Var {
     Age,
     /// Index of the derivation step.
     Step,
+    /// `tg`: the years the plant has grown, `t` less the years its soil
+    /// held it back (`soil@1`, soil depth design D1); `t` without that.
+    Tg,
+    /// `rs`: the soil the plant's roots reach over what its size needs, 0
+    /// to 1, at the last step (`soil@1`); 1 without the tool or with soil
+    /// as deep as roots go.
+    Rs,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -386,6 +393,10 @@ pub struct Scope<'a> {
     pub env: &'a EnvValues,
     pub t: f64,
     pub dt: f64,
+    /// Years of growth the soil has held the plant back by ([`Var::Tg`]).
+    pub lag: f64,
+    /// The plant's soil supply over its demand ([`Var::Rs`]).
+    pub rs: f64,
     pub age: f64,
     pub step: f64,
     /// Key of every random draw: the module's lineage and, for productions,
@@ -437,6 +448,8 @@ pub fn eval(code: &Code, scope: &Scope<'_>, stack: &mut Vec<f64>) -> f64 {
                 Var::Dt => scope.dt,
                 Var::Age => scope.age,
                 Var::Step => scope.step,
+                Var::Tg => scope.t - scope.lag,
+                Var::Rs => scope.rs,
             },
             Op::Env(field) => scope.env[field as usize],
             Op::Neg => -pop(stack),
@@ -510,6 +523,8 @@ mod tests {
             env: &NO_ENV,
             t: 5.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
             age: 2.0,
             step: 5.0,
             key: 42,

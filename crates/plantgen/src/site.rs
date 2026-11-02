@@ -93,6 +93,10 @@ impl Surface {
     }
 }
 
+/// The reaches and depths, metres, a site's [`SiteMesh::rooting`] table
+/// gives the rootable soil at.
+pub const ROOTING_REACHES: [f64; 9] = [0.02, 0.05, 0.1, 0.2, 0.4, 0.8, 1.6, 3.2, 6.4];
+
 /// A site's mesh: triangles with a substrate material each.
 #[derive(Debug, Clone)]
 pub struct SiteMesh {
@@ -306,6 +310,87 @@ impl SiteMesh {
     #[must_use]
     pub fn pavements(&self) -> &[Pavement] {
         &self.pavements
+    }
+
+    /// The soil a plant at `foot` can root in, as a [`Rooting`] table
+    /// (soil depth design D1), when it stands on a paved tile; `None`
+    /// elsewhere, where the soil is as deep as roots go. Over a tile the
+    /// ground counts as [`Pavement::column`] gives it, off it the ground's
+    /// soil counts whole down from its surface, and anything else nothing.
+    ///
+    /// [`Rooting`]: crate::conditions::Rooting
+    #[must_use]
+    #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
+    pub fn rooting(&self, foot: Vec3) -> Option<crate::conditions::Rooting> {
+        // The tile the foot stands in: in a crack or hole, below its top.
+        let tile = self
+            .pavements
+            .iter()
+            .find(|tile| tile.covers(foot.x, foot.z) && foot.y <= tile.top() + 1.0e-6)?;
+        let radii = ROOTING_REACHES.to_vec();
+        let depths = ROOTING_REACHES.to_vec();
+        let mut ring = vec![0.0; radii.len() * depths.len()];
+        let mut add = |x: f64, z: f64, area: f64| {
+            let distance = (x - foot.x).hypot(z - foot.z);
+            let Some(r) = radii.iter().position(|r| distance <= *r) else {
+                return;
+            };
+            let column = self
+                .pavements
+                .iter()
+                .find_map(|t| t.covers(x, z).then(|| t.column(x, z)).flatten());
+            let column = column.unwrap_or_else(|| match self.ground_at(x, z, Some(foot.y + 1.0)) {
+                Some((y, SOIL)) => vec![(y, f64::NEG_INFINITY, 1.0)],
+                _ => Vec::new(),
+            });
+            for (d, depth) in depths.iter().enumerate() {
+                let low = foot.y - depth;
+                let rootable: f64 = column
+                    .iter()
+                    .map(|&(top, bottom, share)| {
+                        (top.min(foot.y) - bottom.max(low)).max(0.0) * share
+                    })
+                    .sum();
+                ring[r * depths.len() + d] += rootable * area;
+            }
+        };
+        // Near the foot at the tile's own cells, so a crack counts as it
+        // is; farther out on a coarser grid, which is right on average.
+        let near = 0.4;
+        let fine = tile.cell();
+        let n = (near / fine).round() as i64;
+        for k in -n..n {
+            for i in -n..n {
+                let x = foot.x + (i as f64 + 0.5) * fine;
+                let z = foot.z + (k as f64 + 0.5) * fine;
+                add(x, z, fine * fine);
+            }
+        }
+        let coarse = 0.04;
+        let far = radii[radii.len() - 1];
+        let m = (far / coarse).ceil() as i64;
+        for k in -m..m {
+            for i in -m..m {
+                let (dx, dz) = ((i as f64 + 0.5) * coarse, (k as f64 + 0.5) * coarse);
+                if dx.abs() < near && dz.abs() < near {
+                    continue;
+                }
+                add(foot.x + dx, foot.z + dz, coarse * coarse);
+            }
+        }
+        // Cumulative over the reaches.
+        let columns = depths.len();
+        for r in 1..radii.len() {
+            for d in 0..columns {
+                ring[r * columns + d] += ring[(r - 1) * columns + d];
+            }
+        }
+        Some(crate::conditions::Rooting {
+            version: 1,
+            radii_m: radii,
+            depths_m: depths,
+            volume_m3: ring,
+        })
     }
 
     /// The tile under (`x`, `z`) whose surface is at or below `below`.

@@ -36,6 +36,20 @@ use crate::substrate::{AIR, BUILT, ROCK, SOIL};
 /// The crack tile's schema.
 pub const CRACK_TILE_VERSION: u32 = 1;
 
+/// Share of a compacted gravel base a root can use, when the tile does not
+/// say. Roots under pavement keep mostly to the seam between the slab and
+/// the base and to voids in it, and road bases are compacted past what
+/// roots enter elsewhere; a fifth is this crate's first estimate, to be
+/// checked against sources (soil depth design D1).
+pub const BASE_ROOTABLE: f64 = 0.2;
+/// Depth of compacted subgrade under a base when the tile does not say;
+/// first estimate, to check.
+pub const SUBGRADE_M: f64 = 0.3;
+/// Share of compacted subgrade a root can use when the tile does not say;
+/// first estimate, to check. Native soil below counts no more, since roots
+/// reach it only through the subgrade.
+pub const SUBGRADE_ROOTABLE: f64 = 0.05;
+
 /// Most cells a tile may rasterise to.
 pub const MAX_PAVEMENT_CELLS: usize = 16_000_000;
 
@@ -56,6 +70,18 @@ pub struct CrackTile {
     /// Depth of the gravel base under the slab, above the soil.
     #[serde(default)]
     pub base_m: f64,
+    /// Share of the base's volume a root can use (soil depth design D1);
+    /// [`BASE_ROOTABLE`] when left out.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub base_rootable: Option<f64>,
+    /// Depth of the compacted subgrade under the base, above native soil;
+    /// [`SUBGRADE_M`] when left out.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub subgrade_m: Option<f64>,
+    /// Share of the subgrade's volume a root can use;
+    /// [`SUBGRADE_ROOTABLE`] when left out.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub subgrade_rootable: Option<f64>,
     /// The paving, for its colour: `asphalt`, `concrete`, `brick` or `gravel`.
     #[serde(default = "asphalt")]
     pub surface: String,
@@ -144,6 +170,15 @@ impl CrackTile {
         finite("top_m", self.top_m, -1.0e4, 1.0e4)?;
         finite("thickness_m", self.thickness_m, 0.005, 2.0)?;
         finite("base_m", self.base_m, 0.0, 5.0)?;
+        for (name, value, high) in [
+            ("base_rootable", self.base_rootable, 1.0),
+            ("subgrade_m", self.subgrade_m, 10.0),
+            ("subgrade_rootable", self.subgrade_rootable, 1.0),
+        ] {
+            if let Some(value) = value {
+                finite(name, value, 0.0, high)?;
+            }
+        }
         if let Some(cell) = self.cell_m {
             finite("cell_m", cell, 0.002, 0.1)?;
         }
@@ -200,8 +235,14 @@ pub struct Pavement {
     thickness: f64,
     base: f64,
     colour: [f32; 3],
+    base_rootable: f64,
+    subgrade: f64,
+    subgrade_rootable: f64,
     /// Height of the soil in each open cell; NaN where the slab is sound.
     soil_top: Vec<f32>,
+    /// Height of the bottom of each open cell's opening: the slab's bottom
+    /// under a crack, a hole's own bottom; NaN where sound.
+    floor: Vec<f32>,
     /// Share of each open cell the opening takes (a 4 mm crack in a 1 cm
     /// cell, 0.4); 0 where sound.
     share: Vec<f32>,
@@ -252,6 +293,7 @@ impl Pavement {
         }
         let total = nx * nz;
         let mut soil_top = vec![f32::NAN; total];
+        let mut floor = vec![f32::NAN; total];
         let mut share = vec![0.0_f32; total];
         let [ox, oz] = tile.origin_m;
         let bottom = tile.top_m - tile.thickness_m;
@@ -260,10 +302,14 @@ impl Pavement {
         let to_cell = |v: f64, low: f64, n: usize| -> usize {
             (((v - low) / cell).floor().max(0.0) as usize).min(n - 1)
         };
-        let mut open = |at: usize, top: f64, part: f64| {
+        let mut open = |at: usize, top: f64, low: f64, part: f64| {
             let top = top.min(tile.top_m) as f32;
             if soil_top[at].is_nan() || top > soil_top[at] {
                 soil_top[at] = top;
+            }
+            let low = low as f32;
+            if floor[at].is_nan() || low < floor[at] {
+                floor[at] = low;
             }
             share[at] = share[at].max(part.clamp(0.0, 1.0) as f32);
         };
@@ -300,7 +346,7 @@ impl Pavement {
                         // line passes through, for the share it takes.
                         if gap <= (width * 0.5).max(cell * 0.5) + 1.0e-9 {
                             let fill = fa + (fb - fa) * t;
-                            open(k * nx + i, bottom + fill, width / cell);
+                            open(k * nx + i, bottom + fill, bottom, width / cell);
                         }
                     }
                 }
@@ -324,7 +370,7 @@ impl Pavement {
                 for i in to_cell(low_x, ox, nx)..=to_cell(high_x, ox, nx) {
                     let (x, z) = centre(i, k);
                     if inside_polygon(&hole.outline_m, x, z) {
-                        open(k * nx + i, soil, 1.0);
+                        open(k * nx + i, soil, tile.top_m - hole.depth_m, 1.0);
                     }
                 }
             }
@@ -342,7 +388,11 @@ impl Pavement {
             thickness: tile.thickness_m,
             base: tile.base_m,
             colour: paving_colour(&tile.surface),
+            base_rootable: tile.base_rootable.unwrap_or(BASE_ROOTABLE),
+            subgrade: tile.subgrade_m.unwrap_or(SUBGRADE_M),
+            subgrade_rootable: tile.subgrade_rootable.unwrap_or(SUBGRADE_ROOTABLE),
             soil_top,
+            floor,
             share,
             to_open,
             nearest_open,
@@ -433,6 +483,49 @@ impl Pavement {
         } else {
             (f64::from(soil), SOIL)
         })
+    }
+
+    /// The rootable share of the ground under (`x`, `z`) by height (soil
+    /// depth design D1): layers from the top down as (top, bottom, share),
+    /// the last reaching down for ever. The slab counts nothing, the soil
+    /// in an opening counts for the share of the cell the opening takes,
+    /// the base and the compacted subgrade count their rootable shares,
+    /// and native soil below counts no more than the least of those, since
+    /// roots reach it only through them. `None` off the tile.
+    #[must_use]
+    pub fn column(&self, x: f64, z: f64) -> Option<Vec<(f64, f64, f64)>> {
+        let at = self.cell_of(x, z)?;
+        let slab_bottom = self.top - self.thickness;
+        let base_bottom = slab_bottom - self.base;
+        let subgrade_bottom = base_bottom - self.subgrade;
+        let mut layers = Vec::with_capacity(4);
+        let mut from = slab_bottom;
+        if !self.soil_top[at].is_nan() {
+            let soil = f64::from(self.soil_top[at]);
+            let low = f64::from(self.floor[at]);
+            if soil > low {
+                layers.push((soil, low, f64::from(self.share[at])));
+            }
+            from = from.min(low);
+        }
+        if from > base_bottom {
+            layers.push((from, base_bottom, self.base_rootable));
+        }
+        let from = from.min(base_bottom);
+        if from > subgrade_bottom {
+            layers.push((from, subgrade_bottom, self.subgrade_rootable));
+        }
+        // Roots reach the ground below only through what they passed, so
+        // native soil under the subgrade counts no more than the least
+        // rootable layer above it.
+        let passed = self.base_rootable.min(self.subgrade_rootable);
+        let passed = if self.base > 0.0 || self.subgrade > 0.0 {
+            passed
+        } else {
+            1.0
+        };
+        layers.push((from.min(subgrade_bottom), f64::NEG_INFINITY, passed));
+        Some(layers)
     }
 
     /// What lies at `p` and its signed distance to the pavement's surface
@@ -738,6 +831,9 @@ mod tests {
             top_m: 0.0,
             thickness_m: 0.08,
             base_m: 0.2,
+            base_rootable: None,
+            subgrade_m: None,
+            subgrade_rootable: None,
             surface: "asphalt".into(),
             cell_m: None,
             cracks: vec![Crack {
@@ -821,5 +917,22 @@ mod tests {
         let mut bad = tile();
         bad.surface = "marble".into();
         assert!(bad.validate().is_err());
+    }
+
+    #[test]
+    fn roots_find_nothing_in_the_slab_and_part_of_the_base() {
+        let pavement = Pavement::new(&tile()).unwrap();
+        let sound = pavement.column(0.3, 0.2).unwrap();
+        let near = |a: f64, b: f64| (a - b).abs() < 1.0e-6;
+        assert_eq!(sound.len(), 3);
+        assert!(near(sound[0].0, -0.08) && near(sound[0].1, -0.28));
+        assert!(near(sound[0].2, BASE_ROOTABLE));
+        assert!(near(sound[1].1, -0.28 - SUBGRADE_M));
+        assert!(sound[2].1.is_infinite() && near(sound[2].2, SUBGRADE_ROOTABLE));
+        // The hole's soil, 5 to 15 cm down, then the base below its bottom.
+        let hole = pavement.column(0.7, 0.8).unwrap();
+        assert!(near(hole[0].0, -0.05) && near(hole[0].1, -0.15) && near(hole[0].2, 1.0));
+        assert!(near(hole[1].0, -0.15) && near(hole[1].1, -0.28));
+        assert!(pavement.column(2.0, 0.5).is_none());
     }
 }

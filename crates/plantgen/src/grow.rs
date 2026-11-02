@@ -593,6 +593,8 @@ fn step_settings(
         env: &crate::lsys::expr::NO_ENV,
         t: clock.t,
         dt: clock.dt,
+        lag: clock.lag,
+        rs: clock.rs,
         age: 0.0,
         step: f64::from(clock.step),
         key: 0,
@@ -754,6 +756,12 @@ pub struct Grower<'a> {
     // What wood rests on: the substrate, or level soil without one.
     ground: std::sync::Arc<crate::substrate::SubstrateField>,
     sun: Option<f64>,
+    /// The soil the plant can root in, for `soil@1`.
+    soil: Option<crate::conditions::SoilVolume>,
+    /// Years of growth the soil has held the plant back by.
+    lag: f64,
+    /// Its soil supply over its demand at the last step.
+    rs: f64,
     steps: u32,
     keyframe_steps: Vec<u32>,
     organ_area: Vec<f64>,
@@ -813,6 +821,9 @@ impl<'a> Grower<'a> {
             substrate: None,
             ground: std::sync::Arc::new(crate::substrate::SubstrateField::flat()),
             sun: None,
+            soil: None,
+            lag: 0.0,
+            rs: 1.0,
             steps,
             keyframe_steps,
             organ_area,
@@ -885,6 +896,7 @@ impl<'a> Grower<'a> {
     /// Fails when the conditions' substrate is not a valid grid.
     pub fn set_conditions(&mut self, conditions: Conditions) -> Result<(), GrowthError> {
         self.substrate = substrate_field(&conditions)?.map(std::sync::Arc::new);
+        self.soil = conditions.soil_volume();
         // `rest` and `bend@1` lay wood on the substrate, or on level soil
         // without one, as substrate@1 reads it.
         self.ground = self
@@ -976,6 +988,8 @@ impl<'a> Grower<'a> {
             step,
             t: f64::from(step) * settings.dt,
             dt: settings.dt,
+            lag: self.lag,
+            rs: self.rs,
         };
         if let Some(layout) = self.layout {
             // Its neighbours' crowns are its own as the last step left it.
@@ -1071,6 +1085,7 @@ impl<'a> Grower<'a> {
             host: settings.host.as_deref(),
             substrate: self.substrate.as_deref(),
             sun: self.sun,
+            soil: self.soil.as_ref(),
         };
         let output = tools::run(
             program,
@@ -1125,6 +1140,14 @@ impl<'a> Grower<'a> {
             self.end(time);
             return Ok(false);
         }
+        // The soil held this year's growth back by 1 - rs of it.
+        self.lag += (1.0 - output.rs) * settings.dt;
+        self.rs = output.rs;
+        let clock = Clock {
+            lag: self.lag,
+            rs: self.rs,
+            ..clock
+        };
         self.string = self.deriver.derive(&self.string, &output.env, clock)?;
         Timer::lap(timer.as_mut(), &mut time.derive);
         if let Some(times) = &mut self.times {

@@ -154,6 +154,8 @@ fn settings(
         env: &NO_ENV,
         t: clock.t,
         dt: clock.dt,
+        lag: clock.lag,
+        rs: clock.rs,
         age: 0.0,
         step: f64::from(clock.step),
         key: hash_words(&[seed, SALT_SETTINGS]),
@@ -482,6 +484,8 @@ pub struct ToolOutput {
     pub env: Vec<(u32, EnvValues)>,
     /// Light at each organ (1 when there is no light tool).
     pub organ_light: Vec<f64>,
+    /// The plant's soil supply over its demand (`soil@1`); 1 without it.
+    pub rs: f64,
 }
 
 /// Run every configured tool on a scene.
@@ -601,6 +605,13 @@ pub fn run(
         .tool(ToolKind::Substrate)
         .map(|_| substrate_of(surroundings));
 
+    // Soil depth design D1: the soil the roots reach over what the plant's
+    // size needs, once for the whole plant.
+    let rs = program.tool(ToolKind::Soil).map_or(1.0, |config| {
+        let values = settings(config, globals, clock, seed, &mut stack);
+        soil_supply(scene, surroundings, &values)
+    });
+
     let mut env = Vec::with_capacity(scene.queries.len());
     for (index, query) in scene.queries.iter().enumerate() {
         let mut values = [0.0; ENV_FIELDS];
@@ -612,7 +623,7 @@ pub fn run(
         }
         if let Some(flux) = &flux {
             let node = query.node as usize;
-            values[EnvField::Vigour as usize] = flux.vigour[node];
+            values[EnvField::Vigour as usize] = flux.vigour[node] * rs;
             values[EnvField::Qsum as usize] = flux.light[node];
             values[EnvField::Nseg as usize] = f64::from(flux.segments[node]);
             values[EnvField::Ntip as usize] = f64::from(flux.tips[node]);
@@ -651,7 +662,61 @@ pub fn run(
         }
         env.push((query.module, values));
     }
-    Ok(ToolOutput { env, organ_light })
+    Ok(ToolOutput {
+        env,
+        organ_light,
+        rs,
+    })
+}
+
+/// The ratio of a plant's soil supply to its demand, 0 to 1, for
+/// `soil@1` with settings `[depth, spread, demand, height]` (soil depth
+/// design D1).
+///
+/// - The crown's radius `r` is the farthest any segment end or organ
+///   reaches sideways from the foot.
+/// - Roots reach out to `spread · r` and down `height` metres for each
+///   metre of the plant's height, at most `depth`. Tumber-Dávila et al.
+///   2022 (*New Phytologist* 235: 1032-1056) give a mean shoot height to
+///   rooting depth ratio of 0.654 for herbaceous plants (so 1.53 m of
+///   root per metre of shoot, the default) and, for woody plants, one
+///   above 1 wherever the climate is not dry; and a lateral root spread
+///   of about 2.2 times the crown's radius (their shoot to root radius
+///   ratio 0.44 for woody plants, 0.452 for herbaceous).
+/// - A crown needs `demand` cubic metres of rootable soil per square metre
+///   it covers: about 0.6 for trees, after Lindsey and Bassuk 1991
+///   (*Journal of Arboriculture* 17: 141-149).
+/// - It never needs more than open ground would give at that reach, so a
+///   seedling in deep soil is not slowed.
+///
+/// 1 when the surroundings say nothing of the soil, which is then as deep
+/// as roots go.
+fn soil_supply(scene: &Scene, surroundings: &dyn Surroundings, values: &[f64]) -> f64 {
+    let (depth, spread, demand, per_height) = (
+        values[0].max(0.0),
+        values[1].max(0.0),
+        values[2].max(0.0),
+        values[3].max(0.0),
+    );
+    let sideways = |p: Vec3| p.x.hypot(p.z);
+    let crown = scene
+        .segments
+        .iter()
+        .map(|segment| sideways(segment.end).max(sideways(segment.start)))
+        .chain(scene.organs.iter().map(|organ| sideways(organ.position)))
+        .fold(0.0_f64, f64::max);
+    let reach = spread * crown;
+    let down = (scene.height * per_height).min(depth);
+    if crown <= 0.0 || reach <= 0.0 || down <= 0.0 || demand <= 0.0 {
+        return 1.0;
+    }
+    let Some(supply) = surroundings.soil_volume(reach, down) else {
+        return 1.0;
+    };
+    let area = std::f64::consts::PI * crown * crown;
+    let open = std::f64::consts::PI * reach * reach * down;
+    let need = (demand * area).min(open);
+    (supply / need).clamp(0.0, 1.0)
 }
 
 /// Which nodes stand on a limb: a `[ ]` branch from an axis that goes on
@@ -3807,6 +3872,8 @@ pub fn organ_areas(program: &Program, globals: &[f64]) -> Result<Vec<f64>, Growt
                     env: &NO_ENV,
                     t: 0.0,
                     dt: 0.0,
+                    lag: 0.0,
+                    rs: 1.0,
                     age: 0.0,
                     step: 0.0,
                     key: 0,
@@ -3898,6 +3965,8 @@ mod tests {
             step: 0,
             t: 0.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         let scene = Interpreter::new(&program, &globals, &limits)
             .interpret(&string, clock)
@@ -3919,6 +3988,8 @@ mod tests {
             step: 0,
             t: 0.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         run(
             &setup.program,
@@ -4165,6 +4236,8 @@ mod tests {
             step: 0,
             t: 0.0,
             dt: 1.0,
+            lag: 0.0,
+            rs: 1.0,
         };
         let mut state = ToolState::default();
         let output = run(
@@ -4321,6 +4394,8 @@ mod tests {
                 step,
                 t: f64::from(step),
                 dt: 1.0,
+                lag: 0.0,
+                rs: 1.0,
             };
             settings(config, &[], clock, seed, stack)[1]
         };
@@ -4350,6 +4425,7 @@ mod tests {
             host: None,
             substrate,
             sun: None,
+            soil: None,
         }
     }
 

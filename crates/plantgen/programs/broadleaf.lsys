@@ -313,9 +313,20 @@
 # sprout_rise 0, as every lineage but the epicormic ones gives it, grows
 # a plant as before.
 #
+# Revision 32 (soil depth D1): soil@1 weighs the soil the roots reach
+# against what the crown needs, and scales every bud's vigour by the
+# ratio rs, so a tree with its roots in a crack or a thin soil grows as
+# a shaded one does and settles at the size its soil carries. Roots go
+# down as far as the plant is tall, to root_depth at most: 3.64 m, the
+# mean maximum rooting depth of trees in Tumber-Dávila et al. 2022 (New
+# Phytologist 235: 1032-1056), who find woody plants taller than their
+# roots are deep wherever the climate is not dry; shrubs' 2.36 m comes
+# from the rule at their rank. Without rooting
+# limits in the conditions rs is 1 and a plant grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 31;
+lsystem broadleaf 32;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -460,6 +471,7 @@ param limb_turn = 0;          # spread of the chance turn, degrees, each year's 
 param fork_set = 0;           # the angle from upright a fork's stems hold: 0, each a leader; above 0, spreading scaffold limbs (the leader lost)
 param branch_droop = -1;      # a branch's droop; below 0: droop's
 param branch_hold = -1;       # how far each node of a branch turns back toward its held angle; below 0: incline_rate
+param root_depth = 3.64;      # deepest the roots reach, metres (soil@1)
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -517,6 +529,7 @@ tool vigour@1 {
     alpha = flux,
     saturation = light_half
 };
+tool soil@1 { depth = root_depth, height = 1 };
 tool bend@1 {
     density = wood_density,
     modulus = wood_modulus,

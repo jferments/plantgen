@@ -3227,6 +3227,8 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
         let substrate = site.substrate_round(foot, cut)?;
         let mut conditions = Conditions::preset(Environment::Open);
         conditions.substrate = Some(substrate);
+        // In a crack, the soil the roots can reach (soil depth design D1).
+        conditions.rooting = site.rooting(foot);
         conditions.validate()?;
         let host = site
             .host_round(foot, cut, &climbable)
