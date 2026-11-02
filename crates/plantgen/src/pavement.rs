@@ -37,18 +37,22 @@ use crate::substrate::{AIR, BUILT, ROCK, SOIL};
 pub const CRACK_TILE_VERSION: u32 = 1;
 
 /// Share of a compacted gravel base a root can use, when the tile does not
-/// say. Roots under pavement keep mostly to the seam between the slab and
-/// the base and to voids in it, and road bases are compacted past what
-/// roots enter elsewhere; a fifth is this crate's first estimate, to be
-/// checked against sources (soil depth design D1).
+/// say. Roots under pavement keep to the seam between the slab and the
+/// base and to the voids among its stones, the zone of least compaction,
+/// and stone-soil mixes as dense as a base do not stop them (Grabosky,
+/// Bassuk and van Es 1996); a fifth, about the voids of a dense-graded
+/// base, is this crate's estimate (soil depth design D1).
 pub const BASE_ROOTABLE: f64 = 0.2;
 /// Depth of compacted subgrade under a base when the tile does not say;
 /// first estimate, to check.
 pub const SUBGRADE_M: f64 = 0.3;
-/// Share of compacted subgrade a root can use when the tile does not say;
-/// first estimate, to check. Native soil below counts no more, since roots
-/// reach it only through the subgrade.
-pub const SUBGRADE_ROOTABLE: f64 = 0.05;
+/// Share of compacted subgrade a root can use when the tile does not say:
+/// none. Grabosky, Bassuk and van Es (1996) found that a clay loam
+/// compacted to the peak density pavement specifications call for stopped
+/// oak roots altogether. Native soil below counts no more, since roots
+/// reach it only through the subgrade; a host whose old road's subgrade
+/// has loosened says so in its tile.
+pub const SUBGRADE_ROOTABLE: f64 = 0.0;
 
 /// Most cells a tile may rasterise to.
 pub const MAX_PAVEMENT_CELLS: usize = 16_000_000;
