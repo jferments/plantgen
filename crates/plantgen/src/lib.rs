@@ -1417,4 +1417,13 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-pub const GENERATOR_REVISION: u32 = 182;
+/// 185: a facing card of a cluster on pedicels or rays (an umbel, a
+/// compound umbel, a corymb) stands on its peduncle and a cone of six
+/// sides up to it, as broad as its flowers fill it, on the levels that
+/// draw it as a card and do not merge it with its neighbours
+/// (`clusters::CardFrame::stand`, `mesh::STAND_SIDES`): a yarrow's
+/// corymbs were lines floating over their stems from the side. Ten of 180
+/// species change on their high and mid tiers, and eleven on the card
+/// tiers baked from those levels. (183 is the fleshy
+/// bodies' far levels, #312; 184 the faster tier search, #315.)
+pub const GENERATOR_REVISION: u32 = 185;
