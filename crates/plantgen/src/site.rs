@@ -22,6 +22,12 @@
 //!
 //! The mesh should be closed solids, or a ground surface open to the sky,
 //! wound counter-clockwise seen from outside (OBJ's and glTF's rule).
+//! Parts too thin to model as solids, a fence's wires, a trellis's slats,
+//! a sheet of mesh, are faces of their own [`Surface`] with a thickness
+//! (`thin_m`): they need not be closed, and each stands as a slab that
+//! thick round its face. A surface a climber must not hold to (a window
+//! kept clear, a painted gutter) is still solid but not climbable
+//! (`climb` false).
 //! Within a narrow band of a surface the sign of the distance comes from
 //! the nearest surface's angle-weighted pseudo-normal (Bærentzen and Aanæs,
 //! 2005); farther off, each column of the grid carries the sign of the
@@ -30,6 +36,7 @@
 
 use std::collections::HashMap;
 
+use crate::graph::PlantGraph;
 use crate::lsys::tools::{Host, closest_on_triangle};
 use crate::math::Vec3;
 use crate::substrate::{
@@ -46,12 +53,53 @@ const COLUMN_CELL: f64 = 1.0;
 /// Most triangles a site mesh may hold.
 pub const MAX_TRIANGLES: usize = 4_000_000;
 
+/// What one face of a site is: its substrate material, whether it is a
+/// thin part and how thick, whether a climber may hold to it, and the
+/// colour it is drawn in.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Surface {
+    /// A substrate solid, [`SOIL`] to [`BUILT`].
+    pub material: u8,
+    /// 0 for a face of a closed solid; above 0, a thin part's thickness in
+    /// metres (a wire's, a slat's), standing as a slab round the face.
+    pub thin_m: f64,
+    /// Whether a climber may hold to it (when its material is
+    /// [`climbable`]).
+    pub climb: bool,
+    /// Whether it is kept clear of plants, as a gardener keeps a window or
+    /// a door clear: nothing holds to it, and what grows onto it is cut
+    /// back ([`SiteMesh::cut_back`]).
+    pub clear: bool,
+    /// Linear RGB to draw it in; the material's colour when `None`.
+    pub colour: Option<[f32; 3]>,
+}
+
+impl Surface {
+    /// A face of a closed solid of `material` that climbers may hold to.
+    #[must_use]
+    pub const fn solid(material: u8) -> Self {
+        Self {
+            material,
+            thin_m: 0.0,
+            climb: true,
+            clear: false,
+            colour: None,
+        }
+    }
+
+    fn thin(&self) -> bool {
+        self.thin_m > 0.0
+    }
+}
+
 /// A site's mesh: triangles with a substrate material each.
 #[derive(Debug, Clone)]
 pub struct SiteMesh {
     positions: Vec<Vec3>,
     triangles: Vec<[u32; 3]>,
     materials: Vec<u8>,
+    /// Each triangle's surface.
+    surfaces: Vec<Surface>,
     /// Each triangle's unit normal.
     normals: Vec<Vec3>,
     /// Each vertex's angle-weighted pseudo-normal.
@@ -111,13 +159,37 @@ impl SiteMesh {
         triangles: &[[u32; 3]],
         materials: &[u8],
     ) -> Result<Self, String> {
-        if triangles.len() != materials.len() {
+        let surfaces: Vec<Surface> = materials.iter().map(|m| Surface::solid(*m)).collect();
+        Self::with_surfaces(positions, triangles, &surfaces)
+    }
+
+    /// The mesh of `positions`, `triangles` and a [`Surface`] per triangle,
+    /// as [`Self::new`]. Thin parts' faces do not count toward the closed
+    /// solids' normals or the rays that tell inside from outside.
+    ///
+    /// # Errors
+    ///
+    /// As [`Self::new`], and on a thickness that is not finite or below 0.
+    #[allow(clippy::too_many_lines)]
+    pub fn with_surfaces(
+        positions: &[Vec3],
+        triangles: &[[u32; 3]],
+        surfaces: &[Surface],
+    ) -> Result<Self, String> {
+        if triangles.len() != surfaces.len() {
             return Err(format!(
                 "a site mesh of {} triangles has {} materials",
                 triangles.len(),
-                materials.len()
+                surfaces.len()
             ));
         }
+        if let Some(bad) = surfaces
+            .iter()
+            .find(|s| !s.thin_m.is_finite() || s.thin_m < 0.0)
+        {
+            return Err(format!("a site part's thickness is {} m", bad.thin_m));
+        }
+        let materials: Vec<u8> = surfaces.iter().map(|s| s.material).collect();
         if triangles.len() > MAX_TRIANGLES {
             return Err(format!(
                 "a site mesh has {} triangles; the limit is {MAX_TRIANGLES}",
@@ -149,8 +221,9 @@ impl SiteMesh {
         }
         let mut kept = Vec::with_capacity(triangles.len());
         let mut kept_materials = Vec::with_capacity(triangles.len());
+        let mut kept_surfaces = Vec::with_capacity(triangles.len());
         let mut normals = Vec::with_capacity(triangles.len());
-        for (corners, material) in triangles.iter().zip(materials) {
+        for ((corners, material), surface) in triangles.iter().zip(&materials).zip(surfaces) {
             let mut new = [0_u32; 3];
             for (slot, &index) in new.iter_mut().zip(corners) {
                 *slot = *remap.get(index as usize).ok_or_else(|| {
@@ -168,6 +241,7 @@ impl SiteMesh {
             }
             kept.push(new);
             kept_materials.push(*material);
+            kept_surfaces.push(*surface);
             normals.push(cross.normalize_or(Vec3::Y));
         }
         if kept.is_empty() {
@@ -177,6 +251,9 @@ impl SiteMesh {
         let mut edge_normals: HashMap<(u32, u32), Vec3> = HashMap::new();
         let mut columns: HashMap<(i32, i32), Vec<u32>> = HashMap::new();
         for (index, (corners, normal)) in kept.iter().zip(&normals).enumerate() {
+            if kept_surfaces[index].thin() {
+                continue;
+            }
             for k in 0..3 {
                 let (here, next, last) = (corners[k], corners[(k + 1) % 3], corners[(k + 2) % 3]);
                 let p = welded[here as usize];
@@ -203,6 +280,7 @@ impl SiteMesh {
             positions: welded,
             triangles: kept,
             materials: kept_materials,
+            surfaces: kept_surfaces,
             normals,
             vertex_normals,
             edge_normals,
@@ -212,7 +290,7 @@ impl SiteMesh {
 
     /// Read a Wavefront OBJ file's `v` and `f` lines (polygons are fanned
     /// into triangles; texture and normal indices are ignored), giving each
-    /// face the material `material_of` returns for the name of the `usemtl`
+    /// face the surface `surface_of` returns for the name of the `usemtl`
     /// in force (`None` before the first). With `z_up`, the file's +Z is up
     /// and its +Y north, as in many CAD and GIS tools, and is turned to
     /// `PlantGen`'s +Y up, −Z north.
@@ -223,12 +301,12 @@ impl SiteMesh {
     pub fn from_obj(
         text: &str,
         z_up: bool,
-        material_of: &dyn Fn(Option<&str>) -> Result<u8, String>,
+        surface_of: &dyn Fn(Option<&str>) -> Result<Surface, String>,
     ) -> Result<Self, String> {
         let mut positions = Vec::new();
         let mut triangles = Vec::new();
         let mut materials = Vec::new();
-        let mut current = material_of(None)?;
+        let mut current = surface_of(None)?;
         for (number, line) in text.lines().enumerate() {
             let line = line.split('#').next().unwrap_or("").trim();
             let mut words = line.split_whitespace();
@@ -275,12 +353,12 @@ impl SiteMesh {
                 }
                 Some("usemtl") => {
                     let name = words.next().unwrap_or("");
-                    current = material_of(Some(name)).map_err(|error| fail(&error))?;
+                    current = surface_of(Some(name)).map_err(|error| fail(&error))?;
                 }
                 _ => {}
             }
         }
-        Self::new(&positions, &triangles, &materials)
+        Self::with_surfaces(&positions, &triangles, &materials)
     }
 
     /// The low and high corners of the box round the mesh.
@@ -315,6 +393,9 @@ impl SiteMesh {
         let mut out = Vec::new();
         for &index in self.columns.get(&column_of(x, z)).into_iter().flatten() {
             let index = index as usize;
+            if self.surfaces[index].thin() {
+                continue;
+            }
             let [a, b, c] = self.corners(index);
             // Barycentric weights in the XZ plane.
             let area = (b.x - a.x) * (c.z - a.z) - (c.x - a.x) * (b.z - a.z);
@@ -343,6 +424,23 @@ impl SiteMesh {
                 self.normals[index].y > 0.0 && below.is_none_or(|limit| y <= limit + 1.0e-9)
             })
             .map(|(y, index)| (y, self.materials[index]))
+    }
+
+    /// Where a plant set at (`x`, `z`) stands: on the highest soil there
+    /// (at or below `below` when given), so a plant set under a roof's
+    /// eaves or a balcony roots in the ground below them; with no soil
+    /// there, on the highest upward-facing surface, as [`Self::ground_at`].
+    #[must_use]
+    pub fn footing(&self, x: f64, z: f64, below: Option<f64>) -> Option<(f64, u8)> {
+        let up = |y: f64, index: usize| {
+            self.normals[index].y > 0.0 && below.is_none_or(|limit| y <= limit + 1.0e-9)
+        };
+        let crossings = self.crossings(x, z);
+        crossings
+            .iter()
+            .find(|&&(y, index)| up(y, index) && self.materials[index] == SOIL)
+            .or_else(|| crossings.iter().find(|&&(y, index)| up(y, index)))
+            .map(|&(y, index)| (y, self.materials[index]))
     }
 
     /// The pseudo-normal at the point of triangle `index` nearest `p`
@@ -423,6 +521,10 @@ impl SiteMesh {
         let mut nearest = vec![f64::INFINITY; total];
         let mut inside = vec![false; total];
         let mut stuff = vec![AIR; total];
+        // Thin parts: the signed distance to the nearest slab, and its
+        // material.
+        let mut slab = vec![f64::INFINITY; total];
+        let mut slab_stuff = vec![AIR; total];
         #[allow(clippy::cast_precision_loss)]
         let high_corner = world_origin + Vec3::new(nx as f64, ny as f64, nz as f64) * cell_m;
         let reach = Vec3::new(band, band, band);
@@ -432,6 +534,8 @@ impl SiteMesh {
         };
         for triangle in 0..self.triangles.len() {
             let [a, b, c] = self.corners(triangle);
+            let half_thick = self.surfaces[triangle].thin_m * 0.5;
+            let reach = reach + Vec3::new(half_thick, half_thick, half_thick);
             let low = a.min(b).min(c) - reach;
             let high = a.max(b).max(c) + reach;
             if low.x > high_corner.x
@@ -462,12 +566,20 @@ impl SiteMesh {
                         let p = centre(x, y, z);
                         // A cell farther from the triangle's plane than the
                         // band is farther from the triangle too.
-                        if (p - a).dot(normal).abs() >= band {
+                        if (p - a).dot(normal).abs() >= band + half_thick {
                             continue;
                         }
                         let closest = closest_on_triangle(p, a, b, c);
                         let gap = (p - closest).length();
                         let at = index(x, y, z);
+                        if half_thick > 0.0 {
+                            let signed = gap - half_thick;
+                            if signed < band && signed < slab[at] {
+                                slab[at] = signed;
+                                slab_stuff[at] = self.materials[triangle];
+                            }
+                            continue;
+                        }
                         if gap < band && gap < nearest[at] {
                             nearest[at] = gap;
                             let outward = self.pseudo_normal(triangle, closest);
@@ -495,23 +607,29 @@ impl SiteMesh {
                 let mut what = above.last().map_or(SOIL, |&(_, t)| self.materials[t]);
                 for y in (0..ny).rev() {
                     let at = index(x, y, z);
-                    let units = if nearest[at].is_finite() {
+                    let mut signed = if nearest[at].is_finite() {
                         solid = inside[at];
                         what = stuff[at];
-                        let signed = if solid { -nearest[at] } else { nearest[at] };
-                        #[allow(clippy::cast_possible_truncation)]
-                        let units = (signed / scale).round().clamp(-127.0, 127.0) as i8;
-                        units
+                        if solid { -nearest[at] } else { nearest[at] }
                     } else if solid {
-                        -127
+                        -band
                     } else {
-                        127
+                        band
                     };
+                    let mut here = what;
+                    // A thin part's slab joins the solids where it is
+                    // nearer.
+                    if slab[at] < signed {
+                        signed = slab[at];
+                        here = slab_stuff[at];
+                    }
+                    #[allow(clippy::cast_possible_truncation)]
+                    let units = (signed / scale).round().clamp(-127.0, 127.0) as i8;
                     #[allow(clippy::cast_sign_loss)]
                     {
                         distance[at] = units as u8;
                     }
-                    material[at] = if units < 0 { what } else { AIR };
+                    material[at] = if units < 0 { here } else { AIR };
                 }
             }
         }
@@ -532,28 +650,120 @@ impl SiteMesh {
 
     /// The surfaces a climber standing at `foot` can hold to within `cut`:
     /// the mesh's triangles of the materials `holds` accepts, in the
-    /// plant's frame, as a `host@1` host. `None` when there are none.
+    /// plant's frame, as a `host@1` host, with the surfaces kept clear,
+    /// which `host@1` reads as `gc`. `None` when there are neither.
     #[must_use]
     pub fn host_round(&self, foot: Vec3, cut: Cut, holds: &dyn Fn(u8) -> bool) -> Option<Host> {
         let low = Vec3::new(-cut.half_m, -cut.below_m, -cut.half_m);
         let high = Vec3::new(cut.half_m, cut.above_m, cut.half_m);
+        let within = |[a, b, c]: &[Vec3; 3]| {
+            let (l, h) = (a.min(*b).min(*c), a.max(*b).max(*c));
+            l.x <= high.x
+                && l.y <= high.y
+                && l.z <= high.z
+                && h.x >= low.x
+                && h.y >= low.y
+                && h.z >= low.z
+        };
         let triangles: Vec<[Vec3; 3]> = (0..self.triangles.len())
-            .filter(|&index| holds(self.materials[index]))
-            .map(|index| self.corners(index).map(|p| p - foot))
-            .filter(|[a, b, c]| {
-                let (l, h) = (a.min(*b).min(*c), a.max(*b).max(*c));
-                l.x <= high.x
-                    && l.y <= high.y
-                    && l.z <= high.z
-                    && h.x >= low.x
-                    && h.y >= low.y
-                    && h.z >= low.z
+            .filter(|&index| {
+                let surface = self.surfaces[index];
+                surface.climb && !surface.clear && holds(self.materials[index])
             })
+            .map(|index| self.corners(index).map(|p| p - foot))
+            .filter(within)
             .collect();
-        if triangles.is_empty() {
+        let clear: Vec<[Vec3; 3]> = (0..self.triangles.len())
+            .filter(|&index| self.surfaces[index].clear)
+            .map(|index| self.corners(index).map(|p| p - foot))
+            .filter(within)
+            .collect();
+        if triangles.is_empty() && clear.is_empty() {
             return None;
         }
-        Some(Host::new(Vec::new()).with_triangles(triangles, (low, high)))
+        Some(
+            Host::new(Vec::new())
+                .with_triangles(triangles, (low, high))
+                .with_clear(clear, (low, high)),
+        )
+    }
+
+    /// Cut back what of `graph` (a plant standing at `foot`, in its own
+    /// frame) has grown onto a surface kept clear, as a gardener keeps a
+    /// window or a door clear: every segment that ends within `gap` of one,
+    /// with all that grows from it, and every organ within `gap` of one.
+    /// How many segments and organs were cut.
+    pub fn cut_back(&self, graph: &mut PlantGraph, foot: Vec3, gap: f64) -> (usize, usize) {
+        let clear: Vec<[Vec3; 3]> = (0..self.triangles.len())
+            .filter(|&index| self.surfaces[index].clear)
+            .map(|index| self.corners(index).map(|p| p - foot))
+            .collect();
+        if clear.is_empty() {
+            return (0, 0);
+        }
+        let (low, high) = graph.segments.iter().fold(
+            (
+                Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
+                Vec3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
+            ),
+            |(low, high), segment| (low.min(segment.end), high.max(segment.end)),
+        );
+        let margin = Vec3::new(gap, gap, gap) * 2.0;
+        let near = Host::new(Vec::new()).with_triangles(clear, (low - margin, high + margin));
+        let touches = |p: Vec3| near.nearest(p, gap).is_some();
+        // A cut carries to all that grows from it.
+        let mut cut: Vec<bool> = graph
+            .segments
+            .iter()
+            .map(|segment| touches(segment.end))
+            .collect();
+        loop {
+            let mut changed = false;
+            for index in 0..graph.segments.len() {
+                if !cut[index]
+                    && graph.segments[index]
+                        .parent
+                        .is_some_and(|parent| cut[parent as usize])
+                {
+                    cut[index] = true;
+                    changed = true;
+                }
+            }
+            if !changed {
+                break;
+            }
+        }
+        let mut renumbered = vec![None; graph.segments.len()];
+        let mut kept = Vec::with_capacity(graph.segments.len());
+        for (index, segment) in graph.segments.iter().enumerate() {
+            if !cut[index] {
+                renumbered[index] = u32::try_from(kept.len()).ok();
+                kept.push(segment.clone());
+            }
+        }
+        for segment in &mut kept {
+            segment.parent = segment
+                .parent
+                .and_then(|parent| renumbered[parent as usize]);
+        }
+        let segments_cut = graph.segments.len() - kept.len();
+        graph.segments = kept;
+        let before = graph.organs.len();
+        graph.organs.retain(|organ| {
+            organ.segment.is_none_or(|segment| !cut[segment as usize]) && !touches(organ.position)
+        });
+        for organ in &mut graph.organs {
+            organ.segment = organ
+                .segment
+                .and_then(|segment| renumbered[segment as usize]);
+        }
+        graph.height = graph
+            .segments
+            .iter()
+            .map(|segment| segment.end.y)
+            .chain(graph.organs.iter().map(|organ| organ.position.y))
+            .fold(0.0, f64::max);
+        (segments_cut, before - graph.organs.len())
     }
 
     /// The mesh's triangles within the box `low` to `high`, moved by
@@ -574,19 +784,29 @@ impl SiteMesh {
             {
                 continue;
             }
-            let color = COLOURS[usize::from(self.materials[index])];
-            let normal = self.normals[index].to_f32();
-            let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
-            for p in [a, b, c] {
-                mesh.positions.push((p + offset).to_f32());
-                mesh.normals.push(normal);
-                mesh.uvs.push([0.0, 0.0]);
-                mesh.colors.push([color[0], color[1], color[2], 1.0]);
-                mesh.births.push(0.0);
-                mesh.sheds.push(f32::INFINITY);
-                mesh.levels.push(0);
+            let surface = self.surfaces[index];
+            let color = surface
+                .colour
+                .unwrap_or(COLOURS[usize::from(self.materials[index])]);
+            // A thin part is seen from both sides.
+            let faces: &[(Vec3, [Vec3; 3])] = &[
+                (self.normals[index], [a, b, c]),
+                (-self.normals[index], [a, c, b]),
+            ];
+            for (normal, corners) in &faces[..if surface.thin() { 2 } else { 1 }] {
+                let normal = normal.to_f32();
+                let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
+                for p in corners {
+                    mesh.positions.push((*p + offset).to_f32());
+                    mesh.normals.push(normal);
+                    mesh.uvs.push([0.0, 0.0]);
+                    mesh.colors.push([color[0], color[1], color[2], 1.0]);
+                    mesh.births.push(0.0);
+                    mesh.sheds.push(f32::INFINITY);
+                    mesh.levels.push(0);
+                }
+                mesh.indices.extend([first, first + 1, first + 2]);
             }
-            mesh.indices.extend([first, first + 1, first + 2]);
         }
         mesh
     }
@@ -753,8 +973,8 @@ mod tests {
     fn obj_faces_and_materials_are_read() {
         let text = "v 0 0 0\nv 1 0 0\nv 1 1 0\nv 0 1 0\nusemtl brick\nf 1 2 3 4\nusemtl lawn\nf -4/1/1 -2/2/2 -1/3/3\n";
         let names = |name: Option<&str>| match name {
-            Some("brick") => Ok(BUILT),
-            _ => Ok(SOIL),
+            Some("brick") => Ok(Surface::solid(BUILT)),
+            _ => Ok(Surface::solid(SOIL)),
         };
         let site = SiteMesh::from_obj(text, false, &names).unwrap();
         assert_eq!(site.triangle_count(), 3);
@@ -762,5 +982,141 @@ mod tests {
         let z_up = SiteMesh::from_obj(text, true, &names).unwrap();
         assert_eq!(z_up.bounds().1.y, 0.0);
         assert!(SiteMesh::from_obj("v 0 0 0\nf 1 2 3\n", false, &names).is_err());
+    }
+
+    /// Ground 4 m across with its top at 0, and an open, one-sided panel
+    /// 2 m wide and 1.5 m high standing at z = 0, of `panel`.
+    fn panel_site(panel: Surface) -> SiteMesh {
+        let mut parts = (Vec::new(), Vec::new(), Vec::new());
+        cuboid(
+            Vec3::new(-2.0, -1.0, -2.0),
+            Vec3::new(2.0, 0.0, 2.0),
+            SOIL,
+            &mut parts,
+        );
+        let first = u32::try_from(parts.0.len()).unwrap();
+        parts.0.extend([
+            Vec3::new(-1.0, 0.0, 0.0),
+            Vec3::new(1.0, 0.0, 0.0),
+            Vec3::new(1.0, 1.5, 0.0),
+            Vec3::new(-1.0, 1.5, 0.0),
+        ]);
+        parts.1.push([first, first + 1, first + 2]);
+        parts.1.push([first, first + 2, first + 3]);
+        let mut surfaces: Vec<Surface> = parts.2.iter().map(|m| Surface::solid(*m)).collect();
+        surfaces.extend([panel, panel]);
+        SiteMesh::with_surfaces(&parts.0, &parts.1, &surfaces).unwrap()
+    }
+
+    /// The signed distance (metres) and material of the cell of `grid`
+    /// whose centre is nearest `p`, in the plant's frame.
+    fn cell_at(grid: &Substrate, p: Vec3) -> (f64, u8) {
+        let size = grid.size.unwrap().map(|n| n as usize);
+        let origin = grid.origin_m.unwrap();
+        let cell = grid.cell_m.unwrap();
+        let distance = crate::substrate::base64_decode(grid.distance.as_deref().unwrap()).unwrap();
+        let material = crate::substrate::base64_decode(grid.material.as_deref().unwrap()).unwrap();
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let at = |v: f64, low: f64| ((v - low) / cell).floor() as usize;
+        let (x, y, z) = (at(p.x, origin[0]), at(p.y, origin[1]), at(p.z, origin[2]));
+        let index = (y * size[2] + z) * size[0] + x;
+        #[allow(clippy::cast_possible_wrap)]
+        let units = f64::from(distance[index] as i8);
+        (units * grid.distance_scale_m.unwrap(), material[index])
+    }
+
+    #[test]
+    fn a_plant_under_the_eaves_stands_on_the_ground() {
+        let mut parts = (Vec::new(), Vec::new(), Vec::new());
+        cuboid(
+            Vec3::new(-2.0, -1.0, -2.0),
+            Vec3::new(2.0, 0.0, 2.0),
+            SOIL,
+            &mut parts,
+        );
+        // A roof slab overhanging the point, 2.5 m up.
+        cuboid(
+            Vec3::new(-1.0, 2.5, -1.0),
+            Vec3::new(1.0, 2.7, 1.0),
+            BUILT,
+            &mut parts,
+        );
+        let site = SiteMesh::new(&parts.0, &parts.1, &parts.2).unwrap();
+        assert_eq!(site.ground_at(0.3, 0.3, None), Some((2.7, BUILT)));
+        assert_eq!(site.footing(0.3, 0.3, None), Some((0.0, SOIL)));
+        // Set on the roof by height, it stands there.
+        let roof = SiteMesh::new(
+            &parts.0[8..],
+            &parts.1[12..]
+                .iter()
+                .map(|t| t.map(|i| i - 8))
+                .collect::<Vec<_>>(),
+            &parts.2[12..],
+        )
+        .unwrap();
+        assert_eq!(roof.footing(0.3, 0.3, None), Some((2.7, BUILT)));
+    }
+
+    #[test]
+    fn a_thin_part_stands_as_a_slab_on_both_sides_of_its_face() {
+        let wood = Surface {
+            thin_m: 0.06,
+            ..Surface::solid(WOOD)
+        };
+        let site = panel_site(wood);
+        let cut = Cut {
+            half_m: 1.5,
+            below_m: 0.5,
+            above_m: 2.0,
+            cell_m: 0.02,
+        };
+        let grid = site.substrate_round(Vec3::new(0.0, 0.0, 0.3), cut).unwrap();
+        // In the plant's frame the panel stands at z = -0.3. In the slab:
+        // solid wood; a hand's breadth either side: air.
+        let (inside, stuff) = cell_at(&grid, Vec3::new(0.01, 0.75, -0.29));
+        assert!(inside < 0.0, "{inside}");
+        assert_eq!(stuff, WOOD);
+        for z in [-0.42, -0.18] {
+            let (out, stuff) = cell_at(&grid, Vec3::new(0.01, 0.75, z));
+            assert!(out > 0.05, "{out} at {z}");
+            assert_eq!(stuff, AIR);
+        }
+        // Nothing under the panel's open edges turns solid: the air beside
+        // it reaches down to the ground on both sides.
+        let (beside, _) = cell_at(&grid, Vec3::new(1.4, 0.75, -0.6));
+        assert!(beside > 0.0);
+        let (ground, stuff) = cell_at(&grid, Vec3::new(0.5, -0.2, -0.6));
+        assert!(ground < 0.0);
+        assert_eq!(stuff, SOIL);
+        // A climber holds to the panel.
+        let host = site
+            .host_round(Vec3::new(0.0, 0.0, 0.3), cut, &climbable)
+            .unwrap();
+        assert!(!host.is_empty());
+    }
+
+    #[test]
+    fn a_climber_does_not_hold_to_a_surface_kept_clear() {
+        let glass = Surface {
+            climb: false,
+            thin_m: 0.06,
+            ..Surface::solid(BUILT)
+        };
+        let site = panel_site(glass);
+        let cut = Cut {
+            half_m: 1.5,
+            below_m: 0.5,
+            above_m: 2.0,
+            cell_m: 0.02,
+        };
+        assert!(
+            site.host_round(Vec3::new(0.0, 0.0, 0.3), cut, &climbable)
+                .is_none()
+        );
+        // It still stands in the substrate, so stems lie on it.
+        let grid = site.substrate_round(Vec3::new(0.0, 0.0, 0.3), cut).unwrap();
+        let (inside, stuff) = cell_at(&grid, Vec3::new(0.01, 0.75, -0.29));
+        assert!(inside < 0.0, "{inside}");
+        assert_eq!(stuff, BUILT);
     }
 }
