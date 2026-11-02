@@ -557,7 +557,7 @@ pub fn run(
             };
             let taken: Option<&(dyn Fn(Vec3) -> bool + Sync)> =
                 (field.is_some() || surroundings.crowded()).then_some(&taken);
-            let buried = |point: Vec3| field.is_some_and(|field| field.solid(point));
+            let buried = |point: Vec3| field.is_some_and(|field| field.buried(point));
             let buried: Option<&(dyn Fn(Vec3) -> bool + Sync)> = field.is_some().then_some(&buried);
             colonize(
                 scene,

@@ -72,6 +72,7 @@ pub mod occlusion;
 pub mod organs;
 pub mod package;
 pub mod parts;
+pub mod pavement;
 pub mod preview;
 pub mod prickles;
 pub mod quality;

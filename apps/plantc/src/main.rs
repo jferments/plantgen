@@ -267,6 +267,13 @@ Usage:
       or with --focus a close-up of SPAN metres (default 2) round a point
       in the mesh's frame. docs/sites/house.json is a house with windows
       and a door kept clear, a picket fence and a wire fence.
+      pavements lists crack tiles (JSON files, plantgen::pavement): a
+      paved slab with its cracks and holes and the soil in them, standing
+      in for the mesh at and below its surface. A plant set on one roots
+      in a crack: on sound slab it moves to the nearest opening within
+      snap_m (0.05 m when left out) or is refused. docs/sites/road.json
+      is a street with its cracks at three decay levels
+      (docs/sites/make_road.py).
   plantc tiers <species>... --out FOLDER [--seed N] [--size PIXELS] [--age YEARS]
                [--columns full,cards,far] [--view VIEW] [--focus F,S]
                [--views side,oblique,close]
@@ -3080,6 +3087,9 @@ fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site:
 /// before they are cut back, metres.
 const CLEAR_GAP_M: f64 = 0.05;
 
+/// How far a plant set on sound pavement moves to the nearest crack, metres.
+const PAVEMENT_SNAP_M: f64 = 0.05;
+
 fn site_command(args: &[String]) -> Result<(), Failure> {
     use plantgen::site::{Cut, SiteMesh, Surface, climbable};
     let options = Options::parse(
@@ -3117,8 +3127,27 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
     let obj = fs::read_to_string(&mesh_path)
         .map_err(|error| format!("cannot read {}: {error}", mesh_path.display()))?;
     let started = Instant::now();
-    let site_mesh = SiteMesh::from_obj(&obj, z_up, &material_of)
+    let mut site_mesh = SiteMesh::from_obj(&obj, z_up, &material_of)
         .map_err(|error| format!("{}: {error}", mesh_path.display()))?;
+    for given in document["pavements"].as_array().into_iter().flatten() {
+        let name = given
+            .as_str()
+            .ok_or("site pavements are crack tile files")?;
+        let path = folder.join(name);
+        let text = fs::read_to_string(&path)
+            .map_err(|error| format!("cannot read {}: {error}", path.display()))?;
+        let tile = plantgen::pavement::CrackTile::from_json(&text)
+            .map_err(|error| format!("{}: {error}", path.display()))?;
+        let pavement = plantgen::pavement::Pavement::new(&tile)
+            .map_err(|error| format!("{}: {error}", path.display()))?;
+        out!(
+            "pavement {name}: {} cracks, {} holes, {:.1}% open",
+            tile.cracks.len(),
+            tile.holes.len(),
+            pavement.open_share() * 100.0
+        );
+        site_mesh.add_pavement(pavement);
+    }
     let site = &site_mesh;
     let default_years = document["years"].as_f64();
     let plants = document["plants"]
@@ -3140,7 +3169,7 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
                     .collect()
             })
             .unwrap_or_default();
-        let (x, z, below) = match at[..] {
+        let (mut x, mut z, below) = match at[..] {
             [x, z] => (x, z, None),
             [x, y, z] => (x, z, Some(y)),
             _ => {
@@ -3149,6 +3178,22 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
                 );
             }
         };
+        // On pavement a plant roots only in a crack or a hole: one set on
+        // sound slab moves to the nearest opening within snap_m, or is
+        // refused.
+        if let Some(tile) = site
+            .pavements()
+            .iter()
+            .find(|tile| tile.covers(x, z) && below.is_none_or(|b| tile.top() <= b))
+        {
+            let snap = plant["snap_m"].as_f64().unwrap_or(PAVEMENT_SNAP_M);
+            let (cx, cz, _) = tile.nearest_open(x, z, snap).ok_or_else(|| {
+                format!(
+                    "plant {number} ({id}): ({x}, {z}) is sound pavement with no crack within {snap} m; nothing roots there"
+                )
+            })?;
+            (x, z) = (cx, cz);
+        }
         let (ground, material) = site.footing(x, z, below).ok_or_else(|| {
             format!("plant {number} ({id}): no upward-facing ground under ({x}, {z})")
         })?;

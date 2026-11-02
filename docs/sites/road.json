@@ -1,0 +1,200 @@
+{
+ "mesh": "road.obj",
+ "materials": {
+  "verge": {
+   "as": "soil",
+   "colour": [
+    0.2,
+    0.28,
+    0.12
+   ]
+  }
+ },
+ "pavements": [
+  "road-2.json",
+  "road-5.json",
+  "road-8.json"
+ ],
+ "plants": [
+  {
+   "species": "holcus-lanatus",
+   "at": [
+    -6.004,
+    -2.0471
+   ],
+   "seed": 1,
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -7.3429,
+    -0.7786
+   ],
+   "seed": 2,
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    -0.3452,
+    -2.2419
+   ],
+   "seed": 7,
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    -0.3139,
+    -2.9124
+   ],
+   "seed": 4,
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -1.3736,
+    2.921
+   ],
+   "seed": 7,
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    -0.0079,
+    -2.651
+   ],
+   "seed": 2,
+   "years": 3
+  },
+  {
+   "species": "verbascum-thapsus",
+   "at": [
+    1.0022,
+    2.3071
+   ],
+   "seed": 1,
+   "years": 3
+  },
+  {
+   "species": "verbascum-thapsus",
+   "at": [
+    4.4014,
+    -0.787
+   ],
+   "seed": 3,
+   "years": 3
+  },
+  {
+   "species": "cirsium-vulgare",
+   "at": [
+    6.1232,
+    -2.2026
+   ],
+   "seed": 4,
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    6.7366,
+    2.6547
+   ],
+   "seed": 2,
+   "years": 3
+  },
+  {
+   "species": "hypochaeris-radicata",
+   "at": [
+    6.7903,
+    -2.9477
+   ],
+   "seed": 4,
+   "years": 3
+  },
+  {
+   "species": "verbascum-thapsus",
+   "at": [
+    4.6045,
+    0.1512
+   ],
+   "seed": 7,
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    5.1753,
+    -0.1509
+   ],
+   "seed": 8,
+   "years": 3
+  },
+  {
+   "species": "holcus-lanatus",
+   "at": [
+    6.8399,
+    2.2166
+   ],
+   "seed": 6,
+   "years": 3
+  },
+  {
+   "species": "trifolium-repens",
+   "at": [
+    6.1344,
+    0.9994
+   ],
+   "seed": 3,
+   "years": 3
+  },
+  {
+   "species": "trifolium-repens",
+   "at": [
+    4.3382,
+    1.7987
+   ],
+   "seed": 2,
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    6.939,
+    -0.0084
+   ],
+   "seed": 8,
+   "years": 3
+  },
+  {
+   "species": "dactylis-glomerata",
+   "at": [
+    2.9602,
+    2.6
+   ],
+   "seed": 8,
+   "years": 3
+  },
+  {
+   "species": "rubus-armeniacus",
+   "at": [
+    5.006,
+    2.321
+   ],
+   "seed": 1,
+   "years": 4
+  },
+  {
+   "species": "alnus-rubra",
+   "at": [
+    5.033,
+    -0.658
+   ],
+   "seed": 1,
+   "years": 4
+  }
+ ]
+}

@@ -268,3 +268,76 @@ fn a_vine_climbs_a_wire_fence() {
         raised.len()
     );
 }
+
+/// A slab of asphalt 8 cm thick laid over the garden's ground from
+/// x = −1 to 1 and z = 1 to 3, with one crack 1 cm wide along z = 2 and
+/// 4 cm of grit in it.
+fn paved_garden() -> SiteMesh {
+    use plantgen::pavement::{Crack, CrackTile, Pavement};
+    let mut site = garden();
+    let tile = CrackTile {
+        version: 1,
+        origin_m: [-1.0, 1.0],
+        size_m: [2.0, 2.0],
+        top_m: 0.0,
+        thickness_m: 0.08,
+        base_m: 0.2,
+        surface: "asphalt".into(),
+        cell_m: None,
+        cracks: vec![Crack {
+            points_m: vec![[-0.9, 2.0], [0.9, 2.0]],
+            width_m: vec![0.01, 0.01],
+            fill_m: vec![0.04, 0.04],
+        }],
+        holes: Vec::new(),
+        made_by: None,
+    };
+    site.add_pavement(Pavement::new(&tile).unwrap());
+    site
+}
+
+#[test]
+fn a_grass_comes_up_through_a_crack_and_nothing_roots_on_sound_slab() {
+    let site = paved_garden();
+    // In the crack: on its grit, 4 cm under the surface.
+    let (y, material) = site.footing(0.0, 2.003, None).unwrap();
+    assert_eq!(material, SOIL);
+    assert!((y + 0.04).abs() < 1.0e-3, "{y}");
+    // On sound slab: the slab, where nothing roots; off the tile, the soil.
+    assert_eq!(site.footing(0.0, 1.5, None), Some((0.0, BUILT)));
+    assert_eq!(site.footing(0.0, 4.0, None).map(|(_, m)| m), Some(SOIL));
+    let spec = PlantSpec::builtin("dactylis-glomerata").unwrap();
+    let (program, params) = spec.program().unwrap();
+    let seed = spec.variants.seeds[0];
+    let foot = Vec3::new(0.0, y, 2.003);
+    let cut = Cut::for_plant(1.0, 0.5);
+    let mut conditions = Conditions::preset(Environment::Open);
+    conditions.substrate = Some(site.substrate_round(foot, cut).unwrap());
+    let growth = grow(
+        &program,
+        &spec.seeded_params(&program, &params, seed),
+        &GrowthSettings {
+            seed,
+            dt: spec.growth.step,
+            years: 2.0,
+            keyframes: vec![2.0],
+            conditions: conditions.clone(),
+            limits: Limits::default(),
+            host: None,
+        },
+    )
+    .unwrap();
+    let graph = &growth.keyframes[0];
+    assert!(
+        graph.height > 0.3,
+        "the grass reached {:.2} m",
+        graph.height
+    );
+    // Its stems come up through the crack, not through the slab. The
+    // tuft's blades spring from a crown wider than a 1 cm crack, so their
+    // bases lie in the slab, but never deeper than the crack's grit (a
+    // tuft held to its crack's line waits on rooting space, plan K4).
+    let intrusion = conditions.intrusion(graph).unwrap();
+    assert_eq!(intrusion.segments_in_solids, 0, "{}", intrusion.describe());
+    assert!(intrusion.deepest_m <= 0.045, "{}", intrusion.describe());
+}
