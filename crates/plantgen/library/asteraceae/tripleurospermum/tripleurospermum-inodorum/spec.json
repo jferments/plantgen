@@ -247,6 +247,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Tripleurospermum inodorum (read 2026-11-02): heads (1-)10-200+, 3-4.5 cm diam., in corymbiform arrays; ray florets 10-25, corollas (4-)10-13(-20) mm; disc florets yellow (Flora of China). sRGB by eye from the words and the species' photos."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.2 m typical at least to 0.8 m at most: the middle, 0.5 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 60%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -260,5 +265,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.5,
+      "tolerance": 0.6
+    }
+  ]
 }

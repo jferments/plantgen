@@ -219,6 +219,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Cirsium arvense (read 2026-11-02): heads 1-many, borne singly or in corymbiform or paniculiform arrays; involucres 1-2 x 1-2 cm; corollas purple (white or pink)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.3 m typical at least to 1.5 m at most: the middle, 0.9 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 67%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -232,5 +237,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.67
+    }
+  ]
 }

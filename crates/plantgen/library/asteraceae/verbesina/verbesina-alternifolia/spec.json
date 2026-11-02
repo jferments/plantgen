@@ -255,6 +255,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Verbesina alternifolia (read 2026-11-02): heads (3-)8-25(-50+) in corymbiform to paniculiform arrays; involucres +/- saucerlike, 10-12+ mm diam.; ray florets (2-)6-8+, laminae 15-25+ mm; disc florets 40-60+, corollas yellow. sRGB by eye from the words and the species' photos."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 1 m typical at least to 3 m at most: the middle, 2.0 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 50%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -268,5 +273,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.5
+    }
+  ]
 }

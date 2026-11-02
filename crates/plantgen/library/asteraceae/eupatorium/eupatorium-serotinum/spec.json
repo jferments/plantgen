@@ -221,6 +221,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Eupatorium serotinum (read 2026-11-02): petioles 10-25 mm; blades +/- 3-nerved, lanceolate, 20-90+ x 5-40 mm, bases rounded to slightly oblique, margins entire or serrate, apices acute."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.8 m typical at least to 2.5 m at most: the middle, 1.65 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 52%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -234,5 +239,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.65,
+      "tolerance": 0.52
+    }
+  ]
 }

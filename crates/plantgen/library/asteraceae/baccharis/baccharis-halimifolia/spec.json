@@ -209,6 +209,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Baccharis halimifolia (read 2026-11-02): heads 3-4 in loose pedunculate clusters in broad paniculiform arrays; involucres 3-5 mm."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 1 m typical at least to 4 m at most: the middle, 2.5 m, at 12 years in the open (the age the built-in daisy shrubs are referenced at), within 60%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -222,5 +227,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 2.5,
+      "tolerance": 0.6
+    }
+  ]
 }

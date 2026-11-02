@@ -265,6 +265,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Doellingeria umbellata (read 2026-11-02): involucres 3-5 mm; rays (2-)5-10(-16), laminae (4-)7-10(-12.3) x (0.8-)1.2-1.8(-2.7) mm; disc florets (5-)11-26(-50)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.6 m typical at least to 2 m at most: the middle, 1.3 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 54%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -278,5 +283,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.3,
+      "tolerance": 0.54
+    }
+  ]
 }

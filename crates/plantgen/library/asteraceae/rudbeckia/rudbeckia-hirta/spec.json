@@ -235,6 +235,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Rudbeckia hirta (read 2026-11-02): heads borne singly or (2-5) in loose corymbiform arrays; ray florets 8-16, laminae uniformly yellow to yellow-orange or with a basal maroon splotch, 15-45 x 5-10 mm; disc florets 250-500+, corollas proximally yellowish green, distally brown-purple. sRGB by eye from the words and the species' photos."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.3 m typical at least to 1 m at most: the middle, 0.65 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 54%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -248,5 +253,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.65,
+      "tolerance": 0.54
+    }
+  ]
 }

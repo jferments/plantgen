@@ -260,6 +260,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Tanacetum vulgare (read 2026-11-02): blades broadly oblong or oval to elliptic, 4-20 x 2-10 cm, pinnately lobed (rachises +/- winged, primary lobes 4-10 pairs, lance-linear to lanceolate, often pinnately lobed or toothed), ultimate margins dentate. Here: 4-10 pairs of primary lobes and the terminal one, drawn as the blade's segments."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.5 m typical at least to 1.5 m at most: the middle, 1.0 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 50%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -273,5 +278,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.0,
+      "tolerance": 0.5
+    }
+  ]
 }

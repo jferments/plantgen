@@ -230,6 +230,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Arctotheca calendula (read 2026-11-02): heads 4-7 cm diam. (across the rays); ray florets 11-17(-25), laminae adaxially yellow, 10-25 x 2-4 mm; disc florets: corollas yellow proximally, bluish distally. sRGB by eye from the words and the species' photos. Here: bluish distally over yellow: a dark blue-grey eye."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.1 m typical at least to 0.4 m at most: the middle, 0.25 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 60%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -243,5 +248,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.25,
+      "tolerance": 0.6
+    }
+  ]
 }

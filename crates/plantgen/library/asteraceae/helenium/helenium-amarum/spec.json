@@ -253,6 +253,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Helenium amarum (read 2026-11-02): heads (1-)10-150(-250+) per plant, in paniculiform arrays; involucres hemispheric to globose, 5-9 x 6-10 mm; ray florets 8-10, corollas yellow, 4.5-14 x 2-10 mm; disc florets 75-250+, corollas yellow proximally, yellow to yellow-brown or purple distally. Here: the disc hemispheric to globose."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.2 m typical at least to 1 m at most: the middle, 0.6 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 67%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -266,5 +271,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.67
+    }
+  ]
 }

@@ -265,6 +265,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Rudbeckia laciniata (read 2026-11-02): heads (2-25) in loose, corymbiform arrays; ray florets 8-12, laminae 15-50 x 4-14 mm; disc florets 150-300+, corollas yellow to yellowish green (lobes yellow). sRGB by eye from the words and the species' photos."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 1 m typical at least to 3 m at most: the middle, 2.0 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 50%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -278,5 +283,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.5
+    }
+  ]
 }

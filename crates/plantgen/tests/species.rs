@@ -870,7 +870,7 @@ fn builtin_clusters_draw_as_part_meshes() {
         }
     }
     assert_eq!(
-        checked, 197,
+        checked, 210,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
@@ -902,7 +902,11 @@ fn builtin_clusters_draw_as_part_meshes() {
          and the glands' great and thread-leaved sundews' coils and hemp's spikes, \
          and the blooms of six vines that state their inflorescences (climber revision 8): Malabar \
          spinach's spikes, orange honeysuckle's and bittersweet's clusters, the wild grape's and ivy's \
-         panicles and umbels, and black pepper's spikes, and the rose cactus's cymes"
+         panicles and umbels, and black pepper's spikes, and the rose cactus's cymes, \
+         and the thirteen head arrays of the draft daisies (C5): the corymbs of white snakeroot, \
+         mistflower, little ironweed, parasol whitetop, boneset, late boneset, butterweed, \
+         narrow-leaved ragwort, wild marigold and tansy, ragweed's racemes, and the panicles of \
+         groundsel tree and nipplewort"
     );
 }
 

@@ -280,6 +280,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Ratibida columnifera (read 2026-11-02): leaves 2-15+ x 0.8-6 cm, 1-2-pinnatifid, lobes 3-14, narrowly linear-lanceolate to narrowly oblong-ovate, 1-16 mm wide. Here: its lobes, drawn as the blade's segments."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.3 m typical at least to 1 m at most: the middle, 0.65 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 54%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -293,5 +298,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.65,
+      "tolerance": 0.54
+    }
+  ]
 }

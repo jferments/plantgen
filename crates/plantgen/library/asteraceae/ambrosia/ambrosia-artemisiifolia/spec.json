@@ -241,6 +241,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Ambrosia artemisiifolia (read 2026-11-02): petioles 25-35(-60+) mm; blades deltate to lanceolate or elliptic, 25-55(-90+) x 20-30(-50+) mm, 1-2-pinnately lobed, bases cuneate, ultimate margins entire or toothed. Here: a pinnately lobed blade ends in a lobe."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.3 m typical at least to 2 m at most: the middle, 1.15 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 74%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -254,5 +259,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.15,
+      "tolerance": 0.74
+    }
+  ]
 }

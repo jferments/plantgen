@@ -229,6 +229,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vols. 19-21, Gaillardia pulchella (read 2026-11-02): peduncles 3-10(-20) cm; ray florets usually 8-14, corollas usually reddish to purplish proximally, yellow to orange distally, 13-30+ mm; disc florets 40-100+, corollas yellowish to purple or brown, often bicolored. sRGB by eye from the words and the species' photos. Here: purple to brown, the colour its photos show."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from the species' stated heights, 0.2 m typical at least to 0.7 m at most: the middle, 0.45 m, at 4 years in the open (the age the built-in daisy herbs are referenced at), within 56%, which spans that range. Replace with measured data before calling this species calibrated."
     }
   },
   "provenance": {
@@ -242,5 +247,13 @@
       "PlantGen contributors"
     ],
     "notes": "Facts-only draft (C5 pilot): the species' characters from its species-facts record, everything else from its rank files."
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.45,
+      "tolerance": 0.56
+    }
+  ]
 }
