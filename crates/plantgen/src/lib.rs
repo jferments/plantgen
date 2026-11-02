@@ -43,6 +43,7 @@ pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod felling;
 pub mod flowers;
 pub mod form;
 pub mod formula;
