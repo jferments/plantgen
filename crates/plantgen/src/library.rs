@@ -2242,8 +2242,13 @@ mod tests {
         ] {
             let entry = Library::builtin().entry(id).unwrap();
             let mut own: serde_json::Value = serde_json::from_str(entry.own_source()).unwrap();
-            let note = own["evidence"]["traits.involucre_diameter_m"].clone();
-            assert!(note.is_object(), "{id} cites its involucre");
+            // Its involucre's own note, or the note on all its traits.
+            let notes = &own["evidence"];
+            let note = [&notes["traits.involucre_diameter_m"], &notes["traits"]]
+                .into_iter()
+                .find(|note| note.is_object())
+                .cloned()
+                .unwrap_or_else(|| panic!("{id} cites its traits"));
             for key in ["involucre_diameter_m", "ray_length_m"] {
                 own["traits"].as_object_mut().unwrap().remove(key);
                 own["evidence"]
