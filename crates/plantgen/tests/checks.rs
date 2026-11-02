@@ -87,6 +87,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "the climber program first flowers in its second year (a shoot turns adult once the vine is adult_age old, counted from 0), so Malabar spinach, which flowers in its first, is drawn flowering at 2 years",
     ),
     (
+        "berberis-aquifolium",
+        "height_typical_m",
+        "its hand-set growth (path_half 0.99 m) already grew it to a median 1.76 m against the 0.5 to 1.5 m its records give as usual (a warning); as a shrub of many stems from its base (revision 181), its upright stems reach 1.9 m, past the range's extremes, though within its greatest 2 m",
+    ),
+    (
         "cornus-nuttallii",
         "crown_see_through",
         "its photographs show no sky through its crown; drawn four times over (form::MOST_DRAWN) it still shows about 9% between its shoots",

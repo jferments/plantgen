@@ -1425,4 +1425,10 @@ pub mod venation;
 /// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
 /// An export's low tier keeps a plant of bodies solid while it is within
 /// twice the tier's most, as baked cards draw its joints as scraps.
-pub const GENERATOR_REVISION: u32 = 183;
+/// 184: a shrub up to 3 m tall whose taxa do not say how its stems rise
+/// (`stem_clump`) sends up many stems from its base, as `stem_clump` many
+/// gives, in place of one stem forking just above the ground (a rule on the
+/// shrub form at the flowering plants); taller shrubs and prostrate mats keep
+/// their forking stem. 32 library shrubs change, and the open
+/// plant-identification judge names them better grown so.
+pub const GENERATOR_REVISION: u32 = 184;
