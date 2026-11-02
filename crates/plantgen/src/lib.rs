@@ -1417,4 +1417,12 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-pub const GENERATOR_REVISION: u32 = 182;
+/// 184: going from a level that draws a card per organ to one that
+/// clusters them, an export's clusters grow from an eighth of the coarser
+/// level's size (`budget::CLUSTER_START`) instead of from nothing, so the
+/// tiers between such levels land on other dials. With the drawings a
+/// search has already made kept for its last step, and a plant's leaf
+/// clusters laid out on idle cores, a 30-year Douglas fir's tiers take
+/// 52 s instead of 160 s. Packages draw as before. (183 is the fleshy
+/// bodies' far levels, #312.)
+pub const GENERATOR_REVISION: u32 = 184;

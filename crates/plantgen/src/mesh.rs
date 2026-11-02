@@ -29,6 +29,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::bend::Bend;
 use crate::body::{self, BodyLook};
+use crate::cores::{self, Lease};
 use crate::graph::{GraphOrgan, PlantGraph};
 use crate::looks::{Bottle, Flare, Look, Moss, Mount, Ridges};
 use crate::math::{self, Vec3, any_perpendicular};
@@ -3262,7 +3263,6 @@ fn solve(mut matrix: Vec<Vec<f64>>, mut rhs: Vec<f64>) -> Option<Vec<f64>> {
 
 /// Organs merged per template and cell of edge `lod.cluster`: a card
 /// facing as its organs do, and upright cards beside it.
-#[allow(clippy::too_many_lines)]
 fn cluster_cards(
     graph: &PlantGraph,
     looks: &[Look],
@@ -3271,7 +3271,7 @@ fn cluster_cards(
     lod: &LodSpec,
 ) -> Vec<Card> {
     // BTreeMap keeps the output order independent of hashing.
-    let mut clusters: BTreeMap<(u8, i64, i64, i64), Cluster> = BTreeMap::new();
+    let mut clusters: BTreeMap<ClusterKey, Cluster> = BTreeMap::new();
     for (number, organ) in graph.organs.iter().enumerate() {
         let index = usize::from(organ.organ);
         if solid.get(index).copied().unwrap_or(false) {
@@ -3346,12 +3346,53 @@ fn cluster_cards(
         entry.born = entry.born.min(organ.born);
         entry.shed = entry.shed.max(organ.shed.unwrap_or(f64::INFINITY));
     }
+    // Each cluster's cards depend on that cluster alone, so a plant of many
+    // clusters (a conifer's needles) lays them out on idle cores, in runs
+    // taken in key order and joined in that order: the cards are the same
+    // whatever the threads.
+    let clusters: Vec<_> = clusters.into_iter().collect();
+    let lease = Lease::take(if clusters.len() > CLUSTERS_IN_PARALLEL {
+        cores::per_task()
+    } else {
+        1
+    });
+    let threads = lease.threads();
+    let size = clusters.len().div_ceil(threads).max(1);
+    cores::map(clusters.chunks(size).collect(), threads, &|run: &[(
+        ClusterKey,
+        Cluster,
+    )]| {
+        run.iter()
+            .flat_map(|((template, ..), cluster)| {
+                cluster_cards_of(graph, looks, variation, *template, cluster)
+            })
+            .collect::<Vec<Card>>()
+    })
+    .into_iter()
+    .flatten()
+    .collect()
+}
+
+/// More clusters than this lay out their cards on idle cores.
+const CLUSTERS_IN_PARALLEL: usize = 2_000;
+
+/// A cluster's template and cell.
+type ClusterKey = (u8, i64, i64, i64);
+
+/// One cluster's cards (see `cluster_cards`).
+#[allow(clippy::too_many_lines)]
+fn cluster_cards_of(
+    graph: &PlantGraph,
+    looks: &[Look],
+    variation: f32,
+    template: u8,
+    cluster: &Cluster,
+) -> Vec<Card> {
     let mut cards = Vec::new();
-    for ((template, ..), cluster) in clusters {
+    {
         let look = &looks[usize::from(template)];
-        if let Some(star) = star_cards(&cluster, graph, look, looks, variation) {
-            cards.extend(star);
-            continue;
+        if let Some(star) = star_cards(cluster, graph, look, looks, variation) {
+            return star;
         }
         let position = cluster.position / cluster.count;
         let normal = cluster.normal.normalize_or(Vec3::Y);
