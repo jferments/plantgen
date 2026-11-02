@@ -286,6 +286,9 @@ pub struct Host {
     cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>>,
     triangles: Vec<[Vec3; 3]>,
     triangle_cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>>,
+    /// Surfaces kept clear of the guest (a site's windows and doors): it
+    /// holds to none of them, and `gc` reads how far the nearest is.
+    clear: Option<Box<Host>>,
 }
 
 /// Edge of a host grid cell, metres.
@@ -315,7 +318,28 @@ impl Host {
             cells,
             triangles: Vec::new(),
             triangle_cells: std::collections::HashMap::new(),
+            clear: None,
         }
+    }
+
+    /// This host with surfaces kept clear of the guest: `triangles` in
+    /// the guest's frame, indexed within `within` as
+    /// [`Self::with_triangles`] indexes its own.
+    #[must_use]
+    pub fn with_clear(mut self, triangles: Vec<[Vec3; 3]>, within: (Vec3, Vec3)) -> Self {
+        self.clear = (!triangles.is_empty())
+            .then(|| Box::new(Self::new(Vec::new()).with_triangles(triangles, within)));
+        self
+    }
+
+    /// The distance from `point` to the nearest surface kept clear, when
+    /// one is within `reach`.
+    #[must_use]
+    pub fn clear_within(&self, point: Vec3, reach: f64) -> Option<f64> {
+        self.clear
+            .as_ref()
+            .and_then(|clear| clear.nearest(point, reach))
+            .map(|(distance, _)| distance)
     }
 
     /// This host with fixed surfaces as well: `triangles`, each three
@@ -617,6 +641,10 @@ pub fn run(
             values[EnvField::Gx as usize] = direction.x;
             values[EnvField::Gy as usize] = direction.y;
             values[EnvField::Gz as usize] = direction.z;
+            values[EnvField::Gc as usize] = surroundings
+                .host()
+                .and_then(|host| host.clear_within(query.position, reach))
+                .unwrap_or(reach + 1.0);
         }
         if let Some(field) = &ground {
             read_substrate(&mut values, field, program, query);

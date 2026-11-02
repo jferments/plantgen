@@ -246,19 +246,27 @@ Usage:
       Grow plants on a mesh you hand over (sites plan S4, grow here).
       The document names mesh (an OBJ file, its path from the document's
       folder), z_up (true when the file's +Z is up), materials (each
-      usemtl name as soil, rock, bark, wood or built; * for the rest,
-      soil when left out), years, and plants: each one's species, at
-      ([x, z], or [x, y, z] for the ground at or below y, in the mesh's
-      units, metres), seed, years and optionally cut (half_m, below_m,
-      above_m and cell_m of the box round it; from its size when left
-      out). Each plant stands on the highest ground under it and grows
-      in a substrate cut from the mesh round its foot; a climber climbs the mesh's rock, bark, wood and built
+      usemtl name as soil, rock, bark, wood or built, or an object of
+      as, the material, thin_m, a thin part's thickness in metres (a
+      fence's wire, a trellis's slat: open faces standing as a slab that
+      thick), climb false for a surface climbers do not hold to, clear
+      true for one kept clear (a window or door: shoots that reach it
+      are cut back each year), and colour, sRGB [r, g, b] to draw it in;
+      * for the rest, soil when left out), years, and plants: each
+      one's species, at ([x, z], or [x, y, z] for the ground at or below
+      y, in the mesh's units, metres), seed, years and optionally cut
+      (half_m, below_m, above_m and cell_m of the box round it; from its
+      size when left out). Each plant stands on the highest soil under
+      it (under eaves, on the ground below them; with no soil, the
+      highest surface) and grows in a substrate cut from the mesh round
+      its foot; a climber climbs the mesh's rock, bark, wood and built
       faces in place of its stock host. Plants that grow in steps of one
       length grow together, each making room for the others' crowns.
       Prints each plant's size and how much of it stands in the mesh,
       and with --out renders them on the mesh (one bark for all wood),
       or with --focus a close-up of SPAN metres (default 2) round a point
-      in the mesh's frame.
+      in the mesh's frame. docs/sites/house.json is a house with windows
+      and a door kept clear, a picket fence and a wire fence.
   plantc tiers <species>... --out FOLDER [--seed N] [--size PIXELS] [--age YEARS]
                [--columns full,cards,far] [--view VIEW] [--focus F,S]
                [--views side,oblique,close]
@@ -3003,8 +3011,77 @@ fn site_size(spec: &PlantSpec, age: f64) -> (f64, f64) {
 
 /// `plantc site`: plants grown on a mesh (`plantgen::site`).
 #[allow(clippy::too_many_lines)]
+/// A site material table's entry `name`: a material's name, or an object
+/// with the material (`as`), a thin part's thickness (`thin_m`), whether a
+/// climber may hold to it (`climb`), whether it is kept clear of plants
+/// (`clear`: what grows onto it is cut back) and the colour to draw it in
+/// (`colour`, sRGB 0 to 1).
+fn site_surface(name: &str, given: &serde_json::Value) -> Result<plantgen::site::Surface, String> {
+    use plantgen::site::{Surface, material_named};
+    if let Some(material) = given.as_str() {
+        return Ok(Surface::solid(material_named(material)?));
+    }
+    let table = given
+        .as_object()
+        .ok_or_else(|| format!("site material `{name}` must be a name or an object"))?;
+    for key in table.keys() {
+        if !["as", "thin_m", "climb", "clear", "colour"].contains(&key.as_str()) {
+            return Err(format!(
+                "site material `{name}`: unknown field `{key}`; use as, thin_m, climb, clear, colour"
+            ));
+        }
+    }
+    let material = table
+        .get("as")
+        .and_then(serde_json::Value::as_str)
+        .ok_or_else(|| format!("site material `{name}` names its material in `as`"))?;
+    let mut surface = Surface::solid(material_named(material)?);
+    if let Some(thin) = table.get("thin_m") {
+        surface.thin_m = thin
+            .as_f64()
+            .filter(|t| t.is_finite() && *t >= 0.0)
+            .ok_or_else(|| format!("site material `{name}`: thin_m must be metres, 0 or more"))?;
+    }
+    if let Some(climb) = table.get("climb") {
+        surface.climb = climb
+            .as_bool()
+            .ok_or_else(|| format!("site material `{name}`: climb must be true or false"))?;
+    }
+    if let Some(clear) = table.get("clear") {
+        surface.clear = clear
+            .as_bool()
+            .ok_or_else(|| format!("site material `{name}`: clear must be true or false"))?;
+    }
+    if let Some(colour) = table.get("colour") {
+        let values: Vec<f64> = colour
+            .as_array()
+            .map(|values| {
+                values
+                    .iter()
+                    .filter_map(serde_json::Value::as_f64)
+                    .collect()
+            })
+            .unwrap_or_default();
+        let [r, g, b] = values[..] else {
+            return Err(format!(
+                "site material `{name}`: colour must be [r, g, b], sRGB 0 to 1"
+            ));
+        };
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let linear = |v: f64| {
+            plantgen::texture::srgb_to_linear((v.clamp(0.0, 1.0) * 255.0).round() as u8) as f32
+        };
+        surface.colour = Some([linear(r), linear(g), linear(b)]);
+    }
+    Ok(surface)
+}
+
+/// How near a surface kept clear a plant's stems and leaves may come
+/// before they are cut back, metres.
+const CLEAR_GAP_M: f64 = 0.05;
+
 fn site_command(args: &[String]) -> Result<(), Failure> {
-    use plantgen::site::{Cut, SiteMesh, climbable};
+    use plantgen::site::{Cut, SiteMesh, Surface, climbable};
     let options = Options::parse(
         args,
         &["out", "view", "size", "day", "quality", "focus", "span"],
@@ -3020,17 +3097,17 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
             .as_str()
             .ok_or("a site names its mesh, an OBJ file")?,
     );
-    let mut names: BTreeMap<String, u8> = BTreeMap::new();
+    let mut names: BTreeMap<String, Surface> = BTreeMap::new();
     if let Some(table) = document["materials"].as_object() {
-        for (name, material) in table {
-            let material = material
-                .as_str()
-                .ok_or_else(|| format!("site material `{name}` must be a name"))?;
-            names.insert(name.clone(), plantgen::site::material_named(material)?);
+        for (name, given) in table {
+            names.insert(name.clone(), site_surface(name, given)?);
         }
     }
-    let fallback = names.get("*").copied().unwrap_or(plantgen::substrate::SOIL);
-    let material_of = |name: Option<&str>| -> Result<u8, String> {
+    let fallback = names
+        .get("*")
+        .copied()
+        .unwrap_or(Surface::solid(plantgen::substrate::SOIL));
+    let material_of = |name: Option<&str>| -> Result<Surface, String> {
         Ok(name
             .and_then(|name| names.get(name))
             .copied()
@@ -3072,7 +3149,7 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
                 );
             }
         };
-        let (ground, material) = site.ground_at(x, z, below).ok_or_else(|| {
+        let (ground, material) = site.footing(x, z, below).ok_or_else(|| {
             format!("plant {number} ({id}): no upward-facing ground under ({x}, {z})")
         })?;
         let foot = Vec3::new(x, ground, z);
@@ -3144,7 +3221,7 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
     let together = grown
         .iter()
         .all(|plant| plant.4.dt.to_bits() == grown[0].4.dt.to_bits());
-    let growths: Vec<Growth> = if together {
+    let mut growths: Vec<Growth> = if together {
         let members: Vec<plantgen::stand::Member<'_>> = grown
             .iter()
             .map(
@@ -3185,16 +3262,29 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
         },
         started.elapsed().as_secs_f64()
     );
-    for ((spec, _, _, _, settings), growth) in grown.iter().zip(&growths) {
+    for ((spec, foot, _, _, settings), growth) in grown.iter().zip(&mut growths) {
+        // What grew onto a surface kept clear is cut back.
+        let mut trimmed = (0, 0);
+        for graph in &mut growth.keyframes {
+            trimmed = site.cut_back(graph, *foot, CLEAR_GAP_M);
+        }
         let Some(graph) = growth.keyframes.last() else {
             continue;
         };
         let intrusion = settings.conditions.intrusion(graph)?;
         out!(
-            "  {}: {}; {}",
+            "  {}: {}; {}{}",
             spec.id,
             describe(graph, &growth.organ_types),
-            intrusion.describe()
+            intrusion.describe(),
+            if trimmed == (0, 0) {
+                String::new()
+            } else {
+                format!(
+                    "; {} segments and {} organs cut back from surfaces kept clear",
+                    trimmed.0, trimmed.1
+                )
+            }
         );
     }
     let Some(out) = options.flags.get("out") else {
