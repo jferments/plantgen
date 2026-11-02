@@ -2130,6 +2130,61 @@ pub fn build_from(
                 }
             }
         }
+        // A ribbon's head takes its thin branches and pedicels (a
+        // panicle's) with its flowers: baked with the clumps below, a
+        // beargrass's panicle drew its branches as specks on the leaves'
+        // cards, beside its stalk. Branches off a tube (an agave's) stay
+        // as they were: on a head's card they drew as specks too.
+        let mut carded = vec![false; ribbons.len() + graph.segments.len()];
+        for &a in &head {
+            if a != usize::MAX {
+                carded[a] = true;
+            }
+        }
+        let mut branch = vec![false; graph.segments.len()];
+        for organ in &graph.organs {
+            if let Some(s) = organ.segment
+                && looks.get(usize::from(organ.organ)).is_some_and(signature)
+            {
+                let mut at = s as usize;
+                let mut walked = 0.0;
+                while !branch[at] {
+                    branch[at] = true;
+                    let g = &graph.segments[at];
+                    walked += (g.end - g.start).length();
+                    match g.parent {
+                        Some(parent) if walked < graph.height * RIBBON_LENGTH => {
+                            at = parent as usize;
+                        }
+                        _ => break,
+                    }
+                }
+            }
+        }
+        head.resize(elements.len(), usize::MAX);
+        for (s, &e) in wood_element.iter().enumerate() {
+            if e == usize::MAX || !branch[s] {
+                continue;
+            }
+            let mut at = s;
+            let mut walked = 0.0;
+            loop {
+                let g = &graph.segments[at];
+                if axis_of[at] != usize::MAX || g.radius >= keep {
+                    if axis_of[at] != usize::MAX && carded[axis_of[at]] {
+                        head[e] = axis_of[at];
+                    }
+                    break;
+                }
+                walked += (g.end - g.start).length();
+                match g.parent {
+                    Some(parent) if walked < graph.height * RIBBON_LENGTH || !g.lateral => {
+                        at = parent as usize;
+                    }
+                    _ => break,
+                }
+            }
+        }
         // A tier without heads' cards bakes the ribbons' heads with their
         // clumps (a grass's spikes, a raceme), but not heads seen face on
         // (an umbel, a corymb, a capitulum): lying on a clump's card, a
@@ -3108,10 +3163,20 @@ fn ribbon_axes(graph: &PlantGraph, looks: &[Look], keep: f64, budget: usize) -> 
             chain.push(following);
             cursor = following;
         }
-        let thin = chain.iter().all(|&s| {
+        let thin_at = |s: usize| {
             let g = &graph.segments[s];
             g.radius < keep && g.body == 0 && g.within.is_none()
-        });
+        };
+        // An axis kept as a tube up to where it narrows (a beargrass's or
+        // a sotol's flowering stalk) is a ribbon from there on: left out
+        // of the tubes and baked, its top and its panicle's branches lay
+        // on the leaves' cards, and drew as specks beside the stalk.
+        let tail = chain
+            .iter()
+            .rposition(|&s| !thin_at(s))
+            .map_or(0, |i| i + 1);
+        let chain = chain.split_off(tail);
+        let thin = !chain.is_empty();
         let bears = chain.iter().any(|&s| signature[s]);
         let length: f64 = chain
             .iter()

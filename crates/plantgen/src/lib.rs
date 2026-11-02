@@ -1426,4 +1426,10 @@ pub mod venation;
 /// flower stalk's top, floating over the plant. Its low cards hid 1.35
 /// times the plant's sky from the side, now 1.06; its minimal cards 0.53,
 /// now 0.75. (183 to 185 are #312, #315 and #316.)
-pub const GENERATOR_REVISION: u32 = 186;
+/// 187: on the card tiers, a flowering axis kept as a tube up to where it
+/// narrows is a ribbon from there on, and a ribbon's head takes its thin
+/// branches with its flowers (`crate::billboards`): a beargrass's stalk
+/// top and panicle branches were baked onto the blades' cards and drew
+/// as specks up to 20 cm off the stalk. A wild carrot's low cards hid
+/// 0.85 of the plant's sky from the side, now 1.00.
+pub const GENERATOR_REVISION: u32 = 187;
