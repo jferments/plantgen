@@ -1005,9 +1005,11 @@ impl Inputs {
 
     /// The same inputs with motion objects built beside the meshes
     /// (`crate::motion`): the key gains the motion's revision, material
-    /// and settings, so a static package keeps its key.
+    /// and settings, so a static package keeps its key. Its stems' root
+    /// flare is the spec's, as drawn ([`crate::motion::Motion::with_flare`]).
     #[must_use]
     pub fn with_motion(mut self, motion: crate::motion::Motion) -> Self {
+        let motion = motion.with_flare(&self.spec.appearance);
         let mut hasher = Sha256::new();
         for (label, bytes) in [
             ("static", self.key.as_bytes().to_vec()),

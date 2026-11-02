@@ -3,6 +3,7 @@
   "rank": "genus",
   "name": "Pinus",
   "traits": {
+    "anchorage_per_stem_kg": 138, "crown_drag_at_rest": 2.67, "crown_drag_streamlining": 0.65, "crown_drag_tested_to_ms": 24,
     "architectural_model": "rauh",
     "foliage_ranks": "all_round",
     "cone_maturation_years": {"min": 2, "max": 3, "typical": 2}
@@ -102,6 +103,10 @@
     }
   },
   "evidence": {
+    "traits.anchorage_per_stem_kg": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for lodgepole, Scots, Corsican, jack, maritime and radiata pine: C_reg 138 N m per kg of green stem, the mean over its four soil groups and three rooting depths and over those species, from tree-pulling tests (Nicoll et al. 2006 and others, listed in the Critical Resistive Moments vignette). A species with its own pulling tests states its own."},
+    "traits.crown_drag_at_rest": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for lodgepole, Scots, Corsican, jack, maritime and radiata pine: crown drag coefficient on the silhouette Cd = C u^-N with C 2.67, N 0.65, fitted between 10 and 24 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_streamlining": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for lodgepole, Scots, Corsican, jack, maritime and radiata pine: crown drag coefficient on the silhouette Cd = C u^-N with C 2.67, N 0.65, fitted between 10 and 24 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_tested_to_ms": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for lodgepole, Scots, Corsican, jack, maritime and radiata pine: crown drag coefficient on the silhouette Cd = C u^-N with C 2.67, N 0.65, fitted between 10 and 24 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
     "appearance.bark_look": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "Pine bark: smooth on the young shoot, then broken into plates of thin scales, the plates small and thin in most pines (lodgepole, western white, whitebark) and large in the yellow pines, whose species state theirs. Reference: ponderosa pine's record (plantgen-claude project-files/bark/records/pinus-ponderosa.json); plate size and depth for the genus inferred from Sargent's descriptions of thin, scaly pine bark."},
     "traits.architectural_model": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 485 names Pinus among the trees of Rauh's model: a monopodial trunk with rhythmic tiers of branches built like the trunk; Ingrouille, Diversity and Evolution of Land Plants (1992) p. 207 says the same of pines."},
     "traits": {

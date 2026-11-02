@@ -955,9 +955,20 @@ fn budgeted(
         let most = budget
             .triangles
             .map_or(crate::budget::TIER_CAPS[last], |given| given[last]);
-        let carded = baked_level(inputs, plant, settings, last, file(last))?;
-        let drawn = carded.summary.triangles;
-        if drawn < before && drawn <= most {
+        // A plant of fleshy bodies (a cholla's joints, a prickly pear's
+        // pads) baked onto cards falls apart into scraps: it keeps its
+        // solid drawing while that is within twice the most.
+        let solid = files[last].summary.triangles;
+        let fleshy = !inputs.bodies.is_empty() && solid <= most.saturating_mul(2);
+        let carded = if fleshy {
+            None
+        } else {
+            Some(baked_level(inputs, plant, settings, last, file(last))?)
+        };
+        if let Some(carded) = carded
+            && carded.summary.triangles < before
+            && carded.summary.triangles <= most
+        {
             let mut carded = carded;
             carded.budget = files[last].budget.map(|given| LevelBudget {
                 triangles: Some(most),

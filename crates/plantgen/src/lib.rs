@@ -38,6 +38,7 @@ pub mod checks;
 pub mod clusters;
 pub mod conditions;
 pub mod cores;
+pub mod damage;
 pub mod divided;
 pub mod drawing;
 pub mod evidence;
@@ -79,6 +80,7 @@ pub mod rng;
 pub mod roots;
 pub mod shed;
 pub mod shoots;
+pub mod site;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
@@ -1417,12 +1419,31 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-/// 184: going from a level that draws a card per organ to one that
+/// 183: a fleshy body's far levels coarsen it to a budget as the near
+/// levels do (30 000 and 6 000 triangles of skin), down to five-sided
+/// rings a few apart with one ring over a dome: a pencil cholla's skin
+/// drew 242 000 triangles on the third level and 95 000 on the farthest,
+/// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
+/// An export's low tier keeps a plant of bodies solid while it is within
+/// twice the tier's most, as baked cards draw its joints as scraps.
+///
+/// 184: plants grow on a mesh you hand over (`site`); `host@1` holds a
+/// site's fixed triangles. Climber 9: a stem rests on the substrate, so
+/// ivy's stems lie on a wall's face. Climber 10: a clinging shoot's
+/// leaves, renewed ones too, face away from its host (`leaf_face`, 0.8
+/// for Hedera, a root climber; 0 for twiners and tendril climbers), and
+/// its internodes wander (`wander`, 30 for Hedera); a paired-leaf vine
+/// renews a pair. Deciduous vines renew their leaves on old wood every
+/// year (an orange honeysuckle and a California grape had set renew 0,
+/// bare but for a tuft at the top). Ivy's internode is 0.045 m, measured
+/// on a photo, with its yearly length, branching, bend and renewal per
+/// metre kept.
+///
+/// 185: going from a level that draws a card per organ to one that
 /// clusters them, an export's clusters grow from an eighth of the coarser
 /// level's size (`budget::CLUSTER_START`) instead of from nothing, so the
 /// tiers between such levels land on other dials. With the drawings a
 /// search has already made kept for its last step, and a plant's leaf
 /// clusters laid out on idle cores, a 30-year Douglas fir's tiers take
-/// 52 s instead of 160 s. Packages draw as before. (183 is the fleshy
-/// bodies' far levels, #312.)
-pub const GENERATOR_REVISION: u32 = 184;
+/// 52 s instead of 160 s. Packages draw as before.
+pub const GENERATOR_REVISION: u32 = 185;

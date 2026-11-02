@@ -4,6 +4,7 @@
   "name": "gymnosperms",
   "parent": "clade/spermatophyta",
   "traits": {
+    "anchorage_per_stem_kg": 153, "crown_drag_at_rest": 2.48, "crown_drag_streamlining": 0.69, "crown_drag_tested_to_ms": 25,
     "reproduction": {
       "cones": "usually",
       "solitary_seeds": "rarely"
@@ -12,6 +13,10 @@
     "wood_class": "softwood"
   },
   "evidence": {
+    "traits.anchorage_per_stem_kg": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES): the median C_reg of its 18 conifer parameter sets (each the mean over four soil groups and three rooting depths), 153 N m per kg of green stem, from tree-pulling tests on about 2,000 conifers (Nicoll et al. 2006 and others). A genus or species with its own tests states its own."},
+    "traits.crown_drag_at_rest": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES): the medians of its 18 conifer parameter sets for the crown drag coefficient on the silhouette, Cd = C u^-N: C 2.48, N 0.69, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole conifers. A genus or species with its own fit states its own."},
+    "traits.crown_drag_streamlining": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES): the medians of its 18 conifer parameter sets for the crown drag coefficient on the silhouette, Cd = C u^-N: C 2.48, N 0.69, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole conifers. A genus or species with its own fit states its own."},
+    "traits.crown_drag_tested_to_ms": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES): the medians of its 18 conifer parameter sets for the crown drag coefficient on the silhouette, Cd = C u^-N: C 2.48, N 0.69, fitted between 10 and 25 m/s, after Mayhead's (1973) wind-tunnel drag of whole conifers. A genus or species with its own fit states its own."},
     "traits.reproduction": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",

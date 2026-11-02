@@ -1,0 +1,10 @@
+{
+  "mesh": "garden.obj",
+  "materials": {"lawn": "soil", "brick": "built", "pole": "wood", "granite": "rock"},
+  "plants": [
+    {"species": "hedera-helix", "at": [0.0, -0.45], "seed": 1, "years": 8},
+    {"species": "lonicera-ciliosa", "at": [3.25, 0.0], "seed": 1, "years": 6},
+    {"species": "woodwardia-fimbriata", "at": [-2.2, 1.3], "seed": 1},
+    {"species": "achillea-millefolium", "at": [1.2, 1.5], "seed": 1}
+  ]
+}
