@@ -1419,4 +1419,15 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-pub const GENERATOR_REVISION: u32 = 182;
+///
+/// 183: plants grow on a mesh you hand over (`site`); `host@1` holds a
+/// site's fixed triangles. Climber 9: a stem rests on the substrate, so
+/// ivy's stems lie on a wall's face. Climber 10: a clinging shoot's
+/// leaves, renewed ones too, face away from its host (`leaf_face`), and
+/// its internodes wander (`wander`, 30 for Hedera); a paired-leaf vine
+/// renews a pair. Deciduous vines renew their leaves on old wood every
+/// year (an orange honeysuckle and a California grape had set renew 0,
+/// bare but for a tuft at the top). Ivy's internode is 0.045 m, measured
+/// on a photo, with its yearly length, branching, bend and renewal per
+/// metre kept.
+pub const GENERATOR_REVISION: u32 = 183;

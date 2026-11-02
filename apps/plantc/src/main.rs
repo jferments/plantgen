@@ -3269,6 +3269,7 @@ fn site_command(args: &[String]) -> Result<(), Failure> {
             frame_height: None,
             frame_reach: Some(plants_reach * 1.15),
             focus,
+            fit_plant: false,
         },
     );
     let png = raster::encode_png(

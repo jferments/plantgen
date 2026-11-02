@@ -43,8 +43,18 @@ fn cuboid(low: Vec3, high: Vec3, material: u8, out: &mut (Vec<Vec3>, Vec<[u32; 3
 /// high and 0.3 m thick whose south face stands at z = −0.5.
 fn garden() -> SiteMesh {
     let mut parts = (Vec::new(), Vec::new(), Vec::new());
-    cuboid(Vec3::new(-6.0, -2.0, -6.0), Vec3::new(6.0, 0.0, 6.0), SOIL, &mut parts);
-    cuboid(Vec3::new(-2.0, -0.3, -0.8), Vec3::new(2.0, 2.5, -0.5), BUILT, &mut parts);
+    cuboid(
+        Vec3::new(-6.0, -2.0, -6.0),
+        Vec3::new(6.0, 0.0, 6.0),
+        SOIL,
+        &mut parts,
+    );
+    cuboid(
+        Vec3::new(-2.0, -0.3, -0.8),
+        Vec3::new(2.0, 2.5, -0.5),
+        BUILT,
+        &mut parts,
+    );
     SiteMesh::new(&parts.0, &parts.1, &parts.2).unwrap()
 }
 
@@ -93,8 +103,15 @@ fn ivy_climbs_a_wall_in_the_mesh_on_its_face() {
         .iter()
         .filter(|organ| organ.position.y > 0.3 && (organ.position.z + 0.3).abs() < 0.25)
         .count();
-    let high = graph.organs.iter().filter(|organ| organ.position.y > 0.3).count();
-    assert!(near * 2 > high, "{near} of {high} raised leaves by the wall");
+    let high = graph
+        .organs
+        .iter()
+        .filter(|organ| organ.position.y > 0.3)
+        .count();
+    assert!(
+        near * 2 > high,
+        "{near} of {high} raised leaves by the wall"
+    );
 
     // With nothing it can climb in reach, it stays low.
     let (open, _) = ivy_at(&site, Vec3::new(0.0, 0.0, 4.0), 6.0);
