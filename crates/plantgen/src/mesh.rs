@@ -619,6 +619,15 @@ pub(crate) fn build_shaded(
             appearance.variation,
             lod,
         );
+        head_stands(
+            cards_graph,
+            looks,
+            cards_solid,
+            &is_part,
+            appearance.variation,
+            lod.cluster,
+            &mut mesh.wood,
+        );
     }
     // Bent cards first, so a renderer draws them as one range.
     let (mut bent, flat): (Vec<Card>, Vec<Card>) =
@@ -2183,6 +2192,143 @@ pub(crate) fn petioles(
             },
             mesh,
         );
+        mesh.bear(first, organ.segment.unwrap_or(GROUNDED));
+    }
+}
+
+/// Sides round the cone a flat-topped cluster's card stands on
+/// ([`head_stands`]).
+pub const STAND_SIDES: u32 = 6;
+
+/// The least share of its card's half width a stand's rim reaches
+/// ([`head_stands`]), as the baked cards' solid heads keep.
+const STAND_NARROWEST: f64 = 0.35;
+
+/// The share of the stalks' colour in a stand's rim ([`head_stands`]):
+/// from the side a corymb shows its green pedicels with the flowers'
+/// sides only at their tips. By eye on yarrow, measured as the heads'
+/// mean colour from the side against the full drawing's: within 6% on
+/// each channel at 0.6, where 1/4 drew a pale paper cup.
+const STAND_STALK: f32 = 0.6;
+
+/// The stands of the facing cards of clusters on pedicels or rays (an
+/// umbel, a compound umbel, a corymb; `crate::clusters::CardFrame::stand`)
+/// among `graph`'s organs not drawn `solid` nor as part meshes at their
+/// cards (`is_part`) and at least as broad as the level's clusters
+/// (`cluster_size`), into `mesh` as wood each
+/// organ's segment bears: the peduncle, three-sided, from the organ's foot
+/// to where its lowest pedicel leaves the axis, and an open cone of
+/// [`STAND_SIDES`] sides from there up to the card, as broad as its flowers
+/// fill it and at most as deep as broad, in the cluster's
+/// stalk colour at its foot and mostly that at its rim too
+/// ([`STAND_STALK`]), as
+/// the pedicels spread under the flowers and the flowers' sides show from
+/// the side. The card alone lay level over nothing: a yarrow's corymbs
+/// were lines floating over their stems from the side, where its full
+/// drawing and its baked cards draw a cone under a white top. Twelve
+/// triangles a cluster.
+fn head_stands(
+    graph: &PlantGraph,
+    looks: &[Look],
+    solid: &[bool],
+    is_part: &dyn Fn(usize) -> bool,
+    variation: f32,
+    cluster_size: f64,
+    mesh: &mut Mesh,
+) {
+    for organ in &graph.organs {
+        let index = usize::from(organ.organ);
+        if solid.get(index).copied().unwrap_or(false) || is_part(index) {
+            continue;
+        }
+        let Some(look) = looks.get(index) else {
+            continue;
+        };
+        let Some(cluster) = &look.inflorescence else {
+            continue;
+        };
+        let Some(low) = cluster.card.stand else {
+            continue;
+        };
+        let heading = organ.heading.normalize_or(Vec3::Y);
+        let left = (organ.left - heading * heading.dot(organ.left))
+            .normalize_or(any_perpendicular(heading));
+        let up = heading.cross(left);
+        let centre = organ.position + heading * (cluster.card.foot * organ.size);
+        let reach = 0.5 * cluster.card.length / 1.04 * organ.size;
+        // Smaller than the level's clusters, it is merged with its
+        // neighbours' cards, and would stand alone under them: a palo
+        // verde's thousands of small corymbs drew 30 000 triangles of
+        // stands on a 50 000 triangle level.
+        if reach <= 0.0 || 2.0 * reach < cluster_size {
+            continue;
+        }
+        // As broad as its flowers fill its disc from above, as the baked
+        // cards' solid heads are (`crate::billboards`), and at most as
+        // deep as it is broad, its peduncle reaching up to it: a lacy
+        // umbel (a wild carrot's, a fennel's) stood on a cone as broad as
+        // its farthest flower, a solid cup where the plant shows a few
+        // white dots.
+        let disc = (crate::templates::fill_share(look) * 4.0 / std::f64::consts::PI).min(1.0);
+        let radius = reach * disc.sqrt().clamp(STAND_NARROWEST, 1.0);
+        let depth = ((cluster.card.foot - low) * organ.size).min(radius);
+        if depth <= 0.0 {
+            continue;
+        }
+        let low = cluster.card.foot - depth / organ.size;
+        let apex = organ.position + heading * (low * organ.size);
+        let stalk = cluster.cluster.stalk;
+        let flowers = organ_color(look, variation, organ.light, organ.id);
+        let rim: [f32; 3] =
+            std::array::from_fn(|c| STAND_STALK * stalk[c] + (1.0 - STAND_STALK) * flowers[c]);
+        let part = crate::blooms::Part {
+            born: organ.born,
+            shed: organ.shed,
+            coarse: crate::clusters::FLAT,
+        };
+        let first = mesh.positions.len();
+        let peduncle = low * organ.size;
+        if peduncle > 0.0 {
+            crate::fruit::stalk_between(
+                organ.position,
+                heading,
+                peduncle,
+                (0.01 * peduncle).max(0.0005),
+                stalk,
+                part,
+                mesh,
+            );
+        }
+        let vertex = |position: Vec3, normal: Vec3, colour: [f32; 3]| Vertex {
+            position,
+            normal,
+            uv: [0.0, 0.0],
+            color: [colour[0], colour[1], colour[2], 1.0],
+            born: organ.born,
+            shed: organ.shed,
+            level: 3,
+            segment: NO_SEGMENT,
+        };
+        // Each side's own corners, lit as facing half way between out
+        // from the axis and the cone's own face (out and down): the
+        // pedicels it stands for face every way round their lengths. By
+        // eye on yarrow: lit as the cone's face, the heads drew 0.74 as
+        // bright as the full drawing's, lit straight out 1.18; half way
+        // 0.97.
+        for k in 0..STAND_SIDES {
+            let at = |k: u32| {
+                let theta = std::f64::consts::TAU * f64::from(k) / f64::from(STAND_SIDES);
+                left * math::cos(theta) + up * math::sin(theta)
+            };
+            let (from, to) = (at(k), at(k + 1));
+            let middle = (from + to).normalize_or(from);
+            let normal =
+                |radial: Vec3| (radial * depth - heading * (0.5 * radius)).normalize_or(radial);
+            let a = mesh.push(vertex(apex, normal(middle), stalk));
+            let b = mesh.push(vertex(centre + to * radius, normal(to), rim));
+            let c = mesh.push(vertex(centre + from * radius, normal(from), rim));
+            mesh.indices.extend_from_slice(&[a, b, c]);
+        }
         mesh.bear(first, organ.segment.unwrap_or(GROUNDED));
     }
 }

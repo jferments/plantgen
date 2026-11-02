@@ -1453,4 +1453,13 @@ pub mod venation;
 /// search has already made kept for its last step, and a plant's leaf
 /// clusters laid out on idle cores, a 30-year Douglas fir's tiers take
 /// 52 s instead of 160 s. Packages draw as before.
-pub const GENERATOR_REVISION: u32 = 186;
+///
+/// 187: a facing card of a cluster on pedicels or rays (an umbel, a
+/// compound umbel, a corymb) stands on its peduncle and a cone of six
+/// sides up to it, as broad as its flowers fill it, on the levels that
+/// draw it as a card and do not merge it with its neighbours
+/// (`clusters::CardFrame::stand`, `mesh::STAND_SIDES`): a yarrow's
+/// corymbs were lines floating over their stems from the side. Eight of
+/// 180 species change on their high and mid tiers, and ten on the
+/// card tiers baked from those levels.
+pub const GENERATOR_REVISION: u32 = 187;
