@@ -1462,4 +1462,13 @@ pub mod venation;
 /// corymbs were lines floating over their stems from the side. Eight of
 /// 180 species change on their high and mid tiers, and ten on the
 /// card tiers baked from those levels.
-pub const GENERATOR_REVISION: u32 = 187;
+///
+/// 188: a level clump of the card tiers turns to the eye where that
+/// draws its cover closer to its parts' than a fixed card, as an upright
+/// one already did, and a level card is lifted to its parts' top only
+/// where they lie in a thin layer (`crate::billboards`): a beargrass's
+/// wedges of blades were plates lifted to the blades' tips and the
+/// flower stalk's top, floating over the plant. Its low cards hid 1.35
+/// times the plant's sky from the side, now 1.06; its minimal cards 0.53,
+/// now 0.75.
+pub const GENERATOR_REVISION: u32 = 188;

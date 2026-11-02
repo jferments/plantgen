@@ -532,3 +532,21 @@ fn a_peyotes_spines_and_wool_are_drawn_on_its_body() {
         );
     }
 }
+
+#[test]
+fn a_tussocks_cards_stand_among_its_blades() {
+    // A beargrass's wedges of blades, arching out from its foot, lay on
+    // level cards lifted to the blades' tips, and with the flower stalk
+    // to its top: plates floating over the plant, a streak from the side.
+    // From the side, the low cards hid 1.35 times the sky the plant does
+    // and the minimal cards 0.53 (`plantc tiers`).
+    for tier in &TIERS[..2] {
+        let (whole, cards) = full_and_tier("nolina-microcarpa", tier);
+        let ratio = cards.cover[0] / whole.cover[0];
+        assert!(
+            (0.7..=1.3).contains(&ratio),
+            "{}: from the side the cards hide {ratio:.2} of the sky the plant does",
+            tier.name
+        );
+    }
+}
