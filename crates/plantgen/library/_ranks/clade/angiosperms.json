@@ -4,6 +4,7 @@
   "name": "angiosperms",
   "parent": "clade/spermatophyta",
   "traits": {
+    "anchorage_per_stem_kg": 184, "crown_drag_at_rest": 2.34, "crown_drag_streamlining": 0.88, "crown_drag_tested_to_ms": 20,
     "reproduction": "flowers",
     "bud_position": "acrotonic",
     "shoot_leaves": {"min": 4, "max": 18, "high": 32, "typical": 12},
@@ -766,6 +767,10 @@
     }
   },
   "evidence": {
+    "traits.anchorage_per_stem_kg": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES): the mean C_reg of its three broadleaf parameter sets (birch, beech, oak; each the mean over four soil groups and three rooting depths), 184 N m per kg of green stem. ForestGALES calls its broadleaf parameters still at the developmental stage; a genus or species with its own tests states its own."},
+    "traits.crown_drag_at_rest": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES): the means of its three broadleaf parameter sets (birch, beech, oak) for the crown drag coefficient on the silhouette, Cd = C u^-N: C 2.34, N 0.88, fitted between 10 and 20 m/s. ForestGALES calls its broadleaf parameters still at the developmental stage; a genus or species with its own fit states its own."},
+    "traits.crown_drag_streamlining": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES): the means of its three broadleaf parameter sets (birch, beech, oak) for the crown drag coefficient on the silhouette, Cd = C u^-N: C 2.34, N 0.88, fitted between 10 and 20 m/s. ForestGALES calls its broadleaf parameters still at the developmental stage; a genus or species with its own fit states its own."},
+    "traits.crown_drag_tested_to_ms": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES): the means of its three broadleaf parameter sets (birch, beech, oak) for the crown drag coefficient on the silhouette, Cd = C u^-N: C 2.34, N 0.88, fitted between 10 and 20 m/s. ForestGALES calls its broadleaf parameters still at the developmental stage; a genus or species with its own fit states its own."},
     "traits.wood_class": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), chapter 2: hardwoods are angiosperms, seeds enclosed in an ovary, their wood with vessels; table 5-11a gives hardwoods their own functions from specific gravity to green strength and stiffness. Monocots lay down no secondary wood and are outside the Handbook's tests, so for a woody monocot this is the nearer class, not a measurement."},
     "rules.generator.params.lie_branch": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a mat of trailing branches, a choice of the model's (2026-10-19): floras say only that lying stems branch freely (Abrams 1951 p. 412, Phlox diffusa: freely branching, the branches spreading or prostrate), so a branch at about a third of the lying nodes, to alternate sides at 55 degrees."},
     "rules.appearance.organs.*.inflorescence.pedicel": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's stalk in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): as long as floras measure the pedicel, for the cluster's length."},

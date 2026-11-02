@@ -3,12 +3,17 @@
   "rank": "genus",
   "name": "Picea",
   "traits": {
+    "anchorage_per_stem_kg": 167, "crown_drag_at_rest": 2.35, "crown_drag_streamlining": 0.51, "crown_drag_tested_to_ms": 22,
     "foliage_ranks": "all_round",
     "leaf_life_years": {"min": 7, "max": 10},
     "cone_maturation_years": 1,
     "cone_posture": "pendent"
   },
   "evidence": {
+    "traits.anchorage_per_stem_kg": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for Sitka, Norway, white and black spruce: C_reg 167 N m per kg of green stem, the mean over its four soil groups and three rooting depths and over those species, from tree-pulling tests (Nicoll et al. 2006 and others, listed in the Critical Resistive Moments vignette). A species with its own pulling tests states its own."},
+    "traits.crown_drag_at_rest": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for Sitka, Norway, white and black spruce: crown drag coefficient on the silhouette Cd = C u^-N with C 2.35, N 0.51, fitted between 10 and 22 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_streamlining": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for Sitka, Norway, white and black spruce: crown drag coefficient on the silhouette Cd = C u^-N with C 2.35, N 0.51, fitted between 10 and 22 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
+    "traits.crown_drag_tested_to_ms": {"evidence": "SourceInferred", "source": "fgr-forestgales", "note": "fgr 2020 (ForestGALES), species parameters for Sitka, Norway, white and black spruce: crown drag coefficient on the silhouette Cd = C u^-N with C 2.35, N 0.51, fitted between 10 and 22 m/s (means over those species), after Mayhead's (1973) wind-tunnel drag of whole trees and later studies (Streamlining and Drag vignette)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
