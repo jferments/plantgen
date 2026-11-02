@@ -80,6 +80,7 @@ pub mod rng;
 pub mod roots;
 pub mod shed;
 pub mod shoots;
+pub mod site;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
@@ -1418,12 +1419,32 @@ pub mod venation;
 /// as a star of three, and one baked from above lies level, over one
 /// atlas of at most 1 024 texels a side. A beargrass's low tier covered
 /// 8% of its outline, now 95%; a yarrow's 33%, now 66%.
-/// 186: a level clump of the card tiers turns to the eye where that
+/// 183: a fleshy body's far levels coarsen it to a budget as the near
+/// levels do (30 000 and 6 000 triangles of skin), down to five-sided
+/// rings a few apart with one ring over a dome: a pencil cholla's skin
+/// drew 242 000 triangles on the third level and 95 000 on the farthest,
+/// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
+/// An export's low tier keeps a plant of bodies solid while it is within
+/// twice the tier's most, as baked cards draw its joints as scraps.
+///
+/// 184: plants grow on a mesh you hand over (`site`); `host@1` holds a
+/// site's fixed triangles. Climber 9: a stem rests on the substrate, so
+/// ivy's stems lie on a wall's face. Climber 10: a clinging shoot's
+/// leaves, renewed ones too, face away from its host (`leaf_face`, 0.8
+/// for Hedera, a root climber; 0 for twiners and tendril climbers), and
+/// its internodes wander (`wander`, 30 for Hedera); a paired-leaf vine
+/// renews a pair. Deciduous vines renew their leaves on old wood every
+/// year (an orange honeysuckle and a California grape had set renew 0,
+/// bare but for a tuft at the top). Ivy's internode is 0.045 m, measured
+/// on a photo, with its yearly length, branching, bend and renewal per
+/// metre kept.
+///
+/// 187: a level clump of the card tiers turns to the eye where that
 /// draws its cover closer to its parts' than a fixed card, as an upright
 /// one already did, and a level card is lifted to its parts' top only
 /// where they lie in a thin layer (`crate::billboards`): a beargrass's
 /// wedges of blades were plates lifted to the blades' tips and the
 /// flower stalk's top, floating over the plant. Its low cards hid 1.35
 /// times the plant's sky from the side, now 1.06; its minimal cards 0.53,
-/// now 0.75. (183 to 185 are #312, #315 and #316.)
-pub const GENERATOR_REVISION: u32 = 186;
+/// now 0.75.
+pub const GENERATOR_REVISION: u32 = 187;

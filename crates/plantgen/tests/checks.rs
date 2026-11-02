@@ -82,11 +82,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
     ),
     (
-        "basella-alba",
-        "juvenile_period_years",
-        "the climber program first flowers in its second year (a shoot turns adult once the vine is adult_age old, counted from 0), so Malabar spinach, which flowers in its first, is drawn flowering at 2 years",
-    ),
-    (
         "cornus-nuttallii",
         "crown_see_through",
         "its photographs show no sky through its crown; drawn four times over (form::MOST_DRAWN) it still shows about 9% between its shoots",

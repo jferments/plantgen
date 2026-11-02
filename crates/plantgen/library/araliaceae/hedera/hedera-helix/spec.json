@@ -12,17 +12,17 @@
   "generator": {
     "params": {
       "shoots": 5,
-      "internode": 0.11,
-      "max_shoot": 3,
+      "internode": 0.045,
+      "max_shoot": 7,
       "cling": 0.2,
       "hug": 0.5,
-      "climb": 0.35,
+      "climb": 0.14,
       "seek": 0.6,
-      "drape": 0.03,
-      "adult_rise": 0.25,
+      "drape": 0.012,
+      "adult_rise": 0.1,
       "adult_light": 0.6,
       "free_years": 1.5,
-      "branch_chance": 0.15,
+      "branch_chance": 0.065,
       "branch_angle": 50,
       "max_order": 2,
       "leaf_size": 0.1,
@@ -33,7 +33,7 @@
       "pipe_tip": 0.0015,
       "pipe_organ": 0.003,
       "pipe_rings": 4e-06,
-      "renew": 0.35,
+      "renew": 0.14,
       "leaf_area": 0.435,
       "fruit_area": 1.27
     }
@@ -129,7 +129,7 @@
     "generator.params.adult_rise": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
-      "note": "FEIS (Waggy 2010, read), after Stein and Fosket (1969): an adult shoot grows upright (orthotropic) and has no aerial roots, where a juvenile shoot creeps or climbs (plagiotropic) on them. So under climber revision 3 (spec rework P6) an adult shoot no longer clings or seeks its host and rises under a tropism of its own; its elasticity, 0.25, a little below a clinging shoot's climb, is hand-set."
+      "note": "FEIS (Waggy 2010, read), after Stein and Fosket (1969): an adult shoot grows upright (orthotropic) and has no aerial roots, where a juvenile shoot creeps or climbs (plagiotropic) on them. So under climber revision 3 (spec rework P6) an adult shoot no longer clings or seeks its host and rises under a tropism of its own; its elasticity, 0.1 (0.25 before the internode was measured, 2026-11-01, the same bend per metre), a little below a clinging shoot's climb, is hand-set."
     },
     "appearance.organs.leaf": {
       "evidence": "SourceInferred",
@@ -144,7 +144,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: an evergreen woody vine that climbs by clinging roots up trunks into the crowns of trees, with glossy, dark, three- to five-lobed leaves on climbing shoots and flowering, black-berried shoots where it reaches the light; introduced and invasive in the forests of the Pacific Northwest, where it smothers bigleaf maples. Not fitted to measurements. Internode 0.11 (was 0.12) since woody forms (2026-10-17), when its host maple's fuller crown let it climb past its reference heights."
+      "note": "Hand-set from general knowledge of the species: an evergreen woody vine that climbs by clinging roots up trunks into the crowns of trees, with glossy, dark, three- to five-lobed leaves on climbing shoots and flowering, black-berried shoots where it reaches the light; introduced and invasive in the forests of the Pacific Northwest, where it smothers bigleaf maples. Not fitted to measurements. Internode 0.11 (was 0.12) since woody forms (2026-10-17), when its host maple's fuller crown let it climb past its reference heights. Internode 0.045 (sites plan S4, 2026-11-01), measured on an iNaturalist photo of a juvenile shoot on a brick wall (imagekit sha256 5b91084b, brick courses of 75 mm as the scale): its leaves stand about 4 cm apart, blades about 5 cm across, where 0.11 left the stems twice as bare as the photos of ivy on walls and trunks. max_shoot 7 (was 3) and branch_chance 0.065 (was 0.15) keep the shoot's yearly length (about 0.32 m) and its side shoots per metre as they were; climb 0.14 (was 0.35), drape 0.012 (was 0.03) and adult_rise 0.1 (was 0.25) keep its tropisms' bend per metre, as a tropism bends a shoot at each internode. renew 0.14 (was 0.35) keeps the leaves an old stem renews per metre: at 0.35 a 15-year ivy on its maple held 227 m² of leaves, against 61 m² before."
     },
     "allometry": {
       "evidence": "Authored",
