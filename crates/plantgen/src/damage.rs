@@ -87,6 +87,29 @@ pub struct Damaged {
     pub pieces: Vec<Piece>,
     /// How each of those breaks tore.
     pub tears: Vec<Tear>,
+    /// The bare wood each split left down its stem, in `standing`.
+    pub scars: Vec<Scar>,
+}
+
+/// The scar a branch split out of its stem leaves: a strip of bare wood
+/// running down the stem from the junction, where the strip the branch
+/// took tore away along the grain. Drawn by [`scar`].
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Scar {
+    /// The junction, on the stem's axis, and the stem's axis there
+    /// (pointing on up the stem).
+    pub top: Vec3,
+    pub axis: Vec3,
+    /// Out of the stem towards where the branch was, square to `axis`.
+    pub out: Vec3,
+    /// The stem's radius, m.
+    pub radius: f64,
+    /// Across the stem's surface at its top, and down the stem, m.
+    pub width: f64,
+    pub length: f64,
+    pub segment: u32,
+    pub level: u8,
+    pub seed: u64,
 }
 
 /// How far past the wood the stub of a branch broken at its foot reaches
@@ -113,14 +136,8 @@ const STRIP_RADIUS: f64 = 0.5;
 /// branch's radii.
 const SOCKET: f64 = 0.3;
 
-/// How deep the scar a split leaves sits under the stem's surface, in the
-/// branch's radii: nearly flush.
-const WOUND_SINK: f64 = 0.1;
-
-/// How far the splinters of a split's wound reach, against a break across
-/// the grain: the strip peels away along the grain and leaves the scar
-/// ragged but nearly flush.
-const WOUND_TORN: f64 = 0.15;
+/// How high above the ground a leaf pressed onto it lies, m.
+const LEAF_LIFT: f64 = 0.01;
 
 /// Green wood's density, kg/m³, for a falling piece's weight: freshly
 /// felled wood is about as heavy as water, a little less.
@@ -296,6 +313,7 @@ pub fn apply(
     let mut stubs = Vec::with_capacity(taken.len());
     let mut pieces = Vec::with_capacity(taken.len());
     let mut tears = Vec::with_capacity(taken.len());
+    let mut scars = Vec::new();
     for (b, run) in &taken {
         let first = &graph.segments[b.segment as usize];
         let axis = (first.end - first.start).normalize_or(Vec3::Y);
@@ -313,28 +331,27 @@ pub fn apply(
                 let host = &graph.segments[parent as usize];
                 let host_axis = (host.end - host.start).normalize_or(Vec3::Y);
                 let sine = axis.cross(host_axis).length().max(0.3);
-                let surface = host.radius / sine;
+                // Out along the branch to its stem's surface; a branch
+                // leaving at a narrow angle, or one arm of a fork, leaves
+                // its stem where the stem's own segment ends, within
+                // about a stem's radius of the junction.
+                let surface = (host.radius / sine).min(host.radius);
                 if how == Tear::Split {
                     let out = (axis - host_axis * axis.dot(host_axis)).normalize_or(Vec3::X);
                     let skin = first.start + out * host.radius;
-                    // The scar the strip leaves: pale torn wood down the
-                    // stem from the socket, one ragged patch a radius.
-                    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                    let patches = STRIP.round().max(1.0) as u64;
-                    for patch in 0..patches {
-                        #[allow(clippy::cast_precision_loss)]
-                        let down = (patch as f64 + 0.5) * r;
-                        stubs.push(End {
-                            point: skin - host_axis * down - out * (WOUND_SINK * r),
-                            axis: out,
-                            radius: STRIP_RADIUS * r,
-                            tension: -host_axis,
-                            segment: remap[parent as usize],
-                            level: level_of(host.order),
-                            seed: rng::combine(first.id, 0x0057_4F55_4E44 + patch),
-                            torn: WOUND_TORN,
-                        });
-                    }
+                    // The scar the strip leaves: bare wood down the stem
+                    // from the socket, as wide as the branch at the top.
+                    scars.push(Scar {
+                        top: first.start,
+                        axis: host_axis,
+                        out,
+                        radius: host.radius,
+                        width: 2.0 * r,
+                        length: STRIP * r,
+                        segment: remap[parent as usize],
+                        level: level_of(host.order),
+                        seed: rng::combine(first.id, 0x0000_5343_4152),
+                    });
                     let mut wood = first.clone();
                     wood.id = rng::combine(first.id, 0x0053_5452_4950);
                     wood.parent = Some(0);
@@ -343,7 +360,7 @@ pub fn apply(
                     wood.end = first.start + axis * surface;
                     wood.radius = STRIP_RADIUS * r;
                     strip = Some(wood);
-                    surface - SOCKET * r
+                    (surface - SOCKET * r).max(0.0)
                 } else {
                     surface + COLLAR * r
                 }
@@ -381,6 +398,13 @@ pub fn apply(
             tension,
             level,
             tear: how,
+            beside: if how == Tear::Split {
+                first
+                    .parent
+                    .map_or(0.0, |parent| graph.segments[parent as usize].radius)
+            } else {
+                0.0
+            },
             strip,
         };
         pieces.push(fallen(graph, b, run, &off, drag));
@@ -406,6 +430,7 @@ pub fn apply(
         stubs,
         pieces,
         tears,
+        scars,
     }
 }
 
@@ -438,6 +463,9 @@ struct Fall {
     level: u8,
     tear: Tear,
     strip: Option<GraphSegment>,
+    /// How far out from the break's axis its butt lands: the stem's radius
+    /// for a limb split out of it, which drops beside the stem.
+    beside: f64,
 }
 
 /// How far the wind at `wind` m/s at 10 m, on the profile `drag`, carries
@@ -575,12 +603,20 @@ fn fallen(
             }
         }
         (about, chosen, Vec3::ZERO)
-    } else if fall.level == 0 {
+    } else if fall.level == 0 || fall.tear == Tear::Split {
         // A stem topples down the wind, its own way round where it
         // already leans, and its butt slides off the stump down the fall.
-        let target = (toward * 2.0 + lean.normalize_or(toward)).normalize_or(toward);
+        // A limb tearing out of its stem pivots on the junction as the
+        // strip peels, outwards the way it leans, and its butt drops to
+        // the stem's foot.
+        let target = if fall.level == 0 {
+            toward * 2.0 + lean.normalize_or(toward)
+        } else {
+            lean.normalize_or(toward) * 2.0 + toward
+        }
+        .normalize_or(toward);
         let turn = Turn::between(length, target);
-        let shift = Vec3::Y * (r - pivot.y) + target * (2.0 * r);
+        let shift = Vec3::Y * (r - pivot.y) + target * (2.0 * r + fall.beside);
         (pivot, turn, shift)
     } else {
         // A branch falls free and tumbles, landing level with its wood's
@@ -597,15 +633,24 @@ fn fallen(
         (pivot, turn, shift)
     };
     let place = |p: Vec3| about + turn.apply(p - about) + shift;
+    // What would lie below the ground is crushed flat onto it: the crown
+    // a piece lands on splays out over the ground rather than sinking in.
+    let on_ground = |p: Vec3, lift: f64| Vec3::new(p.x, p.y.max(lift), p.z);
     for segment in &mut segments {
-        segment.start = place(segment.start);
-        segment.end = place(segment.end);
+        let lift = segment.radius;
+        segment.start = on_ground(place(segment.start), lift);
+        segment.end = on_ground(place(segment.end), lift);
         segment.left = turn.apply(segment.left);
     }
     for organ in &mut organs {
-        organ.position = place(organ.position);
+        organ.position = on_ground(place(organ.position), LEAF_LIFT);
         organ.heading = turn.apply(organ.heading);
         organ.left = turn.apply(organ.left);
+        if organ.position.y <= LEAF_LIFT + 1.0e-9 {
+            // A leaf pressed flat lies along the ground.
+            let flat = Vec3::new(organ.heading.x, 0.0, organ.heading.z);
+            organ.heading = flat.normalize_or(Vec3::X);
+        }
     }
     let base = &segments[0];
     let height = segments
@@ -930,6 +975,122 @@ pub fn fracture(end: &End, toughness: Toughness, grain: &Grain, edge: f64) -> Me
     out
 }
 
+/// The scar `scar` drawn on its stem, coloured `grain`, about `edge` m
+/// between vertices: bare wood just proud of the bark, as wide as the
+/// branch at the junction and narrowing down the stem to a ragged point
+/// where the strip tore off. Its edges are torn unevenly, a lip of bark
+/// curls back along them, and the wood is streaked along the grain.
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn scar(scar: &Scar, grain: &Grain, edge: f64) -> Mesh {
+    let mut out = Mesh::default();
+    let axis = scar.axis.normalize_or(Vec3::Y);
+    let outward = (scar.out - axis * axis.dot(scar.out)).normalize_or(Vec3::X);
+    let side = axis.cross(outward);
+    let radius = scar.radius.max(1.0e-4);
+    let draw = |salt: u64| rng::unit(rng::combine(scar.seed, salt));
+    let step = (0.6 * edge).max(1.0e-3);
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let rows = ((scar.length / step).ceil() as usize).clamp(4, 80);
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let columns = ((scar.width / step).ceil() as usize).clamp(4, 40);
+    // Half its width at a share `s` down it, ragged at the edges.
+    #[allow(clippy::cast_precision_loss)]
+    let half = |s: f64, row: usize, right: bool| {
+        let taper = (1.0 - s.powf(1.5)).max(0.0);
+        let ragged = 0.75 + 0.5 * draw((row as u64) * 2 + u64::from(right));
+        0.5 * scar.width * taper * ragged
+    };
+    // A point on the stem's surface `down` m below the junction, `across`
+    // m round from the middle, `lift` m proud of the bark.
+    let at = |down: f64, across: f64, lift: f64| {
+        let angle = across / radius;
+        let normal = outward * math::cos(angle) + side * math::sin(angle);
+        (scar.top - axis * down + normal * (radius + lift), normal)
+    };
+    let push = |out: &mut Mesh, p: [(Vec3, Vec3); 3], colour: [f32; 4]| {
+        let base = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
+        let normal = (p[1].0 - p[0].0)
+            .cross(p[2].0 - p[0].0)
+            .normalize_or(p[0].1);
+        for (position, _) in p {
+            out.push(Vertex {
+                position,
+                normal,
+                uv: [0.0, 0.0],
+                color: colour,
+                born: 0.0,
+                shed: None,
+                level: scar.level,
+                segment: scar.segment,
+            });
+        }
+        out.indices.extend_from_slice(&[base, base + 1, base + 2]);
+    };
+    let lift = 0.004 * radius.max(0.05);
+    // Streaks along the grain: each column its own shade.
+    #[allow(clippy::cast_possible_truncation)]
+    let streak = |column: usize| (0.82 + 0.3 * draw(0x5354_0000 + column as u64)) as f32;
+    let wood = |column: usize| {
+        let k = streak(column);
+        [
+            grain.sapwood[0] * k,
+            grain.sapwood[1] * k,
+            grain.sapwood[2] * k,
+            1.0,
+        ]
+    };
+    let bark = [
+        grain.bark[0] * 0.8,
+        grain.bark[1] * 0.8,
+        grain.bark[2] * 0.8,
+        1.0,
+    ];
+    #[allow(clippy::cast_precision_loss)]
+    let row_at = |row: usize| {
+        (
+            row as f64 / rows as f64,
+            scar.length * row as f64 / rows as f64,
+        )
+    };
+    for row in 0..rows {
+        let (s0, d0) = row_at(row);
+        let (s1, d1) = row_at(row + 1);
+        let (l0, r0) = (half(s0, row, false), half(s0, row, true));
+        let (l1, r1) = (half(s1, row + 1, false), half(s1, row + 1, true));
+        for column in 0..columns {
+            #[allow(clippy::cast_precision_loss)]
+            let (t0, t1) = (
+                column as f64 / columns as f64,
+                (column + 1) as f64 / columns as f64,
+            );
+            let x = |l: f64, r: f64, t: f64| -l + (l + r) * t;
+            let a = at(d0, x(l0, r0, t0), lift);
+            let b = at(d0, x(l0, r0, t1), lift);
+            let c = at(d1, x(l1, r1, t1), lift);
+            let d = at(d1, x(l1, r1, t0), lift);
+            push(&mut out, [a, d, c], wood(column));
+            push(&mut out, [a, c, b], wood(column));
+        }
+        // The torn bark along each edge, curled out from the wood.
+        for (sign, e0, e1) in [(-1.0, l0, l1), (1.0, r0, r1)] {
+            let inner0 = at(d0, sign * e0, lift);
+            let inner1 = at(d1, sign * e1, lift);
+            let curl = 0.25 * scar.width * (0.4 + 0.6 * draw(0x4C49_0000 + row as u64));
+            let outer0 = at(d0, sign * (e0 + 0.15 * curl), lift + 0.5 * curl);
+            let outer1 = at(d1, sign * (e1 + 0.15 * curl), lift + 0.5 * curl);
+            if sign < 0.0 {
+                push(&mut out, [inner0, outer0, outer1], bark);
+                push(&mut out, [inner0, outer1, inner1], bark);
+            } else {
+                push(&mut out, [inner0, inner1, outer1], bark);
+                push(&mut out, [inner0, outer1, outer0], bark);
+            }
+        }
+    }
+    out
+}
+
 /// Every vertex of `more` added to `mesh`.
 pub fn append(mesh: &mut Mesh, more: &Mesh) {
     let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
@@ -1113,20 +1274,40 @@ mod tests {
             &Drag::default(),
         );
         assert_eq!(damaged.tears, vec![Tear::Split]);
-        // A scar down the stem below the junction, and the socket's end.
-        assert_eq!(damaged.stubs.len(), 5);
-        for wound in &damaged.stubs[..4] {
-            assert!(wound.point.y < 2.0, "{:?}", wound.point);
+        // A scar of bare wood down the stem below the junction, facing
+        // where the branch was, and the socket's torn end.
+        assert_eq!(damaged.scars.len(), 1);
+        let wound = &damaged.scars[0];
+        assert!((wound.out - Vec3::X).length() < 1.0e-9);
+        assert!((wound.length - STRIP * 0.06).abs() < 1.0e-12);
+        let grain = Grain {
+            sapwood: Grain::SAPWOOD,
+            heartwood: None,
+            bark: [0.2, 0.15, 0.1],
+        };
+        let mesh = scar(wound, &grain, 0.02);
+        assert!(mesh.triangle_count() > 20);
+        for p in &mesh.positions {
+            let (x, y) = (f64::from(p[0]), f64::from(p[1]));
             assert!(
-                (wound.axis - Vec3::X).length() < 1.0e-9,
-                "it faces out of the stem"
+                (2.0 - STRIP * 0.06 - 1.0e-6..=2.0 + 1.0e-6).contains(&y),
+                "{p:?}"
             );
+            assert!(x > 0.03, "on the side the branch left: {p:?}");
         }
-        assert!(damaged.stubs[3].point.y < 2.0 - 3.0 * 0.06);
-        let socket = &damaged.stubs[4];
+        assert_eq!(damaged.stubs.len(), 1);
+        let socket = &damaged.stubs[0];
         assert!(
             socket.point.x < 0.09,
             "the socket sits inside the stem's surface"
+        );
+        // It topples from the junction: its butt lands beside the stem's
+        // foot, its length out along the ground the way it grew.
+        let base = &damaged.pieces[0].graph.segments[0];
+        assert!(
+            base.start.y < 0.1 && base.start.x > 0.09,
+            "{:?}",
+            base.start
         );
         // The piece takes the strip of stem wood, running down the stem.
         let piece = &damaged.pieces[0].graph;

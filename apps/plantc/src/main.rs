@@ -203,6 +203,7 @@ Usage:
                 [--focus X,Y,Z [--span METRES]] [--parts on] [--figure off]
                 [--conditions FILE|JSON [--from-age N]]
                 [--break snap|WIND|bone:N [--fallen off]] [--leaves off]
+                [--turn DEGREES]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m (--figure
       off draws neither, for plant-identification models). --focus
@@ -228,7 +229,8 @@ Usage:
       thicker one splits out with a strip of the stem; tough wood often
       breaks hinged, the piece hanging from its break. --leaves off
       draws the wood alone (cards and tufts left out), to see wounds
-      the foliage hides.
+      the foliage hides. --turn turns the plant DEGREES about its foot
+      (anticlockwise from above) before the view, --focus points with it.
   plantc stand <stand.json|JSON>
       Grow plants together, each making room for the others' crowns, and
       print each one's size at the end and where its leaves lean. The
@@ -2702,6 +2704,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             "fallen",
             "figure",
             "leaves",
+            "turn",
         ],
     )?;
     let day = options.day()?;
@@ -2781,7 +2784,14 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         false,
     )?;
     let (mut looks, sizes) = looks_of(&spec, &growth, day);
-    let graph = &*drawn(&growth.keyframes[0], &sizes, &looks);
+    let turn: f64 = options.number("turn")?.unwrap_or(0.0);
+    let staged = drawn(&growth.keyframes[0], &sizes, &looks);
+    let graph = &*if turn == 0.0 {
+        staged
+    } else {
+        Cow::Owned(turned(&staged, turn))
+    };
+    let focus = focus.map(|(point, span)| (spun(point, turn), span));
     let bodies = bodies_of(&spec, &growth);
     let mut bloom = None;
     let mut plant = if parted {
@@ -3045,6 +3055,17 @@ fn broken_mesh(
         lod,
         level,
     );
+    for wound in &damaged.scars {
+        damage::append(&mut plant.wood, &damage::scar(wound, &grain, lod.ring_edge));
+        out!(
+            "split scar from {:.2},{:.2},{:.2} m down {:.2} m, facing {:.0} degrees (0 = +X, 90 = +Z)",
+            wound.top.x,
+            wound.top.y,
+            wound.top.z,
+            wound.length,
+            wound.out.z.atan2(wound.out.x).to_degrees()
+        );
+    }
     for stub in &damaged.stubs {
         damage::append(
             &mut plant.wood,
@@ -4185,6 +4206,34 @@ fn looks_of(spec: &PlantSpec, growth: &Growth, day: f64) -> (Vec<Look>, Vec<f64>
 
 /// `graph` as drawn with its organ types' `sizes` on a day: organs gone
 /// left out, the others at their stage's size (`looks::staged`).
+/// `point` turned `degrees` about the vertical through the plant's foot,
+/// anticlockwise seen from above.
+fn spun(point: Vec3, degrees: f64) -> Vec3 {
+    let (sin, cos) = degrees.to_radians().sin_cos();
+    Vec3::new(
+        point.x * cos + point.z * sin,
+        point.y,
+        -point.x * sin + point.z * cos,
+    )
+}
+
+/// `graph` turned `degrees` about the vertical through its foot
+/// (`plantc render --turn`), to look at a side of it a view does not face.
+fn turned(graph: &PlantGraph, degrees: f64) -> PlantGraph {
+    let mut out = graph.clone();
+    for segment in &mut out.segments {
+        segment.start = spun(segment.start, degrees);
+        segment.end = spun(segment.end, degrees);
+        segment.left = spun(segment.left, degrees);
+    }
+    for organ in &mut out.organs {
+        organ.position = spun(organ.position, degrees);
+        organ.heading = spun(organ.heading, degrees);
+        organ.left = spun(organ.left, degrees);
+    }
+    out
+}
+
 fn drawn<'a>(graph: &'a PlantGraph, sizes: &[f64], looks: &[Look]) -> Cow<'a, PlantGraph> {
     looks::staged(graph, sizes, looks).map_or(Cow::Borrowed(graph), Cow::Owned)
 }
