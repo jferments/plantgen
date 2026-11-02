@@ -577,12 +577,27 @@ pub(crate) fn build_shaded(
     for (solid, bloom) in solid.iter_mut().zip(&blooms) {
         *solid |= bloom.is_some();
     }
+    // Between this level and the next, the organs of a type solid here and
+    // a card there go over to their cards a growing share at a time
+    // (`crate::budget`), so a drawing between the two is between them.
+    let handed = handed_over(
+        graph, twists, looks, level, along, &solid, &blooms, &is_part,
+    );
+    let (solids_graph, cards_graph, cards_twists, cards_solid) = match &handed {
+        Some(handed) => (
+            &handed.solids,
+            &handed.cards,
+            &handed.twists[..],
+            &handed.solid[..],
+        ),
+        None => (graph, graph, twists, &solid[..]),
+    };
     let variation = appearance.variation;
     let colour =
         |look: &Look, organ: &GraphOrgan| organ_color(look, variation, organ.light, organ.id);
-    leaves::build(graph, looks, level, &colour, &mut mesh.wood);
-    crate::lace::build(graph, looks, level, &colour, &mut mesh.wood);
-    blooms::build_stepped(graph, looks, &blooms, &colour, &mut mesh.wood);
+    leaves::build(solids_graph, looks, level, &colour, &mut mesh.wood);
+    crate::lace::build(solids_graph, looks, level, &colour, &mut mesh.wood);
+    blooms::build_stepped(solids_graph, looks, &blooms, &colour, &mut mesh.wood);
     if level <= 1 {
         let stem_hairs = appearance.stem_hairs.as_ref().filter(|hairs| hairs.drawn());
         let twig = appearance
@@ -595,7 +610,14 @@ pub(crate) fn build_shaded(
         }
     }
     if organs {
-        mesh.cards = cards(graph, looks, &solid, twists, appearance.variation, lod);
+        mesh.cards = cards(
+            cards_graph,
+            looks,
+            cards_solid,
+            cards_twists,
+            appearance.variation,
+            lod,
+        );
     }
     // Bent cards first, so a renderer draws them as one range.
     let (mut bent, flat): (Vec<Card>, Vec<Card>) =
@@ -616,6 +638,108 @@ pub(crate) fn build_shaded(
         shades.resize(mesh.wood.positions.len(), 1.0);
     }
     (mesh, shades)
+}
+
+/// A level drawn part of the way to the next, where some organ types
+/// solid on it are cards on the next: the graph whose organs it draws as
+/// solids, the graph whose organs it draws as cards (with their twists),
+/// and which types it draws only as solids.
+struct HandedOver {
+    solids: PlantGraph,
+    cards: PlantGraph,
+    twists: Vec<Option<f64>>,
+    solid: Vec<bool>,
+}
+
+/// Hash salt picking which organs of a type going over to cards stay
+/// solid ([`handed_over`]).
+const HANDED_SALT: u64 = 0x5011_D0C5;
+
+/// Over the second half of the way from `level` to the next (`along` above
+/// 1/2), the organs of each type `solid` here (solid leaves, lace and
+/// blooms) and drawn as cards on the next level go over to their cards:
+/// a share of `2 - 2 along` stays solid, picked by each organ's id, so the
+/// share shrinks to none as the next level nears and the drawing comes
+/// down between the two levels' triangles instead of in one step. `None`
+/// where nothing goes over, as on every whole level.
+#[allow(clippy::too_many_arguments)]
+fn handed_over(
+    graph: &PlantGraph,
+    twists: &[Option<f64>],
+    looks: &[Look],
+    level: usize,
+    along: f64,
+    solid: &[bool],
+    blooms: &[Option<usize>],
+    is_part: &dyn Fn(usize) -> bool,
+) -> Option<HandedOver> {
+    if along <= 0.5 {
+        return None;
+    }
+    let next = level + 1;
+    let solid_next: Vec<bool> = looks
+        .iter()
+        .enumerate()
+        .map(|(index, look)| {
+            look.solid.as_ref().is_some_and(|solid| solid.solid_at(next))
+                || matches!(&look.shape, crate::looks::Shape::Compound(c) if crate::lace::drawn_at(c, next))
+                || (look.solid.is_none() && !is_part(index) && look.form.solid_at(next))
+        })
+        .collect();
+    let going: Vec<bool> = solid
+        .iter()
+        .zip(&solid_next)
+        .enumerate()
+        .map(|(index, (&here, &there))| {
+            // A bloom too many to draw solid here is a card already.
+            let drawn = here
+                && (looks[index].solid.is_some()
+                    || matches!(&looks[index].shape, crate::looks::Shape::Compound(_))
+                    || blooms.get(index).copied().flatten().is_some());
+            drawn && !there
+        })
+        .collect();
+    if !going.iter().any(|&going| going) {
+        return None;
+    }
+    let share = (2.0 - 2.0 * along).clamp(0.0, 1.0);
+    let stays =
+        |organ: &GraphOrgan| crate::rng::unit(crate::rng::mix64(organ.id ^ HANDED_SALT)) < share;
+    let goes = |organ: &GraphOrgan| {
+        going
+            .get(usize::from(organ.organ))
+            .copied()
+            .unwrap_or(false)
+            && !stays(organ)
+    };
+    let mut solids = graph.clone();
+    solids.organs.retain(|organ| !goes(organ));
+    let mut cards = graph.clone();
+    let mut kept_twists = Vec::with_capacity(twists.len());
+    let mut number = 0;
+    cards.organs.retain(|organ| {
+        let keep = !going
+            .get(usize::from(organ.organ))
+            .copied()
+            .unwrap_or(false)
+            || goes(organ);
+        if keep && !twists.is_empty() {
+            kept_twists.push(twists.get(number).copied().flatten());
+        }
+        number += 1;
+        keep
+    });
+    let solid = solid
+        .iter()
+        .zip(&going)
+        .map(|(&solid, &going)| solid && !going)
+        .collect();
+    Some(HandedOver {
+        solids,
+        cards,
+        twists: kept_twists,
+        solid,
+    })
 }
 
 /// The organs of part types among `cards`: each organ's card, or the

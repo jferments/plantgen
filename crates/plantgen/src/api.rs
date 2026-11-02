@@ -57,8 +57,10 @@ pub use crate::spec::{Environment, PlantSpec};
 
 /// The version of this module's items. It goes up when one of them is
 /// renamed, removed, or changes its arguments or meaning; items added
-/// beside them leave it as it is.
-pub const API_VERSION: u32 = 1;
+/// beside them leave it as it is. 2: [`Budget`] gained `tiers` and is
+/// made with [`Budget::new`] or [`Budget::tiers`], so fields added later
+/// break nothing; [`Variants`] draws tiers unless chosen.
+pub const API_VERSION: u32 = 2;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
 pub const VARIANTS_FILE: &str = "variants.json";
@@ -417,8 +419,8 @@ pub struct Variants {
     pub environment: Option<Environment>,
     /// Their age, in years; the oldest its package keeps unless chosen.
     pub age: Option<f64>,
-    /// How each is written: every level of detail, uncompressed, unless
-    /// chosen.
+    /// How each is written: uncompressed, its levels drawn as tiers (max,
+    /// high, mid and low; [`Budget::tiers`]), unless chosen.
     pub settings: Settings,
     /// How many plants to grow at once; the result does not depend on it.
     pub threads: usize,
@@ -426,7 +428,8 @@ pub struct Variants {
 
 impl Variants {
     /// `count` plants from seed 1, in the typical setting at the oldest
-    /// age, uncompressed, as many at once as there are cores.
+    /// age, uncompressed, drawn as tiers, as many at once as there are
+    /// cores.
     #[must_use]
     pub fn count(count: usize) -> Self {
         Self {
@@ -434,7 +437,10 @@ impl Variants {
             first_seed: 1,
             environment: None,
             age: None,
-            settings: Settings::default(),
+            settings: Settings {
+                budget: Budget::tiers(),
+                ..Settings::default()
+            },
             threads: package::default_threads(),
         }
     }

@@ -222,15 +222,21 @@ pub fn most_detail<E>(
     let Some(mut under) = under else {
         return Ok((DIAL_MAX, false));
     };
-    for _ in 0..NARROWINGS {
+    for narrowing in 0..NARROWINGS {
         let width = under.0 - over.0;
         if under.1 >= FULL || width <= STEP {
             break;
         }
         // Where ln(taken) reaches ln(AIM) on the line between the ends,
-        // kept a tenth of the step from either.
+        // kept a tenth of the step from either; every other try halves
+        // the step, so a drawing that falls steeply near one end (organs
+        // going over to cards, `crate::mesh`) is still reached.
         let (high, low) = (crate::math::ln(over.1), crate::math::ln(under.1.max(1e-9)));
-        let t = ((high - crate::math::ln(AIM)) / (high - low)).clamp(0.1, 0.9);
+        let t = if narrowing % 2 == 1 {
+            0.5
+        } else {
+            ((high - crate::math::ln(AIM)) / (high - low)).clamp(0.1, 0.9)
+        };
         let dial = over.0 + width * if t.is_finite() { t } else { 0.5 };
         let share = taken(dial)?;
         if share <= 1.0 {
@@ -242,6 +248,43 @@ pub fn most_detail<E>(
     Ok((under.0, true))
 }
 
+/// Tiers ([`crate::export::Budget::tiers`]): each farther level's share of
+/// the nearest's triangles, kept within [`TIER_FLOORS`] and [`TIER_CAPS`].
+/// Each level is about an eighth of the one before, a step a viewer sees
+/// as one distance doubling to tripling.
+pub const TIER_SHARES: [f64; 4] = [1.0, 1.0 / 8.0, 1.0 / 64.0, 1.0 / 512.0];
+
+/// The fewest triangles a tier aims for (never more than the tier
+/// before): a small plant is not drawn coarser than these, since it costs
+/// little anyway.
+pub const TIER_FLOORS: [usize; 4] = [0, 20_000, 2_000, 200];
+
+/// The most triangles a tier aims for: the high, mid and low tiers of a
+/// tree whose full drawing holds millions of needles stay what a game
+/// draws.
+pub const TIER_CAPS: [usize; 4] = [usize::MAX, 500_000, 50_000, 5_000];
+
+/// The triangles each tier aims for, nearest first, for a plant whose
+/// nearest level draws `max`: the nearest all of it, each farther level
+/// its [`TIER_SHARES`] within [`TIER_FLOORS`] and [`TIER_CAPS`], and never
+/// more than the tier before.
+#[must_use]
+pub fn tier_triangles(max: usize) -> [usize; 4] {
+    let mut tiers = [max; 4];
+    for level in 1..tiers.len() {
+        #[allow(
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss,
+            clippy::cast_precision_loss
+        )]
+        let share = (max as f64 * TIER_SHARES[level]) as usize;
+        tiers[level] = share
+            .clamp(TIER_FLOORS[level], TIER_CAPS[level])
+            .min(tiers[level - 1]);
+    }
+    tiers
+}
+
 /// A drawing taking at least this share of its budget is close enough.
 pub const FULL: f64 = 0.95;
 
@@ -251,12 +294,30 @@ const AIM: f64 = 0.97;
 
 /// The narrowest step the search narrows to, and the most narrowings.
 const STEP: f64 = 1.0 / 64.0;
-const NARROWINGS: usize = 8;
+const NARROWINGS: usize = 12;
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::quality::STANDARD;
+
+    #[test]
+    fn tiers_are_shares_of_the_full_drawing_within_floors_and_caps() {
+        // A yarrow: an eighth, a sixty-fourth and a 512th of it.
+        assert_eq!(
+            tier_triangles(1_069_650),
+            [1_069_650, 133_706, 16_713, 2_089]
+        );
+        // A 60-year Douglas-fir's millions of needles: the caps.
+        assert_eq!(
+            tier_triangles(616_187_886),
+            [616_187_886, 500_000, 50_000, 5_000]
+        );
+        // A small herb is not drawn coarser than it is until the floors,
+        // and no tier above the one before it.
+        assert_eq!(tier_triangles(768), [768, 768, 768, 200]);
+        assert_eq!(tier_triangles(100), [100, 100, 100, 100]);
+    }
 
     #[test]
     fn whole_numbers_are_the_qualitys_levels() {

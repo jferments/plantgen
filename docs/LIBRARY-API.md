@@ -68,9 +68,31 @@ fn main() -> Result<(), plantgen::api::Error> {
 `Options` chooses the quality (`STANDARD`, as packages are built, or
 `DRAFT`) and the day of the year seasoned organs show. `Settings` chooses
 compression (`None`, `Quantize`, `Meshopt`), which attributes to keep and
-a triangle or byte budget, as `plantc export`'s flags do. Start from
-`Options::default()`, `Settings::default()` and `Variants::count(n)` and
-set the fields you choose.
+a budget (`Budget::new(triangles, bytes)` or `Budget::tiers()`), as
+`plantc export`'s flags do. Start from `Options::default()`,
+`Settings::default()` and `Variants::count(n)` and set the fields you
+choose.
+
+## Levels of detail: package levels or tiers
+
+An export has four levels. By default they are the levels the plant's
+package keeps, which suit After: the nearest at full detail, the farther
+ones as its organs go over to cards. For a flowering herb that can fall
+from hundreds of thousands of triangles to a few hundred in one step.
+
+Tiers (`Budget::tiers()`, `plantc export --levels tiers`, and the default
+for variants) space the levels instead: max is the full drawing, and high,
+mid and low come as close as the plant allows to 1/8, 1/64 and 1/512 of
+its triangles, kept within 20,000 to 500,000, 2,000 to 50,000 and 200 to
+5,000. Between two of the package's levels, organs go over to cards a
+share at a time, so a budget anywhere in between is met. A triangle budget
+given with tiers caps each tier too. Measured: yarrow 1.07M, 131k, 9.9k
+and 576 triangles; a 60-year Douglas-fir 616M, 483k, 49k and 4.9k (which
+takes minutes to search on one core, against seconds for package levels).
+
+Some plants cannot reach every tier yet: a herb whose leaves are a few
+large cut blades, or whose parts are drawn in big steps, keeps a coarser
+low or a closer high and mid.
 
 ## Seeds and variants
 
@@ -99,8 +121,8 @@ The first writes 50 yarrows into `variants/achillea-millefolium/`: for
 each, `STEM-lod0.glb` to `STEM-lod3.glb` and `STEM.json`, where STEM is
 `<species>-<environment>-<seed>-<age>y`, and `variants.json` listing them.
 `plantc help` lists every flag: `--first-seed`, `--env`, `--age`, `--day`,
-`--quality`, `--threads`, and `plantc export`'s compression, attribute and
-budget flags.
+`--quality`, `--threads`, and `plantc export`'s compression, attribute,
+budget and `--levels` flags (variants draw tiers unless `--levels package`).
 
 Measured on a 4-core cloud machine (2026-11-01): 6 yarrows at 6 years in
 7 s; 4 Douglas-firs at 60 years in 82 s.
@@ -108,6 +130,6 @@ Measured on a 4-core cloud machine (2026-11-01): 6 yarrows at 6 years in
 The files are glTF 2.0 that need no PlantGen code. Uncompressed and
 quantized files open in Blender, Godot, Unity (glTFast) and three.js;
 `--compress meshopt` files need a viewer with meshopt decoding, such as
-three.js. Nearest levels are drawn at full detail, which for a flowering
+three.js. The max level is drawn at full detail, which for a flowering
 herb or an old tree is a lot of triangles: use `--compress` and the
-farther levels, or a budget, for real-time scenes.
+farther tiers, or a budget, for real-time scenes.

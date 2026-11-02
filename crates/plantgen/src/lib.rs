@@ -1401,4 +1401,14 @@ pub mod venation;
 /// (a poison hemlock's umbel had drawn as separate small tufts). Six
 /// forbs state their flowering side branches from floras (Abrams;
 /// Britton and Brown 1913).
-pub const GENERATOR_REVISION: u32 = 180;
+///
+/// 181: an export drawn to a budget comes down between two levels: the
+/// organs of a type solid on one level and cards on the next (cut leaves,
+/// solid leaves, flowers and fruit) go over to their cards a share at a
+/// time over the second half of the way, and a part mesh past its
+/// coarsest step keeps that step while fewer of its organs stay solid,
+/// instead of each falling in one step (a yarrow drew 200 000 triangles or
+/// 576, nothing between); the search halves every other step; and an
+/// export may draw its levels as tiers (`export::Budget::tiers`).
+/// Packages draw as before.
+pub const GENERATOR_REVISION: u32 = 181;
