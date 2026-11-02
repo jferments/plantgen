@@ -559,8 +559,9 @@ fn fallen(
     let length = (centre - pivot).normalize_or(axis);
     let toward = Vec3::new(b.toward.x, 0.0, b.toward.z).normalize_or(Vec3::X);
     let lean = Vec3::new(length.x, 0.0, length.z);
-    // Turned about `about` by `turn`, then moved by `shift`.
-    let (about, turn, shift) = if fall.tear == Tear::Hinged {
+    // Turned about `about` by `turn`, rolled about its new axis by
+    // `roll`, then moved by `shift`.
+    let (about, turn, roll, shift) = if fall.tear == Tear::Hinged {
         // Swung down about the compression side's fibres, down the wind
         // and under its own weight, until its wood meets the ground or it
         // hangs.
@@ -602,7 +603,7 @@ fn fallen(
                 break;
             }
         }
-        (about, chosen, Vec3::ZERO)
+        (about, chosen, Turn::about(Vec3::Y, 0.0), Vec3::ZERO)
     } else if fall.level == 0 || fall.tear == Tear::Split {
         // A stem topples down the wind, its own way round where it
         // already leans, and its butt slides off the stump down the fall.
@@ -616,8 +617,9 @@ fn fallen(
         }
         .normalize_or(toward);
         let turn = Turn::between(length, target);
+        let roll = rest(&segments, &organs, pivot, &turn, target);
         let shift = Vec3::Y * (r - pivot.y) + target * (2.0 * r + fall.beside);
-        (pivot, turn, shift)
+        (pivot, turn, roll, shift)
     } else {
         // A branch falls free and tumbles, landing level with its wood's
         // centre below where it was, carried down the wind.
@@ -626,13 +628,15 @@ fn fallen(
             .apply(toward * 2.0 + lean.normalize_or(toward))
             .normalize_or(toward);
         let turn = Turn::between(length, target);
-        let landed = pivot + turn.apply(centre - pivot);
+        let roll = rest(&segments, &organs, pivot, &turn, target);
+        let landed = pivot + roll.apply(turn.apply(centre - pivot));
         let carried = drift(mass, area, centre.y, b.wind, drag);
         let to = centre + toward * carried;
         let shift = Vec3::new(to.x - landed.x, r - pivot.y, to.z - landed.z);
-        (pivot, turn, shift)
+        (pivot, turn, roll, shift)
     };
-    let place = |p: Vec3| about + turn.apply(p - about) + shift;
+    let orient = |v: Vec3| roll.apply(turn.apply(v));
+    let place = |p: Vec3| about + orient(p - about) + shift;
     // What would lie below the ground is crushed flat onto it: the crown
     // a piece lands on splays out over the ground rather than sinking in.
     let on_ground = |p: Vec3, lift: f64| Vec3::new(p.x, p.y.max(lift), p.z);
@@ -640,12 +644,12 @@ fn fallen(
         let lift = segment.radius;
         segment.start = on_ground(place(segment.start), lift);
         segment.end = on_ground(place(segment.end), lift);
-        segment.left = turn.apply(segment.left);
+        segment.left = orient(segment.left);
     }
     for organ in &mut organs {
         organ.position = on_ground(place(organ.position), LEAF_LIFT);
-        organ.heading = turn.apply(organ.heading);
-        organ.left = turn.apply(organ.left);
+        organ.heading = orient(organ.heading);
+        organ.left = orient(organ.left);
         if organ.position.y <= LEAF_LIFT + 1.0e-9 {
             // A leaf pressed flat lies along the ground.
             let flat = Vec3::new(organ.heading.x, 0.0, organ.heading.z);
@@ -659,9 +663,9 @@ fn fallen(
         .fold(0.0, f64::max);
     let end = End {
         point: base.start,
-        axis: turn.apply(-axis),
+        axis: orient(-axis),
         radius: r,
-        tension: turn.apply(fall.tension),
+        tension: orient(fall.tension),
         segment: 0,
         level: fall.level,
         seed: rng::combine(base.id, 0x5049_4543),
@@ -680,6 +684,54 @@ fn fallen(
 }
 
 /// A rotation, as the shortest turn between two directions.
+/// How a piece lying along `along` rolls to rest: onto its broad side, the
+/// way a fallen limb settles with its crown's spread along the ground
+/// rather than standing up off it. Of the rolls about its axis, the one
+/// whose wood and leaves lie flattest (least spread above and below the
+/// axis), and of the two faces then, the one with its weight lower.
+fn rest(
+    segments: &[GraphSegment],
+    organs: &[GraphOrgan],
+    pivot: Vec3,
+    turn: &Turn,
+    along: Vec3,
+) -> Turn {
+    const STEPS: u32 = 36;
+    let mut weighted: Vec<(Vec3, f64)> = segments
+        .iter()
+        .map(|segment| {
+            let length = (segment.end - segment.start).length();
+            let mass = GREEN * math::PI * segment.radius * segment.radius * length;
+            (
+                turn.apply((segment.start + segment.end) * 0.5 - pivot),
+                mass,
+            )
+        })
+        .collect();
+    weighted.extend(organs.iter().map(|organ| {
+        (
+            turn.apply(organ.position - pivot),
+            LEAF_MASS * 0.5 * organ.size * organ.size,
+        )
+    }));
+    let mut best = (f64::INFINITY, f64::INFINITY, 0.0);
+    for step in 0..STEPS {
+        let angle = f64::from(step) * 2.0 * math::PI / f64::from(STEPS);
+        let roll = Turn::about(along, angle);
+        let (mut spread, mut low) = (0.0, 0.0);
+        for (point, mass) in &weighted {
+            let y = roll.apply(*point).y;
+            spread += mass * y * y;
+            low += mass * y;
+        }
+        // Flatness first; a tie (within a percent) goes to the lower face.
+        if spread < best.0 * 0.99 || (spread < best.0 * 1.01 && low < best.1) {
+            best = (spread.min(best.0), low, angle);
+        }
+    }
+    Turn::about(along, best.2)
+}
+
 #[derive(Debug, Clone, Copy)]
 struct Turn {
     axis: Vec3,
@@ -994,11 +1046,25 @@ pub fn scar(scar: &Scar, grain: &Grain, edge: f64) -> Mesh {
     let rows = ((scar.length / step).ceil() as usize).clamp(4, 80);
     #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
     let columns = ((scar.width / step).ceil() as usize).clamp(4, 40);
+    // Noise that wanders smoothly down the rows, a new value every few
+    // rows: torn bark comes away in runs, not in a row of teeth.
+    #[allow(clippy::cast_precision_loss)]
+    let wander = |salt: u64, row: usize| {
+        const RUN: usize = 3;
+        let knot = (row / RUN) as u64;
+        let t = (row % RUN) as f64 / RUN as f64;
+        let t = t * t * (3.0 - 2.0 * t);
+        let a = draw(salt + knot);
+        let b = draw(salt + knot + 1);
+        a + (b - a) * t
+    };
     // Half its width at a share `s` down it, ragged at the edges.
     #[allow(clippy::cast_precision_loss)]
     let half = |s: f64, row: usize, right: bool| {
         let taper = (1.0 - s.powf(1.5)).max(0.0);
-        let ragged = 0.75 + 0.5 * draw((row as u64) * 2 + u64::from(right));
+        let side_salt = if right { 0x5249_0000 } else { 0x4C45_0000 };
+        let ragged =
+            0.75 + 0.4 * wander(side_salt, row) + 0.1 * draw(side_salt + 0x8000 + row as u64);
         0.5 * scar.width * taper * ragged
     };
     // A point on the stem's surface `down` m below the junction, `across`
@@ -1076,7 +1142,7 @@ pub fn scar(scar: &Scar, grain: &Grain, edge: f64) -> Mesh {
         for (sign, e0, e1) in [(-1.0, l0, l1), (1.0, r0, r1)] {
             let inner0 = at(d0, sign * e0, lift);
             let inner1 = at(d1, sign * e1, lift);
-            let curl = 0.25 * scar.width * (0.4 + 0.6 * draw(0x4C49_0000 + row as u64));
+            let curl = 0.25 * scar.width * (0.3 + 0.7 * wander(0x4C49_0000, row));
             let outer0 = at(d0, sign * (e0 + 0.15 * curl), lift + 0.5 * curl);
             let outer1 = at(d1, sign * (e1 + 0.15 * curl), lift + 0.5 * curl);
             if sign < 0.0 {
