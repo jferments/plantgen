@@ -80,6 +80,7 @@ pub mod rng;
 pub mod roots;
 pub mod shed;
 pub mod shoots;
+pub mod site;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
@@ -1425,4 +1426,16 @@ pub mod venation;
 /// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
 /// An export's low tier keeps a plant of bodies solid while it is within
 /// twice the tier's most, as baked cards draw its joints as scraps.
-pub const GENERATOR_REVISION: u32 = 183;
+///
+/// 184: plants grow on a mesh you hand over (`site`); `host@1` holds a
+/// site's fixed triangles. Climber 9: a stem rests on the substrate, so
+/// ivy's stems lie on a wall's face. Climber 10: a clinging shoot's
+/// leaves, renewed ones too, face away from its host (`leaf_face`, 0.8
+/// for Hedera, a root climber; 0 for twiners and tendril climbers), and
+/// its internodes wander (`wander`, 30 for Hedera); a paired-leaf vine
+/// renews a pair. Deciduous vines renew their leaves on old wood every
+/// year (an orange honeysuckle and a California grape had set renew 0,
+/// bare but for a tuft at the top). Ivy's internode is 0.045 m, measured
+/// on a photo, with its yearly length, branching, bend and renewal per
+/// metre kept.
+pub const GENERATOR_REVISION: u32 = 184;
