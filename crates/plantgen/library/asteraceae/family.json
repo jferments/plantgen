@@ -24,7 +24,7 @@
         "defaults": {"bare": 0.05, "basal_angle": 60, "flower_angle": 0, "leaf_peak": 0.1, "raceme": 0.05}
       },
       "rules": {
-        "generator.defaults.nodes": {"rule": "clamp(round(0.85 * first(stem_length_m, height_typical_m) / leaf_width_m), 2, 40)", "why": "A daisy-family herb's stem leaves stand about a leaf's width apart, from near its foot to its heads, so its stem bears as many leafy nodes as its height holds widths: a goldenrod's or pearly everlasting's narrow leaves twenty or more, an arnica's broad pairs three, not the herb program's five. The built-in Asteraceae herbs set their nodes about 1.05 leaf widths apart (median of 13; 0.5 to 2.6), and their leaves reach within 5% of the foot and the heads, hence 0.85 of the stem's height."}
+        "generator.defaults.nodes": {"rule": "clamp(round(0.85 * first(stem_length_m, height_typical_m) / leaf_width_m), 2, floor(32 / leaves_per_node))", "why": "A daisy-family herb's stem leaves stand about a leaf's width apart, from near its foot to its heads, so its stem bears as many leafy nodes as its height holds widths: a goldenrod's or pearly everlasting's narrow leaves twenty or more, an arnica's broad pairs three, not the herb program's five. The built-in Asteraceae herbs set their nodes about 1.05 leaf widths apart (median of 13; 0.5 to 2.6), and their leaves reach within 5% of the foot and the heads, hence 0.85 of the stem's height. A stem bears at most the 32 leaves an angiosperm shoot bears at most (shoot_leaves), so a pair at each node sixteen nodes."}
       },
       "evidence": {
         "generator.program": {
