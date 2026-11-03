@@ -420,13 +420,18 @@ Usage:
       sheet with each stage's tile lit and a trunk wearing it.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
                [--threads N] [--profile static|motion] [--cards yes|no]
+               [--old yes|no]
       Build a .afterplant package in DIR (default `plants`) and print its
       key. A package that is already built is not built again. With
       --profile motion it also holds each keyframe's bones and branches
       and each level's binding to them (plant motion S2), under a key of
       its own; the static package is unchanged. With --cards yes it also
       holds each keyframe's baked-card tiers (low and minimal cards, the
-      far impostor; see `plantc tiers`), under a key of its own.
+      far impostor; see `plantc tiers`), under a key of its own. With
+      --old yes it also grows the species' old ages, for stands: each
+      twice the one before past its oldest keyframe, up to the age its old
+      plants commonly reach (`age_max_years`; Douglas-fir 120, 240 and 480
+      years), under a key of its own.
   plantc variants <species|spec.json> --count N [--out DIR] [--first-seed N]
                  [--env ENV] [--age N] [--day N] [--quality draft|standard]
                  [--threads N] [--shade attribute|baked]
@@ -2418,12 +2423,14 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     let environment = options.environment(&spec)?;
     let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
     let years = options.number("years")?.unwrap_or(spec.growth.years);
-    // The spec's ages, the ages it gives reference sizes for, and the end.
+    // The spec's ages, its old ages, the ages it gives reference sizes
+    // for, and the end.
     let mut keyframes: Vec<f64> = spec
         .growth
         .keyframes
         .iter()
         .copied()
+        .chain(spec.old_ages())
         .chain(
             spec.allometry
                 .iter()
@@ -4948,10 +4955,27 @@ fn build_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
-            "out", "quality", "threads", "program", "day", "profile", "cards",
+            "out", "quality", "threads", "program", "day", "profile", "cards", "old",
         ],
     )?;
     let spec = load_spec(options.one_positional("a species")?)?;
+    let spec = match options.flags.get("old").map(String::as_str) {
+        None | Some("no") => spec,
+        Some("yes") => {
+            let old = spec.old_ages();
+            if old.is_empty() {
+                out!(
+                    "{} states no lifespan past its oldest keyframe (`age_max_years`): no old ages",
+                    spec.id
+                );
+            } else {
+                let ages: Vec<String> = old.iter().map(f64::to_string).collect();
+                out!("{} old ages: {} years", spec.id, ages.join(", "));
+            }
+            spec.grown_old()
+        }
+        Some(other) => return Err(format!("--old is yes or no, not `{other}`").into()),
+    };
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     build_package(&spec, &options, &out)?;
     Ok(())
