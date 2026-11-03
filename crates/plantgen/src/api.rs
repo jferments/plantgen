@@ -517,3 +517,103 @@ pub struct LevelFile {
     pub bytes: usize,
     pub triangles: usize,
 }
+
+/// A site a host hands over: a plain triangle mesh, a material per
+/// triangle as an index into a table of [`Surface`]s, and the paved
+/// tiles laid on it, with no files and no OBJ. Positions are metres,
+/// +Y up and -Z north unless `z_up` (then +Z up and +Y north, as CAD and
+/// GIS tools often have it); triangles wind counter-clockwise seen from
+/// outside.
+#[derive(Debug, Clone, Copy)]
+pub struct SiteInput<'a> {
+    pub positions: &'a [[f64; 3]],
+    pub triangles: &'a [[u32; 3]],
+    /// One per triangle: an index into `table`.
+    pub materials: &'a [u32],
+    pub table: &'a [Surface],
+    pub pavements: &'a [CrackTile],
+    pub z_up: bool,
+}
+
+/// The site mesh of `input`, as growth reads it.
+///
+/// # Errors
+///
+/// On a material index past the table, or as
+/// [`crate::site::SiteMesh::with_surfaces`] and [`crate::pavement::Pavement::new`].
+pub fn site_mesh(input: &SiteInput<'_>) -> Result<crate::site::SiteMesh, Error> {
+    if input.materials.len() != input.triangles.len() {
+        return Err(Error(format!(
+            "a site of {} triangles has {} materials",
+            input.triangles.len(),
+            input.materials.len()
+        )));
+    }
+    let surfaces = input
+        .materials
+        .iter()
+        .map(|&m| {
+            input.table.get(m as usize).copied().ok_or_else(|| {
+                Error(format!(
+                    "site material {m} is past the table of {}",
+                    input.table.len()
+                ))
+            })
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    let positions: Vec<crate::math::Vec3> = input
+        .positions
+        .iter()
+        .map(|&[x, y, z]| {
+            if input.z_up {
+                crate::math::Vec3::new(x, z, -y)
+            } else {
+                crate::math::Vec3::new(x, y, z)
+            }
+        })
+        .collect();
+    let mut mesh = crate::site::SiteMesh::with_surfaces(&positions, input.triangles, &surfaces)
+        .map_err(Error)?;
+    for tile in input.pavements {
+        mesh.add_pavement(crate::pavement::Pavement::new(tile).map_err(Error)?);
+    }
+    Ok(mesh)
+}
+
+/// The site field ([`SiteField`]) of the tile from `low` to `high` (X and
+/// Z, metres, in the frame growth uses: +Y up, -Z north) of the site
+/// `input`, measured as `settings` say. Build it once per tile and keep
+/// it: the same inputs give the same field, and its JSON
+/// ([`SiteField::to_json`]) is versioned ([`SITE_FIELD_VERSION`]) and
+/// documented in `docs/sites/SITE-FIELD.md`. Hand the mesh round the tile
+/// too, as far as `settings.margin_m` reaches, so neighbouring tiles
+/// measure their shared edge alike.
+///
+/// # Errors
+///
+/// As [`site_mesh`] and [`crate::site_field::build`].
+pub fn site_field(
+    input: &SiteInput<'_>,
+    low: [f64; 2],
+    high: [f64; 2],
+    settings: &FieldSettings,
+) -> Result<SiteField, Error> {
+    let mesh = site_mesh(input)?;
+    crate::site_field::build(&mesh, low, high, settings).map_err(Error)
+}
+
+/// A site material by its name: `soil`, `rock`, `bark`, `wood` or
+/// `built`, for a [`Surface`].
+///
+/// # Errors
+///
+/// On any other name.
+pub fn site_material(name: &str) -> Result<u8, Error> {
+    crate::site::material_named(name).map_err(Error)
+}
+
+pub use crate::pavement::CrackTile;
+pub use crate::site::Surface;
+pub use crate::site_field::{
+    CrackSite, FieldSettings, Ground, Host, HostKind, Patch, SITE_FIELD_VERSION, SiteField,
+};

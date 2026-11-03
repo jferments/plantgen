@@ -714,3 +714,206 @@ mod succession {
         );
     }
 }
+
+mod field {
+    use super::{cuboid, garden, paved_lot, wire_fence};
+    use plantgen::api::{self, FieldSettings, HostKind, SiteField, SiteInput, Surface};
+    use plantgen::math::Vec3;
+    use plantgen::site::SiteMesh;
+    use plantgen::site_field::{build, heat_load_index};
+    use plantgen::substrate::{ROCK, SOIL, WOOD};
+
+    fn settings() -> FieldSettings {
+        FieldSettings {
+            cell_m: 0.5,
+            margin_m: 0.0,
+            sky_rays: 32,
+            ..FieldSettings::default()
+        }
+    }
+
+    fn field_of(site: &SiteMesh) -> SiteField {
+        build(site, [-6.0, -6.0], [6.0, 6.0], &settings()).unwrap()
+    }
+
+    fn cell(field: &SiteField, x: f64, z: f64) -> usize {
+        field.cell_at(x, z).unwrap() as usize
+    }
+
+    #[test]
+    fn a_wall_is_four_upright_hosts_and_the_ground_beside_it_knows_it() {
+        let field = field_of(&garden());
+        let walls = field
+            .hosts
+            .iter()
+            .filter(|h| h.kind == HostKind::Wall)
+            .count();
+        assert_eq!(walls, 4, "{:?}", field.hosts);
+        assert!(field.hosts.iter().any(|h| h.kind == HostKind::Roof));
+        let g = &field.ground;
+        // Inside the wall's footprint nothing stands; beside it, the
+        // wall is near and half the sky is gone.
+        assert!(g.height[cell(&field, 0.0, -0.65)].is_none());
+        let beside = cell(&field, 0.0, -0.25);
+        let open = cell(&field, 0.0, 4.75);
+        assert!(g.wall_m[beside] < 0.5, "{}", g.wall_m[beside]);
+        assert!(g.wall_m[open] > 4.0);
+        assert!(
+            g.sky[beside] < g.sky[open] - 0.1,
+            "{} {}",
+            g.sky[beside],
+            g.sky[open]
+        );
+        // The soil runs 2 m down to the ground block's floor.
+        assert!((g.rooting_m[open].unwrap() - 2.0).abs() < 1.0e-6);
+        // Every patch on the wall's south face roots in the ground south
+        // of it, and none lies below the ground.
+        for patch in &field.patches {
+            assert!(patch.centre[1] > -0.03, "{patch:?}");
+            if patch.normal[2] > 0.9 && patch.centre[1] < 2.4 {
+                let root = patch.root_cell.expect("a root cell");
+                assert!(field.cell_centre(root)[1] > -0.5);
+                assert!(patch.climbable);
+            }
+        }
+    }
+
+    #[test]
+    fn posts_and_wires_make_a_fence_in_bays_with_u_running_on() {
+        let field = field_of(&wire_fence());
+        let fences: Vec<_> = field
+            .hosts
+            .iter()
+            .filter(|h| h.kind == HostKind::Fence)
+            .collect();
+        assert_eq!(fences.len(), 2, "{:?}", field.hosts);
+        let us: Vec<f64> = field
+            .patches
+            .iter()
+            .filter(|p| p.host == fences[1].id)
+            .map(|p| p.u)
+            .collect();
+        // The second bay's patches carry on from 2.5 m along the fence.
+        assert!(us.iter().all(|u| *u >= 2.25), "{us:?}");
+        assert!(field.patches.iter().any(|p| p.thin_m > 0.0));
+    }
+
+    #[test]
+    fn a_pole_and_a_sunk_boulder_are_found_and_patched_round() {
+        let mut parts = (Vec::new(), Vec::new(), Vec::new());
+        cuboid(
+            Vec3::new(-6.0, -2.0, -6.0),
+            Vec3::new(6.0, 0.0, 6.0),
+            SOIL,
+            &mut parts,
+        );
+        cuboid(
+            Vec3::new(2.85, -0.5, -0.15),
+            Vec3::new(3.15, 8.0, 0.15),
+            WOOD,
+            &mut parts,
+        );
+        cuboid(
+            Vec3::new(-3.0, -0.4, -1.0),
+            Vec3::new(-1.0, 0.6, 1.0),
+            ROCK,
+            &mut parts,
+        );
+        let site = SiteMesh::new(&parts.0, &parts.1, &parts.2).unwrap();
+        let field = field_of(&site);
+        let pole = field
+            .hosts
+            .iter()
+            .find(|h| h.kind == HostKind::Pole)
+            .unwrap();
+        let rock = field
+            .hosts
+            .iter()
+            .find(|h| h.kind == HostKind::Boulder)
+            .unwrap();
+        let round: Vec<_> = field.patches.iter().filter(|p| p.host == pole.id).collect();
+        // Four sides of the pole, each patch facing out, none at its axis.
+        for p in round.iter().filter(|p| p.normal[1].abs() < 0.5) {
+            let out = (p.centre[0] - 3.0).hypot(p.centre[2]);
+            assert!(out > 0.1, "{p:?}");
+            assert!(p.sky > 0.2, "{p:?}");
+        }
+        assert!(round.iter().any(|p| p.height_m > 7.0));
+        // The ground under the boulder is not ground.
+        assert!(field.ground.height[cell(&field, -2.0, 0.0)].is_none());
+        assert!(
+            field
+                .patches
+                .iter()
+                .any(|p| p.host == rock.id && p.normal[1] > 0.9)
+        );
+    }
+
+    #[test]
+    fn cracks_belong_to_their_cells_and_paved_cells_root_only_in_them() {
+        let field = field_of(&paved_lot());
+        assert!(!field.cracks.is_empty());
+        for (index, site) in field.cracks.iter().enumerate() {
+            let cell = site.cell.unwrap() as usize;
+            assert!(field.ground.cracks[cell].contains(&u32::try_from(index).unwrap()));
+        }
+        let g = &field.ground;
+        let crack = cell(&field, 0.0, 2.0);
+        let slab = cell(&field, 0.0, -1.0);
+        assert!(g.rooting_m[crack].unwrap() > 0.03);
+        assert!(g.rooting_m[slab].unwrap() < 1.0e-9);
+        assert!(g.open_share[crack] > 0.0 && g.open_share[crack] < 0.2);
+    }
+
+    #[test]
+    fn a_south_west_slope_is_warmer_than_a_north_east_one() {
+        let level = heat_load_index(45.0, 0.0, 0.0);
+        assert!((level - 0.706).abs() < 0.01, "{level}");
+        assert!(heat_load_index(45.0, 30.0, 225.0) > level);
+        assert!(heat_load_index(45.0, 30.0, 45.0) < level);
+        // South of the equator it turns round.
+        assert!(heat_load_index(-45.0, 30.0, 315.0) > heat_load_index(-45.0, 30.0, 135.0));
+    }
+
+    #[test]
+    fn a_host_builds_the_same_field_from_plain_arrays_and_reads_it_back() {
+        let mut parts = (Vec::new(), Vec::new(), Vec::new());
+        cuboid(
+            Vec3::new(-6.0, -2.0, -6.0),
+            Vec3::new(6.0, 0.0, 6.0),
+            SOIL,
+            &mut parts,
+        );
+        cuboid(
+            Vec3::new(-2.0, -0.3, -0.8),
+            Vec3::new(2.0, 2.5, -0.5),
+            plantgen::substrate::BUILT,
+            &mut parts,
+        );
+        let positions: Vec<[f64; 3]> = parts.0.iter().map(|p| [p.x, p.y, p.z]).collect();
+        let table = [
+            Surface::solid(api::site_material("soil").unwrap()),
+            Surface::solid(api::site_material("built").unwrap()),
+        ];
+        let materials: Vec<u32> = parts.2.iter().map(|m| u32::from(*m != SOIL)).collect();
+        let input = SiteInput {
+            positions: &positions,
+            triangles: &parts.1,
+            materials: &materials,
+            table: &table,
+            pavements: &[],
+            z_up: false,
+        };
+        let from_api = api::site_field(&input, [-6.0, -6.0], [6.0, 6.0], &settings()).unwrap();
+        assert_eq!(from_api, field_of(&garden()));
+        let text = from_api.to_json().unwrap();
+        assert_eq!(SiteField::from_json(&text).unwrap(), from_api);
+        assert_eq!(from_api.version, api::SITE_FIELD_VERSION);
+        // A table too short is refused, not read past.
+        let short = SiteInput {
+            table: &table[..1],
+            ..input
+        };
+        assert!(api::site_field(&short, [-6.0, -6.0], [6.0, 6.0], &settings()).is_err());
+    }
+}
