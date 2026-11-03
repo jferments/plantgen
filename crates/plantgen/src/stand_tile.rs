@@ -37,6 +37,15 @@ pub const TRIES: u32 = 16;
 /// Plants in a row that find no room before a layer counts as full.
 pub const GIVE_UP: u32 = 200;
 
+/// How far a tree's crown may stand off its stem toward room, as a share
+/// of its radius. Crowns grow toward gaps and away from their neighbours
+/// (crown plasticity: Purves, Lichstein and Pacala 2007, PLoS ONE 2:e870;
+/// Muth and Bazzaz 2003, Canadian Journal of Forest Research 33:1323), so
+/// a canopy fills its space without its crowns growing into each other.
+/// The share is this model's choice, kept small for conifers' strong
+/// apical control.
+pub const PLASTICITY: f64 = 0.35;
+
 /// One member of a stand: a grown variant at one age.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Member {
@@ -69,6 +78,10 @@ pub struct Rules {
     pub crown_transmission: f64,
     /// Scale range of a copy of a member.
     pub scale: [f64; 2],
+    /// How far a tree's crown may stand off its stem, as a share of its
+    /// radius ([`PLASTICITY`]); shrubs and herbs keep theirs over their
+    /// feet.
+    pub plasticity: f64,
 }
 
 impl Default for Rules {
@@ -82,6 +95,7 @@ impl Default for Rules {
             overlap: 0.25,
             crown_transmission: 0.1,
             scale: [0.85, 1.15],
+            plasticity: PLASTICITY,
         }
     }
 }
@@ -95,6 +109,23 @@ pub struct Placed {
     pub at_m: [f64; 2],
     pub yaw_deg: f64,
     pub scale: f64,
+    /// Where its crown's centre stands, metres east and north on the tile
+    /// (wrapped): off its stem by at most [`Rules::plasticity`] of its
+    /// radius, toward room. A host leans the plant so.
+    pub crown_m: [f64; 2],
+}
+
+impl Placed {
+    /// How far its crown stands off its stem, metres east and north, by
+    /// the shorter way round the wrapping tile.
+    #[must_use]
+    pub fn crown_offset(&self, tile_m: f64) -> [f64; 2] {
+        let short = |d: f64| d - tile_m * libm::round(d / tile_m);
+        [
+            short(self.crown_m[0] - self.at_m[0]),
+            short(self.crown_m[1] - self.at_m[1]),
+        ]
+    }
 }
 
 /// The crowns standing so far, on a raster of [`CELL_M`] cells that wraps.
@@ -263,27 +294,43 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
                     member.crown_base_m * scale,
                     member.height_m * scale,
                 );
-                let mut best: Option<([f64; 2], Vec<usize>, f64)> = None;
+                // A tree's crown may stand off its stem toward room.
+                let reach = if layer_index < 2 {
+                    rules.plasticity.max(0.0) * radius
+                } else {
+                    0.0
+                };
+                let offsets = crown_offsets(reach);
+                let mut best: Option<([f64; 2], [f64; 2], Vec<usize>, f64)> = None;
                 for _ in 0..TRIES {
                     let at = [next(3) * rules.tile_m, next(4) * rules.tile_m];
-                    let cells = raster.cells(at, radius.max(CELL_M * 0.5));
-                    let (crowded, light) =
-                        raster.crowding(&cells, base, top, rules.crown_transmission);
-                    if light < member.light_needed {
-                        continue;
-                    }
-                    if best.as_ref().is_none_or(|b| crowded < b.2) {
-                        best = Some((at, cells, crowded));
+                    for (offset, off_by) in &offsets {
+                        let crown = [
+                            (at[0] + offset[0]).rem_euclid(rules.tile_m),
+                            (at[1] + offset[1]).rem_euclid(rules.tile_m),
+                        ];
+                        let cells = raster.cells(crown, radius.max(CELL_M * 0.5));
+                        let (crowded, light) =
+                            raster.crowding(&cells, base, top, rules.crown_transmission);
+                        if light < member.light_needed {
+                            continue;
+                        }
+                        // Of two crowns as crowded, the one nearer its stem.
+                        let score = crowded + 0.01 * off_by;
+                        if best.as_ref().is_none_or(|b| score < b.3) {
+                            best = Some((at, crown, cells, score));
+                        }
                     }
                 }
                 match best {
-                    Some((at, cells, crowded)) if crowded <= rules.overlap => {
+                    Some((at, crown, cells, score)) if score <= rules.overlap + 0.01 => {
                         raster.stamp(&cells, base, top, layer_index);
                         placed.push(Placed {
                             member: index,
                             at_m: at,
                             yaw_deg: next(5) * 360.0,
                             scale,
+                            crown_m: crown,
                         });
                         misses = 0;
                     }
@@ -295,6 +342,28 @@ pub fn lay_out(members: &[Member], rules: &Rules, seed: u64) -> Vec<Placed> {
     placed
 }
 
+/// The places a crown may stand off its stem, up to `reach` metres: over
+/// it, and at half and all of the reach in eight directions, each with its
+/// share of the reach.
+fn crown_offsets(reach: f64) -> Vec<([f64; 2], f64)> {
+    let mut offsets = vec![([0.0, 0.0], 0.0)];
+    if reach > 0.0 {
+        for share in [0.5, 1.0] {
+            for step in 0..8 {
+                let angle = f64::from(step) * std::f64::consts::FRAC_PI_4;
+                offsets.push((
+                    [
+                        share * reach * libm::cos(angle),
+                        share * reach * libm::sin(angle),
+                    ],
+                    share,
+                ));
+            }
+        }
+    }
+    offsets
+}
+
 /// Share of the tile's ground covered by any crown of `placed`, seen
 /// straight down, on the layout's raster.
 #[must_use]
@@ -302,7 +371,7 @@ pub fn cover(members: &[Member], placed: &[Placed], tile_m: f64) -> f64 {
     let mut raster = Raster::new(tile_m);
     for plant in placed {
         let member = &members[plant.member];
-        let cells = raster.cells(plant.at_m, member.crown_radius_m * plant.scale);
+        let cells = raster.cells(plant.crown_m, member.crown_radius_m * plant.scale);
         raster.stamp(&cells, 0.0, 1.0, 0);
     }
     raster.cover(None)
@@ -371,6 +440,37 @@ mod tests {
         assert!(
             under * 2 < open,
             "{under} under the canopy, {open} in the open"
+        );
+    }
+
+    #[test]
+    fn crowns_lean_into_room_and_fill_more_of_the_canopy() {
+        let members = [tree(0, Layer::Canopy, 40.0, 4.0)];
+        let full = Rules {
+            cover: [0.99, 0.0, 0.0, 0.0],
+            ..Rules::default()
+        };
+        let rigid = Rules {
+            plasticity: 0.0,
+            ..full.clone()
+        };
+        let leaning = lay_out(&members, &full, 2);
+        let upright = lay_out(&members, &rigid, 2);
+        assert!(upright.iter().all(|p| p.crown_offset(40.0) == [0.0, 0.0]));
+        let offsets: Vec<f64> = leaning
+            .iter()
+            .map(|p| libm::hypot(p.crown_offset(40.0)[0], p.crown_offset(40.0)[1]))
+            .collect();
+        assert!(offsets.iter().any(|d| *d > 0.1));
+        assert!(offsets.iter().all(|d| *d <= PLASTICITY * 4.0 * 1.15 + 1e-9));
+        // Crowns that move toward room close more of the canopy.
+        let (lean_cover, rigid_cover) = (
+            cover(&members, &leaning, 40.0),
+            cover(&members, &upright, 40.0),
+        );
+        assert!(
+            lean_cover > rigid_cover,
+            "{lean_cover} against {rigid_cover}"
         );
     }
 }

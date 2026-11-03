@@ -267,7 +267,12 @@ Usage:
       grows together. --out writes PREFIX-VIEW.png for each view (close
       frames --focus, SPAN metres across, default 4). --cover prints the
       share of the square HALF metres each way from the middle that crowns
-      cover seen straight down.
+      cover seen straight down. A `lay_out` block lays members out on a
+      tile by their crowns (plantgen::stand_tile); a `develop` block
+      builds the stand from its stand_age and species pool (species, env,
+      seeds), each species' niche and lifespan, and a site's moisture,
+      heat_load, elevation_m and slope_deg (plantgen::succession), with
+      tile_m, seed, repeat, cover, scale, overlap and herb_radius_m.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]

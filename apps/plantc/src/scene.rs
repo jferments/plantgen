@@ -16,6 +16,7 @@ use plantgen::preview::{self, PreviewOptions, View};
 use plantgen::raster;
 use plantgen::spec::{Environment, PlantSpec};
 use plantgen::stand_tile;
+use plantgen::succession::{self, Candidate};
 use plantgen::templates::Templates;
 
 use super::{
@@ -30,24 +31,31 @@ struct Instance {
     at_m: [f64; 2],
     yaw_deg: f64,
     scale: f64,
+    /// Metres east and north its crown leans per metre of height.
+    lean: [f64; 2],
 }
 
 /// `PlantMesh` `plant` turned `yaw_deg` about its foot (anticlockwise
-/// seen from above), scaled by `scale` and moved by `by`.
-fn placed(plant: &PlantMesh, yaw_deg: f64, scale: f64, by: Vec3) -> PlantMesh {
+/// seen from above), scaled by `scale`, leaned by `lean` (metres east and
+/// north per metre up, a shear that keeps its foot in place) and moved by
+/// `by`.
+fn placed(plant: &PlantMesh, yaw_deg: f64, scale: f64, lean: [f64; 2], by: Vec3) -> PlantMesh {
     #[allow(clippy::cast_possible_truncation)]
     let (sin, cos, scale_f) = {
         let (sin, cos) = yaw_deg.to_radians().sin_cos();
         (sin as f32, cos as f32, scale as f32)
     };
     let by = by.to_f32();
+    #[allow(clippy::cast_possible_truncation)]
+    let (east, north) = (lean[0] as f32, lean[1] as f32);
     let turn = |v: [f32; 3]| [v[0] * cos + v[2] * sin, v[1], -v[0] * sin + v[2] * cos];
     let point = |v: [f32; 3]| {
         let t = turn(v);
+        let up = t[1] * scale_f;
         [
-            t[0] * scale_f + by[0],
-            t[1] * scale_f + by[1],
-            t[2] * scale_f + by[2],
+            t[0] * scale_f + east * up + by[0],
+            up + by[1],
+            t[2] * scale_f - north * up + by[2],
         ]
     };
     let mut out = plant.clone();
@@ -98,21 +106,38 @@ fn append(host: &mut PlantMesh, guest: PlantMesh) {
 #[allow(clippy::type_complexity)]
 fn lay_out_stand(
     laid: &serde_json::Value,
+    developed: bool,
+    cover_default: Option<[f64; 4]>,
     members: &[(usize, f64, Layer, f64, f64)],
+    names: &[String],
     sizes_at: &BTreeMap<(usize, u64), [f64; 5]>,
     instances: &mut Vec<Instance>,
 ) -> Result<(), Failure> {
     let defaults = stand_tile::Rules::default();
-    let mut cover = defaults.cover;
+    let mut cover = cover_default.unwrap_or(defaults.cover);
     if let Some(given) = laid["cover"].as_array() {
         for (slot, value) in cover.iter_mut().zip(given) {
             *slot = value.as_f64().ok_or("stand cover must be numbers")?;
+        }
+    }
+    // A developed stand's members are each cohort's grown dominant, so its
+    // copies are that size or smaller: Wind River's tallest Douglas-fir
+    // stands 1.24 times its Douglas-firs' mean height (Shaw et al. 2004).
+    let mut scale = if developed {
+        [0.7, 1.0]
+    } else {
+        defaults.scale
+    };
+    if let Some(given) = laid["scale"].as_array() {
+        for (slot, value) in scale.iter_mut().zip(given) {
+            *slot = value.as_f64().ok_or("stand scale must be numbers")?;
         }
     }
     let rules = stand_tile::Rules {
         tile_m: laid["tile_m"].as_f64().unwrap_or(defaults.tile_m),
         cover,
         overlap: laid["overlap"].as_f64().unwrap_or(defaults.overlap),
+        scale,
         ..defaults
     };
     let seed = laid["seed"].as_u64().unwrap_or(1);
@@ -143,16 +168,31 @@ fn lay_out_stand(
     let area_ha = rules.tile_m * rules.tile_m / 10_000.0;
     let (mut basal, mut leaf) = (0.0, 0.0);
     let mut stems = [0_usize; 4];
+    // By species, trees 5 cm or more through at breast height (as plots
+    // count them): stems, summed height, basal area, tallest; and every
+    // stem.
+    let mut by_species: BTreeMap<&str, (usize, f64, f64, f64, usize)> = BTreeMap::new();
     for plant in &placed {
         let (variant, age, layer, ..) = members[plant.member];
-        let [_, _, _, dbh, leaf_area] = sizes_at
+        let [height, _, _, dbh, leaf_area] = sizes_at
             .get(&key(variant, age))
             .copied()
             .unwrap_or([0.0; 5]);
-        basal += std::f64::consts::PI * (0.5 * dbh * plant.scale).powi(2);
+        let area = std::f64::consts::PI * (0.5 * dbh * plant.scale).powi(2);
+        basal += area;
         leaf += leaf_area * plant.scale * plant.scale;
         if let Some(slot) = Layer::ALL.iter().position(|l| *l == layer) {
             stems[slot] += 1;
+        }
+        let entry = by_species
+            .entry(names[variant].as_str())
+            .or_insert((0, 0.0, 0.0, 0.0, 0));
+        entry.4 += 1;
+        if dbh * plant.scale >= 0.05 {
+            entry.0 += 1;
+            entry.1 += height * plant.scale;
+            entry.2 += area;
+            entry.3 = entry.3.max(height * plant.scale);
         }
     }
     #[allow(clippy::cast_precision_loss)]
@@ -170,21 +210,54 @@ fn lay_out_stand(
         leaf / (area_ha * 10_000.0),
         100.0 * stand_tile::cover(&tile_members, &placed, rules.tile_m)
     );
+    for (name, (count, heights, area, tallest, all)) in &by_species {
+        #[allow(clippy::cast_precision_loss)]
+        let mean = heights / (*count).max(1) as f64;
+        out!(
+            "  {name}: {:.0} stems/ha of 5 cm or more (mean height {mean:.1} m, tallest {tallest:.1} m, basal area {:.1} m²/ha), {:.0} stems/ha in all",
+            per_ha(*count),
+            area / area_ha,
+            per_ha(*all)
+        );
+    }
     let repeat = laid["repeat"].as_u64().unwrap_or(1).max(1);
+    // Herbs are drawn only within `herb_radius_m` of the middle, when
+    // given: a hectare's ferns are millions of cards, and only a close view
+    // shows them one by one. They are counted above all the same.
+    let herb_radius = laid["herb_radius_m"].as_f64().unwrap_or(f64::INFINITY);
     #[allow(clippy::cast_precision_loss)]
     let offset = -0.5 * rules.tile_m * repeat as f64;
     for copy_x in 0..repeat {
         for copy_y in 0..repeat {
             for plant in &placed {
-                let (variant, age, ..) = members[plant.member];
+                let (variant, age, layer, ..) = members[plant.member];
+                #[allow(clippy::cast_precision_loss)]
+                let (east, north) = (
+                    plant.at_m[0] + offset + rules.tile_m * copy_x as f64,
+                    plant.at_m[1] + offset + rules.tile_m * copy_y as f64,
+                );
+                if layer == Layer::Herb && east.hypot(north) > herb_radius {
+                    continue;
+                }
+                // Lean it so its crown's middle stands where the layout put
+                // its crown.
+                let [height, base, ..] = sizes_at
+                    .get(&key(variant, age))
+                    .copied()
+                    .unwrap_or([0.0; 5]);
+                let middle = 0.5 * (base + height) * plant.scale;
+                let shift = plant.crown_offset(rules.tile_m);
+                let lean = if middle > 0.5 {
+                    [shift[0] / middle, shift[1] / middle]
+                } else {
+                    [0.0, 0.0]
+                };
                 #[allow(clippy::cast_precision_loss)]
                 instances.push(Instance {
+                    lean,
                     variant,
                     age,
-                    at_m: [
-                        plant.at_m[0] + offset + rules.tile_m * copy_x as f64,
-                        plant.at_m[1] + offset + rules.tile_m * copy_y as f64,
-                    ],
+                    at_m: [east, north],
                     yaw_deg: plant.yaw_deg,
                     scale: plant.scale,
                 });
@@ -214,8 +287,13 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         serde_json::from_str(&text).map_err(|error| format!("invalid scene: {error}"))?;
     let empty = Vec::new();
     let list = document["instances"].as_array().unwrap_or(&empty);
-    let laid = &document["lay_out"];
-    let members_json = laid["members"].as_array().unwrap_or(&empty);
+    let develop = &document["develop"];
+    let laid = if develop.is_object() {
+        develop
+    } else {
+        &document["lay_out"]
+    };
+    let members_json = document["lay_out"]["members"].as_array().unwrap_or(&empty);
     // Variants by (species, environment, seed), each with its ages.
     let mut keys: BTreeMap<(String, String, u64), usize> = BTreeMap::new();
     let mut variants: Vec<(PlantSpec, Environment, u64, Vec<f64>)> = Vec::new();
@@ -274,7 +352,105 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             at_m,
             yaw_deg,
             scale,
+            lean: [0.0, 0.0],
         });
+    }
+    // A developing stand: its cohorts from its species' niches and
+    // lifespans at its age (`plantgen::succession`), each a member whose
+    // layer its grown height decides.
+    let mut candidates: Vec<Candidate> = Vec::new();
+    // (member, candidate) of each developed member.
+    let mut developed: Vec<(usize, usize)> = Vec::new();
+    let mut cover_default = None;
+    if let Some(pool) = develop["species"].as_array() {
+        let stand_age = stand_number(&develop["stand_age"], "stand_age")?;
+        // The site's factors, when given: each species' share follows how
+        // well they suit it.
+        let given = &develop["site"];
+        let site = if given.is_object() {
+            let number = |key: &str, default: f64| given[key].as_f64().unwrap_or(default);
+            Some(plantgen::niche::SiteFactors {
+                moisture: number("moisture", 0.5),
+                heat_load: number("heat_load", 1.0),
+                elevation_m: number("elevation_m", 0.0),
+                slope_deg: number("slope_deg", 0.0),
+            })
+        } else {
+            None
+        };
+        let mut entries = Vec::new();
+        for item in pool {
+            let id = item["species"]
+                .as_str()
+                .ok_or("each species of a developing stand names its species")?;
+            let env_name = item["env"].as_str().unwrap_or("interior");
+            let environment = Environment::from_name(env_name)
+                .ok_or_else(|| format!("unknown environment `{env_name}`"))?;
+            let spec = load_spec(id)?;
+            let niche = plantgen::niche::Niche::builtin(id).map_err(|error| error.to_string())?;
+            let mut ages = spec.growth.keyframes.clone();
+            ages.extend(spec.old_ages());
+            ages.sort_by(f64::total_cmp);
+            ages.dedup();
+            let suitability = site.map_or(1.0, |site| niche.site_response(site));
+            candidates.push(Candidate {
+                shade_tolerance: niche.shade_tolerance,
+                layers: Layer::ALL.map(|layer| niche.layers.get(&layer).copied().unwrap_or(0.0)),
+                lifespan: spec.growth.lifespan.unwrap_or(spec.growth.years),
+                ages,
+                suitability,
+            });
+            out!("  {id}: suits the site {suitability:.2}");
+            let seeds: Vec<u64> = match item["seeds"].as_array() {
+                Some(seeds) => seeds.iter().filter_map(serde_json::Value::as_u64).collect(),
+                None => vec![spec.variants.seeds[0]],
+            };
+            entries.push((
+                id.to_string(),
+                env_name.to_string(),
+                environment,
+                seeds,
+                succession::light_needed(&niche),
+            ));
+        }
+        let development = succession::develop(&candidates, stand_age);
+        out!(
+            "stand of {stand_age} years: {} (pioneers' lifespan {} years), cover canopy {:.2}, subcanopy {:.2}, shrub {:.2}, herb {:.2}",
+            development.stage.name(),
+            development.lifespan,
+            development.cover[0],
+            development.cover[1],
+            development.cover[2],
+            development.cover[3]
+        );
+        cover_default = Some(development.cover);
+        for cohort in &development.cohorts {
+            let (id, env_name, environment, seeds, light) = &entries[cohort.candidate];
+            out!(
+                "  cohort {id} {} years, weight {:.3}{}",
+                cohort.age,
+                cohort.weight,
+                if cohort.pioneer { ", pioneer" } else { "" }
+            );
+            #[allow(clippy::cast_precision_loss)]
+            let share = cohort.weight / seeds.len().max(1) as f64;
+            for seed in seeds {
+                let key = (id.clone(), env_name.clone(), *seed);
+                let index = if let Some(index) = keys.get(&key) {
+                    *index
+                } else {
+                    variants.push((load_spec(id)?, *environment, *seed, Vec::new()));
+                    keys.insert(key, variants.len() - 1);
+                    variants.len() - 1
+                };
+                let ages = &mut variants[index].3;
+                if !ages.iter().any(|known| (known - cohort.age).abs() < 1e-9) {
+                    ages.push(cohort.age);
+                }
+                members.push((index, cohort.age, Layer::Canopy, share, *light));
+                developed.push((members.len() - 1, cohort.candidate));
+            }
+        }
     }
     if instances.is_empty() && members.is_empty() {
         return Err("a scene needs instances or a stand to lay out".into());
@@ -372,8 +548,37 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
     if all_looks.len() > 255 {
         return Err("too many organ types to draw at once; draw fewer variants".into());
     }
+    if !developed.is_empty() {
+        // Each developed member's layer from its height among the stand's
+        // tallest.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let height = |member: &(usize, f64, Layer, f64, f64)| {
+            sizes_at
+                .get(&(member.0, (member.1 * 1000.0).round() as u64))
+                .map_or(0.0, |sizes| sizes[0])
+        };
+        let top = developed
+            .iter()
+            .filter(|(_, candidate)| candidates[*candidate].tree())
+            .map(|(member, _)| height(&members[*member]))
+            .fold(0.0_f64, f64::max);
+        for (member, candidate) in &developed {
+            let layer =
+                succession::layer_of(&candidates[*candidate], height(&members[*member]), top);
+            members[*member].2 = layer;
+        }
+    }
     if !members.is_empty() {
-        lay_out_stand(laid, &members, &sizes_at, &mut instances)?;
+        let names: Vec<String> = variants.iter().map(|(spec, ..)| spec.id.clone()).collect();
+        lay_out_stand(
+            laid,
+            !developed.is_empty(),
+            cover_default,
+            &members,
+            &names,
+            &sizes_at,
+            &mut instances,
+        )?;
     }
     let mut scene = PlantMesh::default();
     for instance in &instances {
@@ -389,6 +594,7 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 plant,
                 instance.yaw_deg,
                 instance.scale,
+                instance.lean,
                 Vec3::new(east, 0.0, -north),
             ),
         );
