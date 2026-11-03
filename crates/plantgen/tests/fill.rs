@@ -141,3 +141,36 @@ fn every_prototype_is_keyed_by_species_seed_setting_and_class() {
     keys.dedup();
     assert_eq!(keys.len(), fill.prototypes().len());
 }
+
+#[test]
+fn a_tall_plants_parts_draw_each_level_between_them() {
+    // A tree cut into its bole and crown bands: each level's parts draw
+    // every triangle of the level once, so a caller can draw each part at
+    // the detail its own distance asks for and the tree stays whole.
+    let mut options = plantgen::api::Options::default();
+    options.quality = plantgen::quality::DRAFT;
+    let fir = plantgen::api::Generator::new("pseudotsuga-menziesii", &options).expect("fir");
+    let plant = fir
+        .grow_in(plantgen::api::Environment::Interior, 1, 40.0)
+        .expect("it grows");
+    let regions = plantgen::api::crown_regions(&plant.size);
+    assert!(regions.len() >= 2, "{regions:?}");
+    assert_eq!(regions[0].name, "bole");
+    let settings = plantgen::api::Settings {
+        budget: plantgen::api::Budget::tiers(),
+        ..Default::default()
+    };
+    let exported = fir
+        .export_parts(&plant, &settings, &regions)
+        .expect("it exports");
+    for level in &exported.levels {
+        assert_eq!(level.parts.len(), regions.len());
+        let parts: usize = level.parts.iter().map(|part| part.summary.triangles).sum();
+        assert_eq!(parts, level.summary.triangles, "{}", level.file);
+    }
+    assert!(exported.levels[0].parts[0].file.ends_with("-bole-lod0.glb"));
+    // A yarrow is seen whole from wherever it is near.
+    let yarrow = plantgen::api::Generator::new("achillea-millefolium", &options).expect("yarrow");
+    let small = yarrow.grow(1).expect("it grows");
+    assert!(plantgen::api::crown_regions(&small.size).is_empty());
+}

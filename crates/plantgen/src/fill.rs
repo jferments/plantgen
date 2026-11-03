@@ -23,7 +23,7 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
-use crate::api::{Error, Generator, Options, Plant, Settings, VariantRecord};
+use crate::api::{Error, Generator, Options, PartRecord, Plant, Settings, VariantRecord};
 use crate::rng;
 use crate::spec::Environment;
 
@@ -123,6 +123,10 @@ pub struct FillSettings {
     pub seeds: u16,
     /// How each prototype is drawn.
     pub options: Options,
+    /// Whether a tall prototype is also written in parts (its bole and
+    /// its crown in bands, [`crate::api::crown_regions`]), so a caller can
+    /// draw each part at the detail its own distance asks for.
+    pub parts: bool,
 }
 
 impl Default for FillSettings {
@@ -131,6 +135,7 @@ impl Default for FillSettings {
             age_classes: 4,
             seeds: 2,
             options: Options::default(),
+            parts: true,
         }
     }
 }
@@ -166,6 +171,10 @@ pub struct PrototypeFiles {
     pub age_years: f64,
     pub layer: Layer,
     pub plant: VariantRecord,
+    /// A tall prototype's parts, each with its box and a file per level;
+    /// empty for a plant drawn whole.
+    #[serde(default)]
+    pub parts: Vec<PartRecord>,
 }
 
 #[derive(Serialize)]
@@ -713,7 +722,14 @@ impl Fill {
                         let index = wanted[slot];
                         let prototype = &self.prototypes[index as usize];
                         let generator = &generators[&prototype.key.species];
-                        match Self::write_prototype(generator, index, prototype, settings, out) {
+                        match Self::write_prototype(
+                            generator,
+                            index,
+                            prototype,
+                            settings,
+                            self.settings.parts,
+                            out,
+                        ) {
                             Ok(files) => {
                                 done.lock()
                                     .unwrap_or_else(std::sync::PoisonError::into_inner)[slot] =
@@ -760,15 +776,17 @@ impl Fill {
         index: u32,
         prototype: &Prototype,
         settings: &Settings,
+        parts: bool,
         out: &Path,
     ) -> Result<PrototypeFiles, Error> {
         let key = &prototype.key;
         let record = out.join(format!(
-            "{}-{}-{}-a{}.prototype.json",
+            "{}-{}-{}-a{}{}.prototype.json",
             key.species,
             key.environment.name(),
             key.seed,
-            key.age_class
+            key.age_class,
+            if parts { "-parts" } else { "" }
         ));
         if let Some(kept) = std::fs::read_to_string(&record)
             .ok()
@@ -782,6 +800,7 @@ impl Fill {
                         .plant
                         .levels
                         .iter()
+                        .chain(kept.files.parts.iter().flat_map(|part| &part.levels))
                         .all(|level| out.join(&level.file).is_file())
             })
         {
@@ -790,12 +809,13 @@ impl Fill {
                 ..kept.files
             });
         }
-        let plant = generator.write_one(
+        let (plant, parts) = generator.write_one_in(
             key.environment,
             key.seed,
             prototype.age_years,
             settings,
             out,
+            parts,
         )?;
         let files = PrototypeFiles {
             index,
@@ -803,6 +823,7 @@ impl Fill {
             age_years: prototype.age_years,
             layer: prototype.layer,
             plant,
+            parts,
         };
         let kept = KeptPrototype {
             generator_revision: crate::GENERATOR_REVISION,

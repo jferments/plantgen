@@ -51,7 +51,10 @@ use crate::library::Library;
 use crate::package::{self, Inputs, Measurements};
 use crate::quality;
 
-pub use crate::export::{Attributes, Budget, Compression, Export, Level, Plant, Settings, Shade};
+pub use crate::export::{
+    Attributes, Budget, Compression, Export, Level, LevelPart, Plant, Region, Settings, Shade,
+    crown_regions,
+};
 pub use crate::fill::{
     CanopyCell, Community, Cover, CoverKind, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA,
     Instance, Layer, Member, PROTOTYPES_FILE, Prototype, PrototypeFiles, PrototypeKey,
@@ -65,8 +68,10 @@ pub use crate::spec::{Environment, PlantSpec};
 /// beside them leave it as it is. 2: [`Budget`] gained `tiers` and is
 /// made with [`Budget::new`] or [`Budget::tiers`], so fields added later
 /// break nothing; [`Variants`] draws tiers unless chosen. 3: [`Level`]
-/// gained `cards`, the baked-card tier a level is drawn as.
-pub const API_VERSION: u32 = 3;
+/// gained `cards`, the baked-card tier a level is drawn as. 4: [`Level`]
+/// gained `parts`, its share in each region of
+/// [`Generator::export_parts`].
+pub const API_VERSION: u32 = 4;
 
 /// The name of the file listing a set of variants ([`VariantSet`]).
 pub const VARIANTS_FILE: &str = "variants.json";
@@ -237,6 +242,31 @@ impl Generator {
         Ok(export::export(&self.inputs, plant, settings, None)?)
     }
 
+    /// [`Self::export`], each level also cut into `regions` (each level's
+    /// [`Level::parts`], written beside it as `STEM-<region>-lodN.glb`), so
+    /// a renderer can draw each part of a tall plant at the detail its own
+    /// distance asks for. [`crown_regions`] gives a tree's: its bole and
+    /// its crown in bands, each limb whole in the part where it leaves the
+    /// stem.
+    ///
+    /// # Errors
+    ///
+    /// As [`Self::export`], and when the plant moves (a motion package's
+    /// bones span the parts).
+    pub fn export_parts(
+        &self,
+        plant: &Plant,
+        settings: &Settings,
+        regions: &[Region],
+    ) -> Result<Export, Error> {
+        Ok(export::export_parts(
+            &self.inputs,
+            plant,
+            settings,
+            regions,
+        )?)
+    }
+
     /// Build the species' package (every variant its spec lists, at every
     /// keyframe, with levels, impostors and textures) into `out`, unless
     /// it is there already; its directory.
@@ -364,14 +394,54 @@ impl Generator {
         settings: &Settings,
         out: &Path,
     ) -> Result<VariantRecord, Error> {
+        self.write_one_in(environment, seed, age, settings, out, false)
+            .map(|(record, _)| record)
+    }
+
+    /// [`Self::write_one`], and with `parts` each level cut into the
+    /// plant's [`crown_regions`]: the regions and each one's files.
+    pub(crate) fn write_one_in(
+        &self,
+        environment: Environment,
+        seed: u64,
+        age: f64,
+        settings: &Settings,
+        out: &Path,
+        parts: bool,
+    ) -> Result<(VariantRecord, Vec<PartRecord>), Error> {
         let plant = self.grow_in(environment, seed, age)?;
-        let exported = self.export(&plant, settings)?;
+        let regions = if parts {
+            crown_regions(&plant.size)
+        } else {
+            Vec::new()
+        };
+        let exported = self.export_parts(&plant, settings, &regions)?;
         let written = export::write(&exported, out)?;
+        let part_records = regions
+            .iter()
+            .enumerate()
+            .map(|(index, region)| PartRecord {
+                region: region.clone(),
+                levels: exported
+                    .levels
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(level_index, level)| {
+                        level.parts.get(index).map(|part| LevelFile {
+                            level: level_index,
+                            file: part.file.clone(),
+                            bytes: part.glb.len(),
+                            triangles: part.summary.triangles,
+                        })
+                    })
+                    .collect(),
+            })
+            .collect();
         let name = |path: &PathBuf| {
             path.file_name()
                 .map_or_else(String::new, |name| name.to_string_lossy().into_owned())
         };
-        Ok(VariantRecord {
+        let record = VariantRecord {
             seed,
             stem: exported.stem.clone(),
             packaged: plant.variant < self.inputs.spec.variant_list().len(),
@@ -389,7 +459,8 @@ impl Generator {
                 .collect(),
             index: written.last().map(name).unwrap_or_default(),
             fingerprint: fingerprint(&exported),
-        })
+        };
+        Ok((record, part_records))
     }
 }
 
@@ -512,6 +583,14 @@ pub struct VariantRecord {
     pub index: String,
     /// SHA-256 over every level's bytes, in order.
     pub fingerprint: String,
+}
+
+/// One region of a plant cut into parts ([`Generator::export_parts`]):
+/// its box and its files, a level each.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PartRecord {
+    pub region: Region,
+    pub levels: Vec<LevelFile>,
 }
 
 /// One level's GLB file, 0 the nearest.

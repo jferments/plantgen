@@ -13,7 +13,9 @@
   Serve the folder `plantc fill --out DIR` wrote, with this page in it:
     cp docs/examples/fill-viewer.html DIR/ && cd DIR && python3 -m http.server 8000
   then open http://localhost:8000/fill-viewer.html?tile=X_Y
-  (&lod=0..3 picks the level for every plant; default: by distance).
+  (&lod=0..3 picks the level for every plant; default: by distance, each
+  part of a tall plant by its own; &parts=no draws plants whole;
+  &view=oblique|side|ground|roof).
 -->
 <script type="importmap">
 { "imports": {
@@ -91,9 +93,13 @@ const tallest = Math.max(1, ...[...prototypes.values()].map(p => p.plant.size.he
 const view = params.get('view') ?? 'oblique';
 const away = Math.max(size, tallest * 1.6) * 1.1;
 if (view === 'side') camera.position.set(size / 2, tallest * 0.45, away * 0.75);
+else if (view === 'ground') camera.position.set(size / 2, 1.7, -size / 2 + size * 0.1);
+else if (view === 'roof') camera.position.set(size / 2, tallest * 0.85, -size / 2 + size * 0.1);
 else camera.position.set(size / 2 + away * 0.55, away * 0.75, away * 0.55);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.copy(centre).setY(view === 'side' ? tallest * 0.45 : tallest * 0.25);
+controls.target.copy(centre).setY(
+  view === 'side' ? tallest * 0.45 : view === 'ground' ? tallest * 0.5 : view === 'roof' ? tallest * 0.8 : tallest * 0.25);
+if (view === 'ground' || view === 'roof') controls.target.setZ(-size * 0.9);
 controls.update();
 
 // The ground, coloured by the plan's ground cover per stand cell.
@@ -116,24 +122,48 @@ ground.position.copy(centre);
 scene.add(ground);
 
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-const lodOf = inst => {
+// The level a piece is drawn at, by its own distance from the eye: a tall
+// prototype's parts (its bole and crown bands, prototypes.json `parts`)
+// each by theirs, so a treetop is coarse from the ground under it and
+// fine from a roof beside it.
+// A piece `span` metres tall looks `span / distance` big: the high tier
+// while it fills more than half the view's height, then mid, then low.
+const lodAt = (point, span) => {
   if (fixedLod !== null) return fixedLod;
-  const d = camera.position.distanceTo(new THREE.Vector3(inst.position[0], inst.position[2], -inst.position[1]));
-  return d < 15 ? 1 : d < 60 ? 2 : 3;
+  const looks = span / Math.max(0.1, camera.position.distanceTo(point));
+  return looks > 0.5 ? 1 : looks > 0.12 ? 2 : 3;
 };
+const usePartsParam = params.get('parts') !== 'no';
 const groups = new Map();
-for (const inst of instances) {
-  const key = `${inst.prototype}/${lodOf(inst)}`;
+const add = (key, inst) => {
   if (!groups.has(key)) groups.set(key, []);
   groups.get(key).push(inst);
+};
+for (const inst of instances) {
+  const proto = prototypes.get(inst.prototype);
+  const foot = new THREE.Vector3(inst.position[0], inst.position[2], -inst.position[1]);
+  const height = proto?.plant.size.height ?? 1;
+  if (usePartsParam && proto?.parts?.length) {
+    proto.parts.forEach((part, index) => {
+      const low = Math.max(0, part.region.min[1]), high = Math.min(height, part.region.max[1]);
+      const centre = foot.clone().setY(foot.y + inst.scale * (low + high) / 2);
+      add(`${inst.prototype}/${index}/${lodAt(centre, inst.scale * (high - low))}`, inst);
+    });
+  } else {
+    const centre = foot.clone().setY(foot.y + inst.scale * height / 2);
+    add(`${inst.prototype}/-1/${lodAt(centre, inst.scale * height)}`, inst);
+  }
 }
 let drawn = 0, triangles = 0;
 const m = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), s = new THREE.Vector3();
+const counted = new Set();
 for (const [key, members] of groups) {
-  const [index, lod] = key.split('/').map(Number);
+  const [index, partIndex, lod] = key.split('/').map(Number);
   const proto = prototypes.get(index);
   if (!proto) continue;
-  const level = proto.plant.levels[Math.min(lod, proto.plant.levels.length - 1)];
+  const levels = partIndex >= 0 ? proto.parts[partIndex].levels : proto.plant.levels;
+  const level = levels[Math.min(lod, levels.length - 1)];
+  if (!level) continue;
   const gltf = await loader.loadAsync(`prototypes/${level.file}`);
   gltf.scene.updateMatrixWorld(true);
   gltf.scene.traverse(node => {
@@ -152,8 +182,9 @@ for (const [key, members] of groups) {
     const tris = (node.geometry.index ? node.geometry.index.count : node.geometry.attributes.position.count) / 3;
     triangles += tris * members.length;
   });
-  drawn += members.length;
+  for (const inst of members) counted.add(inst);
 }
+drawn = counted.size;
 info.textContent = `Tile ${tileName}: ${size} m, ${drawn} plants of ${prototypes.size} prototypes\n` +
   `${(triangles / 1e6).toFixed(2)} M triangles, ${header.stats.stems_per_ha.toFixed(0)} stems/ha, revision ${header.generator_revision}`;
 renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });

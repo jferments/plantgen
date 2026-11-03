@@ -158,6 +158,18 @@ Ok(())
 - **Prototypes** (`fill.prototypes()`) are keyed by species, seed,
   setting and age class; `fill.grow_prototype(i)` grows one to export
   with its species' `Generator`. A city shares one prototype set.
+- **Parts of tall plants.** A prototype 6 m or taller is also written in
+  parts (`FillSettings::parts`, on by default): its bole under the crown
+  and its crown in up to four bands sized by its own height, each limb
+  whole in the part where it leaves the stem, so no seam cuts through
+  foliage. Each part has a file per tier (`STEM-<part>-lodN.glb`, listed
+  in `prototypes.json` under `parts` with its box), and a level's parts
+  together draw exactly the level. A caller draws each part at the tier
+  its own distance asks for: from the ground a tall tree's top is coarse
+  and its lower limbs fine, and from a roof at crown height the top is
+  fine. The instance stays the same; only which file draws each part
+  changes. `Generator::export_parts(&plant, &settings, &crown_regions(&plant.size))`
+  does the same for any one plant.
 - **Instances** pack into 32 bytes, little-endian: u32 prototype, f32 x3
   position (east, north, up, metres from the tile's south-west corner),
   i16 x4 snorm rotation quaternion (z up), f16 scale, u16 age in tenths
@@ -180,8 +192,12 @@ only draws the ones it adds):
 `docs/examples/fill-viewer.html` is an example caller with no PlantGen
 code: copy it into the `--out` folder, serve that folder
 (`python3 -m http.server`) and open `fill-viewer.html?tile=2_3`. It draws
-every plant with one three.js `InstancedMesh` per prototype mesh, the
-level by distance (`&lod=N` fixes it).
+every plant with one three.js `InstancedMesh` per prototype part and
+tier, each part's tier by how big it looks from the eye (`&lod=N` fixes
+it, `&parts=no` draws plants whole, `&view=ground` or `&view=roof`
+stands the eye under or among the crowns). On a 40 m tile of 60-year
+Douglas-firs, parts drew 1.48 M triangles from the ground where whole
+plants drew 2.50 M, and 1.67 M where 2.33 M from crown height.
 
 The types are settled; what a fill computes (density, layers, closure,
 allometry, dead wood, climbers) is still being built, and until then
