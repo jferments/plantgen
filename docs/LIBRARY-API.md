@@ -167,6 +167,22 @@ Ok(())
   (`cover`: kind and fraction; `canopy`: height, cover, colour), for
   hosts that draw ground cover and far forest with their own systems.
 
+From the command line, `plantc fill` does the same and also grows and
+exports each prototype the tile places (cached by key, so the next tile
+only draws the ones it adds):
+
+```bash
+./target/release/plantc fill meadow.json --tile 2,3 --tile-m 240 --seed 5 \
+    --compress meshopt --out city
+# city/tiles/2_3.json, city/tiles/2_3.bin, city/prototypes/prototypes.json and GLBs
+```
+
+`docs/examples/fill-viewer.html` is an example caller with no PlantGen
+code: copy it into the `--out` folder, serve that folder
+(`python3 -m http.server`) and open `fill-viewer.html?tile=2_3`. It draws
+every plant with one three.js `InstancedMesh` per prototype mesh, the
+level by distance (`&lod=N` fixes it).
+
 The types are settled; what a fill computes (density, layers, closure,
 allometry, dead wood, climbers) is still being built, and until then
 `Fill::tile` scatters each community's members at its `stems_per_ha`.

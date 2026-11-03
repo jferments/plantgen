@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlantGen fill viewer</title>
+<!--
+  An example caller of a stands fill: it reads what `plantc fill` (or
+  `plantgen::api::Fill`) writes, tiles/X_Y.json and .bin and
+  prototypes/prototypes.json, and draws every plant with one
+  InstancedMesh per prototype mesh. No PlantGen code runs here.
+
+  Serve the folder `plantc fill --out DIR` wrote, with this page in it:
+    cp docs/examples/fill-viewer.html DIR/ && cd DIR && python3 -m http.server 8000
+  then open http://localhost:8000/fill-viewer.html?tile=X_Y
+  (&lod=0..3 picks the level for every plant; default: by distance).
+-->
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+} }
+</script>
+<style>
+  :root { --bg: #e9ede6; --ink: #1d241b; --panel: rgba(255,255,255,0.85); }
+  @media (prefers-color-scheme: dark) { :root { --bg: #151a14; --ink: #e4ebe0; --panel: rgba(20,26,19,0.85); } }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 14px/1.4 system-ui, sans-serif; }
+  canvas { display: block; }
+  #info { position: fixed; left: 12px; top: 12px; max-width: calc(100% - 24px); background: var(--panel); padding: 8px 12px; border-radius: 8px; white-space: pre-line; }
+</style>
+</head>
+<body>
+<div id="info">Loading…</div>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const params = new URLSearchParams(location.search);
+const tileName = params.get('tile') ?? '0_0';
+const fixedLod = params.has('lod') ? Number(params.get('lod')) : null;
+const info = document.getElementById('info');
+
+// The 32-byte instance (docs/LIBRARY-API.md): u32 prototype, f32x3
+// position (east, north, up), i16x4 snorm quaternion (z up), f16 scale,
+// u16 age (tenths of a year), i8x2 tint, u16 extra.
+function half(bits) {
+  const s = bits & 0x8000 ? -1 : 1, e = (bits >> 10) & 0x1f, m = bits & 0x3ff;
+  return e === 0 ? s * m * 2 ** -24 : s * (1 + m / 1024) * 2 ** (e - 15);
+}
+function readInstances(buffer, count) {
+  const view = new DataView(buffer), out = [];
+  for (let i = 0; i < count; i++) {
+    const o = i * 32;
+    out.push({
+      prototype: view.getUint32(o, true),
+      position: [view.getFloat32(o + 4, true), view.getFloat32(o + 8, true), view.getFloat32(o + 12, true)],
+      rotation: [0, 1, 2, 3].map(k => view.getInt16(o + 16 + 2 * k, true) / 32767),
+      scale: half(view.getUint16(o + 24, true)),
+      age: view.getUint16(o + 26, true) / 10,
+      tint: [view.getInt8(o + 28) / 127, view.getInt8(o + 29) / 127],
+      extra: view.getUint16(o + 30, true),
+    });
+  }
+  return out;
+}
+
+const header = await (await fetch(`tiles/${tileName}.json`)).json();
+const instances = readInstances(await (await fetch(`tiles/${header.instances_file}`)).arrayBuffer(), header.instances);
+const prototypes = new Map((await (await fetch('prototypes/prototypes.json')).json()).prototypes.map(p => [p.index, p]));
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(devicePixelRatio);
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--bg').trim());
+scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x3a3020, 1.2));
+const sun = new THREE.DirectionalLight(0xffffff, 2.2);
+sun.position.set(0.5, 1, 0.3).multiplyScalar(header.tile_m);
+scene.add(sun);
+
+// PlantGen's tile is east, north, up; three.js is x, y up, -z north.
+const size = header.tile_m;
+const centre = new THREE.Vector3(size / 2, 0, -size / 2);
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.05, size * 20);
+// Frame the tile and its tallest plant.
+const tallest = Math.max(1, ...[...prototypes.values()].map(p => p.plant.size.height ?? 0));
+const view = params.get('view') ?? 'oblique';
+const away = Math.max(size, tallest * 1.6) * 1.1;
+if (view === 'side') camera.position.set(size / 2, tallest * 0.45, away * 0.75);
+else camera.position.set(size / 2 + away * 0.55, away * 0.75, away * 0.55);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(centre).setY(view === 'side' ? tallest * 0.45 : tallest * 0.25);
+controls.update();
+
+// The ground, coloured by the plan's ground cover per stand cell.
+const cover = document.createElement('canvas');
+cover.width = cover.height = header.cols;
+const ctx = cover.getContext('2d');
+const kinds = { bare: [150, 140, 125], litter: [96, 74, 50], herb: [92, 120, 60], grass: [120, 140, 70], moss: [70, 100, 50] };
+header.cover.forEach((c, i) => {
+  const col = i % header.cols, row = Math.floor(i / header.cols);
+  const [r, g, b] = kinds[c.kind] ?? kinds.bare, bare = kinds.bare, f = c.fraction;
+  ctx.fillStyle = `rgb(${bare[0] + (r - bare[0]) * f},${bare[1] + (g - bare[1]) * f},${bare[2] + (b - bare[2]) * f})`;
+  ctx.fillRect(col, header.cols - 1 - row, 1, 1);
+});
+const groundTexture = new THREE.CanvasTexture(cover);
+groundTexture.magFilter = THREE.NearestFilter;
+groundTexture.colorSpace = THREE.SRGBColorSpace;
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshLambertMaterial({ map: groundTexture }));
+ground.rotation.x = -Math.PI / 2;
+ground.position.copy(centre);
+scene.add(ground);
+
+const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+const lodOf = inst => {
+  if (fixedLod !== null) return fixedLod;
+  const d = camera.position.distanceTo(new THREE.Vector3(inst.position[0], inst.position[2], -inst.position[1]));
+  return d < 15 ? 1 : d < 60 ? 2 : 3;
+};
+const groups = new Map();
+for (const inst of instances) {
+  const key = `${inst.prototype}/${lodOf(inst)}`;
+  if (!groups.has(key)) groups.set(key, []);
+  groups.get(key).push(inst);
+}
+let drawn = 0, triangles = 0;
+const m = new THREE.Matrix4(), q = new THREE.Quaternion(), p = new THREE.Vector3(), s = new THREE.Vector3();
+for (const [key, members] of groups) {
+  const [index, lod] = key.split('/').map(Number);
+  const proto = prototypes.get(index);
+  if (!proto) continue;
+  const level = proto.plant.levels[Math.min(lod, proto.plant.levels.length - 1)];
+  const gltf = await loader.loadAsync(`prototypes/${level.file}`);
+  gltf.scene.updateMatrixWorld(true);
+  gltf.scene.traverse(node => {
+    if (!node.isMesh) return;
+    const mesh = new THREE.InstancedMesh(node.geometry, node.material, members.length);
+    members.forEach((inst, i) => {
+      const [x, y, z, w] = inst.rotation;
+      q.set(x, z, -y, w);
+      p.set(inst.position[0], inst.position[2], -inst.position[1]);
+      s.setScalar(inst.scale);
+      m.compose(p, q, s).multiply(node.matrixWorld);
+      mesh.setMatrixAt(i, m);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    scene.add(mesh);
+    const tris = (node.geometry.index ? node.geometry.index.count : node.geometry.attributes.position.count) / 3;
+    triangles += tris * members.length;
+  });
+  drawn += members.length;
+}
+info.textContent = `Tile ${tileName}: ${size} m, ${drawn} plants of ${prototypes.size} prototypes\n` +
+  `${(triangles / 1e6).toFixed(2)} M triangles, ${header.stats.stems_per_ha.toFixed(0)} stems/ha, revision ${header.generator_revision}`;
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight);
+});
+window.ready = true;
+</script>
+</body>
+</html>

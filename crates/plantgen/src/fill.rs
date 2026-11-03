@@ -23,7 +23,7 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
-use crate::api::{Error, Generator, Options, Plant};
+use crate::api::{Error, Generator, Options, Plant, Settings, VariantRecord};
 use crate::rng;
 use crate::spec::Environment;
 
@@ -152,6 +152,27 @@ pub struct Prototype {
     /// The age it is grown to, years.
     pub age_years: f64,
     pub layer: Layer,
+}
+
+/// The name of the file listing a fill's written prototypes.
+pub const PROTOTYPES_FILE: &str = "prototypes.json";
+
+/// A prototype as written: its place in [`Fill::prototypes`], its key,
+/// and its files and size as [`Generator::write_variants`] lists a plant.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PrototypeFiles {
+    pub index: u32,
+    pub key: PrototypeKey,
+    pub age_years: f64,
+    pub layer: Layer,
+    pub plant: VariantRecord,
+}
+
+#[derive(Serialize)]
+struct PrototypeList<'a> {
+    schema: u32,
+    generator_revision: u32,
+    prototypes: &'a [PrototypeFiles],
 }
 
 /// One tile's ground, as the fill reads it. The sites thread grows this
@@ -483,6 +504,16 @@ struct TileHeader<'a> {
 }
 
 impl TilePlan {
+    /// The prototypes the plan places, each once, in order: what to pass
+    /// [`Fill::write_prototypes`] for this tile.
+    #[must_use]
+    pub fn prototypes_used(&self) -> Vec<u32> {
+        let mut used: Vec<u32> = self.instances.iter().map(|i| i.prototype).collect();
+        used.sort_unstable();
+        used.dedup();
+        used
+    }
+
     /// The instances packed back to back.
     #[must_use]
     pub fn instance_bytes(&self) -> Vec<u8> {
@@ -614,6 +645,175 @@ impl Fill {
         Ok((generator, plant))
     }
 
+    /// Grow and export the prototypes `which` (indices into
+    /// [`Fill::prototypes`]; every one when empty) into `out`, on up to
+    /// `threads` threads, and list them in [`PROTOTYPES_FILE`]. A
+    /// prototype whose record (`<stem>.prototype.json`) is in `out` from
+    /// the same revision is kept, not drawn again, so a city's tiles can
+    /// ask for theirs as they come.
+    ///
+    /// # Errors
+    ///
+    /// When an index is not a prototype, one does not grow or export, or a
+    /// file cannot be written.
+    pub fn write_prototypes(
+        &self,
+        which: &[u32],
+        settings: &Settings,
+        threads: usize,
+        out: &Path,
+    ) -> Result<Vec<PrototypeFiles>, Error> {
+        let mut wanted: Vec<u32> = if which.is_empty() {
+            (0..u32::try_from(self.prototypes.len()).unwrap_or(u32::MAX)).collect()
+        } else {
+            which.to_vec()
+        };
+        wanted.sort_unstable();
+        wanted.dedup();
+        if let Some(bad) = wanted
+            .iter()
+            .find(|i| **i as usize >= self.prototypes.len())
+        {
+            return Err(Error(format!("fill: no prototype {bad}")));
+        }
+        std::fs::create_dir_all(out)
+            .map_err(|error| Error(format!("cannot create {}: {error}", out.display())))?;
+        let mut generators = std::collections::BTreeMap::new();
+        for index in &wanted {
+            let species = &self.prototypes[*index as usize].key.species;
+            if !generators.contains_key(species) {
+                generators.insert(
+                    species.clone(),
+                    Generator::new(species, &self.settings.options)?,
+                );
+            }
+        }
+        let next = std::sync::Mutex::new(0_usize);
+        let done = std::sync::Mutex::new(vec![None; wanted.len()]);
+        let failure = std::sync::Mutex::new(None);
+        std::thread::scope(|scope| {
+            for _ in 0..threads.clamp(1, wanted.len().max(1)) {
+                scope.spawn(|| {
+                    loop {
+                        let slot = {
+                            let mut next = next
+                                .lock()
+                                .unwrap_or_else(std::sync::PoisonError::into_inner);
+                            if *next >= wanted.len()
+                                || failure
+                                    .lock()
+                                    .unwrap_or_else(std::sync::PoisonError::into_inner)
+                                    .is_some()
+                            {
+                                return;
+                            }
+                            *next += 1;
+                            *next - 1
+                        };
+                        let index = wanted[slot];
+                        let prototype = &self.prototypes[index as usize];
+                        let generator = &generators[&prototype.key.species];
+                        match Self::write_prototype(generator, index, prototype, settings, out) {
+                            Ok(files) => {
+                                done.lock()
+                                    .unwrap_or_else(std::sync::PoisonError::into_inner)[slot] =
+                                    Some(files);
+                            }
+                            Err(error) => {
+                                failure
+                                    .lock()
+                                    .unwrap_or_else(std::sync::PoisonError::into_inner)
+                                    .get_or_insert(error);
+                                return;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        if let Some(error) = failure
+            .into_inner()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+        {
+            return Err(error);
+        }
+        let written: Vec<PrototypeFiles> = done
+            .into_inner()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+            .into_iter()
+            .flatten()
+            .collect();
+        let list = PrototypeList {
+            schema: INSTANCE_SCHEMA,
+            generator_revision: crate::GENERATOR_REVISION,
+            prototypes: &written,
+        };
+        let path = out.join(PROTOTYPES_FILE);
+        let text = serde_json::to_string_pretty(&list).map_err(|error| Error(error.to_string()))?;
+        std::fs::write(&path, text + "\n")
+            .map_err(|error| Error(format!("cannot write {}: {error}", path.display())))?;
+        Ok(written)
+    }
+
+    fn write_prototype(
+        generator: &Generator,
+        index: u32,
+        prototype: &Prototype,
+        settings: &Settings,
+        out: &Path,
+    ) -> Result<PrototypeFiles, Error> {
+        let key = &prototype.key;
+        let record = out.join(format!(
+            "{}-{}-{}-a{}.prototype.json",
+            key.species,
+            key.environment.name(),
+            key.seed,
+            key.age_class
+        ));
+        if let Some(kept) = std::fs::read_to_string(&record)
+            .ok()
+            .and_then(|text| serde_json::from_str::<KeptPrototype>(&text).ok())
+            .filter(|kept| {
+                kept.generator_revision == crate::GENERATOR_REVISION
+                    && kept.files.key == *key
+                    && (kept.files.age_years - prototype.age_years).abs() < 1e-9
+                    && kept
+                        .files
+                        .plant
+                        .levels
+                        .iter()
+                        .all(|level| out.join(&level.file).is_file())
+            })
+        {
+            return Ok(PrototypeFiles {
+                index,
+                ..kept.files
+            });
+        }
+        let plant = generator.write_one(
+            key.environment,
+            key.seed,
+            prototype.age_years,
+            settings,
+            out,
+        )?;
+        let files = PrototypeFiles {
+            index,
+            key: key.clone(),
+            age_years: prototype.age_years,
+            layer: prototype.layer,
+            plant,
+        };
+        let kept = KeptPrototype {
+            generator_revision: crate::GENERATOR_REVISION,
+            files: files.clone(),
+        };
+        let text = serde_json::to_string_pretty(&kept).map_err(|error| Error(error.to_string()))?;
+        std::fs::write(&record, text + "\n")
+            .map_err(|error| Error(format!("cannot write {}: {error}", record.display())))?;
+        Ok(files)
+    }
+
     /// Fill one tile: its instances, ground cover and far canopy.
     ///
     /// # Errors
@@ -727,6 +927,12 @@ impl Fill {
             .unwrap_or(0);
         u32::try_from(index).unwrap_or(u32::MAX)
     }
+}
+
+#[derive(Serialize, Deserialize)]
+struct KeptPrototype {
+    generator_revision: u32,
+    files: PrototypeFiles,
 }
 
 /// The age of class `class` of `classes`: the oldest at class 0, each
