@@ -542,6 +542,49 @@ fn piece(found: &Mechanics, beam: usize, bone_first: &[Option<u32>]) -> Piece {
     }
 }
 
+/// The most a section loses to the knots through it: a whorl of branches
+/// leaves it at least half its strength.
+const KNOT_LOSS_MOST: f64 = 0.5;
+
+/// What is left of each beam's strength at its start for the knots there:
+/// the branches thinner than it that leave its axis at that section. A
+/// branch's knot runs from the pith out to the bark, and its wood carries
+/// no tension along the axis it crosses, so a knot of diameter `d` takes
+/// out a radial strip of the section `d` wide: `4 d cos²θ / (3π R)` of a
+/// round section's bending strength, `θ` its angle from the tension side.
+/// The wind comes from every side, so each knot counts at the mean
+/// `cos²θ` of ½: `4 r / (3π R)` of a radius-`R` section for a branch of
+/// radius `r`. This is the Wood Handbook's (2021, ch. 7, "Knots" and
+/// figure 7-2) idealisation of a knot as a reduced cross-section, taken
+/// round a stem; it lets stems snap at whorls and near the crown's base
+/// rather than in clear wood below it.
+fn knots(beams: &Beams) -> Vec<f64> {
+    let n = beams.len();
+    let mut children: Vec<Vec<usize>> = vec![Vec::new(); n];
+    for beam in 0..n {
+        if let Some(parent) = beams.parent[beam] {
+            children[parent as usize].push(beam);
+        }
+    }
+    (0..n)
+        .map(|beam| {
+            let Some(parent) = beams.parent[beam] else {
+                return 1.0;
+            };
+            let big = beams.radius[beam][0];
+            if big <= 0.0 {
+                return 1.0;
+            }
+            let lost: f64 = children[parent as usize]
+                .iter()
+                .filter(|&&other| other != beam && beams.radius[other][0] < big)
+                .map(|&other| 4.0 * beams.radius[other][0] / (3.0 * math::PI * big))
+                .sum();
+            1.0 - lost.min(KNOT_LOSS_MOST)
+        })
+        .collect()
+}
+
 /// The break sites and failure of `found`, with the anchorage's
 /// overturning moment `anchorage` (N m), loaded by `drag`. A stem with a
 /// root `flare` (`amount`, `height` m: its radius `1 + amount e^(−y /
@@ -572,12 +615,13 @@ pub fn breakage(
             stem[beam as usize] = true;
         }
     }
+    let knots = knots(beams);
     let strength = |beam: usize| {
         let mut r = beams.radius[beam][0];
         if let Some((amount, height)) = flare.filter(|_| stem[beam]) {
             r *= 1.0 + amount * math::exp(-beams.start[beam].y.max(0.0) / height.max(1.0e-3));
         }
-        rupture * 0.25 * math::PI * r * r * r
+        rupture * 0.25 * math::PI * r * r * r * knots[beam]
     };
     // Only a bone's own beams can be a site; a beam riding a bone breaks
     // with it.
@@ -753,6 +797,41 @@ mod tests {
             rupture: Some(50.0e6),
             leaf_mass: None,
         }
+    }
+
+    /// A section through a whorl keeps less strength than one in clear
+    /// wood: each branch's knot takes `4 r / (3π R)` of it.
+    #[test]
+    fn a_knot_weakens_the_section_it_runs_through() {
+        let mut graph = rod(4.0, 0.1, 0.1, 4);
+        let at = graph.segments[1].end;
+        graph.segments.push(GraphSegment {
+            id: 99,
+            parent: Some(1),
+            lateral: true,
+            order: 1,
+            start: at,
+            end: at + Vec3::X,
+            radius: 0.05,
+            ..graph.segments[0].clone()
+        });
+        let found = mechanics::mechanics(&graph, &[], &material(), &Settings::default());
+        let left = knots(&found.beams);
+        let beam = |segment: usize| found.beams.beam_of[segment].expect("a beam") as usize;
+        let expected = 1.0 - 4.0 * 0.05 / (3.0 * math::PI * 0.1);
+        assert!(
+            (left[beam(2)] - expected).abs() < 1.0e-9,
+            "{}",
+            left[beam(2)]
+        );
+        assert!(
+            (left[beam(1)] - 1.0).abs() < 1.0e-12,
+            "clear wood keeps it all"
+        );
+        assert!(
+            (left[beam(4)] - 1.0).abs() < 1.0e-12,
+            "the branch itself has no knot"
+        );
     }
 
     #[test]

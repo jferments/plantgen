@@ -43,6 +43,7 @@ pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod felling;
 pub mod flowers;
 pub mod form;
 pub mod formula;
@@ -80,6 +81,7 @@ pub mod rng;
 pub mod roots;
 pub mod shed;
 pub mod shoots;
+pub mod site;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
@@ -1425,10 +1427,67 @@ pub mod venation;
 /// now 34 000 and 16 000; a Christmas cactus's farthest 8 700, now 5 600.
 /// An export's low tier keeps a plant of bodies solid while it is within
 /// twice the tier's most, as baked cards draw its joints as scraps.
-/// 184: a shrub up to 3 m tall whose taxa do not say how its stems rise
+///
+/// 184: plants grow on a mesh you hand over (`site`); `host@1` holds a
+/// site's fixed triangles. Climber 9: a stem rests on the substrate, so
+/// ivy's stems lie on a wall's face. Climber 10: a clinging shoot's
+/// leaves, renewed ones too, face away from its host (`leaf_face`, 0.8
+/// for Hedera, a root climber; 0 for twiners and tendril climbers), and
+/// its internodes wander (`wander`, 30 for Hedera); a paired-leaf vine
+/// renews a pair. Deciduous vines renew their leaves on old wood every
+/// year (an orange honeysuckle and a California grape had set renew 0,
+/// bare but for a tuft at the top). Ivy's internode is 0.045 m, measured
+/// on a photo, with its yearly length, branching, bend and renewal per
+/// metre kept.
+///
+/// 185: a site's surfaces say what each face is: a thin part (a fence
+/// board, a wire, a pane) stands as a slab of its own thickness, a face may
+/// refuse climbers, and a face kept clear (a window, a door) cuts back a
+/// climber's tip that comes within `clear_gap` of it (climber 11, `gc`).
+/// A plant set under the eaves stands on the soil, not the roof. Stock
+/// hosts have no clear surface, so plants off a site grow as before.
+///
+/// 186: going from a level that draws a card per organ to one that
+/// clusters them, an export's clusters grow from an eighth of the coarser
+/// level's size (`budget::CLUSTER_START`) instead of from nothing, so the
+/// tiers between such levels land on other dials. With the drawings a
+/// search has already made kept for its last step, and a plant's leaf
+/// clusters laid out on idle cores, a 30-year Douglas fir's tiers take
+/// 52 s instead of 160 s. Packages draw as before.
+///
+/// 187: a facing card of a cluster on pedicels or rays (an umbel, a
+/// compound umbel, a corymb) stands on its peduncle and a cone of six
+/// sides up to it, as broad as its flowers fill it, on the levels that
+/// draw it as a card and do not merge it with its neighbours
+/// (`clusters::CardFrame::stand`, `mesh::STAND_SIDES`): a yarrow's
+/// corymbs were lines floating over their stems from the side. Eight of
+/// 180 species change on their high and mid tiers, and ten on the
+/// card tiers baked from those levels.
+///
+/// 188: a level clump of the card tiers turns to the eye where that
+/// draws its cover closer to its parts' than a fixed card, as an upright
+/// one already did, and a level card is lifted to its parts' top only
+/// where they lie in a thin layer (`crate::billboards`): a beargrass's
+/// wedges of blades were plates lifted to the blades' tips and the
+/// flower stalk's top, floating over the plant. Its low cards hid 1.35
+/// times the plant's sky from the side, now 1.06; its minimal cards 0.53,
+/// now 0.75.
+///
+/// 189: on the card tiers, a rosette plant's flowering stalk kept as a
+/// tube up to where it narrows is a ribbon from there on, and a ribbon's
+/// head takes its thin branches with its flowers (`crate::billboards`):
+/// a beargrass's stalk top and panicle branches were baked onto the
+/// blades' cards and drew as specks up to 20 cm off the stalk.
+///
+/// 190: the card tiers draw no midrib lines for leaflets within a leaf,
+/// whose leaf's card hides them (`crate::billboards`): a fishtail palm's
+/// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
+/// 914, with no change in what they show.
+///
+/// 191: a shrub up to 3 m tall whose taxa do not say how its stems rise
 /// (`stem_clump`) sends up many stems from its base, as `stem_clump` many
 /// gives, in place of one stem forking just above the ground (a rule on the
 /// shrub form at the flowering plants); taller shrubs and prostrate mats keep
 /// their forking stem. 32 library shrubs change, and the open
 /// plant-identification judge names them better grown so.
-pub const GENERATOR_REVISION: u32 = 184;
+pub const GENERATOR_REVISION: u32 = 191;

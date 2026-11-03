@@ -1,0 +1,270 @@
+//! Plants grown on a mesh someone hands over (sites plan S4): ivy set at
+//! the foot of a brick wall in a site's mesh climbs the wall, its stems on
+//! the wall's face rather than in it, where with nothing to climb it
+//! sprawls low.
+
+use std::sync::Arc;
+
+use plantgen::conditions::Conditions;
+use plantgen::graph::PlantGraph;
+use plantgen::grow::{GrowthSettings, grow};
+use plantgen::lsys::Limits;
+use plantgen::lsys::tools::Host;
+use plantgen::math::Vec3;
+use plantgen::site::{Cut, SiteMesh, Surface, climbable};
+use plantgen::spec::{Environment, PlantSpec};
+use plantgen::substrate::{BUILT, SOIL, WOOD};
+
+/// A box from `low` to `high`, its faces wound outward.
+fn cuboid(low: Vec3, high: Vec3, material: u8, out: &mut (Vec<Vec3>, Vec<[u32; 3]>, Vec<u8>)) {
+    let first = u32::try_from(out.0.len()).unwrap();
+    for i in 0..8 {
+        out.0.push(Vec3::new(
+            if i & 1 == 0 { low.x } else { high.x },
+            if i & 2 == 0 { low.y } else { high.y },
+            if i & 4 == 0 { low.z } else { high.z },
+        ));
+    }
+    for [a, b, c, d] in [
+        [0, 4, 6, 2],
+        [1, 3, 7, 5],
+        [0, 1, 5, 4],
+        [2, 6, 7, 3],
+        [0, 2, 3, 1],
+        [4, 5, 7, 6],
+    ] {
+        out.1.push([first + a, first + b, first + c]);
+        out.1.push([first + a, first + c, first + d]);
+        out.2.extend([material, material]);
+    }
+}
+
+/// Ground 12 m across, its top at 0, and a brick wall 4 m long, 2.5 m
+/// high and 0.3 m thick whose south face stands at z = −0.5.
+fn garden() -> SiteMesh {
+    let mut parts = (Vec::new(), Vec::new(), Vec::new());
+    cuboid(
+        Vec3::new(-6.0, -2.0, -6.0),
+        Vec3::new(6.0, 0.0, 6.0),
+        SOIL,
+        &mut parts,
+    );
+    cuboid(
+        Vec3::new(-2.0, -0.3, -0.8),
+        Vec3::new(2.0, 2.5, -0.5),
+        BUILT,
+        &mut parts,
+    );
+    SiteMesh::new(&parts.0, &parts.1, &parts.2).unwrap()
+}
+
+/// English ivy, its first variant, grown for `years` at `foot` in the
+/// site: on the substrate cut round its foot, holding to the site's
+/// climbable faces. Its graph and the place it grew in.
+fn ivy_at(site: &SiteMesh, foot: Vec3, years: f64) -> (PlantGraph, Conditions) {
+    let spec = PlantSpec::builtin("hedera-helix").unwrap();
+    let (program, params) = spec.program().unwrap();
+    let seed = spec.variants.seeds[0];
+    let cut = Cut::for_plant(3.0, 2.0);
+    let mut conditions = Conditions::preset(Environment::Open);
+    conditions.substrate = Some(site.substrate_round(foot, cut).unwrap());
+    let host: Option<Arc<Host>> = site.host_round(foot, cut, &climbable).map(Arc::new);
+    let growth = grow(
+        &program,
+        &spec.seeded_params(&program, &params, seed),
+        &GrowthSettings {
+            seed,
+            dt: spec.growth.step,
+            years,
+            keyframes: vec![years],
+            conditions: conditions.clone(),
+            limits: Limits::default(),
+            host,
+        },
+    )
+    .unwrap();
+    (growth.keyframes[0].clone(), conditions)
+}
+
+#[test]
+fn ivy_climbs_a_wall_in_the_mesh_on_its_face() {
+    let site = garden();
+    // 0.3 m south of the wall's face.
+    let (graph, place) = ivy_at(&site, Vec3::new(0.0, 0.0, -0.2), 6.0);
+    assert!(graph.height > 1.5, "ivy reached only {:.2} m", graph.height);
+    let intrusion = place.intrusion(&graph).unwrap();
+    #[allow(clippy::cast_precision_loss)]
+    let share = intrusion.segments_in_solids as f64 / intrusion.segments.max(1) as f64;
+    assert!(share < 0.05, "{}", intrusion.describe());
+    // Its leaves on the wall's south face: most within 25 cm of it, in
+    // the plant's frame at z = −0.3.
+    let near = graph
+        .organs
+        .iter()
+        .filter(|organ| organ.position.y > 0.3 && (organ.position.z + 0.3).abs() < 0.25)
+        .count();
+    let high = graph
+        .organs
+        .iter()
+        .filter(|organ| organ.position.y > 0.3)
+        .count();
+    assert!(
+        near * 2 > high,
+        "{near} of {high} raised leaves by the wall"
+    );
+
+    // With nothing it can climb in reach, it stays low.
+    let (open, _) = ivy_at(&site, Vec3::new(0.0, 0.0, 4.0), 6.0);
+    assert!(open.height < 1.0, "free ivy reached {:.2} m", open.height);
+}
+
+/// The garden's ground and wall, with a window 1 m wide and 1.2 m high
+/// on the wall's south face, 1 cm proud of it: a thin pane, kept clear
+/// when `clear`.
+fn wall_with_window(clear: bool) -> SiteMesh {
+    let mut parts = (Vec::new(), Vec::new(), Vec::new());
+    cuboid(
+        Vec3::new(-6.0, -2.0, -6.0),
+        Vec3::new(6.0, 0.0, 6.0),
+        SOIL,
+        &mut parts,
+    );
+    cuboid(
+        Vec3::new(-2.0, -0.3, -0.8),
+        Vec3::new(2.0, 2.5, -0.5),
+        BUILT,
+        &mut parts,
+    );
+    let mut surfaces: Vec<Surface> = parts.2.iter().map(|m| Surface::solid(*m)).collect();
+    let first = u32::try_from(parts.0.len()).unwrap();
+    parts.0.extend([
+        Vec3::new(-0.3, 0.6, -0.49),
+        Vec3::new(0.7, 0.6, -0.49),
+        Vec3::new(0.7, 1.8, -0.49),
+        Vec3::new(-0.3, 1.8, -0.49),
+    ]);
+    parts
+        .1
+        .extend([[first, first + 1, first + 2], [first, first + 2, first + 3]]);
+    let glass = Surface {
+        thin_m: 0.02,
+        clear,
+        ..Surface::solid(BUILT)
+    };
+    surfaces.extend([glass, glass]);
+    SiteMesh::with_surfaces(&parts.0, &parts.1, &surfaces).unwrap()
+}
+
+#[test]
+fn ivy_grows_round_a_window_kept_clear() {
+    let site = wall_with_window(true);
+    let foot = Vec3::new(0.2, 0.0, -0.2);
+    let (graph, _) = ivy_at(&site, foot, 6.0);
+    assert!(graph.height > 1.5, "ivy reached only {:.2} m", graph.height);
+    // In the plant's frame the pane spans x -0.5 to 0.5, y 0.6 to 1.8, at
+    // z = -0.29. Its tips were cut back each year as they reached it, so
+    // far fewer stems end on it than on a pane left to grow over, even
+    // before what overhangs it is trimmed.
+    let on_pane = |p: Vec3| {
+        (-0.5..0.5).contains(&p.x) && (0.6..1.8).contains(&p.y) && (p.z + 0.29).abs() < 0.12
+    };
+    let on = graph.segments.iter().filter(|s| on_pane(s.end)).count();
+    let (left, _) = ivy_at(&wall_with_window(false), foot, 6.0);
+    let on_left = left.segments.iter().filter(|s| on_pane(s.end)).count();
+    assert!(
+        on * 3 < on_left,
+        "{on} stems end on the pane kept clear, {on_left} on one left"
+    );
+    // Trimmed, nothing is left on it.
+    let mut trimmed = graph.clone();
+    site.cut_back(&mut trimmed, foot, 0.05);
+    assert!(trimmed.segments.len() > graph.segments.len() / 2);
+    assert!(
+        trimmed
+            .organs
+            .iter()
+            .all(|organ| !(on_pane(organ.position) && (organ.position.z + 0.29).abs() < 0.05))
+    );
+}
+
+/// Ground, with a post-and-wire fence along z = 0 from x = -2 to 2: posts
+/// 1.4 m high every 2 m and four wires (thin parts 4 mm thick).
+fn wire_fence() -> SiteMesh {
+    let mut parts = (Vec::new(), Vec::new(), Vec::new());
+    cuboid(
+        Vec3::new(-6.0, -2.0, -6.0),
+        Vec3::new(6.0, 0.0, 6.0),
+        SOIL,
+        &mut parts,
+    );
+    for x in [-2.0, 0.0, 2.0] {
+        cuboid(
+            Vec3::new(x - 0.06, 0.0, -0.06),
+            Vec3::new(x + 0.06, 1.4, 0.06),
+            WOOD,
+            &mut parts,
+        );
+    }
+    let mut surfaces: Vec<Surface> = parts.2.iter().map(|m| Surface::solid(*m)).collect();
+    let wire = Surface {
+        thin_m: 0.004,
+        ..Surface::solid(BUILT)
+    };
+    for y in [0.3, 0.6, 0.9, 1.2] {
+        let first = u32::try_from(parts.0.len()).unwrap();
+        parts.0.extend([
+            Vec3::new(-2.0, y - 0.005, 0.065),
+            Vec3::new(2.0, y - 0.005, 0.065),
+            Vec3::new(2.0, y + 0.005, 0.065),
+            Vec3::new(-2.0, y + 0.005, 0.065),
+        ]);
+        parts
+            .1
+            .extend([[first, first + 1, first + 2], [first, first + 2, first + 3]]);
+        surfaces.extend([wire, wire]);
+    }
+    SiteMesh::with_surfaces(&parts.0, &parts.1, &surfaces).unwrap()
+}
+
+#[test]
+fn a_vine_climbs_a_wire_fence() {
+    let site = wire_fence();
+    // A metre from the nearest post, 15 cm in front of the wires.
+    let foot = Vec3::new(1.0, 0.0, 0.2);
+    let spec = PlantSpec::builtin("lonicera-ciliosa").unwrap();
+    let (program, params) = spec.program().unwrap();
+    let seed = spec.variants.seeds[0];
+    let cut = Cut::for_plant(2.0, 1.5);
+    let mut conditions = Conditions::preset(Environment::Open);
+    conditions.substrate = Some(site.substrate_round(foot, cut).unwrap());
+    let host = site.host_round(foot, cut, &climbable).map(Arc::new);
+    assert!(host.is_some());
+    let growth = grow(
+        &program,
+        &spec.seeded_params(&program, &params, seed),
+        &GrowthSettings {
+            seed,
+            dt: spec.growth.step,
+            years: 5.0,
+            keyframes: vec![5.0],
+            conditions,
+            limits: Limits::default(),
+            host,
+        },
+    )
+    .unwrap();
+    let graph = &growth.keyframes[0];
+    // It climbs the wires: up past the lowest two, its raised leaves
+    // mostly within 30 cm of the fence's plane (z = -0.2 in its frame).
+    assert!(graph.height > 0.9, "reached only {:.2} m", graph.height);
+    let raised: Vec<_> = graph.organs.iter().filter(|o| o.position.y > 0.4).collect();
+    let near = raised
+        .iter()
+        .filter(|o| (o.position.z + 0.2).abs() < 0.3)
+        .count();
+    assert!(
+        near * 2 > raised.len(),
+        "{near} of {} raised leaves by the fence",
+        raised.len()
+    );
+}
