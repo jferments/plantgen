@@ -75,6 +75,8 @@ macro_rules! out {
     };
 }
 
+mod scene;
+
 fn main() -> ExitCode {
     match run() {
         Ok(()) | Err(Failure::OutputClosed) => ExitCode::SUCCESS,
@@ -118,6 +120,7 @@ fn run() -> Result<(), Failure> {
         "audit" => audit_command(&args),
         "grow" => grow_command(&args),
         "stand" => stand_command(&args),
+        "scene" => scene::scene_command(&args),
         "site" => site_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
@@ -252,6 +255,19 @@ Usage:
       and north: the stand is a tile that wraps at its edges) and
       conditions (a place every plant grows in). Seeds default to each
       spec's first.
+  plantc scene <scene.json> [--out PREFIX] [--views side,oblique,top,close]
+               [--size PIXELS] [--day N] [--quality draft|standard]
+               [--focus X,Y,Z [--span METRES]] [--cover HALF]
+      Lay grown variants out as instances and draw them together, as a
+      host's renderer draws a forest (stands plan, step 1). The document
+      gives instances: each one's species, env (open, edge, interior or
+      suppressed; open when left out), seed, age (years), at (metres east
+      and north), yaw (degrees, anticlockwise from above) and scale. Each
+      species, environment and seed grows once, to its oldest age; nothing
+      grows together. --out writes PREFIX-VIEW.png for each view (close
+      frames --focus, SPAN metres across, default 4). --cover prints the
+      share of the square HALF metres each way from the middle that crowns
+      cover seen straight down.
   plantc site <site.json> [--out FILE.png] [--view VIEW] [--size PIXELS]
               [--day N] [--quality draft|standard]
               [--focus X,Y,Z [--span METRES]]
