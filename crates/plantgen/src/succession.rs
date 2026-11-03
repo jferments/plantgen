@@ -296,8 +296,8 @@ pub fn develop(candidates: &[Candidate], age: f64) -> Development {
     Development {
         stage,
         lifespan,
-        cover,
         cohorts,
+        cover,
     }
 }
 
@@ -351,7 +351,7 @@ pub fn light_needed(niche: &crate::niche::Niche) -> f64 {
         return 0.0;
     }
     for _ in 0..30 {
-        let middle = 0.5 * (low + high);
+        let middle = f64::midpoint(low, high);
         if niche.light_response(middle) >= 0.5 {
             high = middle;
         } else {
