@@ -86,6 +86,7 @@ pub mod spec;
 pub mod spikelets;
 pub mod spines;
 pub mod stand;
+pub mod stand_tile;
 pub mod substrate;
 pub mod templates;
 pub mod texture;

@@ -11,9 +11,11 @@ use std::fs;
 
 use plantgen::math::Vec3;
 use plantgen::mesh::{self, PlantMesh};
+use plantgen::niche::Layer;
 use plantgen::preview::{self, PreviewOptions, View};
 use plantgen::raster;
 use plantgen::spec::{Environment, PlantSpec};
+use plantgen::stand_tile;
 use plantgen::templates::Templates;
 
 use super::{
@@ -90,6 +92,108 @@ fn append(host: &mut PlantMesh, guest: PlantMesh) {
     host.tufts.extend(guest.tufts);
 }
 
+/// Lay the stand of `members` out on a tile by `laid`'s rules
+/// (`plantgen::stand_tile`), drawn `repeat` tiles each way about the
+/// middle, and print its stems, basal area, leaf area and cover.
+#[allow(clippy::type_complexity)]
+fn lay_out_stand(
+    laid: &serde_json::Value,
+    members: &[(usize, f64, Layer, f64, f64)],
+    sizes_at: &BTreeMap<(usize, u64), [f64; 5]>,
+    instances: &mut Vec<Instance>,
+) -> Result<(), Failure> {
+    let defaults = stand_tile::Rules::default();
+    let mut cover = defaults.cover;
+    if let Some(given) = laid["cover"].as_array() {
+        for (slot, value) in cover.iter_mut().zip(given) {
+            *slot = value.as_f64().ok_or("stand cover must be numbers")?;
+        }
+    }
+    let rules = stand_tile::Rules {
+        tile_m: laid["tile_m"].as_f64().unwrap_or(defaults.tile_m),
+        cover,
+        overlap: laid["overlap"].as_f64().unwrap_or(defaults.overlap),
+        ..defaults
+    };
+    let seed = laid["seed"].as_u64().unwrap_or(1);
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let key = |variant: usize, age: f64| (variant, (age * 1000.0).round() as u64);
+    let tile_members: Vec<stand_tile::Member> = members
+        .iter()
+        .enumerate()
+        .map(|(id, &(variant, age, layer, share, light))| {
+            let [height, base, radius, ..] = sizes_at
+                .get(&key(variant, age))
+                .copied()
+                .unwrap_or([0.0; 5]);
+            stand_tile::Member {
+                id: u32::try_from(id).unwrap_or(u32::MAX),
+                layer,
+                share,
+                height_m: height,
+                crown_base_m: base,
+                crown_radius_m: radius,
+                light_needed: light,
+            }
+        })
+        .collect();
+    let started = std::time::Instant::now();
+    let placed = stand_tile::lay_out(&tile_members, &rules, seed);
+    let seconds = started.elapsed().as_secs_f64();
+    let area_ha = rules.tile_m * rules.tile_m / 10_000.0;
+    let (mut basal, mut leaf) = (0.0, 0.0);
+    let mut stems = [0_usize; 4];
+    for plant in &placed {
+        let (variant, age, layer, ..) = members[plant.member];
+        let [_, _, _, dbh, leaf_area] = sizes_at
+            .get(&key(variant, age))
+            .copied()
+            .unwrap_or([0.0; 5]);
+        basal += std::f64::consts::PI * (0.5 * dbh * plant.scale).powi(2);
+        leaf += leaf_area * plant.scale * plant.scale;
+        if let Some(slot) = Layer::ALL.iter().position(|l| *l == layer) {
+            stems[slot] += 1;
+        }
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let per_ha = |n: usize| n as f64 / area_ha;
+    out!(
+        "stand tile {} m laid out in {:.3} s: stems/ha canopy {:.0}, subcanopy {:.0}, shrub {:.0}, herb {:.0}; \
+         basal area {:.1} m²/ha; leaf area index {:.2}; cover from above {:.1}%",
+        rules.tile_m,
+        seconds,
+        per_ha(stems[0]),
+        per_ha(stems[1]),
+        per_ha(stems[2]),
+        per_ha(stems[3]),
+        basal / area_ha,
+        leaf / (area_ha * 10_000.0),
+        100.0 * stand_tile::cover(&tile_members, &placed, rules.tile_m)
+    );
+    let repeat = laid["repeat"].as_u64().unwrap_or(1).max(1);
+    #[allow(clippy::cast_precision_loss)]
+    let offset = -0.5 * rules.tile_m * repeat as f64;
+    for copy_x in 0..repeat {
+        for copy_y in 0..repeat {
+            for plant in &placed {
+                let (variant, age, ..) = members[plant.member];
+                #[allow(clippy::cast_precision_loss)]
+                instances.push(Instance {
+                    variant,
+                    age,
+                    at_m: [
+                        plant.at_m[0] + offset + rules.tile_m * copy_x as f64,
+                        plant.at_m[1] + offset + rules.tile_m * copy_y as f64,
+                    ],
+                    yaw_deg: plant.yaw_deg,
+                    scale: plant.scale,
+                });
+            }
+        }
+    }
+    Ok(())
+}
+
 fn view_named(name: &str) -> Result<View, Failure> {
     View::from_name(name).ok_or_else(|| format!("unknown view `{name}`").into())
 }
@@ -108,14 +212,21 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?;
     let document: serde_json::Value =
         serde_json::from_str(&text).map_err(|error| format!("invalid scene: {error}"))?;
-    let list = document["instances"]
-        .as_array()
-        .ok_or("scene instances must be a list")?;
+    let empty = Vec::new();
+    let list = document["instances"].as_array().unwrap_or(&empty);
+    let laid = &document["lay_out"];
+    let members_json = laid["members"].as_array().unwrap_or(&empty);
     // Variants by (species, environment, seed), each with its ages.
     let mut keys: BTreeMap<(String, String, u64), usize> = BTreeMap::new();
     let mut variants: Vec<(PlantSpec, Environment, u64, Vec<f64>)> = Vec::new();
     let mut instances = Vec::new();
-    for item in list {
+    // Members of a laid-out stand: (variant, age, layer, share, light).
+    let mut members = Vec::new();
+    for (item, is_member) in list
+        .iter()
+        .map(|item| (item, false))
+        .chain(members_json.iter().map(|item| (item, true)))
+    {
         let id = item["species"]
             .as_str()
             .ok_or("each instance names its species")?;
@@ -123,9 +234,6 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         let environment = Environment::from_name(env_name)
             .ok_or_else(|| format!("unknown environment `{env_name}`"))?;
         let age = stand_number(&item["age"], "age")?;
-        let at_m = stand_pair(&item["at"], "at")?;
-        let yaw_deg = item["yaw"].as_f64().unwrap_or(0.0);
-        let scale = item["scale"].as_f64().unwrap_or(1.0);
         let seed = item["seed"].as_u64();
         let key_seed = seed.unwrap_or(0);
         let key = (id.to_string(), env_name.to_string(), key_seed);
@@ -142,6 +250,24 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
         if !ages.iter().any(|known| (known - age).abs() < 1e-9) {
             ages.push(age);
         }
+        if is_member {
+            let layer_name = item["layer"].as_str().unwrap_or("canopy");
+            let layer = Layer::ALL
+                .into_iter()
+                .find(|layer| layer.name() == layer_name)
+                .ok_or_else(|| format!("unknown layer `{layer_name}`"))?;
+            members.push((
+                index,
+                age,
+                layer,
+                item["share"].as_f64().unwrap_or(1.0),
+                item["light"].as_f64().unwrap_or(0.0),
+            ));
+            continue;
+        }
+        let at_m = stand_pair(&item["at"], "at")?;
+        let yaw_deg = item["yaw"].as_f64().unwrap_or(0.0);
+        let scale = item["scale"].as_f64().unwrap_or(1.0);
         instances.push(Instance {
             variant: index,
             age,
@@ -150,8 +276,8 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
             scale,
         });
     }
-    if instances.is_empty() {
-        return Err("a scene needs at least one instance".into());
+    if instances.is_empty() && members.is_empty() {
+        return Err("a scene needs instances or a stand to lay out".into());
     }
     let day = options.day()?;
     let quality = options.quality()?;
@@ -192,6 +318,9 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
     let mut all_looks = Vec::new();
     let mut bark = None;
     let mut meshes: BTreeMap<(usize, u64), PlantMesh> = BTreeMap::new();
+    // Each variant's size at each age: height, crown base, crown radius,
+    // breast-height diameter and leaf area.
+    let mut sizes_at: BTreeMap<(usize, u64), [f64; 5]> = BTreeMap::new();
     for (index, ((spec, environment, seed, ages), growth)) in
         variants.iter().zip(&growths).enumerate()
     {
@@ -222,7 +351,18 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
                 describe(graph, &growth.organ_types)
             );
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            meshes.insert((index, (age * 1000.0).round() as u64), plant);
+            let key = (index, (age * 1000.0).round() as u64);
+            meshes.insert(key, plant);
+            sizes_at.insert(
+                key,
+                [
+                    graph.height,
+                    graph.crown_base().unwrap_or(0.0),
+                    graph.crown_radius(),
+                    graph.diameter_at_breast_height().unwrap_or(0.0),
+                    graph.leaf_area(&growth.organ_types),
+                ],
+            );
         }
         all_looks.extend(looks);
         if bark.is_none() {
@@ -231,6 +371,9 @@ pub(super) fn scene_command(args: &[String]) -> Result<(), Failure> {
     }
     if all_looks.len() > 255 {
         return Err("too many organ types to draw at once; draw fewer variants".into());
+    }
+    if !members.is_empty() {
+        lay_out_stand(laid, &members, &sizes_at, &mut instances)?;
     }
     let mut scene = PlantMesh::default();
     for instance in &instances {
