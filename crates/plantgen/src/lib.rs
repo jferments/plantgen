@@ -1483,4 +1483,9 @@ pub mod venation;
 /// whose leaf's card hides them (`crate::billboards`): a fishtail palm's
 /// low cards spent 936 of 1 632 triangles on them, a sago palm's 552 of
 /// 914, with no change in what they show.
-pub const GENERATOR_REVISION: u32 = 190;
+///
+/// 191: a tree's or shrub's stem stays a tube on the card tiers up to
+/// where it is half as thick as at its foot (`crate::billboards`): a
+/// 60-year Douglas fir grown in a closed stand drew its crown floating 9 m
+/// over an 11 m stump on its low tier.
+pub const GENERATOR_REVISION: u32 = 191;
