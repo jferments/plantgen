@@ -683,7 +683,7 @@ fn fill_writes_a_tile_and_the_prototypes_it_places() {
     fs::write(
         &community,
         r#"{"id": "meadow", "members": [
-            {"species": "achillea-millefolium", "layer": "herb", "stems_per_ha": 400}
+            {"species": "achillea-millefolium", "layer": "herb", "abundance": 0.15}
         ]}"#,
     )
     .unwrap();

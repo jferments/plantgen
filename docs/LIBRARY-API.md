@@ -134,7 +134,7 @@ use plantgen::api::{Community, Fill, FillSettings, Site, StandMap, TileId};
 
 fn main() -> Result<(), plantgen::api::Error> {
 let forest = Community::from_json(r#"{"id": "fir-forest", "members": [
-    {"species": "pseudotsuga-menziesii", "layer": "canopy", "stems_per_ha": 300}
+    {"species": "pseudotsuga-menziesii", "layer": "canopy"}
 ]}"#)?;
 let fill = Fill::new(&[forest], &FillSettings::default())?;
 
@@ -201,7 +201,20 @@ plants drew 2.50 M, and 1.67 M where 2.33 M from crown height.
 
 The types are settled; what a fill computes (density, layers, closure,
 allometry, dead wood, climbers) is still being built, and until then
-`Fill::tile` scatters each community's members at its `stems_per_ha`.
+`Fill::tile` scatters each member at a fixed density for its layer, times
+its `abundance`.
+
+A community member names a `species` and may give a `layer` (canopy,
+subcanopy, shrub, herb, ground, climber), the `environments` it grows in
+(interior, edge, open, suppressed; all four when left out) and an
+`abundance` (a share against the others, 1 when left out). It gives no
+density: how many stems a cell holds comes from the fill, from the site
+and the stand's age, not from the caller.
+
+Each instance's `rotation` carries its yaw and its lean together.
+`Instance::lean(yaw, [east, north])` builds it, with the lean in metres
+per metre up, so a plant on a slope or reaching for a gap stands as the
+fill grew it with no extra field to read.
 
 ## From the command line
 

@@ -9,8 +9,8 @@ use plantgen::api::{
 fn forest() -> Community {
     Community::from_json(
         r#"{"id": "test-fir-forest", "members": [
-            {"species": "pseudotsuga-menziesii", "layer": "canopy", "stems_per_ha": 300},
-            {"species": "achillea-millefolium", "layer": "herb", "stems_per_ha": 2000}
+            {"species": "pseudotsuga-menziesii", "layer": "canopy"},
+            {"species": "achillea-millefolium", "layer": "herb", "abundance": 0.7}
         ]}"#,
     )
     .expect("community")
@@ -83,7 +83,7 @@ fn a_tile_filled_whole_or_in_quarters_places_the_same_plants() {
 fn one_tile_holds_many_communities_and_bare_cells() {
     let meadow = Community::from_json(
         r#"{"id": "test-meadow", "members": [
-            {"species": "achillea-millefolium", "layer": "herb", "stems_per_ha": 5000}
+            {"species": "achillea-millefolium", "layer": "herb", "environments": ["open"], "abundance": 1.6}
         ]}"#,
     )
     .expect("community");

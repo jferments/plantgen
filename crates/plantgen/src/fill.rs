@@ -17,7 +17,7 @@
 //! The stands thread owns what is computed (density, layers, closure,
 //! allometry); this module holds the types and file forms callers build
 //! on. Until then [`Fill::tile`] scatters each community's members at a
-//! density from its spec: right in kind, not yet in number.
+//! fixed density by layer: right in kind, not yet in number.
 
 use std::path::Path;
 
@@ -56,19 +56,39 @@ pub enum Layer {
     Climber,
 }
 
-/// One species of a community.
+/// One species of a community. How many of it a stand holds, and in
+/// which layer, is not set here: the stand's development decides it from
+/// the species' niche and the years since disturbance, so a closed forest
+/// closes.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Member {
     /// A built-in species id ([`crate::api::species`]).
     pub species: String,
-    pub layer: Layer,
-    /// Mature stems per hectare where the community is closed.
-    pub stems_per_ha: f64,
+    /// The layer it keeps to, where the community says; the stand's
+    /// development places it otherwise.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub layer: Option<Layer>,
+    /// The settings its prototypes are grown in; every one unless given.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub environments: Vec<Environment>,
+    /// Its weight against the other members, 1 unless given.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub abundance: Option<f64>,
+}
+
+impl Member {
+    fn environments(&self) -> Vec<Environment> {
+        if self.environments.is_empty() {
+            Environment::ALL.to_vec()
+        } else {
+            self.environments.clone()
+        }
+    }
 }
 
 /// A plant community: its members and how they share a stand. Built from
 /// JSON (`{"id": ..., "members": [{"species": ..., "layer": ...,
-/// "stems_per_ha": ...}]}`).
+/// "abundance": ...}]}`, layer and abundance optional).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Community {
     pub id: String,
@@ -101,9 +121,12 @@ impl Community {
                     self.id, member.species
                 )));
             }
-            if !(member.stems_per_ha.is_finite() && member.stems_per_ha >= 0.0) {
+            if member
+                .abundance
+                .is_some_and(|abundance| !(abundance.is_finite() && abundance >= 0.0))
+            {
                 return Err(Error(format!(
-                    "community {}: {} stems per hectare must be 0 or more",
+                    "community {}: {} abundance must be 0 or more",
                     self.id, member.species
                 )));
             }
@@ -156,7 +179,7 @@ pub struct Prototype {
     pub key: PrototypeKey,
     /// The age it is grown to, years.
     pub age_years: f64,
-    pub layer: Layer,
+    pub layer: Option<Layer>,
 }
 
 /// The name of the file listing a fill's written prototypes.
@@ -169,7 +192,7 @@ pub struct PrototypeFiles {
     pub index: u32,
     pub key: PrototypeKey,
     pub age_years: f64,
-    pub layer: Layer,
+    pub layer: Option<Layer>,
     pub plant: VariantRecord,
     /// A tall prototype's parts, each with its box and a file per level;
     /// empty for a plant drawn whole.
@@ -345,7 +368,9 @@ pub struct Instance {
     /// East, north, up, metres from the tile's south-west corner at
     /// height 0.
     pub position: [f32; 3],
-    /// Unit quaternion (x, y, z, w), z up.
+    /// Unit quaternion (x, y, z, w), z up, turning the prototype about its
+    /// foot: its yaw, and its lean where its crown stands off the stem
+    /// toward room (a small tilt, as [`Instance::lean`] makes it).
     pub rotation: [f32; 4],
     pub scale: f32,
     pub age_years: f32,
@@ -355,6 +380,39 @@ pub struct Instance {
 }
 
 impl Instance {
+    /// The rotation of a plant turned `yaw` radians about the vertical
+    /// (east toward north) and leant `lean` (east and north metres per
+    /// metre up) about its foot.
+    #[must_use]
+    pub fn lean(yaw: f64, lean: [f64; 2]) -> [f32; 4] {
+        let half = yaw / 2.0;
+        let turn = [0.0, 0.0, half.sin(), half.cos()];
+        let slope = lean[0].hypot(lean[1]);
+        let tilt = if slope > 0.0 {
+            // About the level axis square to the lean, by its angle.
+            let angle = slope.atan() / 2.0;
+            let axis = [-lean[1] / slope, lean[0] / slope];
+            [
+                axis[0] * angle.sin(),
+                axis[1] * angle.sin(),
+                0.0,
+                angle.cos(),
+            ]
+        } else {
+            [0.0, 0.0, 0.0, 1.0]
+        };
+        // The tilt after the turn.
+        let [ax, ay, az, aw] = tilt;
+        let [bx, by, bz, bw] = turn;
+        #[allow(clippy::cast_possible_truncation)]
+        [
+            (aw * bx + ax * bw + ay * bz - az * by) as f32,
+            (aw * by - ax * bz + ay * bw + az * bx) as f32,
+            (aw * bz + ax * by - ay * bx + az * bw) as f32,
+            (aw * bw - ax * bx - ay * by - az * bz) as f32,
+        ]
+    }
+
     /// The packed form.
     #[must_use]
     pub fn to_bytes(&self) -> [u8; INSTANCE_BYTES] {
@@ -599,7 +657,7 @@ impl Fill {
             }
             let generator = Generator::new(&member.species, &settings.options)?;
             let oldest = generator.default_age();
-            for environment in Environment::ALL {
+            for environment in member.environments() {
                 for age_class in 0..settings.age_classes {
                     for seed in 1..=u64::from(settings.seeds) {
                         prototypes.push(Prototype {
@@ -865,7 +923,9 @@ impl Fill {
             let before = instances.len();
             for (m, member) in community.members.iter().enumerate() {
                 let key = rng::hash_words(&[seed, world[0], world[1], m as u64]);
-                let expected = member.stems_per_ha * cell_area_ha;
+                let expected = stub_stems_per_ha(member.layer)
+                    * member.abundance.unwrap_or(1.0)
+                    * cell_area_ha;
                 #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
                 let count = (expected + rng::unit(key)).floor() as u64;
                 for n in 0..count {
@@ -884,7 +944,7 @@ impl Fill {
                             north as f32,
                             site.height_at(east, north) as f32,
                         ],
-                        rotation: [0.0, 0.0, (yaw / 2.0).sin() as f32, (yaw / 2.0).cos() as f32],
+                        rotation: Instance::lean(yaw, [0.0, 0.0]),
                         scale: (0.85 + 0.3 * draw(6)) as f32,
                         age_years: self.prototypes[prototype as usize].age_years as f32,
                         tint: [
@@ -936,12 +996,18 @@ impl Fill {
             ((class_draw * classes) as u16).min(self.settings.age_classes - 1),
             ((seed_draw * seeds) as u64).min(u64::from(self.settings.seeds) - 1) + 1,
         );
+        let environments = member.environments();
+        let environment = if environments.contains(&Environment::Interior) {
+            Environment::Interior
+        } else {
+            environments[0]
+        };
         let index = self
             .prototypes
             .iter()
             .position(|p| {
                 p.key.species == member.species
-                    && p.key.environment == Environment::Interior
+                    && p.key.environment == environment
                     && p.key.age_class == class
                     && p.key.seed == seed
             })
@@ -954,6 +1020,19 @@ impl Fill {
 struct KeptPrototype {
     generator_revision: u32,
     files: PrototypeFiles,
+}
+
+/// The stub's density until the stand's development sets it: mature
+/// stems per hectare by layer.
+fn stub_stems_per_ha(layer: Option<Layer>) -> f64 {
+    match layer {
+        Some(Layer::Canopy) | None => 300.0,
+        Some(Layer::Subcanopy) => 200.0,
+        Some(Layer::Shrub) => 1_000.0,
+        Some(Layer::Herb) => 3_000.0,
+        Some(Layer::Ground) => 5_000.0,
+        Some(Layer::Climber) => 100.0,
+    }
 }
 
 /// The age of class `class` of `classes`: the oldest at class 0, each
@@ -1014,5 +1093,42 @@ mod tests {
     fn class_ages_run_from_the_oldest_to_a_tenth() {
         assert!((class_age(100.0, 0, 4) - 100.0).abs() < 1e-9);
         assert!((class_age(100.0, 3, 4) - 10.0).abs() < 1e-9);
+    }
+
+    /// Turns `v` by the quaternion `q` (x, y, z, w).
+    #[allow(clippy::many_single_char_names)]
+    fn turned(q: [f32; 4], v: [f64; 3]) -> [f64; 3] {
+        let [x, y, z, w] = q.map(f64::from);
+        let t = [
+            2.0 * (y * v[2] - z * v[1]),
+            2.0 * (z * v[0] - x * v[2]),
+            2.0 * (x * v[1] - y * v[0]),
+        ];
+        [
+            v[0] + w * t[0] + (y * t[2] - z * t[1]),
+            v[1] + w * t[1] + (z * t[0] - x * t[2]),
+            v[2] + w * t[2] + (x * t[1] - y * t[0]),
+        ]
+    }
+
+    #[test]
+    fn a_lean_tilts_the_plants_up_axis_toward_it_after_its_yaw() {
+        let yaw = 0.7;
+        let plain = Instance::lean(yaw, [0.0, 0.0]);
+        let half = yaw / 2.0;
+        #[allow(clippy::cast_possible_truncation)]
+        let expected = [0.0, 0.0, half.sin() as f32, half.cos() as f32];
+        for (a, b) in plain.iter().zip(expected) {
+            assert!((a - b).abs() < 1e-6);
+        }
+        for lean in [[0.1, 0.0], [0.0, -0.25], [0.3, 0.4]] {
+            let up = turned(Instance::lean(yaw, lean), [0.0, 0.0, 1.0]);
+            // The top moves `lean` metres east and north per metre up.
+            assert!((up[0] / up[2] - lean[0]).abs() < 1e-5, "{lean:?}: {up:?}");
+            assert!((up[1] / up[2] - lean[1]).abs() < 1e-5, "{lean:?}: {up:?}");
+        }
+        // The yaw still turns the plant about its own axis: east turns by `yaw`.
+        let east = turned(plain, [1.0, 0.0, 0.0]);
+        assert!((east[1].atan2(east[0]) - yaw).abs() < 1e-5);
     }
 }
