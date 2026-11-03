@@ -44,6 +44,7 @@ pub mod drawing;
 pub mod evidence;
 pub mod export;
 pub mod felling;
+pub mod fill;
 pub mod flowers;
 pub mod form;
 pub mod formula;

@@ -52,6 +52,11 @@ use crate::package::{self, Inputs, Measurements};
 use crate::quality;
 
 pub use crate::export::{Attributes, Budget, Compression, Export, Level, Plant, Settings, Shade};
+pub use crate::fill::{
+    CanopyCell, Community, Cover, CoverKind, Fill, FillSettings, INSTANCE_BYTES, INSTANCE_SCHEMA,
+    Instance, Layer, Member, Prototype, PrototypeKey, STAND_CELL_M, Site, StandCell, StandMap,
+    TileId, TilePlan, TileStats,
+};
 pub use crate::quality::Quality;
 pub use crate::spec::{Environment, PlantSpec};
 

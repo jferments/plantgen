@@ -121,6 +121,56 @@ A set lists each plant's seed, size (height, crown, stem diameter, leaf
 area), files, bytes and triangles per level, and a fingerprint of its
 bytes; `duplicates` names any seed drawn exactly as an earlier one.
 
+## Stands over a whole map: `Fill` (draft)
+
+For city- or region-sized scenes, never grow a plant per place. A `Fill`
+picks *prototypes* once for a set of plant communities (a species, seed,
+setting and age class each: dominants to saplings, interior, edge, open
+and suppressed) and lays out each tile as packed *instances* of them that
+any engine draws with GPU instancing.
+
+```rust
+use plantgen::api::{Community, Fill, FillSettings, Site, StandMap, TileId};
+
+fn main() -> Result<(), plantgen::api::Error> {
+let forest = Community::from_json(r#"{"id": "fir-forest", "members": [
+    {"species": "pseudotsuga-menziesii", "layer": "canopy", "stems_per_ha": 300}
+]}"#)?;
+let fill = Fill::new(&[forest], &FillSettings::default())?;
+
+// Per tile: the ground, and which community grows in each ~40 m cell.
+let site = Site::flat(TileId { x: 12, y: 40 }, 240.0)?;
+let stands = StandMap::uniform(240.0, 0, 120.0); // community 0, 120 years since disturbance
+let plan = fill.tile(&site, &stands, 7)?;
+plan.write("tiles".as_ref())?; // tiles/12_40.json and tiles/12_40.bin
+Ok(())
+}
+```
+
+- **Pure and local.** A tile's plan depends only on the fill's
+  communities, the site, the stand map, the seed and
+  `GENERATOR_REVISION`. Its draws are keyed by each stand cell's place in
+  the world, so neighbouring tiles meet without a seam and any tile can
+  be filled alone, on any thread (`Fill` is `Send + Sync`).
+- **Many communities per tile.** The `StandMap` gives each cell a
+  community (or none: pavement, building, water) and the years since it
+  was disturbed or abandoned.
+- **Prototypes** (`fill.prototypes()`) are keyed by species, seed,
+  setting and age class; `fill.grow_prototype(i)` grows one to export
+  with its species' `Generator`. A city shares one prototype set.
+- **Instances** pack into 32 bytes, little-endian: u32 prototype, f32 x3
+  position (east, north, up, metres from the tile's south-west corner),
+  i16 x4 snorm rotation quaternion (z up), f16 scale, u16 age in tenths
+  of a year, i8 x2 tint (lightness, hue shift), u16 extra (a climber's
+  reach clip in decimetres). `Instance::from_bytes` reads them back.
+- **Ground cover and far canopy** come per stand cell in the plan
+  (`cover`: kind and fraction; `canopy`: height, cover, colour), for
+  hosts that draw ground cover and far forest with their own systems.
+
+The types are settled; what a fill computes (density, layers, closure,
+allometry, dead wood, climbers) is still being built, and until then
+`Fill::tile` scatters each community's members at its `stems_per_ha`.
+
 ## From the command line
 
 ```bash
