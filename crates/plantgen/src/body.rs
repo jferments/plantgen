@@ -755,16 +755,14 @@ impl BodyLook {
     pub fn tint_aged(&self, grey: f64) -> [f32; 3] {
         let felt = self.areoles.felt_radius;
         let felt_area = PI * felt * felt;
-        let spine_area: f64 = self
-            .spines
-            .iter()
-            .map(|set| f64::from(set.count[0] + set.count[1]) * 0.5 * set.length * set.width)
-            .sum();
+        // As much of each set as lies along the skin, as the far levels'
+        // cover counts it ([`spines::cover`]).
+        let spine_area: f64 = self.spines.iter().map(spines::outline).sum();
         let total = felt_area + spine_area;
         if total <= 0.0 {
             return self.colour;
         }
-        let young = spines::colour(self);
+        let young = spines::far_colour(self);
         let spines = match &self.greying {
             Some(greying) if grey > 0.0 => mix(young, greying.colour, grey),
             _ => young,
@@ -2042,6 +2040,22 @@ fn apex_wool(line: &Centreline, s: f64) -> f64 {
     1.0 - math::smoothstep(0.5 * WOOL_REACH, WOOL_REACH, line.cap(s))
 }
 
+/// Length of the spines of an areole at `s` as a share of their full
+/// length: young areoles on the dome carry short spines.
+fn young_spines(line: &Centreline, s: f64) -> f64 {
+    let dome_start = line.length - line.dome;
+    if line.dome > 0.0 && s > dome_start {
+        let x = ((s - dome_start) / line.dome).min(1.0);
+        1.0 - 0.45 * x * x
+    } else {
+        1.0
+    }
+}
+
+/// Points along the stretch of skin a far level's ring stands for, at
+/// which its rings read how grey the spines are.
+const RING_SAMPLES: usize = 8;
+
 /// How far out the woolly cap reaches, a share of the tip's radius.
 const WOOL_REACH: f64 = 0.6;
 
@@ -2634,12 +2648,34 @@ impl Body<'_> {
         let wobble_phase = unit(mix64(self.axis.id ^ 0xC0E4)) * 2.0 * PI;
         let wood = &mut out.wood;
         let mut previous: Option<u32> = None;
-        for &s in &rings {
+        for (ring, &s) in rings.iter().enumerate() {
             let station = self.line.at(s);
-            // Spines grey with age, as the near levels' cards do.
+            // Spines grey with age, as the near levels' cards do: each ring
+            // as grey as the skin it stands for, half way to the rings on
+            // either side, weighed by its breadth. Coloured as at its own
+            // station, a pincushion's top ring took the young brown of the
+            // apex, and its whole dome drew brown where the plant's
+            // areoles are four in five fully grey.
             let tint = match &look.greying {
-                Some(greying) if cover > 0.0 => look
-                    .tint_aged(((self.graph.age - station.born) / greying.years).clamp(0.0, 1.0)),
+                Some(greying) if cover > 0.0 => {
+                    let below = ring.checked_sub(1).map_or(s, |i| (rings[i] + s) * 0.5);
+                    let above = rings.get(ring + 1).map_or(s, |&next| (s + next) * 0.5);
+                    let (mut grey, mut weight) = (0.0, 0.0);
+                    for k in 0..RING_SAMPLES {
+                        #[allow(clippy::cast_precision_loss)]
+                        let at = self.line.at(
+                            below + (above - below) * (k as f64 + 0.5) / RING_SAMPLES as f64,
+                        );
+                        grey += ((self.graph.age - at.born) / greying.years).clamp(0.0, 1.0)
+                            * at.radius;
+                        weight += at.radius;
+                    }
+                    look.tint_aged(if weight > 0.0 {
+                        grey / weight
+                    } else {
+                        ((self.graph.age - station.born) / greying.years).clamp(0.0, 1.0)
+                    })
+                }
                 _ => tint,
             };
             let first = u32::try_from(wood.positions.len()).unwrap_or(u32::MAX);
@@ -2668,7 +2704,10 @@ impl Body<'_> {
                     colour = mix(colour, cork.colour, weight);
                 }
                 if cover > 0.0 {
-                    // Spines stand on the crests, so valleys show more skin.
+                    // Spines stand on the crests, so valleys show more skin,
+                    // and the young short spines on the dome hide less of it
+                    // (as `1 - exp(-a)` of their outlines `a`, [`spines::cover`]).
+                    let cover = 1.0 - (1.0 - cover).powf(young_spines(self.line, s));
                     colour = mix(colour, tint, cover * (1.0 - VALLEY_SHOWS * deep));
                 }
                 if surface.wool > 0.0 {
@@ -2883,14 +2922,7 @@ impl Body<'_> {
                     continue;
                 }
             }
-            // Young areoles on the dome carry short spines.
-            let dome_start = line.length - line.dome;
-            let scale = if line.dome > 0.0 && site.s > dome_start {
-                let x = ((site.s - dome_start) / line.dome).min(1.0);
-                1.0 - 0.45 * x * x
-            } else {
-                1.0
-            };
+            let scale = young_spines(line, site.s);
             let station = line.at(site.s);
             let grey = look.greying.as_ref().map_or(0.0, |greying| {
                 ((age - station.born) / greying.years).clamp(0.0, 1.0)

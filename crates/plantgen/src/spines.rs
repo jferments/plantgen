@@ -869,15 +869,49 @@ pub fn cover(look: &BodyLook, area: f64) -> f64 {
     let felt = look.areoles.felt_radius;
     let mut hidden = std::f64::consts::PI * felt * felt;
     for set in &look.spines {
-        let count = f64::from(set.count[0] + set.count[1].max(set.count[0]))
-            * 0.5
-            * mean_thinning(set.distal);
-        let lying = crate::math::cos(crate::math::radians(set.angle)).max(0.2);
         // Thin spines hide less than their outline: 0.35 keeps the far
         // levels' mean colour with the nearest level's across the cacti.
-        hidden += count * set.length * lying * set.width * 0.35;
+        hidden += outline(set) * 0.35;
     }
     (1.0 - crate::math::exp(-hidden / area)).clamp(0.0, 0.85)
+}
+
+/// The skin one areole's spines of `set` hide, square metres: their mean
+/// count (as the areoles keep them, [`mean_thinning`]) by their length
+/// and width, by how far each lies along the skin (at least a fifth).
+#[must_use]
+pub fn outline(set: &SpineSet) -> f64 {
+    let count =
+        f64::from(set.count[0] + set.count[1].max(set.count[0])) * 0.5 * mean_thinning(set.distal);
+    let lying = crate::math::cos(crate::math::radians(set.angle)).max(0.2);
+    count * set.length * set.width * lying
+}
+
+/// The colour `look`'s spines show the far levels, which draw them as the
+/// skin's tint: each set's colour a third of the way to its tip's, weighed
+/// by its [`outline`]. Weighed by count, length and width alone, a
+/// pincushion's dark central spines, standing out from the skin, weighed
+/// as much as its pale radials lying on it, and its far levels drew brown
+/// where the plant shows grey-green. The felt's colour for a body without
+/// spines.
+#[must_use]
+pub fn far_colour(look: &BodyLook) -> [f32; 3] {
+    let mut sum = [0.0_f64; 3];
+    let mut weight_sum = 0.0;
+    for set in &look.spines {
+        let weight = outline(set);
+        let mean = mix(set.colour, set.tip.unwrap_or(set.colour), 0.35);
+        for channel in 0..3 {
+            sum[channel] += f64::from(mean[channel]) * weight;
+        }
+        weight_sum += weight;
+    }
+    if weight_sum > 0.0 {
+        #[allow(clippy::cast_possible_truncation)]
+        sum.map(|channel| (channel / weight_sum) as f32)
+    } else {
+        look.areoles.felt
+    }
 }
 
 /// How many times broader `look`'s spines (all but its glochids) must be
@@ -895,13 +929,7 @@ pub fn cover_factor(look: &BodyLook, area: f64, target: f64) -> f64 {
         .spines
         .iter()
         .filter(|set| set.role != Some(crate::body::SpineRole::Glochid))
-        .map(|set| {
-            let count = f64::from(set.count[0] + set.count[1].max(set.count[0]))
-                * 0.5
-                * mean_thinning(set.distal);
-            let lying = crate::math::cos(crate::math::radians(set.angle)).max(0.2);
-            count * set.length * set.width * lying
-        })
+        .map(outline)
         .sum();
     if outline <= 0.0 {
         return 1.0;
